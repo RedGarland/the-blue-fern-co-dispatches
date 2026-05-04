@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import subprocess
 import shutil
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -16,6 +17,8 @@ TEMPLATE_VERSION = "dispatches-static-v1"
 DEFAULT_BACKUP_ROOT = Path(r"C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups")
 PUBLIC_ROOT_NAMES = {"site"}
 DETAIL_ROOT_NAMES = {"detail", "paid"}
+CNAME_VALUE = "dispatches.thebluefernco.com"
+PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
 
 
 @dataclass(frozen=True)
@@ -171,6 +174,19 @@ def ensure_public_detail_separation(site_root: Path, detail_roots: list[Path]) -
         if resolved.name in PUBLIC_ROOT_NAMES:
             errors.append(f"detail path {resolved} uses a public root name")
     return errors
+
+
+def public_site_contains_detail_artifacts(site_root: Path) -> list[str]:
+    if not site_root.exists():
+        return []
+    blocked = []
+    for path in site_root.rglob("*"):
+        if not path.is_file():
+            continue
+        relative_parts = path.relative_to(site_root).parts
+        if relative_parts and relative_parts[0] in DETAIL_ROOT_NAMES:
+            blocked.append(str(path))
+    return blocked
 
 
 def write_text(path: Path, content: str, dry_run: bool, wrote: list[str]) -> None:
@@ -422,12 +438,191 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     }
 
 
+def is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.resolve().relative_to(parent.resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def collect_public_site_files(site_root: Path) -> list[Path]:
+    if not site_root.exists():
+        return []
+    return sorted(path for path in site_root.rglob("*") if path.is_file())
+
+
+def validate_pages_publish(root: Path, site_root: Path, pages_repo: Path, require_git: bool = True) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    root = root.resolve()
+    site_root = site_root.resolve()
+    pages_repo = pages_repo.resolve()
+    if not pages_repo.exists():
+        errors.append(f"pages repo path does not exist: {pages_repo}")
+    elif not pages_repo.is_dir():
+        errors.append(f"pages repo path is not a directory: {pages_repo}")
+    elif require_git and not (pages_repo / ".git").is_dir():
+        errors.append(f"pages repo path is not a git repository: {pages_repo}")
+    elif not (pages_repo / ".git").is_dir():
+        warnings.append(f"pages repo path is not a git repository yet: {pages_repo}")
+    if pages_repo == root:
+        errors.append("pages repo path must not be the project root")
+    if site_root.exists() and is_relative_to(pages_repo, site_root):
+        errors.append("pages repo path must not be inside output/site")
+    if not (site_root / "index.html").exists():
+        errors.append(f"public site index does not exist: {site_root / 'index.html'}")
+    detail_files = public_site_contains_detail_artifacts(site_root)
+    if detail_files:
+        errors.append(f"paid/detail artifacts are present in public output: {', '.join(detail_files)}")
+    cname = pages_repo / "CNAME"
+    if cname.exists() and cname.read_text(encoding="utf-8").strip() != CNAME_VALUE:
+        errors.append(f"CNAME value is not correct in {cname}")
+    return errors, warnings
+
+
+def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool) -> tuple[list[str], list[str]]:
+    copied: list[str] = []
+    skipped = [
+        "output/paid/",
+        "output/detail/",
+        "data/",
+        "backups/",
+        "source Python files",
+        "tests/",
+        ".venv/",
+        "__pycache__/",
+        ".pytest_cache/",
+        f"{pages_repo / '.git'}",
+    ]
+    for source in collect_public_site_files(site_root):
+        target = pages_repo / source.relative_to(site_root)
+        copied.append(str(target))
+        if dry_run:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    cname = pages_repo / "CNAME"
+    copied.append(str(cname))
+    if not dry_run:
+        cname.write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    return copied, skipped
+
+
+def run_git(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=str(cwd),
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+
+
+def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool) -> dict[str, Any]:
+    if not commit:
+        return {"would_commit": False, "committed": False, "commit_sha": None, "message": "commit flag not set"}
+    if dry_run:
+        return {"would_commit": True, "committed": False, "commit_sha": None, "message": "dry run; no commit created"}
+
+    add = run_git(["add", "-A"], pages_repo)
+    if add.returncode != 0:
+        return {"would_commit": True, "committed": False, "commit_sha": None, "message": add.stderr.strip() or add.stdout.strip()}
+
+    diff = run_git(["diff", "--cached", "--quiet"], pages_repo)
+    if diff.returncode == 0:
+        return {"would_commit": True, "committed": False, "commit_sha": None, "message": "no changes to commit"}
+
+    commit_result = run_git(["commit", "-m", PUBLISH_COMMIT_MESSAGE], pages_repo)
+    if commit_result.returncode != 0:
+        return {"would_commit": True, "committed": False, "commit_sha": None, "message": commit_result.stderr.strip() or commit_result.stdout.strip()}
+
+    rev = run_git(["rev-parse", "--short", "HEAD"], pages_repo)
+    return {
+        "would_commit": True,
+        "committed": True,
+        "commit_sha": rev.stdout.strip() if rev.returncode == 0 else None,
+        "message": PUBLISH_COMMIT_MESSAGE,
+    }
+
+
+def publish_pages(
+    root: Path,
+    pages_repo: Path,
+    remote_url: str | None,
+    dry_run: bool,
+    commit: bool,
+    no_push: bool,
+    backup_root: Path = DEFAULT_BACKUP_ROOT,
+) -> dict[str, Any]:
+    build = build_site(root, dry_run=dry_run, backup_root=backup_root)
+    root = root.resolve()
+    site_root = root / "output" / "site"
+    pages_repo = pages_repo.resolve()
+    errors = list(build["errors"])
+    validation_errors, validation_warnings = validate_pages_publish(root, site_root, pages_repo, require_git=not dry_run)
+    errors.extend(validation_errors)
+    warnings = list(build["warnings"])
+    warnings.extend(validation_warnings)
+    would_copy = not errors
+    copied: list[str] = []
+    skipped: list[str] = []
+    commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "message": "not attempted"}
+
+    if not errors:
+        copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run)
+        commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit)
+        if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
+            errors.append(commit_result["message"])
+
+    return {
+        "ok": not errors,
+        "source_site_path": str(site_root),
+        "target_pages_repo_path": str(pages_repo),
+        "remote_url": remote_url,
+        "cname_value": CNAME_VALUE,
+        "dry_run": dry_run,
+        "files_that_would_be_copied": copied if dry_run else [],
+        "files_copied": [] if dry_run else copied,
+        "files_that_would_be_skipped": skipped,
+        "would_copy": would_copy,
+        "copied": bool(copied) and not dry_run,
+        "would_commit": bool(commit),
+        "committed": commit_result["committed"],
+        "commit_sha": commit_result["commit_sha"],
+        "message": commit_result["message"],
+        "would_push": False,
+        "pushed": False,
+        "no_push": no_push,
+        "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root),
+        "warnings": warnings,
+        "errors": errors,
+        "build": build,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Dispatches From The Blue Fern Co. static site.")
     parser.add_argument("--dry-run", action="store_true", help="Report planned writes without touching output files.")
     parser.add_argument("--backup-root", default=str(DEFAULT_BACKUP_ROOT), help="Outside-repo backup root.")
+    parser.add_argument("--pages-repo", help="Local GitHub Pages repo root to receive output/site files.")
+    parser.add_argument("--remote-url", help="Expected GitHub remote URL for reporting.")
+    parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
+    parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
     args = parser.parse_args(argv)
-    result = build_site(Path.cwd(), dry_run=args.dry_run, backup_root=Path(args.backup_root))
+    if args.pages_repo:
+        result = publish_pages(
+            Path.cwd(),
+            Path(args.pages_repo),
+            args.remote_url,
+            dry_run=args.dry_run,
+            commit=args.commit,
+            no_push=args.no_push,
+            backup_root=Path(args.backup_root),
+        )
+    else:
+        result = build_site(Path.cwd(), dry_run=args.dry_run, backup_root=Path(args.backup_root))
     print(json.dumps(result, indent=2))
     return 0 if result["ok"] else 1
 

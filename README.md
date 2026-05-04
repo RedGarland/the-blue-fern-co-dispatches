@@ -25,12 +25,40 @@ python scripts\publish_github_pages.py --dry-run
 
 The script does not push, force-push, delete pages, or change DNS.
 
+## GitHub Pages Repo Publishing
+
+GitHub Pages and DNS must be configured separately. This project only prepares a deployable static site root in the local Pages repo.
+
+Dry-run:
+
+```powershell
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+Copy + commit locally, no push:
+
+```powershell
+python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches/" --commit --no-push
+```
+
+Manual push after inspection:
+
+```powershell
+cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+git status
+git remote -v
+git push origin main
+```
+
+The publisher copies only `output/site/` into the Pages repo, writes `CNAME` with `dispatches.thebluefernco.com`, preserves `.git/`, and never pushes automatically.
+
 ## Site Structure
 
 - `assets/` - shared Blue Fern/Gaza/Cascadia visual assets.
 - `src/bluefern_dispatches/` - static site generator and safety checks.
 - `scripts/publish_github_pages.py` - build/dry-run entrypoint.
 - `output/site/` - public static site output.
+- `bluefern-dispatches-pages/` - local Pages repo static root after publishing.
 - `output/detail/` and `output/paid/` - reserved non-public detail roots.
 - `data/dispatches/`, `data/sources/`, `data/curation/`, `data/records/` - project-scoped data roots for future ingestion and records.
 
@@ -78,4 +106,3 @@ Add a new dispatch configuration in `src/bluefern_dispatches/generator.py` with:
 - logo assets in `assets/`
 
 Then run tests and dry-run publishing before writing public output.
-

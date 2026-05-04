@@ -7,12 +7,14 @@ import pytest
 
 from bluefern_dispatches.generator import (
     BASE_URL,
+    CNAME_VALUE,
     DEFAULT_BACKUP_ROOT,
     DispatchConfig,
     SourceRecord,
     StoryRecord,
     build_site,
     ensure_public_detail_separation,
+    publish_pages,
     validate_traceability,
 )
 
@@ -159,3 +161,79 @@ def test_paid_detail_files_are_not_public(built_site):
 def test_detail_roots_inside_public_site_are_rejected():
     site_root = Path("output") / "site"
     assert ensure_public_detail_separation(site_root, [site_root / "paid"])
+
+
+def make_pages_repo(path):
+    path.mkdir(parents=True)
+    (path / ".git").mkdir()
+    (path / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    return path
+
+
+def test_pages_dry_run_does_not_write_to_pages_repo(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        "https://github.com/RedGarland/the-blue-fern-co-dispatches/",
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+    )
+
+    assert result["ok"] is True
+    assert result["files_that_would_be_copied"]
+    assert not (pages_repo / "index.html").exists()
+    assert not (pages_repo / "CNAME").exists()
+    assert (pages_repo / ".git").exists()
+
+
+def test_pages_copy_creates_cname_and_preserves_git(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / ".git").exists()
+    assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
+    assert (pages_repo / "index.html").exists()
+    assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
+    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
+
+
+def test_pages_publish_excludes_paid_detail_folders(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=backup_root)
+
+    assert result["paid_detail_excluded_from_public"] is True
+    assert not (pages_repo / "paid").exists()
+    assert not (pages_repo / "detail").exists()
+    assert "output/paid/" in result["files_that_would_be_skipped"]
+    assert "output/detail/" in result["files_that_would_be_skipped"]
+
+
+def test_commit_flag_does_not_imply_push(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(work, pages_repo, None, dry_run=True, commit=True, no_push=True, backup_root=backup_root)
+
+    assert result["would_commit"] is True
+    assert result["committed"] is False
+    assert result["would_push"] is False
+    assert result["pushed"] is False
+    assert result["no_push"] is True

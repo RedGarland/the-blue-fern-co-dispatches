@@ -301,3 +301,54 @@ li + li { margin-top: 0.35rem; }
     min-height: 135px;
   }
 }
+/* Final root landing page card alignment fix */
+.dispatch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+}
+
+.dispatch-grid > li {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dispatch-card {
+  width: 100%;
+  min-height: 155px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.dispatch-card .eyebrow,
+.dispatch-card p,
+.dispatch-card h2,
+.dispatch-card h3 {
+  margin-left: 0;
+}
+
+.dispatch-card h2,
+.dispatch-card h3 {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  line-height: 1.15;
+}
+
+@media (max-width: 760px) {
+  .dispatch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dispatch-card {
+    min-height: 145px;
+  }
+}

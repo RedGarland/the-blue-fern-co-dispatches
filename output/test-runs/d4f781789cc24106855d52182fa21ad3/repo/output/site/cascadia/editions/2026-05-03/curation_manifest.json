@@ -1,0 +1,19 @@
+[
+  {
+    "story_id": "cascadia-story-001",
+    "title": "Launch placeholder",
+    "summary": "The Cascadia dispatch area is prepared for dated, source-backed system briefings.",
+    "category": "editorial-admin",
+    "score": 0,
+    "scoring_reasons": [
+      "Administrative launch placeholder; not a factual regional signal."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "cascadia-src-001"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": true
+  }
+]

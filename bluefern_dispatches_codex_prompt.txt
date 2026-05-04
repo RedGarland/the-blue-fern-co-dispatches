@@ -1,0 +1,401 @@
+You are working on a new Blue Fern Co. project:
+
+Dispatches From The Blue Fern Co.
+
+Goal:
+Create a unified dispatches site at:
+
+https://dispatches.thebluefernco.com
+
+This should become the landing page for a suite of dispatches, beginning with:
+
+https://dispatches.thebluefernco.com/gaza
+https://dispatches.thebluefernco.com/cascadia
+
+This is a single repository/site project. Do not create separate repos unless explicitly instructed later.
+
+Use the attached/reference `.md` files as project guidance:
+- `copilot-instructions.md`
+- `fda-pipeline.agent.md`
+
+Core rule:
+NO FACT WITHOUT A TRACEABLE SOURCE.
+
+Every claim, summary, signal, count, event, and interpretation must be traceable back to a source record, source URL, source title, source date, or local archived source metadata. If a fact cannot be traced, it should not appear in public or paid output.
+
+Project framing:
+This project is a byproduct of the existing Gaza Dispatch and Cascadia work, but it should become its own standalone dispatch system.
+
+It should support:
+1. Free public summary dispatches for lay readers.
+2. More detailed source-backed datasets and artifacts that may later be monetized.
+3. Gaza-related dispatches remain fully free.
+4. Cascadia and future non-Gaza dispatches may eventually include paid/detail tiers.
+
+Important:
+Anything monetized later must have meticulous records:
+- source URLs
+- source titles
+- publisher/outlet
+- retrieval date/time
+- publication date/time when available
+- local archive path when available
+- story/category assignment
+- curation/scoring reason
+- inclusion/exclusion decision where practical
+- edition/date generated
+- whether used in free summary, paid detail, or both
+
+Use the Cascadia scoring/curation philosophy from the existing agent file, but do NOT reuse Cascadia pipeline output folders or make this depend on the existing FDA/Cascadia project structure. This is a brand-new dispatches system with its own files, modules, outputs, backups, and records.
+
+Relevant curation principles from the Cascadia agent:
+- No fact without a source.
+- No signal without relevance.
+- Remove sports, entertainment, trivia, filler, and unsupported content.
+- Prioritize system-relevant signals such as infrastructure, public safety, healthcare, economic disruption, policy/system impacts, humanitarian impact, civic services, supply chains, and institutional stress.
+- Public output must be human-readable and must not expose internal pipeline/debug language.
+- Public/free and paid/detail data tiers must remain strictly separated.
+
+Relevant publishing behavior from the Gaza instructions:
+- Make minimal changes.
+- Preserve existing rendered Gaza content and layout unless explicitly asked.
+- Use dry-run/publish workflows safely.
+- Keep GitHub Pages publishing behavior safe and testable.
+- Do not perform destructive git operations without explicit user confirmation.
+- Do not force-push unless explicitly confirmed.
+
+Site requirements:
+
+1. Root landing page
+
+Create:
+
+https://dispatches.thebluefernco.com
+
+This should be the landing page for Dispatches From The Blue Fern Co.
+
+Keep it simple for now.
+
+Use the existing Blue Fern visual scheme currently used by the Gaza GitHub Pages output. The current Gaza Pages color scheme is considered correct.
+
+The landing page should include simple cards or links for:
+- Dispatches From Gaza -> `/gaza`
+- Cascadia Systems Dispatch -> `/cascadia`
+
+It can include short institutional copy, but do not overbuild it. Keep the design clean, source-based, and Blue Fern branded.
+
+2. Gaza page
+
+Existing Gaza page should not be changed except for the addition of logos.
+
+For:
+
+https://dispatches.thebluefernco.com/gaza
+
+Add:
+- `gaza-logo.png` at the top.
+- `bluefern.png` at the bottom.
+- Bottom `bluefern.png` should link to `https://thebluefernco.com`.
+
+Do not rewrite Gaza content.
+Do not change Gaza edition text.
+Do not change Gaza page structure beyond logo placement.
+Do not alter Gaza’s free/public nature.
+
+Use uploaded `gaza-logo.zip`; extract/place the image as:
+
+assets/gaza-logo.png
+
+Assume the Blue Fern logo is:
+
+assets/bluefern.png
+
+If `bluefern.png` is not present, add a clear warning in the run output and leave a documented placeholder path, but do not break the build.
+
+3. Cascadia page
+
+Create:
+
+https://dispatches.thebluefernco.com/cascadia
+
+Title/name:
+
+Cascadia Systems Dispatch
+
+Format should visually match the Gaza dispatch format.
+
+Create a placeholder for the top Cascadia logo:
+
+assets/cascadia-logo-placeholder.png
+
+or equivalent clearly named placeholder.
+
+The Cascadia page should support edition pages at URLs like:
+
+https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/
+
+Use dated URLs, not week-based URLs.
+
+Cascadia should use the same general dispatch format as Gaza:
+- landing/index page for the dispatch
+- archive/list of editions
+- individual edition pages
+- source links visible where applicable
+- Blue Fern footer/logo linking back to `https://thebluefernco.com`
+
+4. Project separation
+
+This is a new dispatches system.
+
+Do not write Cascadia dispatch files into the existing FDA/Cascadia pipeline folders.
+
+Do not depend on `output/publish/YYYY-Www-cascadia/`.
+
+Create project-specific folders, for example:
+
+output/dispatches/gaza/editions/YYYY-MM-DD/
+output/dispatches/cascadia/editions/YYYY-MM-DD/
+output/site/
+data/dispatches/
+data/sources/
+data/curation/
+data/records/
+
+Exact names can be adjusted to match existing repo style, but the principle is strict:
+All new project files must be associated only with this dispatches project.
+
+5. Backups
+
+Backups for each edition must be kept locally outside the repo.
+
+Use an outside-repo default such as:
+
+C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups
+
+Create per-dispatch backup folders:
+
+C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\gaza\YYYY-MM-DD\
+C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\cascadia\YYYY-MM-DD\
+
+Each backup should preserve:
+- rendered HTML
+- markdown/source edition file if available
+- source manifest
+- curation manifest
+- dataset/detail files when applicable
+- build metadata
+- timestamped run log or run manifest
+
+Do not publish local backups.
+Do not copy paid/detail datasets into public output paths unless explicitly configured later.
+
+6. Records and manifests
+
+Add detailed machine-readable manifests for every generated edition.
+
+At minimum, each edition should have something like:
+
+edition_manifest.json
+
+Fields should include:
+- dispatch_name
+- dispatch_slug
+- edition_date
+- generated_at
+- public_url
+- local_output_path
+- local_backup_path
+- template_version
+- source_count
+- story_count
+- source_manifest_path
+- curation_manifest_path
+- free_public_artifacts
+- paid_or_detail_artifacts
+- warnings
+- errors
+
+Add a source manifest, for example:
+
+sources_manifest.json
+
+Each source record should include:
+- source_id
+- title
+- url
+- publisher
+- published_at
+- retrieved_at
+- archive_path if available
+- used_in_story_ids
+- claim_ids or trace references if implemented
+- dispatch_slug
+- edition_date
+
+Add a curation manifest, for example:
+
+curation_manifest.json
+
+Each story/segment should include:
+- story_id
+- title
+- summary
+- category
+- score
+- scoring_reasons
+- included_in_public_summary true/false
+- included_in_detail_dataset true/false
+- source_ids
+- excluded_reason if excluded
+
+7. Free vs paid/detail separation
+
+Implement or prepare clear separation between:
+- public/free summary artifacts
+- detailed/paid artifacts
+
+Public output can include:
+- public HTML pages
+- RSS/archive
+- short readable summaries
+- visible source links
+
+Paid/detail output can include:
+- detailed CSV
+- detailed JSON
+- source-rich records
+- scoring metadata
+- movement/ranking/curation metadata
+
+But for now:
+- Gaza is always free.
+- Cascadia may later support monetized detail artifacts.
+- Do not expose paid/detail artifacts in the public site folder unless explicitly instructed.
+
+Use clear folder names such as:
+
+output/detail/cascadia/
+output/paid/cascadia/
+
+or another safe equivalent.
+
+Add safety checks to prevent paid/detail files from being copied into the public site directory.
+
+8. Publisher behavior
+
+Update or create publishing scripts so the site can build:
+
+- root landing page
+- `/gaza`
+- `/gaza/editions/YYYY-MM-DD/`
+- `/cascadia`
+- `/cascadia/editions/YYYY-MM-DD/`
+
+Respect existing GitHub Pages behavior and safety guidance.
+
+Support dry-run mode.
+
+Dry-run should show:
+- files that would be written
+- public URLs
+- backup paths
+- whether anything would be pushed
+- warnings for missing assets
+- whether paid/detail artifacts are safely excluded from public output
+
+Do not force-push.
+Do not delete existing pages.
+Do not destroy existing Gaza output.
+Do not change DNS.
+
+9. Tests
+
+Add or update tests for:
+
+Landing page:
+- root index exists
+- links to `/gaza`
+- links to `/cascadia`
+- uses Blue Fern scheme/assets
+
+Gaza:
+- existing content remains present
+- top Gaza logo appears
+- bottom Blue Fern logo appears
+- Blue Fern logo links to `https://thebluefernco.com`
+- no unintended content rewrite
+
+Cascadia:
+- `/cascadia` page builds
+- Cascadia title is `Cascadia Systems Dispatch`
+- placeholder logo appears
+- dated edition URL format works:
+  `/cascadia/editions/YYYY-MM-DD/`
+- format matches Gaza template conventions
+
+Source traceability:
+- public stories require at least one source record unless explicitly marked as editorial/admin copy
+- no story with factual claims can be rendered without source references
+- source manifest is written
+- curation manifest is written
+- edition manifest is written
+
+Backups:
+- backup path is outside repo
+- backup files are created for each edition
+- backup includes source and curation manifests
+
+Paid/detail safety:
+- detail/paid files are not copied into public site output
+- Gaza detail files, if any, are still treated as free/public unless explicitly configured otherwise
+
+10. Commands
+
+After implementation, run the safest available checks.
+
+Suggested commands, adjusted to actual repo layout:
+
+```powershell
+.venv\Scripts\python.exe -m pytest -q
+```
+
+If publisher scripts exist:
+
+```powershell
+.venv\Scripts\python.exe scripts\publish_github_pages.py --dry-run
+```
+
+If new script names are created, document them clearly.
+
+11. Documentation
+
+Update README or add a short project doc explaining:
+
+- site structure
+- dispatch slugs
+- how to build locally
+- how to dry-run publish
+- how backups work
+- where manifests are stored
+- how source traceability works
+- how public vs detail/paid artifacts are separated
+- how to add future dispatches
+
+12. Output summary required
+
+When finished, provide a concise summary with:
+
+- files changed
+- new folders created
+- commands run
+- test results
+- dry-run publish result
+- backup path used
+- public URLs expected
+- any warnings or missing assets
+
+Do not perform destructive operations.
+Do not force-push.
+Do not change DNS.
+Do not publish paid/detail artifacts publicly.
+Do not rewrite Gaza content beyond the requested logo additions.

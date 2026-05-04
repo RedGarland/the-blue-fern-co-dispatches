@@ -1,0 +1,19 @@
+[
+  {
+    "source_id": "cascadia-src-001",
+    "title": "Placeholder source record for Cascadia launch edition",
+    "url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/sources_manifest.json",
+    "publisher": "Blue Fern Dispatch Records",
+    "published_at": "2026-05-03T00:00:00Z",
+    "retrieved_at": "2026-05-04T01:18:10.031052+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "cascadia-story-001"
+    ],
+    "claim_ids": [
+      "cascadia-admin-001"
+    ],
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-03"
+  }
+]

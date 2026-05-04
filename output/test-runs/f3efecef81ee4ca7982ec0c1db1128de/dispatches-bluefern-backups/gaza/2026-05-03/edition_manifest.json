@@ -1,0 +1,22 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-03",
+  "generated_at": "2026-05-04T01:18:10.031052+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-03/",
+  "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03",
+  "local_backup_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\dispatches-bluefern-backups\\gaza\\2026-05-03",
+  "template_version": "dispatches-static-v1",
+  "source_count": 3,
+  "story_count": 1,
+  "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03\\index.html",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03\\sources_manifest.json",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\test-runs\\f3efecef81ee4ca7982ec0c1db1128de\\repo\\output\\site\\gaza\\editions\\2026-05-03\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "warnings": [],
+  "errors": []
+}

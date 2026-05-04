@@ -19,6 +19,8 @@ PUBLIC_ROOT_NAMES = {"site"}
 DETAIL_ROOT_NAMES = {"detail", "paid"}
 CNAME_VALUE = "dispatches.thebluefernco.com"
 PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
+ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
+ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
 
 
 @dataclass(frozen=True)
@@ -208,6 +210,40 @@ def copy_asset(src: Path, dst: Path, dry_run: bool, wrote: list[str], warnings: 
     shutil.copy2(src, dst)
 
 
+def real_dispatch_edition_files(root: Path, slug: str, edition_date: str) -> list[Path]:
+    edition_dir = root / "output" / "dispatches" / slug / "editions" / edition_date
+    required_names = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
+    files = [edition_dir / name for name in required_names]
+    if all(path.exists() for path in files):
+        return files
+    return []
+
+
+def copy_real_dispatch_edition(root: Path, slug: str, edition_date: str, site_root: Path, dry_run: bool, wrote: list[str]) -> bool:
+    files = real_dispatch_edition_files(root, slug, edition_date)
+    if not files:
+        return False
+    source_dir = root / "output" / "dispatches" / slug / "editions" / edition_date
+    target_dir = site_root / slug / "editions" / edition_date
+    for source in files:
+        target = target_dir / source.relative_to(source_dir)
+        wrote.append(str(target))
+        if dry_run:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    return True
+
+
+def existing_public_edition_files(site_root: Path, slug: str, edition_date: str) -> list[Path]:
+    edition_dir = site_root / slug / "editions" / edition_date
+    required_names = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
+    files = [edition_dir / name for name in required_names]
+    if all(path.exists() for path in files):
+        return files
+    return []
+
+
 def page(title: str, canonical: str, css_href: str, body: str, site_name: str = "Dispatches From The Blue Fern Co.") -> str:
     return f"""<!doctype html>
 <html lang="en">
@@ -259,12 +295,10 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     )
     body = f"""{header("Dispatches From The Blue Fern Co.", "")}
   <main class="home">
-    <section class="hero">
-      <img class="publisher-mark" src="assets/bluefern.png" alt="The Blue Fern Co.">
-      <h1>Dispatches From The Blue Fern Co.</h1>
-      <p class="tagline">Source-backed public briefings</p>
+    <section class="hero root-hero">
+      <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">
     </section>
-    <p class="lede">A unified home for Blue Fern dispatches, built around traceable source records and clear public archives.</p>
+    <p class="lede">{ROOT_DESCRIPTION}</p>
     <ul class="dispatch-grid">
 {cards}
     </ul>
@@ -398,7 +432,7 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
 
-    for asset in ["site.css", "gaza-logo.png", "bluefern.png", "cascadia-logo-placeholder.png"]:
+    for asset in ["site.css", "gaza-logo.png", "bluefern.png", "cascadia-logo-placeholder.png", ROOT_MASTHEAD_ASSET]:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
 
     write_text(site_root / "index.html", render_root(dispatches), dry_run, wrote)
@@ -413,6 +447,10 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
+        if dispatch.slug == "cascadia" and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote):
+            continue
+        if existing_public_edition_files(site_root, dispatch.slug, dispatch.edition_date):
+            continue
         edition_html = render_edition(dispatch)
         write_text(dispatch_public_edition / "index.html", edition_html, dry_run, wrote)
         edition_manifest, sources_manifest, curation_manifest = build_manifests(dispatch, site_root, backup_root, generated_at, warnings, errors)

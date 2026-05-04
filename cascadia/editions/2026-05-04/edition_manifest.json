@@ -1,0 +1,26 @@
+{
+  "dispatch_name": "Cascadia Systems Dispatch",
+  "dispatch_slug": "cascadia",
+  "edition_date": "2026-05-04",
+  "generated_at": "2026-05-04T17:48:26.862844+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-04/",
+  "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04",
+  "local_backup_path": null,
+  "template_version": "dispatches-static-v1",
+  "source_count": 3,
+  "story_count": 3,
+  "public_story_count": 2,
+  "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04\\index.html",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04\\sources_manifest.json",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-04\\cascadian_detail_records.json",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-04\\cascadian_detail_records.csv"
+  ],
+  "warnings": [],
+  "errors": []
+}

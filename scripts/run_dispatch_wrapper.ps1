@@ -9,8 +9,19 @@ if (-not $RepoRoot) {
 $RepoRoot = $RepoRoot.Path
 
 # Python executable (override via env var PYTHON_EXE if needed)
+# Determine Python executable: prefer env override, then common repo venvs, then system python
 $PythonExe = $env:PYTHON_EXE
-if (-not $PythonExe) { $PythonExe = 'C:\Users\Admin\Desktop\Python\fda_media_pipeline.venv\Scripts\python.exe' }
+if (-not $PythonExe) {
+    $candidates = @(
+        Join-Path $RepoRoot '.venv\Scripts\python.exe',
+        Join-Path $RepoRoot 'venv\Scripts\python.exe',
+        'C:\Users\Admin\AppData\Local\Programs\Python\Python313\python.exe'
+    )
+    foreach ($cand in $candidates) {
+        if (Test-Path $cand) { $PythonExe = $cand; break }
+    }
+    if (-not $PythonExe) { $PythonExe = 'python' }
+}
 
 $Script = Join-Path $RepoRoot 'scripts\run_and_notify.py'
 

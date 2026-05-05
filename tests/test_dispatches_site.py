@@ -10,6 +10,8 @@ from bluefern_dispatches.generator import (
     CNAME_VALUE,
     DEFAULT_BACKUP_ROOT,
     DispatchConfig,
+    ROOT_DESCRIPTION,
+    ROOT_MASTHEAD_ASSET,
     SourceRecord,
     StoryRecord,
     build_site,
@@ -44,9 +46,26 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     html = read(index)
     assert 'href="/gaza/"' in html
     assert 'href="/cascadia/"' in html
-    assert "Dispatches From The Blue Fern Co." in html
+    assert "The Cascadia Briefing" in html
+    assert "Cascadia Systems Dispatch" not in html
     assert "--blue-fern: #2F6F88" in read(css)
-    assert "assets/bluefern.png" in html
+    assert f'src="assets/{ROOT_MASTHEAD_ASSET}"' in html
+    assert ROOT_DESCRIPTION in html
+    assert "<h1>Dispatches From The Blue Fern Co.</h1>" not in html
+    root_hero = html.split('<section class="hero root-hero">', 1)[1].split("</section>", 1)[0]
+    assert '<img class="publisher-mark" src="assets/bluefern.png"' not in root_hero
+
+
+def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
+    work, _, _ = built_site
+    index = read(work / "output" / "site" / "index.html")
+    css = read(work / "output" / "site" / "assets" / "site.css")
+
+    assert '<ul class="dispatch-grid">' in index
+    assert 'class="dispatch-card"' in index
+    assert "repeat(auto-fit" in css
+    assert "minmax(min(100%, 240px), 1fr)" in css
+    assert (work / "output" / "site" / "assets" / ROOT_MASTHEAD_ASSET).exists()
 
 
 def test_gaza_content_and_requested_logo_placement(built_site):
@@ -68,7 +87,9 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     cascadia_index = read(work / "output" / "site" / "cascadia" / "index.html")
     cascadia_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html"
 
-    assert "Cascadia Systems Dispatch" in cascadia_index
+    assert "The Cascadia Briefing" in cascadia_index
+    assert "Cascadia Signal Pack" in cascadia_index
+    assert 'href="/cascadia/"' not in cascadia_index
     assert "cascadia-logo-placeholder.png" in cascadia_index
     assert cascadia_edition.exists()
     assert f"{BASE_URL}/cascadia/editions/2026-05-03/" in read(cascadia_edition)
@@ -156,6 +177,10 @@ def test_paid_detail_files_are_not_public(built_site):
     public_paths = [path.relative_to(work / "output" / "site").as_posix() for path in (work / "output" / "site").rglob("*") if path.is_file()]
     assert result["paid_detail_excluded_from_public"] is True
     assert not any(path.startswith("detail/") or path.startswith("paid/") for path in public_paths)
+    public_text = "\n".join(path.read_text(encoding="utf-8") for path in (work / "output" / "site").rglob("*") if path.suffix in {".html", ".json", ".xml", ".css"})
+    assert "output/detail" not in public_text
+    assert "output/paid" not in public_text
+    assert "cascadia_signal_records" not in public_text
 
 
 def test_detail_roots_inside_public_site_are_rejected():
@@ -209,6 +234,7 @@ def test_pages_copy_creates_cname_and_preserves_git(built_site):
     assert (pages_repo / ".git").exists()
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
     assert (pages_repo / "index.html").exists()
+    assert (pages_repo / "assets" / ROOT_MASTHEAD_ASSET).exists()
     assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
     assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
 

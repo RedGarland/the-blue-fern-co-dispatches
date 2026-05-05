@@ -1,0 +1,35 @@
+[
+  {
+    "edition_id": "cascadia-2026-05-03",
+    "dispatch_id": "dispatch-cascadia",
+    "slug": "cascadia",
+    "edition_date": "2026-05-03",
+    "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
+    "output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
+    "backup_path": null,
+    "generated_at": "2026-05-05T03:37:20.000992+00:00",
+    "status": "public"
+  },
+  {
+    "edition_id": "cascadia-2026-05-04",
+    "dispatch_id": "dispatch-cascadia",
+    "slug": "cascadia",
+    "edition_date": "2026-05-04",
+    "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-04/",
+    "output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-04",
+    "backup_path": null,
+    "generated_at": "2026-05-05T03:37:44.168233+00:00",
+    "status": "public"
+  },
+  {
+    "edition_id": "gaza-2026-05-03",
+    "dispatch_id": "dispatch-gaza",
+    "slug": "gaza",
+    "edition_date": "2026-05-03",
+    "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-03/",
+    "output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-03",
+    "backup_path": null,
+    "generated_at": "2026-05-05T03:37:44.168233+00:00",
+    "status": "public"
+  }
+]

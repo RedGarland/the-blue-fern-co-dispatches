@@ -1,0 +1,24 @@
+[
+  {
+    "dispatch_id": "dispatch-cascadia",
+    "slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "internal_name": "Cascadia Signal",
+    "description": "Regional Cascadia systems briefing with a private Signal detail package.",
+    "is_free_public": true,
+    "has_detail_tier": true,
+    "created_at": "2026-05-03T00:00:00Z",
+    "updated_at": "2026-05-05T03:37:44.168233+00:00"
+  },
+  {
+    "dispatch_id": "dispatch-gaza",
+    "slug": "gaza",
+    "public_name": "Dispatches From Gaza",
+    "internal_name": "Gaza Dispatch",
+    "description": "Free public Gaza briefing compiled from traceable source records.",
+    "is_free_public": true,
+    "has_detail_tier": false,
+    "created_at": "2026-05-03T00:00:00Z",
+    "updated_at": "2026-05-05T03:37:44.168233+00:00"
+  }
+]

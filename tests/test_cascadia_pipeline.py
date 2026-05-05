@@ -1,5 +1,6 @@
 import json
 import shutil
+import sys
 import uuid
 from pathlib import Path
 
@@ -9,7 +10,14 @@ from bluefern_dispatches.cascadia_curate import curate_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
+from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.generator import build_site, publish_pages
+from bluefern_dispatches.shared_records import update_shared_records
+
+SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
+if str(SCRIPT_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_ROOT))
+from run_cascadia_dispatch import run_pipeline
 
 
 @pytest.fixture()
@@ -99,14 +107,67 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     assert (public_dir / "sources_manifest.json").exists()
     assert (public_dir / "curation_manifest.json").exists()
     html = (public_dir / "index.html").read_text(encoding="utf-8")
-    assert "Cascadia Systems Dispatch" in html
+    assert "The Cascadia Briefing" in html
+    assert "Cascadia Signal Pack" in html
     assert 'target="_blank" rel="noopener noreferrer"' in html
     curation = read_json(public_dir / "curation_manifest.json")
     assert all("source_record_ids" in story for story in curation)
+    public_text = "\n".join(path.read_text(encoding="utf-8") for path in (cascadia_work_root / "output" / "site").rglob("*") if path.suffix in {".html", ".json", ".xml", ".css"})
+    assert "output/detail" not in public_text
+    assert "cascadia_signal_records" not in public_text
+    assert (detail_dir / "cascadia_signal_records.json").exists()
+    assert (detail_dir / "cascadia_signal_records.csv").exists()
+    assert (detail_dir / "cascadia_source_manifest.json").exists()
+    assert (detail_dir / "cascadia_category_summary.json").exists()
+    assert (detail_dir / "cascadia_category_summary.csv").exists()
+    assert (detail_dir / "cascadia_run_manifest.json").exists()
     assert (detail_dir / "cascadian_detail_records.json").exists()
     assert (detail_dir / "cascadian_detail_records.csv").exists()
     public_paths = [path.relative_to(cascadia_work_root / "output" / "site").as_posix() for path in (cascadia_work_root / "output" / "site").rglob("*") if path.is_file()]
     assert not any(path.startswith("detail/") or path.startswith("paid/") for path in public_paths)
+
+
+def test_shared_dispatch_records_include_gaza_cascadia_and_signal_package(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    detail = write_cascadia_signal_package(cascadia_work_root, "2026-05-03")
+    result = update_shared_records(cascadia_work_root, "2026-05-03", detail["output_paths"], public_rendered=False)
+
+    assert result["ok"] is True
+    records_root = cascadia_work_root / "data" / "records"
+    dispatches = read_json(records_root / "dispatches.json")
+    editions = read_json(records_root / "editions.json")
+    sources = read_json(records_root / "sources.json")
+    records = read_json(records_root / "records.json")
+    packages = read_json(records_root / "detail_packages.json")
+    assert {row["slug"] for row in dispatches} >= {"gaza", "cascadia"}
+    assert any(row["internal_name"] == "Cascadia Signal" for row in dispatches)
+    assert all("dispatch_id" in row for row in editions)
+    assert all("dispatch_id" in row for row in sources)
+    assert all("source_ids" in row for row in records)
+    assert packages and all(row["public_exposed"] is False for row in packages)
+
+
+def test_signal_package_movement_fields_first_and_second_run(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    first = write_cascadia_signal_package(cascadia_work_root, "2026-05-03")
+    assert first["ok"] is True
+    first_records = read_json(cascadia_work_root / "output" / "detail" / "cascadia" / "2026-05-03" / "cascadia_signal_records.json")
+    assert all(record["movement_label"] == "New" for record in first_records)
+    assert all(record["trend_direction"] == "new" for record in first_records)
+
+    ingest_sources(cascadia_work_root, "2026-05-04")
+    normalize_sources(cascadia_work_root, "2026-05-04")
+    curate_sources(cascadia_work_root, "2026-05-04")
+    second = write_cascadia_signal_package(cascadia_work_root, "2026-05-04")
+    second_records = read_json(cascadia_work_root / "output" / "detail" / "cascadia" / "2026-05-04" / "cascadia_signal_records.json")
+    assert second["ok"] is True
+    assert all("first_seen" in record and "last_seen" in record for record in second_records)
+    assert {record["movement_label"] for record in second_records} <= {"New", "Rising", "Falling", "Stable"}
+    assert {record["trend_direction"] for record in second_records} <= {"new", "up", "down", "flat"}
 
 
 def test_generic_build_preserves_real_cascadia_public_edition(cascadia_work_root):
@@ -146,3 +207,26 @@ def test_pages_publish_copies_real_cascadia_public_edition(cascadia_work_root):
     assert 'target="_blank" rel="noopener noreferrer"' in pages_html
     assert not (pages_repo / "detail").exists()
     assert not (pages_repo / "paid").exists()
+
+
+def test_daily_and_weekly_public_modes_write_expected_artifacts(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    daily = run_pipeline("2026-05-03", ingest=True, normalize=True, curate=True, render=False, dry_run=False, mode="daily")
+    assert daily["ok"] is True
+    assert daily["mode"] == "daily"
+    assert daily["public_rendered"] is False
+    assert daily["raw_count"] == 3
+    assert daily["normalized_count"] == 3
+    assert daily["curated_count"] == 3
+    assert daily["detail_count"] == 3
+    assert daily["shared_record_paths"]
+    assert not (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
+
+    weekly = run_pipeline("2026-05-03", ingest=False, normalize=False, curate=False, render=True, dry_run=False, mode="weekly-public")
+    assert weekly["ok"] is True
+    assert weekly["mode"] == "weekly-public"
+    assert weekly["public_rendered"] is True
+    assert (cascadia_work_root / "output" / "dispatches" / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
+    assert (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()

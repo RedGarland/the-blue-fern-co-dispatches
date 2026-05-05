@@ -1,0 +1,18 @@
+[
+  {
+    "package_id": "cascadia-signal-2026-05-03",
+    "dispatch_id": "dispatch-cascadia",
+    "edition_id": "cascadia-2026-05-03",
+    "path_json": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-03\\cascadia_signal_records.json",
+    "path_csv": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-03\\cascadia_signal_records.csv",
+    "public_exposed": false
+  },
+  {
+    "package_id": "cascadia-signal-2026-05-04",
+    "dispatch_id": "dispatch-cascadia",
+    "edition_id": "cascadia-2026-05-04",
+    "path_json": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-04\\cascadia_signal_records.json",
+    "path_csv": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\detail\\cascadia\\2026-05-04\\cascadia_signal_records.csv",
+    "public_exposed": false
+  }
+]

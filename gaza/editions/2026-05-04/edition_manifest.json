@@ -2,10 +2,10 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-04",
-  "generated_at": "2026-05-04T16:29:51.080630+00:00",
+  "generated_at": "2026-05-05T04:04:17.320679+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-04/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-04",
-  "local_backup_path": "C:\\Users\\Admin\\Desktop\\Python\\dispatches-bluefern-backups\\gaza\\2026-05-04",
+  "local_backup_path": "output\\tmp-backups-2026-05-04\\gaza\\2026-05-04",
   "template_version": "dispatches-static-v1",
   "source_count": 3,
   "story_count": 1,
@@ -17,6 +17,7 @@
     "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-04\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
   "warnings": [],
   "errors": []
 }

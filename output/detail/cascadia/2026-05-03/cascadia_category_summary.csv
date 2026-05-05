@@ -1,0 +1,4 @@
+edition_date,dispatch_id,dispatch_slug,category,record_count,public_count,detail_count,max_severity_score,average_severity_score
+2026-05-03,dispatch-cascadia,cascadia,Government and public services,1,0,0,46,46.0
+2026-05-03,dispatch-cascadia,cascadia,Public safety,1,1,1,76,76.0
+2026-05-03,dispatch-cascadia,cascadia,Transportation,1,1,1,76,76.0

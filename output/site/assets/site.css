@@ -65,6 +65,19 @@ nav a {
   text-align: center;
   border-bottom: 1px solid var(--border);
 }
+.root-hero {
+  gap: 0;
+  margin-bottom: 24px;
+  padding: 4px 0 20px;
+}
+.root-masthead {
+  display: block;
+  width: min(680px, 100%);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+}
 .hero-logo {
   display: block;
   width: min(520px, 90%);
@@ -159,13 +172,15 @@ li + li { margin-top: 0.35rem; }
 }
 .dispatch-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  align-items: stretch;
+  gap: 16px;
   list-style: none;
+  margin: 28px 0 0;
   padding: 0;
 }
 .dispatch-card {
-  min-height: 120px;
+  min-height: 132px;
   border: 1px solid var(--border);
   background: var(--panel);
 }
@@ -173,8 +188,9 @@ li + li { margin-top: 0.35rem; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 120px;
-  padding: 18px;
+  min-height: 132px;
+  height: 100%;
+  padding: 20px;
   color: var(--navy);
   text-decoration: none;
 }
@@ -251,4 +267,88 @@ li + li { margin-top: 0.35rem; }
 }
 .site-footer .publisher-label a:hover {
   text-decoration: underline;
+}
+
+/* Root landing page dispatch card grid: equal-height scalable cards */
+.dispatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.dispatch-card {
+  min-height: 145px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.dispatch-card h2,
+.dispatch-card h3 {
+  margin-top: 0.35rem;
+  line-height: 1.15;
+}
+
+@media (max-width: 700px) {
+  .dispatch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dispatch-card {
+    min-height: 135px;
+  }
+}
+/* Final root landing page card alignment fix */
+.dispatch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+}
+
+.dispatch-grid > li {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dispatch-card {
+  width: 100%;
+  min-height: 155px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.dispatch-card .eyebrow,
+.dispatch-card p,
+.dispatch-card h2,
+.dispatch-card h3 {
+  margin-left: 0;
+}
+
+.dispatch-card h2,
+.dispatch-card h3 {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  line-height: 1.15;
+}
+
+@media (max-width: 760px) {
+  .dispatch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dispatch-card {
+    min-height: 145px;
+  }
 }

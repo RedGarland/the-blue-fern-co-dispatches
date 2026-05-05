@@ -15,12 +15,12 @@
       "gaza-src-002",
       "gaza-src-003"
     ],
-    "generated_at": "2026-05-05T03:37:44.168233+00:00"
+    "generated_at": "2026-05-05T17:20:13.287633+00:00"
   },
   {
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-04",
+    "edition_id": "cascadia-2026-05-05",
     "category": "Public safety",
     "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
     "public_summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
@@ -31,12 +31,12 @@
     "source_ids": [
       "src-f6381af1da25bfb2"
     ],
-    "generated_at": "2026-05-05T03:37:44.168233+00:00"
+    "generated_at": "2026-05-05T17:20:13.287633+00:00"
   },
   {
     "record_id": "story-c7a4b5528a8c",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-04",
+    "edition_id": "cascadia-2026-05-05",
     "category": "Transportation",
     "title": "Washington bridge inspection program flags transportation maintenance backlog",
     "public_summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
@@ -47,12 +47,12 @@
     "source_ids": [
       "src-63ceb40d9957a9da"
     ],
-    "generated_at": "2026-05-05T03:37:44.168233+00:00"
+    "generated_at": "2026-05-05T17:20:13.287633+00:00"
   },
   {
     "record_id": "story-d53365c68a09",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-04",
+    "edition_id": "cascadia-2026-05-05",
     "category": "Government and public services",
     "title": "Local college team wins postseason game",
     "public_summary": "Sports-only placeholder item used to verify curation exclusion.",
@@ -63,6 +63,6 @@
     "source_ids": [
       "src-b9754106373f837f"
     ],
-    "generated_at": "2026-05-05T03:37:44.168233+00:00"
+    "generated_at": "2026-05-05T17:20:13.287633+00:00"
   }
 ]

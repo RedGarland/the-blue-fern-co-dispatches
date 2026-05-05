@@ -1,0 +1,29 @@
+[
+  {
+    "source_id": "cascadia-manual",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+    "published_at": "2026-05-03T08:00:00Z",
+    "summary_or_snippet": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+    "region_scope": "WA",
+    "category_hint": "Transportation"
+  },
+  {
+    "source_id": "cascadia-manual",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "url": "https://www.oregon.gov/oem",
+    "published_at": "2026-05-03T09:00:00Z",
+    "summary_or_snippet": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+    "region_scope": "OR",
+    "category_hint": "Public safety"
+  },
+  {
+    "source_id": "cascadia-manual",
+    "title": "Local college team wins postseason game",
+    "url": "https://example.com/cascadia-sports-placeholder",
+    "published_at": "2026-05-03T10:00:00Z",
+    "summary_or_snippet": "Sports-only placeholder item used to verify curation exclusion.",
+    "region_scope": "regional",
+    "category_hint": "sports"
+  }
+]

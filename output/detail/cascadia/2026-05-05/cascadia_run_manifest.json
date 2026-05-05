@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "dispatch_id": "dispatch-cascadia",
+  "dispatch_slug": "cascadia",
+  "edition_date": "2026-05-05",
+  "generated_at": "2026-05-05T17:20:13.278243+00:00",
+  "record_count": 3,
+  "source_count": 3,
+  "category_count": 3,
+  "public_exposed": false,
+  "warnings": [],
+  "errors": []
+}

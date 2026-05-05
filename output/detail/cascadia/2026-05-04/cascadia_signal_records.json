@@ -1,0 +1,131 @@
+[
+  {
+    "signal_id": "story-c7a4b5528a8c",
+    "edition_date": "2026-05-04",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "first_seen": "2026-05-03",
+    "last_seen": "2026-05-04",
+    "state": null,
+    "county": null,
+    "city": null,
+    "category": "Transportation",
+    "subcategory": null,
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "public_summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+    "detail_summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+    "severity_score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "source_count": 1,
+    "source_record_ids": [
+      "src-63ceb40d9957a9da"
+    ],
+    "source_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "source_titles": [
+      "Washington bridge inspection program flags transportation maintenance backlog"
+    ],
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "included_public": true,
+    "included_detail": true,
+    "exclusion_reason": null,
+    "movement_label": "Stable",
+    "previous_score": 76,
+    "score_delta": 0,
+    "trend_direction": "flat",
+    "generated_at": "2026-05-05T14:23:45.229344+00:00"
+  },
+  {
+    "signal_id": "story-b5a2f0ce428f",
+    "edition_date": "2026-05-04",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "first_seen": "2026-05-03",
+    "last_seen": "2026-05-04",
+    "state": null,
+    "county": null,
+    "city": null,
+    "category": "Public safety",
+    "subcategory": null,
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "public_summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+    "detail_summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+    "severity_score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "source_count": 1,
+    "source_record_ids": [
+      "src-f6381af1da25bfb2"
+    ],
+    "source_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "source_titles": [
+      "Oregon emergency management preparedness notice emphasizes public safety coordination"
+    ],
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "included_public": true,
+    "included_detail": true,
+    "exclusion_reason": null,
+    "movement_label": "Stable",
+    "previous_score": 76,
+    "score_delta": 0,
+    "trend_direction": "flat",
+    "generated_at": "2026-05-05T14:23:45.229344+00:00"
+  },
+  {
+    "signal_id": "story-d53365c68a09",
+    "edition_date": "2026-05-04",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "first_seen": "2026-05-03",
+    "last_seen": "2026-05-04",
+    "state": null,
+    "county": null,
+    "city": null,
+    "category": "Government and public services",
+    "subcategory": null,
+    "title": "Local college team wins postseason game",
+    "public_summary": "Sports-only placeholder item used to verify curation exclusion.",
+    "detail_summary": "Sports-only placeholder item used to verify curation exclusion.",
+    "severity_score": 46,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "source_count": 1,
+    "source_record_ids": [
+      "src-b9754106373f837f"
+    ],
+    "source_urls": [
+      "https://example.com/cascadia-sports-placeholder"
+    ],
+    "source_titles": [
+      "Local college team wins postseason game"
+    ],
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "included_public": false,
+    "included_detail": false,
+    "exclusion_reason": "sports",
+    "movement_label": "Stable",
+    "previous_score": 46,
+    "score_delta": 0,
+    "trend_direction": "flat",
+    "generated_at": "2026-05-05T14:23:45.229344+00:00"
+  }
+]

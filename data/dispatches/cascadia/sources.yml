@@ -1,0 +1,33 @@
+sources:
+  - source_id: wa-dot-alerts
+    name: Washington State Department of Transportation
+    url: https://wsdot.wa.gov/travel
+    type: html
+    region_scope: WA
+    category_hint: Transportation
+    reliability_tier: official
+    enabled: false
+  - source_id: oregon-newsroom
+    name: Oregon Department of Emergency Management
+    url: https://www.oregon.gov/oem
+    type: html
+    region_scope: OR
+    category_hint: Public safety
+    reliability_tier: official
+    enabled: false
+  - source_id: idaho-news
+    name: Idaho Office of Emergency Management
+    url: https://ioem.idaho.gov
+    type: html
+    region_scope: ID
+    category_hint: Public safety
+    reliability_tier: official
+    enabled: false
+  - source_id: cascadia-manual
+    name: Blue Fern Cascadia Manual Source File
+    url: data/dispatches/cascadia/manual_sources.json
+    type: manual
+    region_scope: regional
+    category_hint: Government and public services
+    reliability_tier: editorial-record
+    enabled: true

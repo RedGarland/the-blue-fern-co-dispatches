@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import subprocess
 import shutil
 from dataclasses import dataclass
@@ -21,6 +22,7 @@ CNAME_VALUE = "dispatches.thebluefernco.com"
 PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
 ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
+CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing tracks source-backed developments across Washington, Oregon, and Idaho, with emphasis on public systems, infrastructure, health, safety, environment, economy, and regional resilience."
 
 
 @dataclass(frozen=True)
@@ -116,35 +118,36 @@ included where available.</p>"""
 
 
 def seed_dispatches(now: str) -> list[DispatchConfig]:
+    date = os.getenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
     gaza_sources = [
-        SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", "2026-05-03"),
-        SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", "2026-05-03"),
-        SourceRecord("gaza-src-003", "Court extends detention of 2 Gaza flotilla activists accused of Hamas links", "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR", "The Times of Israel", None, now, None, ["gaza-story-001"], ["gaza-claim-003"], "gaza", "2026-05-03"),
+        SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", date),
+        SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", date),
+        SourceRecord("gaza-src-003", "Court extends detention of 2 Gaza flotilla activists accused of Hamas links", "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR", "The Times of Israel", None, now, None, ["gaza-story-001"], ["gaza-claim-003"], "gaza", date),
     ]
     cascadia_sources = [
-        SourceRecord("cascadia-src-001", "Placeholder source record for Cascadia launch edition", f"{BASE_URL}/cascadia/editions/2026-05-03/sources_manifest.json", "Blue Fern Dispatch Records", "2026-05-03T00:00:00Z", now, None, ["cascadia-story-001"], ["cascadia-admin-001"], "cascadia", "2026-05-03")
+        SourceRecord("cascadia-src-001", "Placeholder source record for Cascadia launch edition", f"{BASE_URL}/cascadia/editions/{date}/sources_manifest.json", "Blue Fern Dispatch Records", f"{date}T00:00:00Z", now, None, ["cascadia-story-001"], ["cascadia-admin-001"], "cascadia", date)
     ]
     return [
         DispatchConfig(
             slug="gaza",
             name="Dispatches From Gaza",
-            edition_date="2026-05-03",
+            edition_date=date,
             tagline="Daily briefing",
             logo="gaza-logo.png",
             sources=gaza_sources,
-            stories=[StoryRecord("gaza-story-001", "Dispatches From Gaza - 2026-05-03", "Structured daily briefing synthesizing key developments from public reporting.", "humanitarian", 100, ["Preserved from existing Gaza public edition."], True, False, [s.source_id for s in gaza_sources])],
+            stories=[StoryRecord("gaza-story-001", f"Dispatches From Gaza - {date}", "Structured daily briefing synthesizing key developments from public reporting.", "humanitarian", 100, ["Preserved from existing Gaza public edition."], True, False, [s.source_id for s in gaza_sources])],
             body_html=GAZA_BODY_HTML,
             detail_artifacts=[],
         ),
         DispatchConfig(
             slug="cascadia",
-            name="Cascadia Systems Dispatch",
-            edition_date="2026-05-03",
+            name="The Cascadia Briefing",
+            edition_date=date,
             tagline="Regional systems briefing",
             logo="cascadia-logo-placeholder.png",
             sources=cascadia_sources,
             stories=[StoryRecord("cascadia-story-001", "Launch placeholder", "The Cascadia dispatch area is prepared for dated, source-backed system briefings.", "editorial-admin", 0, ["Administrative launch placeholder; not a factual regional signal."], True, False, ["cascadia-src-001"], editorial_admin_copy=True)],
-            detail_artifacts=["output/detail/cascadia/2026-05-03/detail-placeholder.json"],
+            detail_artifacts=[],
         ),
     ]
 
@@ -264,10 +267,11 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
 """
 
 
-def header(brand: str, root_prefix: str, archive_href: str | None = None) -> str:
+def header(brand: str, root_prefix: str, archive_href: str | None = None, section_href: str | None = None) -> str:
     nav = '<a href="/gaza/">Gaza</a><a href="/cascadia/">Cascadia</a>'
     if archive_href:
-        nav = f'<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
+        section_link = f'<a href="{section_href}">{html.escape(brand)}</a>' if section_href else ""
+        nav = f'<a href="/">Dispatches Home</a>{section_link}<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
     return f"""  <header class="site-header">
     <a class="brand" href="{root_prefix}index.html">{html.escape(brand)}</a>
     <nav>{nav}</nav>
@@ -308,14 +312,19 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
 
 
 def render_dispatch_index(dispatch: DispatchConfig) -> str:
+    signal_pack_note = ""
+    if dispatch.slug == "cascadia":
+        signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
+    description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>
     <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
-    <p class="lede">Structured briefings compiled from traceable source records.</p>
+    <p class="lede">{html.escape(description)}</p>
     <p><a href="editions/{dispatch.edition_date}/">Read the latest briefing</a></p>
+    {signal_pack_note}
     <h2>Recent Editions</h2>
     <ul class="edition-list">
       <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(dispatch.name)} - {dispatch.edition_date}</a></li>
@@ -360,7 +369,7 @@ def render_sources(stories: list[StoryRecord], sources: list[SourceRecord]) -> s
 
 def render_edition(dispatch: DispatchConfig) -> str:
     body_html = dispatch.body_html or render_sources(dispatch.stories, dispatch.sources)
-    body = f"""{header(dispatch.name, "../../", "../../archive.html")}
+    body = f"""{header(dispatch.name, "../../", "../../archive.html", f"/{dispatch.slug}/")}
   <main class="briefing">
     <section class="hero">
       <img class="hero-logo" src="../../assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
@@ -413,7 +422,8 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
             str(source_manifest_public),
             str(curation_manifest_public),
         ],
-        "paid_or_detail_artifacts": dispatch.detail_artifacts or [],
+        "paid_or_detail_artifacts": [],
+        "detail_artifacts_publicly_exposed": False,
         "warnings": warnings,
         "errors": errors,
     }
@@ -448,8 +458,6 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         if dispatch.slug == "cascadia" and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote):
-            continue
-        if existing_public_edition_files(site_root, dispatch.slug, dispatch.edition_date):
             continue
         edition_html = render_edition(dispatch)
         write_text(dispatch_public_edition / "index.html", edition_html, dry_run, wrote)

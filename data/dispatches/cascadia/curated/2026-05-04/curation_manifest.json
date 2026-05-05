@@ -1,0 +1,146 @@
+[
+  {
+    "story_id": "story-c7a4b5528a8c",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+    "category": "Transportation",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=WA",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "src-63ceb40d9957a9da"
+    ],
+    "source_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "src-63ceb40d9957a9da",
+        "canonical_url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+        "title": "Washington bridge inspection program flags transportation maintenance backlog",
+        "publisher": "Blue Fern Cascadia Manual Source File",
+        "published_at": "2026-05-03T08:00:00Z",
+        "retrieved_at": "2026-05-05T14:23:45.214030+00:00",
+        "text": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+        "source_id": "cascadia-manual",
+        "source_name": "Blue Fern Cascadia Manual Source File",
+        "region_scope": "WA",
+        "category_hint": "Transportation",
+        "trace": {
+          "raw_source_record_id": "raw-686e9ebc6da9685a",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-05-04\\raw_sources.json"
+        }
+      }
+    ]
+  },
+  {
+    "story_id": "story-b5a2f0ce428f",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+    "category": "Public safety",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "src-f6381af1da25bfb2"
+    ],
+    "source_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "src-f6381af1da25bfb2",
+        "canonical_url": "https://www.oregon.gov/oem",
+        "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+        "publisher": "Blue Fern Cascadia Manual Source File",
+        "published_at": "2026-05-03T09:00:00Z",
+        "retrieved_at": "2026-05-05T14:23:45.214030+00:00",
+        "text": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+        "source_id": "cascadia-manual",
+        "source_name": "Blue Fern Cascadia Manual Source File",
+        "region_scope": "OR",
+        "category_hint": "Public safety",
+        "trace": {
+          "raw_source_record_id": "raw-6fe5f7b47f758550",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-05-04\\raw_sources.json"
+        }
+      }
+    ]
+  },
+  {
+    "story_id": "story-d53365c68a09",
+    "title": "Local college team wins postseason game",
+    "summary": "Sports-only placeholder item used to verify curation exclusion.",
+    "category": "Government and public services",
+    "score": 46,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Government and public services",
+      "region_scope=regional",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "src-b9754106373f837f"
+    ],
+    "source_urls": [
+      "https://example.com/cascadia-sports-placeholder"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "sports",
+    "source_records": [
+      {
+        "source_record_id": "src-b9754106373f837f",
+        "canonical_url": "https://example.com/cascadia-sports-placeholder",
+        "title": "Local college team wins postseason game",
+        "publisher": "Blue Fern Cascadia Manual Source File",
+        "published_at": "2026-05-03T10:00:00Z",
+        "retrieved_at": "2026-05-05T14:23:45.214030+00:00",
+        "text": "Sports-only placeholder item used to verify curation exclusion.",
+        "source_id": "cascadia-manual",
+        "source_name": "Blue Fern Cascadia Manual Source File",
+        "region_scope": "regional",
+        "category_hint": "sports",
+        "trace": {
+          "raw_source_record_id": "raw-b8f6f90773f156ee",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-05-04\\raw_sources.json"
+        }
+      }
+    ]
+  }
+]

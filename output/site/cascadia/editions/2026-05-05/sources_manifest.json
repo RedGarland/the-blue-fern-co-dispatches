@@ -1,0 +1,62 @@
+[
+  {
+    "source_record_id": "src-63ceb40d9957a9da",
+    "source_id": "cascadia-manual",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+    "publisher": "Blue Fern Cascadia Manual Source File",
+    "published_at": "2026-05-03T08:00:00Z",
+    "retrieved_at": "2026-05-05T17:20:13.263260+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-c7a4b5528a8c"
+    ],
+    "claim_ids": [
+      "story-c7a4b5528a8c"
+    ],
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-05",
+    "region_scope": "WA",
+    "category_hint": "Transportation"
+  },
+  {
+    "source_record_id": "src-b9754106373f837f",
+    "source_id": "cascadia-manual",
+    "title": "Local college team wins postseason game",
+    "url": "https://example.com/cascadia-sports-placeholder",
+    "publisher": "Blue Fern Cascadia Manual Source File",
+    "published_at": "2026-05-03T10:00:00Z",
+    "retrieved_at": "2026-05-05T17:20:13.263260+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-d53365c68a09"
+    ],
+    "claim_ids": [
+      "story-d53365c68a09"
+    ],
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-05",
+    "region_scope": "regional",
+    "category_hint": "sports"
+  },
+  {
+    "source_record_id": "src-f6381af1da25bfb2",
+    "source_id": "cascadia-manual",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "url": "https://www.oregon.gov/oem",
+    "publisher": "Blue Fern Cascadia Manual Source File",
+    "published_at": "2026-05-03T09:00:00Z",
+    "retrieved_at": "2026-05-05T17:20:13.263260+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-b5a2f0ce428f"
+    ],
+    "claim_ids": [
+      "story-b5a2f0ce428f"
+    ],
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-05",
+    "region_scope": "OR",
+    "category_hint": "Public safety"
+  }
+]

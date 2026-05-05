@@ -7,6 +7,7 @@ import pytest
 
 from bluefern_dispatches.generator import (
     BASE_URL,
+    CASCADIA_PUBLIC_DESCRIPTION,
     CNAME_VALUE,
     DEFAULT_BACKUP_ROOT,
     DispatchConfig,
@@ -82,18 +83,56 @@ def test_gaza_content_and_requested_logo_placement(built_site):
     assert 'src="../../assets/bluefern.png"' in gaza_edition
 
 
+def test_dispatch_pages_link_back_to_dispatches_home(built_site):
+    work, _, _ = built_site
+    site = work / "output" / "site"
+    pages = [
+        site / "gaza" / "index.html",
+        site / "gaza" / "archive.html",
+        site / "gaza" / "editions" / "2026-05-03" / "index.html",
+        site / "cascadia" / "index.html",
+        site / "cascadia" / "archive.html",
+        site / "cascadia" / "editions" / "2026-05-03" / "index.html",
+    ]
+
+    for page in pages:
+        html = read(page)
+        assert 'href="/">Dispatches Home</a>' in html
+
+    gaza_edition = read(site / "gaza" / "editions" / "2026-05-03" / "index.html")
+    cascadia_edition = read(site / "cascadia" / "editions" / "2026-05-03" / "index.html")
+    assert 'href="/gaza/">Dispatches From Gaza</a>' in gaza_edition
+    assert 'href="/cascadia/">The Cascadia Briefing</a>' in cascadia_edition
+
+
 def test_cascadia_page_and_dated_edition_url(built_site):
     work, _, _ = built_site
     cascadia_index = read(work / "output" / "site" / "cascadia" / "index.html")
     cascadia_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html"
 
     assert "The Cascadia Briefing" in cascadia_index
+    assert CASCADIA_PUBLIC_DESCRIPTION in cascadia_index
     assert "Cascadia Signal Pack" in cascadia_index
     assert 'href="/cascadia/"' not in cascadia_index
     assert "cascadia-logo-placeholder.png" in cascadia_index
     assert cascadia_edition.exists()
     assert f"{BASE_URL}/cascadia/editions/2026-05-03/" in read(cascadia_edition)
     assert "class=\"briefing\"" in read(cascadia_edition)
+
+
+def test_public_cascadia_pages_use_current_public_name(built_site):
+    work, _, _ = built_site
+    cascadia_pages = [
+        work / "output" / "site" / "cascadia" / "index.html",
+        work / "output" / "site" / "cascadia" / "archive.html",
+        work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html",
+        work / "output" / "site" / "cascadia" / "rss.xml",
+    ]
+
+    for page in cascadia_pages:
+        html = read(page)
+        assert "The Cascadia Briefing" in html
+        assert "Cascadia Systems Dispatch" not in html
 
 
 def test_manifests_and_source_traceability(built_site):

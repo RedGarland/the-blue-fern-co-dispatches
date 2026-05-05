@@ -1,0 +1,4 @@
+story_id,title,category,score,source_record_ids,source_urls,included_in_public_summary,included_in_detail_dataset,excluded_reason
+story-c7a4b5528a8c,Washington bridge inspection program flags transportation maintenance backlog,Transportation,76,"[""src-63ceb40d9957a9da""]","[""https://wsdot.wa.gov/travel/roads-bridges/bridge-structures""]",True,True,
+story-b5a2f0ce428f,Oregon emergency management preparedness notice emphasizes public safety coordination,Public safety,76,"[""src-f6381af1da25bfb2""]","[""https://www.oregon.gov/oem""]",True,True,
+story-d53365c68a09,Local college team wins postseason game,Government and public services,46,"[""src-b9754106373f837f""]","[""https://example.com/cascadia-sports-placeholder""]",False,False,sports

@@ -1,0 +1,35 @@
+[
+  {
+    "edition_date": "2026-05-05",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "category": "Government and public services",
+    "record_count": 1,
+    "public_count": 0,
+    "detail_count": 0,
+    "max_severity_score": 46,
+    "average_severity_score": 46.0
+  },
+  {
+    "edition_date": "2026-05-05",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "category": "Public safety",
+    "record_count": 1,
+    "public_count": 1,
+    "detail_count": 1,
+    "max_severity_score": 76,
+    "average_severity_score": 76.0
+  },
+  {
+    "edition_date": "2026-05-05",
+    "dispatch_id": "dispatch-cascadia",
+    "dispatch_slug": "cascadia",
+    "category": "Transportation",
+    "record_count": 1,
+    "public_count": 1,
+    "detail_count": 1,
+    "max_severity_score": 76,
+    "average_severity_score": 76.0
+  }
+]

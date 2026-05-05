@@ -167,19 +167,36 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     local_hostname = _smtp_local_hostname(email_from)
 
     smtp_ca_bundle = os.getenv("SMTP_CA_BUNDLE")
+    if smtp_ca_bundle and smtp_ca_bundle.strip():
+        smtp_ca_bundle_path = Path(smtp_ca_bundle).expanduser().resolve()
+        if not smtp_ca_bundle_path.is_file():
+            raise RuntimeError(
+                f"SMTP_CA_BUNDLE is set to {smtp_ca_bundle!r} but that file does not exist or is not a file. "
+                "Unset SMTP_CA_BUNDLE or point it to a valid PEM file."
+            )
+        cafile = str(smtp_ca_bundle_path)
+    else:
+        cafile = None
     smtp_skip_verify = _env_bool("SMTP_SKIP_VERIFY", default=False)
 
     if smtp_skip_verify:
         tls_context = ssl._create_unverified_context()
     else:
-        if smtp_ca_bundle:
-            tls_context = ssl.create_default_context(cafile=smtp_ca_bundle)
-        else:
-            try:
-                import certifi
-                tls_context = ssl.create_default_context(cafile=certifi.where())
-            except Exception:
-                tls_context = ssl.create_default_context()
+        try:
+            if cafile:
+                tls_context = ssl.create_default_context(cafile=cafile)
+            else:
+                try:
+                    import certifi
+                    tls_context = ssl.create_default_context(cafile=certifi.where())
+                except Exception:
+                    tls_context = ssl.create_default_context()
+        except FileNotFoundError:
+            raise RuntimeError(
+                "SMTP_CA_BUNDLE referenced file not found. Unset SMTP_CA_BUNDLE or point it to a valid PEM file."
+            ) from None
+        except Exception:
+            tls_context = ssl.create_default_context()
 
     for attempt in range(1, smtp_retries + 2):
         smtp = None

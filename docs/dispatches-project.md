@@ -44,6 +44,75 @@ git push origin main
 
 GitHub Pages and DNS must be configured separately. Do not force-push.
 
+## Gaza Historical Generation
+
+Gaza historical editions are self-contained in this repository. The workflow starts from project-local source records and never depends on rendered output from another project.
+
+Manual source input:
+
+```text
+data/dispatches/gaza/sources/YYYY-MM-DD/manual_sources.json
+```
+
+Required fields:
+
+- `source_record_id`
+- `title`
+- `url`
+- `publisher`
+- `published_at`
+- `retrieved_at`
+- `summary_or_snippet`
+- `source_type`
+- `region_scope`
+- `category_hint`
+- `reliability_tier`
+
+Generate a historical Gaza edition:
+
+```powershell
+python scripts\run_gaza_dispatch.py --date YYYY-MM-DD --historical --from-manual-sources --all
+```
+
+Review:
+
+```text
+output/site/gaza/editions/YYYY-MM-DD/index.html
+```
+
+Dry-run publish:
+
+```powershell
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+Commit to the local Pages repo without pushing:
+
+```powershell
+python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --commit --no-push
+```
+
+Manual push after inspection:
+
+```powershell
+cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+git status
+git push origin main
+```
+
+The generator writes:
+
+```text
+data/dispatches/gaza/raw/YYYY-MM-DD/raw_sources.json
+data/dispatches/gaza/normalized/YYYY-MM-DD/normalized_sources.json
+data/dispatches/gaza/curated/YYYY-MM-DD/curation_manifest.json
+output/dispatches/gaza/editions/YYYY-MM-DD/
+output/site/gaza/editions/YYYY-MM-DD/
+C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\gaza\YYYY-MM-DD\
+```
+
+Gaza remains fully free/public. Every story must list source record IDs, publisher names, and visible source links. If source detail is insufficient, write a shorter story or omit it.
+
 ## Cascadia Dispatch Pipeline
 
 The Cascadia pipeline is standalone inside this repository. It is separate from the older FDA/Cascadia media pipeline and must not depend on that project structure.

@@ -1,5 +1,47 @@
 [
   {
+    "source_id": "gaza-2026-04-30-aa-shelter-materials-003",
+    "source_record_id": "gaza-2026-04-30-aa-shelter-materials-003",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-04-30",
+    "publisher": "Anadolu Agency",
+    "title": "UN says Israel blocks durable shelter materials from entering Gaza",
+    "url": "https://www.aa.com.tr/en/middle-east/un-says-israel-blocks-durable-shelter-materials-from-entering-gaza/3923572",
+    "published_at": "2026-04-30T00:00:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "archive_path": null,
+    "reliability_tier": "reported-public-source"
+  },
+  {
+    "source_id": "gaza-2026-04-30-reuters-maps-control-002",
+    "source_record_id": "gaza-2026-04-30-reuters-maps-control-002",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-04-30",
+    "publisher": "Reuters via Investing.com",
+    "title": "Israeli maps outline expanded zone of military control in Gaza",
+    "url": "https://www.investing.com/news/world-news/israeli-maps-outline-expanded-zone-of-military-control-in-gaza-4650667",
+    "published_at": "2026-04-30T12:48:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "archive_path": null,
+    "reliability_tier": "wire-service-report"
+  },
+  {
+    "source_id": "gaza-2026-04-30-reuters-strikes-ceasefire-001",
+    "source_record_id": "gaza-2026-04-30-reuters-strikes-ceasefire-001",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-04-30",
+    "publisher": "Reuters via Investing.com",
+    "title": "Israeli strikes kill four in Gaza, medics say, amid new ceasefire push",
+    "url": "https://www.investing.com/news/world-news/israeli-strikes-kill-four-in-gaza-medics-say-amid-new-ceasefire-push-4649770",
+    "published_at": "2026-04-30T09:41:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "archive_path": null,
+    "reliability_tier": "wire-service-report"
+  },
+  {
     "source_id": "gaza-src-001",
     "dispatch_id": "dispatch-gaza",
     "edition_id": "gaza-2026-05-03",

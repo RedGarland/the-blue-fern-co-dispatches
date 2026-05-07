@@ -97,6 +97,56 @@ Gaza remains free/public. Cascadia publishes a weekly public briefing and writes
 
 Core editorial rule: **NO FACT WITHOUT A TRACEABLE SOURCE.** Every public factual story, signal, score, trend, summary, and detail/data record must resolve back to source records through manifests or the shared dispatch data layer.
 
+## Gaza Historical Editions
+
+Historical Gaza editions are generated inside this project from source records. They are not imported from rendered output produced by another project.
+
+Manual source records live at:
+
+```text
+data/dispatches/gaza/sources/YYYY-MM-DD/manual_sources.json
+```
+
+Each record must include `source_record_id`, `title`, `url`, `publisher`, `published_at`, `retrieved_at`, `summary_or_snippet`, `source_type`, `region_scope`, `category_hint`, and `reliability_tier`. Do not invent source URLs. If a historical source cannot be found or provided inside this project, omit the story.
+
+Generate a historical Gaza edition:
+
+```powershell
+python scripts\run_gaza_dispatch.py --date YYYY-MM-DD --historical --from-manual-sources --all
+```
+
+Review:
+
+```text
+output/site/gaza/editions/YYYY-MM-DD/index.html
+```
+
+Then dry-run Pages publishing:
+
+```powershell
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+Copy + commit locally, no push:
+
+```powershell
+python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --commit --no-push
+```
+
+Manually push after inspection:
+
+```powershell
+cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+git status
+git push origin main
+```
+
+Gaza remains fully free/public. The script writes public artifacts only under `output/site/`, mirrors edition artifacts under `output/dispatches/gaza/editions/YYYY-MM-DD/`, writes source stage files under `data/dispatches/gaza/`, updates shared records under `data/records/`, refreshes `/gaza/archive.html` and `/gaza/rss.xml`, and writes backups outside the repo under:
+
+```text
+C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\gaza\YYYY-MM-DD\
+```
+
 ## Cascadia Pipeline
 
 The standalone Cascadia pipeline lives inside this project and does not read from or write to the older FDA/Cascadia media pipeline.

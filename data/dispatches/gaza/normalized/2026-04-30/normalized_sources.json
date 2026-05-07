@@ -1,0 +1,65 @@
+[
+  {
+    "source_record_id": "gaza-2026-04-30-reuters-strikes-ceasefire-001",
+    "source_id": "gaza-2026-04-30-reuters-strikes-ceasefire-001",
+    "title": "Israeli strikes kill four in Gaza, medics say, amid new ceasefire push",
+    "url": "https://www.investing.com/news/world-news/israeli-strikes-kill-four-in-gaza-medics-say-amid-new-ceasefire-push-4649770",
+    "canonical_url": "https://www.investing.com/news/world-news/israeli-strikes-kill-four-in-gaza-medics-say-amid-new-ceasefire-push-4649770",
+    "publisher": "Reuters via Investing.com",
+    "published_at": "2026-04-30T09:41:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "summary_or_snippet": "Reuters reported that Gaza health officials said Israeli strikes killed four Palestinians, while Hamas representatives met mediators in Cairo about efforts to advance a fragile ceasefire.",
+    "source_type": "news",
+    "region_scope": "Gaza",
+    "category_hint": "ceasefire",
+    "reliability_tier": "wire-service-report",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-04-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-04-30-001"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-04-30-reuters-maps-control-002",
+    "source_id": "gaza-2026-04-30-reuters-maps-control-002",
+    "title": "Israeli maps outline expanded zone of military control in Gaza",
+    "url": "https://www.investing.com/news/world-news/israeli-maps-outline-expanded-zone-of-military-control-in-gaza-4650667",
+    "canonical_url": "https://www.investing.com/news/world-news/israeli-maps-outline-expanded-zone-of-military-control-in-gaza-4650667",
+    "publisher": "Reuters via Investing.com",
+    "published_at": "2026-04-30T12:48:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "summary_or_snippet": "Reuters reported that maps issued by Israel marked expanded restricted areas in Gaza, with aid sources saying the maps had been shared with aid groups in March.",
+    "source_type": "news",
+    "region_scope": "Gaza",
+    "category_hint": "access-and-movement",
+    "reliability_tier": "wire-service-report",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-04-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-04-30-002"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-04-30-aa-shelter-materials-003",
+    "source_id": "gaza-2026-04-30-aa-shelter-materials-003",
+    "title": "UN says Israel blocks durable shelter materials from entering Gaza",
+    "url": "https://www.aa.com.tr/en/middle-east/un-says-israel-blocks-durable-shelter-materials-from-entering-gaza/3923572",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/un-says-israel-blocks-durable-shelter-materials-from-entering-gaza/3923572",
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-04-30T00:00:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "summary_or_snippet": "Anadolu Agency reported UN spokesman Stephane Dujarric saying aid agencies could bring basic shelter supplies into Gaza but not materials needed for durable shelter.",
+    "source_type": "news",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-04-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-04-30-003"
+    ],
+    "claim_ids": []
+  }
+]

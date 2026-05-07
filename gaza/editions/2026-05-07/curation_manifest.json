@@ -1,21 +1,28 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-05-07",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
+    "story_id": "gaza-story-2026-05-07-001",
+    "title": "Replace with source title",
+    "summary": "Replace with a short source-backed summary or snippet.",
     "category": "humanitarian",
-    "score": 100,
+    "score": 99,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "Included because a complete project-local source record was provided."
     ],
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-05-07-001"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-05-07-001"
+    ],
+    "source_urls": [
+      "https://example.com/source-article"
+    ],
+    "publisher_names": [
+      "Replace with publisher"
+    ],
+    "edition_date": "2026-05-07",
+    "generated_at": "2026-05-07T16:45:38.720451+00:00"
   }
 ]

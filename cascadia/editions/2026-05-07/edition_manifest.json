@@ -1,0 +1,23 @@
+{
+  "dispatch_name": "The Cascadia Briefing",
+  "dispatch_slug": "cascadia",
+  "edition_date": "2026-05-07",
+  "generated_at": "2026-05-07T03:24:46.283509+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-07/",
+  "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07",
+  "local_backup_path": "output\\tmp-backups-pages\\cascadia\\2026-05-07",
+  "template_version": "dispatches-static-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07\\index.html",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07\\sources_manifest.json",
+    "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-07\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [],
+  "errors": []
+}

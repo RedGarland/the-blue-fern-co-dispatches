@@ -20,9 +20,12 @@ PUBLIC_ROOT_NAMES = {"site"}
 DETAIL_ROOT_NAMES = {"detail", "paid"}
 CNAME_VALUE = "dispatches.thebluefernco.com"
 PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
+DEFAULT_PAGES_BRANCH = "gh-pages"
 ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
+CASCADIA_LOGO_ASSET = "cascadia-logo-placeholder.png"
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
-CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing tracks source-backed developments across Washington, Oregon, and Idaho, with emphasis on public systems, infrastructure, health, safety, environment, economy, and regional resilience."
+CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
+CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
 
 
 @dataclass(frozen=True)
@@ -117,6 +120,10 @@ should be read as a neutral informational summary. Source links are
 included where available.</p>"""
 
 
+def gaza_body_html(edition_date: str) -> str:
+    return GAZA_BODY_HTML.replace("Daily Briefing - 2026-05-03", f"Daily Briefing - {edition_date}")
+
+
 def seed_dispatches(now: str) -> list[DispatchConfig]:
     # Use explicit seed edition date if provided via env, otherwise default
     # to the current run date (the 'now' param is an ISO timestamp).
@@ -143,15 +150,15 @@ def seed_dispatches(now: str) -> list[DispatchConfig]:
             logo="gaza-logo.png",
             sources=gaza_sources,
             stories=[StoryRecord("gaza-story-001", f"Dispatches From Gaza - {date}", "Structured daily briefing synthesizing key developments from public reporting.", "humanitarian", 100, ["Preserved from existing Gaza public edition."], True, False, [s.source_id for s in gaza_sources])],
-            body_html=GAZA_BODY_HTML,
+            body_html=gaza_body_html(date),
             detail_artifacts=[],
         ),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
             edition_date=date,
-            tagline="Regional systems briefing",
-            logo="cascadia-logo-placeholder.png",
+            tagline=CASCADIA_RSS_DESCRIPTION,
+            logo=CASCADIA_LOGO_ASSET,
             sources=cascadia_sources,
             stories=[StoryRecord("cascadia-story-001", "Launch placeholder", "The Cascadia dispatch area is prepared for dated, source-backed system briefings.", "editorial-admin", 0, ["Administrative launch placeholder; not a factual regional signal."], True, False, ["cascadia-src-001"], editorial_admin_copy=True)],
             detail_artifacts=[],
@@ -197,6 +204,22 @@ def public_site_contains_detail_artifacts(site_root: Path) -> list[str]:
             continue
         relative_parts = path.relative_to(site_root).parts
         if relative_parts and relative_parts[0] in DETAIL_ROOT_NAMES:
+            blocked.append(str(path))
+    return blocked
+
+
+def public_site_contains_blocked_public_text(site_root: Path) -> list[str]:
+    if not site_root.exists():
+        return []
+    blocked: list[str] = []
+    needles = ("output/detail", "output/paid", "cascadia_signal_records")
+    for path in site_root.rglob("*"):
+        if ".git" in path.relative_to(site_root).parts:
+            continue
+        if not path.is_file() or path.suffix.lower() not in {".html", ".json", ".xml", ".css", ".txt"}:
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if any(needle in text for needle in needles):
             blocked.append(str(path))
     return blocked
 
@@ -400,6 +423,7 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str])
         f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
         for date in edition_dates
     )
+    description = f'\n    <p class="lede">{html.escape(CASCADIA_PUBLIC_DESCRIPTION)}</p>' if dispatch.slug == "cascadia" else ""
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="archive">
     <section class="hero">
@@ -407,6 +431,7 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str])
     </section>
     <p class="eyebrow">Archive</p>
     <h1>Edition Archive</h1>
+    {description}
     <ul class="edition-list">
 {items}
     </ul>
@@ -434,6 +459,8 @@ def render_sources(stories: list[StoryRecord], sources: list[SourceRecord]) -> s
 
 def render_edition(dispatch: DispatchConfig) -> str:
     body_html = dispatch.body_html or render_sources(dispatch.stories, dispatch.sources)
+    if dispatch.slug == "gaza":
+        body_html = body_html.replace("Daily Briefing - 2026-05-03", f"Daily Briefing - {dispatch.edition_date}")
     body = f"""{header(dispatch.name, "../../", "../../archive.html", f"/{dispatch.slug}/")}
   <main class="briefing">
     <section class="hero">
@@ -453,7 +480,7 @@ def render_rss(dispatch: DispatchConfig) -> str:
 <channel>
   <title>{html.escape(dispatch.name)}</title>
   <link>{BASE_URL}/{dispatch.slug}/</link>
-  <description>{html.escape(dispatch.tagline)}</description>
+  <description>{html.escape(CASCADIA_RSS_DESCRIPTION if dispatch.slug == "cascadia" else dispatch.tagline)}</description>
   <item>
     <title>{html.escape(dispatch.name)} - {dispatch.edition_date}</title>
     <link>{edition_url}</link>
@@ -478,7 +505,7 @@ def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> 
 <channel>
   <title>{html.escape(dispatch.name)}</title>
   <link>{BASE_URL}/{dispatch.slug}/</link>
-  <description>{html.escape(dispatch.tagline)}</description>
+  <description>{html.escape(CASCADIA_RSS_DESCRIPTION if dispatch.slug == "cascadia" else dispatch.tagline)}</description>
 {items}
 </channel>
 </rss>
@@ -528,7 +555,7 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
 
-    for asset in ["site.css", "gaza-logo.png", "bluefern.png", "cascadia-logo-placeholder.png", ROOT_MASTHEAD_ASSET]:
+    for asset in ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO_ASSET, ROOT_MASTHEAD_ASSET]:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
 
     write_text(site_root / "index.html", render_root(dispatches), dry_run, wrote)
@@ -543,20 +570,26 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
-        if dispatch.slug == "cascadia" and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote):
-            continue
-        edition_html = render_edition(dispatch)
-        write_text(dispatch_public_edition / "index.html", edition_html, dry_run, wrote)
-        edition_manifest, sources_manifest, curation_manifest = build_manifests(dispatch, site_root, backup_root, generated_at, warnings, errors)
-        write_text(dispatch_public_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
-        write_text(dispatch_public_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
-        write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
-        write_text(backup_dir / "index.html", edition_html, dry_run, wrote)
-        write_text(backup_dir / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
-        write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
-        write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
-        write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
-        if dispatch.slug == "gaza":
+        copied_real_edition = dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
+        if not copied_real_edition:
+            edition_html = render_edition(dispatch)
+            write_text(dispatch_public_edition / "index.html", edition_html, dry_run, wrote)
+            edition_manifest, sources_manifest, curation_manifest = build_manifests(dispatch, site_root, backup_root, generated_at, warnings, errors)
+            write_text(dispatch_public_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
+            write_text(dispatch_public_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
+            write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
+            if dispatch.slug == "gaza":
+                dispatch_output_edition = root / "output" / "dispatches" / dispatch.slug / "editions" / dispatch.edition_date
+                write_text(dispatch_output_edition / "index.html", edition_html, dry_run, wrote)
+                write_text(dispatch_output_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
+                write_text(dispatch_output_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
+                write_text(dispatch_output_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
+            write_text(backup_dir / "index.html", edition_html, dry_run, wrote)
+            write_text(backup_dir / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
+            write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
+            write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
+            write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
+        if dispatch.slug in {"gaza", "cascadia"}:
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
             if dispatch.edition_date not in edition_dates:
                 edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
@@ -591,7 +624,13 @@ def collect_public_site_files(site_root: Path) -> list[Path]:
     return sorted(path for path in site_root.rglob("*") if path.is_file())
 
 
-def validate_pages_publish(root: Path, site_root: Path, pages_repo: Path, require_git: bool = True) -> tuple[list[str], list[str]]:
+def validate_pages_publish(
+    root: Path,
+    site_root: Path,
+    pages_repo: Path,
+    require_git: bool = True,
+    expect_date: str | None = None,
+) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     root = root.resolve()
@@ -611,9 +650,23 @@ def validate_pages_publish(root: Path, site_root: Path, pages_repo: Path, requir
         errors.append("pages repo path must not be inside output/site")
     if not (site_root / "index.html").exists():
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
+    if not (site_root / "gaza" / "archive.html").exists():
+        errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
+    elif expect_date and (site_root / "gaza" / "editions" / expect_date).exists():
+        archive_text = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
+        if expect_date not in archive_text:
+            errors.append(f"output/site/gaza/archive.html does not contain expected date {expect_date}")
     detail_files = public_site_contains_detail_artifacts(site_root)
     if detail_files:
         errors.append(f"paid/detail artifacts are present in public output: {', '.join(detail_files)}")
+    blocked_public_text = public_site_contains_blocked_public_text(site_root)
+    if blocked_public_text:
+        errors.append(f"blocked private artifact names are present in public output: {', '.join(blocked_public_text)}")
+    if expect_date:
+        for dispatch_slug in ("gaza", "cascadia"):
+            source_edition = site_root / dispatch_slug / "editions" / expect_date
+            if source_edition.exists() and not (source_edition / "index.html").exists():
+                errors.append(f"expected {dispatch_slug} edition exists but index is missing: {source_edition / 'index.html'}")
     cname = pages_repo / "CNAME"
     if cname.exists() and cname.read_text(encoding="utf-8").strip() != CNAME_VALUE:
         errors.append(f"CNAME value is not correct in {cname}")
@@ -659,29 +712,117 @@ def run_git(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool) -> dict[str, Any]:
-    if not commit:
-        return {"would_commit": False, "committed": False, "commit_sha": None, "message": "commit flag not set"}
+def git_stdout(args: list[str], cwd: Path) -> str | None:
+    result = run_git(args, cwd)
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip()
+
+
+def git_ref_exists(ref: str, cwd: Path) -> bool:
+    return run_git(["show-ref", "--verify", "--quiet", ref], cwd).returncode == 0
+
+
+def manual_push_command(pages_repo: Path, pages_branch: str) -> str:
+    return f'cd "{pages_repo}"\ngit status\ngit push origin {pages_branch}'
+
+
+def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
+    current_branch = git_stdout(["branch", "--show-current"], pages_repo) or None
+    result: dict[str, Any] = {
+        "current_branch": current_branch,
+        "target_pages_branch": pages_branch,
+        "checked_out_branch": current_branch if dry_run else None,
+        "fetch_attempted": False,
+        "fetched": False,
+        "created_pages_branch": False,
+        "warnings": [],
+        "errors": [],
+    }
     if dry_run:
-        return {"would_commit": True, "committed": False, "commit_sha": None, "message": "dry run; no commit created"}
+        return result
+
+    remotes = git_stdout(["remote"], pages_repo) or ""
+    if "origin" in remotes.split():
+        result["fetch_attempted"] = True
+        fetch = run_git(["fetch", "origin"], pages_repo)
+        result["fetched"] = fetch.returncode == 0
+        if fetch.returncode != 0:
+            result["warnings"].append(fetch.stderr.strip() or fetch.stdout.strip() or "git fetch origin failed; continuing with local refs")
+
+    local_ref = f"refs/heads/{pages_branch}"
+    remote_ref = f"refs/remotes/origin/{pages_branch}"
+    if git_ref_exists(local_ref, pages_repo):
+        checkout = run_git(["checkout", pages_branch], pages_repo)
+    elif git_ref_exists(remote_ref, pages_repo):
+        checkout = run_git(["checkout", "-b", pages_branch, "--track", f"origin/{pages_branch}"], pages_repo)
+        result["created_pages_branch"] = checkout.returncode == 0
+    else:
+        checkout = run_git(["checkout", "-b", pages_branch], pages_repo)
+        result["created_pages_branch"] = checkout.returncode == 0
+        if checkout.returncode == 0:
+            result["warnings"].append(f"{pages_branch} did not exist locally or at origin; created it from the current Pages repo worktree.")
+    if checkout.returncode != 0:
+        result["errors"].append(checkout.stderr.strip() or checkout.stdout.strip() or f"could not checkout {pages_branch}")
+        return result
+    result["checked_out_branch"] = git_stdout(["branch", "--show-current"], pages_repo) or pages_branch
+    return result
+
+
+def validate_pages_repo_after_copy(pages_repo: Path, site_root: Path, expect_date: str | None) -> list[str]:
+    errors: list[str] = []
+    if not (pages_repo / ".git").exists():
+        errors.append(f".git was not preserved in Pages repo: {pages_repo / '.git'}")
+    cname = pages_repo / "CNAME"
+    if not cname.exists() or cname.read_text(encoding="utf-8").strip() != CNAME_VALUE:
+        errors.append(f"CNAME does not contain {CNAME_VALUE}")
+    if not (pages_repo / "index.html").exists():
+        errors.append(f"Pages repo index does not exist: {pages_repo / 'index.html'}")
+    if not (pages_repo / "gaza" / "archive.html").exists():
+        errors.append(f"Pages repo Gaza archive does not exist: {pages_repo / 'gaza' / 'archive.html'}")
+    if (pages_repo / "detail").exists() or (pages_repo / "paid").exists():
+        errors.append("paid/detail artifacts were copied into the Pages repo")
+    blocked_text = public_site_contains_blocked_public_text(pages_repo)
+    if blocked_text:
+        errors.append(f"blocked private artifact names are present in Pages repo: {', '.join(blocked_text)}")
+    if expect_date:
+        archive = pages_repo / "gaza" / "archive.html"
+        if (site_root / "gaza" / "editions" / expect_date).exists():
+            if not (pages_repo / "gaza" / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected Gaza edition missing from Pages repo: {expect_date}")
+            elif archive.exists() and expect_date not in archive.read_text(encoding="utf-8"):
+                errors.append(f"Pages repo Gaza archive does not contain expected date {expect_date}")
+        if (site_root / "cascadia" / "editions" / expect_date).exists() and not (
+            pages_repo / "cascadia" / "editions" / expect_date / "index.html"
+        ).exists():
+            errors.append(f"expected Cascadia edition missing from Pages repo: {expect_date}")
+    return errors
+
+
+def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str) -> dict[str, Any]:
+    if not commit:
+        return {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"}
+    if dry_run:
+        return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": None, "message": "dry run; no commit created"}
 
     add = run_git(["add", "-A"], pages_repo)
     if add.returncode != 0:
-        return {"would_commit": True, "committed": False, "commit_sha": None, "message": add.stderr.strip() or add.stdout.strip()}
+        return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": None, "message": add.stderr.strip() or add.stdout.strip()}
 
     diff = run_git(["diff", "--cached", "--quiet"], pages_repo)
     if diff.returncode == 0:
-        return {"would_commit": True, "committed": False, "commit_sha": None, "message": "no changes to commit"}
+        return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": pages_branch, "message": "no changes to commit"}
 
     commit_result = run_git(["commit", "-m", PUBLISH_COMMIT_MESSAGE], pages_repo)
     if commit_result.returncode != 0:
-        return {"would_commit": True, "committed": False, "commit_sha": None, "message": commit_result.stderr.strip() or commit_result.stdout.strip()}
+        return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": pages_branch, "message": commit_result.stderr.strip() or commit_result.stdout.strip()}
 
     rev = run_git(["rev-parse", "--short", "HEAD"], pages_repo)
     return {
         "would_commit": True,
         "committed": True,
         "commit_sha": rev.stdout.strip() if rev.returncode == 0 else None,
+        "committed_branch": pages_branch,
         "message": PUBLISH_COMMIT_MESSAGE,
     }
 
@@ -694,24 +835,42 @@ def publish_pages(
     commit: bool,
     no_push: bool,
     backup_root: Path = DEFAULT_BACKUP_ROOT,
+    pages_branch: str = DEFAULT_PAGES_BRANCH,
+    expect_date: str | None = None,
 ) -> dict[str, Any]:
     build = build_site(root, dry_run=dry_run, backup_root=backup_root)
     root = root.resolve()
     site_root = root / "output" / "site"
     pages_repo = pages_repo.resolve()
     errors = list(build["errors"])
-    validation_errors, validation_warnings = validate_pages_publish(root, site_root, pages_repo, require_git=not dry_run)
+    validation_errors, validation_warnings = validate_pages_publish(root, site_root, pages_repo, require_git=not dry_run, expect_date=expect_date)
     errors.extend(validation_errors)
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
+    branch_result = {
+        "current_branch": None,
+        "target_pages_branch": pages_branch,
+        "checked_out_branch": None,
+        "fetch_attempted": False,
+        "fetched": False,
+        "created_pages_branch": False,
+        "warnings": [],
+        "errors": [],
+    }
+    if not errors and (pages_repo / ".git").exists():
+        branch_result = ensure_pages_branch(pages_repo, pages_branch, dry_run=dry_run)
+        errors.extend(branch_result["errors"])
+        warnings.extend(branch_result["warnings"])
     would_copy = not errors
     copied: list[str] = []
     skipped: list[str] = []
-    commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "message": "not attempted"}
+    commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
 
     if not errors:
         copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run)
-        commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit)
+        if not dry_run:
+            errors.extend(validate_pages_repo_after_copy(pages_repo, site_root, expect_date))
+        commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
         if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
             errors.append(commit_result["message"])
 
@@ -721,6 +880,10 @@ def publish_pages(
         "target_pages_repo_path": str(pages_repo),
         "remote_url": remote_url,
         "cname_value": CNAME_VALUE,
+        "current_branch": branch_result["current_branch"],
+        "target_pages_branch": pages_branch,
+        "checked_out_branch": branch_result["checked_out_branch"],
+        "committed_branch": commit_result["committed_branch"],
         "dry_run": dry_run,
         "files_that_would_be_copied": copied if dry_run else [],
         "files_copied": [] if dry_run else copied,
@@ -734,7 +897,10 @@ def publish_pages(
         "would_push": False,
         "pushed": False,
         "no_push": no_push,
-        "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root),
+        "manual_push_command": manual_push_command(pages_repo, pages_branch),
+        "expect_date": expect_date,
+        "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root)
+        and not public_site_contains_blocked_public_text(site_root),
         "warnings": warnings,
         "errors": errors,
         "build": build,
@@ -747,6 +913,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--backup-root", default=str(DEFAULT_BACKUP_ROOT), help="Outside-repo backup root.")
     parser.add_argument("--pages-repo", help="Local GitHub Pages repo root to receive output/site files.")
     parser.add_argument("--remote-url", help="Expected GitHub remote URL for reporting.")
+    parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Git branch GitHub Pages deploys from.")
+    parser.add_argument("--expect-date", help="Optional YYYY-MM-DD date expected in generated public archives/editions.")
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
     args = parser.parse_args(argv)
@@ -759,6 +927,8 @@ def main(argv: list[str] | None = None) -> int:
             commit=args.commit,
             no_push=args.no_push,
             backup_root=Path(args.backup_root),
+            pages_branch=args.pages_branch,
+            expect_date=args.expect_date,
         )
     else:
         result = build_site(Path.cwd(), dry_run=args.dry_run, backup_root=Path(args.backup_root))

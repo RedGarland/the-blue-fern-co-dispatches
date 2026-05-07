@@ -116,7 +116,14 @@ def publisher_names(story: dict[str, Any]) -> list[str]:
     return names
 
 
-def sources_manifest_from_curated(curated: list[dict[str, Any]], edition_date: str) -> list[dict[str, Any]]:
+def sources_manifest_from_curated(
+    curated: list[dict[str, Any]],
+    edition_date: str,
+    run_date: str | None = None,
+    coverage_start: str | None = None,
+    coverage_end: str | None = None,
+    briefing_type: str | None = None,
+) -> list[dict[str, Any]]:
     by_id: dict[str, dict[str, Any]] = {}
     for story in curated:
         for record in story.get("source_records", []):
@@ -132,14 +139,28 @@ def sources_manifest_from_curated(curated: list[dict[str, Any]], edition_date: s
                 "used_in_story_ids": [story["story_id"]],
                 "claim_ids": [story["story_id"]],
                 "dispatch_slug": DISPATCH_SLUG,
+                "public_name": "The Cascadia Briefing",
+                "briefing_type": briefing_type,
+                "run_date": run_date,
                 "edition_date": edition_date,
+                "coverage_start": coverage_start,
+                "coverage_end": coverage_end,
                 "region_scope": record.get("region_scope"),
                 "category_hint": record.get("category_hint"),
             }
     return sorted(by_id.values(), key=lambda item: item["source_record_id"])
 
 
-def signal_records(root: Path, edition_date: str, curated: list[dict[str, Any]], generated_at: str | None = None) -> list[dict[str, Any]]:
+def signal_records(
+    root: Path,
+    edition_date: str,
+    curated: list[dict[str, Any]],
+    generated_at: str | None = None,
+    run_date: str | None = None,
+    coverage_start: str | None = None,
+    coverage_end: str | None = None,
+    briefing_type: str | None = None,
+) -> list[dict[str, Any]]:
     generated_at = generated_at or utc_now()
     prior = load_prior_records(root, edition_date)
     records = []
@@ -153,6 +174,11 @@ def signal_records(root: Path, edition_date: str, curated: list[dict[str, Any]],
                 "edition_date": edition_date,
                 "dispatch_id": "dispatch-cascadia",
                 "dispatch_slug": DISPATCH_SLUG,
+                "public_name": "The Cascadia Briefing",
+                "briefing_type": briefing_type,
+                "run_date": run_date,
+                "coverage_start": coverage_start,
+                "coverage_end": coverage_end,
                 "first_seen": previous.get("first_seen") if previous else edition_date,
                 "last_seen": edition_date,
                 "state": None,
@@ -230,7 +256,15 @@ def write_json(path: Path, payload: Any, dry_run: bool, written: list[str]) -> N
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-def write_cascadia_signal_package(root: Path, edition_date: str, dry_run: bool = False) -> dict[str, Any]:
+def write_cascadia_signal_package(
+    root: Path,
+    edition_date: str,
+    dry_run: bool = False,
+    run_date: str | None = None,
+    coverage_start: str | None = None,
+    coverage_end: str | None = None,
+    briefing_type: str | None = None,
+) -> dict[str, Any]:
     root = root.resolve()
     curated_path = root / CASCADE_DATA_ROOT / "curated" / edition_date / "curation_manifest.json"
     detail_dir = root / "output" / "detail" / DISPATCH_SLUG / edition_date
@@ -242,14 +276,28 @@ def write_cascadia_signal_package(root: Path, edition_date: str, dry_run: bool =
         return {"ok": False, "detail_count": 0, "output_paths": {}, "written": written, "warnings": warnings, "errors": errors}
     curated = json.loads(curated_path.read_text(encoding="utf-8"))
     generated_at = utc_now()
-    records = signal_records(root, edition_date, curated, generated_at)
-    sources = sources_manifest_from_curated(curated, edition_date)
+    records = signal_records(root, edition_date, curated, generated_at, run_date, coverage_start, coverage_end, briefing_type)
+    sources = sources_manifest_from_curated(curated, edition_date, run_date, coverage_start, coverage_end, briefing_type)
+    source_record_ids = sorted({source["source_record_id"] for source in sources})
+    source_urls = sorted({source["url"] for source in sources if source.get("url")})
     categories = category_summary(records)
+    manifest_week_label = None
+    if coverage_start:
+        iso = datetime.fromisoformat(coverage_start).date().isocalendar()
+        manifest_week_label = f"{iso.year}-W{iso.week:02d}"
     run_manifest = {
         "ok": not errors,
         "dispatch_id": "dispatch-cascadia",
         "dispatch_slug": DISPATCH_SLUG,
+        "public_name": "The Cascadia Briefing",
+        "briefing_type": briefing_type,
+        "run_date": run_date or edition_date,
         "edition_date": edition_date,
+        "coverage_start": coverage_start,
+        "coverage_end": coverage_end,
+        "week_label": manifest_week_label,
+        "source_record_ids": source_record_ids,
+        "source_urls": source_urls,
         "generated_at": generated_at,
         "record_count": len(records),
         "source_count": len(sources),

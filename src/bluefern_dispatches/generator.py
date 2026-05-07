@@ -15,7 +15,7 @@ from typing import Any
 BASE_URL = "https://dispatches.thebluefernco.com"
 BLUE_FERN_URL = "https://thebluefernco.com"
 TEMPLATE_VERSION = "dispatches-static-v1"
-DEFAULT_BACKUP_ROOT = Path(r"C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups")
+DEFAULT_BACKUP_ROOT = Path(os.getenv("PUBLISH_BACKUP_ROOT", "output/tmp-backups-pages"))
 PUBLIC_ROOT_NAMES = {"site"}
 DETAIL_ROOT_NAMES = {"detail", "paid"}
 CNAME_VALUE = "dispatches.thebluefernco.com"
@@ -118,7 +118,14 @@ included where available.</p>"""
 
 
 def seed_dispatches(now: str) -> list[DispatchConfig]:
-    date = os.getenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+    # Use explicit seed edition date if provided via env, otherwise default
+    # to the current run date (the 'now' param is an ISO timestamp).
+    env_date = os.getenv("BLUEFERN_SEED_EDITION_DATE")
+    if env_date and env_date.strip():
+        date = env_date.strip()
+    else:
+        # 'now' is an ISO timestamp from build_site; extract YYYY-MM-DD
+        date = (now or "").split("T")[0] or "2026-05-03"
     gaza_sources = [
         SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", date),
         SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", date),
@@ -334,6 +341,44 @@ def render_dispatch_index(dispatch: DispatchConfig) -> str:
     return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
 
 
+def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
+    editions_root = site_root / slug / "editions"
+    if not editions_root.exists():
+        return []
+    return sorted(
+        (path.name for path in editions_root.iterdir() if path.is_dir() and len(path.name) == 10),
+        reverse=True,
+    )
+
+
+def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+    latest = edition_dates[0] if edition_dates else dispatch.edition_date
+    signal_pack_note = ""
+    if dispatch.slug == "cascadia":
+        signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
+    description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
+    recent = "\n".join(
+        f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
+        for date in edition_dates[:10]
+    )
+    body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="home">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
+    <p class="lede">{html.escape(description)}</p>
+    <p><a href="editions/{latest}/">Read the latest briefing</a></p>
+    {signal_pack_note}
+    <h2>Recent Editions</h2>
+    <ul class="edition-list">
+{recent}
+    </ul>
+  </main>
+{footer("")}"""
+    return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
+
+
 def render_archive(dispatch: DispatchConfig) -> str:
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="archive">
@@ -344,6 +389,26 @@ def render_archive(dispatch: DispatchConfig) -> str:
     <h1>Edition Archive</h1>
     <ul class="edition-list">
       <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(dispatch.name)} - {dispatch.edition_date}</a></li>
+    </ul>
+  </main>
+{footer("")}"""
+    return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
+
+
+def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+    items = "\n".join(
+        f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
+        for date in edition_dates
+    )
+    body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="archive">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">Archive</p>
+    <h1>Edition Archive</h1>
+    <ul class="edition-list">
+{items}
     </ul>
   </main>
 {footer("")}"""
@@ -394,6 +459,27 @@ def render_rss(dispatch: DispatchConfig) -> str:
     <link>{edition_url}</link>
     <guid>{edition_url}</guid>
   </item>
+</channel>
+</rss>
+"""
+
+
+def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+    items = "\n".join(
+        f"""  <item>
+    <title>{html.escape(dispatch.name)} - {date}</title>
+    <link>{BASE_URL}/{dispatch.slug}/editions/{date}/</link>
+    <guid>{BASE_URL}/{dispatch.slug}/editions/{date}/</guid>
+  </item>"""
+        for date in edition_dates
+    )
+    return f"""<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>{html.escape(dispatch.name)}</title>
+  <link>{BASE_URL}/{dispatch.slug}/</link>
+  <description>{html.escape(dispatch.tagline)}</description>
+{items}
 </channel>
 </rss>
 """
@@ -470,6 +556,13 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
         write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
         write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
+        if dispatch.slug == "gaza":
+            edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
+            if dispatch.edition_date not in edition_dates:
+                edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
+            write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates), dry_run, wrote)
+            write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates), dry_run, wrote)
+            write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates), dry_run, wrote)
     return {
         "ok": not errors,
         "dry_run": dry_run,

@@ -23,12 +23,13 @@ from bluefern_dispatches.generator import (
 
 
 @pytest.fixture()
-def built_site():
+def built_site(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     test_root = repo / "output" / "test-runs" / uuid.uuid4().hex
     work = test_root / "repo"
     shutil.copytree(repo / "assets", work / "assets")
     backup_root = test_root / "dispatches-bluefern-backups"
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
     result = build_site(work, dry_run=False, backup_root=backup_root)
     return work, backup_root, result
 

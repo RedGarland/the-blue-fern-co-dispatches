@@ -1,5 +1,19 @@
 [
   {
+    "decision_id": "decision-gaza-import-2026-04-30",
+    "record_id": "gaza-import-story-2026-04-30",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-04-30",
+    "included_public": true,
+    "included_detail": false,
+    "exclusion_reason": null,
+    "scoring_reasons": [
+      "Imported from older Gaza edition directory."
+    ],
+    "public_exposed": true
+  },
+  {
     "decision_id": "decision-gaza-story-001",
     "record_id": "gaza-story-001",
     "dispatch_id": "dispatch-gaza",
@@ -13,7 +27,7 @@
     "decision_id": "decision-story-b5a2f0ce428f",
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-05",
+    "edition_id": "cascadia-2026-05-06",
     "included_public": true,
     "included_detail": true,
     "exclusion_reason": null,
@@ -27,7 +41,7 @@
     "decision_id": "decision-story-c7a4b5528a8c",
     "record_id": "story-c7a4b5528a8c",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-05",
+    "edition_id": "cascadia-2026-05-06",
     "included_public": true,
     "included_detail": true,
     "exclusion_reason": null,
@@ -41,7 +55,7 @@
     "decision_id": "decision-story-d53365c68a09",
     "record_id": "story-d53365c68a09",
     "dispatch_id": "dispatch-cascadia",
-    "edition_id": "cascadia-2026-05-05",
+    "edition_id": "cascadia-2026-05-06",
     "included_public": false,
     "included_detail": false,
     "exclusion_reason": "sports",

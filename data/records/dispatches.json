@@ -8,7 +8,7 @@
     "is_free_public": true,
     "has_detail_tier": true,
     "created_at": "2026-05-03T00:00:00Z",
-    "updated_at": "2026-05-05T17:20:13.287633+00:00"
+    "updated_at": "2026-05-06T23:34:47.650288+00:00"
   },
   {
     "dispatch_id": "dispatch-gaza",
@@ -19,6 +19,6 @@
     "is_free_public": true,
     "has_detail_tier": false,
     "created_at": "2026-05-03T00:00:00Z",
-    "updated_at": "2026-05-05T17:20:13.287633+00:00"
+    "updated_at": "2026-05-07T01:05:31.334810+00:00"
   }
 ]

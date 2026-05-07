@@ -1,5 +1,6 @@
 import json
 import shutil
+import subprocess
 import uuid
 from pathlib import Path
 
@@ -7,6 +8,7 @@ import pytest
 
 from bluefern_dispatches.generator import (
     BASE_URL,
+    CASCADIA_LOGO_ASSET,
     CASCADIA_PUBLIC_DESCRIPTION,
     CNAME_VALUE,
     DEFAULT_BACKUP_ROOT,
@@ -115,10 +117,26 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     assert CASCADIA_PUBLIC_DESCRIPTION in cascadia_index
     assert "Cascadia Signal Pack" in cascadia_index
     assert 'href="/cascadia/"' not in cascadia_index
-    assert "cascadia-logo-placeholder.png" in cascadia_index
+    assert f"assets/{CASCADIA_LOGO_ASSET}" in cascadia_index
     assert cascadia_edition.exists()
     assert f"{BASE_URL}/cascadia/editions/2026-05-03/" in read(cascadia_edition)
     assert "class=\"briefing\"" in read(cascadia_edition)
+
+
+def test_cascadia_logo_asset_is_copied_to_public_locations(built_site):
+    work, _, _ = built_site
+    source_logo = work / "assets" / CASCADIA_LOGO_ASSET
+    global_logo = work / "output" / "site" / "assets" / CASCADIA_LOGO_ASSET
+    cascadia_logo = work / "output" / "site" / "cascadia" / "assets" / CASCADIA_LOGO_ASSET
+    cascadia_index = read(work / "output" / "site" / "cascadia" / "index.html")
+    cascadia_archive = read(work / "output" / "site" / "cascadia" / "archive.html")
+    cascadia_edition = read(work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html")
+
+    assert global_logo.read_bytes() == source_logo.read_bytes()
+    assert cascadia_logo.read_bytes() == source_logo.read_bytes()
+    assert f'src="assets/{CASCADIA_LOGO_ASSET}"' in cascadia_index
+    assert f'src="assets/{CASCADIA_LOGO_ASSET}"' in cascadia_archive
+    assert f'src="../../assets/{CASCADIA_LOGO_ASSET}"' in cascadia_edition
 
 
 def test_public_cascadia_pages_use_current_public_name(built_site):
@@ -230,8 +248,12 @@ def test_detail_roots_inside_public_site_are_rejected():
 
 def make_pages_repo(path):
     path.mkdir(parents=True)
-    (path / ".git").mkdir()
-    (path / ".git" / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-b", "main"], cwd=path, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "tests@example.com"], cwd=path, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=path, check=True, capture_output=True, text=True)
+    (path / ".keep").write_text("keep\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".keep"], cwd=path, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "commit", "-m", "Initial Pages repo"], cwd=path, check=True, capture_output=True, text=True)
     return path
 
 
@@ -276,7 +298,8 @@ def test_pages_copy_creates_cname_and_preserves_git(built_site):
     assert (pages_repo / "index.html").exists()
     assert (pages_repo / "assets" / ROOT_MASTHEAD_ASSET).exists()
     assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
-    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
+    assert (pages_repo / "cascadia" / "index.html").exists()
+    assert not (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
 
 
 def test_pages_publish_excludes_paid_detail_folders(built_site):
@@ -303,3 +326,24 @@ def test_commit_flag_does_not_imply_push(built_site):
     assert result["would_push"] is False
     assert result["pushed"] is False
     assert result["no_push"] is True
+    assert result["target_pages_branch"] == "gh-pages"
+    assert "git push origin gh-pages" in result["manual_push_command"]
+
+
+def test_pages_publish_commits_on_gh_pages_branch(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=True, no_push=True, backup_root=backup_root, pages_branch="gh-pages")
+
+    current = subprocess.run(["git", "branch", "--show-current"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    assert result["ok"] is True
+    assert result["current_branch"] == "main"
+    assert result["checked_out_branch"] == "gh-pages"
+    assert result["committed_branch"] == "gh-pages"
+    assert result["committed"] is True
+    assert result["would_push"] is False
+    assert result["pushed"] is False
+    assert current.stdout.strip() == "gh-pages"
+    assert (pages_repo / ".git").exists()
+    assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE

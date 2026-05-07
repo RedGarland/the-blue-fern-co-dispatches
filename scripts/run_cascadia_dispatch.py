@@ -2,7 +2,7 @@ from pathlib import Path
 import argparse
 import json
 import sys
-from datetime import date as local_date
+from datetime import date as local_date, timedelta
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -137,6 +137,18 @@ def resolve_week_args(args: argparse.Namespace) -> tuple[str, str, str]:
     return start.isoformat(), end.isoformat(), end.isoformat()
 
 
+def completed_week_windows(run_date: str, weeks: int) -> list[tuple[str, str, str]]:
+    if weeks < 1:
+        raise ValueError("--backfill-weeks must be at least 1")
+    start, end = previous_completed_week(run_date)
+    windows = []
+    for offset in range(weeks):
+        window_start = start - timedelta(days=7 * offset)
+        window_end = end - timedelta(days=7 * offset)
+        windows.append((window_start.isoformat(), window_end.isoformat(), window_end.isoformat()))
+    return windows
+
+
 def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     start, end, edition_date = resolve_week_args(args)
     aggregate = aggregate_weekly_curation(ROOT, args.date, local_date.fromisoformat(start), local_date.fromisoformat(end), edition_date=edition_date, dry_run=args.dry_run)
@@ -162,6 +174,54 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     return result
 
 
+def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object]:
+    results = []
+    warnings: list[str] = []
+    errors: list[str] = []
+    for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
+        aggregate = aggregate_weekly_curation(
+            ROOT,
+            args.date,
+            local_date.fromisoformat(start),
+            local_date.fromisoformat(end),
+            edition_date=edition_date,
+            dry_run=args.dry_run,
+        )
+        result = run_pipeline(
+            edition_date,
+            ingest=False,
+            normalize=False,
+            curate=False,
+            render=True,
+            dry_run=args.dry_run,
+            mode=mode,
+            run_date=args.date,
+            coverage_start=start,
+            coverage_end=end,
+            briefing_type="weekly",
+        )
+        result["weekly_aggregation"] = aggregate
+        result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
+        result["curated_count"] = aggregate.get("curated_count", result.get("curated_count", 0))
+        result["warnings"] = list(aggregate.get("warnings", [])) + list(result.get("warnings", []))
+        result["errors"] = list(aggregate.get("errors", [])) + list(result.get("errors", []))
+        result["ok"] = bool(aggregate.get("ok")) and bool(result.get("ok")) and not result["errors"]
+        warnings.extend(result["warnings"])
+        errors.extend(result["errors"])
+        results.append(result)
+    return {
+        "ok": not errors and all(bool(result.get("ok")) for result in results),
+        "date": args.date,
+        "run_date": args.date,
+        "mode": f"{mode}-backfill",
+        "backfill_weeks": args.backfill_weeks,
+        "edition_dates": [result.get("edition_date") for result in results],
+        "weekly_editions": results,
+        "warnings": warnings,
+        "errors": errors,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the standalone Cascadia Signal pipeline and Cascadia Briefing renderer.")
     parser.add_argument("--date", default=local_date.today().isoformat())
@@ -176,6 +236,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--week-start")
     parser.add_argument("--week-end")
     parser.add_argument("--archive-week")
+    parser.add_argument("--backfill-weeks", type=int)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     run_all = args.all or not any([args.ingest, args.normalize, args.curate, args.render, args.daily, args.weekly, args.weekly_public])
@@ -184,7 +245,15 @@ def main(argv: list[str] | None = None) -> int:
             result = run_pipeline(args.date, ingest=True, normalize=True, curate=True, render=False, dry_run=args.dry_run, mode="daily", briefing_type="daily")
             print(json.dumps(result, indent=2))
             return 0 if result["ok"] else 1
+        if args.backfill_weeks and not args.weekly_public:
+            raise ValueError("--backfill-weeks requires --weekly-public")
+        if args.backfill_weeks and (args.week_start or args.week_end or args.archive_week):
+            raise ValueError("--backfill-weeks cannot be combined with --week-start/--week-end or --archive-week")
         if args.weekly or args.weekly_public:
+            if args.backfill_weeks:
+                result = run_weekly_backfill(args, "weekly-public")
+                print(json.dumps(result, indent=2))
+                return 0 if result["ok"] else 1
             result = run_weekly_public(args, "weekly-public" if args.weekly_public else "weekly")
             print(json.dumps(result, indent=2))
             return 0 if result["ok"] else 1

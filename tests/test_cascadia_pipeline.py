@@ -10,7 +10,7 @@ import pytest
 from bluefern_dispatches.cascadia_curate import curate_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
-from bluefern_dispatches.cascadia_render import render_cascadia_edition
+from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, previous_completed_week
 from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, publish_pages
@@ -19,7 +19,7 @@ from bluefern_dispatches.shared_records import update_shared_records
 SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))
-from run_cascadia_dispatch import run_pipeline
+from run_cascadia_dispatch import completed_week_windows, run_pipeline
 
 
 @pytest.fixture()
@@ -53,6 +53,12 @@ def test_weekly_window_logic():
     assert tuple(day.isoformat() for day in explicit_week("2026-05-04", "2026-05-10")) == ("2026-05-04", "2026-05-10")
     with pytest.raises(ValueError):
         explicit_week("2026-05-05", "2026-05-10")
+    assert completed_week_windows("2026-05-11", 4) == [
+        ("2026-05-04", "2026-05-10", "2026-05-10"),
+        ("2026-04-27", "2026-05-03", "2026-05-03"),
+        ("2026-04-20", "2026-04-26", "2026-04-26"),
+        ("2026-04-13", "2026-04-19", "2026-04-19"),
+    ]
 
 
 def test_ingestion_runs_with_manual_fixture(cascadia_work_root):
@@ -218,8 +224,59 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     assert manifest["coverage_end"] == "2026-05-10"
     assert manifest["week_label"] == "2026-W19"
     assert manifest["source_record_ids"] == ["src-in"]
-    assert "2026-05-10" in (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    assert "2026-05-10" in archive
+    assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
     assert "Weekly source-backed regional briefings" in (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+
+
+def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work_root):
+    editions_root = cascadia_work_root / "output" / "site" / "cascadia" / "editions"
+    for day in ["2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07"]:
+        edition_dir = editions_root / day
+        edition_dir.mkdir(parents=True)
+        (edition_dir / "index.html").write_text(f"<p>Daily {day}</p>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps({"dispatch_slug": "cascadia", "edition_date": day, "briefing_type": "daily"}, indent=2),
+            encoding="utf-8",
+        )
+    weekly_dates = {
+        "2026-05-10": ("2026-05-04", "2026-05-10", "2026-W19"),
+        "2026-05-03": ("2026-04-27", "2026-05-03", "2026-W18"),
+        "2026-04-26": ("2026-04-20", "2026-04-26", "2026-W17"),
+        "2026-04-19": ("2026-04-13", "2026-04-19", "2026-W16"),
+    }
+    for edition_date, (coverage_start, coverage_end, week) in weekly_dates.items():
+        edition_dir = editions_root / edition_date
+        edition_dir.mkdir(parents=True)
+        (edition_dir / "index.html").write_text(f"<p>Weekly {edition_date}</p>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": "cascadia",
+                    "edition_date": edition_date,
+                    "briefing_type": "weekly",
+                    "coverage_start": coverage_start,
+                    "coverage_end": coverage_end,
+                    "week_label": week,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    written = []
+    refresh_cascadia_archive_pages(cascadia_work_root, dry_run=False, written=written)
+
+    archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    index = (cascadia_work_root / "output" / "site" / "cascadia" / "index.html").read_text(encoding="utf-8")
+    rss = (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+    for text in [archive, index, rss]:
+        for day in ["2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07"]:
+            assert day not in text
+        for weekly_date in weekly_dates:
+            assert weekly_date in text
+    assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
 
 def test_shared_dispatch_records_include_gaza_cascadia_and_signal_package(cascadia_work_root):
@@ -286,6 +343,15 @@ def test_pages_publish_copies_real_cascadia_public_edition(cascadia_work_root):
     normalize_sources(cascadia_work_root, "2026-05-03")
     curate_sources(cascadia_work_root, "2026-05-03")
     render_cascadia_edition(cascadia_work_root, "2026-05-03")
+    old_daily_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
+    old_daily_dir.mkdir(parents=True)
+    (old_daily_dir / "index.html").write_text("<p>Old daily Cascadia edition</p>", encoding="utf-8")
+    (old_daily_dir / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "cascadia", "edition_date": "2026-05-04", "briefing_type": "daily"}, indent=2),
+        encoding="utf-8",
+    )
+    (old_daily_dir / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (old_daily_dir / "curation_manifest.json").write_text("[]", encoding="utf-8")
     pages_repo = cascadia_work_root / "bluefern-dispatches-pages"
     pages_repo.mkdir()
     subprocess.run(["git", "init", "-b", "main"], cwd=pages_repo, check=True, capture_output=True, text=True)
@@ -294,6 +360,9 @@ def test_pages_publish_copies_real_cascadia_public_edition(cascadia_work_root):
     (pages_repo / ".keep").write_text("keep\n", encoding="utf-8")
     subprocess.run(["git", "add", ".keep"], cwd=pages_repo, check=True, capture_output=True, text=True)
     subprocess.run(["git", "commit", "-m", "Initial Pages repo"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    stale_pages_daily_dir = pages_repo / "cascadia" / "editions" / "2026-05-04"
+    stale_pages_daily_dir.mkdir(parents=True)
+    (stale_pages_daily_dir / "index.html").write_text("<p>Stale daily page</p>", encoding="utf-8")
 
     result = publish_pages(cascadia_work_root, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=cascadia_work_root / "backup")
 
@@ -306,6 +375,8 @@ def test_pages_publish_copies_real_cascadia_public_edition(cascadia_work_root):
     assert 'target="_blank" rel="noopener noreferrer"' in pages_html
     assert (pages_repo / "assets" / CASCADIA_LOGO_ASSET).read_bytes() == (cascadia_work_root / "assets" / CASCADIA_LOGO_ASSET).read_bytes()
     assert (pages_repo / "cascadia" / "assets" / CASCADIA_LOGO_ASSET).read_bytes() == (cascadia_work_root / "assets" / CASCADIA_LOGO_ASSET).read_bytes()
+    assert not (pages_repo / "cascadia" / "editions" / "2026-05-04").exists()
+    assert result["non_publishable_pages_editions_removed"]
     assert not (pages_repo / "detail").exists()
     assert not (pages_repo / "paid").exists()
 
@@ -355,3 +426,36 @@ def test_archive_week_cli_uses_sunday_edition_date(cascadia_work_root, monkeypat
     assert manifest["edition_date"] == "2026-05-10"
     assert manifest["coverage_start"] == "2026-05-04"
     assert manifest["coverage_end"] == "2026-05-10"
+
+
+def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+
+    code = run_cascadia_dispatch.main(["--weekly-public", "--backfill-weeks", "4", "--date", "2026-05-11"])
+
+    assert code == 0
+    expected = {
+        "2026-05-10": ("2026-05-04", "2026-05-10"),
+        "2026-05-03": ("2026-04-27", "2026-05-03"),
+        "2026-04-26": ("2026-04-20", "2026-04-26"),
+        "2026-04-19": ("2026-04-13", "2026-04-19"),
+    }
+    for edition_date, (coverage_start, coverage_end) in expected.items():
+        edition_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / edition_date
+        html = (edition_dir / "index.html").read_text(encoding="utf-8")
+        manifest = read_json(edition_dir / "edition_manifest.json")
+        assert "Weekly briefing" in html
+        assert coverage_start in html
+        assert coverage_end in html
+        assert "No qualifying source-backed Cascadia signals were identified" in html
+        assert manifest["briefing_type"] == "weekly"
+        assert manifest["edition_date"] == edition_date
+        assert manifest["coverage_start"] == coverage_start
+        assert manifest["coverage_end"] == coverage_end
+        assert manifest["run_date"] == "2026-05-11"
+        assert "source_record_ids" in manifest
+        assert "source_urls" in manifest
+    archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    assert all(edition_date in archive for edition_date in expected)

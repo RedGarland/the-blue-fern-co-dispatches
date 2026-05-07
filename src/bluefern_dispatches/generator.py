@@ -364,12 +364,39 @@ def render_dispatch_index(dispatch: DispatchConfig) -> str:
     return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
 
 
+def is_weekly_cascadia_manifest(manifest: dict[str, Any], edition_date: str) -> bool:
+    if manifest.get("dispatch_slug") != "cascadia":
+        return False
+    if manifest.get("edition_date") and manifest.get("edition_date") != edition_date:
+        return False
+    if manifest.get("briefing_type") == "weekly":
+        return True
+    return all(manifest.get(field) for field in ("coverage_start", "coverage_end", "week_label"))
+
+
+def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) -> bool:
+    if slug != "cascadia":
+        return True
+    manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+    if not manifest_path.exists():
+        return False
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return is_weekly_cascadia_manifest(manifest, edition_date)
+
+
 def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
     return sorted(
-        (path.name for path in editions_root.iterdir() if path.is_dir() and len(path.name) == 10),
+        (
+            path.name
+            for path in editions_root.iterdir()
+            if path.is_dir() and len(path.name) == 10 and public_edition_is_listable(site_root, slug, path.name)
+        ),
         reverse=True,
     )
 
@@ -423,7 +450,6 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str])
         f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
         for date in edition_dates
     )
-    description = f'\n    <p class="lede">{html.escape(CASCADIA_PUBLIC_DESCRIPTION)}</p>' if dispatch.slug == "cascadia" else ""
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="archive">
     <section class="hero">
@@ -431,7 +457,6 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str])
     </section>
     <p class="eyebrow">Archive</p>
     <h1>Edition Archive</h1>
-    {description}
     <ul class="edition-list">
 {items}
     </ul>
@@ -591,7 +616,7 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
         if dispatch.slug in {"gaza", "cascadia"}:
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
-            if dispatch.edition_date not in edition_dates:
+            if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates), dry_run, wrote)
@@ -621,7 +646,17 @@ def is_relative_to(path: Path, parent: Path) -> bool:
 def collect_public_site_files(site_root: Path) -> list[Path]:
     if not site_root.exists():
         return []
-    return sorted(path for path in site_root.rglob("*") if path.is_file())
+    files = []
+    for path in site_root.rglob("*"):
+        if not path.is_file():
+            continue
+        relative_parts = path.relative_to(site_root).parts
+        if len(relative_parts) >= 4 and relative_parts[0] == "cascadia" and relative_parts[1] == "editions":
+            edition_date = relative_parts[2]
+            if not public_edition_is_listable(site_root, "cascadia", edition_date):
+                continue
+        files.append(path)
+    return sorted(files)
 
 
 def validate_pages_publish(
@@ -699,6 +734,22 @@ def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool) 
     if not dry_run:
         cname.write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
     return copied, skipped
+
+
+def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[str]:
+    editions_root = pages_repo / "cascadia" / "editions"
+    if not editions_root.exists():
+        return []
+    removed: list[str] = []
+    for edition_dir in sorted(editions_root.iterdir()):
+        if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+            continue
+        if public_edition_is_listable(site_root, "cascadia", edition_dir.name):
+            continue
+        removed.append(str(edition_dir))
+        if not dry_run:
+            shutil.rmtree(edition_dir)
+    return removed
 
 
 def run_git(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -864,9 +915,11 @@ def publish_pages(
     would_copy = not errors
     copied: list[str] = []
     skipped: list[str] = []
+    removed_non_publishable: list[str] = []
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
 
     if not errors:
+        removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
         copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run)
         if not dry_run:
             errors.extend(validate_pages_repo_after_copy(pages_repo, site_root, expect_date))
@@ -887,6 +940,8 @@ def publish_pages(
         "dry_run": dry_run,
         "files_that_would_be_copied": copied if dry_run else [],
         "files_copied": [] if dry_run else copied,
+        "non_publishable_pages_editions_removed": [] if dry_run else removed_non_publishable,
+        "non_publishable_pages_editions_that_would_be_removed": removed_non_publishable if dry_run else [],
         "files_that_would_be_skipped": skipped,
         "would_copy": would_copy,
         "copied": bool(copied) and not dry_run,

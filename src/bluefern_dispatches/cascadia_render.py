@@ -135,7 +135,13 @@ def render_cascadia_html(
         grouped[story["category"]].append(story)
     groups = "\n".join(render_story_group(category, items) for category, items in sorted(grouped.items()))
     if not groups:
-        groups = "<p>No public Cascadia stories met the source and relevance threshold for this edition.</p>"
+        if coverage_start and coverage_end and briefing_type == "weekly":
+            groups = (
+                "<p>No qualifying source-backed Cascadia signals were identified "
+                f"for the {html.escape(coverage_start)} through {html.escape(coverage_end)} coverage window.</p>"
+            )
+        else:
+            groups = "<p>No public Cascadia stories met the source and relevance threshold for this edition.</p>"
     coverage_line = ""
     if coverage_start and coverage_end:
         coverage_line = f"Weekly briefing / Coverage: {html.escape(coverage_start)} through {html.escape(coverage_end)}"

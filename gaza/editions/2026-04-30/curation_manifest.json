@@ -1,0 +1,22 @@
+[
+  {
+    "story_id": "gaza-import-story-2026-04-30",
+    "title": "Dispatches From Gaza - 2026-04-30",
+    "summary": "Imported older Gaza edition. Original factual content was preserved without rewrite.",
+    "category": "imported-public-edition",
+    "score": null,
+    "scoring_reasons": [
+      "Imported from older Gaza edition directory."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [],
+    "source_links_detected": false,
+    "structured_sources_available": false,
+    "warnings": [
+      "missing structured source records; detected links are recorded only as import evidence",
+      "no source links detected in imported edition content"
+    ],
+    "generated_at": "2026-05-07T01:05:31.334810+00:00"
+  }
+]

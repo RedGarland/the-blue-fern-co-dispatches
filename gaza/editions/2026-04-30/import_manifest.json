@@ -1,0 +1,26 @@
+{
+  "imported_at": "2026-05-07T01:05:31.334810+00:00",
+  "edition_date": "2026-04-30",
+  "original_source_edition_directory": "C:\\Users\\Admin\\Desktop\\Python\\Gaza Dispatch V4\\output\\editions\\2026-04-30",
+  "best_source_file": "C:\\Users\\Admin\\Desktop\\Python\\Gaza Dispatch V4\\output\\editions\\2026-04-30\\edition.html",
+  "imported_files": [
+    "edition.html",
+    "edition.md",
+    "substack_post.md"
+  ],
+  "structured_source_manifest_candidates": [],
+  "structured_source_records_available": false,
+  "source_links_detected": false,
+  "detected_source_links": [],
+  "warnings": [
+    "missing structured source records; detected links are recorded only as import evidence",
+    "no source links detected in imported edition content"
+  ],
+  "did_not_invent_sources": true,
+  "blocked_public_parts": [
+    "detail",
+    "paid",
+    "premium",
+    "private"
+  ]
+}

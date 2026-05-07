@@ -26,7 +26,15 @@
     ],
     "included_in_public_summary": true,
     "included_in_detail_dataset": true,
-    "excluded_reason": null
+    "excluded_reason": null,
+    "source_window_date": "2026-05-03",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03"
   },
   {
     "story_id": "story-b5a2f0ce428f",
@@ -55,7 +63,15 @@
     ],
     "included_in_public_summary": true,
     "included_in_detail_dataset": true,
-    "excluded_reason": null
+    "excluded_reason": null,
+    "source_window_date": "2026-05-03",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03"
   },
   {
     "story_id": "story-d53365c68a09",
@@ -84,6 +100,14 @@
     ],
     "included_in_public_summary": false,
     "included_in_detail_dataset": false,
-    "excluded_reason": "sports"
+    "excluded_reason": "sports",
+    "source_window_date": "2026-05-03",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03"
   }
 ]

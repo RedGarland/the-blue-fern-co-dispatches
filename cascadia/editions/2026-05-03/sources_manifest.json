@@ -15,7 +15,12 @@
       "story-c7a4b5528a8c"
     ],
     "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
     "region_scope": "WA",
     "category_hint": "Transportation"
   },
@@ -35,7 +40,12 @@
       "story-d53365c68a09"
     ],
     "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
     "region_scope": "regional",
     "category_hint": "sports"
   },
@@ -55,7 +65,12 @@
       "story-b5a2f0ce428f"
     ],
     "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
     "region_scope": "OR",
     "category_hint": "Public safety"
   }

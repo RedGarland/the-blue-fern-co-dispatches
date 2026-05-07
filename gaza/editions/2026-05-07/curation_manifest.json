@@ -1,9 +1,9 @@
 [
   {
     "story_id": "gaza-story-2026-05-07-001",
-    "title": "Replace with source title",
-    "summary": "Replace with a short source-backed summary or snippet.",
-    "category": "humanitarian",
+    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
+    "summary": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
+    "category": "conflict",
     "score": 99,
     "scoring_reasons": [
       "Included because a complete project-local source record was provided."
@@ -11,18 +11,44 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-07-001"
+      "gaza-2026-05-07-ap-hamas-negotiator-son"
     ],
     "source_ids": [
-      "gaza-2026-05-07-001"
+      "gaza-2026-05-07-ap-hamas-negotiator-son"
     ],
     "source_urls": [
-      "https://example.com/source-article"
+      "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
     ],
     "publisher_names": [
-      "Replace with publisher"
+      "Associated Press"
     ],
     "edition_date": "2026-05-07",
-    "generated_at": "2026-05-07T16:59:23.227549+00:00"
+    "generated_at": "2026-05-07T17:03:15.952425+00:00"
+  },
+  {
+    "story_id": "gaza-story-2026-05-07-002",
+    "title": "Gazans confined to less than half of strip: UN",
+    "summary": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
+    "category": "humanitarian",
+    "score": 98,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-07-xinhua-ocha-confined"
+    ],
+    "source_ids": [
+      "gaza-2026-05-07-xinhua-ocha-confined"
+    ],
+    "source_urls": [
+      "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
+    ],
+    "publisher_names": [
+      "Xinhua"
+    ],
+    "edition_date": "2026-05-07",
+    "generated_at": "2026-05-07T17:03:15.952425+00:00"
   }
 ]

@@ -1,22 +1,43 @@
 [
   {
-    "source_record_id": "gaza-2026-05-07-001",
-    "source_id": "gaza-2026-05-07-001",
-    "title": "Replace with source title",
-    "url": "https://example.com/source-article",
-    "canonical_url": "https://example.com/source-article",
-    "publisher": "Replace with publisher",
+    "source_record_id": "gaza-2026-05-07-ap-hamas-negotiator-son",
+    "source_id": "gaza-2026-05-07-ap-hamas-negotiator-son",
+    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
+    "url": "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f",
+    "canonical_url": "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f",
+    "publisher": "Associated Press",
     "published_at": "2026-05-07T00:00:00Z",
-    "retrieved_at": "2026-05-07T00:00:00Z",
-    "summary_or_snippet": "Replace with a short source-backed summary or snippet.",
-    "source_type": "article",
+    "retrieved_at": "2026-05-07T00:00:00-07:00",
+    "summary_or_snippet": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
+    "source_type": "news",
     "region_scope": "Gaza",
-    "category_hint": "humanitarian",
-    "reliability_tier": "standard",
+    "category_hint": "conflict",
+    "reliability_tier": "wire-service",
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-07",
     "used_in_story_ids": [
       "gaza-story-2026-05-07-001"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-07-xinhua-ocha-confined",
+    "source_id": "gaza-2026-05-07-xinhua-ocha-confined",
+    "title": "Gazans confined to less than half of strip: UN",
+    "url": "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml",
+    "canonical_url": "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml",
+    "publisher": "Xinhua",
+    "published_at": "2026-05-07T00:00:00Z",
+    "retrieved_at": "2026-05-07T00:00:00-07:00",
+    "summary_or_snippet": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
+    "source_type": "news",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "wire-service",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-07",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-07-002"
     ],
     "claim_ids": []
   }

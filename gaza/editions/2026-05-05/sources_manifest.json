@@ -1,0 +1,23 @@
+[
+  {
+    "source_record_id": "gaza-2026-05-05-001",
+    "source_id": "gaza-2026-05-05-001",
+    "title": "Actual source title",
+    "url": "https://actual-source-url",
+    "canonical_url": "https://actual-source-url",
+    "publisher": "Actual publisher",
+    "published_at": "2026-05-05T00:00:00Z",
+    "retrieved_at": "2026-05-07T00:00:00Z",
+    "summary_or_snippet": "Short source-backed summary.",
+    "source_type": "article",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "standard",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-05",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-05-001"
+    ],
+    "claim_ids": []
+  }
+]

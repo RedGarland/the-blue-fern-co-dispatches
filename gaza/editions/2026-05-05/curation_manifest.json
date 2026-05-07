@@ -1,0 +1,28 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-05-001",
+    "title": "Actual source title",
+    "summary": "Short source-backed summary.",
+    "category": "humanitarian",
+    "score": 99,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-05-001"
+    ],
+    "source_ids": [
+      "gaza-2026-05-05-001"
+    ],
+    "source_urls": [
+      "https://actual-source-url"
+    ],
+    "publisher_names": [
+      "Actual publisher"
+    ],
+    "edition_date": "2026-05-05",
+    "generated_at": "2026-05-07T18:12:06.875511+00:00"
+  }
+]

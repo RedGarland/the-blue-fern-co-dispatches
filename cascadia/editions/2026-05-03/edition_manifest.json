@@ -11,7 +11,7 @@
   "week_label": "2026-W18",
   "source_record_ids": [],
   "source_urls": [],
-  "generated_at": "2026-05-08T14:31:09.581001+00:00",
+  "generated_at": "2026-05-08T22:44:16.147111+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
   "local_backup_path": null,
@@ -37,10 +37,17 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "sparse week: GDELT rate limits prevented usable provider results"
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "sparse week: no provider results"
   ],
   "errors": []
 }

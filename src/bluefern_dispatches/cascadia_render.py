@@ -10,7 +10,7 @@ from typing import Any
 
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
-from bluefern_dispatches.cascadia_weekly import week_label
+from bluefern_dispatches.cascadia_weekly import format_coverage_label, week_label
 from bluefern_dispatches.generator import (
     BASE_URL,
     CASCADIA_LOGO_ASSET,
@@ -53,15 +53,16 @@ def sources_manifest_from_curated(
     coverage_start: str | None = None,
     coverage_end: str | None = None,
     briefing_type: str | None = None,
+    coverage_label: str | None = None,
 ) -> list[dict[str, Any]]:
     by_id: dict[str, dict[str, Any]] = {}
     for story in curated:
         for record in story.get("source_records", []):
-            by_id[record["source_record_id"]] = {
+            item = {
                 "source_record_id": record["source_record_id"],
                 "source_id": record.get("source_id"),
                 "title": record.get("title"),
-                "url": record.get("canonical_url"),
+                "url": record.get("source_url") or record.get("url") or record.get("canonical_url"),
                 "publisher": record.get("publisher"),
                 "published_at": record.get("published_at"),
                 "retrieved_at": record.get("retrieved_at"),
@@ -75,9 +76,24 @@ def sources_manifest_from_curated(
                 "edition_date": edition_date,
                 "coverage_start": coverage_start,
                 "coverage_end": coverage_end,
+                "coverage_label": coverage_label,
                 "region_scope": record.get("region_scope"),
                 "category_hint": record.get("category_hint"),
             }
+            for field in [
+                "source_type",
+                "derived_from_edition_date",
+                "derived_from_edition_path",
+                "derived_from_manifest_path",
+                "original_source_record_id",
+                "source_url",
+                "source_title",
+                "weekly_date_basis",
+                "traceability_note",
+            ]:
+                if field in record:
+                    item[field] = record.get(field)
+            by_id[record["source_record_id"]] = item
     return sorted(by_id.values(), key=lambda item: item["source_record_id"])
 
 
@@ -88,6 +104,7 @@ def public_curation_manifest(
     coverage_start: str | None = None,
     coverage_end: str | None = None,
     briefing_type: str | None = None,
+    coverage_label: str | None = None,
 ) -> list[dict[str, Any]]:
     public = []
     for story in curated:
@@ -100,6 +117,7 @@ def public_curation_manifest(
         item["edition_date"] = edition_date
         item["coverage_start"] = coverage_start
         item["coverage_end"] = coverage_end
+        item["coverage_label"] = coverage_label
         public.append(item)
     return public
 
@@ -130,6 +148,7 @@ def render_cascadia_html(
     coverage_end: str | None = None,
     briefing_type: str = "weekly",
 ) -> str:
+    coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else edition_date
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for story in stories:
         grouped[story["category"]].append(story)
@@ -144,7 +163,7 @@ def render_cascadia_html(
             groups = "<p>No public Cascadia stories met the source and relevance threshold for this edition.</p>"
     coverage_line = ""
     if coverage_start and coverage_end:
-        coverage_line = f"Weekly briefing / Coverage: {html.escape(coverage_start)} through {html.escape(coverage_end)}"
+        coverage_line = f"Weekly briefing / {html.escape(coverage_label)} / Coverage: {html.escape(coverage_start)} through {html.escape(coverage_end)}"
     else:
         coverage_line = f"Regional systems briefing / {html.escape(edition_date)}"
     run_line = f"\n    <p class=\"edition-date\">Run date: {html.escape(run_date)}</p>" if run_date else ""
@@ -160,7 +179,7 @@ def render_cascadia_html(
     {groups}
   </main>
 {footer("../../")}"""
-    return page(f"{DISPATCH_NAME} - {edition_date}", f"{BASE_URL}/cascadia/editions/{edition_date}/", "../../assets/site.css", body, DISPATCH_NAME)
+    return page(f"{DISPATCH_NAME} - {coverage_label}", f"{BASE_URL}/cascadia/editions/{edition_date}/", "../../assets/site.css", body, DISPATCH_NAME)
 
 
 def write_json(path: Path, payload: Any, dry_run: bool, written: list[str]) -> None:
@@ -225,9 +244,9 @@ def refresh_cascadia_archive_pages(root: Path, dry_run: bool, written: list[str]
             stories=[],
         )
     public_root = site_root / DISPATCH_SLUG
-    generator_write_text(public_root / "index.html", render_dispatch_index_for_dates(dispatch, dates), dry_run, written)
-    generator_write_text(public_root / "archive.html", render_archive_for_dates(dispatch, dates), dry_run, written)
-    generator_write_text(public_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, written)
+    generator_write_text(public_root / "index.html", render_dispatch_index_for_dates(dispatch, dates, site_root), dry_run, written)
+    generator_write_text(public_root / "archive.html", render_archive_for_dates(dispatch, dates, site_root), dry_run, written)
+    generator_write_text(public_root / "rss.xml", render_rss_for_dates(dispatch, dates, site_root), dry_run, written)
 
 
 def render_cascadia_edition(
@@ -253,8 +272,9 @@ def render_cascadia_edition(
     curated = json.loads(curated_path.read_text(encoding="utf-8"))
     stories = public_stories(curated)
     errors.extend(validate_public_stories(stories))
-    sources_manifest = sources_manifest_from_curated(curated, edition_date, run_date, coverage_start, coverage_end, briefing_type)
-    curation_manifest = public_curation_manifest(curated, run_date, edition_date, coverage_start, coverage_end, briefing_type)
+    coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else None
+    sources_manifest = sources_manifest_from_curated(curated, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
+    curation_manifest = public_curation_manifest(curated, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
     html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type)
     generated_at = datetime.now(timezone.utc).isoformat()
     source_record_ids = sorted({source["source_record_id"] for source in sources_manifest})
@@ -268,6 +288,7 @@ def render_cascadia_edition(
         "edition_date": edition_date,
         "coverage_start": coverage_start,
         "coverage_end": coverage_end,
+        "coverage_label": coverage_label,
         "week_label": week_label(datetime.fromisoformat(coverage_start).date()) if coverage_start else None,
         "source_record_ids": source_record_ids,
         "source_urls": source_urls,

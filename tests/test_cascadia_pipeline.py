@@ -12,7 +12,7 @@ from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
-from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, previous_completed_week
+from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, format_coverage_label, previous_completed_week
 from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, publish_pages
 from bluefern_dispatches.shared_records import update_shared_records
 
@@ -59,6 +59,9 @@ def test_weekly_window_logic():
         ("2026-04-20", "2026-04-26", "2026-04-26"),
         ("2026-04-13", "2026-04-19", "2026-04-19"),
     ]
+    assert format_coverage_label("2026-04-13", "2026-04-19") == "Apr 13\u201319, 2026"
+    assert format_coverage_label("2026-04-27", "2026-05-03") == "Apr 27\u2013May 3, 2026"
+    assert format_coverage_label("2026-12-28", "2027-01-03") == "Dec 28, 2026\u2013Jan 3, 2027"
 
 
 def test_ingestion_runs_with_manual_fixture(cascadia_work_root):
@@ -214,7 +217,7 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     assert result["ok"] is True
     public_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-10"
     html = (public_dir / "index.html").read_text(encoding="utf-8")
-    assert "Weekly briefing / Coverage: 2026-05-04 through 2026-05-10" in html
+    assert "Weekly briefing / May 4\u201310, 2026 / Coverage: 2026-05-04 through 2026-05-10" in html
     assert "https://example.com/weekly" in html
     assert "https://example.com/outside" not in html
     manifest = read_json(public_dir / "edition_manifest.json")
@@ -222,6 +225,7 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     assert manifest["run_date"] == "2026-05-11"
     assert manifest["coverage_start"] == "2026-05-04"
     assert manifest["coverage_end"] == "2026-05-10"
+    assert manifest["coverage_label"] == "May 4\u201310, 2026"
     assert manifest["week_label"] == "2026-W19"
     assert manifest["source_record_ids"] == ["src-in"]
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
@@ -241,12 +245,12 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
             encoding="utf-8",
         )
     weekly_dates = {
-        "2026-05-10": ("2026-05-04", "2026-05-10", "2026-W19"),
-        "2026-05-03": ("2026-04-27", "2026-05-03", "2026-W18"),
-        "2026-04-26": ("2026-04-20", "2026-04-26", "2026-W17"),
-        "2026-04-19": ("2026-04-13", "2026-04-19", "2026-W16"),
+        "2026-05-10": ("2026-05-04", "2026-05-10", "2026-W19", "May 4\u201310, 2026"),
+        "2026-05-03": ("2026-04-27", "2026-05-03", "2026-W18", "Apr 27\u2013May 3, 2026"),
+        "2026-04-26": ("2026-04-20", "2026-04-26", "2026-W17", "Apr 20\u201326, 2026"),
+        "2026-04-19": ("2026-04-13", "2026-04-19", "2026-W16", "Apr 13\u201319, 2026"),
     }
-    for edition_date, (coverage_start, coverage_end, week) in weekly_dates.items():
+    for edition_date, (coverage_start, coverage_end, week, label) in weekly_dates.items():
         edition_dir = editions_root / edition_date
         edition_dir.mkdir(parents=True)
         (edition_dir / "index.html").write_text(f"<p>Weekly {edition_date}</p>", encoding="utf-8")
@@ -258,6 +262,7 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
                     "briefing_type": "weekly",
                     "coverage_start": coverage_start,
                     "coverage_end": coverage_end,
+                    "coverage_label": label,
                     "week_label": week,
                 },
                 indent=2,
@@ -276,6 +281,8 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
             assert day not in text
         for weekly_date in weekly_dates:
             assert weekly_date in text
+        for _, _, _, label in weekly_dates.values():
+            assert f"The Cascadia Briefing - {label}" in text
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
 
@@ -454,8 +461,74 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert manifest["edition_date"] == edition_date
         assert manifest["coverage_start"] == coverage_start
         assert manifest["coverage_end"] == coverage_end
+        assert manifest["coverage_label"] == format_coverage_label(coverage_start, coverage_end)
         assert manifest["run_date"] == "2026-05-11"
         assert "source_record_ids" in manifest
         assert "source_urls" in manifest
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     assert all(edition_date in archive for edition_date in expected)
+
+
+def test_backfill_weeks_from_existing_editions_preserves_traceability(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    old_daily = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-04-28"
+    old_daily.mkdir(parents=True)
+    source = {
+        "source_record_id": "old-src-1",
+        "title": "Idaho water infrastructure funding update",
+        "url": "https://example.com/idaho-water",
+        "publisher": "Example News",
+        "published_at": "2026-04-28T12:00:00Z",
+        "retrieved_at": "2026-04-28T13:00:00Z",
+        "category_hint": "Infrastructure",
+        "region_scope": "ID",
+    }
+    (old_daily / "sources_manifest.json").write_text(json.dumps([source, dict(source)]), encoding="utf-8")
+    (old_daily / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "old-story-1",
+                    "title": "Idaho water infrastructure funding update",
+                    "summary": "Idaho water infrastructure funding update",
+                    "category": "Infrastructure",
+                    "score": 72,
+                    "source_record_ids": ["old-src-1"],
+                    "source_urls": ["https://example.com/idaho-water"],
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": True,
+                    "excluded_reason": None,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    empty_daily = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-04-29"
+    empty_daily.mkdir(parents=True)
+    (empty_daily / "sources_manifest.json").write_text("[]", encoding="utf-8")
+
+    code = run_cascadia_dispatch.main(["--weekly-public", "--backfill-weeks", "1", "--date", "2026-05-04", "--from-existing-editions"])
+
+    assert code == 0
+    edition_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
+    sources = read_json(edition_dir / "sources_manifest.json")
+    curation = read_json(edition_dir / "curation_manifest.json")
+    html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    rss = (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+
+    assert "Idaho water infrastructure funding update" in html
+    assert "https://example.com/idaho-water" in html
+    assert len(sources) == 1
+    assert sources[0]["source_url"] == "https://example.com/idaho-water"
+    assert sources[0]["original_source_record_id"] == "old-src-1"
+    assert sources[0]["source_type"] == "existing_cascadia_manifest"
+    assert sources[0]["weekly_date_basis"] == "published_at"
+    assert sources[0]["traceability_note"] == "Derived from prior Cascadia edition manifest; original source URL preserved."
+    assert curation[0]["derived_from_edition_date"] == "2026-04-28"
+    assert curation[0]["traceability_note"] == "Derived from prior Cascadia edition manifest; original source URL preserved."
+    assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in archive
+    assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in rss
+    assert "2026-04-28" not in archive

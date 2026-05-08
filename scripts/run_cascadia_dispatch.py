@@ -15,7 +15,7 @@ from bluefern_dispatches.cascadia_ingest import ingest_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
-from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, previous_completed_week
+from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, backfill_weekly_from_existing_editions, containing_week, explicit_week, previous_completed_week
 from bluefern_dispatches.shared_records import update_shared_records
 
 
@@ -179,14 +179,24 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
     warnings: list[str] = []
     errors: list[str] = []
     for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
-        aggregate = aggregate_weekly_curation(
-            ROOT,
-            args.date,
-            local_date.fromisoformat(start),
-            local_date.fromisoformat(end),
-            edition_date=edition_date,
-            dry_run=args.dry_run,
-        )
+        if args.from_existing_editions:
+            aggregate = backfill_weekly_from_existing_editions(
+                ROOT,
+                args.date,
+                local_date.fromisoformat(start),
+                local_date.fromisoformat(end),
+                edition_date=edition_date,
+                dry_run=args.dry_run,
+            )
+        else:
+            aggregate = aggregate_weekly_curation(
+                ROOT,
+                args.date,
+                local_date.fromisoformat(start),
+                local_date.fromisoformat(end),
+                edition_date=edition_date,
+                dry_run=args.dry_run,
+            )
         result = run_pipeline(
             edition_date,
             ingest=False,
@@ -215,6 +225,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
         "run_date": args.date,
         "mode": f"{mode}-backfill",
         "backfill_weeks": args.backfill_weeks,
+        "from_existing_editions": bool(args.from_existing_editions),
         "edition_dates": [result.get("edition_date") for result in results],
         "weekly_editions": results,
         "warnings": warnings,
@@ -237,6 +248,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--week-end")
     parser.add_argument("--archive-week")
     parser.add_argument("--backfill-weeks", type=int)
+    parser.add_argument("--from-existing-editions", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     run_all = args.all or not any([args.ingest, args.normalize, args.curate, args.render, args.daily, args.weekly, args.weekly_public])
@@ -249,6 +261,8 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--backfill-weeks requires --weekly-public")
         if args.backfill_weeks and (args.week_start or args.week_end or args.archive_week):
             raise ValueError("--backfill-weeks cannot be combined with --week-start/--week-end or --archive-week")
+        if args.from_existing_editions and not args.backfill_weeks:
+            raise ValueError("--from-existing-editions requires --backfill-weeks")
         if args.weekly or args.weekly_public:
             if args.backfill_weeks:
                 result = run_weekly_backfill(args, "weekly-public")

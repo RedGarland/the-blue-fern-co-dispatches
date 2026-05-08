@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from bluefern_dispatches.cascadia_weekly import format_coverage_label
+
 
 BASE_URL = "https://dispatches.thebluefernco.com"
 BLUE_FERN_URL = "https://thebluefernco.com"
@@ -387,6 +389,28 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     return is_weekly_cascadia_manifest(manifest, edition_date)
 
 
+def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> dict[str, Any]:
+    manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+    if not manifest_path.exists():
+        return {}
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
+    if dispatch.slug != "cascadia":
+        return edition_date
+    manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+    if manifest.get("coverage_label"):
+        return str(manifest["coverage_label"])
+    if manifest.get("coverage_start") and manifest.get("coverage_end"):
+        return format_coverage_label(str(manifest["coverage_start"]), str(manifest["coverage_end"]))
+    return edition_date
+
+
 def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
@@ -401,14 +425,15 @@ def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
     )
 
 
-def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
     latest = edition_dates[0] if edition_dates else dispatch.edition_date
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
         signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
     description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
+    site_root = site_root or Path("output") / "site"
     recent = "\n".join(
-        f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
+        f'      <li><span class="edition-date">{html.escape(public_edition_label(site_root, dispatch, date))}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</a></li>'
         for date in edition_dates[:10]
     )
     body = f"""{header(dispatch.name, "", "archive.html")}
@@ -445,9 +470,10 @@ def render_archive(dispatch: DispatchConfig) -> str:
     return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
 
 
-def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
+    site_root = site_root or Path("output") / "site"
     items = "\n".join(
-        f'      <li><span class="edition-date">{date}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {date}</a></li>'
+        f'      <li><span class="edition-date">{html.escape(public_edition_label(site_root, dispatch, date))}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</a></li>'
         for date in edition_dates
     )
     body = f"""{header(dispatch.name, "", "archive.html")}
@@ -516,12 +542,14 @@ def render_rss(dispatch: DispatchConfig) -> str:
 """
 
 
-def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str]) -> str:
+def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
+    site_root = site_root or Path("output") / "site"
     items = "\n".join(
         f"""  <item>
-    <title>{html.escape(dispatch.name)} - {date}</title>
+    <title>{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</title>
     <link>{BASE_URL}/{dispatch.slug}/editions/{date}/</link>
     <guid>{BASE_URL}/{dispatch.slug}/editions/{date}/</guid>
+    <description>{html.escape(public_edition_label(site_root, dispatch, date))}</description>
   </item>"""
         for date in edition_dates
     )
@@ -618,9 +646,9 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
-            write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates), dry_run, wrote)
-            write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates), dry_run, wrote)
-            write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates), dry_run, wrote)
+            write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+            write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+            write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
     return {
         "ok": not errors,
         "dry_run": dry_run,

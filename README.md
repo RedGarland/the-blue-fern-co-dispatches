@@ -25,6 +25,14 @@ python scripts\publish_github_pages.py --dry-run
 
 The script does not push, force-push, delete pages, or change DNS.
 
+## Doctor
+
+Check the project contract and publish safety assumptions:
+
+```powershell
+python scripts\doctor.py
+```
+
 ## GitHub Pages Repo Publishing
 
 GitHub Pages and DNS must be configured separately. This project only prepares a deployable static site root in the local Pages repo.

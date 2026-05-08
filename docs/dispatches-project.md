@@ -230,6 +230,7 @@ Source configuration:
 ```text
 data/dispatches/cascadia/sources.yml
 data/dispatches/cascadia/historical_sources.yml
+data/dispatches/cascadia/source_registry.yml
 ```
 
 Full run:
@@ -252,7 +253,48 @@ python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Pyth
 
 The public Cascadia edition is weekly. Monday runs cover the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
 
-Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. Provider order lives in `data/dispatches/cascadia/historical_sources.yml`; supported modes are `--historical-provider all`, `--historical-provider manual`, and `--historical-provider gdelt`. Sparse weeks are explained by `historical_search_report.json`, including provider counts, manual validation status, GDELT cache/rate-limit diagnostics, dedupe counts, final saved source count, and a recommendation. Unsupported stories are omitted.
+Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. Supported modes are `--historical-provider all`, `--historical-provider manual`, `--historical-provider registry`, `--historical-provider gdelt`, and comma-separated combinations such as `registry,manual` or `gdelt,registry,manual`. Sparse weeks are explained by `historical_search_report.json`, including provider counts, manual validation status, registry cache/fetch diagnostics, GDELT cache/rate-limit diagnostics, dedupe counts, final saved source count, and a recommendation. Unsupported stories are omitted.
+
+### Cascadia layered free-source model
+
+The Cascadia source portfolio is intentionally layered and free:
+
+- Tier 1 official/public sources: state agencies, county/city emergency management, transportation departments, health departments, ecology/environment agencies, utilities/public infrastructure feeds, public safety alerts, and official press releases.
+- Tier 2 free structured search providers: GDELT and any future free/no-key provider only after it is safe and reliable enough for this project.
+- Tier 3 public RSS/local-regional sources: public radio, nonprofit/local news, statehouse/public-policy outlets, and stable local/regional feeds where publicly accessible.
+- Tier 4 manual supplements: `manual_sources.json`, which remains first-class and validated.
+
+The model requires no paid APIs or paid API keys, has no old project dependency, and follows the project rule: no fact without a traceable source URL. Registry sources live in `data/dispatches/cascadia/source_registry.yml`; registry feed cache files live under `data/dispatches/cascadia/cache/registry/`. Page-only official sources are retained as curated source inventory and diagnostics, but the collector only fetches RSS, Atom, and alert feeds automatically.
+
+Run weekly with all free providers:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public --historical-search --historical-provider all
+```
+
+Backfill four weeks with all providers:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search --historical-provider all
+```
+
+Registry-only test:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider registry
+```
+
+Manual plus registry:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider registry,manual
+```
+
+Gap report:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --source-gap-report
+```
 
 Manual Cascadia supplement workflow:
 
@@ -272,7 +314,7 @@ Validate without publishing:
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --validate-manual-sources
 ```
 
-Generate with manual plus GDELT:
+Generate with manual plus registry plus GDELT:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider all

@@ -255,6 +255,7 @@ Source config:
 ```text
 data/dispatches/cascadia/sources.yml
 data/dispatches/cascadia/historical_sources.yml
+data/dispatches/cascadia/source_registry.yml
 ```
 
 Run the full Cascadia dispatch for a date:
@@ -290,7 +291,43 @@ python scripts\run_cascadia_dispatch.py --week-start 2026-04-20 --week-end 2026-
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 ```
 
-Historical search uses project-local source records, not old Cascadia/FDA project artifacts. Provider order lives in `data/dispatches/cascadia/historical_sources.yml`; supported providers are `manual` and `gdelt`. The default historical provider mode is `all`, which loads project-local manual supplements and then queries enabled provider slots. Each run writes `historical_sources.json` and `historical_search_report.json` in the same weekly source folder, preserving URLs, publishers, dates, snippets, provider IDs, queries, warnings, exclusions, dedupe counts, provider counts, manual validation status, and a recommendation. If no qualifying records are found, the weekly public page renders a clean no-source message and does not invent stories.
+Historical search uses project-local source records, not old Cascadia/FDA project artifacts. The default historical provider mode is `all`, which runs manual supplements, curated registry sources, and GDELT in that order. Each run writes `historical_sources.json`, `historical_search_report.json`, and registry diagnostics when applicable in the same weekly source folder, preserving URLs, publishers, dates, snippets, provider IDs, source IDs, queries/feed URLs, warnings, exclusions, dedupe counts, provider counts, manual validation status, registry cache status, and a recommendation. If no qualifying records are found, the weekly public page renders a clean no-source message and does not invent stories.
+
+### Cascadia layered free-source model
+
+The Cascadia Briefing uses a layered free-source model. Tier 1 is official/public sources such as state agencies, emergency management, transportation, public health, environment, utilities, public safety alerts, and official press-release pages. Tier 2 is free structured search providers, currently GDELT as a broad fallback. Tier 3 is public RSS or Atom feeds from regional public-media, nonprofit, and local/regional publishers where the feed is publicly accessible. Tier 4 is the project-local `manual_sources.json` weekly supplement workflow.
+
+No paid APIs, paid API keys, old project dependencies, old rendered prose, or invented facts are required. Every public story must trace back to a source URL. Registry feed fetches are cached under `data/dispatches/cascadia/cache/registry/`; non-feed registry entries are kept as curated source inventory and reported as skipped rather than scraped.
+
+Run weekly with all free providers:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public --historical-search --historical-provider all
+```
+
+Backfill four weeks with all providers:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search --historical-provider all
+```
+
+Registry-only test:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider registry
+```
+
+Manual plus registry:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider registry,manual
+```
+
+Gap report:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --source-gap-report
+```
 
 Manual Cascadia weekly supplements live at:
 
@@ -318,7 +355,7 @@ Validate without publishing:
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --validate-manual-sources
 ```
 
-Generate with manual plus GDELT:
+Generate with manual plus registry plus GDELT:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider all

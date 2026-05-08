@@ -14,6 +14,7 @@ from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
+from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, load_source_registry
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, format_coverage_label, previous_completed_week
 from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, publish_pages
 from bluefern_dispatches.shared_records import update_shared_records
@@ -33,7 +34,22 @@ def cascadia_work_root():
     shutil.copytree(repo / "assets", root / "assets")
     shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "sources.yml", root / "data" / "dispatches" / "cascadia" / "sources.yml")
     shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "historical_sources.yml", root / "data" / "dispatches" / "cascadia" / "historical_sources.yml")
+    shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "source_registry.yml", root / "data" / "dispatches" / "cascadia" / "source_registry.yml")
     shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "manual_sources.json", root / "data" / "dispatches" / "cascadia" / "manual_sources.json")
+    registry_path = root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_lines = registry_path.read_text(encoding="utf-8").splitlines()
+    updated_lines = []
+    current_fetchable = False
+    for line in registry_lines:
+        if line.startswith("  - source_id:"):
+            current_fetchable = False
+        if line.strip() in {"source_type: rss", "source_type: atom", "source_type: alert_feed"}:
+            current_fetchable = True
+        if current_fetchable and line.strip() == "enabled: true":
+            updated_lines.append(line.replace("true", "false"))
+            continue
+        updated_lines.append(line)
+    registry_path.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
     return root
 
 
@@ -47,6 +63,96 @@ def test_cascadia_sources_yml_loads(cascadia_work_root):
     assert sources
     assert any(source["source_id"] == "cascadia-manual" for source in sources)
     assert all("reliability_tier" in source for source in sources)
+
+
+def test_cascadia_source_registry_loads_free_sources(cascadia_work_root):
+    registry = load_source_registry(cascadia_work_root)
+
+    assert registry
+    assert any(source["source_id"] == "wa-doh-newsroom" for source in registry)
+    assert any(source["source_id"] == "manual-weekly-supplements" and source["tier"] == 4 for source in registry)
+    assert all("url" in source for source in registry)
+    assert not any("api_key" in json.dumps(source).lower() for source in registry)
+
+
+def test_registry_feed_parses_filters_dedupes_and_warns(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: official-wa-feed
+    name: Official WA Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/feed.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [transportation, infrastructure]
+    reliability_tier: official-public
+    publisher: Washington Example Agency
+    refresh_mode: archive_limited
+    notes: Test feed.
+  - source_id: disabled-feed
+    name: Disabled Feed
+    tier: 3
+    source_type: rss
+    url: https://example.com/disabled.xml
+    enabled: false
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [government]
+    reliability_tier: test
+    publisher: Disabled
+    refresh_mode: archive_limited
+    notes: Should be skipped.
+""",
+        encoding="utf-8",
+    )
+    feed = """<?xml version="1.0"?>
+<rss><channel>
+  <item><title>Washington bridge repair closes route</title><link>https://example.com/bridge?utm=1</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure road closure.</description></item>
+  <item><title>Washington bridge repair closes route</title><link>https://example.com/bridge?utm=2</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure road closure.</description></item>
+  <item><title>Washington missing url</title><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure.</description></item>
+  <item><title>Washington bridge old item</title><link>https://example.com/old</link><pubDate>Tue, 21 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure.</description></item>
+  <item><title>Washington emergency management update</title><link>https://example.com/no-date</link><description>Emergency management update.</description></item>
+</channel></rss>"""
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return feed.encode("utf-8")
+
+    calls = []
+
+    def fake_urlopen(request, timeout):
+        calls.append(request.full_url)
+        return FakeResponse()
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_source_registry.urllib.request.urlopen", fake_urlopen)
+
+    week_start, week_end = containing_week("2026-04-28")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+    cached = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T13:00:00Z")
+
+    assert calls == ["https://example.com/feed.xml"]
+    assert len(result["records"]) == 2
+    assert cached["report"]["registry_cache_hits"] == 1
+    assert result["records"][0]["source_id"] == "official-wa-feed"
+    assert result["records"][0]["tier"] == 1
+    assert result["records"][0]["source_type"] == "rss"
+    assert result["report"]["registry_exclusion_reasons"]["duplicate"] == 1
+    assert result["report"]["registry_exclusion_reasons"]["missing_url"] == 1
+    assert result["report"]["registry_exclusion_reasons"]["outside_date_window"] == 1
+    assert any("weak date basis" in warning for warning in result["warnings"])
 
 
 def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_root, monkeypatch):
@@ -459,6 +565,26 @@ def test_historical_provider_modes_and_manual_survives_gdelt_failure(cascadia_wo
     week_start, week_end = containing_week("2026-04-28")
     manual_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
     manual_dir.mkdir(parents=True)
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: registry-wa-feed
+    name: Registry WA Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/registry.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [utilities]
+    reliability_tier: official-public
+    publisher: Registry Agency
+    refresh_mode: archive_limited
+    notes: Test feed.
+""",
+        encoding="utf-8",
+    )
     (manual_dir / "manual_sources.json").write_text(
         json.dumps(
             [
@@ -487,21 +613,41 @@ def test_historical_provider_modes_and_manual_survives_gdelt_failure(cascadia_wo
                 }
             ]
 
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return b"<rss><channel><item><title>Washington utility infrastructure registry update</title><link>https://example.com/registry-utility</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Washington utility infrastructure update.</description></item></channel></rss>"
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_source_registry.urllib.request.urlopen", lambda request, timeout: FakeResponse())
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
     manual_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="manual")
+    registry_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="registry", refresh_cache=True)
     gdelt_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="gdelt")
-    all_sources = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03")
+    registry_manual = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="registry,manual", refresh_cache=True)
+    all_sources = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", refresh_cache=True)
 
     assert manual_only["report"]["source_count_by_provider"] == {"manual": 1}
+    assert registry_only["report"]["source_count_by_provider"] == {"registry": 1}
     assert gdelt_only["report"]["source_count_by_provider"] == {"gdelt": 1}
-    assert all_sources["report"]["source_count_by_provider"] == {"gdelt": 1, "manual": 1}
+    assert registry_manual["report"]["source_count_by_provider"] == {"manual": 1, "registry": 1}
+    assert all_sources["report"]["source_count_by_provider"] == {"gdelt": 1, "manual": 1, "registry": 1}
+    assert all_sources["report"]["registry_records_saved"] == 1
+    assert all_sources["report"]["source_count_by_type"]["rss"] == 1
 
     class FailingGDELT(GDELTProvider):
         def search(self, start_date, end_date, query_terms, max_results):
             raise OSError("network down")
 
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FailingGDELT)
-    fallback = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03")
+    fallback = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="manual,gdelt")
 
     assert fallback["ok"] is True
     assert fallback["source_count"] == 1
@@ -518,7 +664,7 @@ def test_source_gap_report_is_read_only_and_recommends_actions(cascadia_work_roo
     folder.mkdir(parents=True)
     (folder / "manual_sources.json").write_text("[]", encoding="utf-8")
     (folder / "historical_sources.json").write_text(
-        json.dumps([{"provider_id": "gdelt", "url": "https://example.com/one"}]),
+        json.dumps([{"provider_id": "gdelt", "url": "https://example.com/one"}, {"provider_id": "registry", "url": "https://example.com/two"}]),
         encoding="utf-8",
     )
     before = sorted(str(path) for path in cascadia_work_root.rglob("*") if path.is_file())
@@ -528,6 +674,9 @@ def test_source_gap_report_is_read_only_and_recommends_actions(cascadia_work_roo
 
     assert result["ok"] is True
     assert len(result["weeks"]) == 4
+    assert result["weeks"][0]["registry_source_count"] == 1
+    assert result["weeks"][0]["gdelt_source_count"] == 1
+    assert "weak_provider_count" in result["weeks"][0]
     assert result["weeks"][0]["recommended_action"] == "provider sparse; manual supplement recommended"
     assert result["weeks"][1]["recommended_action"] == "add manual_sources.json"
     assert before == after

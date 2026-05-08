@@ -1,0 +1,280 @@
+sources:
+  - source_id: wa-doh-newsroom
+    name: Washington State Department of Health Newsroom
+    tier: 1
+    source_type: official_page
+    url: https://doh.wa.gov/newsroom
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [health, public_safety]
+    reliability_tier: official-public
+    publisher: Washington State Department of Health
+    refresh_mode: archive_limited
+    notes: Public state health newsroom and health alerts index.
+
+  - source_id: wa-ecology-news
+    name: Washington State Department of Ecology News
+    tier: 1
+    source_type: official_page
+    url: https://ecology.wa.gov/about-us/who-we-are/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [environment, agriculture, utilities, emergency_management]
+    reliability_tier: official-public
+    publisher: Washington State Department of Ecology
+    refresh_mode: archive_limited
+    notes: Public agency news page for environment, water, drought, cleanup, and climate items.
+
+  - source_id: wa-emergency-management-news
+    name: Washington Emergency Management Division News
+    tier: 1
+    source_type: official_page
+    url: https://mil.wa.gov/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [emergency_management, public_safety, infrastructure]
+    reliability_tier: official-public
+    publisher: Washington Military Department Emergency Management Division
+    refresh_mode: archive_limited
+    notes: Public emergency management news page.
+
+  - source_id: wa-wsdot-news
+    name: Washington State Department of Transportation News
+    tier: 1
+    source_type: press_release_page
+    url: https://wsdot.wa.gov/about/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [transportation, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Washington State Department of Transportation
+    refresh_mode: archive_limited
+    notes: Public state transportation news and travel alerts page.
+
+  - source_id: or-newsroom-statewide
+    name: Oregon State Newsroom
+    tier: 1
+    source_type: official_page
+    url: https://apps.oregon.gov/oregon-newsroom/OR/Posts
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [government, emergency_management, health, housing, transportation, environment]
+    reliability_tier: official-public
+    publisher: State of Oregon
+    refresh_mode: archive_limited
+    notes: Public statewide newsroom with agency, category, and date filters.
+
+  - source_id: or-oha-news
+    name: Oregon Health Authority News Releases
+    tier: 1
+    source_type: press_release_page
+    url: https://www.oregon.gov/OHA/ERD/Pages/News-Releases.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [health, public_safety, government]
+    reliability_tier: official-public
+    publisher: Oregon Health Authority
+    refresh_mode: archive_limited
+    notes: Public health agency news and notices page.
+
+  - source_id: or-odot-news
+    name: Oregon Department of Transportation News
+    tier: 1
+    source_type: press_release_page
+    url: https://www.oregon.gov/odot/Pages/news.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [transportation, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Oregon Department of Transportation
+    refresh_mode: archive_limited
+    notes: Public state transportation news page.
+
+  - source_id: or-deq-newsroom
+    name: Oregon Department of Environmental Quality Newsroom
+    tier: 1
+    source_type: official_page
+    url: https://apps.oregon.gov/oregon-newsroom/OR/DEQ/Posts
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [environment, utilities, public_safety]
+    reliability_tier: official-public
+    publisher: Oregon Department of Environmental Quality
+    refresh_mode: archive_limited
+    notes: Public Oregon Newsroom agency page for DEQ posts.
+
+  - source_id: idaho-news-statewide
+    name: Idaho.gov News
+    tier: 1
+    source_type: official_page
+    url: https://www.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [government, public_safety, health, transportation, environment]
+    reliability_tier: official-public
+    publisher: State of Idaho
+    refresh_mode: archive_limited
+    notes: Public state news index.
+
+  - source_id: idaho-dhw-news
+    name: Idaho Department of Health and Welfare News
+    tier: 1
+    source_type: official_page
+    url: https://healthandwelfare.idaho.gov/news
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [health, public_safety, food_security]
+    reliability_tier: official-public
+    publisher: Idaho Department of Health and Welfare
+    refresh_mode: archive_limited
+    notes: Public health and welfare news page.
+
+  - source_id: idaho-transportation-news
+    name: Idaho Transportation Department News
+    tier: 1
+    source_type: press_release_page
+    url: https://itd.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [transportation, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Idaho Transportation Department
+    refresh_mode: archive_limited
+    notes: Public transportation department news page.
+
+  - source_id: nws-seattle-alerts
+    name: National Weather Service Seattle Alerts
+    tier: 1
+    source_type: alert_feed
+    url: https://alerts.weather.gov/cap/wwaatmget.php?x=WAC000&y=0
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [emergency_management, public_safety, environment]
+    reliability_tier: official-public
+    publisher: National Weather Service
+    refresh_mode: current
+    notes: Public CAP/Atom alert feed for Washington.
+
+  - source_id: nws-oregon-alerts
+    name: National Weather Service Oregon Alerts
+    tier: 1
+    source_type: alert_feed
+    url: https://alerts.weather.gov/cap/wwaatmget.php?x=ORC000&y=0
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [emergency_management, public_safety, environment]
+    reliability_tier: official-public
+    publisher: National Weather Service
+    refresh_mode: current
+    notes: Public CAP/Atom alert feed for Oregon.
+
+  - source_id: nws-idaho-alerts
+    name: National Weather Service Idaho Alerts
+    tier: 1
+    source_type: alert_feed
+    url: https://alerts.weather.gov/cap/wwaatmget.php?x=IDC000&y=0
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [emergency_management, public_safety, environment]
+    reliability_tier: official-public
+    publisher: National Weather Service
+    refresh_mode: current
+    notes: Public CAP/Atom alert feed for Idaho.
+
+  - source_id: gdelt
+    name: GDELT 2.1 Document API
+    tier: 2
+    source_type: search_provider
+    url: https://api.gdeltproject.org/api/v2/doc/doc
+    enabled: true
+    state_scope: PNW
+    geographic_scope: Washington, Oregon, Idaho, and Pacific Northwest
+    category_hints: [infrastructure, transportation, health, public_safety, environment, economy, housing, emergency_management, utilities, agriculture, food_security, government]
+    reliability_tier: broad-free-provider
+    publisher: GDELT Project
+    refresh_mode: historical_if_available
+    notes: Free no-key public structured search provider used as broad fallback.
+
+  - source_id: opb-rss
+    name: Oregon Public Broadcasting RSS
+    tier: 3
+    source_type: rss
+    url: https://www.opb.org/rss/
+    enabled: true
+    state_scope: PNW
+    geographic_scope: Oregon and Pacific Northwest
+    category_hints: [government, environment, health, housing, economy, public_safety, transportation]
+    reliability_tier: public-media
+    publisher: Oregon Public Broadcasting
+    refresh_mode: archive_limited
+    notes: Public RSS feed from regional public media.
+
+  - source_id: crosscut-rss
+    name: Cascade PBS Crosscut RSS
+    tier: 3
+    source_type: rss
+    url: https://crosscut.com/rss.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington and Pacific Northwest
+    category_hints: [government, economy, housing, environment, public_safety]
+    reliability_tier: nonprofit-news
+    publisher: Cascade PBS Crosscut
+    refresh_mode: archive_limited
+    notes: Public RSS feed from nonprofit regional news outlet.
+
+  - source_id: kuow-rss
+    name: KUOW RSS
+    tier: 3
+    source_type: rss
+    url: https://www.kuow.org/feeds/rss
+    enabled: true
+    state_scope: WA
+    geographic_scope: Puget Sound and Washington
+    category_hints: [government, health, housing, environment, public_safety, transportation]
+    reliability_tier: public-media
+    publisher: KUOW Public Radio
+    refresh_mode: archive_limited
+    notes: Public RSS feed from Seattle public radio.
+
+  - source_id: boise-state-public-radio-rss
+    name: Boise State Public Radio News RSS
+    tier: 3
+    source_type: rss
+    url: https://www.boisestatepublicradio.org/index.rss
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [government, health, environment, economy, housing, public_safety]
+    reliability_tier: public-media
+    publisher: Boise State Public Radio
+    refresh_mode: archive_limited
+    notes: Public RSS feed from Idaho public radio.
+
+  - source_id: manual-weekly-supplements
+    name: Manual Weekly Supplements
+    tier: 4
+    source_type: manual
+    url: data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/manual_sources.json
+    enabled: true
+    state_scope: PNW
+    geographic_scope: Washington, Oregon, Idaho, and Pacific Northwest
+    category_hints: [infrastructure, transportation, health, public_safety, environment, economy, housing, emergency_management, utilities, agriculture, food_security, government]
+    reliability_tier: editorial-record
+    publisher: Blue Fern editorial source file
+    refresh_mode: historical_if_available
+    notes: Project-local manual supplement workflow; each fact must include a traceable URL.

@@ -192,6 +192,8 @@ def source_gap_item(start: str, end: str, edition_date: str) -> dict[str, object
     edition_manifest_path = ROOT / "output" / "site" / "cascadia" / "editions" / edition_date / "edition_manifest.json"
     manual_sources = read_json_list(manual_path)
     historical_sources = read_json_list(historical_path)
+    registry_sources = [item for item in historical_sources if item.get("provider_id") == "registry"]
+    gdelt_sources = [item for item in historical_sources if item.get("provider_id") == "gdelt"]
     historical_only = [item for item in historical_sources if item.get("provider_id") != "manual" and item.get("source_type") != "manual"]
     urls = {str(item.get("url") or item.get("source_url") or item.get("canonical_url") or "") for item in manual_sources + historical_sources}
     urls.discard("")
@@ -208,10 +210,26 @@ def source_gap_item(start: str, end: str, edition_date: str) -> dict[str, object
         except json.JSONDecodeError:
             last_report = {"errors": ["historical_search_report.json is invalid JSON"]}
     total_source_count = len(urls) if urls else len(manual_sources) + len(historical_sources)
+    weak_provider_count = 0
+    if last_report:
+        source_counts = last_report.get("source_count_by_provider") if isinstance(last_report.get("source_count_by_provider"), dict) else {}
+        registry_count = int(source_counts.get("registry", len(registry_sources)) or 0)
+        gdelt_count = int(source_counts.get("gdelt", len(gdelt_sources)) or 0)
+        if "registry" in source_counts and registry_count == 0:
+            weak_provider_count += 1
+        if "gdelt" in source_counts and gdelt_count == 0:
+            weak_provider_count += 1
+    else:
+        registry_count = len(registry_sources)
+        gdelt_count = len(gdelt_sources)
     if total_source_count >= 4:
         action = "enough source records available"
     elif not manual_path.exists():
         action = "add manual_sources.json"
+    elif last_report and int(last_report.get("registry_records_raw") or 0) > 0 and int(last_report.get("registry_records_saved") or 0) == 0:
+        action = "registry found records but curation excluded them; inspect diagnostics"
+    elif last_report and int(last_report.get("registry_sources_run") or 0) == 0 and int(last_report.get("registry_sources_planned") or 0) > 0:
+        action = "check disabled registry sources"
     elif historical_path.exists() and len(historical_only) == 0 and len(manual_sources) == 0:
         action = "rerun historical search with refresh-cache"
     else:
@@ -223,9 +241,12 @@ def source_gap_item(start: str, end: str, edition_date: str) -> dict[str, object
         "source_folder": str(folder),
         "manual_sources_exists": manual_path.exists(),
         "manual_source_count": len(manual_sources),
+        "registry_source_count": registry_count,
+        "gdelt_source_count": gdelt_count,
         "historical_source_count": len(historical_only),
         "total_source_count": total_source_count,
         "public_story_count": public_story_count,
+        "weak_provider_count": weak_provider_count,
         "last_historical_search_report": str(report_path) if report_path.exists() else None,
         "recommended_action": action,
         "report_recommendation": last_report.get("recommendation") if isinstance(last_report, dict) else None,
@@ -260,7 +281,7 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
             run_date=args.date,
             dry_run=args.dry_run,
             refresh_cache=args.refresh_cache,
-            historical_provider=None if args.historical_provider == "all" else args.historical_provider,
+            historical_provider=args.historical_provider,
             max_historical_queries=args.max_historical_queries,
             historical_delay_seconds=args.historical_delay_seconds,
         )
@@ -303,7 +324,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
                 run_date=args.date,
                 dry_run=args.dry_run,
                 refresh_cache=args.refresh_cache,
-                historical_provider=None if args.historical_provider == "all" else args.historical_provider,
+                historical_provider=args.historical_provider,
                 max_historical_queries=args.max_historical_queries,
                 historical_delay_seconds=args.historical_delay_seconds,
             )
@@ -381,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--from-existing-editions", action="store_true")
     parser.add_argument("--historical-search", action="store_true")
     parser.add_argument("--refresh-cache", action="store_true")
-    parser.add_argument("--historical-provider", choices=["gdelt", "manual", "all"], default="all")
+    parser.add_argument("--historical-provider", default="all")
     parser.add_argument("--max-historical-queries", type=int)
     parser.add_argument("--historical-delay-seconds", type=float)
     parser.add_argument("--create-manual-template", action="store_true")

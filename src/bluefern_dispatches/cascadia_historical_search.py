@@ -16,6 +16,7 @@ from typing import Any
 from bluefern_dispatches.cascadia_curate import curate_sources
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_normalize import canonicalize_url, normalize_sources
+from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, write_registry_report
 
 
 DEFAULT_CONFIG_PATH = CASCADE_DATA_ROOT / "historical_sources.yml"
@@ -595,6 +596,20 @@ def dedupe_records(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
     return kept, duplicates
 
 
+def parse_provider_mode(value: str | None) -> list[str]:
+    if not value or value == "all":
+        return ["manual", "registry", "gdelt"]
+    providers = [item.strip().lower() for item in value.split(",") if item.strip()]
+    unknown = [item for item in providers if item not in {"manual", "registry", "gdelt"}]
+    if unknown:
+        raise ValueError(f"unsupported historical provider(s): {', '.join(unknown)}")
+    ordered = []
+    for provider_id in ["manual", "registry", "gdelt"]:
+        if provider_id in providers and provider_id not in ordered:
+            ordered.append(provider_id)
+    return ordered
+
+
 def source_folder(root: Path, week_start: date, week_end: date) -> Path:
     return root / CASCADE_DATA_ROOT / "sources" / f"{week_start.isoformat()}_{week_end.isoformat()}"
 
@@ -826,6 +841,7 @@ def retrieve_historical_sources(
     if max_historical_queries is not None:
         config.setdefault("query_groups", {})["max_queries_per_week"] = max_historical_queries
     provider_mode = historical_provider or "all"
+    provider_order = parse_provider_mode(provider_mode)
     retrieved_at = utc_now()
     queries = build_queries(config)
     warnings: list[str] = []
@@ -847,6 +863,23 @@ def retrieve_historical_sources(
     target_records = int(config.get("query_groups", {}).get("target_records_per_week", 8))
     folder = source_folder(root, week_start, week_end)
     manual_path = manual_sources_path(root, week_start, week_end)
+    registry_report: dict[str, Any] = {
+        "registry_sources_planned": 0,
+        "registry_sources_run": 0,
+        "registry_cache_hits": 0,
+        "registry_cache_misses": 0,
+        "registry_fetch_errors": 0,
+        "registry_records_raw": 0,
+        "registry_records_saved": 0,
+        "registry_records_excluded": 0,
+        "registry_exclusion_reasons": {},
+        "records_by_source_id": {},
+        "records_by_tier": {},
+        "records_by_category_hint": {},
+        "warnings": [],
+        "errors": [],
+    }
+    registry_report_path: Path | None = None
 
     manual_records: list[dict[str, Any]] = []
     manual_validation: dict[str, Any] = {
@@ -857,7 +890,7 @@ def retrieve_historical_sources(
         "warnings": [],
         "errors": [],
     }
-    if provider_mode in {"all", "manual"}:
+    if "manual" in provider_order:
         manual_records, manual_validation = load_manual_sources(root, week_start, week_end, retrieved_at)
         warnings.extend(str(item) for item in manual_validation.get("warnings", []))
         errors.extend(str(item) for item in manual_validation.get("errors", []))
@@ -870,13 +903,25 @@ def retrieve_historical_sources(
                 continue
             raw_candidates.append(record)
 
+    if "registry" in provider_order:
+        registry_result = collect_registry_sources(root, week_start, week_end, retrieved_at=retrieved_at, refresh_cache=refresh_cache)
+        registry_report = dict(registry_result.get("report") or {})
+        registry_report_path = write_registry_report(root, week_start, week_end, registry_report, dry_run=dry_run)
+        registry_records = [record for record in registry_result.get("records", []) if isinstance(record, dict)]
+        warnings.extend(str(item) for item in registry_result.get("warnings", []))
+        warnings.extend(f"registry source fetch error: {item}" for item in registry_result.get("errors", []))
+        if registry_records:
+            providers_used.append("registry")
+        for record in registry_records:
+            raw_candidates.append(record)
+
     for provider_config in config.get("providers", []):
         if not provider_config.get("enabled", False):
             continue
         provider_id = str(provider_config.get("provider_id"))
         if provider_id == "manual":
             continue
-        if provider_mode != "all" and provider_id != provider_mode:
+        if provider_id not in provider_order:
             continue
         if historical_delay_seconds is not None and str(provider_config.get("provider_id")) == "gdelt":
             provider_config = {**provider_config, "delay_seconds": historical_delay_seconds}
@@ -1014,6 +1059,8 @@ def retrieve_historical_sources(
         recommendation = "provider sparse; manual supplement recommended"
     if provider_mode == "gdelt" and not saved_records:
         recommendation = "rerun historical search with refresh-cache"
+    if "registry" in provider_order and not saved_records and registry_report.get("registry_records_raw") and registry_report.get("registry_records_excluded"):
+        recommendation = "registry found records but curation excluded them; inspect diagnostics"
     report = {
         "coverage_start": week_start.isoformat(),
         "coverage_end": week_end.isoformat(),
@@ -1038,6 +1085,20 @@ def retrieve_historical_sources(
         "duplicates_removed": duplicates_removed,
         "source_count_by_provider": dict(sorted(source_count_by_provider.items())),
         "source_count_by_type": dict(sorted(records_by_source_type.items())),
+        "source_count_by_provider_planned": {provider_id: provider_order.count(provider_id) for provider_id in provider_order},
+        "registry_sources_planned": registry_report.get("registry_sources_planned", 0),
+        "registry_sources_run": registry_report.get("registry_sources_run", 0),
+        "registry_cache_hits": registry_report.get("registry_cache_hits", 0),
+        "registry_cache_misses": registry_report.get("registry_cache_misses", 0),
+        "registry_fetch_errors": registry_report.get("registry_fetch_errors", 0),
+        "registry_records_raw": registry_report.get("registry_records_raw", 0),
+        "registry_records_saved": registry_report.get("registry_records_saved", 0),
+        "registry_records_excluded": registry_report.get("registry_records_excluded", 0),
+        "registry_exclusion_reasons": registry_report.get("registry_exclusion_reasons", {}),
+        "records_by_source_id": registry_report.get("records_by_source_id", {}),
+        "records_by_tier": registry_report.get("records_by_tier", {}),
+        "records_by_category_hint": dict(sorted(records_by_category.items())),
+        "registry_source_report_path": str(registry_report_path) if registry_report_path else None,
         "manual_sources_path": str(manual_path),
         "manual_sources_loaded": len(manual_records),
         "manual_sources_valid": bool(manual_validation.get("ok")),
@@ -1045,8 +1106,8 @@ def retrieve_historical_sources(
         "manual_sources_warnings": list(manual_validation.get("warnings", [])),
         "records_by_source_type": dict(sorted(records_by_source_type.items())),
         "records_by_state_hint": dict(sorted(records_by_state.items())),
-        "records_by_category_hint": dict(sorted(records_by_category.items())),
         "provider_request_diagnostics": provider_request_diagnostics,
+        "registry_source_diagnostics": registry_report.get("diagnostics", []),
         "recommendation": recommendation,
         "warnings": warnings,
         "errors": errors,
@@ -1064,8 +1125,8 @@ def retrieve_historical_sources(
             raw_records.append(
                 {
                     **record,
-                    "source_id": record.get("provider_id"),
-                    "source_name": record.get("publisher") or record.get("provider_name"),
+                    "source_id": record.get("source_id") or record.get("provider_id"),
+                    "source_name": record.get("source_name") or record.get("publisher") or record.get("provider_name"),
                     "region_scope": record.get("state_hint") or ("regional" if record.get("region_terms_matched") else None),
                 }
             )

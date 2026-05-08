@@ -1,0 +1,20 @@
+[
+  {
+    "source_record_id": "manual-2026-04-20-001",
+    "title": "Replace with exact source title",
+    "url": "https://example.org/source-story",
+    "publisher": "Replace with publisher",
+    "published_at": "2026-04-20T12:00:00Z",
+    "retrieved_at": "2026-05-08T15:01:50.925224+00:00",
+    "summary_or_snippet": "",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "region_terms_matched": [
+      "washington"
+    ],
+    "category_hint": "Infrastructure",
+    "state_hint": "WA",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  }
+]

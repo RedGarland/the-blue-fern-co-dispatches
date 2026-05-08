@@ -1,0 +1,164 @@
+{
+  "coverage_start": "2026-04-20",
+  "coverage_end": "2026-04-26",
+  "historical_provider_mode": "all",
+  "providers_used": [
+    "gdelt"
+  ],
+  "queries_planned": [
+    "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")",
+    "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")"
+  ],
+  "queries_run": [
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+      "result_count": 0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28infrastructure+OR+utility+OR+utilities+OR+power+OR+water+OR+transportation+OR+bridge+OR+%22road+closure%22+OR+rail+OR+port%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "retry_count": 0,
+      "cache_hit": false,
+      "cache_miss": true
+    },
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")",
+      "result_count": 0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+health%22+OR+hospital+OR+healthcare+OR+Medicaid+OR+school+OR+%22public+services%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "retry_count": 0,
+      "cache_hit": false,
+      "cache_miss": true
+    },
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
+      "result_count": 0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28wildfire+OR+drought+OR+flood+OR+climate+OR+%22environmental+cleanup%22+OR+resilience+OR+%22air+quality%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "retry_count": 0,
+      "cache_hit": false,
+      "cache_miss": true
+    }
+  ],
+  "queries_skipped_due_to_limit": 0,
+  "cache_hits": 0,
+  "cache_misses": 3,
+  "gdelt_queries_run": 3,
+  "gdelt_cache_hits": 0,
+  "gdelt_rate_limit_count": 0,
+  "retry_count": 0,
+  "rate_limit_count": 0,
+  "raw_results_count": 0,
+  "records_saved": 0,
+  "merged_source_count": 0,
+  "final_saved_source_count": 0,
+  "records_excluded": 0,
+  "exclusion_reasons": {},
+  "duplicates_removed": 0,
+  "source_count_by_provider": {},
+  "source_count_by_type": {},
+  "manual_sources_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-20_2026-04-26\\manual_sources.json",
+  "manual_sources_loaded": 0,
+  "manual_sources_valid": true,
+  "manual_sources_errors": [],
+  "manual_sources_warnings": [],
+  "records_by_source_type": {},
+  "records_by_state_hint": {},
+  "records_by_category_hint": {},
+  "provider_request_diagnostics": [
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+      "start_date": "2026-04-20",
+      "end_date": "2026-04-26",
+      "mode": "ArtList",
+      "format": "json",
+      "max_records": 10,
+      "cache_key": "346ddac2b17a5a4c31b65414a9c5b411123a8beffc86e5adae854f8ac7668117",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28infrastructure+OR+utility+OR+utilities+OR+power+OR+water+OR+transportation+OR+bridge+OR+%22road+closure%22+OR+rail+OR+port%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\346ddac2b17a5a4c31b65414a9c5b411123a8beffc86e5adae854f8ac7668117.json",
+      "cache_hit": false,
+      "cache_miss": true,
+      "retry_count": 0,
+      "rate_limit_count": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "status_code": null,
+          "content_type": "",
+          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        }
+      ],
+      "warnings": [
+        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+      ],
+      "errors": []
+    },
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")",
+      "start_date": "2026-04-20",
+      "end_date": "2026-04-26",
+      "mode": "ArtList",
+      "format": "json",
+      "max_records": 10,
+      "cache_key": "92e7a9349d94948925dd201020e2a9e3dc8a085fb35e6c56a311752576148059",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+health%22+OR+hospital+OR+healthcare+OR+Medicaid+OR+school+OR+%22public+services%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\92e7a9349d94948925dd201020e2a9e3dc8a085fb35e6c56a311752576148059.json",
+      "cache_hit": false,
+      "cache_miss": true,
+      "retry_count": 0,
+      "rate_limit_count": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "status_code": null,
+          "content_type": "",
+          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        }
+      ],
+      "warnings": [
+        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+      ],
+      "errors": []
+    },
+    {
+      "provider_id": "gdelt",
+      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
+      "start_date": "2026-04-20",
+      "end_date": "2026-04-26",
+      "mode": "ArtList",
+      "format": "json",
+      "max_records": 10,
+      "cache_key": "184e4735a1a4dfc46dc717649c7a98f637291ff147cf4b9b7aba79a3be4fed5f",
+      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28wildfire+OR+drought+OR+flood+OR+climate+OR+%22environmental+cleanup%22+OR+resilience+OR+%22air+quality%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
+      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\184e4735a1a4dfc46dc717649c7a98f637291ff147cf4b9b7aba79a3be4fed5f.json",
+      "cache_hit": false,
+      "cache_miss": true,
+      "retry_count": 0,
+      "rate_limit_count": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "status_code": null,
+          "content_type": "",
+          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        }
+      ],
+      "warnings": [
+        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+      ],
+      "errors": []
+    }
+  ],
+  "recommendation": "provider sparse; manual supplement recommended",
+  "warnings": [
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "sparse week: no provider results"
+  ],
+  "errors": []
+}

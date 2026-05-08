@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.cascadia_curate import curate_sources
-from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, dedupe_records, retrieve_historical_sources
+from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
@@ -21,7 +21,7 @@ from bluefern_dispatches.shared_records import update_shared_records
 SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))
-from run_cascadia_dispatch import completed_week_windows, run_pipeline
+from run_cascadia_dispatch import completed_week_windows, run_pipeline, run_source_gap_report
 
 
 @pytest.fixture()
@@ -352,6 +352,185 @@ def test_manual_and_historical_sources_merge_with_source_type_preserved(cascadia
     records = read_json(manual_dir / "historical_sources.json")
     assert {record["source_type"] for record in records} == {"historical_search", "manual"}
     assert {record["provider_id"] for record in records} == {"gdelt", "manual"}
+    report = read_json(manual_dir / "historical_search_report.json")
+    assert report["source_count_by_provider"] == {"gdelt": 1, "manual": 1}
+    assert report["source_count_by_type"] == {"historical_search": 1, "manual": 1}
+    assert report["manual_sources_loaded"] == 1
+    assert report["manual_sources_valid"] is True
+    assert report["final_saved_source_count"] == 2
+
+
+def test_manual_template_command_creates_week_files_without_overwrite(cascadia_work_root):
+    import run_cascadia_dispatch
+
+    run_cascadia_dispatch.ROOT = cascadia_work_root
+    code = run_cascadia_dispatch.main(["--archive-week", "2026-04-21", "--create-manual-template"])
+
+    assert code == 0
+    folder = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-20_2026-04-26"
+    manual_path = folder / "manual_sources.json"
+    example_path = folder / "manual_sources.example.json"
+    assert read_json(manual_path) == []
+    assert isinstance(read_json(example_path), list)
+    manual_path.write_text(json.dumps([{"url": "https://example.com/keep", "title": "Keep", "publisher": "Example"}]), encoding="utf-8")
+
+    code = run_cascadia_dispatch.main(["--archive-week", "2026-04-21", "--create-manual-template"])
+
+    assert code == 0
+    assert read_json(manual_path)[0]["url"] == "https://example.com/keep"
+
+
+def test_manual_validation_reports_errors_and_warnings(cascadia_work_root):
+    week_start, week_end = containing_week("2026-04-21")
+    folder = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-20_2026-04-26"
+    folder.mkdir(parents=True)
+    manual_path = folder / "manual_sources.json"
+    manual_path.write_text("{bad json", encoding="utf-8")
+
+    invalid = validate_manual_sources(cascadia_work_root, week_start, week_end)
+
+    assert invalid["ok"] is False
+    assert "invalid JSON" in invalid["errors"][0]
+
+    manual_path.write_text(
+        json.dumps(
+            [
+                {"source_record_id": "dup", "title": "Missing URL", "publisher": "Example"},
+                {
+                    "source_record_id": "dup",
+                    "title": "Washington bridge infrastructure update",
+                    "url": "https://example.com/bridge",
+                    "publisher": "Example",
+                    "published_at": "2026-04-29T12:00:00Z",
+                    "summary_or_snippet": "Washington bridge infrastructure update.",
+                },
+                {
+                    "source_record_id": "ok",
+                    "title": "Oregon housing services update",
+                    "url": "https://example.com/bridge?utm=1",
+                    "publisher": "Example",
+                    "published_at": "2026-04-22T12:00:00Z",
+                    "summary_or_snippet": "Oregon housing services update.",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = validate_manual_sources(cascadia_work_root, week_start, week_end)
+
+    assert result["ok"] is False
+    assert any("missing required url" in error for error in result["errors"])
+    assert any("duplicate source_record_ids" in error for error in result["errors"])
+    assert result["duplicate_urls"]
+    assert any("outside coverage window" in warning for warning in result["warnings"])
+
+    manual_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "manual-good",
+                    "title": "Washington water infrastructure update",
+                    "url": "https://example.com/water",
+                    "publisher": "Example",
+                    "published_at": "2026-04-22T12:00:00Z",
+                    "retrieved_at": "2026-04-23T12:00:00Z",
+                    "summary_or_snippet": "Washington water infrastructure update.",
+                    "source_type": "manual",
+                    "provider_id": "manual",
+                    "region_terms_matched": ["washington"],
+                    "category_hint": "Infrastructure",
+                    "state_hint": "WA",
+                    "reliability_tier": "editorial-record",
+                    "traceability_note": "Project-local manual source supplement.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    valid = validate_manual_sources(cascadia_work_root, week_start, week_end)
+
+    assert valid["ok"] is True
+    assert valid["source_count"] == 1
+
+
+def test_historical_provider_modes_and_manual_survives_gdelt_failure(cascadia_work_root, monkeypatch):
+    week_start, week_end = containing_week("2026-04-28")
+    manual_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
+    manual_dir.mkdir(parents=True)
+    (manual_dir / "manual_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "manual-wa-water",
+                    "title": "Washington water utility update",
+                    "url": "https://example.com/manual-water",
+                    "publisher": "Example",
+                    "published_at": "2026-04-28T12:00:00Z",
+                    "summary_or_snippet": "Washington water utility infrastructure update.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            return [
+                {
+                    "title": "Oregon wildfire emergency update",
+                    "url": "https://example.com/gdelt-wildfire",
+                    "publisher": "Example",
+                    "published_at": "2026-04-29T12:00:00Z",
+                    "summary_or_snippet": "Oregon wildfire emergency management update.",
+                }
+            ]
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    manual_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="manual")
+    gdelt_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="gdelt")
+    all_sources = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03")
+
+    assert manual_only["report"]["source_count_by_provider"] == {"manual": 1}
+    assert gdelt_only["report"]["source_count_by_provider"] == {"gdelt": 1}
+    assert all_sources["report"]["source_count_by_provider"] == {"gdelt": 1, "manual": 1}
+
+    class FailingGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            raise OSError("network down")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FailingGDELT)
+    fallback = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03")
+
+    assert fallback["ok"] is True
+    assert fallback["source_count"] == 1
+    assert fallback["report"]["source_count_by_provider"] == {"manual": 1}
+    assert fallback["warnings"]
+
+
+def test_source_gap_report_is_read_only_and_recommends_actions(cascadia_work_root, monkeypatch):
+    import argparse
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    folder = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"
+    folder.mkdir(parents=True)
+    (folder / "manual_sources.json").write_text("[]", encoding="utf-8")
+    (folder / "historical_sources.json").write_text(
+        json.dumps([{"provider_id": "gdelt", "url": "https://example.com/one"}]),
+        encoding="utf-8",
+    )
+    before = sorted(str(path) for path in cascadia_work_root.rglob("*") if path.is_file())
+
+    result = run_source_gap_report(argparse.Namespace(date="2026-05-11", backfill_weeks=4, week_start=None, week_end=None, archive_week=None))
+    after = sorted(str(path) for path in cascadia_work_root.rglob("*") if path.is_file())
+
+    assert result["ok"] is True
+    assert len(result["weeks"]) == 4
+    assert result["weeks"][0]["recommended_action"] == "provider sparse; manual supplement recommended"
+    assert result["weeks"][1]["recommended_action"] == "add manual_sources.json"
+    assert before == after
 
 
 def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_work_root, monkeypatch):

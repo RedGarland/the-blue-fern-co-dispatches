@@ -252,7 +252,51 @@ python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Pyth
 
 The public Cascadia edition is weekly. Monday runs cover the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
 
-Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. The default network provider is GDELT, with a manual provider fallback. Sparse weeks are explained by `historical_search_report.json`; unsupported stories are omitted.
+Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. Provider order lives in `data/dispatches/cascadia/historical_sources.yml`; supported modes are `--historical-provider all`, `--historical-provider manual`, and `--historical-provider gdelt`. Sparse weeks are explained by `historical_search_report.json`, including provider counts, manual validation status, GDELT cache/rate-limit diagnostics, dedupe counts, final saved source count, and a recommendation. Unsupported stories are omitted.
+
+Manual Cascadia supplement workflow:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --create-manual-template
+```
+
+Edit:
+
+```text
+data\dispatches\cascadia\sources\2026-04-20_2026-04-26\manual_sources.json
+```
+
+Validate without publishing:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --validate-manual-sources
+```
+
+Generate with manual plus GDELT:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider all
+```
+
+Generate manual-only:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider manual
+```
+
+Backfill four weeks:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search --historical-provider all
+```
+
+Find sparse weeks without publishing:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --source-gap-report
+```
+
+Manual records should include `source_record_id`, `title`, `url`, `publisher`, `published_at`, `retrieved_at`, `summary_or_snippet`, `source_type: manual`, `provider_id: manual`, `region_terms_matched`, `category_hint`, `state_hint`, `reliability_tier`, and `traceability_note`. URL is required. Leave `summary_or_snippet` blank rather than inventing source text.
 
 Daily jobs:
 

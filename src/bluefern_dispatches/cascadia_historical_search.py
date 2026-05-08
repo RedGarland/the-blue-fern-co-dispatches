@@ -20,6 +20,8 @@ from bluefern_dispatches.cascadia_normalize import canonicalize_url, normalize_s
 
 DEFAULT_CONFIG_PATH = CASCADE_DATA_ROOT / "historical_sources.yml"
 CACHE_ROOT = CASCADE_DATA_ROOT / "cache" / "gdelt"
+MANUAL_SOURCE_FILENAME = "manual_sources.json"
+MANUAL_SOURCE_EXAMPLE_FILENAME = "manual_sources.example.json"
 
 REGION_TERMS = {
     "WA": ["washington", "seattle", "spokane", "tacoma"],
@@ -110,6 +112,7 @@ def load_historical_config(root: Path, path: Path | None = None) -> dict[str, An
             merged.update(payload)
             for section in ["query_groups", "region_filters"]:
                 merged[section] = {**default_config().get(section, {}), **payload.get(section, {})}
+            merged["providers"] = sorted(merged.get("providers", []), key=lambda item: int(item.get("priority", 999)))
             return merged
     except Exception:
         pass
@@ -158,6 +161,7 @@ def load_historical_config(root: Path, path: Path | None = None) -> dict[str, An
     merged.update(config)
     for section in ["query_groups", "region_filters"]:
         merged[section] = {**default_config().get(section, {}), **config.get(section, {})}
+    merged["providers"] = sorted(merged.get("providers", []), key=lambda item: int(item.get("priority", 999)))
     return merged
 
 
@@ -179,8 +183,9 @@ def default_config() -> dict[str, Any]:
                 "cache_ttl_days": 14,
                 "user_agent": "BlueFernDispatches/0.1 historical-source-retrieval",
                 "reliability_tier": "unknown",
+                "priority": 2,
             },
-            {"provider_id": "manual", "provider_name": "Project-local manual historical sources", "enabled": True, "reliability_tier": "editorial-record"},
+            {"provider_id": "manual", "provider_name": "Project-local manual historical sources", "enabled": True, "reliability_tier": "editorial-record", "priority": 1},
         ],
         "query_groups": {
             "region_terms": ["Washington", "Oregon", "Idaho", "Pacific Northwest", "Cascadia", "Seattle", "Portland", "Spokane", "Boise", "Tacoma", "Eugene", "Salem"],
@@ -594,15 +599,179 @@ def source_folder(root: Path, week_start: date, week_end: date) -> Path:
     return root / CASCADE_DATA_ROOT / "sources" / f"{week_start.isoformat()}_{week_end.isoformat()}"
 
 
-def load_manual_sources(root: Path, week_start: date, week_end: date, retrieved_at: str) -> tuple[list[dict[str, Any]], list[str]]:
-    path = source_folder(root, week_start, week_end) / "manual_sources.json"
-    if not path.exists():
-        return [], []
+def manual_sources_path(root: Path, week_start: date, week_end: date) -> Path:
+    return source_folder(root, week_start, week_end) / MANUAL_SOURCE_FILENAME
+
+
+def manual_sources_example_path(root: Path, week_start: date, week_end: date) -> Path:
+    return source_folder(root, week_start, week_end) / MANUAL_SOURCE_EXAMPLE_FILENAME
+
+
+def parse_record_date(value: str | None) -> date | None:
+    if not value:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).date()
+    except ValueError:
+        pass
+    try:
+        return date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+
+
+def valid_url(value: str) -> bool:
+    parsed = urllib.parse.urlsplit(value.strip())
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+
+def manual_example_records(week_start: date, week_end: date) -> list[dict[str, Any]]:
+    return [
+        {
+            "source_record_id": f"manual-{week_start.isoformat()}-001",
+            "title": "Replace with exact source title",
+            "url": "https://example.org/source-story",
+            "publisher": "Replace with publisher",
+            "published_at": f"{week_start.isoformat()}T12:00:00Z",
+            "retrieved_at": utc_now(),
+            "summary_or_snippet": "",
+            "source_type": "manual",
+            "provider_id": "manual",
+            "region_terms_matched": ["washington"],
+            "category_hint": "Infrastructure",
+            "state_hint": "WA",
+            "reliability_tier": "editorial-record",
+            "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved.",
+        }
+    ]
+
+
+def create_manual_source_template(root: Path, week_start: date, week_end: date, force: bool = False) -> dict[str, Any]:
+    folder = source_folder(root.resolve(), week_start, week_end)
+    manual_path = folder / MANUAL_SOURCE_FILENAME
+    example_path = folder / MANUAL_SOURCE_EXAMPLE_FILENAME
+    written: list[str] = []
     warnings: list[str] = []
+    errors: list[str] = []
+    folder.mkdir(parents=True, exist_ok=True)
+    if manual_path.exists() and not force:
+        warnings.append(f"manual source file already exists and was not overwritten: {manual_path}")
+    else:
+        manual_path.write_text("[]\n", encoding="utf-8")
+        written.append(str(manual_path))
+    if example_path.exists() and not force:
+        warnings.append(f"manual source example already exists and was not overwritten: {example_path}")
+    else:
+        example_path.write_text(json.dumps(manual_example_records(week_start, week_end), indent=2) + "\n", encoding="utf-8")
+        written.append(str(example_path))
+    return {
+        "ok": not errors,
+        "coverage_start": week_start.isoformat(),
+        "coverage_end": week_end.isoformat(),
+        "source_folder": str(folder),
+        "manual_sources_path": str(manual_path),
+        "manual_sources_example_path": str(example_path),
+        "written": written,
+        "warnings": warnings,
+        "errors": errors,
+    }
+
+
+def validate_manual_sources(root: Path, week_start: date, week_end: date) -> dict[str, Any]:
+    path = manual_sources_path(root.resolve(), week_start, week_end)
+    warnings: list[str] = []
+    errors: list[str] = []
+    records: list[dict[str, Any]] = []
+    duplicate_urls: list[str] = []
+    duplicate_ids: list[str] = []
+    if not path.exists():
+        errors.append(f"manual source file not found: {path}")
+        return {"ok": False, "manual_sources_path": str(path), "manual_sources_exists": False, "source_count": 0, "warnings": warnings, "errors": errors}
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        return [], [f"failed to parse manual historical source file {path}: {exc}"]
+        errors.append(f"invalid JSON in manual source file {path}: {exc}")
+        return {"ok": False, "manual_sources_path": str(path), "manual_sources_exists": True, "source_count": 0, "warnings": warnings, "errors": errors}
+    if not isinstance(payload, list):
+        errors.append("manual source file must contain a top-level JSON list")
+        return {"ok": False, "manual_sources_path": str(path), "manual_sources_exists": True, "source_count": 0, "warnings": warnings, "errors": errors}
+    seen_urls: set[str] = set()
+    seen_ids: set[str] = set()
+    system_terms = [term for terms in CATEGORY_HINTS.values() for term in terms]
+    for index, item in enumerate(payload, start=1):
+        if not isinstance(item, dict):
+            errors.append(f"record {index} must be a JSON object")
+            continue
+        records.append(item)
+        url = str(item.get("url") or item.get("source_url") or item.get("canonical_url") or "").strip()
+        title = str(item.get("title") or item.get("source_title") or "").strip()
+        publisher = str(item.get("publisher") or item.get("source_name") or "").strip()
+        source_record_id = str(item.get("source_record_id") or "").strip()
+        if not url:
+            errors.append(f"record {index} missing required url")
+        elif not valid_url(url):
+            errors.append(f"record {index} has invalid url: {url}")
+        else:
+            url_key = canonicalize_url(url)
+            if url_key in seen_urls:
+                duplicate_urls.append(url)
+            seen_urls.add(url_key)
+        if not title and not publisher:
+            errors.append(f"record {index} must include title or publisher")
+        if not source_record_id:
+            warnings.append(f"record {index} missing source_record_id; one will be generated during retrieval")
+        elif source_record_id in seen_ids:
+            duplicate_ids.append(source_record_id)
+        seen_ids.add(source_record_id)
+        published = parse_record_date(item.get("published_at"))
+        if item.get("published_at") and published is None:
+            warnings.append(f"record {index} has unparseable published_at: {item.get('published_at')}")
+        elif published is not None and not (week_start <= published <= week_end):
+            warnings.append(f"record {index} published_at is outside coverage window: {item.get('published_at')}")
+        text = f"{title} {publisher} {item.get('summary_or_snippet') or ''} {url}"
+        reason = exclusion_reason({"url": url, "title": title, "publisher": publisher, "summary_or_snippet": item.get("summary_or_snippet") or ""}, system_terms)
+        if reason in {"no_wa_or_id_connection", "no_public_systems_term"}:
+            warnings.append(f"record {index} has weak Cascadia relevance: {reason}")
+        elif not matched_region_terms(text):
+            warnings.append(f"record {index} has no explicit WA/OR/ID region term")
+    if duplicate_urls:
+        warnings.append(f"duplicate URLs found: {', '.join(sorted(set(duplicate_urls)))}")
+    if duplicate_ids:
+        errors.append(f"duplicate source_record_ids found: {', '.join(sorted(set(duplicate_ids)))}")
+    return {
+        "ok": not errors,
+        "manual_sources_path": str(path),
+        "manual_sources_exists": True,
+        "source_count": len(records),
+        "duplicate_urls": sorted(set(duplicate_urls)),
+        "duplicate_source_record_ids": sorted(set(duplicate_ids)),
+        "warnings": warnings,
+        "errors": errors,
+    }
+
+
+def load_manual_sources(root: Path, week_start: date, week_end: date, retrieved_at: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    path = manual_sources_path(root, week_start, week_end)
+    validation = validate_manual_sources(root, week_start, week_end) if path.exists() else {
+        "ok": True,
+        "manual_sources_path": str(path),
+        "manual_sources_exists": False,
+        "source_count": 0,
+        "warnings": [],
+        "errors": [],
+    }
+    if not path.exists():
+        return [], validation
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        validation["errors"] = list(validation.get("errors", [])) or [f"failed to parse manual historical source file {path}: {exc}"]
+        validation["ok"] = False
+        return [], validation
+    warnings = list(validation.get("warnings", []))
     records = []
     for item in payload if isinstance(payload, list) else []:
         url = item.get("url") or item.get("source_url") or item.get("canonical_url") or ""
@@ -611,29 +780,31 @@ def load_manual_sources(root: Path, week_start: date, week_end: date, retrieved_
         if not url:
             warnings.append(f"manual source skipped without URL: {title or publisher or 'untitled'}")
             continue
-        records.append(
-            {
-                "source_record_id": item.get("source_record_id") or f"manual-{stable_id(url, title, publisher)}",
-                "title": title,
-                "url": url,
-                "publisher": publisher,
-                "published_at": item.get("published_at"),
-                "retrieved_at": item.get("retrieved_at") or retrieved_at,
-                "summary_or_snippet": item.get("summary_or_snippet") or item.get("text") or "",
-                "source_type": item.get("source_type") or "manual",
-                "provider_id": item.get("provider_id") or "manual",
-                "provider_name": item.get("provider_name") or "Project-local manual historical sources",
-                "query_used": item.get("query_used") or "manual_sources.json",
-                "search_start_date": week_start.isoformat(),
-                "search_end_date": week_end.isoformat(),
-                "region_terms_matched": item.get("region_terms_matched") or matched_region_terms(f"{title} {publisher} {url}"),
-                "category_hint": item.get("category_hint") or infer_category(f"{title} {item.get('summary_or_snippet', '')}"),
-                "state_hint": item.get("state_hint") or infer_state(f"{title} {publisher} {url}"),
-                "reliability_tier": item.get("reliability_tier") or "editorial-record",
-                "traceability_note": item.get("traceability_note") or "Project-local manual source supplement; URL and supplied metadata preserved.",
-            }
-        )
-    return records, warnings
+        text = f"{title} {item.get('summary_or_snippet', '')} {publisher} {url}"
+        record = {
+            "source_record_id": item.get("source_record_id") or f"manual-{stable_id(url, title, publisher)}",
+            "title": title,
+            "url": url,
+            "publisher": publisher,
+            "published_at": item.get("published_at"),
+            "retrieved_at": item.get("retrieved_at") or retrieved_at,
+            "summary_or_snippet": item.get("summary_or_snippet") or item.get("text") or "",
+            "source_type": item.get("source_type") or "manual",
+            "provider_id": item.get("provider_id") or "manual",
+            "provider_name": item.get("provider_name") or "Project-local manual historical sources",
+            "query_used": item.get("query_used") or MANUAL_SOURCE_FILENAME,
+            "search_start_date": week_start.isoformat(),
+            "search_end_date": week_end.isoformat(),
+            "region_terms_matched": item.get("region_terms_matched") or matched_region_terms(text),
+            "category_hint": item.get("category_hint") or infer_category(text),
+            "state_hint": item.get("state_hint") or infer_state(text),
+            "reliability_tier": item.get("reliability_tier") or "editorial-record",
+            "traceability_note": item.get("traceability_note") or "Project-local manual source supplement; URL and supplied metadata preserved.",
+        }
+        records.append(record)
+    validation["warnings"] = warnings
+    validation["source_count"] = len(records)
+    return records, validation
 
 
 def retrieve_historical_sources(
@@ -654,6 +825,7 @@ def retrieve_historical_sources(
     config = load_historical_config(root)
     if max_historical_queries is not None:
         config.setdefault("query_groups", {})["max_queries_per_week"] = max_historical_queries
+    provider_mode = historical_provider or "all"
     retrieved_at = utc_now()
     queries = build_queries(config)
     warnings: list[str] = []
@@ -673,19 +845,44 @@ def retrieve_historical_sources(
     rate_limit_count = 0
     system_terms = list(config.get("query_groups", {}).get("systems_terms", []))
     target_records = int(config.get("query_groups", {}).get("target_records_per_week", 8))
+    folder = source_folder(root, week_start, week_end)
+    manual_path = manual_sources_path(root, week_start, week_end)
+
+    manual_records: list[dict[str, Any]] = []
+    manual_validation: dict[str, Any] = {
+        "ok": True,
+        "manual_sources_path": str(manual_path),
+        "manual_sources_exists": manual_path.exists(),
+        "source_count": 0,
+        "warnings": [],
+        "errors": [],
+    }
+    if provider_mode in {"all", "manual"}:
+        manual_records, manual_validation = load_manual_sources(root, week_start, week_end, retrieved_at)
+        warnings.extend(str(item) for item in manual_validation.get("warnings", []))
+        errors.extend(str(item) for item in manual_validation.get("errors", []))
+        if manual_records:
+            providers_used.append("manual")
+        for record in manual_records:
+            reason = exclusion_reason(record, system_terms)
+            if reason:
+                excluded[reason] += 1
+                continue
+            raw_candidates.append(record)
 
     for provider_config in config.get("providers", []):
         if not provider_config.get("enabled", False):
             continue
-        if historical_provider and str(provider_config.get("provider_id")) != historical_provider:
+        provider_id = str(provider_config.get("provider_id"))
+        if provider_id == "manual":
+            continue
+        if provider_mode != "all" and provider_id != provider_mode:
             continue
         if historical_delay_seconds is not None and str(provider_config.get("provider_id")) == "gdelt":
             provider_config = {**provider_config, "delay_seconds": historical_delay_seconds}
         provider = provider_from_config(provider_config, root=root, refresh_cache=refresh_cache)
         if provider is None:
             warnings.append(f"unsupported historical provider: {provider_config.get('provider_id')}")
-            continue
-        if provider.provider_id == "manual":
             continue
         providers_used.append(provider.provider_id)
         max_results = int(provider_config.get("max_results_per_query", 20))
@@ -791,18 +988,16 @@ def retrieve_historical_sources(
                     excluded[reason] += 1
                     continue
                 raw_candidates.append(record)
-            if len(raw_candidates) >= target_records:
+            provider_candidate_count = sum(1 for record in raw_candidates if record.get("provider_id") == provider.provider_id)
+            if provider_candidate_count >= target_records:
                 break
 
-    manual_records, manual_warnings = load_manual_sources(root, week_start, week_end, retrieved_at)
-    warnings.extend(manual_warnings)
-    if manual_records:
-        providers_used.append("manual")
-    raw_candidates.extend(manual_records)
     saved_records, duplicates_removed = dedupe_records(raw_candidates)
+    source_count_by_provider = Counter(record.get("provider_id") or "unknown" for record in saved_records)
     records_by_state = Counter(record.get("state_hint") or "unknown" for record in saved_records)
     records_by_category = Counter(record.get("category_hint") or "unknown" for record in saved_records)
     records_by_source_type = Counter(record.get("source_type") or "unknown" for record in saved_records)
+    providers_used = sorted(set(providers_used), key=providers_used.index)
     if not saved_records:
         if rate_limit_count:
             warnings.append("sparse week: GDELT rate limits prevented usable provider results")
@@ -812,30 +1007,50 @@ def retrieve_historical_sources(
             warnings.append("sparse week: no provider results")
         elif sum(excluded.values()) > 0:
             warnings.append("sparse week: provider results were excluded by source standards")
+    recommendation = "enough source records available"
+    if not saved_records:
+        recommendation = "add manual_sources.json" if not manual_path.exists() else "provider sparse; manual supplement recommended"
+    elif len(saved_records) < max(3, min(target_records, 4)):
+        recommendation = "provider sparse; manual supplement recommended"
+    if provider_mode == "gdelt" and not saved_records:
+        recommendation = "rerun historical search with refresh-cache"
     report = {
         "coverage_start": week_start.isoformat(),
         "coverage_end": week_end.isoformat(),
+        "historical_provider_mode": provider_mode,
         "providers_used": providers_used,
         "queries_planned": queries_planned,
         "queries_run": queries_run,
         "queries_skipped_due_to_limit": queries_skipped_due_to_limit,
         "cache_hits": cache_hits,
         "cache_misses": cache_misses,
+        "gdelt_queries_run": sum(1 for item in queries_run if item.get("provider_id") == "gdelt"),
+        "gdelt_cache_hits": sum(1 for item in queries_run if item.get("provider_id") == "gdelt" and item.get("cache_hit")),
+        "gdelt_rate_limit_count": rate_limit_count,
         "retry_count": retry_count,
         "rate_limit_count": rate_limit_count,
         "raw_results_count": sum(item.get("result_count", 0) for item in queries_run),
         "records_saved": len(saved_records),
+        "merged_source_count": len(raw_candidates),
+        "final_saved_source_count": len(saved_records),
         "records_excluded": sum(excluded.values()),
         "exclusion_reasons": dict(sorted(excluded.items())),
         "duplicates_removed": duplicates_removed,
+        "source_count_by_provider": dict(sorted(source_count_by_provider.items())),
+        "source_count_by_type": dict(sorted(records_by_source_type.items())),
+        "manual_sources_path": str(manual_path),
+        "manual_sources_loaded": len(manual_records),
+        "manual_sources_valid": bool(manual_validation.get("ok")),
+        "manual_sources_errors": list(manual_validation.get("errors", [])),
+        "manual_sources_warnings": list(manual_validation.get("warnings", [])),
         "records_by_source_type": dict(sorted(records_by_source_type.items())),
         "records_by_state_hint": dict(sorted(records_by_state.items())),
         "records_by_category_hint": dict(sorted(records_by_category.items())),
         "provider_request_diagnostics": provider_request_diagnostics,
+        "recommendation": recommendation,
         "warnings": warnings,
         "errors": errors,
     }
-    folder = source_folder(root, week_start, week_end)
     historical_path = folder / "historical_sources.json"
     report_path = folder / "historical_search_report.json"
     raw_path = root / CASCADE_DATA_ROOT / "raw" / edition_date / "raw_sources.json"

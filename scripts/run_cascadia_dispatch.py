@@ -11,12 +11,13 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.cascadia_curate import curate_sources
-from bluefern_dispatches.cascadia_historical_search import retrieve_historical_sources
+from bluefern_dispatches.cascadia_historical_search import create_manual_source_template, manual_sources_path, retrieve_historical_sources, source_folder, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, backfill_weekly_from_existing_editions, containing_week, explicit_week, previous_completed_week
+from bluefern_dispatches.cascadia_weekly import format_coverage_label
 from bluefern_dispatches.shared_records import update_shared_records
 
 
@@ -161,6 +162,93 @@ def unique_messages(messages: list[str]) -> list[str]:
     return unique
 
 
+def read_json_list(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    return [item for item in payload if isinstance(item, dict)] if isinstance(payload, list) else []
+
+
+def create_manual_template_command(args: argparse.Namespace) -> dict[str, object]:
+    start, end, _ = resolve_week_args(args)
+    return create_manual_source_template(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end), force=args.force)
+
+
+def validate_manual_sources_command(args: argparse.Namespace) -> dict[str, object]:
+    start, end, _ = resolve_week_args(args)
+    return validate_manual_sources(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end))
+
+
+def source_gap_item(start: str, end: str, edition_date: str) -> dict[str, object]:
+    week_start = local_date.fromisoformat(start)
+    week_end = local_date.fromisoformat(end)
+    folder = source_folder(ROOT, week_start, week_end)
+    manual_path = manual_sources_path(ROOT, week_start, week_end)
+    historical_path = folder / "historical_sources.json"
+    report_path = folder / "historical_search_report.json"
+    edition_manifest_path = ROOT / "output" / "site" / "cascadia" / "editions" / edition_date / "edition_manifest.json"
+    manual_sources = read_json_list(manual_path)
+    historical_sources = read_json_list(historical_path)
+    historical_only = [item for item in historical_sources if item.get("provider_id") != "manual" and item.get("source_type") != "manual"]
+    urls = {str(item.get("url") or item.get("source_url") or item.get("canonical_url") or "") for item in manual_sources + historical_sources}
+    urls.discard("")
+    public_story_count = 0
+    if edition_manifest_path.exists():
+        try:
+            public_story_count = int((json.loads(edition_manifest_path.read_text(encoding="utf-8")) or {}).get("public_story_count") or 0)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            public_story_count = 0
+    last_report: dict[str, object] | None = None
+    if report_path.exists():
+        try:
+            last_report = json.loads(report_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            last_report = {"errors": ["historical_search_report.json is invalid JSON"]}
+    total_source_count = len(urls) if urls else len(manual_sources) + len(historical_sources)
+    if total_source_count >= 4:
+        action = "enough source records available"
+    elif not manual_path.exists():
+        action = "add manual_sources.json"
+    elif historical_path.exists() and len(historical_only) == 0 and len(manual_sources) == 0:
+        action = "rerun historical search with refresh-cache"
+    else:
+        action = "provider sparse; manual supplement recommended"
+    return {
+        "coverage_start": start,
+        "coverage_end": end,
+        "coverage_label": format_coverage_label(start, end),
+        "source_folder": str(folder),
+        "manual_sources_exists": manual_path.exists(),
+        "manual_source_count": len(manual_sources),
+        "historical_source_count": len(historical_only),
+        "total_source_count": total_source_count,
+        "public_story_count": public_story_count,
+        "last_historical_search_report": str(report_path) if report_path.exists() else None,
+        "recommended_action": action,
+        "report_recommendation": last_report.get("recommendation") if isinstance(last_report, dict) else None,
+    }
+
+
+def run_source_gap_report(args: argparse.Namespace) -> dict[str, object]:
+    if args.backfill_weeks:
+        windows = completed_week_windows(args.date, args.backfill_weeks)
+    else:
+        windows = [resolve_week_args(args)]
+    items = [source_gap_item(start, end, edition_date) for start, end, edition_date in windows]
+    return {
+        "ok": True,
+        "date": args.date,
+        "mode": "source-gap-report",
+        "backfill_weeks": args.backfill_weeks,
+        "weeks": items,
+        "warnings": [],
+        "errors": [],
+    }
+
+
 def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     start, end, edition_date = resolve_week_args(args)
     if args.historical_search:
@@ -172,7 +260,7 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
             run_date=args.date,
             dry_run=args.dry_run,
             refresh_cache=args.refresh_cache,
-            historical_provider=args.historical_provider,
+            historical_provider=None if args.historical_provider == "all" else args.historical_provider,
             max_historical_queries=args.max_historical_queries,
             historical_delay_seconds=args.historical_delay_seconds,
         )
@@ -215,7 +303,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
                 run_date=args.date,
                 dry_run=args.dry_run,
                 refresh_cache=args.refresh_cache,
-                historical_provider=args.historical_provider,
+                historical_provider=None if args.historical_provider == "all" else args.historical_provider,
                 max_historical_queries=args.max_historical_queries,
                 historical_delay_seconds=args.historical_delay_seconds,
             )
@@ -293,15 +381,31 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--from-existing-editions", action="store_true")
     parser.add_argument("--historical-search", action="store_true")
     parser.add_argument("--refresh-cache", action="store_true")
-    parser.add_argument("--historical-provider", choices=["gdelt", "manual"])
+    parser.add_argument("--historical-provider", choices=["gdelt", "manual", "all"], default="all")
     parser.add_argument("--max-historical-queries", type=int)
     parser.add_argument("--historical-delay-seconds", type=float)
+    parser.add_argument("--create-manual-template", action="store_true")
+    parser.add_argument("--validate-manual-sources", action="store_true")
+    parser.add_argument("--source-gap-report", action="store_true")
+    parser.add_argument("--force", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     run_all = args.all or not any([args.ingest, args.normalize, args.curate, args.render, args.daily, args.weekly, args.weekly_public])
     try:
         if args.daily:
             result = run_pipeline(args.date, ingest=True, normalize=True, curate=True, render=False, dry_run=args.dry_run, mode="daily", briefing_type="daily")
+            print(json.dumps(result, indent=2))
+            return 0 if result["ok"] else 1
+        if args.create_manual_template:
+            result = create_manual_template_command(args)
+            print(json.dumps(result, indent=2))
+            return 0 if result["ok"] else 1
+        if args.validate_manual_sources:
+            result = validate_manual_sources_command(args)
+            print(json.dumps(result, indent=2))
+            return 0 if result["ok"] else 1
+        if args.source_gap_report:
+            result = run_source_gap_report(args)
             print(json.dumps(result, indent=2))
             return 0 if result["ok"] else 1
         if args.backfill_weeks and not args.weekly_public:

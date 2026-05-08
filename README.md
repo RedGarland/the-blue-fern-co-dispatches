@@ -282,7 +282,57 @@ python scripts\run_cascadia_dispatch.py --week-start 2026-04-20 --week-end 2026-
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 ```
 
-Historical search uses project-local source records, not old Cascadia/FDA project artifacts. The default provider is GDELT when network access is available; project-local manual supplements can be added at `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/manual_sources.json`. Each run writes `historical_sources.json` and `historical_search_report.json` in the same weekly source folder, preserving URLs, publishers, dates, snippets, provider IDs, queries, warnings, exclusions, and dedupe counts. If no qualifying records are found, the weekly public page renders a clean no-source message and does not invent stories.
+Historical search uses project-local source records, not old Cascadia/FDA project artifacts. Provider order lives in `data/dispatches/cascadia/historical_sources.yml`; supported providers are `manual` and `gdelt`. The default historical provider mode is `all`, which loads project-local manual supplements and then queries enabled provider slots. Each run writes `historical_sources.json` and `historical_search_report.json` in the same weekly source folder, preserving URLs, publishers, dates, snippets, provider IDs, queries, warnings, exclusions, dedupe counts, provider counts, manual validation status, and a recommendation. If no qualifying records are found, the weekly public page renders a clean no-source message and does not invent stories.
+
+Manual Cascadia weekly supplements live at:
+
+```text
+data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/manual_sources.json
+```
+
+Each manual record should include `source_record_id`, `title`, `url`, `publisher`, `published_at`, `retrieved_at`, `summary_or_snippet`, `source_type: manual`, `provider_id: manual`, `region_terms_matched`, `category_hint`, `state_hint`, `reliability_tier`, and `traceability_note`. URL is required. Title is required unless the URL is clearly stable and publisher is present. Do not invent summaries; leave `summary_or_snippet` blank when the source does not provide one.
+
+Manual supplement workflow:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --create-manual-template
+```
+
+Edit:
+
+```text
+data\dispatches\cascadia\sources\2026-04-20_2026-04-26\manual_sources.json
+```
+
+Validate without publishing:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --validate-manual-sources
+```
+
+Generate with manual plus GDELT:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider all
+```
+
+Generate manual-only:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider manual
+```
+
+Backfill four weeks with all providers:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search --historical-provider all
+```
+
+Report sparse source windows without publishing:
+
+```powershell
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --source-gap-report
+```
 
 Pipeline stages:
 

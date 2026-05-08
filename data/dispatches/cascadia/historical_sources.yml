@@ -2,6 +2,7 @@ providers:
   - provider_id: gdelt
     provider_name: GDELT 2.1 Document API
     enabled: true
+    priority: 2
     base_url: https://api.gdeltproject.org/api/v2/doc/doc
     max_results_per_query: 10
     timeout_seconds: 6
@@ -16,6 +17,7 @@ providers:
   - provider_id: manual
     provider_name: Project-local manual historical sources
     enabled: true
+    priority: 1
     reliability_tier: editorial-record
 
 query_groups:

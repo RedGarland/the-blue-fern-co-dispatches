@@ -229,6 +229,7 @@ Source configuration:
 
 ```text
 data/dispatches/cascadia/sources.yml
+data/dispatches/cascadia/historical_sources.yml
 ```
 
 Full run:
@@ -241,14 +242,17 @@ Operational cadence:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --date YYYY-MM-DD --daily
-python scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public
-python scripts\run_cascadia_dispatch.py --archive-week 2026-05-06 --weekly-public
-python scripts\run_cascadia_dispatch.py --week-start 2026-05-04 --week-end 2026-05-10 --weekly-public
+python scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public --historical-search
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search
+python scripts\run_cascadia_dispatch.py --week-start 2026-04-20 --week-end 2026-04-26 --weekly-public --historical-search
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
 ```
 
 The public Cascadia edition is weekly. Monday runs cover the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
+
+Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. The default network provider is GDELT, with a manual provider fallback. Sparse weeks are explained by `historical_search_report.json`; unsupported stories are omitted.
 
 Daily jobs:
 
@@ -270,7 +274,7 @@ Task Scheduler setup for Cascadia:
 Arguments for the weekly Cascadia run without push:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public --historical-search"
 ```
 
 Manual push after inspection:
@@ -285,6 +289,8 @@ Stage outputs:
 
 ```text
 data/dispatches/cascadia/raw/YYYY-MM-DD/raw_sources.json
+data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/historical_sources.json
+data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/historical_search_report.json
 data/dispatches/cascadia/normalized/YYYY-MM-DD/normalized_sources.json
 data/dispatches/cascadia/curated/YYYY-MM-DD/curation_manifest.json
 output/dispatches/cascadia/editions/YYYY-MM-DD/
@@ -293,7 +299,7 @@ output/detail/cascadia/YYYY-MM-DD/
 data/records/
 ```
 
-The public Cascadia edition includes only stories with traceable source records and visible source links. Detail records are written only to `output/detail/cascadia/YYYY-MM-DD/` and are not published publicly. Weekly manifests include `dispatch_slug`, `public_name`, `briefing_type`, `run_date`, `edition_date`, `coverage_start`, `coverage_end`, `week_label`, `source_record_ids`, and `source_urls`.
+The public Cascadia edition includes only stories with traceable source records and visible source links. Detail records are written only to `output/detail/cascadia/YYYY-MM-DD/` and are not published publicly. Weekly manifests include `dispatch_slug`, `public_name`, `briefing_type`, `run_date`, `edition_date`, `coverage_start`, `coverage_end`, `week_label`, `source_record_ids`, `source_urls`, `historical_search`, `providers_used`, `query_count`, `included_source_count`, and `excluded_source_count`.
 
 Public brand: The Cascadia Briefing.
 

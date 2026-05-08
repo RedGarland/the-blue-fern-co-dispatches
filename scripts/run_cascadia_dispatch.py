@@ -11,6 +11,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.cascadia_curate import curate_sources
+from bluefern_dispatches.cascadia_historical_search import retrieve_historical_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
@@ -149,9 +150,34 @@ def completed_week_windows(run_date: str, weeks: int) -> list[tuple[str, str, st
     return windows
 
 
+def unique_messages(messages: list[str]) -> list[str]:
+    seen = set()
+    unique = []
+    for message in messages:
+        if message in seen:
+            continue
+        seen.add(message)
+        unique.append(message)
+    return unique
+
+
 def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     start, end, edition_date = resolve_week_args(args)
-    aggregate = aggregate_weekly_curation(ROOT, args.date, local_date.fromisoformat(start), local_date.fromisoformat(end), edition_date=edition_date, dry_run=args.dry_run)
+    if args.historical_search:
+        aggregate = retrieve_historical_sources(
+            ROOT,
+            local_date.fromisoformat(start),
+            local_date.fromisoformat(end),
+            edition_date=edition_date,
+            run_date=args.date,
+            dry_run=args.dry_run,
+            refresh_cache=args.refresh_cache,
+            historical_provider=args.historical_provider,
+            max_historical_queries=args.max_historical_queries,
+            historical_delay_seconds=args.historical_delay_seconds,
+        )
+    else:
+        aggregate = aggregate_weekly_curation(ROOT, args.date, local_date.fromisoformat(start), local_date.fromisoformat(end), edition_date=edition_date, dry_run=args.dry_run)
     result = run_pipeline(
         edition_date,
         ingest=False,
@@ -166,10 +192,11 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
         briefing_type="weekly",
     )
     result["weekly_aggregation"] = aggregate
+    result["historical_search"] = bool(args.historical_search)
     result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
     result["curated_count"] = aggregate.get("curated_count", result.get("curated_count", 0))
-    result["warnings"] = list(aggregate.get("warnings", [])) + list(result.get("warnings", []))
-    result["errors"] = list(aggregate.get("errors", [])) + list(result.get("errors", []))
+    result["warnings"] = unique_messages(list(aggregate.get("warnings", [])) + list(result.get("warnings", [])))
+    result["errors"] = unique_messages(list(aggregate.get("errors", [])) + list(result.get("errors", [])))
     result["ok"] = bool(aggregate.get("ok")) and bool(result.get("ok")) and not result["errors"]
     return result
 
@@ -179,7 +206,20 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
     warnings: list[str] = []
     errors: list[str] = []
     for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
-        if args.from_existing_editions:
+        if args.historical_search:
+            aggregate = retrieve_historical_sources(
+                ROOT,
+                local_date.fromisoformat(start),
+                local_date.fromisoformat(end),
+                edition_date=edition_date,
+                run_date=args.date,
+                dry_run=args.dry_run,
+                refresh_cache=args.refresh_cache,
+                historical_provider=args.historical_provider,
+                max_historical_queries=args.max_historical_queries,
+                historical_delay_seconds=args.historical_delay_seconds,
+            )
+        elif args.from_existing_editions:
             aggregate = backfill_weekly_from_existing_editions(
                 ROOT,
                 args.date,
@@ -211,10 +251,11 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
             briefing_type="weekly",
         )
         result["weekly_aggregation"] = aggregate
+        result["historical_search"] = bool(args.historical_search)
         result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
         result["curated_count"] = aggregate.get("curated_count", result.get("curated_count", 0))
-        result["warnings"] = list(aggregate.get("warnings", [])) + list(result.get("warnings", []))
-        result["errors"] = list(aggregate.get("errors", [])) + list(result.get("errors", []))
+        result["warnings"] = unique_messages(list(aggregate.get("warnings", [])) + list(result.get("warnings", [])))
+        result["errors"] = unique_messages(list(aggregate.get("errors", [])) + list(result.get("errors", [])))
         result["ok"] = bool(aggregate.get("ok")) and bool(result.get("ok")) and not result["errors"]
         warnings.extend(result["warnings"])
         errors.extend(result["errors"])
@@ -226,6 +267,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
         "mode": f"{mode}-backfill",
         "backfill_weeks": args.backfill_weeks,
         "from_existing_editions": bool(args.from_existing_editions),
+        "historical_search": bool(args.historical_search),
         "edition_dates": [result.get("edition_date") for result in results],
         "weekly_editions": results,
         "warnings": warnings,
@@ -249,6 +291,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--archive-week")
     parser.add_argument("--backfill-weeks", type=int)
     parser.add_argument("--from-existing-editions", action="store_true")
+    parser.add_argument("--historical-search", action="store_true")
+    parser.add_argument("--refresh-cache", action="store_true")
+    parser.add_argument("--historical-provider", choices=["gdelt", "manual"])
+    parser.add_argument("--max-historical-queries", type=int)
+    parser.add_argument("--historical-delay-seconds", type=float)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     run_all = args.all or not any([args.ingest, args.normalize, args.curate, args.render, args.daily, args.weekly, args.weekly_public])
@@ -263,6 +310,8 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--backfill-weeks cannot be combined with --week-start/--week-end or --archive-week")
         if args.from_existing_editions and not args.backfill_weeks:
             raise ValueError("--from-existing-editions requires --backfill-weeks")
+        if args.from_existing_editions and args.historical_search:
+            raise ValueError("--from-existing-editions cannot be combined with --historical-search")
         if args.weekly or args.weekly_public:
             if args.backfill_weeks:
                 result = run_weekly_backfill(args, "weekly-public")

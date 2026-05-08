@@ -1,0 +1,92 @@
+providers:
+  - provider_id: gdelt
+    provider_name: GDELT 2.1 Document API
+    enabled: true
+    base_url: https://api.gdeltproject.org/api/v2/doc/doc
+    max_results_per_query: 10
+    timeout_seconds: 6
+    delay_seconds: 3
+    max_retries: 2
+    backoff_base_seconds: 5
+    backoff_max_seconds: 60
+    cache_enabled: true
+    cache_ttl_days: 14
+    user_agent: BlueFernDispatches/0.1 historical-source-retrieval
+    reliability_tier: unknown
+  - provider_id: manual
+    provider_name: Project-local manual historical sources
+    enabled: true
+    reliability_tier: editorial-record
+
+query_groups:
+  max_queries: 3
+  max_queries_per_week: 3
+  max_region_terms_per_query: 8
+  system_terms_per_query: 10
+  target_records_per_week: 8
+  region_terms:
+    - Washington
+    - Oregon
+    - Idaho
+    - Pacific Northwest
+    - Cascadia
+    - Seattle
+    - Portland
+    - Spokane
+    - Boise
+    - Tacoma
+    - Eugene
+    - Salem
+  system_groups:
+    - infrastructure/utilities|infrastructure|utility|utilities|power|water|transportation|bridge|road closure|rail|port
+    - health/public services|public health|hospital|healthcare|Medicaid|school|public services
+    - environment/climate/wildfire|wildfire|drought|flood|climate|environmental cleanup|resilience|air quality
+    - economy/labor/housing|economy|labor|layoffs|housing|homelessness|agriculture|food insecurity
+    - public safety/emergency management|public safety|emergency|emergency management|evacuation|disaster
+  systems_terms:
+    - infrastructure
+    - public health
+    - hospital
+    - healthcare
+    - Medicaid
+    - school
+    - housing
+    - homelessness
+    - wildfire
+    - drought
+    - flood
+    - power outage
+    - utility
+    - water
+    - transportation
+    - bridge
+    - road closure
+    - rail
+    - port
+    - public safety
+    - emergency
+    - economy
+    - labor
+    - layoffs
+    - agriculture
+    - food insecurity
+    - environmental cleanup
+    - climate
+    - resilience
+
+region_filters:
+  states:
+    - WA
+    - OR
+    - ID
+  known_regional_domains:
+    - seattletimes.com
+    - spokesman.com
+    - oregonlive.com
+    - opb.org
+    - boisedev.com
+    - idahostatesman.com
+    - katu.com
+    - king5.com
+    - kgw.com
+    - kxly.com

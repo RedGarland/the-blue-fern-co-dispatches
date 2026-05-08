@@ -246,6 +246,7 @@ Source config:
 
 ```text
 data/dispatches/cascadia/sources.yml
+data/dispatches/cascadia/historical_sources.yml
 ```
 
 Run the full Cascadia dispatch for a date:
@@ -263,7 +264,7 @@ python scripts\run_cascadia_dispatch.py --date YYYY-MM-DD --daily
 Weekly public briefing:
 
 ```powershell
-python scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public
+python scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public --historical-search
 ```
 
 The public Cascadia mode is weekly. It runs on Monday morning and covers the previous completed Monday-Sunday window. A run on `2026-05-11` publishes the week `2026-05-04` through `2026-05-10` using the Sunday coverage-end edition convention:
@@ -275,10 +276,13 @@ The public Cascadia mode is weekly. It runs on Monday morning and covers the pre
 Historical weekly runs accept any date inside the desired week, or an explicit Monday-Sunday range:
 
 ```powershell
-python scripts\run_cascadia_dispatch.py --archive-week 2026-05-06 --weekly-public
-python scripts\run_cascadia_dispatch.py --week-start 2026-05-04 --week-end 2026-05-10 --weekly-public
+python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --date 2026-05-11 --historical-search
+python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search
+python scripts\run_cascadia_dispatch.py --week-start 2026-04-20 --week-end 2026-04-26 --weekly-public --historical-search
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 ```
+
+Historical search uses project-local source records, not old Cascadia/FDA project artifacts. The default provider is GDELT when network access is available; project-local manual supplements can be added at `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/manual_sources.json`. Each run writes `historical_sources.json` and `historical_search_report.json` in the same weekly source folder, preserving URLs, publishers, dates, snippets, provider IDs, queries, warnings, exclusions, and dedupe counts. If no qualifying records are found, the weekly public page renders a clean no-source message and does not invent stories.
 
 Pipeline stages:
 
@@ -294,6 +298,8 @@ Key outputs:
 
 ```text
 data/dispatches/cascadia/raw/YYYY-MM-DD/raw_sources.json
+data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/historical_sources.json
+data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/historical_search_report.json
 data/dispatches/cascadia/normalized/YYYY-MM-DD/normalized_sources.json
 data/dispatches/cascadia/curated/YYYY-MM-DD/curation_manifest.json
 output/dispatches/cascadia/editions/YYYY-MM-DD/
@@ -309,7 +315,7 @@ data/records/detail_packages.json
 
 Every public Cascadia story must include source record IDs and source URLs. Paid/detail artifacts must never be copied into `output/site/`.
 
-Weekly Cascadia manifests include `dispatch_slug`, `public_name`, `briefing_type`, `run_date`, `edition_date`, `coverage_start`, `coverage_end`, `week_label`, `source_record_ids`, and `source_urls`.
+Weekly Cascadia manifests include `dispatch_slug`, `public_name`, `briefing_type`, `run_date`, `edition_date`, `coverage_start`, `coverage_end`, `week_label`, `source_record_ids`, `source_urls`, `historical_search`, `providers_used`, `query_count`, `included_source_count`, and `excluded_source_count`.
 
 The shared `data/records/` structure is dispatch-agnostic. It represents dispatches, editions, sources, story/signal records, curation decisions, and private detail packages for Gaza, Cascadia, food insecurity, political actions, healthcare access, and future briefings without adding new schema files.
 
@@ -365,7 +371,7 @@ powershell.exe
 Arguments for a weekly Cascadia run without push:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public --historical-search"
 ```
 
 Wrapper:

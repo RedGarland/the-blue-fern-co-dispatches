@@ -1,4 +1,5 @@
 import json
+import urllib.error
 import shutil
 import subprocess
 import sys
@@ -8,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.cascadia_curate import curate_sources
+from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, dedupe_records, retrieve_historical_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
@@ -24,11 +26,13 @@ from run_cascadia_dispatch import completed_week_windows, run_pipeline
 
 @pytest.fixture()
 def cascadia_work_root():
+    PROVIDER_BACKOFF_UNTIL.clear()
     repo = Path(__file__).resolve().parents[1]
     root = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
     (root / "data" / "dispatches" / "cascadia").mkdir(parents=True)
     shutil.copytree(repo / "assets", root / "assets")
     shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "sources.yml", root / "data" / "dispatches" / "cascadia" / "sources.yml")
+    shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "historical_sources.yml", root / "data" / "dispatches" / "cascadia" / "historical_sources.yml")
     shutil.copy2(repo / "data" / "dispatches" / "cascadia" / "manual_sources.json", root / "data" / "dispatches" / "cascadia" / "manual_sources.json")
     return root
 
@@ -43,6 +47,370 @@ def test_cascadia_sources_yml_loads(cascadia_work_root):
     assert sources
     assert any(source["source_id"] == "cascadia-manual" for source in sources)
     assert all("reliability_tier" in source for source in sources)
+
+
+def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_root, monkeypatch):
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            return [
+                {
+                    "title": "Washington bridge repairs close Spokane route",
+                    "url": "https://example.com/wa-bridge?utm=1",
+                    "publisher": "Example WA News",
+                    "published_at": "2026-04-28T12:00:00Z",
+                    "summary_or_snippet": "Infrastructure and transportation officials announced a road closure.",
+                    "reliability_tier": "reputable",
+                },
+                {
+                    "title": "Washington bridge repairs close Spokane route",
+                    "url": "https://example.com/wa-bridge?utm=2",
+                    "publisher": "Example WA News",
+                    "published_at": "2026-04-28T12:00:00Z",
+                    "summary_or_snippet": "Infrastructure and transportation officials announced a road closure.",
+                    "reliability_tier": "reputable",
+                },
+                {
+                    "title": "National sports tournament preview",
+                    "url": "https://example.com/sports",
+                    "publisher": "National Sports",
+                    "published_at": "2026-04-28T12:00:00Z",
+                    "summary_or_snippet": "Sports game coverage.",
+                },
+                {
+                    "title": "Oregon wildfire evacuation routes updated",
+                    "url": "",
+                    "publisher": "Example OR News",
+                    "published_at": "2026-04-29T12:00:00Z",
+                    "summary_or_snippet": "Wildfire emergency notice.",
+                },
+            ]
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-28"), edition_date="2026-05-03", run_date="2026-05-11")
+
+    assert result["ok"] is True
+    assert result["source_count"] == 1
+    historical_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03" / "historical_sources.json"
+    report_path = historical_path.with_name("historical_search_report.json")
+    records = read_json(historical_path)
+    report = read_json(report_path)
+    assert records[0]["source_type"] == "historical_search"
+    assert records[0]["provider_id"] == "gdelt"
+    assert records[0]["query_used"]
+    assert records[0]["url"]
+    assert records[0]["state_hint"] == "WA"
+    assert report["duplicates_removed"] >= 1
+    assert report["exclusion_reasons"]["sports"] >= 1
+    assert report["exclusion_reasons"]["missing_url"] >= 1
+    assert "cache_hits" in report
+    assert "cache_misses" in report
+    assert "retry_count" in report
+    assert "rate_limit_count" in report
+    assert "queries_planned" in report
+    assert "queries_skipped_due_to_limit" in report
+
+
+def test_historical_search_builds_batched_queries(cascadia_work_root):
+    config = {
+        "query_groups": {
+            "max_queries": 2,
+            "max_region_terms_per_query": 3,
+            "system_terms_per_query": 2,
+            "region_terms": ["Washington", "Oregon", "Idaho", "Seattle"],
+            "systems_terms": ["public health", "bridge", "wildfire", "housing"],
+        }
+    }
+
+    queries = build_queries(config)
+
+    assert len(queries) == 2
+    assert queries[0].startswith("(Washington OR Oregon OR Idaho)")
+    assert '"public health" OR bridge' in queries[0]
+    assert "wildfire OR housing" in queries[1]
+    assert all(" AND " in query for query in queries)
+
+
+def test_gdelt_provider_cache_writes_hits_refreshes_and_keys_by_window(cascadia_work_root, monkeypatch):
+    calls = 0
+
+    class FakeResponse:
+        status = 200
+
+        def __init__(self, payload):
+            self.payload = payload
+            self.headers = {"Content-Type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode("utf-8")
+
+    def fake_urlopen(request, timeout):
+        nonlocal calls
+        calls += 1
+        return FakeResponse(
+            {
+                "articles": [
+                    {
+                        "title": "Washington water utility update",
+                        "url": f"https://example.com/water-{calls}",
+                        "domain": "example.com",
+                        "seendate": "20260428120000",
+                        "snippet": "Washington water utility infrastructure update.",
+                    }
+                ]
+            }
+        )
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    config = {
+        "provider_id": "gdelt",
+        "base_url": "https://api.gdeltproject.org/api/v2/doc/doc",
+        "delay_seconds": 0,
+        "cache_enabled": True,
+        "cache_ttl_days": 14,
+    }
+    provider = GDELTProvider(config, root=cascadia_work_root)
+    first = provider.search(*containing_week("2026-04-28"), "Washington AND water", 3)
+    first_diag = provider.last_diagnostics
+    second = provider.search(*containing_week("2026-04-28"), "Washington AND water", 3)
+    second_diag = provider.last_diagnostics
+    refreshed = GDELTProvider(config, root=cascadia_work_root, refresh_cache=True).search(*containing_week("2026-04-28"), "Washington AND water", 3)
+    different_window = GDELTProvider(config, root=cascadia_work_root).search(*containing_week("2026-05-05"), "Washington AND water", 3)
+
+    assert calls == 3
+    assert first[0]["url"] == second[0]["url"]
+    assert refreshed[0]["url"] != first[0]["url"]
+    assert different_window[0]["url"] != first[0]["url"]
+    assert first_diag["cache_miss"] is True
+    assert second_diag["cache_hit"] is True
+    cache_files = list((cascadia_work_root / "data" / "dispatches" / "cascadia" / "cache" / "gdelt").glob("*.json"))
+    assert len(cache_files) >= 2
+
+
+def test_gdelt_provider_rate_limit_retries_honor_retry_after(cascadia_work_root, monkeypatch):
+    calls = 0
+    sleeps = []
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return json.dumps({"articles": []}).encode("utf-8")
+
+    def fake_urlopen(request, timeout):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise urllib.error.HTTPError(request.full_url, 429, "Too Many Requests", {"Retry-After": "7"}, None)
+        return FakeResponse()
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.time.sleep", lambda seconds: sleeps.append(seconds))
+    provider = GDELTProvider({"provider_id": "gdelt", "delay_seconds": 0, "max_retries": 2, "backoff_base_seconds": 1}, root=cascadia_work_root)
+
+    assert provider.search(*containing_week("2026-04-28"), "Washington AND water", 3) == []
+    assert calls == 2
+    assert sleeps == [7.0]
+    assert provider.last_diagnostics["rate_limit_count"] == 1
+    assert provider.last_diagnostics["retry_count"] == 1
+
+
+def test_gdelt_provider_rate_limit_stops_after_max_retries(cascadia_work_root, monkeypatch):
+    sleeps = []
+
+    def fake_urlopen(request, timeout):
+        raise urllib.error.HTTPError(request.full_url, 429, "Too Many Requests", {}, None)
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.time.sleep", lambda seconds: sleeps.append(seconds))
+    provider = GDELTProvider({"provider_id": "gdelt", "delay_seconds": 0, "max_retries": 1, "backoff_base_seconds": 2}, root=cascadia_work_root)
+
+    with pytest.raises(HistoricalProviderRateLimited):
+        provider.search(*containing_week("2026-04-28"), "Washington AND water", 3)
+    assert sleeps == [2]
+    assert provider.last_diagnostics["rate_limit_count"] == 2
+    assert provider.last_diagnostics["retry_count"] == 1
+
+
+def test_gdelt_provider_empty_and_non_json_responses_warn(cascadia_work_root, monkeypatch):
+    class FakeResponse:
+        status = 200
+
+        def __init__(self, body, content_type):
+            self.body = body
+            self.headers = {"Content-Type": content_type}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return self.body.encode("utf-8")
+
+    responses = [FakeResponse("", "text/plain"), FakeResponse("<html>busy</html>", "text/html")]
+
+    def fake_urlopen(request, timeout):
+        return responses.pop(0)
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    config = {"provider_id": "gdelt", "delay_seconds": 0, "cache_enabled": False}
+    provider = GDELTProvider(config, root=cascadia_work_root)
+
+    assert provider.search(*containing_week("2026-04-28"), "Washington AND water", 3) == []
+    assert "empty response body" in provider.last_diagnostics["warnings"]
+    assert provider.search(*containing_week("2026-04-28"), "Washington AND power", 3) == []
+    assert any("invalid JSON response" in warning for warning in provider.last_diagnostics["warnings"])
+
+
+def test_historical_provider_failure_fails_safely(cascadia_work_root, monkeypatch):
+    class FailingGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            raise OSError("network unavailable")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FailingGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-28"), edition_date="2026-05-03", run_date="2026-05-11")
+
+    assert result["ok"] is True
+    assert result["source_count"] == 0
+    assert result["warnings"]
+    assert read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03" / "historical_sources.json") == []
+
+
+def test_historical_provider_rate_limit_enters_cooldown(cascadia_work_root, monkeypatch):
+    class RateLimitedGDELT(GDELTProvider):
+        calls = 0
+
+        def search(self, start_date, end_date, query_terms, max_results):
+            RateLimitedGDELT.calls += 1
+            raise HistoricalProviderRateLimited("HTTP 429 Too Many Requests")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", RateLimitedGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-28"), edition_date="2026-05-03", run_date="2026-05-11")
+    second = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-21"), edition_date="2026-04-26", run_date="2026-05-11")
+
+    assert result["ok"] is True
+    assert result["query_count"] == 1
+    assert result["report"]["queries_run"][0]["rate_limited"] is True
+    assert second["query_count"] == 0
+    assert RateLimitedGDELT.calls == 1
+    assert "cooling down" in second["warnings"][0]
+
+
+def test_manual_and_historical_sources_merge_with_source_type_preserved(cascadia_work_root, monkeypatch):
+    week_start, week_end = containing_week("2026-04-28")
+    manual_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
+    manual_dir.mkdir(parents=True)
+    (manual_dir / "manual_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Idaho hospital emergency staffing update",
+                    "url": "https://example.com/idaho-hospital",
+                    "publisher": "Idaho Public Source",
+                    "published_at": "2026-04-30T12:00:00Z",
+                    "summary_or_snippet": "Hospital and public health agencies described emergency staffing.",
+                    "state_hint": "ID",
+                    "category_hint": "Healthcare",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            return [
+                {
+                    "title": "Oregon housing services expand shelter capacity",
+                    "url": "https://example.com/oregon-housing",
+                    "publisher": "Oregon Public Source",
+                    "published_at": "2026-04-29T12:00:00Z",
+                    "summary_or_snippet": "Oregon housing and homelessness services added shelter capacity.",
+                    "reliability_tier": "reputable",
+                }
+            ]
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", run_date="2026-05-11")
+
+    assert result["source_count"] == 2
+    records = read_json(manual_dir / "historical_sources.json")
+    assert {record["source_type"] for record in records} == {"historical_search", "manual"}
+    assert {record["provider_id"] for record in records} == {"gdelt", "manual"}
+
+
+def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            if start_date.isoformat() == "2026-05-04":
+                return [
+                    {
+                        "title": "Seattle utility warns of power outage resilience work",
+                        "url": "https://example.com/seattle-utility",
+                        "publisher": "Seattle Public Source",
+                        "published_at": "2026-05-05T12:00:00Z",
+                        "summary_or_snippet": "Seattle utility crews described power outage resilience work.",
+                        "reliability_tier": "reputable",
+                    }
+                ]
+            return []
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    code = run_cascadia_dispatch.main(["--weekly-public", "--backfill-weeks", "4", "--date", "2026-05-11", "--historical-search"])
+
+    assert code == 0
+    edition_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-10"
+    html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    manifest = read_json(edition_dir / "edition_manifest.json")
+    sources = read_json(edition_dir / "sources_manifest.json")
+    curation = read_json(edition_dir / "curation_manifest.json")
+    assert "Seattle utility warns of power outage resilience work" in html
+    assert "https://example.com/seattle-utility" in html
+    assert manifest["historical_search"] is True
+    assert manifest["providers_used"] == ["gdelt"]
+    assert manifest["query_count"] >= 1
+    assert sources[0]["provider_id"] == "gdelt"
+    assert sources[0]["query_used"]
+    assert curation[0]["source_record_ids"]
+    empty_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
+    assert "No qualifying source-backed Cascadia signals were identified" in empty_html
+    archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    rss = (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+    assert "The Cascadia Briefing - May 4\u201310, 2026" in archive
+    assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in rss
+    assert "2026-05-07" not in archive
+
+
+def test_dedupe_records_handles_url_title_and_compound_keys():
+    records, duplicates = dedupe_records(
+        [
+            {"url": "https://example.com/a?x=1", "title": "WA water utility update", "publisher": "Source", "published_at": "2026-05-01T00:00:00Z"},
+            {"url": "https://example.com/a?x=2", "title": "WA water utility update", "publisher": "Source", "published_at": "2026-05-01T00:00:00Z"},
+            {"url": "https://example.com/b", "title": "WA water utility update", "publisher": "Source", "published_at": "2026-05-01T00:00:00Z"},
+        ]
+    )
+
+    assert len(records) == 1
+    assert duplicates == 2
 
 
 def test_weekly_window_logic():

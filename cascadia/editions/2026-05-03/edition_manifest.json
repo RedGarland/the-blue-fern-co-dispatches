@@ -7,18 +7,19 @@
   "edition_date": "2026-05-03",
   "coverage_start": "2026-04-27",
   "coverage_end": "2026-05-03",
+  "coverage_label": "Apr 27\u2013May 3, 2026",
   "week_label": "2026-W18",
   "source_record_ids": [
-    "src-63ceb40d9957a9da",
-    "src-b9754106373f837f",
-    "src-f6381af1da25bfb2"
+    "derived-2026-05-03-src-63ceb40d9957a9da",
+    "derived-2026-05-03-src-b9754106373f837f",
+    "derived-2026-05-03-src-f6381af1da25bfb2"
   ],
   "source_urls": [
     "https://example.com/cascadia-sports-placeholder",
     "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
     "https://www.oregon.gov/oem"
   ],
-  "generated_at": "2026-05-07T23:17:01.863308+00:00",
+  "generated_at": "2026-05-08T00:12:59.362594+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
   "local_backup_path": null,

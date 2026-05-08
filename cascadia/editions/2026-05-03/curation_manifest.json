@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "story-c7a4b5528a8c",
+    "story_id": "derived-2026-05-03-derived-2026-05-03-story-c7a4b5528a8c",
     "title": "Washington bridge inspection program flags transportation maintenance backlog",
     "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
     "category": "Transportation",
@@ -19,7 +19,7 @@
       "source_reliability=editorial-record"
     ],
     "source_record_ids": [
-      "src-63ceb40d9957a9da"
+      "derived-2026-05-03-src-63ceb40d9957a9da"
     ],
     "source_urls": [
       "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
@@ -34,10 +34,16 @@
     "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
     "coverage_start": "2026-04-27",
-    "coverage_end": "2026-05-03"
+    "coverage_end": "2026-05-03",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
   },
   {
-    "story_id": "story-b5a2f0ce428f",
+    "story_id": "derived-2026-05-03-derived-2026-05-03-story-b5a2f0ce428f",
     "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
     "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
     "category": "Public safety",
@@ -56,7 +62,7 @@
       "source_reliability=editorial-record"
     ],
     "source_record_ids": [
-      "src-f6381af1da25bfb2"
+      "derived-2026-05-03-src-f6381af1da25bfb2"
     ],
     "source_urls": [
       "https://www.oregon.gov/oem"
@@ -71,10 +77,16 @@
     "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
     "coverage_start": "2026-04-27",
-    "coverage_end": "2026-05-03"
+    "coverage_end": "2026-05-03",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
   },
   {
-    "story_id": "story-d53365c68a09",
+    "story_id": "derived-2026-05-03-derived-2026-05-03-story-d53365c68a09",
     "title": "Local college team wins postseason game",
     "summary": "Sports-only placeholder item used to verify curation exclusion.",
     "category": "Government and public services",
@@ -93,7 +105,7 @@
       "source_reliability=editorial-record"
     ],
     "source_record_ids": [
-      "src-b9754106373f837f"
+      "derived-2026-05-03-src-b9754106373f837f"
     ],
     "source_urls": [
       "https://example.com/cascadia-sports-placeholder"
@@ -108,6 +120,12 @@
     "run_date": "2026-05-11",
     "edition_date": "2026-05-03",
     "coverage_start": "2026-04-27",
-    "coverage_end": "2026-05-03"
+    "coverage_end": "2026-05-03",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
   }
 ]

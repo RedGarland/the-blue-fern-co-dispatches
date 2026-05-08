@@ -3,7 +3,7 @@
   "dispatch_slug": "cascadia",
   "public_name": "The Cascadia Briefing",
   "briefing_type": "weekly",
-  "run_date": "2026-05-11",
+  "run_date": "2026-05-08",
   "edition_date": "2026-04-26",
   "coverage_start": "2026-04-20",
   "coverage_end": "2026-04-26",
@@ -11,7 +11,7 @@
   "week_label": "2026-W17",
   "source_record_ids": [],
   "source_urls": [],
-  "generated_at": "2026-05-08T14:31:33.690012+00:00",
+  "generated_at": "2026-05-08T15:02:33.586133+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-04-26/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26",
   "local_backup_path": null,
@@ -37,9 +37,9 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
     "sparse week: no provider results"
   ],
   "errors": []

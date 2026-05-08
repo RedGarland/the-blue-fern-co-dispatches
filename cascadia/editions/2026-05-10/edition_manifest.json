@@ -9,23 +9,29 @@
   "coverage_end": "2026-05-10",
   "coverage_label": "May 4\u201310, 2026",
   "week_label": "2026-W19",
-  "source_record_ids": [],
-  "source_urls": [],
-  "generated_at": "2026-05-08T01:41:06.905903+00:00",
+  "source_record_ids": [
+    "hist-4f19b1f3a146910c",
+    "hist-5175a43aea34b624"
+  ],
+  "source_urls": [
+    "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html",
+    "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+  ],
+  "generated_at": "2026-05-08T14:26:21.887019+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 0,
-  "included_source_count": 0,
-  "excluded_source_count": 0,
-  "story_count": 0,
-  "public_story_count": 0,
+  "source_count": 2,
+  "included_source_count": 2,
+  "excluded_source_count": 8,
+  "story_count": 2,
+  "public_story_count": 2,
   "historical_search": true,
   "providers_used": [
     "gdelt"
   ],
-  "query_count": 6,
+  "query_count": 3,
   "historical_search_report_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-04_2026-05-10\\historical_search_report.json",
   "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
   "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\curation_manifest.json",
@@ -37,12 +43,8 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "historical provider gdelt failed for query \"Washington\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Oregon\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Idaho\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Pacific Northwest\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): Expecting value: line 1 column 1 (char 0)",
-    "historical provider gdelt failed for query \"Cascadia\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Seattle\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests"
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): The read operation timed out"
   ],
   "errors": []
 }

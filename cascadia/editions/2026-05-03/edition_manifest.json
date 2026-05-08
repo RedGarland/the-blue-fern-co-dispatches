@@ -11,7 +11,7 @@
   "week_label": "2026-W18",
   "source_record_ids": [],
   "source_urls": [],
-  "generated_at": "2026-05-08T01:41:19.561509+00:00",
+  "generated_at": "2026-05-08T14:27:28.778572+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
   "local_backup_path": null,
@@ -25,7 +25,7 @@
   "providers_used": [
     "gdelt"
   ],
-  "query_count": 6,
+  "query_count": 3,
   "historical_search_report_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-27_2026-05-03\\historical_search_report.json",
   "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\sources_manifest.json",
   "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
@@ -37,12 +37,10 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "historical provider gdelt failed for query \"Washington\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Oregon\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): Expecting value: line 1 column 1 (char 0)",
-    "historical provider gdelt failed for query \"Idaho\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Pacific Northwest\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Cascadia\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): HTTP Error 429: Too Many Requests",
-    "historical provider gdelt failed for query \"Seattle\" (infrastructure OR \"public health\" OR hospital OR healthcare OR Medicaid OR school OR housing OR homelessness OR wildfire OR drought OR flood OR \"power outage\" OR utility OR water OR transportation OR bridge OR \"road closure\" OR rail OR port OR \"public safety\" OR emergency OR economy OR labor OR layoffs OR agriculture OR \"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): Expecting value: line 1 column 1 (char 0)"
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): The read operation timed out",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): The read operation timed out",
+    "historical provider gdelt rate limited for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): HTTP 429 Too Many Requests after max retries",
+    "sparse week: GDELT rate limits prevented usable provider results"
   ],
   "errors": []
 }

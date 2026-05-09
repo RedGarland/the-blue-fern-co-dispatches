@@ -212,7 +212,7 @@ def write_weekly_quality_report(start: str, end: str, edition_date: str, aggrega
     sources = read_json_list(public_dir / "sources_manifest.json")
     historical_report = dict(aggregate.get("report") or {})
     public_stories = [story for story in curation if story.get("included_in_public_summary")]
-    public_story_count = len(public_stories)
+    public_story_count = int(render_result.get("public_story_count", len(public_stories)) or 0)
     target_public_stories = targets["target_public_stories"]
     below_target = public_story_count < targets["min_public_stories"]
     manual_path = manual_sources_path(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end))

@@ -273,6 +273,18 @@ def build_queries(config: dict[str, Any]) -> list[str]:
     return queries
 
 
+def query_group_label(query: str, config: dict[str, Any]) -> str:
+    for raw_group in config.get("query_groups", {}).get("system_groups") or []:
+        parts = [part.strip() for part in str(raw_group).split("|") if part.strip()]
+        if len(parts) < 2:
+            continue
+        label = parts[0]
+        terms = parts[1:]
+        if all(term in query for term in terms[: min(2, len(terms))]):
+            return label
+    return "combined public-systems"
+
+
 class HistoricalProviderRateLimited(RuntimeError):
     pass
 
@@ -870,7 +882,7 @@ def retrieve_historical_sources(
     queries_run: list[dict[str, Any]] = []
     provider_request_diagnostics: list[dict[str, Any]] = []
     query_limit = max(1, int(max_historical_queries or config.get("query_groups", {}).get("max_queries_per_week") or config.get("query_groups", {}).get("max_queries", len(queries) or 1)))
-    queries_planned = queries
+    queries_planned = [{"query_group": query_group_label(query, config), "query": query} for query in queries]
     limited_queries = queries[:query_limit]
     queries_skipped_due_to_limit = max(0, len(queries) - len(limited_queries))
     cache_hits = 0
@@ -968,6 +980,7 @@ def retrieve_historical_sources(
                 queries_run.append(
                     {
                         "provider_id": provider.provider_id,
+                        "query_group": query_group_label(query, config),
                         "query": query,
                         "result_count": len(results),
                         "request_url": diagnostics.get("request_url"),
@@ -992,6 +1005,7 @@ def retrieve_historical_sources(
                 queries_run.append(
                     {
                         "provider_id": provider.provider_id,
+                        "query_group": query_group_label(query, config),
                         "query": query,
                         "result_count": 0,
                         "error": str(exc),
@@ -1017,6 +1031,7 @@ def retrieve_historical_sources(
                 queries_run.append(
                     {
                         "provider_id": provider.provider_id,
+                        "query_group": query_group_label(query, config),
                         "query": query,
                         "result_count": 0,
                         "error": str(exc),

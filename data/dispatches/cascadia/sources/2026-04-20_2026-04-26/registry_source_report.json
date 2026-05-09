@@ -1,139 +1,12 @@
 {
-  "coverage_start": "2026-04-20",
-  "coverage_end": "2026-04-26",
-  "historical_provider_mode": "all",
-  "providers_used": [
-    "manual",
-    "gdelt"
-  ],
-  "queries_planned": [
-    {
-      "query_group": "infrastructure/utilities",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)"
-    },
-    {
-      "query_group": "health/public services",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")"
-    },
-    {
-      "query_group": "environment/climate/wildfire",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")"
-    },
-    {
-      "query_group": "economy/labor/housing",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\")"
-    },
-    {
-      "query_group": "public safety/emergency management",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster)"
-    }
-  ],
-  "queries_run": [
-    {
-      "provider_id": "gdelt",
-      "query_group": "infrastructure/utilities",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
-      "result_count": 10,
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28infrastructure+OR+utility+OR+utilities+OR+power+OR+water+OR+transportation+OR+bridge+OR+%22road+closure%22+OR+rail+OR+port%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "status_code": null,
-      "content_type": null,
-      "retry_count": 0,
-      "cache_hit": true,
-      "cache_miss": false,
-      "fetch_backend": "cache",
-      "fallback_used": false
-    },
-    {
-      "provider_id": "gdelt",
-      "query_group": "health/public services",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")",
-      "result_count": 0,
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+health%22+OR+hospital+OR+healthcare+OR+Medicaid+OR+school+OR+%22public+services%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "retry_count": 0,
-      "cache_hit": false,
-      "cache_miss": true,
-      "fetch_backend": "auto",
-      "fallback_used": true
-    },
-    {
-      "provider_id": "gdelt",
-      "query_group": "environment/climate/wildfire",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
-      "result_count": 0,
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28wildfire+OR+drought+OR+flood+OR+climate+OR+%22environmental+cleanup%22+OR+resilience+OR+%22air+quality%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "retry_count": 0,
-      "cache_hit": false,
-      "cache_miss": true,
-      "fetch_backend": "auto",
-      "fallback_used": true
-    },
-    {
-      "provider_id": "gdelt",
-      "query_group": "economy/labor/housing",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\")",
-      "result_count": 0,
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28economy+OR+labor+OR+layoffs+OR+housing+OR+homelessness+OR+agriculture+OR+%22food+insecurity%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "retry_count": 0,
-      "cache_hit": false,
-      "cache_miss": true,
-      "fetch_backend": "auto",
-      "fallback_used": true
-    },
-    {
-      "provider_id": "gdelt",
-      "query_group": "public safety/emergency management",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster)",
-      "result_count": 0,
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+safety%22+OR+emergency+OR+%22emergency+management%22+OR+evacuation+OR+disaster%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "retry_count": 0,
-      "cache_hit": false,
-      "cache_miss": true,
-      "fetch_backend": "auto",
-      "fallback_used": true
-    }
-  ],
-  "queries_skipped_due_to_limit": 0,
-  "cache_hits": 1,
-  "cache_misses": 4,
-  "gdelt_queries_run": 5,
-  "gdelt_cache_hits": 1,
-  "gdelt_rate_limit_count": 0,
-  "retry_count": 0,
-  "rate_limit_count": 0,
   "fetch_backend": "auto",
   "fallback_used": true,
   "python_fetch_error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
   "curl_exit_code": 35,
   "curl_stderr_tail": "% Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package",
   "tls_or_revocation_hint": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-  "raw_results_count": 10,
-  "records_saved": 5,
-  "merged_source_count": 5,
-  "final_saved_source_count": 5,
-  "records_excluded": 9,
-  "exclusion_reasons": {
-    "entertainment": 1,
-    "no_public_systems_term": 3,
-    "no_wa_or_id_connection": 5
-  },
-  "duplicates_removed": 0,
-  "source_count_by_provider": {
-    "gdelt": 1,
-    "manual": 4
-  },
-  "source_count_by_type": {
-    "historical_search": 1,
-    "manual": 4
-  },
-  "source_count_by_provider_planned": {
-    "manual": 1,
-    "registry": 1,
-    "gdelt": 1
-  },
+  "registry_sources_configured": 20,
+  "registry_sources_enabled": 20,
   "registry_sources_planned": 18,
   "registry_sources_run": 18,
   "registry_cache_hits": 0,
@@ -154,217 +27,8 @@
   "unsupported_source_type_count": 2,
   "records_by_source_id": {},
   "records_by_tier": {},
-  "records_by_category_hint": {
-    "Environment and climate": 2,
-    "Government and public services": 1,
-    "Housing and homelessness": 1,
-    "Public safety": 1
-  },
-  "registry_source_report_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-20_2026-04-26\\registry_source_report.json",
-  "manual_sources_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-20_2026-04-26\\manual_sources.json",
-  "manual_sources_loaded": 4,
-  "manual_sources_valid": true,
-  "manual_sources_errors": [],
-  "manual_sources_warnings": [],
-  "records_by_source_type": {
-    "historical_search": 1,
-    "manual": 4
-  },
-  "records_by_state_hint": {
-    "ID": 2,
-    "OR": 2,
-    "WA": 1
-  },
-  "provider_request_diagnostics": [
-    {
-      "provider_id": "gdelt",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-26",
-      "mode": "ArtList",
-      "format": "json",
-      "max_records": 10,
-      "cache_key": "346ddac2b17a5a4c31b65414a9c5b411123a8beffc86e5adae854f8ac7668117",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28infrastructure+OR+utility+OR+utilities+OR+power+OR+water+OR+transportation+OR+bridge+OR+%22road+closure%22+OR+rail+OR+port%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\346ddac2b17a5a4c31b65414a9c5b411123a8beffc86e5adae854f8ac7668117.json",
-      "cache_hit": true,
-      "cache_miss": false,
-      "retry_count": 0,
-      "rate_limit_count": 0,
-      "attempts": [],
-      "warnings": [],
-      "errors": [],
-      "fetch_backend": "cache",
-      "fallback_used": false,
-      "python_fetch_error": null,
-      "curl_exit_code": null,
-      "curl_stderr_tail": null,
-      "tls_or_revocation_hint": null,
-      "recommendation": null,
-      "bytes_read": 0
-    },
-    {
-      "provider_id": "gdelt",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\")",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-26",
-      "mode": "ArtList",
-      "format": "json",
-      "max_records": 10,
-      "cache_key": "92e7a9349d94948925dd201020e2a9e3dc8a085fb35e6c56a311752576148059",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+health%22+OR+hospital+OR+healthcare+OR+Medicaid+OR+school+OR+%22public+services%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\92e7a9349d94948925dd201020e2a9e3dc8a085fb35e6c56a311752576148059.json",
-      "cache_hit": false,
-      "cache_miss": true,
-      "retry_count": 0,
-      "rate_limit_count": 0,
-      "attempts": [
-        {
-          "attempt": 1,
-          "status_code": null,
-          "content_type": "",
-          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-          "fetch_backend": "auto",
-          "fallback_used": true,
-          "curl_exit_code": 35
-        }
-      ],
-      "warnings": [
-        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-        "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
-      ],
-      "errors": [],
-      "fetch_backend": "auto",
-      "fallback_used": true,
-      "python_fetch_error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "curl_exit_code": 35,
-      "curl_stderr_tail": "% Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package",
-      "tls_or_revocation_hint": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "bytes_read": 0
-    },
-    {
-      "provider_id": "gdelt",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-26",
-      "mode": "ArtList",
-      "format": "json",
-      "max_records": 10,
-      "cache_key": "184e4735a1a4dfc46dc717649c7a98f637291ff147cf4b9b7aba79a3be4fed5f",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28wildfire+OR+drought+OR+flood+OR+climate+OR+%22environmental+cleanup%22+OR+resilience+OR+%22air+quality%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\184e4735a1a4dfc46dc717649c7a98f637291ff147cf4b9b7aba79a3be4fed5f.json",
-      "cache_hit": false,
-      "cache_miss": true,
-      "retry_count": 0,
-      "rate_limit_count": 0,
-      "attempts": [
-        {
-          "attempt": 1,
-          "status_code": null,
-          "content_type": "",
-          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-          "fetch_backend": "auto",
-          "fallback_used": true,
-          "curl_exit_code": 35
-        }
-      ],
-      "warnings": [
-        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-        "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
-      ],
-      "errors": [],
-      "fetch_backend": "auto",
-      "fallback_used": true,
-      "python_fetch_error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "curl_exit_code": 35,
-      "curl_stderr_tail": "% Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package",
-      "tls_or_revocation_hint": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "bytes_read": 0
-    },
-    {
-      "provider_id": "gdelt",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\")",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-26",
-      "mode": "ArtList",
-      "format": "json",
-      "max_records": 10,
-      "cache_key": "81b8eb1bb8c7245e93d0b2633ba5779d3691b50293d173a9e2cb9b920d4e81a6",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28economy+OR+labor+OR+layoffs+OR+housing+OR+homelessness+OR+agriculture+OR+%22food+insecurity%22%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\81b8eb1bb8c7245e93d0b2633ba5779d3691b50293d173a9e2cb9b920d4e81a6.json",
-      "cache_hit": false,
-      "cache_miss": true,
-      "retry_count": 0,
-      "rate_limit_count": 0,
-      "attempts": [
-        {
-          "attempt": 1,
-          "status_code": null,
-          "content_type": "",
-          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-          "fetch_backend": "auto",
-          "fallback_used": true,
-          "curl_exit_code": 35
-        }
-      ],
-      "warnings": [
-        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-        "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
-      ],
-      "errors": [],
-      "fetch_backend": "auto",
-      "fallback_used": true,
-      "python_fetch_error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "curl_exit_code": 35,
-      "curl_stderr_tail": "% Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package",
-      "tls_or_revocation_hint": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "bytes_read": 0
-    },
-    {
-      "provider_id": "gdelt",
-      "query": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster)",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-26",
-      "mode": "ArtList",
-      "format": "json",
-      "max_records": 10,
-      "cache_key": "a92f584b5688a29bcf65f49e7bf72d8e9acb8687462861bb94ad474864631eca",
-      "request_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%28Washington+OR+Oregon+OR+Idaho+OR+%22Pacific+Northwest%22+OR+Cascadia+OR+Seattle+OR+Portland+OR+Spokane%29+AND+%28%22public+safety%22+OR+emergency+OR+%22emergency+management%22+OR+evacuation+OR+disaster%29&mode=ArtList&format=json&sort=HybridRel&maxrecords=10&startdatetime=20260420000000&enddatetime=20260426235959",
-      "cache_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\cache\\gdelt\\a92f584b5688a29bcf65f49e7bf72d8e9acb8687462861bb94ad474864631eca.json",
-      "cache_hit": false,
-      "cache_miss": true,
-      "retry_count": 0,
-      "rate_limit_count": 0,
-      "attempts": [
-        {
-          "attempt": 1,
-          "status_code": null,
-          "content_type": "",
-          "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-          "fetch_backend": "auto",
-          "fallback_used": true,
-          "curl_exit_code": 35
-        }
-      ],
-      "warnings": [
-        "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-        "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
-      ],
-      "errors": [],
-      "fetch_backend": "auto",
-      "fallback_used": true,
-      "python_fetch_error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-      "curl_exit_code": 35,
-      "curl_stderr_tail": "% Total % Received % Xferd Average Speed Time Time Time Current Dload Upload Total Spent Left Speed 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 0 0 0 0 0 0 0 0 --:--:-- --:--:-- --:--:-- 0 curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No credentials are available in the security package",
-      "tls_or_revocation_hint": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-      "bytes_read": 0
-    }
-  ],
-  "registry_source_diagnostics": [
+  "records_by_category_hint": {},
+  "diagnostics": [
     {
       "source_id": "wa-doh-newsroom",
       "source_name": "Washington State Department of Health Newsroom",
@@ -849,7 +513,6 @@
       "recommendation": null
     }
   ],
-  "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
   "warnings": [
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
@@ -868,29 +531,27 @@
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
   ],
-  "errors": []
+  "errors": [
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+  ],
+  "recommendation": "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings."
 }

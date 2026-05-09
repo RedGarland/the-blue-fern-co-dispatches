@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "source_record_id": "manual-2026-04-20-or-drought-emergency",
+    "title": "Governor Kotek Declares Drought Emergency in Crook, Grant, Jackson, Jefferson, Morrow, and Wallowa Counties",
+    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
+    "publisher": "Oregon Governor's Office",
+    "published_at": "2026-04-23T12:00:00Z",
+    "summary_or_snippet": "Oregon declared drought emergencies in six counties, citing record-low snowpack, dry conditions, water supply pressure, and wildfire risk while directing state agencies to coordinate assistance.",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "region_terms_matched": ["oregon"],
+    "category_hint": "Environment and climate",
+    "state_hint": "OR",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-or-housing-bills",
+    "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
+    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
+    "publisher": "Oregon Governor's Office",
+    "published_at": "2026-04-22T12:00:00Z",
+    "summary_or_snippet": "Oregon signed six housing bills intended to expand housing options for middle-income residents, seniors, and farmworkers while easing development and preservation barriers statewide.",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "region_terms_matched": ["oregon"],
+    "category_hint": "Housing and homelessness",
+    "state_hint": "OR",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+    "title": "Gov. Little spotlights priorities in Enduring Idaho plan",
+    "url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan/",
+    "publisher": "Office of the Governor of Idaho",
+    "published_at": "2026-04-22T12:00:00Z",
+    "summary_or_snippet": "Idaho's adopted budget plan preserved water infrastructure and transportation investments, protected public school funding, supported rural healthcare grants, and maintained public safety priorities.",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "region_terms_matched": ["idaho"],
+    "category_hint": "Government and public services",
+    "state_hint": "ID",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+    "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
+    "url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id/",
+    "publisher": "Idaho State Police",
+    "published_at": "2026-04-20T18:21:00Z",
+    "summary_or_snippet": "Idaho State Police said Idaho Transportation Department and fire crews responded to an injury crash that blocked Highway 53 near Rathdrum while crews cleared the scene.",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "region_terms_matched": ["idaho"],
+    "category_hint": "Public safety",
+    "state_hint": "ID",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  }
+]

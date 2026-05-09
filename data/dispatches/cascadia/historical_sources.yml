@@ -21,8 +21,8 @@ providers:
     reliability_tier: editorial-record
 
 query_groups:
-  max_queries: 3
-  max_queries_per_week: 3
+  max_queries: 5
+  max_queries_per_week: 5
   max_region_terms_per_query: 8
   system_terms_per_query: 10
   target_records_per_week: 8
@@ -75,6 +75,11 @@ query_groups:
     - environmental cleanup
     - climate
     - resilience
+
+quality_targets:
+  min_public_stories: 3
+  target_public_stories: 5
+  max_public_stories: 7
 
 region_filters:
   states:

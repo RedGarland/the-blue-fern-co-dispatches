@@ -11,7 +11,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.cascadia_curate import curate_sources
-from bluefern_dispatches.cascadia_historical_search import create_manual_source_template, manual_sources_path, retrieve_historical_sources, source_folder, validate_manual_sources
+from bluefern_dispatches.cascadia_historical_search import create_manual_source_template, load_historical_config, manual_sources_path, retrieve_historical_sources, source_folder, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
@@ -172,6 +172,117 @@ def read_json_list(path: Path) -> list[dict[str, object]]:
     return [item for item in payload if isinstance(item, dict)] if isinstance(payload, list) else []
 
 
+def read_json_object(path: Path) -> dict[str, object]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def quality_targets() -> dict[str, int]:
+    config = load_historical_config(ROOT)
+    targets = config.get("quality_targets") if isinstance(config.get("quality_targets"), dict) else {}
+    return {
+        "min_public_stories": int(targets.get("min_public_stories", 3)),
+        "target_public_stories": int(targets.get("target_public_stories", 5)),
+        "max_public_stories": int(targets.get("max_public_stories", 7)),
+    }
+
+
+def weekly_manual_commands(start: str, end: str) -> dict[str, str]:
+    base = ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py"
+    rerun = (
+        f"{base} --archive-week {start} --weekly-public --historical-search "
+        "--historical-provider all --max-historical-queries 5 --historical-delay-seconds 10"
+    )
+    return {
+        "create_template": f"{base} --archive-week {start} --create-manual-template",
+        "validate": f"{base} --archive-week {start} --validate-manual-sources",
+        "rerun": rerun,
+    }
+
+
+def write_weekly_quality_report(start: str, end: str, edition_date: str, aggregate: dict[str, object], render_result: dict[str, object], dry_run: bool) -> dict[str, object]:
+    targets = quality_targets()
+    public_dir = ROOT / "output" / "site" / "cascadia" / "editions" / edition_date
+    curation = read_json_list(ROOT / "data" / "dispatches" / "cascadia" / "curated" / edition_date / "curation_manifest.json")
+    sources = read_json_list(public_dir / "sources_manifest.json")
+    historical_report = dict(aggregate.get("report") or {})
+    public_stories = [story for story in curation if story.get("included_in_public_summary")]
+    public_story_count = len(public_stories)
+    target_public_stories = targets["target_public_stories"]
+    below_target = public_story_count < targets["min_public_stories"]
+    manual_path = manual_sources_path(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end))
+    recommendations: list[str] = []
+    warnings = unique_messages(list(aggregate.get("warnings", [])) + list(render_result.get("warnings", [])))
+    errors = unique_messages(list(aggregate.get("errors", [])) + list(render_result.get("errors", [])))
+    if below_target:
+        recommendations.append("Below target story count; add manual supplement or rerun with additional providers.")
+        warnings.append("Below target story count; add manual supplement or rerun with additional providers.")
+    commands = weekly_manual_commands(start, end)
+    story_categories: dict[str, int] = {}
+    story_states: dict[str, int] = {}
+    for story in public_stories:
+        category = str(story.get("category") or "unknown")
+        story_categories[category] = story_categories.get(category, 0) + 1
+        states = {
+            str(record.get("state_hint") or record.get("region_scope") or "unknown")
+            for record in story.get("source_records", [])
+            if isinstance(record, dict)
+        } or {"unknown"}
+        for state in states:
+            story_states[state] = story_states.get(state, 0) + 1
+    source_count_by_provider: dict[str, int] = {}
+    source_count_by_type: dict[str, int] = {}
+    for source in sources:
+        provider = str(source.get("provider_id") or "unknown")
+        source_type = str(source.get("source_type") or "unknown")
+        source_count_by_provider[provider] = source_count_by_provider.get(provider, 0) + 1
+        source_count_by_type[source_type] = source_count_by_type.get(source_type, 0) + 1
+    report = {
+        "coverage_start": start,
+        "coverage_end": end,
+        "coverage_label": format_coverage_label(start, end),
+        "query_groups_run": [
+            {
+                "provider_id": item.get("provider_id"),
+                "query_group": item.get("query_group"),
+                "result_count": item.get("result_count", 0),
+                "cache_hit": item.get("cache_hit", False),
+            }
+            for item in historical_report.get("queries_run", [])
+            if isinstance(item, dict)
+        ],
+        "raw_results_count": int(historical_report.get("raw_results_count") or 0),
+        "records_saved": int(historical_report.get("records_saved") or aggregate.get("source_count") or 0),
+        "records_excluded": int(historical_report.get("records_excluded") or aggregate.get("excluded_source_count") or 0),
+        "public_story_count": public_story_count,
+        "min_public_stories": targets["min_public_stories"],
+        "target_public_stories": target_public_stories,
+        "max_public_stories": targets["max_public_stories"],
+        "below_target": below_target,
+        "missing_story_count": max(0, target_public_stories - public_story_count),
+        "stories_by_category": dict(sorted(story_categories.items())),
+        "stories_by_state_hint": dict(sorted(story_states.items())),
+        "source_count_by_provider": dict(sorted(source_count_by_provider.items())),
+        "source_count_by_type": dict(sorted(source_count_by_type.items())),
+        "manual_supplement_path": str(manual_path),
+        "manual_supplement_commands": commands,
+        "recommendations": recommendations,
+        "warnings": unique_messages(warnings),
+        "errors": errors,
+    }
+    report_path = source_folder(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end)) / "weekly_quality_report.json"
+    if not dry_run:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    report["weekly_quality_report_path"] = str(report_path)
+    return report
+
+
 def create_manual_template_command(args: argparse.Namespace) -> dict[str, object]:
     start, end, _ = resolve_week_args(args)
     return create_manual_source_template(ROOT, local_date.fromisoformat(start), local_date.fromisoformat(end), force=args.force)
@@ -272,7 +383,15 @@ def run_source_gap_report(args: argparse.Namespace) -> dict[str, object]:
 
 def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     start, end, edition_date = resolve_week_args(args)
-    if args.historical_search:
+    historical_search = args.historical_search or args.quality_weekly
+    historical_provider = args.historical_provider
+    max_historical_queries = args.max_historical_queries
+    historical_delay_seconds = args.historical_delay_seconds
+    if args.quality_weekly:
+        historical_provider = historical_provider or "all"
+        max_historical_queries = max_historical_queries or 5
+        historical_delay_seconds = historical_delay_seconds if historical_delay_seconds is not None else 10
+    if historical_search:
         aggregate = retrieve_historical_sources(
             ROOT,
             local_date.fromisoformat(start),
@@ -281,9 +400,9 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
             run_date=args.date,
             dry_run=args.dry_run,
             refresh_cache=args.refresh_cache,
-            historical_provider=args.historical_provider,
-            max_historical_queries=args.max_historical_queries,
-            historical_delay_seconds=args.historical_delay_seconds,
+            historical_provider=historical_provider,
+            max_historical_queries=max_historical_queries,
+            historical_delay_seconds=historical_delay_seconds,
         )
     else:
         aggregate = aggregate_weekly_curation(ROOT, args.date, local_date.fromisoformat(start), local_date.fromisoformat(end), edition_date=edition_date, dry_run=args.dry_run)
@@ -301,7 +420,14 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
         briefing_type="weekly",
     )
     result["weekly_aggregation"] = aggregate
-    result["historical_search"] = bool(args.historical_search)
+    result["historical_search"] = bool(historical_search)
+    if args.quality_weekly:
+        quality_report = write_weekly_quality_report(start, end, edition_date, aggregate, result, args.dry_run)
+        result["quality_weekly"] = True
+        result["quality_weekly_report"] = quality_report
+        result["weekly_quality_report_path"] = quality_report.get("weekly_quality_report_path")
+        result["warnings"] = unique_messages(list(result.get("warnings", [])) + list(quality_report.get("warnings", [])))
+        result["errors"] = unique_messages(list(result.get("errors", [])) + list(quality_report.get("errors", [])))
     result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
     result["curated_count"] = aggregate.get("curated_count", result.get("curated_count", 0))
     result["warnings"] = unique_messages(list(aggregate.get("warnings", [])) + list(result.get("warnings", [])))
@@ -315,7 +441,8 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
     warnings: list[str] = []
     errors: list[str] = []
     for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
-        if args.historical_search:
+        historical_search = args.historical_search or args.quality_weekly
+        if historical_search:
             aggregate = retrieve_historical_sources(
                 ROOT,
                 local_date.fromisoformat(start),
@@ -324,9 +451,9 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
                 run_date=args.date,
                 dry_run=args.dry_run,
                 refresh_cache=args.refresh_cache,
-                historical_provider=args.historical_provider,
-                max_historical_queries=args.max_historical_queries,
-                historical_delay_seconds=args.historical_delay_seconds,
+                historical_provider=args.historical_provider or "all",
+                max_historical_queries=args.max_historical_queries or (5 if args.quality_weekly else None),
+                historical_delay_seconds=args.historical_delay_seconds if args.historical_delay_seconds is not None else (10 if args.quality_weekly else None),
             )
         elif args.from_existing_editions:
             aggregate = backfill_weekly_from_existing_editions(
@@ -360,7 +487,14 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
             briefing_type="weekly",
         )
         result["weekly_aggregation"] = aggregate
-        result["historical_search"] = bool(args.historical_search)
+        result["historical_search"] = bool(historical_search)
+        if args.quality_weekly:
+            quality_report = write_weekly_quality_report(start, end, edition_date, aggregate, result, args.dry_run)
+            result["quality_weekly"] = True
+            result["quality_weekly_report"] = quality_report
+            result["weekly_quality_report_path"] = quality_report.get("weekly_quality_report_path")
+            result["warnings"] = unique_messages(list(result.get("warnings", [])) + list(quality_report.get("warnings", [])))
+            result["errors"] = unique_messages(list(result.get("errors", [])) + list(quality_report.get("errors", [])))
         result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
         result["curated_count"] = aggregate.get("curated_count", result.get("curated_count", 0))
         result["warnings"] = unique_messages(list(aggregate.get("warnings", [])) + list(result.get("warnings", [])))
@@ -401,6 +535,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--backfill-weeks", type=int)
     parser.add_argument("--from-existing-editions", action="store_true")
     parser.add_argument("--historical-search", action="store_true")
+    parser.add_argument("--quality-weekly", action="store_true", help="Run the recommended quality weekly free-source build preset.")
     parser.add_argument("--refresh-cache", action="store_true")
     parser.add_argument("--historical-provider", default="all")
     parser.add_argument("--max-historical-queries", type=int)
@@ -437,6 +572,8 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--from-existing-editions requires --backfill-weeks")
         if args.from_existing_editions and args.historical_search:
             raise ValueError("--from-existing-editions cannot be combined with --historical-search")
+        if args.quality_weekly and not args.weekly_public:
+            raise ValueError("--quality-weekly requires --weekly-public")
         if args.weekly or args.weekly_public:
             if args.backfill_weeks:
                 result = run_weekly_backfill(args, "weekly-public")

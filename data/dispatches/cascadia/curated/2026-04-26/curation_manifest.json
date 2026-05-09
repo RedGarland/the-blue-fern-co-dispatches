@@ -1,0 +1,307 @@
+[
+  {
+    "story_id": "story-5a099769cda5",
+    "title": "Governor Kotek Declares Drought Emergency in Crook, Grant, Jackson, Jefferson, Morrow, and Wallowa Counties",
+    "summary": "Oregon declared drought emergencies in six counties, citing record-low snowpack, dry conditions, water supply pressure, and wildfire risk while directing state agencies to coordinate assistance. It is included because the source metadata ties it to environment and climate in Oregon.",
+    "category": "Environment and climate",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=OR",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "manual-2026-04-20-or-drought-emergency"
+    ],
+    "source_urls": [
+      "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "manual-2026-04-20-or-drought-emergency",
+        "canonical_url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
+        "title": "Governor Kotek Declares Drought Emergency in Crook, Grant, Jackson, Jefferson, Morrow, and Wallowa Counties",
+        "publisher": "Oregon Governor's Office",
+        "published_at": "2026-04-23T12:00:00Z",
+        "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
+        "text": "Oregon declared drought emergencies in six counties, citing record-low snowpack, dry conditions, water supply pressure, and wildfire risk while directing state agencies to coordinate assistance.",
+        "source_id": "manual",
+        "source_name": "Oregon Governor's Office",
+        "region_scope": "OR",
+        "category_hint": "Environment and climate",
+        "trace": {
+          "raw_source_record_id": "manual-2026-04-20-or-drought-emergency",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+        },
+        "source_type": "manual",
+        "provider_id": "manual",
+        "provider_name": "Project-local manual historical sources",
+        "query_used": "manual_sources.json",
+        "search_start_date": "2026-04-20",
+        "search_end_date": "2026-04-26",
+        "region_terms_matched": [
+          "oregon"
+        ],
+        "state_hint": "OR",
+        "reliability_tier": "editorial-record",
+        "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+      }
+    ],
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "story_id": "story-b18904e9e010",
+    "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
+    "summary": "Oregon signed six housing bills intended to expand housing options for middle-income residents, seniors, and farmworkers while easing development and preservation barriers statewide. It is included because the source metadata ties it to housing and homelessness in Oregon.",
+    "category": "Housing and homelessness",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Housing and homelessness",
+      "region_scope=OR",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "manual-2026-04-20-or-housing-bills"
+    ],
+    "source_urls": [
+      "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "manual-2026-04-20-or-housing-bills",
+        "canonical_url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
+        "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
+        "publisher": "Oregon Governor's Office",
+        "published_at": "2026-04-22T12:00:00Z",
+        "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
+        "text": "Oregon signed six housing bills intended to expand housing options for middle-income residents, seniors, and farmworkers while easing development and preservation barriers statewide.",
+        "source_id": "manual",
+        "source_name": "Oregon Governor's Office",
+        "region_scope": "OR",
+        "category_hint": "Housing and homelessness",
+        "trace": {
+          "raw_source_record_id": "manual-2026-04-20-or-housing-bills",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+        },
+        "source_type": "manual",
+        "provider_id": "manual",
+        "provider_name": "Project-local manual historical sources",
+        "query_used": "manual_sources.json",
+        "search_start_date": "2026-04-20",
+        "search_end_date": "2026-04-26",
+        "region_terms_matched": [
+          "oregon"
+        ],
+        "state_hint": "OR",
+        "reliability_tier": "editorial-record",
+        "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+      }
+    ],
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "story_id": "story-2b140a8ca79c",
+    "title": "Gov. Little spotlights priorities in Enduring Idaho plan",
+    "summary": "Idaho's adopted budget plan preserved water infrastructure and transportation investments, protected public school funding, supported rural healthcare grants, and maintained public safety priorities. It is included because the source metadata ties it to government and public services in Idaho.",
+    "category": "Government and public services",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Government and public services",
+      "region_scope=ID",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "manual-2026-04-20-idaho-enduring-plan"
+    ],
+    "source_urls": [
+      "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+        "canonical_url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan",
+        "title": "Gov. Little spotlights priorities in Enduring Idaho plan",
+        "publisher": "Office of the Governor of Idaho",
+        "published_at": "2026-04-22T12:00:00Z",
+        "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
+        "text": "Idaho's adopted budget plan preserved water infrastructure and transportation investments, protected public school funding, supported rural healthcare grants, and maintained public safety priorities.",
+        "source_id": "manual",
+        "source_name": "Office of the Governor of Idaho",
+        "region_scope": "ID",
+        "category_hint": "Government and public services",
+        "trace": {
+          "raw_source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+        },
+        "source_type": "manual",
+        "provider_id": "manual",
+        "provider_name": "Project-local manual historical sources",
+        "query_used": "manual_sources.json",
+        "search_start_date": "2026-04-20",
+        "search_end_date": "2026-04-26",
+        "region_terms_matched": [
+          "idaho"
+        ],
+        "state_hint": "ID",
+        "reliability_tier": "editorial-record",
+        "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+      }
+    ],
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "story_id": "story-ad8c9c07aa05",
+    "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
+    "summary": "Idaho State Police said Idaho Transportation Department and fire crews responded to an injury crash that blocked Highway 53 near Rathdrum while crews cleared the scene. It is included because the source metadata ties it to public safety in Idaho.",
+    "category": "Public safety",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=ID",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "manual-2026-04-20-idaho-highway-53-crash"
+    ],
+    "source_urls": [
+      "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+        "canonical_url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id",
+        "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
+        "publisher": "Idaho State Police",
+        "published_at": "2026-04-20T18:21:00Z",
+        "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
+        "text": "Idaho State Police said Idaho Transportation Department and fire crews responded to an injury crash that blocked Highway 53 near Rathdrum while crews cleared the scene.",
+        "source_id": "manual",
+        "source_name": "Idaho State Police",
+        "region_scope": "ID",
+        "category_hint": "Public safety",
+        "trace": {
+          "raw_source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+        },
+        "source_type": "manual",
+        "provider_id": "manual",
+        "provider_name": "Project-local manual historical sources",
+        "query_used": "manual_sources.json",
+        "search_start_date": "2026-04-20",
+        "search_end_date": "2026-04-26",
+        "region_terms_matched": [
+          "idaho"
+        ],
+        "state_hint": "ID",
+        "reliability_tier": "editorial-record",
+        "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+      }
+    ],
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "story_id": "story-621be055b03d",
+    "title": "Microsoft AI demands more power . Can a WA fusion company supply it ?",
+    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
+    "category": "Environment and climate",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "hist-e2dbf1568037c7f3"
+    ],
+    "source_urls": [
+      "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_records": [
+      {
+        "source_record_id": "hist-e2dbf1568037c7f3",
+        "canonical_url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it",
+        "title": "Microsoft AI demands more power . Can a WA fusion company supply it ?",
+        "publisher": "seattletimes.com",
+        "published_at": "2026-04-26T14:15:00Z",
+        "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
+        "text": "",
+        "source_id": "gdelt",
+        "source_name": "seattletimes.com",
+        "region_scope": "WA",
+        "category_hint": "Environment and climate",
+        "trace": {
+          "raw_source_record_id": "hist-e2dbf1568037c7f3",
+          "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+        },
+        "source_type": "historical_search",
+        "provider_id": "gdelt",
+        "provider_name": "GDELT 2.1 Document API",
+        "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+        "search_start_date": "2026-04-20",
+        "search_end_date": "2026-04-26",
+        "region_terms_matched": [
+          "seattle"
+        ],
+        "state_hint": "WA",
+        "reliability_tier": "unknown",
+        "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+      }
+    ],
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  }
+]

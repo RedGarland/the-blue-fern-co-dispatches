@@ -1,0 +1,81 @@
+{
+  "coverage_start": "2026-04-20",
+  "coverage_end": "2026-04-26",
+  "coverage_label": "Apr 20\u201326, 2026",
+  "query_groups_run": [
+    {
+      "provider_id": "gdelt",
+      "query_group": "infrastructure/utilities",
+      "result_count": 10,
+      "cache_hit": true
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "health/public services",
+      "result_count": 0,
+      "cache_hit": false
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "environment/climate/wildfire",
+      "result_count": 0,
+      "cache_hit": false
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "economy/labor/housing",
+      "result_count": 0,
+      "cache_hit": false
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "public safety/emergency management",
+      "result_count": 0,
+      "cache_hit": false
+    }
+  ],
+  "raw_results_count": 10,
+  "records_saved": 5,
+  "records_excluded": 9,
+  "public_story_count": 5,
+  "min_public_stories": 3,
+  "target_public_stories": 5,
+  "max_public_stories": 7,
+  "below_target": false,
+  "missing_story_count": 0,
+  "stories_by_category": {
+    "Environment and climate": 2,
+    "Government and public services": 1,
+    "Housing and homelessness": 1,
+    "Public safety": 1
+  },
+  "stories_by_state_hint": {
+    "ID": 2,
+    "OR": 2,
+    "WA": 1
+  },
+  "source_count_by_provider": {
+    "gdelt": 1,
+    "manual": 4
+  },
+  "source_count_by_type": {
+    "historical_search": 1,
+    "manual": 4
+  },
+  "manual_supplement_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-20_2026-04-26\\manual_sources.json",
+  "manual_supplement_commands": {
+    "create_template": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-04-20 --create-manual-template",
+    "validate": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-04-20 --validate-manual-sources",
+    "rerun": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-04-20 --weekly-public --historical-search --historical-provider all --max-historical-queries 5 --historical-delay-seconds 10"
+  },
+  "recommendations": [],
+  "warnings": [
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+  ],
+  "errors": []
+}

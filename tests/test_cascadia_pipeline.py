@@ -433,6 +433,76 @@ def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_
     assert "rate_limit_count" in report
     assert "queries_planned" in report
     assert "queries_skipped_due_to_limit" in report
+    assert report["queries_run"][0]["query_group"] == "infrastructure/utilities"
+
+
+def test_quality_weekly_cli_writes_report_and_below_target_guidance(cascadia_work_root, monkeypatch, capsys):
+    import run_cascadia_dispatch
+
+    (cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml").write_text("sources: []\n", encoding="utf-8")
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            if "infrastructure" in query_terms:
+                return [
+                    {
+                        "title": "Washington bridge infrastructure update",
+                        "url": "https://example.com/wa-bridge",
+                        "publisher": "Example WA News",
+                        "published_at": "2026-04-21T12:00:00Z",
+                        "summary_or_snippet": "Washington transportation officials described a bridge infrastructure closure.",
+                        "reliability_tier": "reputable",
+                    }
+                ]
+            if "public health" in query_terms:
+                return [
+                    {
+                        "title": "Oregon public health hospital staffing update",
+                        "url": "https://example.com/or-health",
+                        "publisher": "Example OR News",
+                        "published_at": "2026-04-22T12:00:00Z",
+                        "summary_or_snippet": "Oregon hospital leaders described public health staffing for public services.",
+                        "reliability_tier": "reputable",
+                    }
+                ]
+            return []
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+
+    code = run_cascadia_dispatch.main(["--archive-week", "2026-04-21", "--weekly-public", "--historical-search", "--quality-weekly"])
+
+    assert code == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["edition_date"] == "2026-04-26"
+    assert summary["coverage_start"] == "2026-04-20"
+    assert summary["coverage_end"] == "2026-04-26"
+    assert summary["quality_weekly"] is True
+    assert "Below target story count; add manual supplement or rerun with additional providers." in summary["warnings"]
+    report_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-20_2026-04-26" / "weekly_quality_report.json"
+    report = read_json(report_path)
+    assert report["public_story_count"] == 2
+    assert report["target_public_stories"] == 5
+    assert report["missing_story_count"] == 3
+    assert report["below_target"] is True
+    assert report["manual_supplement_path"].endswith(r"2026-04-20_2026-04-26\manual_sources.json") or report["manual_supplement_path"].endswith("2026-04-20_2026-04-26/manual_sources.json")
+    assert "--create-manual-template" in report["manual_supplement_commands"]["create_template"]
+    assert "--validate-manual-sources" in report["manual_supplement_commands"]["validate"]
+    assert "--max-historical-queries 5" in report["manual_supplement_commands"]["rerun"]
+    assert len(report["query_groups_run"]) == 5
+    assert {item["query_group"] for item in report["query_groups_run"]} >= {"infrastructure/utilities", "health/public services"}
+    assert report["source_count_by_provider"] == {"gdelt": 2}
+
+    public_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
+    html = (public_dir / "index.html").read_text(encoding="utf-8")
+    assert "Weekly briefing / Apr 20\u201326, 2026" in html
+    assert "No qualifying source-backed Cascadia signals were identified" not in html
+    assert "Example WA News — Washington bridge infrastructure update" in html
+    curation = read_json(public_dir / "curation_manifest.json")
+    for story in curation:
+        if story["included_in_public_summary"]:
+            assert story["source_urls"]
+            assert story["summary"] != story["title"]
 
 
 def test_historical_search_builds_batched_queries(cascadia_work_root):
@@ -453,6 +523,82 @@ def test_historical_search_builds_batched_queries(cascadia_work_root):
     assert '"public health" OR bridge' in queries[0]
     assert "wildfire OR housing" in queries[1]
     assert all(" AND " in query for query in queries)
+
+
+def test_curation_balances_categories_and_excludes_low_signal_items(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-04-26"
+    normalized_dir.mkdir(parents=True)
+    records = []
+    for index, state in enumerate(["WA", "OR", "ID", "WA"], start=1):
+        records.append(
+            {
+                "source_record_id": f"src-infra-{index}",
+                "canonical_url": f"https://example.com/infra-{index}",
+                "title": f"{state} bridge infrastructure public services update",
+                "publisher": "Example News",
+                "published_at": "2026-04-21T12:00:00Z",
+                "text": f"{state} transportation bridge infrastructure update.",
+                "source_id": "cascadia-manual",
+                "region_scope": state,
+                "state_hint": state,
+                "category_hint": "Infrastructure",
+                "reliability_tier": "editorial-record",
+            }
+        )
+    records.extend(
+        [
+            {
+                "source_record_id": "src-health",
+                "canonical_url": "https://example.com/health",
+                "title": "Oregon public health hospital services update",
+                "publisher": "Example News",
+                "published_at": "2026-04-22T12:00:00Z",
+                "text": "Oregon public health hospital services update.",
+                "source_id": "cascadia-manual",
+                "region_scope": "OR",
+                "state_hint": "OR",
+                "category_hint": "Healthcare",
+                "reliability_tier": "editorial-record",
+            },
+            {
+                "source_record_id": "src-sports",
+                "canonical_url": "https://example.com/sports",
+                "title": "Washington sports team game preview",
+                "publisher": "Example Sports",
+                "published_at": "2026-04-22T12:00:00Z",
+                "text": "Sports game coverage.",
+                "source_id": "cascadia-manual",
+                "region_scope": "WA",
+                "state_hint": "WA",
+                "category_hint": "Infrastructure",
+                "reliability_tier": "editorial-record",
+            },
+            {
+                "source_record_id": "src-opinion",
+                "canonical_url": "https://example.com/opinion",
+                "title": "Oregon editorial opinion on transportation",
+                "publisher": "Example Opinion",
+                "published_at": "2026-04-22T12:00:00Z",
+                "text": "Opinion column.",
+                "source_id": "cascadia-manual",
+                "region_scope": "OR",
+                "state_hint": "OR",
+                "category_hint": "Transportation",
+                "reliability_tier": "editorial-record",
+            },
+        ]
+    )
+    (normalized_dir / "normalized_sources.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
+
+    result = curate_sources(cascadia_work_root, "2026-04-26")
+    curated = read_json(Path(result["curation_path"]))
+    public = [story for story in curated if story["included_in_public_summary"]]
+
+    assert len([story for story in public if story["category"] == "Infrastructure"]) == 2
+    assert any(story["category"] == "Healthcare" for story in public)
+    assert not any("sports" in story["title"].lower() for story in public)
+    assert not any("opinion" in story["title"].lower() for story in public)
+    assert all(story["source_urls"] and story["source_record_ids"] for story in public)
 
 
 def test_gdelt_provider_cache_writes_hits_refreshes_and_keys_by_window(cascadia_work_root, monkeypatch):

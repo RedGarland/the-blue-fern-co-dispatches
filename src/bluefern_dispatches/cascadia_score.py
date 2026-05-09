@@ -19,6 +19,7 @@ CATEGORIES = [
 EXCLUSION_TERMS = {
     "sports": ["sports", "team", "game", "coach", "postseason", "tournament"],
     "entertainment": ["celebrity", "movie", "concert", "festival", "album"],
+    "opinion": ["opinion", "editorial", "letter to the editor"],
     "lifestyle": ["recipe", "restaurant review", "fashion", "travel tips"],
     "historical trivia": ["on this day", "history quiz", "trivia"],
 }

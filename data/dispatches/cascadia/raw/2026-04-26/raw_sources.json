@@ -19,7 +19,10 @@
     "category_hint": "Environment and climate",
     "state_hint": "OR",
     "reliability_tier": "editorial-record",
-    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved.",
+    "source_id": "manual",
+    "source_name": "Oregon Governor's Office",
+    "region_scope": "OR"
   },
   {
     "source_record_id": "manual-2026-04-20-or-housing-bills",
@@ -41,7 +44,10 @@
     "category_hint": "Housing and homelessness",
     "state_hint": "OR",
     "reliability_tier": "editorial-record",
-    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved.",
+    "source_id": "manual",
+    "source_name": "Oregon Governor's Office",
+    "region_scope": "OR"
   },
   {
     "source_record_id": "manual-2026-04-20-idaho-enduring-plan",
@@ -63,7 +69,10 @@
     "category_hint": "Government and public services",
     "state_hint": "ID",
     "reliability_tier": "editorial-record",
-    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved.",
+    "source_id": "manual",
+    "source_name": "Office of the Governor of Idaho",
+    "region_scope": "ID"
   },
   {
     "source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
@@ -85,7 +94,10 @@
     "category_hint": "Public safety",
     "state_hint": "ID",
     "reliability_tier": "editorial-record",
-    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved.",
+    "source_id": "manual",
+    "source_name": "Idaho State Police",
+    "region_scope": "ID"
   },
   {
     "source_record_id": "hist-e2dbf1568037c7f3",
@@ -117,6 +129,9 @@
       "domain": "seattletimes.com",
       "language": "English",
       "sourcecountry": "United States"
-    }
+    },
+    "source_id": "gdelt",
+    "source_name": "seattletimes.com",
+    "region_scope": "WA"
   }
 ]

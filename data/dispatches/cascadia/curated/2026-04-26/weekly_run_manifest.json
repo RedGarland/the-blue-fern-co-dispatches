@@ -1,0 +1,20 @@
+{
+  "dispatch_slug": "cascadia",
+  "public_name": "The Cascadia Briefing",
+  "briefing_type": "weekly",
+  "source_type": "existing_cascadia_manifest",
+  "run_date": "2026-05-11",
+  "edition_date": "2026-04-26",
+  "coverage_start": "2026-04-20",
+  "coverage_end": "2026-04-26",
+  "coverage_label": "Apr 20\u201326, 2026",
+  "week_label": "2026-W17",
+  "source_record_ids": [],
+  "source_urls": [],
+  "curated_count": 0,
+  "warnings": [
+    "empty existing Cascadia source manifest: C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-26\\sources_manifest.json",
+    "empty existing Cascadia source manifest: C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26\\sources_manifest.json"
+  ],
+  "errors": []
+}

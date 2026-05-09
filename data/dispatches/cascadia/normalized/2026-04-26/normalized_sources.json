@@ -1,12 +1,20 @@
 [
   {
     "source_record_id": "manual-2026-04-20-or-drought-emergency",
+    "canonical_url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
     "title": "Governor Kotek Declares Drought Emergency in Crook, Grant, Jackson, Jefferson, Morrow, and Wallowa Counties",
-    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
     "publisher": "Oregon Governor's Office",
     "published_at": "2026-04-23T12:00:00Z",
     "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
-    "summary_or_snippet": "Oregon declared drought emergencies in six counties, citing record-low snowpack, dry conditions, water supply pressure, and wildfire risk while directing state agencies to coordinate assistance.",
+    "text": "Oregon declared drought emergencies in six counties, citing record-low snowpack, dry conditions, water supply pressure, and wildfire risk while directing state agencies to coordinate assistance.",
+    "source_id": "manual",
+    "source_name": "Oregon Governor's Office",
+    "region_scope": "OR",
+    "category_hint": "Environment and climate",
+    "trace": {
+      "raw_source_record_id": "manual-2026-04-20-or-drought-emergency",
+      "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+    },
     "source_type": "manual",
     "provider_id": "manual",
     "provider_name": "Project-local manual historical sources",
@@ -16,19 +24,26 @@
     "region_terms_matched": [
       "oregon"
     ],
-    "category_hint": "Environment and climate",
     "state_hint": "OR",
     "reliability_tier": "editorial-record",
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
     "source_record_id": "manual-2026-04-20-or-housing-bills",
+    "canonical_url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
     "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
-    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
     "publisher": "Oregon Governor's Office",
     "published_at": "2026-04-22T12:00:00Z",
     "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
-    "summary_or_snippet": "Oregon signed six housing bills intended to expand housing options for middle-income residents, seniors, and farmworkers while easing development and preservation barriers statewide.",
+    "text": "Oregon signed six housing bills intended to expand housing options for middle-income residents, seniors, and farmworkers while easing development and preservation barriers statewide.",
+    "source_id": "manual",
+    "source_name": "Oregon Governor's Office",
+    "region_scope": "OR",
+    "category_hint": "Housing and homelessness",
+    "trace": {
+      "raw_source_record_id": "manual-2026-04-20-or-housing-bills",
+      "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+    },
     "source_type": "manual",
     "provider_id": "manual",
     "provider_name": "Project-local manual historical sources",
@@ -38,19 +53,26 @@
     "region_terms_matched": [
       "oregon"
     ],
-    "category_hint": "Housing and homelessness",
     "state_hint": "OR",
     "reliability_tier": "editorial-record",
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
     "source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+    "canonical_url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan",
     "title": "Gov. Little spotlights priorities in Enduring Idaho plan",
-    "url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan/",
     "publisher": "Office of the Governor of Idaho",
     "published_at": "2026-04-22T12:00:00Z",
     "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
-    "summary_or_snippet": "Idaho's adopted budget plan preserved water infrastructure and transportation investments, protected public school funding, supported rural healthcare grants, and maintained public safety priorities.",
+    "text": "Idaho's adopted budget plan preserved water infrastructure and transportation investments, protected public school funding, supported rural healthcare grants, and maintained public safety priorities.",
+    "source_id": "manual",
+    "source_name": "Office of the Governor of Idaho",
+    "region_scope": "ID",
+    "category_hint": "Government and public services",
+    "trace": {
+      "raw_source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+      "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+    },
     "source_type": "manual",
     "provider_id": "manual",
     "provider_name": "Project-local manual historical sources",
@@ -60,19 +82,26 @@
     "region_terms_matched": [
       "idaho"
     ],
-    "category_hint": "Government and public services",
     "state_hint": "ID",
     "reliability_tier": "editorial-record",
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
     "source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+    "canonical_url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id",
     "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
-    "url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id/",
     "publisher": "Idaho State Police",
     "published_at": "2026-04-20T18:21:00Z",
     "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
-    "summary_or_snippet": "Idaho State Police said Idaho Transportation Department and fire crews responded to an injury crash that blocked Highway 53 near Rathdrum while crews cleared the scene.",
+    "text": "Idaho State Police said Idaho Transportation Department and fire crews responded to an injury crash that blocked Highway 53 near Rathdrum while crews cleared the scene.",
+    "source_id": "manual",
+    "source_name": "Idaho State Police",
+    "region_scope": "ID",
+    "category_hint": "Public safety",
+    "trace": {
+      "raw_source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+      "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+    },
     "source_type": "manual",
     "provider_id": "manual",
     "provider_name": "Project-local manual historical sources",
@@ -82,19 +111,26 @@
     "region_terms_matched": [
       "idaho"
     ],
-    "category_hint": "Public safety",
     "state_hint": "ID",
     "reliability_tier": "editorial-record",
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
     "source_record_id": "hist-e2dbf1568037c7f3",
-    "title": "Microsoft AI demands more power . Can a WA fusion company supply it ? ",
-    "url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it/",
+    "canonical_url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it",
+    "title": "Microsoft AI demands more power . Can a WA fusion company supply it ?",
     "publisher": "seattletimes.com",
     "published_at": "2026-04-26T14:15:00Z",
     "retrieved_at": "2026-05-09T02:21:43.128876+00:00",
-    "summary_or_snippet": "",
+    "text": "",
+    "source_id": "gdelt",
+    "source_name": "seattletimes.com",
+    "region_scope": "WA",
+    "category_hint": "Environment and climate",
+    "trace": {
+      "raw_source_record_id": "hist-e2dbf1568037c7f3",
+      "raw_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\raw\\2026-04-26\\raw_sources.json"
+    },
     "source_type": "historical_search",
     "provider_id": "gdelt",
     "provider_name": "GDELT 2.1 Document API",
@@ -104,19 +140,8 @@
     "region_terms_matched": [
       "seattle"
     ],
-    "category_hint": "Environment and climate",
     "state_hint": "WA",
     "reliability_tier": "unknown",
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "raw_payload": {
-      "url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it/",
-      "url_mobile": "",
-      "title": "Microsoft AI demands more power . Can a WA fusion company supply it ? ",
-      "seendate": "20260426T141500Z",
-      "socialimage": "",
-      "domain": "seattletimes.com",
-      "language": "English",
-      "sourcecountry": "United States"
-    }
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
   }
 ]

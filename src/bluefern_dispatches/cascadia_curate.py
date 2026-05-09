@@ -6,6 +6,7 @@ import re
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
+from collections import Counter
 
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT, DEFAULT_SOURCES_PATH, load_sources
 from bluefern_dispatches.cascadia_score import exclusion_reason, score_record
@@ -84,6 +85,64 @@ def supported_rationale(category: str, region: str) -> str:
     return f"It is included because the source metadata ties it to {category_text}{region_text}."
 
 
+def story_state(story: dict[str, Any]) -> str:
+    records = story.get("source_records") or []
+    for record in records:
+        state = str(record.get("state_hint") or record.get("region_scope") or "").strip()
+        if state:
+            return state
+    return ""
+
+
+def balance_public_stories(curated: list[dict[str, Any]], max_public_stories: int = 7, max_per_category: int = 2) -> None:
+    candidates = [story for story in curated if story.get("included_in_public_summary")]
+    if len(candidates) <= max_public_stories and len({story.get("category") for story in candidates}) <= 1:
+        return
+    selected: list[dict[str, Any]] = []
+    selected_ids: set[str] = set()
+    category_counts: Counter[str] = Counter()
+    state_counts: Counter[str] = Counter()
+    categories = {story.get("category") for story in candidates}
+    enforce_category_cap = len(categories) > 1
+    ordered = sorted(candidates, key=lambda item: item.get("score") or 0, reverse=True)
+    while ordered and len(selected) < min(max_public_stories, len(candidates)):
+        best_index = 0
+        best_rank: tuple[int, int, int] | None = None
+        for index, story in enumerate(ordered):
+            category = str(story.get("category") or "")
+            state = story_state(story)
+            over_category = enforce_category_cap and category_counts[category] >= max_per_category
+            rank = (
+                0 if not over_category else 1,
+                state_counts[state] if state else 0,
+                -(int(story.get("score") or 0)),
+            )
+            if best_rank is None or rank < best_rank:
+                best_rank = rank
+                best_index = index
+        story = ordered.pop(best_index)
+        category = str(story.get("category") or "")
+        if enforce_category_cap and category_counts[category] >= max_per_category:
+            if any(category_counts[str(other.get("category") or "")] < max_per_category for other in ordered):
+                ordered.append(story)
+                continue
+            break
+        selected.append(story)
+        selected_ids.add(story["story_id"])
+        category_counts[category] += 1
+        state = story_state(story)
+        if state:
+            state_counts[state] += 1
+    for story in candidates:
+        if story["story_id"] not in selected_ids:
+            story["included_in_public_summary"] = False
+            if not story.get("excluded_reason"):
+                story["excluded_reason"] = "quality_weekly_balance_limit"
+            reasons = list(story.get("scoring_reasons") or [])
+            reasons.append("public_balance=held_for_detail")
+            story["scoring_reasons"] = reasons
+
+
 def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict[str, Any]:
     root = root.resolve()
     in_path = root / CASCADE_DATA_ROOT / "normalized" / edition_date / "normalized_sources.json"
@@ -128,6 +187,7 @@ def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict
                 "traceability_note": record.get("traceability_note"),
             }
         )
+    balance_public_stories(curated)
     if not dry_run:
         out_dir.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(curated, indent=2), encoding="utf-8")

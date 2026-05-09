@@ -23,7 +23,7 @@
     "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id",
     "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it"
   ],
-  "generated_at": "2026-05-09T02:23:01.935961+00:00",
+  "generated_at": "2026-05-09T03:24:50.693552+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-04-26/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26",
   "local_backup_path": null,
@@ -33,6 +33,29 @@
   "excluded_source_count": 9,
   "story_count": 5,
   "public_story_count": 5,
+  "public_categories": [
+    "Environment and climate",
+    "Housing and homelessness",
+    "Government and public services",
+    "Public safety"
+  ],
+  "public_state_hints": [
+    "OR",
+    "ID",
+    "WA"
+  ],
+  "public_source_publishers": [
+    "Oregon Governor's Office",
+    "Office of the Governor of Idaho",
+    "Idaho State Police",
+    "Seattle Times"
+  ],
+  "weekly_summary_bullets": [
+    "Environment and climate, Housing and homelessness, and Government and public services appeared in OR, ID, and WA source records.",
+    "This edition includes source-backed items from Oregon Governor's Office, Office of the Governor of Idaho, and Idaho State Police.",
+    "5 public source-backed stories met the current public-systems criteria."
+  ],
+  "public_archive_subtitle": "5 stories | OR, ID, WA | Environment and climate, Housing and homelessness, Government and public services, Public safety",
   "historical_search": true,
   "providers_used": [
     "gdelt",

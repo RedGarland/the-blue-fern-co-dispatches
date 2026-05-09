@@ -3,29 +3,37 @@
   "dispatch_slug": "cascadia",
   "public_name": "The Cascadia Briefing",
   "briefing_type": "weekly",
-  "run_date": "2026-05-11",
+  "run_date": "2026-05-08",
   "edition_date": "2026-04-19",
   "coverage_start": "2026-04-13",
   "coverage_end": "2026-04-19",
   "coverage_label": "Apr 13\u201319, 2026",
   "week_label": "2026-W16",
-  "source_record_ids": [],
-  "source_urls": [],
-  "generated_at": "2026-05-09T00:18:10.692641+00:00",
+  "source_record_ids": [
+    "hist-463d7d81015776ee",
+    "hist-a3319dada0b1b37f",
+    "hist-f563e6a78a761e11"
+  ],
+  "source_urls": [
+    "https://www.khq.com/news/scientists-voice-concerns-about-el-ni-os-impact-on-wildfire-risk-in-washington-state/article_33501ffe-3245-47f1-b627-994759962b23.html",
+    "https://www.postregister.com/news/local/no-snow-no-water-east-idahos-warmest-winter-ever-signals-a-desperate-summer-ahead/article_e3257f5b-0f67-5d84-ad55-1073acb749de.html",
+    "https://www.spokesman.com/stories/2026/apr/19/spokane-refugee-organization-locked-in-legal-battl"
+  ],
+  "generated_at": "2026-05-09T02:54:51.368988+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-04-19/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-19",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 0,
-  "included_source_count": 0,
-  "excluded_source_count": 0,
-  "story_count": 0,
-  "public_story_count": 0,
+  "source_count": 3,
+  "included_source_count": 3,
+  "excluded_source_count": 7,
+  "story_count": 3,
+  "public_story_count": 3,
   "historical_search": true,
   "providers_used": [
     "gdelt"
   ],
-  "query_count": 1,
+  "query_count": 5,
   "historical_search_report_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-13_2026-04-19\\historical_search_report.json",
   "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-19\\sources_manifest.json",
   "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-19\\curation_manifest.json",
@@ -37,8 +45,18 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "sparse week: no provider results"
+    "registry source fetch error: HTTP Error 404: Not Found",
+    "registry source fetch error: HTTP Error 404: Not Found",
+    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
+    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
+    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
+    "registry source fetch error: HTTP Error 404: Not Found",
+    "registry source fetch error: HTTP Error 404: Not Found",
+    "registry source fetch error: HTTP Error 404: Not Found",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): The read operation timed out",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): The read operation timed out",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\"): The read operation timed out",
+    "historical provider gdelt rate limited for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster): HTTP 429 Too Many Requests after max retries"
   ],
   "errors": []
 }

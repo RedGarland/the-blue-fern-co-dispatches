@@ -1,1 +1,117 @@
-[]
+[
+  {
+    "source_record_id": "hist-463d7d81015776ee",
+    "source_id": "gdelt",
+    "title": "Spokane refugee organization locked in legal battle with troubled Portland developer",
+    "url": "https://www.spokesman.com/stories/2026/apr/19/spokane-refugee-organization-locked-in-legal-battl",
+    "publisher": "spokesman.com",
+    "published_at": "2026-04-19T11:30:00Z",
+    "retrieved_at": "2026-05-09T02:52:49.260322+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-8d8a3b523313"
+    ],
+    "claim_ids": [
+      "story-8d8a3b523313"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-19",
+    "coverage_start": "2026-04-13",
+    "coverage_end": "2026-04-19",
+    "coverage_label": "Apr 13\u201319, 2026",
+    "region_scope": "WA",
+    "category_hint": "Transportation",
+    "source_type": "historical_search",
+    "provider_id": "gdelt",
+    "provider_name": "GDELT 2.1 Document API",
+    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
+    "search_start_date": "2026-04-13",
+    "search_end_date": "2026-04-19",
+    "region_terms_matched": [
+      "spokane",
+      "portland"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "unknown",
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "hist-a3319dada0b1b37f",
+    "source_id": "gdelt",
+    "title": "No snow , no water : East Idaho warmest winter ever signals a desperate summer ahead",
+    "url": "https://www.postregister.com/news/local/no-snow-no-water-east-idahos-warmest-winter-ever-signals-a-desperate-summer-ahead/article_e3257f5b-0f67-5d84-ad55-1073acb749de.html",
+    "publisher": "postregister.com",
+    "published_at": "2026-04-14T01:45:00Z",
+    "retrieved_at": "2026-05-09T02:52:49.260322+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-bd243137422c"
+    ],
+    "claim_ids": [
+      "story-bd243137422c"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-19",
+    "coverage_start": "2026-04-13",
+    "coverage_end": "2026-04-19",
+    "coverage_label": "Apr 13\u201319, 2026",
+    "region_scope": "ID",
+    "category_hint": "Infrastructure",
+    "source_type": "historical_search",
+    "provider_id": "gdelt",
+    "provider_name": "GDELT 2.1 Document API",
+    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
+    "search_start_date": "2026-04-13",
+    "search_end_date": "2026-04-19",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "unknown",
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "hist-f563e6a78a761e11",
+    "source_id": "gdelt",
+    "title": "Scientists voice concerns about El Ni\u00f1o impact on wildfire risk in Washington state",
+    "url": "https://www.khq.com/news/scientists-voice-concerns-about-el-ni-os-impact-on-wildfire-risk-in-washington-state/article_33501ffe-3245-47f1-b627-994759962b23.html",
+    "publisher": "khq.com",
+    "published_at": "2026-04-15T01:15:00Z",
+    "retrieved_at": "2026-05-09T02:52:49.260322+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-33d9577c2ec7"
+    ],
+    "claim_ids": [
+      "story-33d9577c2ec7"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-19",
+    "coverage_start": "2026-04-13",
+    "coverage_end": "2026-04-19",
+    "coverage_label": "Apr 13\u201319, 2026",
+    "region_scope": "WA",
+    "category_hint": "Environment and climate",
+    "source_type": "historical_search",
+    "provider_id": "gdelt",
+    "provider_name": "GDELT 2.1 Document API",
+    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\")",
+    "search_start_date": "2026-04-13",
+    "search_end_date": "2026-04-19",
+    "region_terms_matched": [
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "unknown",
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  }
+]

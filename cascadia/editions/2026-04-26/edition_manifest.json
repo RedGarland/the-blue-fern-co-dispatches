@@ -9,23 +9,27 @@
   "coverage_end": "2026-04-26",
   "coverage_label": "Apr 20\u201326, 2026",
   "week_label": "2026-W17",
-  "source_record_ids": [],
-  "source_urls": [],
-  "generated_at": "2026-05-08T22:44:42.785278+00:00",
+  "source_record_ids": [
+    "hist-e2dbf1568037c7f3"
+  ],
+  "source_urls": [
+    "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it"
+  ],
+  "generated_at": "2026-05-09T00:17:55.487229+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-04-26/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 0,
-  "included_source_count": 0,
-  "excluded_source_count": 0,
-  "story_count": 0,
-  "public_story_count": 0,
+  "source_count": 1,
+  "included_source_count": 1,
+  "excluded_source_count": 9,
+  "story_count": 1,
+  "public_story_count": 1,
   "historical_search": true,
   "providers_used": [
     "gdelt"
   ],
-  "query_count": 3,
+  "query_count": 1,
   "historical_search_report_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-20_2026-04-26\\historical_search_report.json",
   "source_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26\\sources_manifest.json",
   "curation_manifest_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-04-26\\curation_manifest.json",
@@ -36,18 +40,6 @@
   ],
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
-  "warnings": [
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
-    "sparse week: no provider results"
-  ],
+  "warnings": [],
   "errors": []
 }

@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "source_record_id": "hist-e2dbf1568037c7f3",
+    "source_id": "gdelt",
+    "title": "Microsoft AI demands more power . Can a WA fusion company supply it ?",
+    "url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it",
+    "publisher": "seattletimes.com",
+    "published_at": "2026-04-26T14:15:00Z",
+    "retrieved_at": "2026-05-09T00:17:55.477564+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-621be055b03d"
+    ],
+    "claim_ids": [
+      "story-621be055b03d"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "WA",
+    "category_hint": "Environment and climate",
+    "source_type": "historical_search",
+    "provider_id": "gdelt",
+    "provider_name": "GDELT 2.1 Document API",
+    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "unknown",
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  }
+]

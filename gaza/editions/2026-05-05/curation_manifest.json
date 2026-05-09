@@ -23,6 +23,10 @@
       "Actual publisher"
     ],
     "edition_date": "2026-05-05",
-    "generated_at": "2026-05-07T18:15:10.029292+00:00"
+    "generated_at": "2026-05-09T04:44:28.952699+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ]
   }
 ]

@@ -8,7 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.cascadia_curate import curate_sources
+from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary
+from bluefern_dispatches.cascadia_fetch import curl_command, fetch_public_url
 from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
@@ -75,6 +76,102 @@ def test_cascadia_source_registry_loads_free_sources(cascadia_work_root):
     assert not any("api_key" in json.dumps(source).lower() for source in registry)
 
 
+def test_fetch_backend_python_success(monkeypatch):
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return b'{"articles": []}'
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "python")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "0")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", lambda request, timeout: FakeResponse())
+
+    result = fetch_public_url("https://example.com/data.json", 5, "TestAgent")
+
+    assert result.ok is True
+    assert result.body == '{"articles": []}'
+    assert result.diagnostics["fetch_backend"] == "python"
+    assert result.diagnostics["fallback_used"] is False
+
+
+def test_fetch_backend_auto_failure_curl_disabled(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("certificate revocation check failed")
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "0")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.is_windows", lambda: True)
+
+    result = fetch_public_url("https://example.com/feed.xml", 5, "TestAgent")
+
+    assert result.ok is False
+    assert result.diagnostics["fallback_used"] is False
+    assert "CASCADIA_ALLOW_CURL_NO_REVOKE=1" in result.diagnostics["recommendation"]
+
+
+def test_fetch_backend_auto_failure_curl_enabled(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("No connection could be made because the target machine actively refused it")
+
+    class FakeCompleted:
+        returncode = 0
+        stdout = '{"articles":[{"title":"Washington public health update","url":"https://example.com/wa","domain":"example.com","seendate":"20260421120000","snippet":"Washington public health services update."}]}'
+        stderr = "curl ok"
+
+    calls = []
+
+    def fake_run(command, capture_output, text, timeout, check, env=None):
+        calls.append(command)
+        return FakeCompleted()
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "1")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.is_windows", lambda: True)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.subprocess.run", fake_run)
+
+    result = fetch_public_url("https://example.com/data.json", 5, "TestAgent")
+
+    assert result.ok is True
+    assert result.diagnostics["fallback_used"] is True
+    assert result.diagnostics["curl_exit_code"] == 0
+    assert "--ssl-no-revoke" in calls[0]
+    assert "curl fallback succeeded" in result.diagnostics["recommendation"]
+
+
+def test_fetch_backend_does_not_fallback_on_non_windows(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("certificate revocation check failed")
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "1")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.is_windows", lambda: False)
+
+    result = fetch_public_url("https://example.com/feed.xml", 5, "TestAgent")
+
+    assert result.ok is False
+    assert result.diagnostics["fallback_used"] is False
+    assert result.diagnostics["curl_exit_code"] is None
+
+
+def test_curl_command_no_revoke_only_when_allowed():
+    allowed = curl_command("https://example.com", 7, "Agent", allow_no_revoke=True)
+    disallowed = curl_command("https://example.com", 7, "Agent", allow_no_revoke=False)
+
+    assert "--ssl-no-revoke" in allowed
+    assert "--ssl-no-revoke" not in disallowed
+
+
 def test_registry_feed_parses_filters_dedupes_and_warns(cascadia_work_root, monkeypatch):
     registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
     registry_path.write_text(
@@ -137,7 +234,7 @@ sources:
         calls.append(request.full_url)
         return FakeResponse()
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_source_registry.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
 
     week_start, week_end = containing_week("2026-04-28")
     result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
@@ -153,6 +250,128 @@ sources:
     assert result["report"]["registry_exclusion_reasons"]["missing_url"] == 1
     assert result["report"]["registry_exclusion_reasons"]["outside_date_window"] == 1
     assert any("weak date basis" in warning for warning in result["warnings"])
+
+
+def test_registry_curl_fallback_output_parses_and_records_diagnostics(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: official-wa-feed
+    name: Official WA Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/feed.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [transportation, infrastructure]
+    reliability_tier: official-public
+    publisher: Washington Example Agency
+    refresh_mode: archive_limited
+    notes: Test feed.
+""",
+        encoding="utf-8",
+    )
+
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("certificate revocation check failed")
+
+    class FakeCompleted:
+        returncode = 0
+        stdout = """<rss><channel><item><title>Washington bridge infrastructure update</title><link>https://example.com/bridge</link><pubDate>Tue, 21 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure update.</description></item></channel></rss>"""
+        stderr = "curl fallback worked"
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "1")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.is_windows", lambda: True)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.subprocess.run", lambda command, capture_output, text, timeout, check, env=None: FakeCompleted())
+
+    week_start, week_end = containing_week("2026-04-21")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z", refresh_cache=True)
+
+    assert len(result["records"]) == 1
+    assert result["records"][0]["url"] == "https://example.com/bridge"
+    assert result["report"]["fallback_used"] is True
+    assert result["report"]["curl_exit_code"] == 0
+    assert result["report"]["fetch_backend"] == "auto"
+    assert "curl fallback succeeded" in result["report"]["recommendation"]
+
+
+def test_registry_official_page_parses_same_domain_links_and_dates(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: official-page
+    name: Official Page
+    tier: 1
+    source_type: official_page
+    url: https://example.com/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [government]
+    reliability_tier: official-public
+    publisher: Example Agency
+    refresh_mode: archive_limited
+    notes: Test page.
+""",
+        encoding="utf-8",
+    )
+    page = """
+<html><body>
+  <nav><a href="/news/archive">Archive</a></nav>
+  <main>
+    <a href="/news/water-system-update" data-date="2026-04-22">Washington water infrastructure update</a>
+    <a href="https://other.example/news">Washington offsite emergency update</a>
+    <a href="/news/no-date">Washington public health services briefing</a>
+    <a href="/news/sports" data-date="2026-04-22">Washington sports game recap</a>
+    <a href="#top">Top</a>
+  </main>
+  <footer><a href="/contact">Contact</a></footer>
+</body></html>
+"""
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "text/html"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return page.encode("utf-8")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", lambda request, timeout: FakeResponse())
+
+    week_start, week_end = containing_week("2026-04-21")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+
+    assert len(result["records"]) == 1
+    record = result["records"][0]
+    assert record["url"] == "https://example.com/news/water-system-update"
+    assert record["title"] == "Washington water infrastructure update"
+    assert record["published_at"] == "2026-04-22T00:00:00Z"
+    assert record["source_id"] == "official-page"
+    assert record["tier"] == 1
+    assert record["publisher"] == "Example Agency"
+    assert record["category_hint"] == "government"
+    assert record["state_hint"] == "WA"
+    assert result["report"]["official_pages_planned"] == 1
+    assert result["report"]["official_pages_run"] == 1
+    assert result["report"]["official_links_found"] >= 3
+    assert result["report"]["official_links_saved"] == 1
+    assert result["report"]["same_domain_links_only"] is True
+    assert result["report"]["weak_date_count"] == 1
+    assert result["report"]["registry_exclusion_reasons"]["weak_date_basis"] == 1
+    assert result["report"]["official_exclusion_reasons"]["off_domain"] == 1
+    assert result["report"]["official_exclusion_reasons"]["sports"] == 1
+    assert not any(not item.get("url") for item in result["records"])
 
 
 def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_root, monkeypatch):
@@ -272,7 +491,7 @@ def test_gdelt_provider_cache_writes_hits_refreshes_and_keys_by_window(cascadia_
             }
         )
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
     config = {
         "provider_id": "gdelt",
         "base_url": "https://api.gdeltproject.org/api/v2/doc/doc",
@@ -296,6 +515,51 @@ def test_gdelt_provider_cache_writes_hits_refreshes_and_keys_by_window(cascadia_
     assert second_diag["cache_hit"] is True
     cache_files = list((cascadia_work_root / "data" / "dispatches" / "cascadia" / "cache" / "gdelt").glob("*.json"))
     assert len(cache_files) >= 2
+
+
+def test_gdelt_provider_curl_fallback_records_diagnostics(cascadia_work_root, monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("certificate revocation check failed")
+
+    class FakeCompleted:
+        returncode = 0
+        stdout = json.dumps(
+            {
+                "articles": [
+                    {
+                        "title": "Washington public health services update",
+                        "url": "https://example.com/wa-health",
+                        "domain": "example.com",
+                        "seendate": "20260421120000",
+                        "snippet": "Washington public health services update.",
+                    },
+                    {
+                        "title": "Washington missing URL",
+                        "domain": "example.com",
+                        "seendate": "20260421120000",
+                        "snippet": "Washington public health services update.",
+                    },
+                ]
+            }
+        )
+        stderr = "curl ok"
+
+    monkeypatch.setenv("CASCADIA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("CASCADIA_ALLOW_CURL_NO_REVOKE", "1")
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.is_windows", lambda: True)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.subprocess.run", lambda command, capture_output, text, timeout, check, env=None: FakeCompleted())
+
+    week_start, week_end = containing_week("2026-04-21")
+    result = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-04-26", historical_provider="gdelt", max_historical_queries=1)
+    report = result["report"]
+
+    assert result["source_count"] == 1
+    assert report["fetch_backend"] == "auto"
+    assert report["fallback_used"] is True
+    assert report["curl_exit_code"] == 0
+    assert report["exclusion_reasons"]["missing_url"] == 1
+    assert "curl fallback succeeded" in report["recommendation"]
 
 
 def test_gdelt_provider_rate_limit_retries_honor_retry_after(cascadia_work_root, monkeypatch):
@@ -322,7 +586,7 @@ def test_gdelt_provider_rate_limit_retries_honor_retry_after(cascadia_work_root,
             raise urllib.error.HTTPError(request.full_url, 429, "Too Many Requests", {"Retry-After": "7"}, None)
         return FakeResponse()
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.time.sleep", lambda seconds: sleeps.append(seconds))
     provider = GDELTProvider({"provider_id": "gdelt", "delay_seconds": 0, "max_retries": 2, "backoff_base_seconds": 1}, root=cascadia_work_root)
 
@@ -339,7 +603,7 @@ def test_gdelt_provider_rate_limit_stops_after_max_retries(cascadia_work_root, m
     def fake_urlopen(request, timeout):
         raise urllib.error.HTTPError(request.full_url, 429, "Too Many Requests", {}, None)
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.time.sleep", lambda seconds: sleeps.append(seconds))
     provider = GDELTProvider({"provider_id": "gdelt", "delay_seconds": 0, "max_retries": 1, "backoff_base_seconds": 2}, root=cascadia_work_root)
 
@@ -372,7 +636,7 @@ def test_gdelt_provider_empty_and_non_json_responses_warn(cascadia_work_root, mo
     def fake_urlopen(request, timeout):
         return responses.pop(0)
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
     config = {"provider_id": "gdelt", "delay_seconds": 0, "cache_enabled": False}
     provider = GDELTProvider(config, root=cascadia_work_root)
 
@@ -413,7 +677,7 @@ def test_historical_provider_rate_limit_enters_cooldown(cascadia_work_root, monk
     assert result["report"]["queries_run"][0]["rate_limited"] is True
     assert second["query_count"] == 0
     assert RateLimitedGDELT.calls == 1
-    assert "cooling down" in second["warnings"][0]
+    assert any("cooling down" in warning for warning in second["warnings"])
 
 
 def test_manual_and_historical_sources_merge_with_source_type_preserved(cascadia_work_root, monkeypatch):
@@ -626,7 +890,7 @@ sources:
         def read(self):
             return b"<rss><channel><item><title>Washington utility infrastructure registry update</title><link>https://example.com/registry-utility</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Washington utility infrastructure update.</description></item></channel></rss>"
 
-    monkeypatch.setattr("bluefern_dispatches.cascadia_source_registry.urllib.request.urlopen", lambda request, timeout: FakeResponse())
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", lambda request, timeout: FakeResponse())
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
     manual_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="manual")
     registry_only = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", historical_provider="registry", refresh_cache=True)
@@ -810,6 +1074,33 @@ def test_curation_excludes_sports_and_keeps_public_source_urls(cascadia_work_roo
     assert all(story["source_record_ids"] for story in public)
 
 
+def test_deterministic_summary_uses_snippet_and_safe_fallbacks():
+    with_snippet = {
+        "title": "Washington bridge inspection program",
+        "text": "State transportation officials posted a bridge inspection update for Washington infrastructure.",
+        "category_hint": "Transportation",
+        "region_scope": "WA",
+        "publisher": "Example Agency",
+    }
+    only_title = {
+        "title": "Oregon public health services update",
+        "text": "",
+        "category_hint": "Healthcare",
+        "region_scope": "OR",
+    }
+
+    snippet_summary = deterministic_summary(with_snippet)
+    fallback_summary = deterministic_summary(only_title)
+
+    assert snippet_summary != with_snippet["title"]
+    assert "bridge inspection update" in snippet_summary
+    assert "Washington" in snippet_summary
+    assert "deaths" not in snippet_summary.lower()
+    assert "cost" not in snippet_summary.lower()
+    assert fallback_summary.startswith("This source was flagged as a Healthcare signal for Oregon")
+    assert "based on its title and source metadata" in fallback_summary
+
+
 def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_work_root):
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")
@@ -827,6 +1118,7 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     assert "The Cascadia Briefing" in html
     assert "Cascadia Signal Pack" in html
     assert 'target="_blank" rel="noopener noreferrer"' in html
+    assert "Blue Fern Cascadia Manual Source File — Washington bridge inspection program" in html
     curation = read_json(public_dir / "curation_manifest.json")
     assert all("source_record_ids" in story for story in curation)
     public_text = "\n".join(path.read_text(encoding="utf-8") for path in (cascadia_work_root / "output" / "site").rglob("*") if path.suffix in {".html", ".json", ".xml", ".css"})

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
@@ -16,8 +17,71 @@ def story_id_for(record: dict[str, Any]) -> str:
 
 
 def deterministic_summary(record: dict[str, Any]) -> str:
-    text = record.get("text") or record.get("title") or ""
-    return " ".join(text.split())
+    title = clean_sentence(record.get("title") or "")
+    snippet = clean_sentence(record.get("text") or record.get("summary_or_snippet") or "")
+    publisher = clean_sentence(record.get("publisher") or record.get("source_name") or "")
+    category = clean_sentence(record.get("category_hint") or "")
+    region = region_label(record)
+    if snippet and snippet.lower() != title.lower():
+        summary = trim_to_sentences(snippet)
+    elif title:
+        category_text = category.replace("_", " ") if category else "public-systems"
+        region_text = f" for {region}" if region else ""
+        summary = f"This source was flagged as a {category_text} signal{region_text} based on its title and source metadata."
+    else:
+        source_text = f" from {publisher}" if publisher else ""
+        summary = f"This source{source_text} was flagged as a public-systems signal based on source metadata."
+    rationale = supported_rationale(category, region)
+    if rationale and rationale.lower() not in summary.lower():
+        return f"{summary} {rationale}"
+    return summary
+
+
+def clean_sentence(value: str | None) -> str:
+    text = " ".join(str(value or "").split())
+    return re.sub(r"\s+([?.!,;:])", r"\1", text).strip()
+
+
+def trim_to_sentences(value: str, max_sentences: int = 2, max_chars: int = 320) -> str:
+    parts = [part.strip() for part in re.split(r"(?<=[.!?])\s+", value) if part.strip()]
+    summary = " ".join(parts[:max_sentences]) if parts else value
+    if len(summary) <= max_chars:
+        return summary
+    cut = summary[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return f"{cut}."
+
+
+def region_label(record: dict[str, Any]) -> str:
+    value = str(record.get("state_hint") or record.get("region_scope") or "").strip()
+    return {"WA": "Washington", "OR": "Oregon", "ID": "Idaho", "PNW": "the Pacific Northwest", "regional": "the Pacific Northwest"}.get(value, value)
+
+
+def supported_rationale(category: str, region: str) -> str:
+    category_text = category.replace("_", " ").lower()
+    if not category_text:
+        return ""
+    public_system_terms = {
+        "infrastructure",
+        "transportation",
+        "energy",
+        "utilities",
+        "healthcare",
+        "public safety",
+        "housing",
+        "homelessness",
+        "environment",
+        "climate",
+        "government",
+        "public services",
+        "economy",
+        "labor",
+        "food",
+        "agriculture",
+    }
+    if not any(term in category_text for term in public_system_terms):
+        return ""
+    region_text = f" in {region}" if region else ""
+    return f"It is included because the source metadata ties it to {category_text}{region_text}."
 
 
 def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict[str, Any]:
@@ -36,7 +100,8 @@ def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict
     for record in records:
         source_config = sources.get(record.get("source_id"), {})
         excluded_reason = exclusion_reason(record)
-        score = score_record(record, str(source_config.get("reliability_tier", "unknown")))
+        reliability_tier = str(source_config.get("reliability_tier") or record.get("reliability_tier") or "unknown")
+        score = score_record(record, reliability_tier)
         included_public = excluded_reason is None and score["total_score"] >= 35 and bool(record.get("canonical_url"))
         curated.append(
             {
@@ -60,6 +125,7 @@ def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict
                 "included_in_detail_dataset": excluded_reason is None,
                 "excluded_reason": excluded_reason,
                 "source_records": [record],
+                "traceability_note": record.get("traceability_note"),
             }
         )
     if not dry_run:

@@ -82,6 +82,14 @@ def sources_manifest_from_curated(
             }
             for field in [
                 "source_type",
+                "provider_id",
+                "provider_name",
+                "query_used",
+                "search_start_date",
+                "search_end_date",
+                "region_terms_matched",
+                "state_hint",
+                "reliability_tier",
                 "derived_from_edition_date",
                 "derived_from_edition_path",
                 "derived_from_manifest_path",
@@ -125,10 +133,8 @@ def public_curation_manifest(
 def render_story_group(category: str, stories: list[dict[str, Any]]) -> str:
     items = []
     for story in sorted(stories, key=lambda item: item["score"], reverse=True):
-        links = "\n".join(
-            f'<li><a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">{html.escape(url)}</a></li>'
-            for url in story.get("source_urls", [])
-        )
+        source_records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
+        links = "\n".join(render_source_link(url, source_records) for url in story.get("source_urls", []))
         items.append(
             f"""<article class="dispatch-story">
 <h3>{html.escape(story["title"])}</h3>
@@ -138,6 +144,54 @@ def render_story_group(category: str, stories: list[dict[str, Any]]) -> str:
 </article>"""
         )
     return f"<h2>{html.escape(category)}</h2>\n" + "\n".join(items)
+
+
+def render_source_link(url: str, source_records: list[dict[str, Any]]) -> str:
+    label = source_link_label(url, source_records)
+    return f'<li><a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a></li>'
+
+
+def source_link_label(url: str, source_records: list[dict[str, Any]]) -> str:
+    matching = next(
+        (
+            record
+            for record in source_records
+            if (record.get("canonical_url") or record.get("source_url") or record.get("url")) == url
+        ),
+        source_records[0] if source_records else {},
+    )
+    publisher = display_publisher(" ".join(str(matching.get("publisher") or matching.get("source_name") or "").split()))
+    title = " ".join(str(matching.get("title") or matching.get("source_title") or "").split())
+    if publisher and title:
+        return f"{publisher} — {title}"
+    if publisher:
+        return publisher
+    domain = domain_from_url(url)
+    return domain or url
+
+
+def display_publisher(value: str) -> str:
+    domain = value.lower().removeprefix("www.")
+    known = {
+        "seattletimes.com": "Seattle Times",
+        "opb.org": "OPB",
+        "crosscut.com": "Cascade PBS Crosscut",
+        "kuow.org": "KUOW",
+        "boisestatepublicradio.org": "Boise State Public Radio",
+        "idahostatesman.com": "Idaho Statesman",
+        "oregonlive.com": "OregonLive",
+        "spokesman.com": "The Spokesman-Review",
+    }
+    return known.get(domain, value)
+
+
+def domain_from_url(url: str) -> str:
+    try:
+        from urllib.parse import urlsplit
+
+        return urlsplit(url).netloc.lower().removeprefix("www.")
+    except Exception:
+        return ""
 
 
 def render_cascadia_html(
@@ -157,7 +211,8 @@ def render_cascadia_html(
         if coverage_start and coverage_end and briefing_type == "weekly":
             groups = (
                 "<p>No qualifying source-backed Cascadia signals were identified "
-                f"for the {html.escape(coverage_start)} through {html.escape(coverage_end)} coverage window.</p>"
+                f"for this coverage window under the current public-systems criteria. "
+                "Source collection diagnostics are retained locally for review.</p>"
             )
         else:
             groups = "<p>No public Cascadia stories met the source and relevance threshold for this edition.</p>"
@@ -279,6 +334,24 @@ def render_cascadia_edition(
     generated_at = datetime.now(timezone.utc).isoformat()
     source_record_ids = sorted({source["source_record_id"] for source in sources_manifest})
     source_urls = sorted({source["url"] for source in sources_manifest if source.get("url")})
+    providers_used = sorted({source.get("provider_id") for source in sources_manifest if source.get("provider_id")})
+    query_count = len({(source.get("provider_id"), source.get("query_used")) for source in sources_manifest if source.get("query_used")})
+    historical_search = any(source.get("source_type") == "historical_search" for source in sources_manifest)
+    included_source_count = len({source["source_record_id"] for source in sources_manifest})
+    excluded_source_count = sum(1 for story in curated if story.get("excluded_reason"))
+    historical_report_path = None
+    historical_report: dict[str, Any] = {}
+    if coverage_start and coverage_end:
+        candidate = root / CASCADE_DATA_ROOT / "sources" / f"{coverage_start}_{coverage_end}" / "historical_search_report.json"
+        if candidate.exists():
+            historical_report_path = str(candidate)
+            historical_report = json.loads(candidate.read_text(encoding="utf-8"))
+            historical_search = True
+            providers_used = sorted(set(providers_used) | set(historical_report.get("providers_used") or []))
+            query_count = len(historical_report.get("queries_run") or []) or query_count
+            excluded_source_count = int(historical_report.get("records_excluded", excluded_source_count))
+            warnings.extend(historical_report.get("warnings") or [])
+            errors.extend(historical_report.get("errors") or [])
     edition_manifest = {
         "dispatch_name": DISPATCH_NAME,
         "dispatch_slug": DISPATCH_SLUG,
@@ -298,8 +371,14 @@ def render_cascadia_edition(
         "local_backup_path": None,
         "template_version": TEMPLATE_VERSION,
         "source_count": len(sources_manifest),
+        "included_source_count": included_source_count,
+        "excluded_source_count": excluded_source_count,
         "story_count": len(curated),
         "public_story_count": len(stories),
+        "historical_search": historical_search,
+        "providers_used": providers_used,
+        "query_count": query_count,
+        "historical_search_report_path": historical_report_path,
         "source_manifest_path": str(public_dir / "sources_manifest.json"),
         "curation_manifest_path": str(public_dir / "curation_manifest.json"),
         "free_public_artifacts": [

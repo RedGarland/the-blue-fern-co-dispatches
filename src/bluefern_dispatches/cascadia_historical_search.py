@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from bluefern_dispatches.cascadia_curate import curate_sources
+from bluefern_dispatches.cascadia_fetch import fetch_public_url
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_normalize import canonicalize_url, normalize_sources
 from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, write_registry_report
@@ -392,57 +393,74 @@ class GDELTProvider(HistoricalSearchProvider):
             "attempts": attempts,
             "warnings": [],
             "errors": [],
+            "fetch_backend": "auto",
+            "fallback_used": False,
+            "python_fetch_error": None,
+            "curl_exit_code": None,
+            "curl_stderr_tail": None,
+            "tls_or_revocation_hint": None,
+            "recommendation": None,
+            "bytes_read": 0,
         }
         if cached:
+            diagnostics["fetch_backend"] = "cache"
             self.last_diagnostics = diagnostics
             return cached["payload"]
         for attempt_number in range(self.max_retries + 1):
             self.throttle()
-            request = urllib.request.Request(url, headers={"User-Agent": self.user_agent})  # noqa: S310 - configured public provider URL
-            try:
-                with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
-                    self.last_request_at = time.monotonic()
-                    status_code = getattr(response, "status", 200)
-                    content_type = response.headers.get("Content-Type", "")
-                    body = response.read().decode("utf-8", errors="replace")
-            except urllib.error.HTTPError as exc:
-                self.last_request_at = time.monotonic()
-                retry_after = parse_retry_after(exc.headers.get("Retry-After") if exc.headers else None)
+            result = fetch_public_url(url, self.timeout_seconds, self.user_agent)
+            fetch_diag = result.diagnostics
+            for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
+                diagnostics[key] = fetch_diag.get(key)
+            self.last_request_at = time.monotonic()
+            if not result.ok and result.status_code:
+                retry_after = parse_retry_after(str(fetch_diag.get("retry_after") or "")) if fetch_diag.get("retry_after") else None
                 attempt = {
                     "attempt": attempt_number + 1,
-                    "status_code": exc.code,
-                    "content_type": exc.headers.get("Content-Type", "") if exc.headers else "",
+                    "status_code": result.status_code,
+                    "content_type": result.content_type,
                     "retry_after_seconds": retry_after,
                 }
                 attempts.append(attempt)
-                if exc.code == 429:
+                if result.status_code == 429:
                     diagnostics["rate_limit_count"] += 1
                     if attempt_number >= self.max_retries:
                         diagnostics["errors"].append("HTTP 429 Too Many Requests after max retries")
                         self.last_diagnostics = diagnostics
-                        raise HistoricalProviderRateLimited("HTTP 429 Too Many Requests after max retries") from exc
+                        raise HistoricalProviderRateLimited("HTTP 429 Too Many Requests after max retries")
                     diagnostics["retry_count"] += 1
                     sleep_for = retry_after if retry_after is not None else min(self.backoff_max_seconds, self.backoff_base_seconds * (2**attempt_number))
                     attempt["sleep_seconds"] = sleep_for
                     time.sleep(sleep_for)
                     continue
-                diagnostics["errors"].append(f"HTTP Error {exc.code}: {exc.reason}")
+                diagnostics["errors"].append(str(fetch_diag.get("python_fetch_error") or f"HTTP Error {result.status_code}"))
                 self.last_diagnostics = diagnostics
-                raise
-            except (urllib.error.URLError, TimeoutError, OSError) as exc:
-                self.last_request_at = time.monotonic()
+                return None
+            if not result.ok:
                 attempts.append(
                     {
                         "attempt": attempt_number + 1,
                         "status_code": None,
                         "content_type": "",
-                        "error": str(exc),
+                        "error": str(fetch_diag.get("python_fetch_error") or fetch_diag.get("curl_stderr_tail") or "fetch failed"),
+                        "fetch_backend": fetch_diag.get("fetch_backend"),
+                        "fallback_used": bool(fetch_diag.get("fallback_used")),
+                        "curl_exit_code": fetch_diag.get("curl_exit_code"),
                     }
                 )
-                diagnostics["warnings"].append(str(exc))
+                diagnostics["warnings"].append(str(fetch_diag.get("python_fetch_error") or fetch_diag.get("curl_stderr_tail") or "fetch failed"))
+                if fetch_diag.get("recommendation"):
+                    diagnostics["warnings"].append(str(fetch_diag.get("recommendation")))
                 self.last_diagnostics = diagnostics
-                raise
-            attempt = {"attempt": attempt_number + 1, "status_code": status_code, "content_type": content_type}
+                raise OSError(str(fetch_diag.get("python_fetch_error") or fetch_diag.get("curl_stderr_tail") or "fetch failed"))
+            body = result.body
+            attempt = {
+                "attempt": attempt_number + 1,
+                "status_code": result.status_code,
+                "content_type": result.content_type,
+                "fetch_backend": fetch_diag.get("fetch_backend"),
+                "fallback_used": bool(fetch_diag.get("fallback_used")),
+            }
             attempts.append(attempt)
             if not body.strip():
                 diagnostics["warnings"].append("empty response body")
@@ -958,6 +976,8 @@ def retrieve_historical_sources(
                         "retry_count": diagnostics.get("retry_count", 0),
                         "cache_hit": bool(diagnostics.get("cache_hit")),
                         "cache_miss": bool(diagnostics.get("cache_miss")),
+                        "fetch_backend": diagnostics.get("fetch_backend"),
+                        "fallback_used": bool(diagnostics.get("fallback_used")),
                     }
                 )
             except HistoricalProviderRateLimited as exc:  # pragma: no cover - network behavior is environment-dependent
@@ -980,6 +1000,8 @@ def retrieve_historical_sources(
                         "retry_count": diagnostics.get("retry_count", 0),
                         "cache_hit": bool(diagnostics.get("cache_hit")),
                         "cache_miss": bool(diagnostics.get("cache_miss")),
+                        "fetch_backend": diagnostics.get("fetch_backend"),
+                        "fallback_used": bool(diagnostics.get("fallback_used")),
                     }
                 )
                 break
@@ -1002,6 +1024,8 @@ def retrieve_historical_sources(
                         "retry_count": diagnostics.get("retry_count", 0),
                         "cache_hit": bool(diagnostics.get("cache_hit")),
                         "cache_miss": bool(diagnostics.get("cache_miss")),
+                        "fetch_backend": diagnostics.get("fetch_backend"),
+                        "fallback_used": bool(diagnostics.get("fallback_used")),
                     }
                 )
                 continue
@@ -1061,6 +1085,13 @@ def retrieve_historical_sources(
         recommendation = "rerun historical search with refresh-cache"
     if "registry" in provider_order and not saved_records and registry_report.get("registry_records_raw") and registry_report.get("registry_records_excluded"):
         recommendation = "registry found records but curation excluded them; inspect diagnostics"
+    fetch_diagnostics = provider_request_diagnostics + list(registry_report.get("diagnostics", []))
+    fetch_recommendations = [str(item.get("recommendation")) for item in fetch_diagnostics if item.get("recommendation")]
+    curl_success_recommendation = next((item for item in fetch_recommendations if "curl fallback succeeded" in item), None)
+    if curl_success_recommendation:
+        recommendation = curl_success_recommendation
+    elif fetch_recommendations:
+        recommendation = fetch_recommendations[0]
     report = {
         "coverage_start": week_start.isoformat(),
         "coverage_end": week_end.isoformat(),
@@ -1076,6 +1107,12 @@ def retrieve_historical_sources(
         "gdelt_rate_limit_count": rate_limit_count,
         "retry_count": retry_count,
         "rate_limit_count": rate_limit_count,
+        "fetch_backend": next((item.get("fetch_backend") for item in fetch_diagnostics if item.get("fetch_backend") not in {None, "cache"}), None) or ("cache" if any(item.get("fetch_backend") == "cache" for item in fetch_diagnostics) else None),
+        "fallback_used": any(bool(item.get("fallback_used")) for item in fetch_diagnostics),
+        "python_fetch_error": next((item.get("python_fetch_error") for item in fetch_diagnostics if item.get("python_fetch_error")), None),
+        "curl_exit_code": next((item.get("curl_exit_code") for item in fetch_diagnostics if item.get("curl_exit_code") is not None), None),
+        "curl_stderr_tail": next((item.get("curl_stderr_tail") for item in fetch_diagnostics if item.get("curl_stderr_tail")), None),
+        "tls_or_revocation_hint": next((item.get("tls_or_revocation_hint") for item in fetch_diagnostics if item.get("tls_or_revocation_hint")), None),
         "raw_results_count": sum(item.get("result_count", 0) for item in queries_run),
         "records_saved": len(saved_records),
         "merged_source_count": len(raw_candidates),
@@ -1095,6 +1132,15 @@ def retrieve_historical_sources(
         "registry_records_saved": registry_report.get("registry_records_saved", 0),
         "registry_records_excluded": registry_report.get("registry_records_excluded", 0),
         "registry_exclusion_reasons": registry_report.get("registry_exclusion_reasons", {}),
+        "official_pages_planned": registry_report.get("official_pages_planned", 0),
+        "official_pages_run": registry_report.get("official_pages_run", 0),
+        "official_links_found": registry_report.get("official_links_found", 0),
+        "official_links_saved": registry_report.get("official_links_saved", 0),
+        "official_links_excluded": registry_report.get("official_links_excluded", 0),
+        "official_exclusion_reasons": registry_report.get("official_exclusion_reasons", {}),
+        "weak_date_count": registry_report.get("weak_date_count", 0),
+        "same_domain_links_only": registry_report.get("same_domain_links_only", True),
+        "unsupported_source_type_count": registry_report.get("unsupported_source_type_count", 0),
         "records_by_source_id": registry_report.get("records_by_source_id", {}),
         "records_by_tier": registry_report.get("records_by_tier", {}),
         "records_by_category_hint": dict(sorted(records_by_category.items())),

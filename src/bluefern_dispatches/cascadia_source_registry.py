@@ -10,17 +10,21 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
+from html.parser import HTMLParser
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
+from bluefern_dispatches.cascadia_fetch import fetch_backend, fetch_public_url
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_normalize import canonicalize_url
 
 
 REGISTRY_PATH = CASCADE_DATA_ROOT / "source_registry.yml"
 REGISTRY_CACHE_ROOT = CASCADE_DATA_ROOT / "cache" / "registry"
-FETCHABLE_SOURCE_TYPES = {"rss", "atom", "alert_feed"}
+FEED_SOURCE_TYPES = {"rss", "atom", "alert_feed"}
+OFFICIAL_PAGE_SOURCE_TYPES = {"official_page", "press_release_page"}
+FETCHABLE_SOURCE_TYPES = FEED_SOURCE_TYPES | OFFICIAL_PAGE_SOURCE_TYPES
 DEFAULT_USER_AGENT = "BlueFernDispatches/0.1 registry-source-retrieval"
 SYSTEM_TERMS = [
     "infrastructure",
@@ -64,6 +68,42 @@ EXCLUDED_TERMS = {
     "sports": ["sports", "game", "coach", "tournament", "playoff", "score"],
     "entertainment": ["movie", "concert", "album", "celebrity"],
     "opinion": ["opinion", "editorial", "letter to the editor"],
+}
+NAV_LINK_TEXT = {
+    "about",
+    "accessibility",
+    "back",
+    "calendar",
+    "careers",
+    "contact",
+    "facebook",
+    "home",
+    "instagram",
+    "linkedin",
+    "login",
+    "menu",
+    "next",
+    "privacy",
+    "search",
+    "share",
+    "subscribe",
+    "twitter",
+    "x",
+    "youtube",
+}
+NAV_PATH_PARTS = {
+    "/about",
+    "/contact",
+    "/events",
+    "/facebook",
+    "/instagram",
+    "/linkedin",
+    "/privacy",
+    "/search",
+    "/subscribe",
+    "/twitter",
+    "/x.com",
+    "/youtube",
 }
 
 
@@ -151,6 +191,27 @@ def parse_datetime(value: str | None) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
+def parse_visible_date(value: str | None) -> datetime | None:
+    text = strip_markup(value)
+    if not text:
+        return None
+    iso_match = re.search(r"\b(20\d{2})[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12]\d|3[01])\b", text)
+    if iso_match:
+        year, month, day = iso_match.groups()
+        return parse_datetime(f"{int(year):04d}-{int(month):02d}-{int(day):02d}T00:00:00Z")
+    month_match = re.search(
+        r"\b("
+        r"Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|"
+        r"Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Sept|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?"
+        r")\.?\s+([0-3]?\d),?\s+(20\d{2})\b",
+        text,
+        flags=re.IGNORECASE,
+    )
+    if month_match:
+        return parse_datetime(month_match.group(0))
+    return None
+
+
 def format_datetime(value: datetime | None) -> str | None:
     if value is None:
         return None
@@ -213,6 +274,104 @@ def parse_feed_items(body: str) -> tuple[list[dict[str, Any]], list[str]]:
     return records, warnings
 
 
+class OfficialPageLinkParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.links: list[dict[str, Any]] = []
+        self._skip_depth = 0
+        self._current: dict[str, Any] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr_map = {key.lower(): value or "" for key, value in attrs}
+        if tag.lower() in {"script", "style", "svg", "nav", "footer", "header"}:
+            self._skip_depth += 1
+            return
+        if self._skip_depth:
+            return
+        if tag.lower() == "a" and attr_map.get("href"):
+            self._current = {"href": attr_map.get("href", ""), "text": "", "attrs": attr_map}
+            return
+        if self._current is not None and tag.lower() == "time":
+            for key in ("datetime", "title", "aria-label"):
+                if attr_map.get(key):
+                    self._current.setdefault("date_candidates", []).append(attr_map[key])
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth or self._current is None:
+            return
+        self._current["text"] = f"{self._current.get('text', '')} {data}"
+
+    def handle_endtag(self, tag: str) -> None:
+        if self._skip_depth:
+            self._skip_depth = max(0, self._skip_depth - 1)
+            return
+        if tag.lower() == "a" and self._current is not None:
+            self.links.append(self._current)
+            self._current = None
+
+
+def parse_official_page_links(body: str, source_url: str) -> list[dict[str, Any]]:
+    parser = OfficialPageLinkParser()
+    parser.feed(body)
+    base = urllib.parse.urlsplit(source_url)
+    source_host = base.netloc.lower().removeprefix("www.")
+    records: list[dict[str, Any]] = []
+    seen_urls: set[str] = set()
+    for link in parser.links:
+        href = str(link.get("href") or "").strip()
+        if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        absolute_url = urllib.parse.urljoin(source_url, href)
+        parsed = urllib.parse.urlsplit(absolute_url)
+        host = parsed.netloc.lower().removeprefix("www.")
+        title = strip_markup(str(link.get("text") or ""))
+        if not parsed.scheme.startswith("http") or host != source_host:
+            records.append({"url": absolute_url, "title": title, "excluded_reason": "off_domain"})
+            continue
+        normalized_url = canonicalize_url(absolute_url)
+        if normalized_url in seen_urls:
+            records.append({"url": absolute_url, "title": title, "excluded_reason": "duplicate_link"})
+            continue
+        seen_urls.add(normalized_url)
+        reason = official_link_exclusion_reason(title, absolute_url, source_url)
+        if reason:
+            records.append({"url": absolute_url, "title": title, "excluded_reason": reason})
+            continue
+        attrs = link.get("attrs") if isinstance(link.get("attrs"), dict) else {}
+        candidates = list(link.get("date_candidates") or [])
+        candidates.extend(str(attrs.get(key) or "") for key in ("datetime", "data-date", "data-published", "aria-label", "title"))
+        candidates.append(title)
+        parsed_date = next((parse_visible_date(candidate) for candidate in candidates if parse_visible_date(candidate)), None)
+        records.append(
+            {
+                "title": title,
+                "url": absolute_url,
+                "published_at": format_datetime(parsed_date),
+                "summary_or_snippet": "",
+                "raw_published_at": format_datetime(parsed_date),
+            }
+        )
+    return records
+
+
+def official_link_exclusion_reason(title: str, url: str, source_url: str) -> str | None:
+    text = strip_markup(title).lower()
+    if len(text) < 8:
+        return "navigation_or_empty_text"
+    if text in NAV_LINK_TEXT:
+        return "navigation_or_footer_link"
+    parsed = urllib.parse.urlsplit(url)
+    path = parsed.path.lower().rstrip("/")
+    source_path = urllib.parse.urlsplit(source_url).path.lower().rstrip("/")
+    if path == source_path:
+        return "same_page_link"
+    if any(part in path for part in NAV_PATH_PARTS):
+        return "navigation_or_footer_link"
+    if re.search(r"\.(pdf|jpg|jpeg|png|gif|svg|zip)$", path):
+        return "non_html_asset"
+    return None
+
+
 def cache_key(source: dict[str, Any], week_start: date, week_end: date, cache_date: str) -> str:
     payload = {
         "source_id": source.get("source_id"),
@@ -264,18 +423,29 @@ def fetch_feed(source: dict[str, Any], root: Path, week_start: date, week_end: d
         "raw_count": 0,
         "warnings": [],
         "errors": [],
+        "fetch_backend": "auto",
+        "fallback_used": False,
+        "python_fetch_error": None,
+        "curl_exit_code": None,
+        "curl_stderr_tail": None,
+        "tls_or_revocation_hint": None,
+        "recommendation": None,
+        "bytes_read": 0,
     }
     if cached:
         items = [item for item in cached.get("items", []) if isinstance(item, dict)]
         diagnostics["raw_count"] = len(items)
+        diagnostics["fetch_backend"] = "cache"
         return items, diagnostics
-    request = urllib.request.Request(str(source.get("url")), headers={"User-Agent": DEFAULT_USER_AGENT})  # noqa: S310 - curated public source URL
-    try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
-            body = response.read().decode("utf-8", errors="replace")
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        diagnostics["errors"].append(str(exc))
+    result = fetch_public_url(str(source.get("url")), timeout_seconds, DEFAULT_USER_AGENT)
+    for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
+        diagnostics[key] = result.diagnostics.get(key)
+    if not result.ok:
+        diagnostics["errors"].append(str(result.diagnostics.get("python_fetch_error") or result.diagnostics.get("curl_stderr_tail") or "fetch failed"))
+        if result.diagnostics.get("recommendation"):
+            diagnostics["warnings"].append(str(result.diagnostics.get("recommendation")))
         return [], diagnostics
+    body = result.body
     if not body.strip():
         diagnostics["warnings"].append("empty response body")
         return [], diagnostics
@@ -283,6 +453,59 @@ def fetch_feed(source: dict[str, Any], root: Path, week_start: date, week_end: d
     diagnostics["warnings"].extend(parse_warnings)
     diagnostics["raw_count"] = len(items)
     if not parse_warnings:
+        write_cache(path, diagnostics, items)
+    return items, diagnostics
+
+
+def fetch_official_page(source: dict[str, Any], root: Path, week_start: date, week_end: date, retrieved_at: str, refresh_cache: bool = False, timeout_seconds: int = 8) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    path = cache_path(root, source, week_start, week_end, retrieved_at)
+    cached = read_cache(path, refresh_cache)
+    diagnostics = {
+        "source_id": source.get("source_id"),
+        "source_name": source.get("name"),
+        "url": source.get("url"),
+        "source_type": source.get("source_type"),
+        "cache_path": str(path),
+        "cache_hit": bool(cached),
+        "cache_miss": not bool(cached),
+        "raw_count": 0,
+        "included_links": [],
+        "excluded_links": [],
+        "warnings": [],
+        "errors": [],
+        "fetch_backend": "auto",
+        "fallback_used": False,
+        "python_fetch_error": None,
+        "curl_exit_code": None,
+        "curl_stderr_tail": None,
+        "tls_or_revocation_hint": None,
+        "recommendation": None,
+        "bytes_read": 0,
+        "same_domain_links_only": True,
+    }
+    if cached:
+        items = [item for item in cached.get("items", []) if isinstance(item, dict)]
+        diagnostics["raw_count"] = len(items)
+        diagnostics["fetch_backend"] = "cache"
+        return items, diagnostics
+    result = fetch_public_url(str(source.get("url")), timeout_seconds, DEFAULT_USER_AGENT)
+    for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
+        diagnostics[key] = result.diagnostics.get(key)
+    if not result.ok:
+        diagnostics["errors"].append(str(result.diagnostics.get("python_fetch_error") or result.diagnostics.get("curl_stderr_tail") or "fetch failed"))
+        if result.diagnostics.get("recommendation"):
+            diagnostics["warnings"].append(str(result.diagnostics.get("recommendation")))
+        return [], diagnostics
+    parsed_links = parse_official_page_links(result.body, str(source.get("url") or ""))
+    items = []
+    for link in parsed_links:
+        if link.get("excluded_reason"):
+            diagnostics["excluded_links"].append({"url": link.get("url"), "title": link.get("title"), "reason": link.get("excluded_reason")})
+            continue
+        diagnostics["included_links"].append({"url": link.get("url"), "title": link.get("title"), "published_at": link.get("published_at")})
+        items.append(link)
+    diagnostics["raw_count"] = len(items)
+    if not diagnostics["errors"]:
         write_cache(path, diagnostics, items)
     return items, diagnostics
 
@@ -314,11 +537,13 @@ def infer_category(text: str, source: dict[str, Any]) -> str | None:
         normalized = str(hint).replace("_", " ").lower()
         if normalized in lowered:
             return str(hint)
+    hints = source.get("category_hints") or []
+    if hints:
+        return str(hints[0])
     for term in SYSTEM_TERMS:
         if term in lowered:
             return term.replace(" ", "_")
-    hints = source.get("category_hints") or []
-    return str(hints[0]) if hints else None
+    return None
 
 
 def should_keep_record(record: dict[str, Any], source: dict[str, Any]) -> str | None:
@@ -345,7 +570,9 @@ def normalize_registry_item(item: dict[str, Any], source: dict[str, Any], week_s
     date_basis = "published_at"
     warning: str | None = None
     if parsed_published is None:
-        date_basis = "retrieved_at_weak"
+        if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES and str(source.get("refresh_mode") or "") != "current":
+            return None, "weak_date_basis"
+        date_basis = "current_page_weak_date" if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES else "retrieved_at_weak"
         warning = f"{source.get('source_id')} item has weak date basis; published_at unavailable or unparseable"
     elif not (week_start <= parsed_published.date() <= week_end):
         return None, "outside_date_window"
@@ -375,7 +602,7 @@ def normalize_registry_item(item: dict[str, Any], source: dict[str, Any], week_s
         "category_hint": infer_category(text, source),
         "state_hint": infer_state(text, source),
         "reliability_tier": source.get("reliability_tier") or "public-source",
-        "traceability_note": "Retrieved from curated free Cascadia source registry; URL and feed metadata preserved when supplied.",
+        "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
         "date_basis": date_basis,
     }
     return record, warning
@@ -392,6 +619,13 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
     excluded: Counter[str] = Counter()
     diagnostics: list[dict[str, Any]] = []
     planned = len([source for source in sources if source.get("source_type") in FETCHABLE_SOURCE_TYPES])
+    official_pages_planned = len([source for source in sources if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES])
+    official_pages_run = 0
+    official_links_found = 0
+    official_links_saved = 0
+    official_links_excluded = Counter()
+    weak_date_count = 0
+    unsupported_source_type_count = 0
     run = 0
     cache_hits = 0
     cache_misses = 0
@@ -400,6 +634,7 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
     for source in sources:
         source_type = str(source.get("source_type") or "")
         if source_type not in FETCHABLE_SOURCE_TYPES:
+            unsupported_source_type_count += 1
             diagnostics.append(
                 {
                     "source_id": source.get("source_id"),
@@ -407,12 +642,20 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
                     "source_type": source_type,
                     "url": source.get("url"),
                     "skipped": True,
-                    "skip_reason": "non_feed_registry_entry",
+                    "skip_reason": "unsupported_source_type",
+                    "recommendation": None,
                 }
             )
             continue
         run += 1
-        items, diag = fetch_feed(source, root, week_start, week_end, retrieved_at, refresh_cache=refresh_cache)
+        if source_type in OFFICIAL_PAGE_SOURCE_TYPES:
+            official_pages_run += 1
+            items, diag = fetch_official_page(source, root, week_start, week_end, retrieved_at, refresh_cache=refresh_cache)
+            official_links_found += len(diag.get("included_links", [])) + len(diag.get("excluded_links", []))
+            for excluded_link in diag.get("excluded_links", []):
+                official_links_excluded[str(excluded_link.get("reason") or "excluded")] += 1
+        else:
+            items, diag = fetch_feed(source, root, week_start, week_end, retrieved_at, refresh_cache=refresh_cache)
         diagnostics.append(diag)
         cache_hits += int(bool(diag.get("cache_hit")))
         cache_misses += int(bool(diag.get("cache_miss")))
@@ -424,18 +667,32 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
             record, warning_or_reason = normalize_registry_item(item, source, week_start, week_end, retrieved_at)
             if record is None:
                 excluded[str(warning_or_reason or "excluded")] += 1
+                if warning_or_reason == "weak_date_basis":
+                    weak_date_count += 1
                 continue
             if warning_or_reason:
                 warnings.append(warning_or_reason)
+                if "weak date basis" in warning_or_reason:
+                    weak_date_count += 1
             reason = should_keep_record(record, source)
             if reason:
                 excluded[reason] += 1
+                if source_type in OFFICIAL_PAGE_SOURCE_TYPES:
+                    official_links_excluded[reason] += 1
                 continue
+            if source_type in OFFICIAL_PAGE_SOURCE_TYPES:
+                official_links_saved += 1
             records.append(record)
     deduped, duplicates_removed = dedupe_registry_records(records)
     if duplicates_removed:
         excluded["duplicate"] += duplicates_removed
     report = {
+        "fetch_backend": fetch_backend(),
+        "fallback_used": any(bool(item.get("fallback_used")) for item in diagnostics),
+        "python_fetch_error": next((item.get("python_fetch_error") for item in diagnostics if item.get("python_fetch_error")), None),
+        "curl_exit_code": next((item.get("curl_exit_code") for item in diagnostics if item.get("curl_exit_code") is not None), None),
+        "curl_stderr_tail": next((item.get("curl_stderr_tail") for item in diagnostics if item.get("curl_stderr_tail")), None),
+        "tls_or_revocation_hint": next((item.get("tls_or_revocation_hint") for item in diagnostics if item.get("tls_or_revocation_hint")), None),
         "registry_sources_configured": len(registry),
         "registry_sources_enabled": len(sources),
         "registry_sources_planned": planned,
@@ -447,6 +704,15 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
         "registry_records_saved": len(deduped),
         "registry_records_excluded": sum(excluded.values()),
         "registry_exclusion_reasons": dict(sorted(excluded.items())),
+        "official_pages_planned": official_pages_planned,
+        "official_pages_run": official_pages_run,
+        "official_links_found": official_links_found,
+        "official_links_saved": official_links_saved,
+        "official_links_excluded": sum(official_links_excluded.values()),
+        "official_exclusion_reasons": dict(sorted(official_links_excluded.items())),
+        "weak_date_count": weak_date_count,
+        "same_domain_links_only": True,
+        "unsupported_source_type_count": unsupported_source_type_count,
         "records_by_source_id": dict(sorted(Counter(str(record.get("source_id") or "unknown") for record in deduped).items())),
         "records_by_tier": dict(sorted(Counter(str(record.get("tier") or "unknown") for record in deduped).items())),
         "records_by_category_hint": dict(sorted(Counter(str(record.get("category_hint") or "unknown") for record in deduped).items())),
@@ -454,6 +720,7 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
         "warnings": warnings,
         "errors": errors,
     }
+    report["recommendation"] = next((item.get("recommendation") for item in diagnostics if item.get("recommendation")), None)
     return {"records": deduped, "report": report, "warnings": warnings, "errors": errors}
 
 

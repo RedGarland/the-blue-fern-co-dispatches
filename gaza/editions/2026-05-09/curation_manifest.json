@@ -1,21 +1,351 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-05-09",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-05-09-001",
+    "title": "One killed in Gaza as Turkish FM talks peace efforts with Hamas official",
+    "summary": "Israel continues to violate a &#039;ceasefire&#039; agreed to in October with hundreds more killed across the Strip.",
+    "category": "regional",
+    "score": 99,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "Included because a complete project-local source record was provided."
     ],
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-05-09-aljazeera-all-bf2464cbac13"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-05-09-aljazeera-all-bf2464cbac13"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/9/one-killed-in-gaza-as-turkish-fm-talks-peace-efforts-with-hamas-official?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-002",
+    "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike",
+    "summary": "Al Jazeera\u2019s Tareq Abu Azzoum reports from Al-Shati Refugee Camp after overnight Israeli airstrikes.",
+    "category": "regional",
+    "score": 98,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-aljazeera-all-0307e87d21f5"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-aljazeera-all-0307e87d21f5"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/9/nowhere-left-to-go-gaza-residents-return-to-rubble-after-israeli-strike?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-003",
+    "title": "Israel to release two detained Gaza flotilla activists",
+    "summary": "Lawyer representing Saif Abu Keshek and Thiago Avila tells Al Jazeera they will be &#039;released to their home countries&#039;.",
+    "category": "regional",
+    "score": 97,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-aljazeera-all-c80db321751a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-aljazeera-all-c80db321751a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/9/israel-to-release-two-detained-gaza-flotilla-activists?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-004",
+    "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike - Al Jazeera",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMivgFBVV95cUxPeVhoYm9jLUpwYWxib3V4dWd5QTdQbW5oX2dvN1VfbndkQWhwYV9xVWkwZTFzMExRUWhvN0xxMVRLVlFGajZLUXh2NzduWGZIMlJGUEFXQTM4ajQtSWhyQmlYTHlMeU1UYUp6bng1dUtOcG04MXJYTWEwRXF4emQ1ZTdRRERLUFFNYVFSN0o4STFtbElyUDBic2RYLVlmVnh4X3RFdExQSEZVRlRmOVBSc2M1UkNhNGJMdU1XcENn0gHDAUFVX3lxTE9nakNLbGIteV92bjlOcWZfYUVHRW1WLVp3R0dXTk1WRGttSGY0ZXBBSUwteHlzT2FwTENVZHVrOTF2c2pZU3ZwWkhZUklENjROR2daOUFKb1VvdGhFdFVrbHZMaU50Zmo1VXJiX3JRVTZfQXctYU1IRVBvbnU5aHd5dFI4RV80d1AxQ1p1bzZZX2tBUURjYUNpbFV6NGpIT2dLWHNjQ1ZvbWZqazJIQS1qZVp3WkRIdjVialF3YWtJRXdaTQ?oc=5\" target=\"_blank\">\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Al Jazeera</font>",
+    "category": "general",
+    "score": 96,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-ed4b53eeb99d"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-ed4b53eeb99d"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMivgFBVV95cUxPeVhoYm9jLUpwYWxib3V4dWd5QTdQbW5oX2dvN1VfbndkQWhwYV9xVWkwZTFzMExRUWhvN0xxMVRLVlFGajZLUXh2NzduWGZIMlJGUEFXQTM4ajQtSWhyQmlYTHlMeU1UYUp6bng1dUtOcG04MXJYTWEwRXF4emQ1ZTdRRERLUFFNYVFSN0o4STFtbElyUDBic2RYLVlmVnh4X3RFdExQSEZVRlRmOVBSc2M1UkNhNGJMdU1XcENn0gHDAUFVX3lxTE9nakNLbGIteV92bjlOcWZfYUVHRW1WLVp3R0dXTk1WRGttSGY0ZXBBSUwteHlzT2FwTENVZHVrOTF2c2pZU3ZwWkhZUklENjROR2daOUFKb1VvdGhFdFVrbHZMaU50Zmo1VXJiX3JRVTZfQXctYU1IRVBvbnU5aHd5dFI4RV80d1AxQ1p1bzZZX2tBUURjYUNpbFV6NGpIT2dLWHNjQ1ZvbWZqazJIQS1qZVp3WkRIdjVialF3YWtJRXdaTQ?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-005",
+    "title": "Israel to deport two Gaza flotilla activists detained for past week - The Times of Israel",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMimgFBVV95cUxORGt2REQtUWhETGhvTFVHdkhZYW50Z0VaeUNtWllxZW1JVDZKY2JCS1dYQ0tRM0w4MW5KeExJdzJhQXNySV8zVXQ5dm1Xbl9WLXpNNjRqenV0MVUxaHRRSkVVYi0zb0lPeHI1WUtMVk10MDdxWVFhdHhzaWpzc3ZVd3hUNlZFYU9XYzVWZGw4T3FHR1NwSWs4UWpB0gGfAUFVX3lxTFBzUGpNQ3BvMk9Bc2xkQ2xaSnBrdWdrb2twemw3aG1PaExYb1FLczVmN3FDVTd2ZkJRN3l1cGRDNkhrZWhNYnlPM2NSRDJNOW5HRnhGdDdBbkgzQTFXRE5DYkdSNWpwa2pNYXJCcTZ6clNhekxqcFU0ekFhLUk3ZWFDQ3p2ZlBKNl9wTGpka2RvWWUxbFkxVXZzWVpiVlBxdw?oc=5\" target=\"_blank\">Israel to deport two Gaza flotilla activists detained for past week</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Times of Israel</font>",
+    "category": "general",
+    "score": 95,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-2e3f65fb7fa7"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-2e3f65fb7fa7"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMimgFBVV95cUxORGt2REQtUWhETGhvTFVHdkhZYW50Z0VaeUNtWllxZW1JVDZKY2JCS1dYQ0tRM0w4MW5KeExJdzJhQXNySV8zVXQ5dm1Xbl9WLXpNNjRqenV0MVUxaHRRSkVVYi0zb0lPeHI1WUtMVk10MDdxWVFhdHhzaWpzc3ZVd3hUNlZFYU9XYzVWZGw4T3FHR1NwSWs4UWpB0gGfAUFVX3lxTFBzUGpNQ3BvMk9Bc2xkQ2xaSnBrdWdrb2twemw3aG1PaExYb1FLczVmN3FDVTd2ZkJRN3l1cGRDNkhrZWhNYnlPM2NSRDJNOW5HRnhGdDdBbkgzQTFXRE5DYkdSNWpwa2pNYXJCcTZ6clNhekxqcFU0ekFhLUk3ZWFDQ3p2ZlBKNl9wTGpka2RvWWUxbFkxVXZzWVpiVlBxdw?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-006",
+    "title": "Gaza flotilla activists to be released from Israel detention and deported - Reuters",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMipAJBVV95cUxOTmNSbHhBalFNc3BwejR4aUJqZGlJYm0zWjBQcnl3ZXROVTRWVVd5NU9ZTVpIQklobWZVOEdQdk9aX1prWXh0b1pzQ2dQMmdldkt3SU5vaFpYZmd0NkNGa2xfeGlZd19TTHFNSXpjS0ZtY0ZqRmgxa3Fpal9LZnRqTmhmVWZzMExPc0p0NEUyTnZnd2F0Yl9CN1luajJmTEVuRzJCYlJDbXpyY25nNzZxeGZGdVRBS29yM3hmS2hHdEFwa2VoY0tTTXROV1ljUVNWcGVmWEFBRVBzeE40WlZ0bkU2Q3FpZzZtQ2N1WmtSLUJycTBtTXZsWVhhWDlvSEFsa1hEb290QlRvcU91dlotLWJlZy1NMkl5MmFlQzQ4S0dQOEwz?oc=5\" target=\"_blank\">Two Gaza flotilla activists to be released from Israeli detention and deported</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Haaretz</font>",
+    "category": "general",
+    "score": 94,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided.",
+      "merged_duplicate_story=gaza-story-2026-05-09-009",
+      "merged_duplicate_story=gaza-story-2026-05-09-011"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-20f333c28d10",
+      "gaza-2026-05-09-google-news-gaza-a088c9408956",
+      "gaza-2026-05-09-google-news-gaza-880d623f1f11"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-20f333c28d10",
+      "gaza-2026-05-09-google-news-gaza-a088c9408956",
+      "gaza-2026-05-09-google-news-gaza-880d623f1f11"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMixgFBVV95cUxOd1Zja3A5Y0gzdWYxSXZBSzlQR1BzbGQ5R3JyY0syYkZBUFJiSjJ2ZDVtUHRpMFJFcElLbjJwZ2RJWWRsT1JnWkF3YjN1V2I4azc2d09iV3pFTmswUThsV21va3ZOQ3ZPbE9jclowWk1TbXJRcU5kbVgwYWtwUHZvOV92cGVrWmEyVUpDTEhlUmVmcGM0blZwbzdBV1d3ek5fOXdBdEJBYlpXOWFDM1VZajZXM1ZMM2x1OGJOVVlnbmx5OG84VWc?oc=5",
+      "https://news.google.com/rss/articles/CBMipAJBVV95cUxOTmNSbHhBalFNc3BwejR4aUJqZGlJYm0zWjBQcnl3ZXROVTRWVVd5NU9ZTVpIQklobWZVOEdQdk9aX1prWXh0b1pzQ2dQMmdldkt3SU5vaFpYZmd0NkNGa2xfeGlZd19TTHFNSXpjS0ZtY0ZqRmgxa3Fpal9LZnRqTmhmVWZzMExPc0p0NEUyTnZnd2F0Yl9CN1luajJmTEVuRzJCYlJDbXpyY25nNzZxeGZGdVRBS29yM3hmS2hHdEFwa2VoY0tTTXROV1ljUVNWcGVmWEFBRVBzeE40WlZ0bkU2Q3FpZzZtQ2N1WmtSLUJycTBtTXZsWVhhWDlvSEFsa1hEb290QlRvcU91dlotLWJlZy1NMkl5MmFlQzQ4S0dQOEwz?oc=5",
+      "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBqRXBxOWlyWnJ4OE1YT2JuS3VfWE83ejRyOENWcDZjU1ZEMkF3TlNQYmk2SERTWjc2NkttSU5RakppSVpjaHQtOGFFOUtJeEFobC1NT0x4LWY4R08t?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "canonical_urls": [],
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-007",
+    "title": "Israel to release activists from Gaza aid flotilla - politico.eu",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMihAFBVV95cUxQWXJwNExBRGFTQ1lyU21uaER0bXQxcXhmSE02WXRETGU0SnE1OTlQSUJJcjBndzR3SE5VUEhOblJLa29yVDlRM2FJeEdrcG5UQ2JSUjhCREZQZlBtcTdMaDBnNXFad2Z4Z3g1YlFnWDZZaGNtb3lwdzNFOWU1NGNUeGJLTXk?oc=5\" target=\"_blank\">Israel to release activists from Gaza aid flotilla</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">politico.eu</font>",
+    "category": "general",
+    "score": 93,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-8273a5319868"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-8273a5319868"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMihAFBVV95cUxQWXJwNExBRGFTQ1lyU21uaER0bXQxcXhmSE02WXRETGU0SnE1OTlQSUJJcjBndzR3SE5VUEhOblJLa29yVDlRM2FJeEdrcG5UQ2JSUjhCREZQZlBtcTdMaDBnNXFad2Z4Z3g1YlFnWDZZaGNtb3lwdzNFOWU1NGNUeGJLTXk?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-008",
+    "title": "Surfers in war-torn Gaza find rare moments of joy taking to the waves - SFGATE",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMiogFBVV95cUxOUU05VDluaUV5b1Joc0o4NFpOTjMtcy1TVURfUGxUMlMyaUJxSHkyMlNSTWQyRkFjaURFQW5WMXdpMHJMYXdzbHRPcTNhZGxGSWVYWU80RkFMTmV4aVVuVTNlenlJenppek1NVlMyNDZ5cUppM25xdnlRV24yQzVwZGlzaGpPZUQ4b3BvOWlqRzRLeFFRdHpqY0tSSDZCaHJkRUE?oc=5\" target=\"_blank\">Surfers in war-torn Gaza find rare moments of joy taking to the waves</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">SFGATE</font>",
+    "category": "general",
+    "score": 92,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-9bdb0825f156"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-9bdb0825f156"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiogFBVV95cUxOUU05VDluaUV5b1Joc0o4NFpOTjMtcy1TVURfUGxUMlMyaUJxSHkyMlNSTWQyRkFjaURFQW5WMXdpMHJMYXdzbHRPcTNhZGxGSWVYWU80RkFMTmV4aVVuVTNlenlJenppek1NVlMyNDZ5cUppM25xdnlRV24yQzVwZGlzaGpPZUQ4b3BvOWlqRzRLeFFRdHpqY0tSSDZCaHJkRUE?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-010",
+    "title": "Palestinian war amputees compete in Gaza marathon - CNN",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMif0FVX3lxTFAtbzZhcHJyUE5NeUpKdVZkYVpVQm9mSjJMZDRvVVAtSmpUM0JQemNxMnc0NG9VcE1INmstekhqeWRmN1VjWndodUtEOFNxbVZWRTYwVTNmNlp5Y0poWWwtMGdxVGRMZWNyc0Vsamw2Ri11WlJfai1jMEd3SkI1bVE?oc=5\" target=\"_blank\">Palestinian war amputees compete in Gaza marathon</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">CNN</font>",
+    "category": "general",
+    "score": 90,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-80fedb463193"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-80fedb463193"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMif0FVX3lxTFAtbzZhcHJyUE5NeUpKdVZkYVpVQm9mSjJMZDRvVVAtSmpUM0JQemNxMnc0NG9VcE1INmstekhqeWRmN1VjWndodUtEOFNxbVZWRTYwVTNmNlp5Y0poWWwtMGdxVGRMZWNyc0Vsamw2Ri11WlJfai1jMEd3SkI1bVE?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-09-012",
+    "title": "In Gaza, surfers abide despite ongoing war - Taipei Times",
+    "summary": "<a href=\"https://news.google.com/rss/articles/CBMieEFVX3lxTE1hbFRkdW1FRnFlc2ZEODlOZVNGQ2s0ZzJyTVdpVXphX1V5ZjJJYWdUcU1lMFdwQ2hSWDZuVzVLZWNoSzQwTUFQdWJGMHhJMDlRX2lyTUxfdVFMVkNraC1jbmpfam96RjNrNTBKcXpaQi1ZcFU1bDluLQ?oc=5\" target=\"_blank\">In Gaza, surfers abide despite ongoing war</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Taipei Times</font>",
+    "category": "general",
+    "score": 88,
+    "scoring_reasons": [
+      "Included because a complete project-local source record was provided."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-09-google-news-gaza-1d0a2bb63f4c"
+    ],
+    "source_ids": [
+      "gaza-2026-05-09-google-news-gaza-1d0a2bb63f4c"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMieEFVX3lxTE1hbFRkdW1FRnFlc2ZEODlOZVNGQ2s0ZzJyTVdpVXphX1V5ZjJJYWdUcU1lMFdwQ2hSWDZuVzVLZWNoSzQwTUFQdWJGMHhJMDlRX2lyTUxfdVFMVkNraC1jbmpfam96RjNrNTBKcXpaQi1ZcFU1bDluLQ?oc=5"
+    ],
+    "publisher_names": [
+      "Google News"
+    ],
+    "edition_date": "2026-05-09",
+    "generated_at": "2026-05-09T22:30:13.312210+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
   }
 ]

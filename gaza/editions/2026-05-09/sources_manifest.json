@@ -1,53 +1,254 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-05-09T00:52:04.369208+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-05-09-aljazeera-all-bf2464cbac13",
+    "source_id": "gaza-2026-05-09-aljazeera-all-bf2464cbac13",
+    "title": "One killed in Gaza as Turkish FM talks peace efforts with Hamas official",
+    "url": "https://www.aljazeera.com/news/2026/5/9/one-killed-in-gaza-as-turkish-fm-talks-peace-efforts-with-hamas-official?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/9/one-killed-in-gaza-as-turkish-fm-talks-peace-efforts-with-hamas-official?traffic_source=rss",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-09T21:10:43+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "Israel continues to violate a &#039;ceasefire&#039; agreed to in October with hundreds more killed across the Strip.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "regional",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-09"
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-001"
+    ],
+    "claim_ids": []
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-05-09T00:52:04.369208+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-05-09-aljazeera-all-0307e87d21f5",
+    "source_id": "gaza-2026-05-09-aljazeera-all-0307e87d21f5",
+    "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/9/nowhere-left-to-go-gaza-residents-return-to-rubble-after-israeli-strike?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/9/nowhere-left-to-go-gaza-residents-return-to-rubble-after-israeli-strike?traffic_source=rss",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-09T17:21:33+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "Al Jazeera\u2019s Tareq Abu Azzoum reports from Al-Shati Refugee Camp after overnight Israeli airstrikes.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "regional",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-09"
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-002"
+    ],
+    "claim_ids": []
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-05-09T00:52:04.369208+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-05-09-aljazeera-all-c80db321751a",
+    "source_id": "gaza-2026-05-09-aljazeera-all-c80db321751a",
+    "title": "Israel to release two detained Gaza flotilla activists",
+    "url": "https://www.aljazeera.com/news/2026/5/9/israel-to-release-two-detained-gaza-flotilla-activists?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/9/israel-to-release-two-detained-gaza-flotilla-activists?traffic_source=rss",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-09T14:06:55+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "Lawyer representing Saif Abu Keshek and Thiago Avila tells Al Jazeera they will be &#039;released to their home countries&#039;.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "regional",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-09"
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-003"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-ed4b53eeb99d",
+    "source_id": "gaza-2026-05-09-google-news-gaza-ed4b53eeb99d",
+    "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike - Al Jazeera",
+    "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPeVhoYm9jLUpwYWxib3V4dWd5QTdQbW5oX2dvN1VfbndkQWhwYV9xVWkwZTFzMExRUWhvN0xxMVRLVlFGajZLUXh2NzduWGZIMlJGUEFXQTM4ajQtSWhyQmlYTHlMeU1UYUp6bng1dUtOcG04MXJYTWEwRXF4emQ1ZTdRRERLUFFNYVFSN0o4STFtbElyUDBic2RYLVlmVnh4X3RFdExQSEZVRlRmOVBSc2M1UkNhNGJMdU1XcENn0gHDAUFVX3lxTE9nakNLbGIteV92bjlOcWZfYUVHRW1WLVp3R0dXTk1WRGttSGY0ZXBBSUwteHlzT2FwTENVZHVrOTF2c2pZU3ZwWkhZUklENjROR2daOUFKb1VvdGhFdFVrbHZMaU50Zmo1VXJiX3JRVTZfQXctYU1IRVBvbnU5aHd5dFI4RV80d1AxQ1p1bzZZX2tBUURjYUNpbFV6NGpIT2dLWHNjQ1ZvbWZqazJIQS1qZVp3WkRIdjVialF3YWtJRXdaTQ?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPeVhoYm9jLUpwYWxib3V4dWd5QTdQbW5oX2dvN1VfbndkQWhwYV9xVWkwZTFzMExRUWhvN0xxMVRLVlFGajZLUXh2NzduWGZIMlJGUEFXQTM4ajQtSWhyQmlYTHlMeU1UYUp6bng1dUtOcG04MXJYTWEwRXF4emQ1ZTdRRERLUFFNYVFSN0o4STFtbElyUDBic2RYLVlmVnh4X3RFdExQSEZVRlRmOVBSc2M1UkNhNGJMdU1XcENn0gHDAUFVX3lxTE9nakNLbGIteV92bjlOcWZfYUVHRW1WLVp3R0dXTk1WRGttSGY0ZXBBSUwteHlzT2FwTENVZHVrOTF2c2pZU3ZwWkhZUklENjROR2daOUFKb1VvdGhFdFVrbHZMaU50Zmo1VXJiX3JRVTZfQXctYU1IRVBvbnU5aHd5dFI4RV80d1AxQ1p1bzZZX2tBUURjYUNpbFV6NGpIT2dLWHNjQ1ZvbWZqazJIQS1qZVp3WkRIdjVialF3YWtJRXdaTQ?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T17:21:46+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMivgFBVV95cUxPeVhoYm9jLUpwYWxib3V4dWd5QTdQbW5oX2dvN1VfbndkQWhwYV9xVWkwZTFzMExRUWhvN0xxMVRLVlFGajZLUXh2NzduWGZIMlJGUEFXQTM4ajQtSWhyQmlYTHlMeU1UYUp6bng1dUtOcG04MXJYTWEwRXF4emQ1ZTdRRERLUFFNYVFSN0o4STFtbElyUDBic2RYLVlmVnh4X3RFdExQSEZVRlRmOVBSc2M1UkNhNGJMdU1XcENn0gHDAUFVX3lxTE9nakNLbGIteV92bjlOcWZfYUVHRW1WLVp3R0dXTk1WRGttSGY0ZXBBSUwteHlzT2FwTENVZHVrOTF2c2pZU3ZwWkhZUklENjROR2daOUFKb1VvdGhFdFVrbHZMaU50Zmo1VXJiX3JRVTZfQXctYU1IRVBvbnU5aHd5dFI4RV80d1AxQ1p1bzZZX2tBUURjYUNpbFV6NGpIT2dLWHNjQ1ZvbWZqazJIQS1qZVp3WkRIdjVialF3YWtJRXdaTQ?oc=5\" target=\"_blank\">\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Al Jazeera</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-004"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-2e3f65fb7fa7",
+    "source_id": "gaza-2026-05-09-google-news-gaza-2e3f65fb7fa7",
+    "title": "Israel to deport two Gaza flotilla activists detained for past week - The Times of Israel",
+    "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxORGt2REQtUWhETGhvTFVHdkhZYW50Z0VaeUNtWllxZW1JVDZKY2JCS1dYQ0tRM0w4MW5KeExJdzJhQXNySV8zVXQ5dm1Xbl9WLXpNNjRqenV0MVUxaHRRSkVVYi0zb0lPeHI1WUtMVk10MDdxWVFhdHhzaWpzc3ZVd3hUNlZFYU9XYzVWZGw4T3FHR1NwSWs4UWpB0gGfAUFVX3lxTFBzUGpNQ3BvMk9Bc2xkQ2xaSnBrdWdrb2twemw3aG1PaExYb1FLczVmN3FDVTd2ZkJRN3l1cGRDNkhrZWhNYnlPM2NSRDJNOW5HRnhGdDdBbkgzQTFXRE5DYkdSNWpwa2pNYXJCcTZ6clNhekxqcFU0ekFhLUk3ZWFDQ3p2ZlBKNl9wTGpka2RvWWUxbFkxVXZzWVpiVlBxdw?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxORGt2REQtUWhETGhvTFVHdkhZYW50Z0VaeUNtWllxZW1JVDZKY2JCS1dYQ0tRM0w4MW5KeExJdzJhQXNySV8zVXQ5dm1Xbl9WLXpNNjRqenV0MVUxaHRRSkVVYi0zb0lPeHI1WUtMVk10MDdxWVFhdHhzaWpzc3ZVd3hUNlZFYU9XYzVWZGw4T3FHR1NwSWs4UWpB0gGfAUFVX3lxTFBzUGpNQ3BvMk9Bc2xkQ2xaSnBrdWdrb2twemw3aG1PaExYb1FLczVmN3FDVTd2ZkJRN3l1cGRDNkhrZWhNYnlPM2NSRDJNOW5HRnhGdDdBbkgzQTFXRE5DYkdSNWpwa2pNYXJCcTZ6clNhekxqcFU0ekFhLUk3ZWFDQ3p2ZlBKNl9wTGpka2RvWWUxbFkxVXZzWVpiVlBxdw?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T14:49:03+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMimgFBVV95cUxORGt2REQtUWhETGhvTFVHdkhZYW50Z0VaeUNtWllxZW1JVDZKY2JCS1dYQ0tRM0w4MW5KeExJdzJhQXNySV8zVXQ5dm1Xbl9WLXpNNjRqenV0MVUxaHRRSkVVYi0zb0lPeHI1WUtMVk10MDdxWVFhdHhzaWpzc3ZVd3hUNlZFYU9XYzVWZGw4T3FHR1NwSWs4UWpB0gGfAUFVX3lxTFBzUGpNQ3BvMk9Bc2xkQ2xaSnBrdWdrb2twemw3aG1PaExYb1FLczVmN3FDVTd2ZkJRN3l1cGRDNkhrZWhNYnlPM2NSRDJNOW5HRnhGdDdBbkgzQTFXRE5DYkdSNWpwa2pNYXJCcTZ6clNhekxqcFU0ekFhLUk3ZWFDQ3p2ZlBKNl9wTGpka2RvWWUxbFkxVXZzWVpiVlBxdw?oc=5\" target=\"_blank\">Israel to deport two Gaza flotilla activists detained for past week</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Times of Israel</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-005"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-20f333c28d10",
+    "source_id": "gaza-2026-05-09-google-news-gaza-20f333c28d10",
+    "title": "Gaza flotilla activists to be released from Israel detention and deported - Reuters",
+    "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOd1Zja3A5Y0gzdWYxSXZBSzlQR1BzbGQ5R3JyY0syYkZBUFJiSjJ2ZDVtUHRpMFJFcElLbjJwZ2RJWWRsT1JnWkF3YjN1V2I4azc2d09iV3pFTmswUThsV21va3ZOQ3ZPbE9jclowWk1TbXJRcU5kbVgwYWtwUHZvOV92cGVrWmEyVUpDTEhlUmVmcGM0blZwbzdBV1d3ek5fOXdBdEJBYlpXOWFDM1VZajZXM1ZMM2x1OGJOVVlnbmx5OG84VWc?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOd1Zja3A5Y0gzdWYxSXZBSzlQR1BzbGQ5R3JyY0syYkZBUFJiSjJ2ZDVtUHRpMFJFcElLbjJwZ2RJWWRsT1JnWkF3YjN1V2I4azc2d09iV3pFTmswUThsV21va3ZOQ3ZPbE9jclowWk1TbXJRcU5kbVgwYWtwUHZvOV92cGVrWmEyVUpDTEhlUmVmcGM0blZwbzdBV1d3ek5fOXdBdEJBYlpXOWFDM1VZajZXM1ZMM2x1OGJOVVlnbmx5OG84VWc?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T13:04:17+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMixgFBVV95cUxOd1Zja3A5Y0gzdWYxSXZBSzlQR1BzbGQ5R3JyY0syYkZBUFJiSjJ2ZDVtUHRpMFJFcElLbjJwZ2RJWWRsT1JnWkF3YjN1V2I4azc2d09iV3pFTmswUThsV21va3ZOQ3ZPbE9jclowWk1TbXJRcU5kbVgwYWtwUHZvOV92cGVrWmEyVUpDTEhlUmVmcGM0blZwbzdBV1d3ek5fOXdBdEJBYlpXOWFDM1VZajZXM1ZMM2x1OGJOVVlnbmx5OG84VWc?oc=5\" target=\"_blank\">Gaza flotilla activists to be released from Israel detention and deported</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Reuters</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-006"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-8273a5319868",
+    "source_id": "gaza-2026-05-09-google-news-gaza-8273a5319868",
+    "title": "Israel to release activists from Gaza aid flotilla - politico.eu",
+    "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQWXJwNExBRGFTQ1lyU21uaER0bXQxcXhmSE02WXRETGU0SnE1OTlQSUJJcjBndzR3SE5VUEhOblJLa29yVDlRM2FJeEdrcG5UQ2JSUjhCREZQZlBtcTdMaDBnNXFad2Z4Z3g1YlFnWDZZaGNtb3lwdzNFOWU1NGNUeGJLTXk?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQWXJwNExBRGFTQ1lyU21uaER0bXQxcXhmSE02WXRETGU0SnE1OTlQSUJJcjBndzR3SE5VUEhOblJLa29yVDlRM2FJeEdrcG5UQ2JSUjhCREZQZlBtcTdMaDBnNXFad2Z4Z3g1YlFnWDZZaGNtb3lwdzNFOWU1NGNUeGJLTXk?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T17:35:00+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMihAFBVV95cUxQWXJwNExBRGFTQ1lyU21uaER0bXQxcXhmSE02WXRETGU0SnE1OTlQSUJJcjBndzR3SE5VUEhOblJLa29yVDlRM2FJeEdrcG5UQ2JSUjhCREZQZlBtcTdMaDBnNXFad2Z4Z3g1YlFnWDZZaGNtb3lwdzNFOWU1NGNUeGJLTXk?oc=5\" target=\"_blank\">Israel to release activists from Gaza aid flotilla</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">politico.eu</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-007"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-9bdb0825f156",
+    "source_id": "gaza-2026-05-09-google-news-gaza-9bdb0825f156",
+    "title": "Surfers in war-torn Gaza find rare moments of joy taking to the waves - SFGATE",
+    "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOUU05VDluaUV5b1Joc0o4NFpOTjMtcy1TVURfUGxUMlMyaUJxSHkyMlNSTWQyRkFjaURFQW5WMXdpMHJMYXdzbHRPcTNhZGxGSWVYWU80RkFMTmV4aVVuVTNlenlJenppek1NVlMyNDZ5cUppM25xdnlRV24yQzVwZGlzaGpPZUQ4b3BvOWlqRzRLeFFRdHpqY0tSSDZCaHJkRUE?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOUU05VDluaUV5b1Joc0o4NFpOTjMtcy1TVURfUGxUMlMyaUJxSHkyMlNSTWQyRkFjaURFQW5WMXdpMHJMYXdzbHRPcTNhZGxGSWVYWU80RkFMTmV4aVVuVTNlenlJenppek1NVlMyNDZ5cUppM25xdnlRV24yQzVwZGlzaGpPZUQ4b3BvOWlqRzRLeFFRdHpqY0tSSDZCaHJkRUE?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T17:52:56+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMiogFBVV95cUxOUU05VDluaUV5b1Joc0o4NFpOTjMtcy1TVURfUGxUMlMyaUJxSHkyMlNSTWQyRkFjaURFQW5WMXdpMHJMYXdzbHRPcTNhZGxGSWVYWU80RkFMTmV4aVVuVTNlenlJenppek1NVlMyNDZ5cUppM25xdnlRV24yQzVwZGlzaGpPZUQ4b3BvOWlqRzRLeFFRdHpqY0tSSDZCaHJkRUE?oc=5\" target=\"_blank\">Surfers in war-torn Gaza find rare moments of joy taking to the waves</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">SFGATE</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-008"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-a088c9408956",
+    "source_id": "gaza-2026-05-09-google-news-gaza-a088c9408956",
+    "title": "Two Gaza flotilla activists to be released from Israeli detention and deported - Haaretz",
+    "url": "https://news.google.com/rss/articles/CBMipAJBVV95cUxOTmNSbHhBalFNc3BwejR4aUJqZGlJYm0zWjBQcnl3ZXROVTRWVVd5NU9ZTVpIQklobWZVOEdQdk9aX1prWXh0b1pzQ2dQMmdldkt3SU5vaFpYZmd0NkNGa2xfeGlZd19TTHFNSXpjS0ZtY0ZqRmgxa3Fpal9LZnRqTmhmVWZzMExPc0p0NEUyTnZnd2F0Yl9CN1luajJmTEVuRzJCYlJDbXpyY25nNzZxeGZGdVRBS29yM3hmS2hHdEFwa2VoY0tTTXROV1ljUVNWcGVmWEFBRVBzeE40WlZ0bkU2Q3FpZzZtQ2N1WmtSLUJycTBtTXZsWVhhWDlvSEFsa1hEb290QlRvcU91dlotLWJlZy1NMkl5MmFlQzQ4S0dQOEwz?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMipAJBVV95cUxOTmNSbHhBalFNc3BwejR4aUJqZGlJYm0zWjBQcnl3ZXROVTRWVVd5NU9ZTVpIQklobWZVOEdQdk9aX1prWXh0b1pzQ2dQMmdldkt3SU5vaFpYZmd0NkNGa2xfeGlZd19TTHFNSXpjS0ZtY0ZqRmgxa3Fpal9LZnRqTmhmVWZzMExPc0p0NEUyTnZnd2F0Yl9CN1luajJmTEVuRzJCYlJDbXpyY25nNzZxeGZGdVRBS29yM3hmS2hHdEFwa2VoY0tTTXROV1ljUVNWcGVmWEFBRVBzeE40WlZ0bkU2Q3FpZzZtQ2N1WmtSLUJycTBtTXZsWVhhWDlvSEFsa1hEb290QlRvcU91dlotLWJlZy1NMkl5MmFlQzQ4S0dQOEwz?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T14:41:00+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMipAJBVV95cUxOTmNSbHhBalFNc3BwejR4aUJqZGlJYm0zWjBQcnl3ZXROVTRWVVd5NU9ZTVpIQklobWZVOEdQdk9aX1prWXh0b1pzQ2dQMmdldkt3SU5vaFpYZmd0NkNGa2xfeGlZd19TTHFNSXpjS0ZtY0ZqRmgxa3Fpal9LZnRqTmhmVWZzMExPc0p0NEUyTnZnd2F0Yl9CN1luajJmTEVuRzJCYlJDbXpyY25nNzZxeGZGdVRBS29yM3hmS2hHdEFwa2VoY0tTTXROV1ljUVNWcGVmWEFBRVBzeE40WlZ0bkU2Q3FpZzZtQ2N1WmtSLUJycTBtTXZsWVhhWDlvSEFsa1hEb290QlRvcU91dlotLWJlZy1NMkl5MmFlQzQ4S0dQOEwz?oc=5\" target=\"_blank\">Two Gaza flotilla activists to be released from Israeli detention and deported</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Haaretz</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-009"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-80fedb463193",
+    "source_id": "gaza-2026-05-09-google-news-gaza-80fedb463193",
+    "title": "Palestinian war amputees compete in Gaza marathon - CNN",
+    "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFAtbzZhcHJyUE5NeUpKdVZkYVpVQm9mSjJMZDRvVVAtSmpUM0JQemNxMnc0NG9VcE1INmstekhqeWRmN1VjWndodUtEOFNxbVZWRTYwVTNmNlp5Y0poWWwtMGdxVGRMZWNyc0Vsamw2Ri11WlJfai1jMEd3SkI1bVE?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFAtbzZhcHJyUE5NeUpKdVZkYVpVQm9mSjJMZDRvVVAtSmpUM0JQemNxMnc0NG9VcE1INmstekhqeWRmN1VjWndodUtEOFNxbVZWRTYwVTNmNlp5Y0poWWwtMGdxVGRMZWNyc0Vsamw2Ri11WlJfai1jMEd3SkI1bVE?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T15:58:00+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMif0FVX3lxTFAtbzZhcHJyUE5NeUpKdVZkYVpVQm9mSjJMZDRvVVAtSmpUM0JQemNxMnc0NG9VcE1INmstekhqeWRmN1VjWndodUtEOFNxbVZWRTYwVTNmNlp5Y0poWWwtMGdxVGRMZWNyc0Vsamw2Ri11WlJfai1jMEd3SkI1bVE?oc=5\" target=\"_blank\">Palestinian war amputees compete in Gaza marathon</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">CNN</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-010"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-880d623f1f11",
+    "source_id": "gaza-2026-05-09-google-news-gaza-880d623f1f11",
+    "title": "Gaza flotilla activists to be released from detention, deported from Israel - The Jerusalem Post",
+    "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBqRXBxOWlyWnJ4OE1YT2JuS3VfWE83ejRyOENWcDZjU1ZEMkF3TlNQYmk2SERTWjc2NkttSU5RakppSVpjaHQtOGFFOUtJeEFobC1NT0x4LWY4R08t?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBqRXBxOWlyWnJ4OE1YT2JuS3VfWE83ejRyOENWcDZjU1ZEMkF3TlNQYmk2SERTWjc2NkttSU5RakppSVpjaHQtOGFFOUtJeEFobC1NT0x4LWY4R08t?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T13:38:53+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMiXEFVX3lxTFBqRXBxOWlyWnJ4OE1YT2JuS3VfWE83ejRyOENWcDZjU1ZEMkF3TlNQYmk2SERTWjc2NkttSU5RakppSVpjaHQtOGFFOUtJeEFobC1NT0x4LWY4R08t?oc=5\" target=\"_blank\">Gaza flotilla activists to be released from detention, deported from Israel</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Jerusalem Post</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-011"
+    ],
+    "claim_ids": []
+  },
+  {
+    "source_record_id": "gaza-2026-05-09-google-news-gaza-1d0a2bb63f4c",
+    "source_id": "gaza-2026-05-09-google-news-gaza-1d0a2bb63f4c",
+    "title": "In Gaza, surfers abide despite ongoing war - Taipei Times",
+    "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1hbFRkdW1FRnFlc2ZEODlOZVNGQ2s0ZzJyTVdpVXphX1V5ZjJJYWdUcU1lMFdwQ2hSWDZuVzVLZWNoSzQwTUFQdWJGMHhJMDlRX2lyTUxfdVFMVkNraC1jbmpfam96RjNrNTBKcXpaQi1ZcFU1bDluLQ?oc=5",
+    "canonical_url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1hbFRkdW1FRnFlc2ZEODlOZVNGQ2s0ZzJyTVdpVXphX1V5ZjJJYWdUcU1lMFdwQ2hSWDZuVzVLZWNoSzQwTUFQdWJGMHhJMDlRX2lyTUxfdVFMVkNraC1jbmpfam96RjNrNTBKcXpaQi1ZcFU1bDluLQ?oc=5",
+    "publisher": "Google News",
+    "published_at": "2026-05-09T16:00:00+00:00",
+    "retrieved_at": "2026-05-09T22:30:11.672723+00:00",
+    "summary_or_snippet": "<a href=\"https://news.google.com/rss/articles/CBMieEFVX3lxTE1hbFRkdW1FRnFlc2ZEODlOZVNGQ2s0ZzJyTVdpVXphX1V5ZjJJYWdUcU1lMFdwQ2hSWDZuVzVLZWNoSzQwTUFQdWJGMHhJMDlRX2lyTUxfdVFMVkNraC1jbmpfam96RjNrNTBKcXpaQi1ZcFU1bDluLQ?oc=5\" target=\"_blank\">In Gaza, surfers abide despite ongoing war</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Taipei Times</font>",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "general",
+    "reliability_tier": "news-aggregator",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-09",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-09-012"
+    ],
+    "claim_ids": []
   }
 ]

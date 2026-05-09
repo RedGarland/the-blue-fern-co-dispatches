@@ -38,6 +38,28 @@ def deterministic_summary(record: dict[str, Any]) -> str:
     return summary
 
 
+def why_it_matters(record: dict[str, Any], category: str | None = None) -> str:
+    category_text = clean_sentence(category or record.get("category_hint") or "public systems").replace("_", " ").lower()
+    region = region_label(record)
+    category_label, rationale = category_rationale(category_text)
+    prefix = f"In {region}, " if region and region in {"Washington", "Oregon", "Idaho"} else ""
+    return f"{prefix}{category_label} signals can affect {rationale}."
+
+
+def category_rationale(category_text: str) -> tuple[str, str]:
+    if any(term in category_text for term in ("environment", "climate", "wildfire", "water")):
+        return "Environmental and climate", "public safety, infrastructure planning, and regional resilience"
+    if any(term in category_text for term in ("transportation", "infrastructure", "freight", "bridge", "road")):
+        return "Transportation", "mobility, emergency access, freight movement, and infrastructure maintenance"
+    if any(term in category_text for term in ("public safety", "emergency", "disaster", "fire")):
+        return "Public safety", "emergency response, household stability, and local service coordination"
+    if any(term in category_text for term in ("housing", "homeless")):
+        return "Housing", "household stability, local services, and public-sector capacity"
+    if any(term in category_text for term in ("health", "hospital", "healthcare", "public health")):
+        return "Health system", "access to care, public services, and community resilience"
+    return "Public systems", "public services, local planning, and regional resilience"
+
+
 def clean_sentence(value: str | None) -> str:
     text = " ".join(str(value or "").split())
     return re.sub(r"\s+([?.!,;:])", r"\1", text).strip()
@@ -168,6 +190,7 @@ def curate_sources(root: Path, edition_date: str, dry_run: bool = False) -> dict
                 "title": record.get("title", ""),
                 "summary": deterministic_summary(record),
                 "category": score["category"],
+                "why_it_matters": why_it_matters(record, score["category"]),
                 "score": score["total_score"],
                 "regional_relevance_score": score["regional_relevance_score"],
                 "systems_impact_score": score["systems_impact_score"],

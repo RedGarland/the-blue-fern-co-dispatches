@@ -8,12 +8,12 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary
+from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary, why_it_matters
 from bluefern_dispatches.cascadia_fetch import curl_command, fetch_public_url
 from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
-from bluefern_dispatches.cascadia_render import render_cascadia_edition, refresh_cascadia_archive_pages
+from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, load_source_registry
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, format_coverage_label, previous_completed_week
@@ -497,7 +497,7 @@ def test_quality_weekly_cli_writes_report_and_below_target_guidance(cascadia_wor
     html = (public_dir / "index.html").read_text(encoding="utf-8")
     assert "Weekly briefing / Apr 20\u201326, 2026" in html
     assert "No qualifying source-backed Cascadia signals were identified" not in html
-    assert "Example WA News — Washington bridge infrastructure update" in html
+    assert "Example WA News - Washington bridge infrastructure update" in html
     curation = read_json(public_dir / "curation_manifest.json")
     for story in curation:
         if story["included_in_public_summary"]:
@@ -1247,6 +1247,22 @@ def test_deterministic_summary_uses_snippet_and_safe_fallbacks():
     assert "based on its title and source metadata" in fallback_summary
 
 
+def test_why_it_matters_is_category_and_region_grounded():
+    record = {
+        "category_hint": "Transportation",
+        "state_hint": "WA",
+        "title": "Washington bridge inspection program",
+        "summary_or_snippet": "Bridge inspection update.",
+    }
+
+    line = why_it_matters(record, "Transportation")
+
+    assert line == "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance."
+    assert "deaths" not in line.lower()
+    assert "closure" not in line.lower()
+    assert "cost" not in line.lower()
+
+
 def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_work_root):
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")
@@ -1264,9 +1280,26 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     assert "The Cascadia Briefing" in html
     assert "Cascadia Signal Pack" in html
     assert 'target="_blank" rel="noopener noreferrer"' in html
-    assert "Blue Fern Cascadia Manual Source File — Washington bridge inspection program" in html
+    assert "Score:" not in html
+    assert "Signal strength" not in html
+    assert "Why it matters:" in html
+    assert "Source: <a href=" in html
+    assert "Published:" in html
+    assert "Category:" in html
+    assert "Blue Fern Cascadia Manual Source File - Washington bridge inspection program" in html
+    assert "source_record_id" not in html
+    assert "provider_id" not in html
     curation = read_json(public_dir / "curation_manifest.json")
     assert all("source_record_ids" in story for story in curation)
+    assert all("score" in story for story in curation)
+    assert all("why_it_matters" in story for story in curation if story["included_in_public_summary"])
+    editorial = cascadia_work_root / "output" / "dispatches" / "cascadia" / "editions" / "2026-05-03" / "editorial_review.md"
+    assert editorial.exists()
+    assert not (public_dir / "editorial_review.md").exists()
+    editorial_text = editorial.read_text(encoding="utf-8")
+    assert "No public numeric scores: pass" in editorial_text
+    assert "Every public story has source URL: pass" in editorial_text
+    assert "Every public story has why-it-matters line: pass" in editorial_text
     public_text = "\n".join(path.read_text(encoding="utf-8") for path in (cascadia_work_root / "output" / "site").rglob("*") if path.suffix in {".html", ".json", ".xml", ".css"})
     assert "output/detail" not in public_text
     assert "cascadia_signal_records" not in public_text
@@ -1282,8 +1315,34 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     assert edition_manifest["briefing_type"] == "weekly"
     assert edition_manifest["dispatch_slug"] == "cascadia"
     assert edition_manifest["public_name"] == "The Cascadia Briefing"
+    assert edition_manifest["public_story_count"] >= 1
+    assert edition_manifest["public_categories"]
+    assert edition_manifest["public_state_hints"]
+    assert edition_manifest["public_source_publishers"]
+    assert edition_manifest["weekly_summary_bullets"]
+    assert edition_manifest["public_archive_subtitle"]
     public_paths = [path.relative_to(cascadia_work_root / "output" / "site").as_posix() for path in (cascadia_work_root / "output" / "site").rglob("*") if path.is_file()]
     assert not any(path.startswith("detail/") or path.startswith("paid/") for path in public_paths)
+
+
+def test_editorial_checklist_catches_public_score_missing_source_and_summary():
+    stories = [
+        {
+            "story_id": "story-1",
+            "title": "Washington bridge inspection program",
+            "summary": "Washington bridge inspection program",
+            "category": "Transportation",
+            "source_urls": [],
+            "source_records": [],
+        }
+    ]
+
+    text = editorial_checklist("Apr 20-26, 2026", stories, "<p>Score: 68</p>", [])
+
+    assert "No public numeric scores: fail" in text
+    assert "No title-as-summary repeats: fail" in text
+    assert "Every public story has source URL: fail" in text
+    assert "Weekly summary present when stories exist: fail" in text
 
 
 def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
@@ -1352,8 +1411,17 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     public_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-10"
     html = (public_dir / "index.html").read_text(encoding="utf-8")
     assert "Weekly briefing / May 4\u201310, 2026 / Coverage: 2026-05-04 through 2026-05-10" in html
+    assert "This week's signals" in html
+    assert "Transportation appeared in WA source records." in html
+    assert "Why it matters:" in html
+    assert "In Washington, Transportation signals can affect mobility" in html
     assert "https://example.com/weekly" in html
     assert "https://example.com/outside" not in html
+    assert "Score:" not in html
+    assert "Source: <a href=\"https://example.com/weekly\"" in html
+    assert "Source - Washington bridge inspection program" in html
+    assert "Published: May 4, 2026" in html
+    assert "Category: Transportation" in html
     manifest = read_json(public_dir / "edition_manifest.json")
     assert manifest["briefing_type"] == "weekly"
     assert manifest["run_date"] == "2026-05-11"
@@ -1362,10 +1430,20 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     assert manifest["coverage_label"] == "May 4\u201310, 2026"
     assert manifest["week_label"] == "2026-W19"
     assert manifest["source_record_ids"] == ["src-in"]
+    assert manifest["weekly_summary_bullets"] == [
+        "Transportation appeared in WA source records.",
+        "This edition includes source-backed items from Source.",
+        "1 public source-backed story met the current public-systems criteria.",
+    ]
+    assert manifest["public_archive_subtitle"] == "1 story | WA | Transportation"
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     assert "2026-05-10" in archive
+    assert "1 story | WA | Transportation" in archive
+    index = (cascadia_work_root / "output" / "site" / "cascadia" / "index.html").read_text(encoding="utf-8")
+    assert "1 story | WA | Transportation" in index
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
-    assert "Weekly source-backed regional briefings" in (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+    rss = (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
+    assert "1 story | WA | Transportation" in rss
 
 
 def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work_root):
@@ -1398,6 +1476,8 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
                     "coverage_end": coverage_end,
                     "coverage_label": label,
                     "week_label": week,
+                    "public_story_count": 0,
+                    "public_archive_subtitle": "0 stories | No qualifying public signals identified",
                 },
                 indent=2,
             ),
@@ -1417,6 +1497,7 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
             assert weekly_date in text
         for _, _, _, label in weekly_dates.values():
             assert f"The Cascadia Briefing - {label}" in text
+        assert "0 stories | No qualifying public signals identified" in text
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
 
@@ -1591,6 +1672,7 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert coverage_start in html
         assert coverage_end in html
         assert "No qualifying source-backed Cascadia signals were identified" in html
+        assert "This week's signals" not in html
         assert manifest["briefing_type"] == "weekly"
         assert manifest["edition_date"] == edition_date
         assert manifest["coverage_start"] == coverage_start
@@ -1599,6 +1681,8 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert manifest["run_date"] == "2026-05-11"
         assert "source_record_ids" in manifest
         assert "source_urls" in manifest
+        assert manifest["weekly_summary_bullets"] == []
+        assert manifest["public_archive_subtitle"] == "0 stories | No qualifying public signals identified"
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     assert all(edition_date in archive for edition_date in expected)
 

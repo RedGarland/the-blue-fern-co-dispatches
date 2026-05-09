@@ -3,11 +3,13 @@ from __future__ import annotations
 import csv
 import html
 import json
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from bluefern_dispatches.cascadia_curate import why_it_matters
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_weekly import format_coverage_label, week_label
@@ -43,6 +45,8 @@ def validate_public_stories(stories: list[dict[str, Any]]) -> list[str]:
     for story in stories:
         if not story.get("source_record_ids") or not story.get("source_urls"):
             errors.append(f"public story lacks source trace: {story.get('story_id')}")
+        if not story.get("why_it_matters") and not story.get("source_records"):
+            errors.append(f"public story lacks why-it-matters trace: {story.get('story_id')}")
     return errors
 
 
@@ -134,16 +138,51 @@ def render_story_group(category: str, stories: list[dict[str, Any]]) -> str:
     items = []
     for story in sorted(stories, key=lambda item: item["score"], reverse=True):
         source_records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
-        links = "\n".join(render_source_link(url, source_records) for url in story.get("source_urls", []))
+        source_blocks = "\n".join(render_source_metadata(url, source_records, story.get("category")) for url in story.get("source_urls", []))
+        why = story_why_it_matters(story)
         items.append(
             f"""<article class="dispatch-story">
 <h3>{html.escape(story["title"])}</h3>
 <p>{html.escape(story["summary"])}</p>
-<p class="edition-date">Score: {int(story["score"])}</p>
-<ul>{links}</ul>
+<p><strong>Why it matters:</strong> {html.escape(why)}</p>
+{source_blocks}
 </article>"""
         )
     return f"<h2>{html.escape(category)}</h2>\n" + "\n".join(items)
+
+
+def story_why_it_matters(story: dict[str, Any]) -> str:
+    value = " ".join(str(story.get("why_it_matters") or "").split())
+    if value:
+        return value
+    records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
+    return why_it_matters(records[0] if records else {}, story.get("category"))
+
+
+def matching_source_record(url: str, source_records: list[dict[str, Any]]) -> dict[str, Any]:
+    return next(
+        (
+            record
+            for record in source_records
+            if (record.get("canonical_url") or record.get("source_url") or record.get("url")) == url
+        ),
+        source_records[0] if source_records else {},
+    )
+
+
+def render_source_metadata(url: str, source_records: list[dict[str, Any]], category: str | None = None) -> str:
+    record = matching_source_record(url, source_records)
+    label = source_link_label(url, source_records)
+    published = format_public_date(record.get("published_at"))
+    category_text = " ".join(str(category or record.get("category_hint") or "").split())
+    lines = [
+        f'<p>Source: <a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a></p>'
+    ]
+    if published:
+        lines.append(f"<p>Published: {html.escape(published)}</p>")
+    if category_text:
+        lines.append(f"<p>Category: {html.escape(category_text)}</p>")
+    return '<div class="source-meta">' + "\n".join(lines) + "</div>"
 
 
 def render_source_link(url: str, source_records: list[dict[str, Any]]) -> str:
@@ -152,22 +191,29 @@ def render_source_link(url: str, source_records: list[dict[str, Any]]) -> str:
 
 
 def source_link_label(url: str, source_records: list[dict[str, Any]]) -> str:
-    matching = next(
-        (
-            record
-            for record in source_records
-            if (record.get("canonical_url") or record.get("source_url") or record.get("url")) == url
-        ),
-        source_records[0] if source_records else {},
-    )
+    matching = matching_source_record(url, source_records)
     publisher = display_publisher(" ".join(str(matching.get("publisher") or matching.get("source_name") or "").split()))
     title = " ".join(str(matching.get("title") or matching.get("source_title") or "").split())
     if publisher and title:
-        return f"{publisher} — {title}"
+        return f"{publisher} - {title}"
     if publisher:
         return publisher
     domain = domain_from_url(url)
     return domain or url
+
+
+def format_public_date(value: Any) -> str:
+    if not value:
+        return ""
+    text = str(value)
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        match = re.match(r"^(\d{4})-(\d{2})-(\d{2})", text)
+        if not match:
+            return ""
+        parsed = datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+    return f"{parsed.strftime('%b')} {parsed.day}, {parsed.year}"
 
 
 def display_publisher(value: str) -> str:
@@ -194,6 +240,86 @@ def domain_from_url(url: str) -> str:
         return ""
 
 
+def public_story_states(stories: list[dict[str, Any]]) -> list[str]:
+    states: list[str] = []
+    for story in stories:
+        for record in story.get("source_records", []) or []:
+            if not isinstance(record, dict):
+                continue
+            state = str(record.get("state_hint") or record.get("region_scope") or "").strip()
+            if state in {"WA", "OR", "ID"} and state not in states:
+                states.append(state)
+    return states
+
+
+def public_story_publishers(stories: list[dict[str, Any]]) -> list[str]:
+    publishers: list[str] = []
+    for story in stories:
+        for record in story.get("source_records", []) or []:
+            if not isinstance(record, dict):
+                continue
+            publisher = display_publisher(" ".join(str(record.get("publisher") or record.get("source_name") or "").split()))
+            if publisher and publisher not in publishers:
+                publishers.append(publisher)
+    return publishers
+
+
+def public_story_categories(stories: list[dict[str, Any]]) -> list[str]:
+    categories: list[str] = []
+    for story in stories:
+        category = " ".join(str(story.get("category") or "").split())
+        if category and category not in categories:
+            categories.append(category)
+    return categories
+
+
+def sentence_join(values: list[str]) -> str:
+    if not values:
+        return ""
+    if len(values) == 1:
+        return values[0]
+    if len(values) == 2:
+        return f"{values[0]} and {values[1]}"
+    return f"{', '.join(values[:-1])}, and {values[-1]}"
+
+
+def build_weekly_summary_bullets(stories: list[dict[str, Any]]) -> list[str]:
+    if not stories:
+        return []
+    categories = public_story_categories(stories)
+    states = public_story_states(stories)
+    publishers = public_story_publishers(stories)
+    bullets: list[str] = []
+    if categories and states:
+        bullets.append(f"{sentence_join(categories[:3])} appeared in {sentence_join(states)} source records.")
+    elif categories:
+        bullets.append(f"{sentence_join(categories[:3])} appeared in this week's public source records.")
+    if publishers:
+        bullets.append(f"This edition includes source-backed items from {sentence_join(publishers[:3])}.")
+    bullets.append(f"{len(stories)} public source-backed {'story' if len(stories) == 1 else 'stories'} met the current public-systems criteria.")
+    return bullets[:4]
+
+
+def render_weekly_summary(bullets: list[str]) -> str:
+    if not bullets:
+        return ""
+    items = "\n".join(f"<li>{html.escape(bullet)}</li>" for bullet in bullets)
+    return f"<h2>This week's signals</h2>\n<ul>{items}</ul>"
+
+
+def archive_subtitle(stories: list[dict[str, Any]]) -> str:
+    if not stories:
+        return "0 stories | No qualifying public signals identified"
+    parts = [f"{len(stories)} {'story' if len(stories) == 1 else 'stories'}"]
+    states = public_story_states(stories)
+    categories = public_story_categories(stories)
+    if states:
+        parts.append(", ".join(states))
+    if categories:
+        parts.append(", ".join(categories[:4]))
+    return " | ".join(parts)
+
+
 def render_cascadia_html(
     edition_date: str,
     stories: list[dict[str, Any]],
@@ -207,6 +333,8 @@ def render_cascadia_html(
     for story in stories:
         grouped[story["category"]].append(story)
     groups = "\n".join(render_story_group(category, items) for category, items in sorted(grouped.items()))
+    weekly_bullets = build_weekly_summary_bullets(stories)
+    weekly_summary = render_weekly_summary(weekly_bullets)
     if not groups:
         if coverage_start and coverage_end and briefing_type == "weekly":
             groups = (
@@ -231,6 +359,7 @@ def render_cascadia_html(
     <p><strong>{DISPATCH_NAME}</strong></p>
     <p>{html.escape(CASCADIA_PUBLIC_DESCRIPTION)}</p>
     <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>
+    {weekly_summary}
     {groups}
   </main>
 {footer("../../")}"""
@@ -274,6 +403,54 @@ def write_detail_csv(path: Path, records: list[dict[str, Any]], dry_run: bool, w
         writer.writeheader()
         for record in records:
             writer.writerow({field: json.dumps(record.get(field)) if isinstance(record.get(field), list) else record.get(field) for field in fieldnames})
+
+
+def editorial_checklist(
+    coverage_label: str | None,
+    stories: list[dict[str, Any]],
+    html_text: str,
+    weekly_summary_bullets: list[str],
+    archive_weekly_only: bool = True,
+) -> str:
+    def pass_fail(condition: bool) -> str:
+        return "pass" if condition else "fail"
+
+    warnings: list[str] = []
+    if "Score:" in html_text:
+        warnings.append("Public HTML contains a numeric score label.")
+    if any(not story.get("source_urls") for story in stories):
+        warnings.append("At least one public story is missing a source URL.")
+    if any(not story_why_it_matters(story) for story in stories):
+        warnings.append("At least one public story is missing a why-it-matters line.")
+    if any(str(story.get("summary") or "").strip().lower() == str(story.get("title") or "").strip().lower() for story in stories):
+        warnings.append("At least one public story repeats the title as its summary.")
+    if not warnings:
+        warnings.append("No local editorial warnings.")
+    source_labels_present = all(
+        source_link_label(url, [record for record in story.get("source_records", []) if isinstance(record, dict)])
+        for story in stories
+        for url in story.get("source_urls", [])
+    )
+    lines = [
+        "# Cascadia Editorial Review",
+        "",
+        f"- Coverage label: {coverage_label or 'not set'}",
+        f"- Public story count: {len(stories)}",
+        f"- Minimum story target met: {'yes' if len(stories) >= 5 else 'no'}",
+        f"- No public numeric scores: {pass_fail('Score:' not in html_text)}",
+        f"- No title-as-summary repeats: {pass_fail(all(str(story.get('summary') or '').strip().lower() != str(story.get('title') or '').strip().lower() for story in stories))}",
+        f"- Every public story has source URL: {pass_fail(all(bool(story.get('source_urls')) for story in stories))}",
+        f"- Every public story has source label: {pass_fail(source_labels_present)}",
+        f"- Every public story has why-it-matters line: {pass_fail(all(bool(story_why_it_matters(story)) for story in stories))}",
+        f"- Weekly summary present when stories exist: {pass_fail((not stories) or bool(weekly_summary_bullets))}",
+        f"- Cascadia archive/recent/RSS weekly-only: {pass_fail(archive_weekly_only)}",
+        f"- No output/detail or output/paid exposed publicly: {pass_fail('output/detail' not in html_text and 'output/paid' not in html_text)}",
+        "",
+        "## Warnings/recommendations",
+        "",
+    ]
+    lines.extend(f"- {warning}" for warning in warnings)
+    return "\n".join(lines) + "\n"
 
 
 def refresh_cascadia_archive_pages(root: Path, dry_run: bool, written: list[str]) -> None:
@@ -331,6 +508,11 @@ def render_cascadia_edition(
     sources_manifest = sources_manifest_from_curated(curated, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
     curation_manifest = public_curation_manifest(curated, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
     html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type)
+    weekly_summary_bullets = build_weekly_summary_bullets(stories)
+    public_categories = public_story_categories(stories)
+    public_state_hints = public_story_states(stories)
+    public_source_publishers = public_story_publishers(stories)
+    public_archive_subtitle = archive_subtitle(stories)
     generated_at = datetime.now(timezone.utc).isoformat()
     source_record_ids = sorted({source["source_record_id"] for source in sources_manifest})
     source_urls = sorted({source["url"] for source in sources_manifest if source.get("url")})
@@ -375,6 +557,11 @@ def render_cascadia_edition(
         "excluded_source_count": excluded_source_count,
         "story_count": len(curated),
         "public_story_count": len(stories),
+        "public_categories": public_categories,
+        "public_state_hints": public_state_hints,
+        "public_source_publishers": public_source_publishers,
+        "weekly_summary_bullets": weekly_summary_bullets,
+        "public_archive_subtitle": public_archive_subtitle,
         "historical_search": historical_search,
         "providers_used": providers_used,
         "query_count": query_count,
@@ -398,6 +585,12 @@ def render_cascadia_edition(
         write_json(out_dir / "edition_manifest.json", edition_manifest, dry_run, written)
         write_json(out_dir / "sources_manifest.json", sources_manifest, dry_run, written)
         write_json(out_dir / "curation_manifest.json", curation_manifest, dry_run, written)
+    write_text(
+        output_dispatch_dir / "editorial_review.md",
+        editorial_checklist(coverage_label, stories, html_text, weekly_summary_bullets),
+        dry_run,
+        written,
+    )
     refresh_cascadia_archive_pages(root, dry_run, written)
     detail_result = write_cascadia_signal_package(
         root,
@@ -430,3 +623,4 @@ def render_cascadia_edition(
         "warnings": warnings,
         "errors": errors,
     }
+

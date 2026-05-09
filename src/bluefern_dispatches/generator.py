@@ -411,6 +411,38 @@ def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date
     return edition_date
 
 
+def public_edition_subtitle(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
+    if dispatch.slug != "cascadia":
+        return ""
+    manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+    subtitle = str(manifest.get("public_archive_subtitle") or "").strip()
+    if subtitle:
+        return subtitle
+    if manifest.get("public_story_count") == 0:
+        return "0 stories | No qualifying public signals identified"
+    parts = []
+    if isinstance(manifest.get("public_story_count"), int):
+        count = int(manifest["public_story_count"])
+        parts.append(f"{count} {'story' if count == 1 else 'stories'}")
+    states = [str(item) for item in manifest.get("public_state_hints") or [] if item]
+    categories = [str(item) for item in manifest.get("public_categories") or [] if item]
+    if states:
+        parts.append(", ".join(states))
+    if categories:
+        parts.append(", ".join(categories[:4]))
+    return " | ".join(parts)
+
+
+def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: str) -> str:
+    label = public_edition_label(site_root, dispatch, date)
+    subtitle = public_edition_subtitle(site_root, dispatch, date)
+    subtitle_html = f'<br><small>{html.escape(subtitle)}</small>' if subtitle else ""
+    return (
+        f'      <li><span class="edition-date">{html.escape(label)}</span>'
+        f'<a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(label)}</a>{subtitle_html}</li>'
+    )
+
+
 def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
@@ -433,7 +465,7 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
     site_root = site_root or Path("output") / "site"
     recent = "\n".join(
-        f'      <li><span class="edition-date">{html.escape(public_edition_label(site_root, dispatch, date))}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</a></li>'
+        render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates[:10]
     )
     body = f"""{header(dispatch.name, "", "archive.html")}
@@ -473,7 +505,7 @@ def render_archive(dispatch: DispatchConfig) -> str:
 def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
     site_root = site_root or Path("output") / "site"
     items = "\n".join(
-        f'      <li><span class="edition-date">{html.escape(public_edition_label(site_root, dispatch, date))}</span><a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</a></li>'
+        render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates
     )
     body = f"""{header(dispatch.name, "", "archive.html")}
@@ -549,7 +581,7 @@ def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str], sit
     <title>{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</title>
     <link>{BASE_URL}/{dispatch.slug}/editions/{date}/</link>
     <guid>{BASE_URL}/{dispatch.slug}/editions/{date}/</guid>
-    <description>{html.escape(public_edition_label(site_root, dispatch, date))}</description>
+    <description>{html.escape(public_edition_subtitle(site_root, dispatch, date) or public_edition_label(site_root, dispatch, date))}</description>
   </item>"""
         for date in edition_dates
     )

@@ -1,0 +1,238 @@
+{
+  "dispatch_slug": "cascadia",
+  "edition_date": "2026-05-10",
+  "candidates_seen": 6,
+  "included_stories": [
+    {
+      "story_id": "story-c965b0e4f594",
+      "title": "New wave of text scams target Idaho courts and state agencies",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-0fdbd6f791e1",
+      "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-ebe9d6f8b02c",
+      "title": "Oregon regulators move to make data centers pay more for grid expansion",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-062399431de1",
+      "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-8536e7e9a964",
+      "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-25faabb5d285",
+      "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [
+    {
+      "story_id": "story-0fdbd6f791e1",
+      "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-8a81c519e42c",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-ebe9d6f8b02c",
+      "title": "Oregon regulators move to make data centers pay more for grid expansion",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-237e944506cf",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-062399431de1",
+      "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-237e944506cf",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-25faabb5d285",
+      "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-8a81c519e42c",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "major_updates": [],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "story-c965b0e4f594",
+      "title": "New wave of text scams target Idaho courts and state agencies",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-0fdbd6f791e1",
+      "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-8a81c519e42c",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-ebe9d6f8b02c",
+      "title": "Oregon regulators move to make data centers pay more for grid expansion",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-237e944506cf",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-062399431de1",
+      "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-237e944506cf",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-8536e7e9a964",
+      "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "story-25faabb5d285",
+      "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_geography"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "story-8a81c519e42c",
+      "prior_edition_date": "2026-05-03",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-03",
+    "2026-04-26",
+    "2026-04-19"
+  ]
+}

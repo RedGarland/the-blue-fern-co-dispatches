@@ -13,6 +13,7 @@ from bluefern_dispatches.generator import (
     CNAME_VALUE,
     DEFAULT_BACKUP_ROOT,
     DispatchConfig,
+    FAVICON_ASSETS,
     ROOT_DESCRIPTION,
     ROOT_MASTHEAD_ASSET,
     SourceRecord,
@@ -20,6 +21,9 @@ from bluefern_dispatches.generator import (
     build_site,
     ensure_public_detail_separation,
     publish_pages,
+    normalize_expect_dispatches,
+    validate_pages_publish,
+    validate_pages_repo_after_copy,
     validate_traceability,
 )
 
@@ -40,6 +44,19 @@ def read(path):
     return path.read_text(encoding="utf-8")
 
 
+def assert_favicon_links(html):
+    expected = [
+        '<link rel="icon" href="/assets/favicon.ico" sizes="any">',
+        '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">',
+        '<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">',
+        '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">',
+    ]
+    for tag in expected:
+        assert tag in html
+    assert "href=\"assets/favicon" not in html
+    assert "href=\"../../assets/favicon" not in html
+
+
 def test_landing_page_links_and_blue_fern_scheme(built_site):
     work, _, result = built_site
     index = work / "output" / "site" / "index.html"
@@ -58,6 +75,60 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert "<h1>Dispatches From The Blue Fern Co.</h1>" not in html
     root_hero = html.split('<section class="hero root-hero">', 1)[1].split("</section>", 1)[0]
     assert '<img class="publisher-mark" src="assets/bluefern.png"' not in root_hero
+
+
+def test_favicon_assets_are_copied_and_linked_from_public_html(built_site):
+    work, _, _ = built_site
+    site = work / "output" / "site"
+
+    for asset in FAVICON_ASSETS:
+        assert (work / "assets" / asset).exists()
+        assert (site / "assets" / asset).read_bytes() == (work / "assets" / asset).read_bytes()
+
+    pages = [
+        site / "index.html",
+        site / "gaza" / "index.html",
+        site / "gaza" / "archive.html",
+        site / "gaza" / "editions" / "2026-05-03" / "index.html",
+        site / "cascadia" / "index.html",
+        site / "cascadia" / "archive.html",
+        site / "cascadia" / "editions" / "2026-05-03" / "index.html",
+    ]
+    for page in pages:
+        assert_favicon_links(read(page))
+
+
+def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    old_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
+    old_edition.mkdir(parents=True)
+    (old_edition / "index.html").write_text(
+        '<!doctype html>\n<html><head>\n  <link rel="stylesheet" href="../../assets/site.css">\n</head><body>Old weekly page</body></html>\n',
+        encoding="utf-8",
+    )
+    (old_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "cascadia",
+                "edition_date": "2026-04-26",
+                "briefing_type": "weekly",
+                "coverage_start": "2026-04-20",
+                "coverage_end": "2026-04-26",
+                "coverage_label": "Apr 20-26, 2026",
+                "week_label": "2026-W17",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    assert result["ok"] is True
+    assert_favicon_links(read(old_edition / "index.html"))
 
 
 def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
@@ -297,6 +368,8 @@ def test_pages_copy_creates_cname_and_preserves_git(built_site):
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
     assert (pages_repo / "index.html").exists()
     assert (pages_repo / "assets" / ROOT_MASTHEAD_ASSET).exists()
+    for asset in FAVICON_ASSETS:
+        assert (pages_repo / "assets" / asset).exists()
     assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
     assert (pages_repo / "cascadia" / "index.html").exists()
     assert not (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
@@ -313,6 +386,165 @@ def test_pages_publish_excludes_paid_detail_folders(built_site):
     assert not (pages_repo / "detail").exists()
     assert "output/paid/" in result["files_that_would_be_skipped"]
     assert "output/detail/" in result["files_that_would_be_skipped"]
+
+
+def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
+    edition = site_root / "gaza" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text("<html><body>Gaza daily</body></html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(json.dumps({"dispatch_slug": "gaza", "edition_date": edition_date}), encoding="utf-8")
+    (edition / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    archive = site_root / "gaza" / "archive.html"
+    archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
+
+
+def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
+    edition = site_root / "cascadia" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text("<html><body>Cascadia weekly</body></html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "cascadia",
+                "edition_date": edition_date,
+                "briefing_type": "weekly",
+                "coverage_start": "2026-05-04",
+                "coverage_end": edition_date,
+                "week_label": "2026-W19",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+
+
+def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_gaza_site_edition(site_root, "2026-05-09")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-09",
+        expect_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "gaza" / "editions" / "2026-05-09" / "index.html").exists()
+    assert not (pages_repo / "cascadia" / "editions" / "2026-05-09" / "index.html").exists()
+    assert not any("expected Cascadia" in error for error in result["errors"])
+
+
+def test_gaza_expect_date_reports_gaza_missing_only(built_site):
+    work, _, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = work / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    (pages_repo / ".git").mkdir()
+    (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html></html>", encoding="utf-8")
+    (pages_repo / "gaza").mkdir()
+    (pages_repo / "gaza" / "archive.html").write_text("2026-05-09", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-05-09")
+
+    errors = validate_pages_repo_after_copy(
+        pages_repo,
+        site_root,
+        "2026-05-09",
+        expect_dispatches=("gaza",),
+    )
+
+    assert "expected Gaza edition missing: 2026-05-09" in errors
+    assert not any("Cascadia" in error for error in errors)
+
+
+def test_legacy_full_site_expectation_still_checks_same_date_dispatches(built_site):
+    work, _, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = work / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    (pages_repo / ".git").mkdir()
+    (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html></html>", encoding="utf-8")
+    (pages_repo / "gaza").mkdir()
+    (pages_repo / "gaza" / "archive.html").write_text("2026-05-10", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-05-10")
+    add_cascadia_site_edition(site_root, "2026-05-10")
+
+    errors = validate_pages_repo_after_copy(pages_repo, site_root, "2026-05-10")
+
+    assert "expected Cascadia edition missing: 2026-05-10" in errors
+
+
+def test_cascadia_expect_date_does_not_require_same_date_gaza(built_site):
+    work, _, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = work / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    (pages_repo / ".git").mkdir()
+    (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html></html>", encoding="utf-8")
+    (pages_repo / "gaza").mkdir()
+    (pages_repo / "gaza" / "archive.html").write_text("", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-05-10")
+    add_cascadia_site_edition(site_root, "2026-05-10")
+
+    pre_errors, _ = validate_pages_publish(
+        work,
+        site_root,
+        pages_repo,
+        require_git=False,
+        expect_date="2026-05-10",
+        expect_dispatches=("cascadia",),
+    )
+    (pages_repo / "cascadia" / "editions" / "2026-05-10").mkdir(parents=True)
+    (pages_repo / "cascadia" / "editions" / "2026-05-10" / "index.html").write_text("weekly", encoding="utf-8")
+    post_errors = validate_pages_repo_after_copy(
+        pages_repo,
+        site_root,
+        "2026-05-10",
+        expect_dispatches=("cascadia",),
+    )
+
+    assert pre_errors == []
+    assert post_errors == []
+
+
+def test_cascadia_expect_date_reports_cascadia_missing_only(built_site):
+    work, _, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = work / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    (pages_repo / ".git").mkdir()
+    (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html></html>", encoding="utf-8")
+    (pages_repo / "gaza").mkdir()
+    (pages_repo / "gaza" / "archive.html").write_text("", encoding="utf-8")
+    add_cascadia_site_edition(site_root, "2026-05-10")
+
+    errors = validate_pages_repo_after_copy(
+        pages_repo,
+        site_root,
+        "2026-05-10",
+        expect_dispatches=("cascadia",),
+    )
+
+    assert "expected Cascadia edition missing: 2026-05-10" in errors
+    assert not any("Gaza edition missing" in error for error in errors)
+
+
+def test_expect_dispatch_all_expands_to_full_site_expectation():
+    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia")
 
 
 def test_commit_flag_does_not_imply_push(built_site):

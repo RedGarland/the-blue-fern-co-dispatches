@@ -1,0 +1,306 @@
+[
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-09",
+    "story_id": "story-47d1c1987bf8",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "normalized_title": "oregon emergency management preparedness notice emphasizes public safety coordination",
+    "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal. It is included because the source metadata ties it to public safety in Oregon.",
+    "source_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "canonical_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "category": "Public safety",
+    "topic_fingerprint": "1110239afb5ce6b3",
+    "first_seen_date": "2026-05-09",
+    "last_seen_date": "2026-05-09",
+    "update_count": 0
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-09",
+    "story_id": "story-be7947ea23b2",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "normalized_title": "washington bridge inspection program flags transportation maintenance backlog",
+    "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal. It is included because the source metadata ties it to transportation in Washington.",
+    "source_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "canonical_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "category": "Transportation",
+    "topic_fingerprint": "5728d3f626b07953",
+    "first_seen_date": "2026-05-09",
+    "last_seen_date": "2026-05-09",
+    "update_count": 0
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-062399431de1",
+    "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
+    "normalized_title": "spr news today could wa draw new districts one democratic leader thinks there more support now",
+    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
+    "source_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+    ],
+    "canonical_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+    ],
+    "publisher_names": [
+      "spokanepublicradio.org"
+    ],
+    "category": "Transportation",
+    "geographies": [
+      "WA"
+    ],
+    "source_dates": [
+      "2026-05-06T18:15:00Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "446e9c3e39a436f6",
+    "first_seen_date": "2026-05-03",
+    "last_seen_date": "2026-05-10",
+    "update_count": 1,
+    "latest_classification": "continuing_development"
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-0fdbd6f791e1",
+    "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+    "normalized_title": "facing low snowpack severe drought wa officials in search of answers",
+    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
+    "source_urls": [
+      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
+      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
+    ],
+    "canonical_urls": [
+      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
+      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
+    ],
+    "publisher_names": [
+      "seattletimes.com"
+    ],
+    "category": "Environment and climate",
+    "geographies": [
+      "WA"
+    ],
+    "source_dates": [
+      "2026-05-08T00:15:00Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "f5ea81bd1ca4fa71",
+    "first_seen_date": "2026-05-03",
+    "last_seen_date": "2026-05-10",
+    "update_count": 1,
+    "latest_classification": "continuing_development"
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-25faabb5d285",
+    "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
+    "normalized_title": "will this year el ni o impact fire season in oregon not so fast",
+    "summary": "This source was flagged as a Environment and climate signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Oregon.",
+    "source_urls": [
+      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
+      "https://www.kgw.com/article/weather/el-nino-fire-season-winter-weather-drought-snowpack-problems/283-a83102a1-928e-4868-8ffd-3449dfa2a08c"
+    ],
+    "canonical_urls": [
+      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
+      "https://www.kgw.com/article/weather/el-nino-fire-season-winter-weather-drought-snowpack-problems/283-a83102a1-928e-4868-8ffd-3449dfa2a08c"
+    ],
+    "publisher_names": [
+      "kgw.com"
+    ],
+    "category": "Environment and climate",
+    "geographies": [
+      "OR"
+    ],
+    "source_dates": [
+      "2026-05-07T19:00:00Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "2643b45ed9ee95f9",
+    "first_seen_date": "2026-05-03",
+    "last_seen_date": "2026-05-10",
+    "update_count": 1,
+    "latest_classification": "continuing_development"
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-8536e7e9a964",
+    "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
+    "normalized_title": "medicaid contract is stalled after a lawsuit now idaho officials are delaying privatization",
+    "summary": "This source was flagged as a Healthcare signal for Idaho based on its title and source metadata. It is included because the source metadata ties it to healthcare in Idaho.",
+    "source_urls": [
+      "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html"
+    ],
+    "canonical_urls": [
+      "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html"
+    ],
+    "publisher_names": [
+      "idahostatejournal.com"
+    ],
+    "category": "Healthcare",
+    "geographies": [
+      "ID"
+    ],
+    "source_dates": [
+      "2026-05-06T23:15:00Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "daf852049665dddf",
+    "first_seen_date": "2026-05-10",
+    "last_seen_date": "2026-05-10",
+    "update_count": 0,
+    "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-c965b0e4f594",
+    "title": "New wave of text scams target Idaho courts and state agencies",
+    "normalized_title": "new wave of text scams target idaho courts and state agencies",
+    "summary": "A surge in sophisticated text scams impersonating Idaho government agencies is costing residents thousands and prompting experts to warn the public about how to spot and avoid fraud. It is included because the source metadata ties it to government in Idaho.",
+    "source_urls": [
+      "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-05/text-scams-target-idaho-courts-state-agencies"
+    ],
+    "canonical_urls": [
+      "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-05/text-scams-target-idaho-courts-state-agencies"
+    ],
+    "publisher_names": [
+      "Boise State Public Radio"
+    ],
+    "category": "Government and public services",
+    "geographies": [
+      "ID"
+    ],
+    "source_dates": [
+      "2026-05-05T19:01:27Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "51954af9e439d64f",
+    "first_seen_date": "2026-05-10",
+    "last_seen_date": "2026-05-10",
+    "update_count": 0,
+    "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "story_id": "story-ebe9d6f8b02c",
+    "title": "Oregon regulators move to make data centers pay more for grid expansion",
+    "normalized_title": "oregon regulators move to make data centers pay more for grid expansion",
+    "summary": "This source was flagged as a Transportation signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to transportation in Oregon.",
+    "source_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://katu.com/news/local/oregon-regulators-move-to-make-data-centers-pay-more-for-grid-expansion-hillsboro-portland-salem-coporations-environment-center-local-outcry-pollution-bills-expenses-utilities"
+    ],
+    "canonical_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://katu.com/news/local/oregon-regulators-move-to-make-data-centers-pay-more-for-grid-expansion-hillsboro-portland-salem-coporations-environment-center-local-outcry-pollution-bills-expenses-utilities"
+    ],
+    "publisher_names": [
+      "katu.com"
+    ],
+    "category": "Transportation",
+    "geographies": [
+      "OR"
+    ],
+    "source_dates": [
+      "2026-05-09T01:15:00Z",
+      "2026-05-09T17:59:42.114827+00:00"
+    ],
+    "topic_fingerprint": "9a59f0212a2c6298",
+    "first_seen_date": "2026-05-03",
+    "last_seen_date": "2026-05-10",
+    "update_count": 1,
+    "latest_classification": "continuing_development"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-05",
+    "story_id": "gaza-story-2026-05-05-001",
+    "title": "Actual source title",
+    "normalized_title": "actual source title",
+    "summary": "Short source-backed summary.",
+    "source_urls": [
+      "https://actual-source-url"
+    ],
+    "canonical_urls": [
+      "https://actual-source-url"
+    ],
+    "publisher_names": [
+      "Actual publisher"
+    ],
+    "category": "humanitarian",
+    "topic_fingerprint": "c9d1b400832e2870",
+    "first_seen_date": "2026-05-05",
+    "last_seen_date": "2026-05-05",
+    "update_count": 0
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-07",
+    "story_id": "gaza-story-2026-05-07-001",
+    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
+    "normalized_title": "hamas says a son of its chief negotiator was killed in an israeli strike on gaza",
+    "summary": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
+    "source_urls": [
+      "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
+    ],
+    "canonical_urls": [
+      "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
+    ],
+    "publisher_names": [
+      "Associated Press"
+    ],
+    "category": "conflict",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "c8060b80b05bf42d",
+    "first_seen_date": "2026-05-07",
+    "last_seen_date": "2026-05-07",
+    "update_count": 0,
+    "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-07",
+    "story_id": "gaza-story-2026-05-07-002",
+    "title": "Gazans confined to less than half of strip: UN",
+    "normalized_title": "gazans confined to less than half of strip un",
+    "summary": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
+    "source_urls": [
+      "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
+    ],
+    "canonical_urls": [
+      "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
+    ],
+    "publisher_names": [
+      "Xinhua"
+    ],
+    "category": "humanitarian",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "dc0759dc4f75d5d3",
+    "first_seen_date": "2026-05-07",
+    "last_seen_date": "2026-05-07",
+    "update_count": 0,
+    "latest_classification": "new"
+  }
+]

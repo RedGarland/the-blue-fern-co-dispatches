@@ -1,0 +1,65 @@
+{
+  "coverage_start": "2026-05-04",
+  "coverage_end": "2026-05-10",
+  "coverage_label": "May 4\u201310, 2026",
+  "query_groups_run": [
+    {
+      "provider_id": "gdelt",
+      "query_group": "infrastructure/utilities",
+      "result_count": 10,
+      "cache_hit": true
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "health/public services",
+      "result_count": 10,
+      "cache_hit": true
+    },
+    {
+      "provider_id": "gdelt",
+      "query_group": "environment/climate/wildfire",
+      "result_count": 10,
+      "cache_hit": true
+    }
+  ],
+  "raw_results_count": 30,
+  "records_saved": 7,
+  "records_excluded": 22,
+  "public_story_count": 6,
+  "min_public_stories": 3,
+  "target_public_stories": 5,
+  "max_public_stories": 7,
+  "below_target": false,
+  "missing_story_count": 0,
+  "stories_by_category": {
+    "Environment and climate": 2,
+    "Government and public services": 1,
+    "Healthcare": 1,
+    "Transportation": 2
+  },
+  "stories_by_state_hint": {
+    "ID": 2,
+    "OR": 2,
+    "WA": 2
+  },
+  "source_count_by_provider": {
+    "gdelt": 6,
+    "registry": 1
+  },
+  "source_count_by_type": {
+    "historical_search": 6,
+    "rss": 1
+  },
+  "manual_supplement_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-04_2026-05-10\\manual_sources.json",
+  "manual_supplement_commands": {
+    "create_template": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-05-04 --create-manual-template",
+    "validate": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-05-04 --validate-manual-sources",
+    "rerun": ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py --archive-week 2026-05-04 --weekly-public --historical-search --historical-provider all --max-historical-queries 5 --historical-delay-seconds 10"
+  },
+  "recommendations": [],
+  "warnings": [
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+  ],
+  "errors": []
+}

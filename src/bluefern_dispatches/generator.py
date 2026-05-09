@@ -25,9 +25,14 @@ PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
 DEFAULT_PAGES_BRANCH = "gh-pages"
 ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
 CASCADIA_LOGO_ASSET = "cascadia-logo-placeholder.png"
+FAVICON_ASSETS = ["favicon.ico", "favicon-32x32.png", "favicon-16x16.png", "apple-touch-icon.png"]
+PUBLIC_SITE_ASSETS = ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO_ASSET, ROOT_MASTHEAD_ASSET, *FAVICON_ASSETS]
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
 CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
 CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
+EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "all")
+ALL_EXPECT_DISPATCHES = ("gaza", "cascadia")
+DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia"}
 
 
 @dataclass(frozen=True)
@@ -266,7 +271,10 @@ def copy_real_dispatch_edition(root: Path, slug: str, edition_date: str, site_ro
         if dry_run:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        if source.name == "index.html":
+            target.write_text(ensure_favicon_links(source.read_text(encoding="utf-8")), encoding="utf-8")
+        else:
+            shutil.copy2(source, target)
     return True
 
 
@@ -277,6 +285,32 @@ def existing_public_edition_files(site_root: Path, slug: str, edition_date: str)
     if all(path.exists() for path in files):
         return files
     return []
+
+
+def favicon_links() -> str:
+    return """  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">"""
+
+
+def ensure_favicon_links(html_text: str) -> str:
+    if 'href="/assets/favicon.ico"' in html_text and 'rel="apple-touch-icon"' in html_text:
+        return html_text
+    return html_text.replace('  <link rel="stylesheet"', f"{favicon_links()}\n  <link rel=\"stylesheet\"", 1)
+
+
+def ensure_public_html_favicons(site_root: Path, dry_run: bool, wrote: list[str]) -> None:
+    if not site_root.exists():
+        return
+    for path in sorted(site_root.rglob("*.html")):
+        text = path.read_text(encoding="utf-8")
+        updated = ensure_favicon_links(text)
+        if updated == text:
+            continue
+        wrote.append(str(path))
+        if not dry_run:
+            path.write_text(updated, encoding="utf-8")
 
 
 def page(title: str, canonical: str, css_href: str, body: str, site_name: str = "Dispatches From The Blue Fern Co.") -> str:
@@ -290,6 +324,7 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
   <meta property="og:url" content="{html.escape(canonical)}">
   <meta property="og:site_name" content="{html.escape(site_name)}">
   <meta name="twitter:card" content="summary_large_image">
+{favicon_links()}
   <link rel="stylesheet" href="{css_href}">
 </head>
 <body>
@@ -640,7 +675,7 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
 
-    for asset in ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO_ASSET, ROOT_MASTHEAD_ASSET]:
+    for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
 
     write_text(site_root / "index.html", render_root(dispatches), dry_run, wrote)
@@ -681,6 +716,7 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+    ensure_public_html_favicons(site_root, dry_run, wrote)
     return {
         "ok": not errors,
         "dry_run": dry_run,
@@ -725,6 +761,7 @@ def validate_pages_publish(
     pages_repo: Path,
     require_git: bool = True,
     expect_date: str | None = None,
+    expect_dispatches: tuple[str, ...] = (),
 ) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -745,9 +782,10 @@ def validate_pages_publish(
         errors.append("pages repo path must not be inside output/site")
     if not (site_root / "index.html").exists():
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
+    dispatches_to_check = expect_dispatches or ALL_EXPECT_DISPATCHES
     if not (site_root / "gaza" / "archive.html").exists():
         errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
-    elif expect_date and (site_root / "gaza" / "editions" / expect_date).exists():
+    elif expect_date and "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
         archive_text = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
         if expect_date not in archive_text:
             errors.append(f"output/site/gaza/archive.html does not contain expected date {expect_date}")
@@ -758,10 +796,14 @@ def validate_pages_publish(
     if blocked_public_text:
         errors.append(f"blocked private artifact names are present in public output: {', '.join(blocked_public_text)}")
     if expect_date:
-        for dispatch_slug in ("gaza", "cascadia"):
+        for dispatch_slug in dispatches_to_check:
             source_edition = site_root / dispatch_slug / "editions" / expect_date
-            if source_edition.exists() and not (source_edition / "index.html").exists():
-                errors.append(f"expected {dispatch_slug} edition exists but index is missing: {source_edition / 'index.html'}")
+            if expect_dispatches and not source_edition.exists():
+                label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
+                errors.append(f"expected {label} edition missing: {expect_date}")
+            elif source_edition.exists() and not (source_edition / "index.html").exists():
+                label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
+                errors.append(f"expected {label} edition exists but index is missing: {source_edition / 'index.html'}")
     cname = pages_repo / "CNAME"
     if cname.exists() and cname.read_text(encoding="utf-8").strip() != CNAME_VALUE:
         errors.append(f"CNAME value is not correct in {cname}")
@@ -880,7 +922,12 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> d
     return result
 
 
-def validate_pages_repo_after_copy(pages_repo: Path, site_root: Path, expect_date: str | None) -> list[str]:
+def validate_pages_repo_after_copy(
+    pages_repo: Path,
+    site_root: Path,
+    expect_date: str | None,
+    expect_dispatches: tuple[str, ...] = (),
+) -> list[str]:
     errors: list[str] = []
     if not (pages_repo / ".git").exists():
         errors.append(f".git was not preserved in Pages repo: {pages_repo / '.git'}")
@@ -896,17 +943,17 @@ def validate_pages_repo_after_copy(pages_repo: Path, site_root: Path, expect_dat
     blocked_text = public_site_contains_blocked_public_text(pages_repo)
     if blocked_text:
         errors.append(f"blocked private artifact names are present in Pages repo: {', '.join(blocked_text)}")
+    dispatches_to_check = expect_dispatches or ALL_EXPECT_DISPATCHES
     if expect_date:
         archive = pages_repo / "gaza" / "archive.html"
-        if (site_root / "gaza" / "editions" / expect_date).exists():
+        if "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
             if not (pages_repo / "gaza" / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected Gaza edition missing from Pages repo: {expect_date}")
+                errors.append(f"expected Gaza edition missing: {expect_date}")
             elif archive.exists() and expect_date not in archive.read_text(encoding="utf-8"):
                 errors.append(f"Pages repo Gaza archive does not contain expected date {expect_date}")
-        if (site_root / "cascadia" / "editions" / expect_date).exists() and not (
-            pages_repo / "cascadia" / "editions" / expect_date / "index.html"
-        ).exists():
-            errors.append(f"expected Cascadia edition missing from Pages repo: {expect_date}")
+        if "cascadia" in dispatches_to_check and (site_root / "cascadia" / "editions" / expect_date).exists():
+            if not (pages_repo / "cascadia" / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected Cascadia edition missing: {expect_date}")
     return errors
 
 
@@ -948,13 +995,21 @@ def publish_pages(
     backup_root: Path = DEFAULT_BACKUP_ROOT,
     pages_branch: str = DEFAULT_PAGES_BRANCH,
     expect_date: str | None = None,
+    expect_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     build = build_site(root, dry_run=dry_run, backup_root=backup_root)
     root = root.resolve()
     site_root = root / "output" / "site"
     pages_repo = pages_repo.resolve()
     errors = list(build["errors"])
-    validation_errors, validation_warnings = validate_pages_publish(root, site_root, pages_repo, require_git=not dry_run, expect_date=expect_date)
+    validation_errors, validation_warnings = validate_pages_publish(
+        root,
+        site_root,
+        pages_repo,
+        require_git=not dry_run,
+        expect_date=expect_date,
+        expect_dispatches=expect_dispatches,
+    )
     errors.extend(validation_errors)
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
@@ -982,7 +1037,7 @@ def publish_pages(
         removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
         copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run)
         if not dry_run:
-            errors.extend(validate_pages_repo_after_copy(pages_repo, site_root, expect_date))
+            errors.extend(validate_pages_repo_after_copy(pages_repo, site_root, expect_date, expect_dispatches=expect_dispatches))
         commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
         if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
             errors.append(commit_result["message"])
@@ -1014,12 +1069,23 @@ def publish_pages(
         "no_push": no_push,
         "manual_push_command": manual_push_command(pages_repo, pages_branch),
         "expect_date": expect_date,
+        "expect_dispatches": list(expect_dispatches),
         "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root)
         and not public_site_contains_blocked_public_text(site_root),
         "warnings": warnings,
         "errors": errors,
         "build": build,
     }
+
+
+def normalize_expect_dispatches(values: list[str] | tuple[str, ...]) -> tuple[str, ...]:
+    if not values:
+        return ()
+    if "all" in values:
+        if len(values) > 1:
+            raise ValueError("--expect-dispatch all cannot be combined with another --expect-dispatch value")
+        return ALL_EXPECT_DISPATCHES
+    return tuple(values)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1030,9 +1096,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--remote-url", help="Expected GitHub remote URL for reporting.")
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Git branch GitHub Pages deploys from.")
     parser.add_argument("--expect-date", help="Optional YYYY-MM-DD date expected in generated public archives/editions.")
+    parser.add_argument(
+        "--expect-dispatch",
+        action="append",
+        choices=EXPECT_DISPATCH_CHOICES,
+        default=[],
+        help="Dispatch whose --expect-date edition must be present: gaza, cascadia, or all. Repeat for multiple dispatches. If omitted with --expect-date, legacy full-site checks are used.",
+    )
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
     args = parser.parse_args(argv)
+    try:
+        expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.pages_repo:
         result = publish_pages(
             Path.cwd(),
@@ -1044,6 +1121,7 @@ def main(argv: list[str] | None = None) -> int:
             backup_root=Path(args.backup_root),
             pages_branch=args.pages_branch,
             expect_date=args.expect_date,
+            expect_dispatches=expect_dispatches,
         )
     else:
         result = build_site(Path.cwd(), dry_run=args.dry_run, backup_root=Path(args.backup_root))

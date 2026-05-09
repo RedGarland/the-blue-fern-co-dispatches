@@ -4,6 +4,7 @@
     "title": "New wave of text scams target Idaho courts and state agencies",
     "summary": "A surge in sophisticated text scams impersonating Idaho government agencies is costing residents thousands and prompting experts to warn the public about how to spot and avoid fraud. It is included because the source metadata ties it to government in Idaho.",
     "category": "Government and public services",
+    "why_it_matters": "In Idaho, Public systems signals can affect public services, local planning, and regional resilience.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -28,11 +29,65 @@
     "included_in_detail_dataset": true,
     "excluded_reason": null,
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
     ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-10",
+    "coverage_start": "2026-05-04",
+    "coverage_end": "2026-05-10",
+    "coverage_label": "May 4\u201310, 2026"
+  },
+  {
+    "story_id": "story-0fdbd6f791e1",
+    "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 38,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "hist-a1bb5fbd7d0e686d"
+    ],
+    "source_urls": [
+      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
+    "dedupe_classification": "continuing_development",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_source_url_different_publisher",
+      "new_geography"
+    ],
+    "continuation_of_story_id": "story-8a81c519e42c",
+    "first_seen_date": "2026-05-03",
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
@@ -47,6 +102,7 @@
     "title": "Oregon regulators move to make data centers pay more for grid expansion",
     "summary": "This source was flagged as a Transportation signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to transportation in Oregon.",
     "category": "Transportation",
+    "why_it_matters": "In Oregon, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -71,11 +127,66 @@
     "included_in_detail_dataset": true,
     "excluded_reason": null,
     "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
     "dedupe_classification": "continuing_development",
     "dedupe_reasons": [
       "same_topic",
       "new_source_or_summary_detail"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_source_url_different_publisher",
+      "new_geography"
+    ],
+    "continuation_of_story_id": "story-237e944506cf",
+    "first_seen_date": "2026-05-03",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-10",
+    "coverage_start": "2026-05-04",
+    "coverage_end": "2026-05-10",
+    "coverage_label": "May 4\u201310, 2026"
+  },
+  {
+    "story_id": "story-062399431de1",
+    "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
+    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
+    "category": "Transportation",
+    "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 38,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=WA",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "hist-5175a43aea34b624"
+    ],
+    "source_urls": [
+      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
+    "dedupe_classification": "continuing_development",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_source_url_different_publisher",
+      "new_geography"
     ],
     "continuation_of_story_id": "story-237e944506cf",
     "first_seen_date": "2026-05-03",
@@ -93,6 +204,7 @@
     "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
     "summary": "This source was flagged as a Healthcare signal for Idaho based on its title and source metadata. It is included because the source metadata ties it to healthcare in Idaho.",
     "category": "Healthcare",
+    "why_it_matters": "In Idaho, Health system signals can affect access to care, public services, and community resilience.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -117,10 +229,13 @@
     "included_in_detail_dataset": true,
     "excluded_reason": null,
     "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -136,6 +251,7 @@
     "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
     "summary": "This source was flagged as a Environment and climate signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Oregon.",
     "category": "Environment and climate",
+    "why_it_matters": "In Oregon, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -160,11 +276,15 @@
     "included_in_detail_dataset": true,
     "excluded_reason": null,
     "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
     "dedupe_classification": "continuing_development",
     "dedupe_reasons": [
       "same_topic",
       "new_source_or_summary_detail"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_source_url_different_publisher",
+      "new_geography"
     ],
     "continuation_of_story_id": "story-8a81c519e42c",
     "first_seen_date": "2026-05-03",
@@ -182,6 +302,7 @@
     "title": "Gov . Tina Kotek warns of potentially severe 2026 wildfire season amid drought , low snowpack",
     "summary": "This source was flagged as a Environment and climate signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Oregon.",
     "category": "Environment and climate",
+    "why_it_matters": "In Oregon, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -207,99 +328,6 @@
     "included_in_detail_dataset": true,
     "excluded_reason": "quality_weekly_balance_limit",
     "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-11",
-    "edition_date": "2026-05-10",
-    "coverage_start": "2026-05-04",
-    "coverage_end": "2026-05-10",
-    "coverage_label": "May 4\u201310, 2026"
-  },
-  {
-    "story_id": "story-0fdbd6f791e1",
-    "title": "Facing low snowpack , severe drought , WA officials in search of answers",
-    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
-    "category": "Environment and climate",
-    "score": 38,
-    "regional_relevance_score": 15,
-    "systems_impact_score": 5,
-    "public_consequence_score": 15,
-    "recency_score": 10,
-    "source_reliability_score": 8,
-    "multi_source_score": 0,
-    "duplicate_penalty": 0,
-    "low_signal_penalty": 15,
-    "scoring_reasons": [
-      "category=Environment and climate",
-      "region_scope=WA",
-      "source_reliability=unknown"
-    ],
-    "source_record_ids": [
-      "hist-a1bb5fbd7d0e686d"
-    ],
-    "source_urls": [
-      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
-    ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
-    "dedupe_classification": "continuing_development",
-    "dedupe_reasons": [
-      "same_topic",
-      "new_source_or_summary_detail"
-    ],
-    "continuation_of_story_id": "story-8a81c519e42c",
-    "first_seen_date": "2026-05-03",
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-11",
-    "edition_date": "2026-05-10",
-    "coverage_start": "2026-05-04",
-    "coverage_end": "2026-05-10",
-    "coverage_label": "May 4\u201310, 2026"
-  },
-  {
-    "story_id": "story-062399431de1",
-    "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
-    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
-    "category": "Transportation",
-    "score": 38,
-    "regional_relevance_score": 15,
-    "systems_impact_score": 5,
-    "public_consequence_score": 15,
-    "recency_score": 10,
-    "source_reliability_score": 8,
-    "multi_source_score": 0,
-    "duplicate_penalty": 0,
-    "low_signal_penalty": 15,
-    "scoring_reasons": [
-      "category=Transportation",
-      "region_scope=WA",
-      "source_reliability=unknown"
-    ],
-    "source_record_ids": [
-      "hist-5175a43aea34b624"
-    ],
-    "source_urls": [
-      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
-    ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
-    "source_window_date": "2026-05-10",
-    "dedupe_classification": "continuing_development",
-    "dedupe_reasons": [
-      "same_topic",
-      "new_source_or_summary_detail"
-    ],
-    "continuation_of_story_id": "story-237e944506cf",
-    "first_seen_date": "2026-05-03",
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",

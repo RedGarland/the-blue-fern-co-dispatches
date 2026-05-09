@@ -27,7 +27,7 @@
     "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers",
     "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
   ],
-  "generated_at": "2026-05-09T04:44:51.034185+00:00",
+  "generated_at": "2026-05-09T17:59:59.559515+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/",
   "local_output_path": "C:\\Users\\Admin\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10",
   "local_backup_path": null,
@@ -39,29 +39,29 @@
   "public_story_count": 6,
   "public_categories": [
     "Government and public services",
+    "Environment and climate",
     "Transportation",
-    "Healthcare",
-    "Environment and climate"
+    "Healthcare"
   ],
   "public_state_hints": [
     "ID",
-    "OR",
-    "WA"
+    "WA",
+    "OR"
   ],
   "public_source_publishers": [
     "Boise State Public Radio",
-    "katu.com",
-    "idahostatejournal.com",
-    "kgw.com",
     "Seattle Times",
-    "spokanepublicradio.org"
+    "katu.com",
+    "spokanepublicradio.org",
+    "idahostatejournal.com",
+    "kgw.com"
   ],
   "weekly_summary_bullets": [
-    "Government and public services, Transportation, and Healthcare appeared in ID, OR, and WA source records.",
-    "This edition includes source-backed items from Boise State Public Radio, katu.com, and idahostatejournal.com.",
+    "Government and public services, Environment and climate, and Transportation appeared in ID, WA, and OR source records.",
+    "This edition includes source-backed items from Boise State Public Radio, Seattle Times, and katu.com.",
     "6 public source-backed stories met the current public-systems criteria."
   ],
-  "public_archive_subtitle": "6 stories | ID, OR, WA | Government and public services, Transportation, Healthcare, Environment and climate",
+  "public_archive_subtitle": "6 stories | ID, WA, OR | Government and public services, Environment and climate, Transportation, Healthcare",
   "historical_search": true,
   "providers_used": [
     "gdelt",
@@ -79,14 +79,22 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "registry source fetch error: HTTP Error 404: Not Found",
-    "registry source fetch error: HTTP Error 404: Not Found",
-    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
-    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
-    "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
-    "registry source fetch error: HTTP Error 404: Not Found",
-    "registry source fetch error: HTTP Error 404: Not Found",
-    "registry source fetch error: HTTP Error 404: Not Found"
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+    "registry source fetch error: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
   ],
   "errors": []
 }

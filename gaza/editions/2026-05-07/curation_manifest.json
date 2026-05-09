@@ -23,10 +23,14 @@
       "Associated Press"
     ],
     "edition_date": "2026-05-07",
-    "generated_at": "2026-05-09T04:44:35.214399+00:00",
+    "generated_at": "2026-05-09T17:59:36.585174+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
     ]
   },
   {
@@ -53,10 +57,14 @@
       "Xinhua"
     ],
     "edition_date": "2026-05-07",
-    "generated_at": "2026-05-09T04:44:35.214399+00:00",
+    "generated_at": "2026-05-09T17:59:36.585174+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
     ]
   }
 ]

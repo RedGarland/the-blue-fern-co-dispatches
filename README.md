@@ -33,6 +33,48 @@ Check the project contract and publish safety assumptions:
 python scripts\doctor.py
 ```
 
+## New Machine Setup
+
+Clone the source project branch into the new project root, then clone the GitHub Pages deploy branch into `bluefern-dispatches-pages` beside the source files:
+
+```powershell
+git clone <source-repo-url> "C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co"
+cd "C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co"
+git clone --branch gh-pages <pages-repo-url> bluefern-dispatches-pages
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+Recreate `.env` manually on the new machine. Do not copy secrets into docs, logs, task XML, or command history.
+
+Validate the clone before publishing:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider --basetemp .pytest_tmp
+.\.venv\Scripts\python.exe scripts\doctor.py
+```
+
+If doctor reports stale Cascadia weekly public links, regenerate the affected weekly public output:
+
+```powershell
+$env:CASCADIA_ALLOW_CURL_NO_REVOKE = "1"
+$env:CASCADIA_FETCH_BACKEND = "auto"
+.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-28 --weekly-public --historical-search --quality-weekly
+```
+
+Task Scheduler fields for this machine:
+
+```text
+Program/script:
+powershell.exe
+
+Add arguments:
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"
+
+Start in:
+C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co
+```
+
 ## GitHub Pages Repo Publishing
 
 GitHub Pages and DNS must be configured separately. This project only prepares a deployable static site root in the local Pages repo.

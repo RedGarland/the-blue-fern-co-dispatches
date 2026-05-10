@@ -855,8 +855,9 @@ def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry
 
 
 def run_git(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    cwd = cwd.resolve()
     return subprocess.run(
-        ["git", *args],
+        ["git", "-c", f"safe.directory={cwd}", *args],
         cwd=str(cwd),
         check=False,
         capture_output=True,

@@ -18,6 +18,7 @@ KNOWN_CASCADIA_TRANSITIONAL_DAILY_DATES = {
     "2026-05-06",
     "2026-05-07",
     "2026-05-08",
+    "2026-05-09",
 }
 OLD_PROJECT_NEEDLES = (
     "fda_media_pipeline",
@@ -101,10 +102,22 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
         return _result("scheduled task .venv", True, "ops folder is absent; scheduled task check skipped")
     task_files = sorted(ops.glob("*.xml"))
     problems: list[str] = []
+    expected_root = str(root)
+    expected_venv = str(root / ".venv" / "Scripts" / "python.exe")
+    absolute_python_re = re.compile(r"[A-Za-z]:\\[^\"'<>]*?\\(?:\.venv|venv)\\Scripts\\python\.exe", re.IGNORECASE)
     for path in task_files:
         text = _read_text(path)
-        if "run_and_notify.py" in text and ".venv\\Scripts\\python.exe" not in text and ".venv/Scripts/python.exe" not in text:
+        if "run_and_notify.py" not in text:
+            continue
+        if expected_root not in text:
+            problems.append(f"{path.relative_to(root)} does not set the project root working directory")
+        uses_relative_project_venv = ".\\.venv\\Scripts\\python.exe" in text or "./.venv/Scripts/python.exe" in text
+        uses_absolute_project_venv = expected_venv in text
+        if not uses_relative_project_venv and not uses_absolute_project_venv:
             problems.append(f"{path.relative_to(root)} does not use project .venv Python")
+        for match in absolute_python_re.findall(text):
+            if Path(match).resolve() != (root / ".venv" / "Scripts" / "python.exe").resolve():
+                problems.append(f"{path.relative_to(root)} contains non-project Python path {match}")
     if not task_files:
         return _result("scheduled task .venv", True, "no scheduled task XML files found; scheduled task check skipped")
     return _result("scheduled task .venv", not problems, "scheduled task templates use project .venv" if not problems else "; ".join(problems))
@@ -191,9 +204,10 @@ def check_gaza_archive(root: Path) -> CheckResult:
 
 
 def _git_branch(repo: Path) -> str | None:
+    repo = repo.resolve()
     try:
         completed = subprocess.run(
-            ["git", "-C", str(repo), "branch", "--show-current"],
+            ["git", "-c", f"safe.directory={repo}", "-C", str(repo), "branch", "--show-current"],
             capture_output=True,
             text=True,
             check=False,

@@ -28,6 +28,7 @@ from bluefern_dispatches.generator import (
     render_rss_for_dates,
     write_text as generator_write_text,
 )
+from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
 DISPATCH_NAME = "The Cascadia Briefing"
@@ -502,11 +503,17 @@ def render_cascadia_edition(
         errors.append(f"curation manifest not found: {curated_path}")
         return {"ok": False, "written": written, "warnings": warnings, "errors": errors}
     curated = json.loads(curated_path.read_text(encoding="utf-8"))
-    stories = public_stories(curated)
+    dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, public_stories(curated), dry_run=dry_run, written=written)
+    stories = dedupe_result.stories
+    included_ids = {story.get("story_id") for story in stories}
+    curated_for_public = [
+        {**story, "included_in_public_summary": story.get("story_id") in included_ids}
+        for story in curated
+    ]
     errors.extend(validate_public_stories(stories))
     coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else None
-    sources_manifest = sources_manifest_from_curated(curated, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
-    curation_manifest = public_curation_manifest(curated, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
+    sources_manifest = sources_manifest_from_curated(stories, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
+    curation_manifest = public_curation_manifest(curated_for_public, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
     html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type)
     weekly_summary_bullets = build_weekly_summary_bullets(stories)
     public_categories = public_story_categories(stories)

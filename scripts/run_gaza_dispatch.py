@@ -26,6 +26,7 @@ from bluefern_dispatches.generator import (
     render_dispatch_index_for_dates,
     render_rss_for_dates,
 )
+from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
 DISPATCH_SLUG = "gaza"
@@ -189,6 +190,19 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
 
 def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]]) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
+
+    def render_story(story: dict[str, Any]) -> None:
+        chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
+        chunks.append(f"<p>{html.escape(story['summary'])}</p>")
+        chunks.append("<p><strong>Sources</strong></p><ul>")
+        for source_id in story["source_record_ids"]:
+            source = source_by_id[source_id]
+            chunks.append(
+                f'<li><a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">'
+                f'{html.escape(source["title"])}</a> - {html.escape(source["publisher"])}</li>'
+            )
+        chunks.append("</ul></article>")
+
     chunks: list[str] = []
     chunks.append("<h1>Dispatches From Gaza</h1>")
     if stories:
@@ -197,18 +211,14 @@ def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], source
         for story in stories:
             chunks.append(f"<li>{html.escape(story['title'])}</li>")
         chunks.append("</ul>")
-        chunks.append("<h2>Stories</h2>")
-        for story in stories:
-            chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
-            chunks.append(f"<p>{html.escape(story['summary'])}</p>")
-            chunks.append("<p><strong>Sources</strong></p><ul>")
-            for source_id in story["source_record_ids"]:
-                source = source_by_id[source_id]
-                chunks.append(
-                    f'<li><a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">'
-                    f'{html.escape(source["title"])}</a> - {html.escape(source["publisher"])}</li>'
-                )
-            chunks.append("</ul></article>")
+        chunks.append("<h2>Top Story</h2>")
+        render_story(stories[0])
+        chunks.append("<h2>Other Developments</h2>")
+        if len(stories) > 1:
+            for story in stories[1:]:
+                render_story(story)
+        else:
+            chunks.append("<p>No additional source-backed developments cleared the public threshold for this edition.</p>")
     else:
         chunks.append("<p>No source-backed Gaza stories were generated for this date. Add project-local source records before publishing factual coverage.</p>")
         chunks.append("<h2>Sources</h2><p>No source records were available.</p>")
@@ -469,6 +479,8 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     errors.extend(norm_errors)
     write_json(normalized_dir / "normalized_sources.json", normalized, dry_run, wrote)
     stories = curate_stories(normalized, edition_date, generated_at)
+    dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
+    stories = dedupe_result.stories
     write_json(curated_dir / "curation_manifest.json", stories, dry_run, wrote)
     should_render = render or all_steps
     if should_render:

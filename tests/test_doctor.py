@@ -34,7 +34,7 @@ def _make_contract_root() -> Path:
     _write(root / "scripts" / "run_daily_gaza.py", "print('daily')\n")
     _write(
         root / "ops" / "generate_and_notify_task.xml",
-        r"<Task><Actions><Exec><Arguments>&amp; '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py'</Arguments></Exec></Actions></Task>",
+        rf"<Task><Actions><Exec><Arguments>Set-Location '{root}'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py'</Arguments><WorkingDirectory>{root}</WorkingDirectory></Exec></Actions></Task>",
     )
     _write(root / "src" / "bluefern_dispatches" / "__init__.py", "")
     _write(root / "output" / "site" / "gaza" / "archive.html", "<a href=\"editions/2026-05-08/\">Gaza</a>")
@@ -115,6 +115,39 @@ def test_doctor_flags_scheduled_task_without_project_venv():
         _cleanup_contract_root(root)
 
 
+def test_doctor_flags_scheduled_task_with_old_absolute_python_path():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "ops" / "generate_and_notify_task.xml",
+            rf"<Task><Actions><Exec><Arguments>Set-Location '{root}'; &amp; 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\.venv\Scripts\python.exe' 'scripts\run_and_notify.py'</Arguments><WorkingDirectory>{root}</WorkingDirectory></Exec></Actions></Task>",
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "non-project Python path" in result.message
+        assert "Admin" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_flags_scheduled_task_missing_project_working_directory():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "ops" / "generate_and_notify_task.xml",
+            r"<Task><Actions><Exec><Arguments>&amp; '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py'</Arguments></Exec></Actions></Task>",
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "working directory" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_flags_cascadia_transitional_date_links():
     root = _make_contract_root()
     try:
@@ -127,6 +160,23 @@ def test_doctor_flags_cascadia_transitional_date_links():
 
         assert not result.ok
         assert "2026-05-08" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_excludes_all_known_cascadia_transitional_daily_dates():
+    root = _make_contract_root()
+    try:
+        for day in ["2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-09"]:
+            _write(
+                root / "output" / "site" / "cascadia" / "archive.html",
+                f'<a href="editions/{day}/">The Cascadia Briefing - {day}</a>',
+            )
+
+            result = _result_map(root)["Cascadia transitional dates excluded"]
+
+            assert not result.ok
+            assert day in result.message
     finally:
         _cleanup_contract_root(root)
 
@@ -155,6 +205,35 @@ def test_doctor_flags_non_weekly_cascadia_manifest():
         _cleanup_contract_root(root)
 
 
+def test_doctor_accepts_cascadia_2026_05_03_weekly_public_links():
+    root = _make_contract_root()
+    try:
+        label = "Apr 27-May 3, 2026"
+        for name in ["archive.html", "index.html", "rss.xml"]:
+            _write(
+                root / "output" / "site" / "cascadia" / name,
+                f'<a href="editions/2026-05-03/">The Cascadia Briefing - {label}</a>',
+            )
+        _write(
+            root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "edition_manifest.json",
+            """{
+  "briefing_type": "weekly",
+  "edition_date": "2026-05-03",
+  "coverage_start": "2026-04-27",
+  "coverage_end": "2026-05-03",
+  "coverage_label": "Apr 27-May 3, 2026"
+}
+""",
+        )
+
+        results = _result_map(root)
+
+        assert results["Cascadia weekly public links"].ok
+        assert results["Cascadia transitional dates excluded"].ok
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_flags_bad_json_and_smtp_password_log_marker():
     root = _make_contract_root()
     try:
@@ -167,6 +246,18 @@ def test_doctor_flags_bad_json_and_smtp_password_log_marker():
         assert "2026-05-09" in results["manual source JSON"].message
         assert not results["SMTP_PASSWORD logs"].ok
         assert "dispatches-20260509.log" in results["SMTP_PASSWORD logs"].message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_passes_after_smtp_password_log_marker_is_sanitized():
+    root = _make_contract_root()
+    try:
+        _write(root / "logs" / "dispatches-20260509.log", "SMTP password marker removed\n")
+
+        result = _result_map(root)["SMTP_PASSWORD logs"]
+
+        assert result.ok
     finally:
         _cleanup_contract_root(root)
 

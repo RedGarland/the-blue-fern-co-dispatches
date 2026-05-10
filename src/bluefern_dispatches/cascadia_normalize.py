@@ -67,6 +67,23 @@ def normalize_sources(root: Path, edition_date: str, dry_run: bool = False) -> d
                 },
             }
         )
+        for field in [
+            "source_type",
+            "provider_id",
+            "provider_name",
+            "query_used",
+            "search_start_date",
+            "search_end_date",
+            "region_terms_matched",
+            "state_hint",
+            "reliability_tier",
+            "source_url",
+            "source_title",
+            "weekly_date_basis",
+            "traceability_note",
+        ]:
+            if field in record:
+                normalized[-1][field] = record.get(field)
     if not dry_run:
         out_dir.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(normalized, indent=2), encoding="utf-8")

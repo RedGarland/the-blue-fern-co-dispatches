@@ -2,6 +2,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from scripts import clean_local_generated
+
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "clean_local_generated.py"
 
@@ -56,6 +58,47 @@ def test_dry_run_does_not_delete(tmp_path):
     assert (root / "data/dispatches/cascadia/cache/cache.json").exists()
 
 
+def test_locked_temp_folder_failure_is_warning_and_cleanup_continues(tmp_path, monkeypatch):
+    root = _make_repo(tmp_path)
+    _write(root / ".pytest_tmp/temp.txt")
+    _write(root / "data/dispatches/cascadia/cache/cache.json")
+
+    real_rmtree = clean_local_generated.shutil.rmtree
+
+    def locked_rmtree(path):
+        if Path(path).name == ".pytest_tmp":
+            raise PermissionError("locked")
+        return real_rmtree(path)
+
+    monkeypatch.setattr(clean_local_generated.shutil, "rmtree", locked_rmtree)
+
+    result = clean_local_generated.apply_actions(
+        [
+            clean_local_generated.Action("remove", Path(".pytest_tmp")),
+            clean_local_generated.Action("remove", Path("data/dispatches/cascadia/cache")),
+        ],
+        root,
+    )
+
+    assert not result.critical_failures
+    assert len(result.warnings) == 1
+    assert "Could not remove .pytest_tmp; close Python/pytest/OneDrive locks and rerun." in result.warnings[0]
+    assert (root / ".pytest_tmp/temp.txt").exists()
+    assert not (root / "data/dispatches/cascadia/cache").exists()
+
+
+def test_missing_remove_path_does_not_crash(tmp_path):
+    root = _make_repo(tmp_path)
+
+    result = clean_local_generated.apply_actions(
+        [clean_local_generated.Action("remove", Path(".pytest_tmp"))],
+        root,
+    )
+
+    assert result.warnings == []
+    assert result.critical_failures == []
+
+
 def test_apply_removes_only_allowed_generated_paths(tmp_path):
     root = _make_repo(tmp_path)
     _write(root / "data/dispatches/cascadia/cache/cache.json")
@@ -71,7 +114,7 @@ def test_apply_removes_only_allowed_generated_paths(tmp_path):
     assert (root / "docs/generated-note.md").exists()
 
 
-def test_env_and_nested_pages_repo_are_never_touched(tmp_path):
+def test_apply_does_not_touch_env_or_nested_pages_repo(tmp_path):
     root = _make_repo(tmp_path)
     _write(root / ".env", "SECRET=1\n")
     _write(root / "bluefern-dispatches-pages/output.html")

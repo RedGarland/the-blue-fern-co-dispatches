@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
+import stat
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -41,6 +43,12 @@ GENERATED_SOURCE_MARKERS = {
 class Action:
     kind: str
     path: Path
+
+
+@dataclass(frozen=True)
+class CleanupResult:
+    warnings: list[str]
+    critical_failures: list[str]
 
 
 def _relative(path: Path, root: Path) -> Path:
@@ -132,24 +140,72 @@ def planned_actions(root: Path = ROOT, include_site_output: bool = False) -> lis
     return actions
 
 
-def apply_actions(actions: list[Action], root: Path) -> None:
+def _make_writable(path: Path) -> None:
+    paths = [path]
+    if path.is_dir():
+        paths.extend(child for child in path.rglob("*"))
+    for item in paths:
+        try:
+            os.chmod(item, stat.S_IWRITE | stat.S_IREAD)
+        except OSError:
+            continue
+
+
+def _remove_path(path: Path) -> None:
+    if path.is_dir():
+        shutil.rmtree(path)
+    else:
+        path.unlink()
+
+
+def _locked_remove_warning(path: Path, exc: BaseException) -> str:
+    return f"Could not remove {path.as_posix()}; close Python/pytest/OneDrive locks and rerun. ({exc})"
+
+
+def _remove_with_retry(path: Path, root: Path) -> str | None:
+    target = root / path
+    if not target.exists():
+        return None
+    resolved = target.resolve()
+    root_resolved = root.resolve()
+    if resolved == root_resolved or root_resolved not in resolved.parents:
+        raise RuntimeError(f"Refusing to remove outside project root: {target}")
+    try:
+        _remove_path(target)
+        return None
+    except FileNotFoundError:
+        return None
+    except (PermissionError, OSError) as first_exc:
+        try:
+            _make_writable(target)
+            _remove_path(target)
+            return None
+        except FileNotFoundError:
+            return None
+        except (PermissionError, OSError) as retry_exc:
+            return _locked_remove_warning(path, retry_exc or first_exc)
+
+
+def apply_actions(actions: list[Action], root: Path) -> CleanupResult:
+    warnings: list[str] = []
+    critical_failures: list[str] = []
     restore_paths = [str(action.path) for action in actions if action.kind == "restore"]
     if restore_paths:
-        subprocess.run(["git", "restore", "--", *restore_paths], cwd=root, check=True)
+        try:
+            subprocess.run(["git", "restore", "--", *restore_paths], cwd=root, check=True)
+        except subprocess.CalledProcessError as exc:
+            critical_failures.append(f"git restore failed with exit code {exc.returncode}")
     for action in actions:
         if action.kind != "remove":
             continue
-        target = root / action.path
-        if not target.exists():
+        try:
+            warning = _remove_with_retry(action.path, root)
+        except RuntimeError as exc:
+            critical_failures.append(str(exc))
             continue
-        resolved = target.resolve()
-        root_resolved = root.resolve()
-        if resolved == root_resolved or root_resolved not in resolved.parents:
-            raise RuntimeError(f"Refusing to remove outside project root: {target}")
-        if target.is_dir():
-            shutil.rmtree(target)
-        else:
-            target.unlink()
+        if warning:
+            warnings.append(warning)
+    return CleanupResult(warnings=warnings, critical_failures=critical_failures)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -170,7 +226,14 @@ def main(argv: list[str] | None = None) -> int:
     for action in actions:
         print(f"{action.kind}: {action.path.as_posix()}")
     if args.apply:
-        apply_actions(actions, root)
+        result = apply_actions(actions, root)
+        for warning in result.warnings:
+            print(f"WARNING: {warning}")
+        for failure in result.critical_failures:
+            print(f"ERROR: {failure}")
+        if result.critical_failures:
+            print("Cleanup finished with critical failures.")
+            return 1
         print("Cleanup complete.")
     else:
         print("No files changed. Re-run with --apply to clean listed paths.")

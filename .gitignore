@@ -1,6 +1,13 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest_tmp/
+src/bluefern_dispatches.egg-info/
 output/test-runs/
+output/local_worktree_cleanup_report.md
+output/smtp-debug*.log
+data/dispatches/*/cache/
+repair-and-reclone*.log
+reclone*.log
 
 _bundle_stage/

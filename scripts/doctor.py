@@ -107,7 +107,7 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
     absolute_python_re = re.compile(r"[A-Za-z]:\\[^\"'<>]*?\\(?:\.venv|venv)\\Scripts\\python\.exe", re.IGNORECASE)
     for path in task_files:
         text = _read_text(path)
-        if "run_and_notify.py" not in text:
+        if "run_and_notify.py" not in text and "run_cascadia_dispatch.py" not in text:
             continue
         if expected_root not in text:
             problems.append(f"{path.relative_to(root)} does not set the project root working directory")

@@ -148,6 +148,24 @@ def test_doctor_flags_scheduled_task_missing_project_working_directory():
         _cleanup_contract_root(root)
 
 
+def test_doctor_checks_cascadia_scheduled_task_template():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "ops" / "run_cascadia_weekly_task.xml",
+            r"<Task><Actions><Exec><Arguments>&amp; 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --weekly-public --historical-search</Arguments></Exec></Actions></Task>",
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "run_cascadia_weekly_task.xml" in result.message
+        assert "working directory" in result.message
+        assert "non-project Python path" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_flags_cascadia_transitional_date_links():
     root = _make_contract_root()
     try:

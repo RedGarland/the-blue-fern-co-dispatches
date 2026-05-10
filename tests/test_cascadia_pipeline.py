@@ -252,6 +252,67 @@ sources:
     assert any("weak date basis" in warning for warning in result["warnings"])
 
 
+def test_registry_cache_write_creates_nested_source_directory(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: official/wa feed
+    name: Official WA Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/feed.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [transportation, infrastructure]
+    reliability_tier: official-public
+    publisher: Washington Example Agency
+    refresh_mode: archive_limited
+    notes: Test feed.
+""",
+        encoding="utf-8",
+    )
+    feed = """<?xml version="1.0"?>
+<rss><channel>
+  <item><title>Washington bridge infrastructure update</title><link>https://example.com/bridge</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Transportation infrastructure update.</description></item>
+</channel></rss>"""
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return feed.encode("utf-8")
+
+    calls = []
+
+    def fake_urlopen(request, timeout):
+        calls.append(request.full_url)
+        return FakeResponse()
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+
+    week_start, week_end = containing_week("2026-04-28")
+    cache_source_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "cache" / "registry" / "official-wa-feed"
+    assert not cache_source_dir.exists()
+
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+    cached = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T13:00:00Z")
+
+    assert len(result["records"]) == 1
+    assert calls == ["https://example.com/feed.xml"]
+    assert cache_source_dir.is_dir()
+    assert len(list(cache_source_dir.glob("*.json"))) == 1
+    assert cached["report"]["registry_cache_hits"] == 1
+
+
 def test_registry_curl_fallback_output_parses_and_records_diagnostics(cascadia_work_root, monkeypatch):
     registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
     registry_path.write_text(

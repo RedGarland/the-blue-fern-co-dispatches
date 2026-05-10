@@ -3,6 +3,7 @@ import smtplib
 import time
 import threading
 import asyncio
+import base64
 from pathlib import Path
 import importlib.util
 import pytest
@@ -10,6 +11,11 @@ import pytest
 spec = importlib.util.spec_from_file_location("run_and_notify", "scripts/run_and_notify.py")
 run_and_notify = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(run_and_notify)
+
+
+@pytest.fixture(autouse=True)
+def _disable_env_file_loading(monkeypatch):
+    monkeypatch.setattr(run_and_notify, "load_env_file", lambda path=None: None)
 
 
 async def _smtp_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, out_list: list):
@@ -96,9 +102,9 @@ def test_send_email_integration(monkeypatch):
     monkeypatch.delenv("SMTP_USER", raising=False)
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)
 
-    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: {"command": " ".join(cmd), "exit_code": 0, "stdout": "ok", "stderr": ""})
+    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")))
 
-    rc = run_and_notify.main(["--date", "2026-05-04"])
+    rc = run_and_notify.main(["--date", "2026-05-04", "--send-test-email"])
     assert rc == 0
 
     # give the server a moment to process
@@ -118,9 +124,9 @@ def test_send_email_integration(monkeypatch):
     assert len(received) >= 1, f"expected at least 1 message, got {len(received)}"
     data = received[0]
     if isinstance(data, bytes):
-        assert b"Dispatches publish result" in data
+        assert b"SMTP diagnostic" in data
     else:
-        assert "Dispatches publish result" in data
+        assert "SMTP diagnostic" in data
 
 
 class FakeSMTP:
@@ -287,19 +293,104 @@ def test_smtp_debug_file_tees_debug_output(monkeypatch, capsys):
         debug_file.unlink(missing_ok=True)
 
 
-def test_main_returns_nonzero_when_email_send_fails(monkeypatch, capsys):
+def test_send_test_email_returns_nonzero_when_email_send_fails(monkeypatch, capsys):
     monkeypatch.setattr(
         run_and_notify,
         "run_command",
-        lambda cmd: {"command": " ".join(cmd), "exit_code": 0, "stdout": "ok", "stderr": ""},
+        lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")),
     )
     monkeypatch.setattr(run_and_notify, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("network down")))
 
-    rc = run_and_notify.main(["--date", "2026-05-04"])
+    rc = run_and_notify.main(["--date", "2026-05-04", "--send-test-email"])
 
     captured = capsys.readouterr()
     assert rc == 2
     assert "OSError: network down" in captured.err
+
+
+def test_send_test_email_does_not_run_pipeline_or_publish(monkeypatch):
+    sent = []
+    monkeypatch.setattr(
+        run_and_notify,
+        "run_command",
+        lambda cmd: (_ for _ in ()).throw(AssertionError(f"unexpected command: {cmd}")),
+    )
+    monkeypatch.setattr(run_and_notify, "send_email", lambda subject, body, date_str, smtp_debug=False: sent.append((subject, body, date_str, smtp_debug)))
+
+    rc = run_and_notify.main(["--date", "2026-05-09", "--publish", "--pages-repo", "pages", "--smtp-debug", "--send-test-email"])
+
+    assert rc == 0
+    assert sent == [
+        (
+            "[Blue Fern Dispatches] SMTP diagnostic - 2026-05-09",
+            "Blue Fern Dispatches SMTP diagnostic message.\nDate: 2026-05-09\n\nThis message was sent by scripts/run_and_notify.py --send-test-email.\nNo Gaza pipeline was run.",
+            "2026-05-09",
+            True,
+        )
+    ]
+
+
+def test_send_test_email_missing_smtp_env_returns_clear_failure(monkeypatch, capsys):
+    monkeypatch.delenv("SMTP_HOST", raising=False)
+    monkeypatch.delenv("EMAIL_TO", raising=False)
+    monkeypatch.delenv("SMTP_USER", raising=False)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
+    monkeypatch.delenv("SMTP_PASSWORD", raising=False)
+    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")))
+
+    rc = run_and_notify.main(["--date", "2026-05-09", "--send-test-email"])
+
+    captured = capsys.readouterr()
+    assert rc == 2
+    assert "Missing required env vars: SMTP_HOST, EMAIL_TO" in captured.err
+
+
+def test_send_test_email_debug_redacts_smtp_password(monkeypatch, capsys, tmp_path):
+    FakeSMTP.instances = []
+    _set_email_env(monkeypatch)
+    secret = "secret-app-password"
+    debug_file = tmp_path / "smtp-debug.log"
+    monkeypatch.setenv("SMTP_DEBUG_FILE", str(debug_file))
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)
+    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")))
+
+    rc = run_and_notify.main(["--date", "2026-05-09", "--smtp-debug", "--send-test-email"])
+
+    captured = capsys.readouterr()
+    assert rc == 0
+    assert secret not in captured.out
+    assert secret not in captured.err
+    assert base64.b64encode(b"alerts@example.test").decode() not in captured.err
+    assert secret not in debug_file.read_text(encoding="utf-8")
+    assert base64.b64encode(b"alerts@example.test").decode() not in debug_file.read_text(encoding="utf-8")
+
+
+def test_normal_run_invokes_gaza_daily_dry_run(monkeypatch):
+    calls = []
+    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: calls.append(cmd) or {"command": " ".join(cmd), "exit_code": 0, "stdout": "ok", "stderr": ""})
+
+    rc = run_and_notify.main(["--date", "2026-05-09"])
+
+    assert rc == 0
+    assert len(calls) == 1
+    assert "run_daily_gaza.py" in calls[0][1]
+    assert "--email-report" in calls[0]
+    assert "--dry-run" in calls[0]
+
+
+def test_publish_run_maps_to_gaza_publish_behavior(monkeypatch):
+    calls = []
+    monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: calls.append(cmd) or {"command": " ".join(cmd), "exit_code": 0, "stdout": "ok", "stderr": ""})
+
+    rc = run_and_notify.main(["--date", "2026-05-09", "--publish", "--pages-repo", "pages", "--smtp-debug"])
+
+    assert rc == 0
+    assert len(calls) == 1
+    assert "run_daily_gaza.py" in calls[0][1]
+    assert "--dry-run" not in calls[0]
+    assert "--email-report" in calls[0]
+    assert "--smtp-debug" in calls[0]
+    assert calls[0][-2:] == ["--pages-repo", "pages"]
 
 
 @pytest.mark.skipif(os.getenv("INTEGRATION_SMTP") != "1", reason="Integration SMTP not enabled")
@@ -315,5 +406,5 @@ def test_send_email_real_smtp_integration(monkeypatch):
         lambda cmd: {"command": " ".join(cmd), "exit_code": 0, "stdout": "ok", "stderr": ""},
     )
 
-    rc = run_and_notify.main(["--date", "2026-05-04"])
+    rc = run_and_notify.main(["--date", "2026-05-04", "--send-test-email"])
     assert rc == 0

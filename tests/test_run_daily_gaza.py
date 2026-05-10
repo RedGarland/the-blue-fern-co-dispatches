@@ -310,6 +310,21 @@ def test_email_report_missing_smtp_config_returns_2(isolated, monkeypatch, capsy
     assert any("Missing required env vars: SMTP_HOST, EMAIL_TO" in error for error in summary["errors"])
 
 
+def test_source_collection_exception_is_reported_with_email(isolated, monkeypatch, capsys):
+    root = isolated
+    sent = []
+    monkeypatch.setattr(daily, "collect_gaza_sources", lambda *args, **kwargs: (_ for _ in ()).throw(FileNotFoundError("Gaza sources config does not exist")))
+    monkeypatch.setattr(daily, "send_email", lambda subject, body, date_str: sent.append((subject, body, date_str)))
+
+    code = daily.main(["--date", "2026-05-07", "--source-mode", "auto", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert summary["generated"] is False
+    assert "Gaza sources config does not exist" in summary["errors"]
+    assert sent
+
+
 def test_email_report_failure_does_not_log_smtp_password(isolated, monkeypatch, capsys):
     root = isolated
     secret = "secret-app-password"

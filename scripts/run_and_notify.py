@@ -10,6 +10,7 @@ import ssl
 import subprocess
 import sys
 import time
+import base64
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -17,9 +18,9 @@ from typing import TextIO
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PIPELINE_SCRIPT = ROOT / "scripts" / "run_cascadia_dispatch.py"
-PUBLISH_SCRIPT = ROOT / "scripts" / "publish_github_pages.py"
+PIPELINE_SCRIPT = ROOT / "scripts" / "run_daily_gaza.py"
 TRUTHY = {"1", "true", "yes"}
+FALSY = {"0", "false", "no"}
 
 
 def run_command(cmd: list[str]) -> dict[str, object]:
@@ -52,11 +53,52 @@ class _TeeStderr:
             stream.flush()
 
 
+class _RedactingStream:
+    def __init__(self, stream: TextIO, sensitive_values: list[str]) -> None:
+        self.stream = stream
+        self.sensitive_values = [value for value in sensitive_values if value]
+
+    def write(self, data: str) -> int:
+        self.stream.write(_redact_text(data, self.sensitive_values))
+        return len(data)
+
+    def flush(self) -> None:
+        self.stream.flush()
+
+
+def load_env_file(path: Path | None = None) -> None:
+    env_path = path or ROOT / ".env"
+    if not env_path.exists():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
 def _env_bool(name: str, default: bool = False) -> bool:
     value = os.getenv(name)
     if value is None:
         return default
     return value.strip().lower() in TRUTHY
+
+
+def _env_bool_any(names: list[str], default: bool = False) -> bool:
+    for name in names:
+        value = os.getenv(name)
+        if value is None:
+            continue
+        normalized = value.strip().lower()
+        if normalized in TRUTHY:
+            return True
+        if normalized in FALSY:
+            return False
+    return default
 
 
 def _env_int(name: str, default: int) -> int:
@@ -85,8 +127,80 @@ def _env_float(name: str, default: float) -> float:
     return parsed
 
 
+def _env_first(*names: str) -> str | None:
+    for name in names:
+        value = os.getenv(name)
+        if value is not None and value.strip():
+            return value
+    return None
+
+
+def _smtp_sensitive_values() -> list[str]:
+    values = [
+        os.getenv("SMTP_PASSWORD") or "",
+        os.getenv("SMTP_USER") or "",
+        os.getenv("SMTP_USERNAME") or "",
+        os.getenv("EMAIL_TO") or "",
+        os.getenv("EMAIL_FROM") or "",
+        os.getenv("SMTP_FROM") or "",
+    ]
+    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME") or ""
+    smtp_password = os.getenv("SMTP_PASSWORD") or ""
+    auth_plain = f"\0{smtp_user}\0{smtp_password}".encode()
+    if smtp_user or smtp_password:
+        values.append(base64.b64encode(auth_plain).decode())
+    if smtp_password:
+        values.append(base64.b64encode(smtp_password.encode()).decode())
+    for value in list(values):
+        if value:
+            values.append(base64.b64encode(value.encode()).decode())
+    return values
+
+
+def _redact_text(text: str, sensitive_values: list[str] | None = None) -> str:
+    redacted = text
+    for value in sensitive_values or _smtp_sensitive_values():
+        if value:
+            redacted = redacted.replace(value, "[REDACTED]")
+    return redacted
+
+
+def _mask_email(value: str | None) -> str:
+    if not value:
+        return "<unset>"
+    value = value.strip()
+    if "@" not in value:
+        return value[:1] + "***" if value else "<unset>"
+    local, domain = value.rsplit("@", 1)
+    prefix = local[:1] if local else "*"
+    return f"{prefix}***@{domain}"
+
+
+def _mask_recipients(value: str | None) -> str:
+    if not value:
+        return "<unset>"
+    return ", ".join(_mask_email(item) for item in value.split(",") if item.strip()) or "<unset>"
+
+
 @contextmanager
-def _smtp_debug_output() -> object:
+def _smtp_debug_output(sensitive_values: list[str] | None = None) -> object:
+    sensitive = sensitive_values or _smtp_sensitive_values()
+    debug_file = os.getenv("SMTP_DEBUG_FILE")
+    if not debug_file:
+        with redirect_stderr(_RedactingStream(sys.stderr, sensitive)):
+            yield
+        return
+
+    path = Path(debug_file).expanduser()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(f"\n--- SMTP debug {datetime.now(timezone.utc).isoformat()} ---\n")
+        with redirect_stderr(_TeeStderr(_RedactingStream(sys.stderr, sensitive), _RedactingStream(handle, sensitive))):
+            yield
+
+
+@contextmanager
+def _smtp_debug_file_only() -> object:
     debug_file = os.getenv("SMTP_DEBUG_FILE")
     if not debug_file:
         yield
@@ -134,10 +248,10 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     smtp_timeout = _env_float("SMTP_TIMEOUT", 30.0)
     smtp_retries = _env_int("SMTP_RETRIES", 2)
     smtp_retry_delay = _env_float("SMTP_RETRY_DELAY", 1.0)
-    smtp_user = os.getenv("SMTP_USER")
+    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
     smtp_password = os.getenv("SMTP_PASSWORD")
     email_to = os.getenv("EMAIL_TO", "")
-    email_from = os.getenv("EMAIL_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
+    email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
 
     missing: list[str] = []
     if not smtp_host:
@@ -166,7 +280,7 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
 
     local_hostname = _smtp_local_hostname(email_from)
 
-    smtp_ca_bundle = os.getenv("SMTP_CA_BUNDLE")
+    smtp_ca_bundle = _env_first("SMTP_CA_BUNDLE", "SMTP_CA_FILE")
     if smtp_ca_bundle and smtp_ca_bundle.strip():
         smtp_ca_bundle_path = Path(smtp_ca_bundle).expanduser().resolve()
         if not smtp_ca_bundle_path.is_file():
@@ -177,7 +291,9 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
         cafile = str(smtp_ca_bundle_path)
     else:
         cafile = None
-    smtp_skip_verify = _env_bool("SMTP_SKIP_VERIFY", default=False)
+    smtp_skip_verify = _env_bool_any(["SMTP_SKIP_VERIFY", "SMTP_RELAX_X509_STRICT"], default=False)
+    if _env_bool_any(["SMTP_TLS_VERIFY"], default=True) is False:
+        smtp_skip_verify = True
 
     if smtp_skip_verify:
         tls_context = ssl._create_unverified_context()
@@ -215,7 +331,7 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
             if smtp_debug:
                 smtp.set_debuglevel(1)
 
-            with _smtp_debug_output():
+            with _smtp_debug_output(_smtp_sensitive_values()) if smtp_debug else _smtp_debug_file_only():
                 if use_smtps:
                     _smtp_ehlo(smtp, local_hostname)
                     connection_label = "SMTPS (SSL)"
@@ -319,35 +435,76 @@ def build_body(date_str: str, results: list[dict[str, object]], publish_requeste
     return "\n".join(lines)
 
 
+def build_test_email_body(date_str: str) -> str:
+    return "\n".join(
+        [
+            "Blue Fern Dispatches SMTP diagnostic message.",
+            f"Date: {date_str}",
+            "",
+            "This message was sent by scripts/run_and_notify.py --send-test-email.",
+            "No Gaza pipeline was run.",
+        ]
+    )
+
+
+def print_smtp_config_debug() -> None:
+    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
+    email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
+    smtp_port = os.getenv("SMTP_PORT", "587")
+    smtp_use_ssl = _env_bool("SMTP_USE_SSL") or smtp_port == "465"
+    smtp_skip_verify = _env_bool_any(["SMTP_SKIP_VERIFY", "SMTP_RELAX_X509_STRICT"], default=False)
+    if _env_bool_any(["SMTP_TLS_VERIFY"], default=True) is False:
+        smtp_skip_verify = True
+    lines = [
+        "SMTP diagnostic config:",
+        f"- SMTP host: {os.getenv('SMTP_HOST') or '<unset>'}",
+        f"- SMTP port: {smtp_port}",
+        f"- SMTP username: {_mask_email(smtp_user)}",
+        f"- Email from: {_mask_email(email_from)}",
+        f"- Email to: {_mask_recipients(os.getenv('EMAIL_TO'))}",
+        f"- TLS mode: {'SMTPS' if smtp_use_ssl else 'STARTTLS if advertised'}",
+        f"- TLS verification: {str(not smtp_skip_verify).lower()}",
+        f"- SMTP debug file: {os.getenv('SMTP_DEBUG_FILE') or '<unset>'}",
+    ]
+    print("\n".join(lines), file=sys.stderr)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run dispatch pipeline and email results.")
     parser.add_argument("--date", default=datetime.now(timezone.utc).date().isoformat(), help="Edition date in YYYY-MM-DD format (default: current UTC date).")
     parser.add_argument("--publish", action="store_true", help="Run publish step after pipeline.")
     parser.add_argument("--pages-repo", help="Pages repository path used by publish step.")
     parser.add_argument("--smtp-debug", action="store_true", help="Enable smtplib debug output on the SMTP connection.")
+    parser.add_argument("--send-test-email", action="store_true", help="Send an SMTP-only diagnostic email and do not run the Gaza pipeline.")
     args = parser.parse_args(argv)
 
+    load_env_file()
+
+    if args.send_test_email:
+        if args.smtp_debug:
+            print_smtp_config_debug()
+        subject = f"[Blue Fern Dispatches] SMTP diagnostic - {args.date}"
+        try:
+            send_email(subject, build_test_email_body(args.date), args.date, smtp_debug=bool(args.smtp_debug))
+        except Exception as exc:  # noqa: BLE001
+            print(f"Failed to send test email: {_smtp_error_message(exc)}", file=sys.stderr)
+            return 2
+        return 0
+
     py = sys.executable
-    pipeline_cmd = [py, str(PIPELINE_SCRIPT), "--date", args.date, "--all"]
-    results = [run_command(pipeline_cmd)]
-
-    if args.publish:
-        publish_cmd = [py, str(PUBLISH_SCRIPT)]
-        if args.pages_repo:
-            publish_cmd.extend(["--pages-repo", args.pages_repo, "--commit"])
-        results.append(run_command(publish_cmd))
-
-    success = all(int(item["exit_code"]) == 0 for item in results)
-    subject = f"Dispatches publish result - {args.date} - {'SUCCESS' if success else 'FAILURE'}"
-    body = build_body(args.date, results, args.publish)
-
-    try:
-        send_email(subject, body, args.date, smtp_debug=bool(args.smtp_debug))
-    except Exception as exc:  # noqa: BLE001
-        print(f"Failed to send email: {_smtp_error_message(exc)}", file=sys.stderr)
-        return 2
-
-    return 0 if success else 1
+    pipeline_cmd = [py, str(PIPELINE_SCRIPT), "--date", args.date, "--email-report"]
+    if not args.publish:
+        pipeline_cmd.append("--dry-run")
+    if args.smtp_debug:
+        pipeline_cmd.append("--smtp-debug")
+    if args.pages_repo:
+        pipeline_cmd.extend(["--pages-repo", args.pages_repo])
+    result = run_command(pipeline_cmd)
+    if result["stdout"]:
+        print(str(result["stdout"]), end="")
+    if result["stderr"]:
+        print(str(result["stderr"]), end="", file=sys.stderr)
+    return int(result["exit_code"])
 
 
 if __name__ == "__main__":

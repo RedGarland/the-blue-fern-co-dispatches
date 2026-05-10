@@ -158,6 +158,20 @@ The daily runner is the scheduled/manual wrapper for Gaza:
 python scripts\run_daily_gaza.py --date YYYY-MM-DD
 ```
 
+The new-machine notification wrapper uses the Gaza daily runner for normal reports:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_and_notify.py --date 2026-05-09 --publish --smtp-debug
+```
+
+SMTP-only diagnostic mode:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_and_notify.py --date 2026-05-09 --smtp-debug --send-test-email
+```
+
+Expected: the diagnostic command sends a minimal SMTP test email, redacts config/debug output, and does not run the Gaza pipeline, run tests, publish, push, or touch the Pages repo.
+
 It supports `--source-mode auto|manual|both`; the default is `both`. Manual records live at `data/dispatches/gaza/sources/YYYY-MM-DD/manual_sources.json`. Auto collection reads only `data/dispatches/gaza/sources.yml` and writes project-local source records back into this repository. It does not use old Gaza project folders, old rendered output, DNS settings, or GitHub Pages settings.
 
 Task Scheduler action without push:
@@ -202,16 +216,17 @@ data/dispatches/gaza/editions/YYYY-MM-DD/run_manifest.json
 - `SMTP_PORT` optional, defaults to `587`
 - `SMTP_USE_SSL` optional
 - `SMTP_TLS_VERIFY` optional, defaults to `true`
-- `SMTP_CA_FILE` optional path to a PEM CA bundle used for SMTP TLS verification
+- `SMTP_RELAX_X509_STRICT` optional; set to `1` only for temporary diagnostics
+- `SMTP_CA_FILE` or `SMTP_CA_BUNDLE` optional path to a PEM CA bundle used for SMTP TLS verification
 - `SMTP_TIMEOUT` optional
 - `SMTP_RETRIES` optional
 - `SMTP_RETRY_DELAY` optional
-- `SMTP_USER` optional
-- `SMTP_PASSWORD` required when `SMTP_USER` is set
+- `SMTP_USER` or `SMTP_USERNAME` optional
+- `SMTP_PASSWORD` required when `SMTP_USER` or `SMTP_USERNAME` is set
 - `EMAIL_TO` required, comma-separated recipients
-- `EMAIL_FROM` optional
+- `EMAIL_FROM` or `SMTP_FROM` optional
 
-For Gmail on port `587`, use STARTTLS with `SMTP_USE_SSL=0`. For Gmail on port `465`, use SMTP over SSL with `SMTP_USE_SSL=1`. Keep TLS verification enabled for normal runs. A self-signed certificate chain error usually means local TLS inspection is replacing the SMTP server certificate, or Python is missing the trusted local CA; export that CA as PEM and set `SMTP_CA_FILE` when inspection is intentional.
+For Gmail on port `587`, use STARTTLS with `SMTP_USE_SSL=0`. For Gmail on port `465`, use SMTP over SSL with `SMTP_USE_SSL=1`. Keep TLS verification enabled for normal runs. A self-signed certificate chain error usually means local TLS inspection is replacing the SMTP server certificate, or Python is missing the trusted local CA; export that CA as PEM and set `SMTP_CA_FILE`/`SMTP_CA_BUNDLE` when inspection is intentional. `SMTP_RELAX_X509_STRICT=1` is a temporary diagnostic escape hatch only.
 
 Exit codes: `0` means the pipeline succeeded and email was sent, or email was not requested. `1` means the pipeline failed but email was sent. `2` means email was requested but could not be sent. SMTP passwords must stay in environment variables or a credential manager, never in scheduled task arguments or logs.
 

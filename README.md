@@ -54,6 +54,20 @@ Validate the clone before publishing:
 .\.venv\Scripts\python.exe scripts\doctor.py
 ```
 
+SMTP-only diagnostic email:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_and_notify.py --date 2026-05-09 --smtp-debug --send-test-email
+```
+
+Expected: sends a minimal diagnostic email through the same SMTP settings used by Gaza notifications. It does not run the Gaza pipeline, run tests, publish, push, or touch the Pages repo.
+
+Full Gaza daily run with local Pages publish and email report:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_and_notify.py --date 2026-05-09 --publish --smtp-debug
+```
+
 If doctor reports stale Cascadia weekly public links, regenerate the affected weekly public output:
 
 ```powershell
@@ -280,7 +294,7 @@ Task Scheduler arguments with push:
 
 The daily runner fails before publishing if sources are missing or invalid, source count is below `--min-sources`, public stories lack source IDs, manifests are empty, rendered HTML has no visible source links, tests fail without `--skip-tests`, Pages dry-run fails, or paid/detail leak checks fail. Logs are written to `logs/gaza-daily-YYYY-MM-DD.log`, and the run manifest is written to `data/dispatches/gaza/editions/YYYY-MM-DD/run_manifest.json`.
 
-Add `--email-report` to send a plain-text Gaza run report on success or failure. Exit code `0` means the pipeline succeeded and email was sent, or email was not requested. Exit code `1` means the pipeline failed but email was sent. Exit code `2` means email was requested but could not be sent; the console summary still includes pipeline errors. The report uses `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_SSL`, `SMTP_TLS_VERIFY`, `SMTP_CA_FILE`, `SMTP_TIMEOUT`, `SMTP_RETRIES`, `SMTP_RETRY_DELAY`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_TO`, and `EMAIL_FROM`. `SMTP_HOST` and `EMAIL_TO` are required; `SMTP_PASSWORD` is required when `SMTP_USER` is set. Do not put SMTP passwords in scheduled task arguments.
+Add `--email-report` to send a plain-text Gaza run report on success or failure. Exit code `0` means the pipeline succeeded and email was sent, or email was not requested. Exit code `1` means the pipeline failed but email was sent. Exit code `2` means email was requested but could not be sent; the console summary still includes pipeline errors. The report uses `SMTP_HOST`, `SMTP_PORT`, `SMTP_USE_SSL`, `SMTP_TLS_VERIFY`, `SMTP_RELAX_X509_STRICT`, `SMTP_CA_FILE`/`SMTP_CA_BUNDLE`, `SMTP_TIMEOUT`, `SMTP_RETRIES`, `SMTP_RETRY_DELAY`, `SMTP_USER`/`SMTP_USERNAME`, `SMTP_PASSWORD`, `EMAIL_TO`, and `EMAIL_FROM`/`SMTP_FROM`. `SMTP_HOST` and `EMAIL_TO` are required; `SMTP_PASSWORD` is required when `SMTP_USER` or `SMTP_USERNAME` is set. Do not put SMTP passwords in scheduled task arguments.
 
 ## Cascadia Pipeline
 
@@ -517,7 +531,7 @@ Wrapper:
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 ```
 
-Use `scripts/run_and_notify.py` to run the Cascadia pipeline and optionally publish, then always send an email report. The script exits with `0` when the pipeline and email succeed, `1` when the pipeline or publish step fails but the email report was sent, and `2` when the email report cannot be sent.
+Use `scripts/run_and_notify.py` for the scheduled Gaza daily workflow and SMTP diagnostics. Normal mode delegates to `scripts/run_daily_gaza.py --email-report`; `--publish` performs the local Pages publish behavior, while omitting `--publish` runs the Gaza workflow in dry-run mode. `--send-test-email` sends only the SMTP diagnostic message and does not run Gaza, tests, publish, push, or touch the Pages repo.
 
 Required environment variables:
 
@@ -525,15 +539,16 @@ Required environment variables:
 - `SMTP_PORT` (optional, defaults to `587`)
 - `SMTP_USE_SSL` (optional; truthy values `1`, `true`, `yes`; port `465` also uses SMTPS)
 - `SMTP_TLS_VERIFY` (optional; defaults to `true`; set `false` only for temporary diagnostics)
-- `SMTP_CA_FILE` (optional path to a PEM CA bundle used for SMTP TLS verification)
+- `SMTP_RELAX_X509_STRICT` (optional; set `1` only for temporary diagnostics on this machine)
+- `SMTP_CA_FILE` or `SMTP_CA_BUNDLE` (optional path to a PEM CA bundle used for SMTP TLS verification)
 - `SMTP_TIMEOUT` (optional seconds, defaults to `30`)
 - `SMTP_RETRIES` (optional retry count, defaults to `2`)
 - `SMTP_RETRY_DELAY` (optional seconds between retries, defaults to `1`)
 - `SMTP_DEBUG_FILE` (optional path that receives SMTP debug traces when `--smtp-debug` is used)
-- `SMTP_USER` (optional)
-- `SMTP_PASSWORD` (required when `SMTP_USER` is set)
+- `SMTP_USER` or `SMTP_USERNAME` (optional)
+- `SMTP_PASSWORD` (required when `SMTP_USER` or `SMTP_USERNAME` is set)
 - `EMAIL_TO` (required, comma-separated recipients)
-- `EMAIL_FROM` (optional, defaults to `SMTP_USER` or `noreply@<hostname>`)
+- `EMAIL_FROM` or `SMTP_FROM` (optional, defaults to SMTP username or `noreply@<hostname>`)
 
 Example PowerShell environment setup:
 
@@ -552,8 +567,8 @@ Local test commands:
 python -m pytest -q
 python scripts\run_cascadia_dispatch.py --date 2026-05-03 --daily
 python scripts\run_cascadia_dispatch.py --date 2026-05-03 --weekly-public
-python scripts\run_and_notify.py --date 2026-05-04 --publish --pages-repo "C:\path\to\pages\repo"
-python scripts\run_and_notify.py --date 2026-05-04 --smtp-debug
+python scripts\run_and_notify.py --date 2026-05-09 --smtp-debug --send-test-email
+python scripts\run_and_notify.py --date 2026-05-09 --publish --smtp-debug
 python scripts\publish_github_pages.py --dry-run
 ```
 
@@ -561,9 +576,9 @@ SMTP troubleshooting:
 
 - Gmail on port `587` uses STARTTLS: set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, and `SMTP_USE_SSL=0`.
 - Gmail on port `465` uses SMTP over SSL: set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, and `SMTP_USE_SSL=1`.
-- Keep `SMTP_TLS_VERIFY` unset or `true` for normal runs. If a corporate proxy or local security product inserts a private CA, export that CA as a PEM bundle and set `SMTP_CA_FILE` to that path.
+- Keep `SMTP_TLS_VERIFY` unset or `true` for normal runs. If a corporate proxy or local security product inserts a private CA, export that CA as a PEM bundle and set `SMTP_CA_FILE` or `SMTP_CA_BUNDLE` to that path.
 - `certificate verify failed: self-signed certificate in certificate chain` usually means local TLS inspection is replacing Gmail's certificate, or the inspecting CA is not trusted by Python. Keep verification enabled and set `SMTP_CA_FILE` to the trusted local CA bundle if inspection is intentional.
-- `SMTP_TLS_VERIFY=false` disables certificate verification and prints a warning to stderr and `SMTP_DEBUG_FILE`; use it only as a short-lived diagnostic.
+- `SMTP_TLS_VERIFY=false`, `SMTP_SKIP_VERIFY=true`, or `SMTP_RELAX_X509_STRICT=1` disables certificate verification; use only as a short-lived diagnostic.
 - SMTP passwords are read from `SMTP_PASSWORD` but are not written to SMTP debug logs.
 
 Real SMTP integration tests are skipped by default. To enable them locally or in CI, set all required SMTP variables plus `INTEGRATION_SMTP=1`:

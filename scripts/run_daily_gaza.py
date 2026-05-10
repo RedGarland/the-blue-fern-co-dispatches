@@ -390,7 +390,13 @@ def main(argv: list[str] | None = None) -> int:
         write_summary(summary)
         return pipeline_code
 
-    source_path, records = collect_or_load_sources(args, summary, log_path)
+    try:
+        source_path, records = collect_or_load_sources(args, summary, log_path)
+    except Exception as exc:  # noqa: BLE001
+        message = str(exc) or exc.__class__.__name__
+        summary["errors"].append(message)
+        log_line(log_path, f"Source collection failed: {message}")
+        return finish(1)
     if summary["errors"]:
         log_line(log_path, f"Source validation failed: {summary['errors']}")
         return finish(1)

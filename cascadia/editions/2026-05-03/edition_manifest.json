@@ -9,26 +9,53 @@
   "coverage_end": "2026-05-03",
   "coverage_label": "Apr 27\u2013May 3, 2026",
   "week_label": "2026-W18",
-  "source_record_ids": [],
-  "source_urls": [],
-  "generated_at": "2026-05-10T21:23:15.859527+00:00",
+  "source_record_ids": [
+    "src-03be2eb7e6fc2e1c",
+    "src-1f2b6234aa32eb7d",
+    "src-480ae6027db43339",
+    "src-8c78785478347270"
+  ],
+  "source_urls": [
+    "https://www.boisestatepublicradio.org/news/2026-05-01/wyoming-celebrates-nuclear-renaissance-as-feds-approve-license-for-a-new-reactor",
+    "https://www.islands.com/2154259/ike-kinswa-state-park-washington-between-tacoma-portland-fishing-spots-camping",
+    "https://www.islands.com/2156088/spring-creek-hatchery-state-park-washington-columbia-river-gorge-national-scenic-area-perfect-water-recreation",
+    "https://www.yoursourceone.com/columbia_basin/wenatchee-valleys-pangborn-airport-adds-portland-flights-via-alaska-airlines-starting-oct-3/article_98e68817-60e4-4a93-b399-cb4d57e4c178.html"
+  ],
+  "generated_at": "2026-05-10T22:50:18.325941+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 0,
-  "included_source_count": 0,
-  "excluded_source_count": 0,
-  "story_count": 0,
-  "public_story_count": 0,
-  "public_categories": [],
-  "public_state_hints": [],
-  "public_source_publishers": [],
-  "weekly_summary_bullets": [],
-  "public_archive_subtitle": "0 stories | No qualifying public signals identified",
+  "source_count": 4,
+  "included_source_count": 4,
+  "excluded_source_count": 7,
+  "story_count": 4,
+  "public_story_count": 4,
+  "public_categories": [
+    "Government and public services",
+    "Transportation",
+    "Infrastructure"
+  ],
+  "public_state_hints": [
+    "ID",
+    "WA",
+    "OR"
+  ],
+  "public_source_publishers": [
+    "Boise State Public Radio News RSS",
+    "islands.com",
+    "yoursourceone.com"
+  ],
+  "weekly_summary_bullets": [
+    "Government and public services, Transportation, and Infrastructure appeared in ID, WA, and OR source records.",
+    "This edition includes source-backed items from Boise State Public Radio News RSS, islands.com, and yoursourceone.com.",
+    "4 public source-backed stories met the current public-systems criteria."
+  ],
+  "public_archive_subtitle": "4 stories | ID, WA, OR | Government and public services, Transportation, Infrastructure",
   "historical_search": true,
   "providers_used": [
-    "gdelt"
+    "gdelt",
+    "registry"
   ],
   "query_count": 5,
   "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-27_2026-05-03\\historical_search_report.json",
@@ -42,19 +69,19 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "empty response body",
-    "invalid XML feed: syntax error: line 1, column 0",
-    "invalid XML feed: mismatched tag: line 64, column 2",
-    "empty response body",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
+    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
     "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
     "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "sparse week: provider returned empty or non-JSON responses"
+    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public health\" OR hospital OR healthcare OR Medicaid OR school OR \"public services\"): <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (wildfire OR drought OR flood OR climate OR \"environmental cleanup\" OR resilience OR \"air quality\"): <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (economy OR labor OR layoffs OR housing OR homelessness OR agriculture OR \"food insecurity\"): <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "historical provider gdelt failed for query (Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (\"public safety\" OR emergency OR \"emergency management\" OR evacuation OR disaster): <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
   ],
   "errors": []
 }

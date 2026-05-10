@@ -1,1 +1,158 @@
-[]
+[
+  {
+    "story_id": "story-bed3e820a369",
+    "title": "Wyoming celebrates 'nuclear renaissance' as feds approve license for a new reactor",
+    "summary": "Construction of an advanced nuclear power plant partly funded by the U.S. government is now underway in Wyoming. It is included because the source metadata ties it to government in Idaho.",
+    "category": "Government and public services",
+    "why_it_matters": "In Idaho, Public systems signals can affect public services, local planning, and regional resilience.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Government and public services",
+      "region_scope=ID",
+      "source_reliability=public-media"
+    ],
+    "source_record_ids": [
+      "src-1f2b6234aa32eb7d"
+    ],
+    "source_urls": [
+      "https://www.boisestatepublicradio.org/news/2026-05-01/wyoming-celebrates-nuclear-renaissance-as-feds-approve-license-for-a-new-reactor"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  },
+  {
+    "story_id": "story-d45e113ab29a",
+    "title": "Between Seattle And Portland Is Washington Lesser - Known Lake State Park With Idyllic Fishing And Camping",
+    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
+    "category": "Transportation",
+    "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 38,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=WA",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "src-8c78785478347270"
+    ],
+    "source_urls": [
+      "https://www.islands.com/2154259/ike-kinswa-state-park-washington-between-tacoma-portland-fishing-spots-camping"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  },
+  {
+    "story_id": "story-43438ab1d80e",
+    "title": "Pangborn Airport Adds Portland Flights Starting Oct . 3 | Columbia Basin",
+    "summary": "This source was flagged as a Transportation signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to transportation in Oregon.",
+    "category": "Transportation",
+    "why_it_matters": "In Oregon, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 38,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=OR",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "src-03be2eb7e6fc2e1c"
+    ],
+    "source_urls": [
+      "https://www.yoursourceone.com/columbia_basin/wenatchee-valleys-pangborn-airport-adds-portland-flights-via-alaska-airlines-starting-oct-3/article_98e68817-60e4-4a93-b399-cb4d57e4c178.html"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  },
+  {
+    "story_id": "story-224f89d4d5e1",
+    "title": "Washington Scenic State Park In The Columbia River Gorge Is The Perfect Stop For Water Recreation",
+    "summary": "This source was flagged as a Infrastructure signal for Washington based on its title and source metadata. It is included because the source metadata ties it to infrastructure in Washington.",
+    "category": "Infrastructure",
+    "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Infrastructure",
+      "region_scope=WA",
+      "source_reliability=unknown"
+    ],
+    "source_record_ids": [
+      "src-480ae6027db43339"
+    ],
+    "source_urls": [
+      "https://www.islands.com/2156088/spring-creek-hatchery-state-park-washington-columbia-river-gorge-national-scenic-area-perfect-water-recreation"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  }
+]

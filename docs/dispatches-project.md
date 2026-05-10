@@ -372,10 +372,10 @@ Task Scheduler setup for Cascadia:
 - Start in: `C:\PythonProjects\Dispatches From The Blue Fern Co`
 - Keep separate from Gaza Daily Pipeline
 
-Arguments for the weekly Cascadia run without push:
+Arguments for the weekly Cascadia run with confirmation email and without push:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public --historical-search"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"
 ```
 
 Manual push after inspection:

@@ -3,7 +3,7 @@
   <RegistrationInfo>
     <Date>2026-05-10T00:00:00</Date>
     <Author>REPLACE_WITH_USER</Author>
-    <Description>Run Blue Fern Cascadia weekly public briefing without publishing.</Description>
+    <Description>Run Blue Fern Cascadia weekly public briefing and send a confirmation email without pushing.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>
@@ -46,7 +46,7 @@
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public --historical-search"</Arguments>
+      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"</Arguments>
       <WorkingDirectory>C:\PythonProjects\Dispatches From The Blue Fern Co</WorkingDirectory>
     </Exec>
   </Actions>

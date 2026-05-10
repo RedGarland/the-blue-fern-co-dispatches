@@ -15,12 +15,12 @@ if (-not $PythonExe) {
     $candidates = @(
         Join-Path $RepoRoot '.venv\Scripts\python.exe',
         Join-Path $RepoRoot 'venv\Scripts\python.exe',
-        'C:\Users\Admin\AppData\Local\Programs\Python\Python313\python.exe'
+        'py',
+        'python'
     )
     foreach ($cand in $candidates) {
-        if (Test-Path $cand) { $PythonExe = $cand; break }
+        if ($cand -in @('py', 'python') -or (Test-Path $cand)) { $PythonExe = $cand; break }
     }
-    if (-not $PythonExe) { $PythonExe = 'python' }
 }
 
 $Script = Join-Path $RepoRoot 'scripts\run_and_notify.py'

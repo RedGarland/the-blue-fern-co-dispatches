@@ -188,7 +188,28 @@ def generation_command(edition_date: str) -> list[str]:
 
 
 def run_tests() -> subprocess.CompletedProcess[str]:
-    return run_command([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"])
+    smtp_env_names = (
+        "SMTP_HOST",
+        "SMTP_PORT",
+        "SMTP_USER",
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "EMAIL_TO",
+        "EMAIL_FROM",
+        "SMTP_FROM",
+        "SMTP_USE_SSL",
+        "SMTP_SKIP_VERIFY",
+        "SMTP_RELAX_X509_STRICT",
+        "SMTP_TLS_VERIFY",
+        "SMTP_CA_BUNDLE",
+        "SMTP_CA_FILE",
+        "SMTP_DEBUG_FILE",
+    )
+    saved = {name: os.environ.pop(name) for name in smtp_env_names if name in os.environ}
+    try:
+        return run_command([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"])
+    finally:
+        os.environ.update(saved)
 
 
 def push_pages_repo(pages_repo: Path, pages_branch: str) -> tuple[bool, list[str], str]:

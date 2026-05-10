@@ -43,8 +43,8 @@
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"</Arguments>
-      <WorkingDirectory>C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co</WorkingDirectory>
+      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; &amp; 'C:\PythonProjects\Dispatches From The Blue Fern Co\.venv\Scripts\python.exe' 'scripts\run_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"</Arguments>
+      <WorkingDirectory>C:\PythonProjects\Dispatches From The Blue Fern Co</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>

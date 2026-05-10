@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import shutil
 import sys
@@ -33,7 +34,9 @@ DISPATCH_SLUG = "gaza"
 DISPATCH_ID = "dispatch-gaza"
 DISPATCH_NAME = "Dispatches From Gaza"
 DISPATCH_TAGLINE = "Daily briefing"
-BACKUP_ROOT = Path(r"C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups") / DISPATCH_SLUG
+BACKUP_ROOT = Path(
+    os.getenv("BLUEFERN_BACKUP_ROOT", str(ROOT / "output" / "tmp-backups-pages"))
+) / DISPATCH_SLUG
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 REQUIRED_SOURCE_FIELDS = {
     "source_record_id",

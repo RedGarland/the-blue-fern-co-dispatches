@@ -423,6 +423,7 @@ def fetch_feed(source: dict[str, Any], root: Path, week_start: date, week_end: d
         "source_name": source.get("name"),
         "url": source.get("url"),
         "source_type": source.get("source_type"),
+        "geographic_scope": source.get("geographic_scope"),
         "cache_path": str(path),
         "cache_hit": bool(cached),
         "cache_miss": not bool(cached),
@@ -437,6 +438,12 @@ def fetch_feed(source: dict[str, Any], root: Path, week_start: date, week_end: d
         "tls_or_revocation_hint": None,
         "recommendation": None,
         "bytes_read": 0,
+        "fetch_successful": False,
+        "status_code": None,
+        "content_type": "",
+        "failure_reason": None,
+        "selected_backend": "auto",
+        "parse_empty": False,
     }
     if cached:
         items = [item for item in cached.get("items", []) if isinstance(item, dict)]
@@ -446,18 +453,25 @@ def fetch_feed(source: dict[str, Any], root: Path, week_start: date, week_end: d
     result = fetch_public_url(str(source.get("url")), timeout_seconds, DEFAULT_USER_AGENT)
     for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
         diagnostics[key] = result.diagnostics.get(key)
+    diagnostics["status_code"] = result.status_code
+    diagnostics["content_type"] = result.content_type
+    diagnostics["failure_reason"] = result.diagnostics.get("failure_reason")
+    diagnostics["selected_backend"] = result.diagnostics.get("selected_backend", diagnostics.get("fetch_backend"))
     if not result.ok:
         diagnostics["errors"].append(str(result.diagnostics.get("python_fetch_error") or result.diagnostics.get("curl_stderr_tail") or "fetch failed"))
         if result.diagnostics.get("recommendation"):
             diagnostics["warnings"].append(str(result.diagnostics.get("recommendation")))
         return [], diagnostics
+    diagnostics["fetch_successful"] = True
     body = result.body
     if not body.strip():
         diagnostics["warnings"].append("empty response body")
+        diagnostics["failure_reason"] = "empty_response"
         return [], diagnostics
     items, parse_warnings = parse_feed_items(body)
     diagnostics["warnings"].extend(parse_warnings)
     diagnostics["raw_count"] = len(items)
+    diagnostics["parse_empty"] = bool(not items and not diagnostics["errors"])
     if not parse_warnings:
         write_cache(path, diagnostics, items)
     return items, diagnostics
@@ -471,6 +485,7 @@ def fetch_official_page(source: dict[str, Any], root: Path, week_start: date, we
         "source_name": source.get("name"),
         "url": source.get("url"),
         "source_type": source.get("source_type"),
+        "geographic_scope": source.get("geographic_scope"),
         "cache_path": str(path),
         "cache_hit": bool(cached),
         "cache_miss": not bool(cached),
@@ -487,6 +502,12 @@ def fetch_official_page(source: dict[str, Any], root: Path, week_start: date, we
         "tls_or_revocation_hint": None,
         "recommendation": None,
         "bytes_read": 0,
+        "fetch_successful": False,
+        "status_code": None,
+        "content_type": "",
+        "failure_reason": None,
+        "selected_backend": "auto",
+        "parse_empty": False,
         "same_domain_links_only": True,
     }
     if cached:
@@ -497,11 +518,16 @@ def fetch_official_page(source: dict[str, Any], root: Path, week_start: date, we
     result = fetch_public_url(str(source.get("url")), timeout_seconds, DEFAULT_USER_AGENT)
     for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
         diagnostics[key] = result.diagnostics.get(key)
+    diagnostics["status_code"] = result.status_code
+    diagnostics["content_type"] = result.content_type
+    diagnostics["failure_reason"] = result.diagnostics.get("failure_reason")
+    diagnostics["selected_backend"] = result.diagnostics.get("selected_backend", diagnostics.get("fetch_backend"))
     if not result.ok:
         diagnostics["errors"].append(str(result.diagnostics.get("python_fetch_error") or result.diagnostics.get("curl_stderr_tail") or "fetch failed"))
         if result.diagnostics.get("recommendation"):
             diagnostics["warnings"].append(str(result.diagnostics.get("recommendation")))
         return [], diagnostics
+    diagnostics["fetch_successful"] = True
     parsed_links = parse_official_page_links(result.body, str(source.get("url") or ""))
     items = []
     for link in parsed_links:
@@ -511,6 +537,7 @@ def fetch_official_page(source: dict[str, Any], root: Path, week_start: date, we
         diagnostics["included_links"].append({"url": link.get("url"), "title": link.get("title"), "published_at": link.get("published_at")})
         items.append(link)
     diagnostics["raw_count"] = len(items)
+    diagnostics["parse_empty"] = bool(not items and not diagnostics["errors"])
     if not diagnostics["errors"]:
         write_cache(path, diagnostics, items)
     return items, diagnostics

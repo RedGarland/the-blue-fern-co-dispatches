@@ -363,6 +363,258 @@ sources:
     refresh_mode: archive_limited
     notes: Public utility news page for electricity reliability and outage context.
 
+  - source_id: wa-utilities-transportation-news
+    name: Washington Utilities and Transportation Commission News
+    tier: 1
+    source_type: official_page
+    url: https://www.utc.wa.gov/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [utilities, transportation, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Washington Utilities and Transportation Commission
+    refresh_mode: archive_limited
+    notes: Public state utility and transportation regulator news page.
+
+  - source_id: wa-dnr-wildfire-news
+    name: Washington Department of Natural Resources News
+    tier: 1
+    source_type: official_page
+    url: https://www.dnr.wa.gov/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [wildfire, environment, public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: Washington State Department of Natural Resources
+    refresh_mode: archive_limited
+    notes: Public DNR news page for wildfire, lands, and natural resources updates.
+
+  - source_id: wa-agriculture-news
+    name: Washington State Department of Agriculture News
+    tier: 1
+    source_type: official_page
+    url: https://agr.wa.gov/about-wsda/news-and-media-relations/news-releases
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [agriculture, food_assistance, public_safety]
+    reliability_tier: official-public
+    publisher: Washington State Department of Agriculture
+    refresh_mode: archive_limited
+    notes: Public agriculture department news releases page.
+
+  - source_id: king-county-news
+    name: King County News
+    tier: 1
+    source_type: official_page
+    url: https://kingcounty.gov/en/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Seattle and King County
+    category_hints: [public_safety, health, housing, transportation, utilities]
+    reliability_tier: official-public
+    publisher: King County
+    refresh_mode: archive_limited
+    notes: Public county news page for Seattle-area regional systems.
+
+  - source_id: spokane-county-news
+    name: Spokane County News
+    tier: 1
+    source_type: official_page
+    url: https://www.spokanecounty.org/CivicAlerts.aspx
+    enabled: true
+    state_scope: WA
+    geographic_scope: Spokane County
+    category_hints: [public_safety, emergency_management, infrastructure]
+    reliability_tier: official-public
+    publisher: Spokane County
+    refresh_mode: archive_limited
+    notes: Public county civic alerts page for Spokane-area systems.
+
+  - source_id: or-puc-news
+    name: Oregon Public Utility Commission News
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/puc/news-events/Pages/default.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [utilities, energy, infrastructure]
+    reliability_tier: official-public
+    publisher: Oregon Public Utility Commission
+    refresh_mode: archive_limited
+    notes: Public state utility regulator news and events page.
+
+  - source_id: or-forestry-news
+    name: Oregon Department of Forestry News
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/odf/aboutodf/Pages/news.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [wildfire, fire, environment, public_safety]
+    reliability_tier: official-public
+    publisher: Oregon Department of Forestry
+    refresh_mode: archive_limited
+    notes: Public forestry department news page for wildfire and forest conditions.
+
+  - source_id: or-agriculture-news
+    name: Oregon Department of Agriculture News
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/oda/about-us/Pages/news.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [agriculture, food_assistance, public_safety]
+    reliability_tier: official-public
+    publisher: Oregon Department of Agriculture
+    refresh_mode: archive_limited
+    notes: Public agriculture department news page.
+
+  - source_id: multnomah-county-news
+    name: Multnomah County News
+    tier: 1
+    source_type: official_page
+    url: https://www.multco.us/news
+    enabled: true
+    state_scope: OR
+    geographic_scope: Portland and Multnomah County
+    category_hints: [health, housing, public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: Multnomah County
+    refresh_mode: archive_limited
+    notes: Public county news page for Portland-area regional systems.
+
+  - source_id: marion-county-alerts
+    name: Marion County Emergency Alerts
+    tier: 1
+    source_type: official_page
+    url: https://www.co.marion.or.us/Alerts
+    enabled: true
+    state_scope: OR
+    geographic_scope: Salem and Marion County
+    category_hints: [public_safety, emergency_management, transportation]
+    reliability_tier: official-public
+    publisher: Marion County
+    refresh_mode: current
+    notes: Public county alerts page for Salem-area emergency and public safety signals.
+
+  - source_id: lane-county-news
+    name: Lane County News
+    tier: 1
+    source_type: official_page
+    url: https://www.lanecounty.org/news
+    enabled: true
+    state_scope: OR
+    geographic_scope: Eugene and Lane County
+    category_hints: [public_safety, health, housing, transportation]
+    reliability_tier: official-public
+    publisher: Lane County
+    refresh_mode: archive_limited
+    notes: Public county news page for Eugene-area regional systems.
+
+  - source_id: idaho-puc-news
+    name: Idaho Public Utilities Commission News
+    tier: 1
+    source_type: official_page
+    url: https://puc.idaho.gov/press-releases/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [utilities, energy, infrastructure]
+    reliability_tier: official-public
+    publisher: Idaho Public Utilities Commission
+    refresh_mode: archive_limited
+    notes: Public utility regulator press releases page.
+
+  - source_id: idaho-lands-news
+    name: Idaho Department of Lands News
+    tier: 1
+    source_type: official_page
+    url: https://www.idl.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [wildfire, fire, environment, public_safety]
+    reliability_tier: official-public
+    publisher: Idaho Department of Lands
+    refresh_mode: archive_limited
+    notes: Public lands department news page for wildfire and natural resources updates.
+
+  - source_id: idaho-agriculture-news
+    name: Idaho State Department of Agriculture News
+    tier: 1
+    source_type: official_page
+    url: https://agri.idaho.gov/main/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [agriculture, food_assistance, public_safety]
+    reliability_tier: official-public
+    publisher: Idaho State Department of Agriculture
+    refresh_mode: archive_limited
+    notes: Public agriculture department news page.
+
+  - source_id: ada-county-alerts
+    name: Ada County Emergency Management News
+    tier: 1
+    source_type: official_page
+    url: https://adacounty.id.gov/emergencymanagement/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Boise and Ada County
+    category_hints: [public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: Ada County Emergency Management
+    refresh_mode: archive_limited
+    notes: Public county emergency management page for Boise-area signals.
+
+  - source_id: washington-state-standard-feed
+    name: Washington State Standard Feed
+    tier: 2
+    source_type: rss
+    url: https://washingtonstatestandard.com/feed/
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [government, public_safety, health, housing, transportation, environment, economy]
+    reliability_tier: reputable-regional-media
+    publisher: Washington State Standard
+    refresh_mode: archive_limited
+    notes: Reputable regional nonprofit news feed for Washington state government and public systems.
+
+  - source_id: opb-news-feed
+    name: OPB News Feed
+    tier: 2
+    source_type: rss
+    url: https://www.opb.org/news/index.rss
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon and southwest Washington
+    category_hints: [government, public_safety, health, housing, transportation, environment, economy]
+    reliability_tier: reputable-regional-media
+    publisher: Oregon Public Broadcasting
+    refresh_mode: archive_limited
+    notes: Reputable public media RSS feed covering Oregon and southwest Washington public systems.
+
+  - source_id: idaho-capital-sun-feed
+    name: Idaho Capital Sun Feed
+    tier: 2
+    source_type: rss
+    url: https://idahocapitalsun.com/feed/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [government, public_safety, health, housing, transportation, environment, economy]
+    reliability_tier: reputable-regional-media
+    publisher: Idaho Capital Sun
+    refresh_mode: archive_limited
+    notes: Reputable regional nonprofit news feed for Idaho public policy and systems.
+
   - source_id: nws-seattle-alerts
     name: National Weather Service Seattle Alerts
     tier: 1

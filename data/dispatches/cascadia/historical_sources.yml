@@ -23,15 +23,22 @@ providers:
 query_groups:
   max_queries: 8
   max_queries_per_week: 8
-  max_region_terms_per_query: 8
+  max_region_terms_per_query: 20
   system_terms_per_query: 10
   target_records_per_week: 8
   region_terms:
     - Washington
+    - Washington state
+    - WA
     - Oregon
+    - OR
     - Idaho
+    - ID
     - Pacific Northwest
     - Cascadia
+    - Puget Sound
+    - Willamette Valley
+    - Treasure Valley
     - Seattle
     - Portland
     - Spokane
@@ -39,19 +46,24 @@ query_groups:
     - Tacoma
     - Eugene
     - Salem
+    - King County
+    - Multnomah County
+    - Lane County
+    - Ada County
   system_groups:
-    - infrastructure/utilities/outages|infrastructure|utility|utilities|outage|power|water|bridge|road closure
-    - health/emergency services|public health|hospital|emergency services|healthcare|Medicaid|clinic
-    - environment/climate/hazards|wildfire|drought|flood|landslide|earthquake|air quality|climate
+    - infrastructure/utilities/outages|infrastructure|utility|utilities|power outage|outage|power|water system|water|bridge|road closure
+    - transportation/freight/supply chain|ferry|transit|port|freight|rail|supply chain|transportation
+    - health/emergency services|public health|hospital|emergency medical services|emergency services|healthcare|Medicaid|clinic
+    - environment/fire/climate/hazards|wildfire|fire|smoke|air quality|drought|flood|landslide|earthquake|climate
     - housing/homelessness|housing|homelessness|shelter|rent|eviction
     - labor/economy/public services|layoffs|unemployment|budget cuts|school closure|public services|workforce
     - public safety/emergency declarations|crime|public safety|emergency declaration|evacuation|emergency management
-    - transportation/ports/supply chain|ferry|transit|port|rail|supply chain|transportation
     - agriculture/food assistance|agriculture|food assistance|SNAP|food bank|food insecurity
   systems_terms:
     - infrastructure
     - public health
     - hospital
+    - emergency medical services
     - emergency services
     - healthcare
     - Medicaid
@@ -64,6 +76,9 @@ query_groups:
     - rent
     - eviction
     - wildfire
+    - fire
+    - smoke
+    - air quality
     - drought
     - flood
     - landslide
@@ -72,12 +87,14 @@ query_groups:
     - outage
     - utility
     - water
+    - water system
     - transportation
     - ferry
     - transit
     - bridge
     - road closure
     - rail
+    - freight
     - port
     - supply chain
     - public safety

@@ -22,6 +22,7 @@ from bluefern_dispatches.generator import (
     ensure_public_detail_separation,
     publish_pages,
     normalize_expect_dispatches,
+    public_edition_subtitle,
     validate_pages_publish,
     validate_pages_repo_after_copy,
     validate_traceability,
@@ -263,6 +264,25 @@ def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
     index = read(work / "output" / "site" / "cascadia" / "index.html")
     assert 'href="editions/2026-05-03/"' in index
     assert "2026-05-11" not in index
+
+
+def test_zero_story_cascadia_subtitle_reflects_review_threshold(built_site):
+    work, _, _ = built_site
+    site_root = work / "output" / "site"
+    dispatch = DispatchConfig("cascadia", "The Cascadia Briefing", "2026-05-10", "Weekly", CASCADIA_LOGO_ASSET, [], [])
+    add_cascadia_site_edition(site_root, "2026-05-10")
+    manifest_path = site_root / "cascadia" / "editions" / "2026-05-10" / "edition_manifest.json"
+    manifest = json.loads(read(manifest_path))
+    manifest["public_story_count"] = 0
+    manifest["public_archive_subtitle"] = "0 stories | No qualifying public signals identified"
+    manifest["minimum_review_threshold_met"] = False
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    assert public_edition_subtitle(site_root, dispatch, "2026-05-10") == "Reviewed week | No qualifying source-backed regional signals surfaced"
+
+    manifest["minimum_review_threshold_met"] = True
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    assert public_edition_subtitle(site_root, dispatch, "2026-05-10") == "Reviewed week | No qualifying source-backed regional signals identified"
 
 
 def test_cascadia_logo_asset_is_copied_to_public_locations(built_site):

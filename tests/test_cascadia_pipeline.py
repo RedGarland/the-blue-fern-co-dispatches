@@ -10,7 +10,7 @@ import pytest
 
 from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary, why_it_matters
 from bluefern_dispatches.cascadia_fetch import curl_command, fetch_public_url
-from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, retrieve_historical_sources, validate_manual_sources
+from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, load_historical_config, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages
@@ -71,9 +71,23 @@ def test_cascadia_source_registry_loads_free_sources(cascadia_work_root):
 
     assert registry
     assert any(source["source_id"] == "wa-doh-newsroom" for source in registry)
+    assert any(source["source_id"] == "king-county-news" for source in registry)
+    assert any(source["source_id"] == "opb-news-feed" and source["source_type"] == "rss" for source in registry)
+    assert any(source["source_id"] == "idaho-puc-news" for source in registry)
     assert any(source["source_id"] == "manual-weekly-supplements" and source["tier"] == 4 for source in registry)
     assert all("url" in source for source in registry)
     assert not any("api_key" in json.dumps(source).lower() for source in registry)
+
+
+def test_historical_query_groups_include_local_region_filters(cascadia_work_root):
+    config = load_historical_config(cascadia_work_root)
+    queries = build_queries(config)
+    joined = "\n".join(queries)
+
+    for region in ["WA", "Washington state", "OR", "ID", "Puget Sound", "Willamette Valley", "Treasure Valley", "Spokane", "Boise", "Portland", "Seattle"]:
+        assert region in joined
+    assert any("power outage" in query and "water system" in query for query in queries)
+    assert any("freight" in query and "supply chain" in query for query in queries)
 
 
 def test_fetch_backend_python_success(monkeypatch):
@@ -551,7 +565,7 @@ def test_quality_weekly_cli_writes_report_and_below_target_guidance(cascadia_wor
     assert "--validate-manual-sources" in report["manual_supplement_commands"]["validate"]
     assert "--max-historical-queries 8" in report["manual_supplement_commands"]["rerun"]
     assert len(report["query_groups_run"]) == 8
-    assert {item["query_group"] for item in report["query_groups_run"]} >= {"infrastructure/utilities/outages", "health/emergency services"}
+    assert {item["query_group"] for item in report["query_groups_run"]} >= {"infrastructure/utilities/outages", "transportation/freight/supply chain", "health/emergency services"}
     assert report["source_count_by_provider"] == {"gdelt": 2}
 
     public_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
@@ -1203,6 +1217,7 @@ def test_zero_week_gap_report_documents_no_signal_result(cascadia_work_root, mon
                     "source_type": "rss",
                     "url": "https://example.com/rss.xml",
                     "raw_count": 0,
+                    "bytes_read": 1200,
                     "errors": [],
                     "warnings": [],
                 },
@@ -1238,9 +1253,89 @@ def test_zero_week_gap_report_documents_no_signal_result(cascadia_work_root, mon
     assert saved["rejected_candidate_count"] == 2
     assert saved["rejected_candidates"]
     assert saved["manual_source_records_added"] is False
-    assert saved["final_zero_story_result_is_credible"] is True
-    assert "No source-backed public story survived validation" in saved["final_reason"]
+    assert saved["source_checks_attempted"] == 3
+    assert saved["source_checks_successful"] == 1
+    assert saved["source_checks_failed"] == 2
+    assert saved["successful_fetch_rate"] == 0.3333
+    assert saved["fetch_failures_by_reason"]["tls_or_certificate"] == 1
+    assert saved["fetch_failures_by_reason"]["timeout"] == 1
+    assert saved["candidate_rejection_counts"]["navigation_or_footer_link"] >= 1
+    assert saved["candidate_rejections_by_stage"]["official_page_parse"] == 1
+    assert saved["minimum_review_threshold_met"] is False
+    assert saved["public_zero_story_wording"] == "Reviewed week | No qualifying source-backed regional signals surfaced"
+    assert saved["final_zero_story_result_is_credible"] is False
+    assert "successful fetched/evaluated source coverage" in saved["final_reason"]
     assert not (cascadia_work_root / "output" / "site" / "weekly_gap_reports").exists()
+
+
+def test_gap_report_nonzero_public_story_omits_zero_story_metadata(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    aggregate = {"source_count": 4, "warnings": [], "errors": [], "report": {"records_saved": 4}}
+    render_result = {"public_story_count": 2, "warnings": [], "errors": []}
+
+    report = write_zero_week_gap_report(
+        "2026-03-30",
+        "2026-04-05",
+        "2026-04-05",
+        0,
+        aggregate,
+        render_result,
+        dry_run=True,
+    )
+
+    assert report["final_public_story_count"] == 2
+    assert report["final_zero_story_result_is_credible"] is None
+    assert report["public_zero_story_wording"] is None
+    assert "survived validation" in report["final_reason"]
+
+
+@pytest.mark.parametrize(
+    ("minimum_review_threshold_met", "expected_wording"),
+    [
+        (True, "Reviewed week | No qualifying source-backed regional signals identified"),
+        (False, "Reviewed week | No qualifying source-backed regional signals surfaced"),
+    ],
+)
+def test_gap_report_zero_story_wording_follows_threshold(cascadia_work_root, monkeypatch, minimum_review_threshold_met, expected_wording):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    monkeypatch.setattr(
+        run_cascadia_dispatch,
+        "_successful_fetch_metrics",
+        lambda _report: {
+            "source_checks_attempted": 25,
+            "source_checks_successful": 15,
+            "source_checks_failed": 10,
+            "successful_fetch_rate": 0.6,
+            "successful_sources_by_group": {
+                "historical_search_provider": 5,
+                "local_regional_source": 5,
+                "official_state_regional_source": 5,
+            },
+            "failed_sources_by_group": {},
+            "fetch_failures_by_reason": {},
+            "minimum_review_threshold_met": minimum_review_threshold_met,
+            "minimum_review_threshold": {},
+        },
+    )
+    aggregate = {"source_count": 0, "warnings": [], "errors": [], "report": {"records_saved": 0}}
+    render_result = {"public_story_count": 0, "warnings": [], "errors": []}
+
+    report = write_zero_week_gap_report(
+        "2026-04-06",
+        "2026-04-12",
+        "2026-04-12",
+        0,
+        aggregate,
+        render_result,
+        dry_run=True,
+    )
+
+    assert report["final_public_story_count"] == 0
+    assert report["public_zero_story_wording"] == expected_wording
 
 
 def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_work_root, monkeypatch):
@@ -1648,7 +1743,7 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
             assert weekly_date in text
         for _, _, _, label in weekly_dates.values():
             assert f"The Cascadia Briefing - {label}" in text
-        assert "Reviewed week | No qualifying source-backed regional signals identified" in text
+        assert "Reviewed week | No qualifying source-backed regional signals surfaced" in text
         assert "0 stories | No qualifying public signals identified" not in text
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
@@ -1834,7 +1929,7 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert "source_record_ids" in manifest
         assert "source_urls" in manifest
         assert manifest["weekly_summary_bullets"] == []
-        assert manifest["public_archive_subtitle"] == "Reviewed week | No qualifying source-backed regional signals identified"
+        assert manifest["public_archive_subtitle"] == "Reviewed week | No qualifying source-backed regional signals surfaced"
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     assert all(edition_date in archive for edition_date in expected)
 

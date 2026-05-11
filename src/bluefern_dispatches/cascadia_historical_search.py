@@ -190,21 +190,22 @@ def default_config() -> dict[str, Any]:
             {"provider_id": "manual", "provider_name": "Project-local manual historical sources", "enabled": True, "reliability_tier": "editorial-record", "priority": 1},
         ],
         "query_groups": {
-            "region_terms": ["Washington", "Oregon", "Idaho", "Pacific Northwest", "Cascadia", "Seattle", "Portland", "Spokane", "Boise", "Tacoma", "Eugene", "Salem"],
+            "region_terms": ["Washington", "Washington state", "WA", "Oregon", "OR", "Idaho", "ID", "Pacific Northwest", "Cascadia", "Puget Sound", "Willamette Valley", "Treasure Valley", "Seattle", "Portland", "Spokane", "Boise", "Tacoma", "Eugene", "Salem", "King County", "Multnomah County", "Lane County", "Ada County"],
             "system_groups": [
-                "infrastructure/utilities/outages|infrastructure|utility|utilities|outage|power|water|bridge|road closure",
-                "health/emergency services|public health|hospital|emergency services|healthcare|Medicaid|clinic",
-                "environment/climate/hazards|wildfire|drought|flood|landslide|earthquake|air quality|climate",
+                "infrastructure/utilities/outages|infrastructure|utility|utilities|power outage|outage|power|water system|water|bridge|road closure",
+                "transportation/freight/supply chain|ferry|transit|port|freight|rail|supply chain|transportation",
+                "health/emergency services|public health|hospital|emergency medical services|emergency services|healthcare|Medicaid|clinic",
+                "environment/fire/climate/hazards|wildfire|fire|smoke|air quality|drought|flood|landslide|earthquake|climate",
                 "housing/homelessness|housing|homelessness|shelter|rent|eviction",
                 "labor/economy/public services|layoffs|unemployment|budget cuts|school closure|public services|workforce",
                 "public safety/emergency declarations|crime|public safety|emergency declaration|evacuation|emergency management",
-                "transportation/ports/supply chain|ferry|transit|port|rail|supply chain|transportation",
                 "agriculture/food assistance|agriculture|food assistance|SNAP|food bank|food insecurity",
             ],
             "systems_terms": [
                 "infrastructure",
                 "public health",
                 "hospital",
+                "emergency medical services",
                 "emergency services",
                 "healthcare",
                 "Medicaid",
@@ -217,6 +218,8 @@ def default_config() -> dict[str, Any]:
                 "rent",
                 "eviction",
                 "wildfire",
+                "fire",
+                "smoke",
                 "drought",
                 "flood",
                 "landslide",
@@ -226,12 +229,14 @@ def default_config() -> dict[str, Any]:
                 "outage",
                 "utility",
                 "water",
+                "water system",
                 "transportation",
                 "ferry",
                 "transit",
                 "bridge",
                 "road closure",
                 "rail",
+                "freight",
                 "port",
                 "supply chain",
                 "public safety",
@@ -254,7 +259,7 @@ def default_config() -> dict[str, Any]:
             ],
             "max_queries": 8,
             "max_queries_per_week": 8,
-            "max_region_terms_per_query": 8,
+            "max_region_terms_per_query": 20,
             "system_terms_per_query": 12,
             "target_records_per_week": 8,
         },
@@ -272,7 +277,14 @@ def build_queries(config: dict[str, Any]) -> list[str]:
     priority_regions = regions[:max_region_terms]
     if not priority_regions:
         return []
-    region_query = " OR ".join(f'"{term}"' if " " in term else term for term in priority_regions)
+
+    def quote_query_term(term: str) -> str:
+        upper = term.upper()
+        if " " in term or upper in {"AND", "OR", "NOT"} or len(term) <= 2:
+            return f'"{term}"'
+        return term
+
+    region_query = " OR ".join(quote_query_term(str(term)) for term in priority_regions)
     system_groups = groups.get("system_groups") or []
     queries = []
     for raw_group in system_groups:
@@ -281,7 +293,7 @@ def build_queries(config: dict[str, Any]) -> list[str]:
         terms = parts[1:] if len(parts) > 1 else parts
         if not terms:
             continue
-        systems_query = " OR ".join(f'"{term}"' if " " in term else term for term in terms)
+        systems_query = " OR ".join(quote_query_term(str(term)) for term in terms)
         queries.append(f"({region_query}) AND ({systems_query})")
         if len(queries) >= max_queries:
             return queries
@@ -289,7 +301,7 @@ def build_queries(config: dict[str, Any]) -> list[str]:
         return queries
     for offset in range(0, len(systems), system_terms_per_query):
         system_chunk = systems[offset : offset + system_terms_per_query]
-        systems_query = " OR ".join(f'"{term}"' if " " in term else term for term in system_chunk)
+        systems_query = " OR ".join(quote_query_term(str(term)) for term in system_chunk)
         queries.append(f"({region_query}) AND ({systems_query})")
         if len(queries) >= max_queries:
             break

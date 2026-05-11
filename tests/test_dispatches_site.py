@@ -28,6 +28,51 @@ from bluefern_dispatches.generator import (
 )
 
 
+def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
+    edition = work / "output" / "dispatches" / "cascadia" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text(
+        f'''<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+  <nav><a href="/">Dispatches Home</a><a href="/cascadia/">The Cascadia Briefing</a></nav>
+  <main class="briefing"><a href="{BASE_URL}/cascadia/editions/{edition_date}/">The Cascadia Briefing</a><img src="../../assets/{CASCADIA_LOGO_ASSET}"></main>
+</body>
+</html>''',
+        encoding="utf-8",
+    )
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "cascadia",
+                "edition_date": edition_date,
+                "briefing_type": "weekly",
+                "coverage_start": "2026-04-27",
+                "coverage_end": edition_date,
+                "coverage_label": "Apr 27-May 3, 2026",
+                "week_label": "2026-W18",
+                "source_count": 1,
+                "story_count": 1,
+                "source_manifest_path": str(edition / "sources_manifest.json"),
+                "curation_manifest_path": str(edition / "curation_manifest.json"),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "src-001", "title": "Source", "url": "https://example.com/source"}]),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "story-001", "source_ids": ["src-001"]}]),
+        encoding="utf-8",
+    )
+
+
 @pytest.fixture()
 def built_site(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
@@ -36,6 +81,7 @@ def built_site(monkeypatch):
     shutil.copytree(repo / "assets", work / "assets")
     backup_root = test_root / "dispatches-bluefern-backups"
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+    add_cascadia_dispatch_edition(work, "2026-05-03")
     result = build_site(work, dry_run=False, backup_root=backup_root)
     return work, backup_root, result
 
@@ -192,6 +238,31 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     assert cascadia_edition.exists()
     assert f"{BASE_URL}/cascadia/editions/2026-05-03/" in read(cascadia_edition)
     assert "class=\"briefing\"" in read(cascadia_edition)
+
+
+def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    stale_daily = work / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
+    stale_daily.mkdir(parents=True)
+    (stale_daily / "index.html").write_text("<html>daily</html>", encoding="utf-8")
+    (stale_daily / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "cascadia", "edition_date": "2026-05-04", "briefing_type": "daily"}),
+        encoding="utf-8",
+    )
+    add_cascadia_site_edition(work / "output" / "site", "2026-05-03")
+    add_cascadia_dispatch_edition(work, "2026-05-03")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-11")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    assert result["ok"] is True
+    assert not (work / "output" / "site" / "cascadia" / "editions" / "2026-05-11").exists()
+    assert not stale_daily.exists()
+    index = read(work / "output" / "site" / "cascadia" / "index.html")
+    assert 'href="editions/2026-05-03/"' in index
+    assert "2026-05-11" not in index
 
 
 def test_cascadia_logo_asset_is_copied_to_public_locations(built_site):
@@ -372,7 +443,7 @@ def test_pages_copy_creates_cname_and_preserves_git(built_site):
         assert (pages_repo / "assets" / asset).exists()
     assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
     assert (pages_repo / "cascadia" / "index.html").exists()
-    assert not (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
+    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "index.html").exists()
 
 
 def test_pages_publish_excludes_paid_detail_folders(built_site):

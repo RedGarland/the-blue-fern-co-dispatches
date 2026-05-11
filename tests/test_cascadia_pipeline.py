@@ -23,7 +23,7 @@ from bluefern_dispatches.shared_records import update_shared_records
 SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))
-from run_cascadia_dispatch import completed_week_windows, run_pipeline, run_source_gap_report
+from run_cascadia_dispatch import completed_week_windows, run_pipeline, run_source_gap_report, write_zero_week_gap_report
 
 
 @pytest.fixture()
@@ -494,7 +494,7 @@ def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_
     assert "rate_limit_count" in report
     assert "queries_planned" in report
     assert "queries_skipped_due_to_limit" in report
-    assert report["queries_run"][0]["query_group"] == "infrastructure/utilities"
+    assert report["queries_run"][0]["query_group"] == "infrastructure/utilities/outages"
 
 
 def test_quality_weekly_cli_writes_report_and_below_target_guidance(cascadia_work_root, monkeypatch, capsys):
@@ -549,9 +549,9 @@ def test_quality_weekly_cli_writes_report_and_below_target_guidance(cascadia_wor
     assert report["manual_supplement_path"].endswith(r"2026-04-20_2026-04-26\manual_sources.json") or report["manual_supplement_path"].endswith("2026-04-20_2026-04-26/manual_sources.json")
     assert "--create-manual-template" in report["manual_supplement_commands"]["create_template"]
     assert "--validate-manual-sources" in report["manual_supplement_commands"]["validate"]
-    assert "--max-historical-queries 5" in report["manual_supplement_commands"]["rerun"]
-    assert len(report["query_groups_run"]) == 5
-    assert {item["query_group"] for item in report["query_groups_run"]} >= {"infrastructure/utilities", "health/public services"}
+    assert "--max-historical-queries 8" in report["manual_supplement_commands"]["rerun"]
+    assert len(report["query_groups_run"]) == 8
+    assert {item["query_group"] for item in report["query_groups_run"]} >= {"infrastructure/utilities/outages", "health/emergency services"}
     assert report["source_count_by_provider"] == {"gdelt": 2}
 
     public_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
@@ -1151,6 +1151,96 @@ def test_source_gap_report_is_read_only_and_recommends_actions(cascadia_work_roo
     assert result["weeks"][0]["recommended_action"] == "provider sparse; manual supplement recommended"
     assert result["weeks"][1]["recommended_action"] == "add manual_sources.json"
     assert before == after
+
+
+def test_zero_week_gap_report_documents_no_signal_result(cascadia_work_root, monkeypatch):
+    import run_cascadia_dispatch
+
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    aggregate = {
+        "source_count": 0,
+        "warnings": ["sparse week: no provider results"],
+        "errors": [],
+        "report": {
+            "manual_sources_path": str(cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10" / "manual_sources.json"),
+            "manual_sources_loaded": 0,
+            "manual_sources_valid": True,
+            "registry_sources_run": 2,
+            "registry_records_raw": 0,
+            "registry_records_excluded": 1,
+            "registry_exclusion_reasons": {"outside_date_window": 1},
+            "official_links_excluded": 1,
+            "official_exclusion_reasons": {"navigation_or_footer_link": 1},
+            "gdelt_queries_run": 1,
+            "raw_results_count": 0,
+            "records_saved": 0,
+            "records_excluded": 0,
+            "queries_run": [
+                {
+                    "provider_id": "gdelt",
+                    "query_group": "infrastructure/utilities/outages",
+                    "query": "(Washington OR Oregon) AND (outage)",
+                    "result_count": 0,
+                    "error": "timed out",
+                    "cache_hit": False,
+                    "fallback_used": True,
+                }
+            ],
+            "registry_source_diagnostics": [
+                {
+                    "source_id": "official-page",
+                    "source_name": "Official Page",
+                    "source_type": "official_page",
+                    "url": "https://example.com/news",
+                    "raw_count": 0,
+                    "errors": ["certificate verify failed"],
+                    "warnings": ["TLS warning"],
+                    "excluded_links": [{"url": "https://example.com/contact", "title": "Contact", "reason": "navigation_or_footer_link"}],
+                },
+                {
+                    "source_id": "rss-source",
+                    "source_name": "RSS Source",
+                    "source_type": "rss",
+                    "url": "https://example.com/rss.xml",
+                    "raw_count": 0,
+                    "errors": [],
+                    "warnings": [],
+                },
+            ],
+            "warnings": ["TLS warning"],
+            "tls_or_revocation_hint": "certificate revocation check failed",
+            "python_fetch_error": "timed out",
+        },
+    }
+    render_result = {"public_story_count": 0, "warnings": [], "errors": []}
+
+    report = write_zero_week_gap_report(
+        "2026-05-04",
+        "2026-05-10",
+        "2026-05-10",
+        0,
+        aggregate,
+        render_result,
+        dry_run=False,
+    )
+
+    path = cascadia_work_root / "output" / "dispatches" / "cascadia" / "weekly_gap_reports" / "2026-05-10.json"
+    saved = read_json(path)
+    assert report["weekly_gap_report_path"] == str(path)
+    assert saved["edition_date"] == "2026-05-10"
+    assert saved["coverage_label"] == "May 4\u201310, 2026"
+    assert saved["provider_queries_attempted"][0]["query_group"] == "infrastructure/utilities/outages"
+    assert len(saved["official_pages_checked"]) == 1
+    assert len(saved["registry_sources_checked"]) == 2
+    assert saved["gdelt_queries_attempted"][0]["result_count"] == 0
+    assert saved["candidate_count"] == 2
+    assert saved["accepted_candidate_count"] == 0
+    assert saved["rejected_candidate_count"] == 2
+    assert saved["rejected_candidates"]
+    assert saved["manual_source_records_added"] is False
+    assert saved["final_zero_story_result_is_credible"] is True
+    assert "No source-backed public story survived validation" in saved["final_reason"]
+    assert not (cascadia_work_root / "output" / "site" / "weekly_gap_reports").exists()
 
 
 def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_work_root, monkeypatch):

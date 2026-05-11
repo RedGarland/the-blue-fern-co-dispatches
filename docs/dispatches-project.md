@@ -270,6 +270,8 @@ The public Cascadia edition is weekly. Monday runs cover the previous completed 
 
 Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. Supported modes are `--historical-provider all`, `--historical-provider manual`, `--historical-provider registry`, `--historical-provider gdelt`, and comma-separated combinations such as `registry,manual` or `gdelt,registry,manual`. Sparse weeks are explained by `historical_search_report.json`, including provider counts, manual validation status, registry cache/fetch diagnostics, GDELT cache/rate-limit diagnostics, dedupe counts, final saved source count, and a recommendation. Unsupported stories are omitted.
 
+Quality weekly runs also write local zero-week QA reports under `output/dispatches/cascadia/weekly_gap_reports/` when rerun through the documented supplement workflow. These reports stay out of `output/site` and summarize manual supplement status, registry and official-page checks, GDELT query attempts, candidate/rejection counts, fetch warnings, TLS/network warnings, and whether a zero-story result is credible.
+
 ### Cascadia layered free-source model
 
 The Cascadia source portfolio is intentionally layered and free:

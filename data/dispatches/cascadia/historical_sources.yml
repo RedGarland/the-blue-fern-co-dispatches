@@ -21,8 +21,8 @@ providers:
     reliability_tier: editorial-record
 
 query_groups:
-  max_queries: 5
-  max_queries_per_week: 5
+  max_queries: 8
+  max_queries_per_week: 8
   max_region_terms_per_query: 8
   system_terms_per_query: 10
   target_records_per_week: 8
@@ -40,37 +40,59 @@ query_groups:
     - Eugene
     - Salem
   system_groups:
-    - infrastructure/utilities|infrastructure|utility|utilities|power|water|transportation|bridge|road closure|rail|port
-    - health/public services|public health|hospital|healthcare|Medicaid|school|public services
-    - environment/climate/wildfire|wildfire|drought|flood|climate|environmental cleanup|resilience|air quality
-    - economy/labor/housing|economy|labor|layoffs|housing|homelessness|agriculture|food insecurity
-    - public safety/emergency management|public safety|emergency|emergency management|evacuation|disaster
+    - infrastructure/utilities/outages|infrastructure|utility|utilities|outage|power|water|bridge|road closure
+    - health/emergency services|public health|hospital|emergency services|healthcare|Medicaid|clinic
+    - environment/climate/hazards|wildfire|drought|flood|landslide|earthquake|air quality|climate
+    - housing/homelessness|housing|homelessness|shelter|rent|eviction
+    - labor/economy/public services|layoffs|unemployment|budget cuts|school closure|public services|workforce
+    - public safety/emergency declarations|crime|public safety|emergency declaration|evacuation|emergency management
+    - transportation/ports/supply chain|ferry|transit|port|rail|supply chain|transportation
+    - agriculture/food assistance|agriculture|food assistance|SNAP|food bank|food insecurity
   systems_terms:
     - infrastructure
     - public health
     - hospital
+    - emergency services
     - healthcare
     - Medicaid
+    - clinic
     - school
+    - school closure
     - housing
     - homelessness
+    - shelter
+    - rent
+    - eviction
     - wildfire
     - drought
     - flood
+    - landslide
+    - earthquake
     - power outage
+    - outage
     - utility
     - water
     - transportation
+    - ferry
+    - transit
     - bridge
     - road closure
     - rail
     - port
+    - supply chain
     - public safety
     - emergency
+    - emergency declaration
     - economy
     - labor
     - layoffs
+    - unemployment
+    - budget cuts
+    - workforce
     - agriculture
+    - food assistance
+    - SNAP
+    - food bank
     - food insecurity
     - environmental cleanup
     - climate

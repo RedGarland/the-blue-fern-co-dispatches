@@ -55,6 +55,76 @@ sources:
     refresh_mode: archive_limited
     notes: Public state transportation news and travel alerts page.
 
+  - source_id: wa-governor-news
+    name: Washington Governor News Releases
+    tier: 1
+    source_type: official_page
+    url: https://governor.wa.gov/news
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [government, public_safety, emergency_management, economy]
+    reliability_tier: official-public
+    publisher: Office of the Governor of Washington
+    refresh_mode: archive_limited
+    notes: Public governor news release index.
+
+  - source_id: wa-commerce-news
+    name: Washington State Department of Commerce News
+    tier: 1
+    source_type: official_page
+    url: https://www.commerce.wa.gov/news/
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [housing, homelessness, economy, infrastructure, utilities]
+    reliability_tier: official-public
+    publisher: Washington State Department of Commerce
+    refresh_mode: archive_limited
+    notes: Public housing, economic development, and infrastructure news page.
+
+  - source_id: wa-esd-news
+    name: Washington Employment Security Department News
+    tier: 1
+    source_type: official_page
+    url: https://esd.wa.gov/newsroom
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [labor, unemployment, economy, workforce]
+    reliability_tier: official-public
+    publisher: Washington Employment Security Department
+    refresh_mode: archive_limited
+    notes: Public unemployment and workforce newsroom.
+
+  - source_id: seattle-alerts
+    name: City of Seattle Alerts
+    tier: 1
+    source_type: official_page
+    url: https://alert.seattle.gov/
+    enabled: true
+    state_scope: WA
+    geographic_scope: Seattle
+    category_hints: [public_safety, emergency_management, utilities, transportation]
+    reliability_tier: official-public
+    publisher: City of Seattle
+    refresh_mode: current
+    notes: Public city alert page for emergency, utility, and transportation notices.
+
+  - source_id: pierce-county-alerts
+    name: Pierce County Emergency Management News
+    tier: 1
+    source_type: official_page
+    url: https://www.piercecountywa.gov/938/Emergency-Management
+    enabled: true
+    state_scope: WA
+    geographic_scope: Tacoma and Pierce County
+    category_hints: [public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: Pierce County Emergency Management
+    refresh_mode: archive_limited
+    notes: Public county emergency management page for Tacoma-area signals.
+
   - source_id: or-newsroom-statewide
     name: Oregon State Newsroom
     tier: 1
@@ -96,6 +166,76 @@ sources:
     publisher: Oregon Department of Transportation
     refresh_mode: archive_limited
     notes: Public state transportation news page.
+
+  - source_id: or-governor-news
+    name: Oregon Governor Newsroom
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/gov/media/Pages/newsroom.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [government, public_safety, emergency_management, economy]
+    reliability_tier: official-public
+    publisher: Office of the Governor of Oregon
+    refresh_mode: archive_limited
+    notes: Public governor newsroom.
+
+  - source_id: or-housing-news
+    name: Oregon Housing and Community Services News
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/ohcs/about-us/Pages/newsroom.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [housing, homelessness, rent, shelter]
+    reliability_tier: official-public
+    publisher: Oregon Housing and Community Services
+    refresh_mode: archive_limited
+    notes: Public housing and homelessness agency newsroom.
+
+  - source_id: or-employment-news
+    name: Oregon Employment Department News
+    tier: 1
+    source_type: official_page
+    url: https://www.oregon.gov/employ/Agency/Pages/News.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [labor, unemployment, economy, workforce]
+    reliability_tier: official-public
+    publisher: Oregon Employment Department
+    refresh_mode: archive_limited
+    notes: Public unemployment and labor market news page.
+
+  - source_id: portland-public-alerts
+    name: Portland Public Alerts
+    tier: 1
+    source_type: official_page
+    url: https://www.publicalerts.org/
+    enabled: true
+    state_scope: OR
+    geographic_scope: Portland metro
+    category_hints: [public_safety, emergency_management, transportation, utilities]
+    reliability_tier: official-public
+    publisher: Portland PublicAlerts
+    refresh_mode: current
+    notes: Public regional emergency information page for the Portland area.
+
+  - source_id: eugene-alerts
+    name: City of Eugene Emergency Management
+    tier: 1
+    source_type: official_page
+    url: https://www.eugene-or.gov/255/Emergency-Management
+    enabled: true
+    state_scope: OR
+    geographic_scope: Eugene
+    category_hints: [public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: City of Eugene
+    refresh_mode: archive_limited
+    notes: Public city emergency management page.
 
   - source_id: or-deq-newsroom
     name: Oregon Department of Environmental Quality Newsroom
@@ -152,6 +292,76 @@ sources:
     publisher: Idaho Transportation Department
     refresh_mode: archive_limited
     notes: Public transportation department news page.
+
+  - source_id: idaho-governor-news
+    name: Idaho Governor News
+    tier: 1
+    source_type: official_page
+    url: https://gov.idaho.gov/pressrelease/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [government, public_safety, emergency_management, economy]
+    reliability_tier: official-public
+    publisher: Office of the Governor of Idaho
+    refresh_mode: archive_limited
+    notes: Public governor press release index.
+
+  - source_id: idaho-commerce-news
+    name: Idaho Commerce News
+    tier: 1
+    source_type: official_page
+    url: https://commerce.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [economy, workforce, infrastructure]
+    reliability_tier: official-public
+    publisher: Idaho Department of Commerce
+    refresh_mode: archive_limited
+    notes: Public economic development and workforce news page.
+
+  - source_id: idaho-labor-news
+    name: Idaho Department of Labor News
+    tier: 1
+    source_type: official_page
+    url: https://www.labor.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [labor, unemployment, economy, workforce]
+    reliability_tier: official-public
+    publisher: Idaho Department of Labor
+    refresh_mode: archive_limited
+    notes: Public labor and unemployment news page.
+
+  - source_id: boise-emergency-management
+    name: Boise Emergency Management
+    tier: 1
+    source_type: official_page
+    url: https://www.cityofboise.org/departments/fire/emergency-management/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Boise
+    category_hints: [public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: City of Boise
+    refresh_mode: archive_limited
+    notes: Public city emergency management page.
+
+  - source_id: idaho-power-news
+    name: Idaho Power News
+    tier: 2
+    source_type: official_page
+    url: https://www.idahopower.com/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Idaho
+    category_hints: [utilities, power, infrastructure]
+    reliability_tier: public-utility
+    publisher: Idaho Power
+    refresh_mode: archive_limited
+    notes: Public utility news page for electricity reliability and outage context.
 
   - source_id: nws-seattle-alerts
     name: National Weather Service Seattle Alerts

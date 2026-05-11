@@ -16,9 +16,24 @@ from bluefern_dispatches.cascadia_ingest import ingest_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import render_cascadia_edition
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
+from bluefern_dispatches.cascadia_source_registry import load_source_registry
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, backfill_weekly_from_existing_editions, containing_week, explicit_week, previous_completed_week
 from bluefern_dispatches.cascadia_weekly import format_coverage_label
 from bluefern_dispatches.shared_records import update_shared_records
+
+
+ZERO_WEEK_SOURCE_GROUPS = [
+    "state governor press releases",
+    "state emergency management",
+    "state transportation agencies",
+    "state health agencies",
+    "state environmental/wildfire/climate agencies",
+    "housing and homelessness agencies",
+    "labor/economic/workforce agencies",
+    "public utility / energy reliability sources",
+    "major city/county public safety or emergency pages",
+    "reputable regional media sources",
+]
 
 
 def run_pipeline(
@@ -182,6 +197,15 @@ def read_json_object(path: Path) -> dict[str, object]:
     return payload if isinstance(payload, dict) else {}
 
 
+def manifest_public_story_count(edition_date: str) -> int:
+    manifest_path = ROOT / "output" / "site" / "cascadia" / "editions" / edition_date / "edition_manifest.json"
+    manifest = read_json_object(manifest_path)
+    try:
+        return int(manifest.get("public_story_count") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 def quality_targets() -> dict[str, int]:
     config = load_historical_config(ROOT)
     targets = config.get("quality_targets") if isinstance(config.get("quality_targets"), dict) else {}
@@ -196,7 +220,7 @@ def weekly_manual_commands(start: str, end: str) -> dict[str, str]:
     base = ".\\.venv\\Scripts\\python.exe scripts\\run_cascadia_dispatch.py"
     rerun = (
         f"{base} --archive-week {start} --weekly-public --historical-search "
-        "--historical-provider all --max-historical-queries 5 --historical-delay-seconds 10"
+        "--historical-provider all --max-historical-queries 8 --historical-delay-seconds 10"
     )
     return {
         "create_template": f"{base} --archive-week {start} --create-manual-template",
@@ -280,6 +304,196 @@ def write_weekly_quality_report(start: str, end: str, edition_date: str, aggrega
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     report["weekly_quality_report_path"] = str(report_path)
+    return report
+
+
+def _warning_list(*values: object) -> list[str]:
+    warnings: list[str] = []
+    for value in values:
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, list):
+                    warnings.extend(str(nested) for nested in item if nested)
+                elif item:
+                    warnings.append(str(item))
+        elif value:
+            warnings.append(str(value))
+    return unique_messages(warnings)
+
+
+def _registry_diagnostics(report: dict[str, object]) -> list[dict[str, object]]:
+    diagnostics = report.get("registry_source_diagnostics")
+    return [item for item in diagnostics if isinstance(item, dict)] if isinstance(diagnostics, list) else []
+
+
+def _rejected_candidate_summary(report: dict[str, object]) -> list[dict[str, object]]:
+    rejected: list[dict[str, object]] = []
+    for group_name, key in [
+        ("historical_search", "exclusion_reasons"),
+        ("registry", "registry_exclusion_reasons"),
+        ("official_pages", "official_exclusion_reasons"),
+    ]:
+        reasons = report.get(key)
+        if isinstance(reasons, dict):
+            for reason, count in sorted(reasons.items()):
+                rejected.append({"source_group": group_name, "reason": reason, "count": count})
+    for diagnostic in _registry_diagnostics(report):
+        for excluded in diagnostic.get("excluded_links", []) if isinstance(diagnostic.get("excluded_links"), list) else []:
+            if isinstance(excluded, dict):
+                rejected.append(
+                    {
+                        "source_group": "official_pages",
+                        "source_id": diagnostic.get("source_id"),
+                        "title": excluded.get("title"),
+                        "url": excluded.get("url"),
+                        "reason": excluded.get("reason") or "excluded",
+                    }
+                )
+    return rejected
+
+
+def write_zero_week_gap_report(
+    start: str,
+    end: str,
+    edition_date: str,
+    initial_public_story_count: int,
+    aggregate: dict[str, object],
+    render_result: dict[str, object],
+    dry_run: bool,
+) -> dict[str, object]:
+    historical_report = dict(aggregate.get("report") or {})
+    registry_diagnostics = _registry_diagnostics(historical_report)
+    gdelt_queries = [
+        item
+        for item in historical_report.get("queries_run", [])
+        if isinstance(item, dict) and item.get("provider_id") == "gdelt"
+    ]
+    official_pages = [
+        item
+        for item in registry_diagnostics
+        if item.get("source_type") in {"official_page", "press_release_page"}
+    ]
+    registry_sources_checked = [
+        {
+            "source_id": item.get("source_id"),
+            "source_name": item.get("source_name"),
+            "source_type": item.get("source_type"),
+            "url": item.get("url"),
+            "cache_hit": item.get("cache_hit"),
+            "raw_count": item.get("raw_count"),
+            "errors": item.get("errors", []),
+            "warnings": item.get("warnings", []),
+        }
+        for item in registry_diagnostics
+    ]
+    provider_queries = [
+        {
+            "provider_id": item.get("provider_id"),
+            "query_group": item.get("query_group"),
+            "query": item.get("query"),
+            "result_count": item.get("result_count", 0),
+            "error": item.get("error"),
+            "cache_hit": item.get("cache_hit", False),
+            "fallback_used": item.get("fallback_used", False),
+        }
+        for item in historical_report.get("queries_run", [])
+        if isinstance(item, dict)
+    ]
+    fetch_warnings = _warning_list(
+        historical_report.get("warnings", []),
+        [item.get("warnings", []) for item in registry_diagnostics],
+    )
+    provider_warnings = _warning_list(aggregate.get("warnings", []), render_result.get("warnings", []))
+    tls_or_network_warnings = [
+        warning
+        for warning in _warning_list(
+            historical_report.get("tls_or_revocation_hint"),
+            historical_report.get("python_fetch_error"),
+            historical_report.get("curl_stderr_tail"),
+            [item.get("errors", []) for item in registry_diagnostics],
+            [item.get("recommendation") for item in registry_diagnostics],
+        )
+        if any(term in warning.lower() for term in ["tls", "ssl", "certificate", "timeout", "network", "dns", "getaddrinfo", "curl", "revocation"])
+    ]
+    accepted_candidate_count = int(historical_report.get("records_saved") or aggregate.get("source_count") or 0)
+    rejected_candidate_count = int(historical_report.get("records_excluded") or 0)
+    rejected_candidate_count += int(historical_report.get("registry_records_excluded") or 0)
+    rejected_candidate_count += int(historical_report.get("official_links_excluded") or 0)
+    candidate_count = max(
+        accepted_candidate_count + rejected_candidate_count,
+        int(historical_report.get("raw_results_count") or 0)
+        + int(historical_report.get("registry_records_raw") or 0)
+        + int(historical_report.get("manual_sources_loaded") or 0),
+    )
+    final_public_story_count = int(render_result.get("public_story_count") or 0)
+    manual_valid = bool(historical_report.get("manual_sources_valid", True))
+    source_checks_attempted = bool(historical_report.get("registry_sources_run")) or bool(historical_report.get("gdelt_queries_run")) or bool(historical_report.get("manual_sources_path"))
+    final_zero_story_result_is_credible = (
+        final_public_story_count == 0
+        and accepted_candidate_count == 0
+        and manual_valid
+        and source_checks_attempted
+        and not aggregate.get("errors")
+        and not render_result.get("errors")
+    )
+    if final_public_story_count:
+        final_reason = "One or more source-backed public stories survived validation."
+    elif final_zero_story_result_is_credible:
+        final_reason = "No source-backed public story survived validation after manual, registry, official-page, and GDELT checks; provider/TLS/network warnings are documented."
+    else:
+        final_reason = "Zero-story result needs additional review because source checks were incomplete or validation errors were recorded."
+    registry = load_source_registry(ROOT)
+    report = {
+        "edition_date": edition_date,
+        "coverage_start": start,
+        "coverage_end": end,
+        "coverage_label": format_coverage_label(start, end),
+        "initial_public_story_count": initial_public_story_count,
+        "final_public_story_count": final_public_story_count,
+        "source_groups_checked": ZERO_WEEK_SOURCE_GROUPS,
+        "configured_registry_source_count": len([item for item in registry if isinstance(item, dict) and item.get("enabled", False)]),
+        "provider_queries_attempted": provider_queries,
+        "official_pages_checked": [
+            {
+                "source_id": item.get("source_id"),
+                "source_name": item.get("source_name"),
+                "url": item.get("url"),
+                "raw_count": item.get("raw_count"),
+                "errors": item.get("errors", []),
+                "warnings": item.get("warnings", []),
+            }
+            for item in official_pages
+        ],
+        "registry_sources_checked": registry_sources_checked,
+        "gdelt_queries_attempted": provider_queries if not gdelt_queries else [
+            {
+                "query_group": item.get("query_group"),
+                "query": item.get("query"),
+                "result_count": item.get("result_count", 0),
+                "error": item.get("error"),
+                "cache_hit": item.get("cache_hit", False),
+                "fallback_used": item.get("fallback_used", False),
+            }
+            for item in gdelt_queries
+        ],
+        "candidate_count": candidate_count,
+        "accepted_candidate_count": accepted_candidate_count,
+        "rejected_candidate_count": rejected_candidate_count,
+        "rejected_candidates": _rejected_candidate_summary(historical_report),
+        "fetch_warnings": fetch_warnings,
+        "provider_warnings": provider_warnings,
+        "tls_or_network_warnings": unique_messages(tls_or_network_warnings),
+        "manual_source_records_added": int(historical_report.get("manual_sources_loaded") or 0) > 0,
+        "manual_sources_path": historical_report.get("manual_sources_path"),
+        "manual_sources_valid": manual_valid,
+        "final_zero_story_result_is_credible": final_zero_story_result_is_credible,
+        "final_reason": final_reason,
+    }
+    report_path = ROOT / "output" / "dispatches" / "cascadia" / "weekly_gap_reports" / f"{edition_date}.json"
+    if not dry_run:
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    report["weekly_gap_report_path"] = str(report_path)
     return report
 
 
@@ -383,13 +597,14 @@ def run_source_gap_report(args: argparse.Namespace) -> dict[str, object]:
 
 def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     start, end, edition_date = resolve_week_args(args)
+    initial_public_story_count = manifest_public_story_count(edition_date)
     historical_search = args.historical_search or args.quality_weekly
     historical_provider = args.historical_provider
     max_historical_queries = args.max_historical_queries
     historical_delay_seconds = args.historical_delay_seconds
     if args.quality_weekly:
         historical_provider = historical_provider or "all"
-        max_historical_queries = max_historical_queries or 5
+        max_historical_queries = max_historical_queries or 8
         historical_delay_seconds = historical_delay_seconds if historical_delay_seconds is not None else 10
     if historical_search:
         aggregate = retrieve_historical_sources(
@@ -423,9 +638,12 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     result["historical_search"] = bool(historical_search)
     if args.quality_weekly:
         quality_report = write_weekly_quality_report(start, end, edition_date, aggregate, result, args.dry_run)
+        gap_report = write_zero_week_gap_report(start, end, edition_date, initial_public_story_count, aggregate, result, args.dry_run)
         result["quality_weekly"] = True
         result["quality_weekly_report"] = quality_report
         result["weekly_quality_report_path"] = quality_report.get("weekly_quality_report_path")
+        result["weekly_gap_report"] = gap_report
+        result["weekly_gap_report_path"] = gap_report.get("weekly_gap_report_path")
         result["warnings"] = unique_messages(list(result.get("warnings", [])) + list(quality_report.get("warnings", [])))
         result["errors"] = unique_messages(list(result.get("errors", [])) + list(quality_report.get("errors", [])))
     result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))
@@ -441,6 +659,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
     warnings: list[str] = []
     errors: list[str] = []
     for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
+        initial_public_story_count = manifest_public_story_count(edition_date)
         historical_search = args.historical_search or args.quality_weekly
         if historical_search:
             aggregate = retrieve_historical_sources(
@@ -452,7 +671,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
                 dry_run=args.dry_run,
                 refresh_cache=args.refresh_cache,
                 historical_provider=args.historical_provider or "all",
-                max_historical_queries=args.max_historical_queries or (5 if args.quality_weekly else None),
+                max_historical_queries=args.max_historical_queries or (8 if args.quality_weekly else None),
                 historical_delay_seconds=args.historical_delay_seconds if args.historical_delay_seconds is not None else (10 if args.quality_weekly else None),
             )
         elif args.from_existing_editions:
@@ -490,9 +709,12 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
         result["historical_search"] = bool(historical_search)
         if args.quality_weekly:
             quality_report = write_weekly_quality_report(start, end, edition_date, aggregate, result, args.dry_run)
+            gap_report = write_zero_week_gap_report(start, end, edition_date, initial_public_story_count, aggregate, result, args.dry_run)
             result["quality_weekly"] = True
             result["quality_weekly_report"] = quality_report
             result["weekly_quality_report_path"] = quality_report.get("weekly_quality_report_path")
+            result["weekly_gap_report"] = gap_report
+            result["weekly_gap_report_path"] = gap_report.get("weekly_gap_report_path")
             result["warnings"] = unique_messages(list(result.get("warnings", [])) + list(quality_report.get("warnings", [])))
             result["errors"] = unique_messages(list(result.get("errors", [])) + list(quality_report.get("errors", [])))
         result["normalized_count"] = aggregate.get("normalized_count", result.get("normalized_count", 0))

@@ -492,6 +492,23 @@ def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
     )
 
 
+def remove_unlistable_public_cascadia_editions(site_root: Path, dry_run: bool, wrote: list[str]) -> list[str]:
+    editions_root = site_root / "cascadia" / "editions"
+    if not editions_root.exists():
+        return []
+    removed: list[str] = []
+    for edition_dir in sorted(editions_root.iterdir()):
+        if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+            continue
+        if public_edition_is_listable(site_root, "cascadia", edition_dir.name):
+            continue
+        removed.append(str(edition_dir))
+        wrote.append(str(edition_dir))
+        if not dry_run:
+            shutil.rmtree(edition_dir)
+    return removed
+
+
 def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
     latest = edition_dates[0] if edition_dates else dispatch.edition_date
     signal_pack_note = ""
@@ -681,7 +698,6 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     write_text(site_root / "index.html", render_root(dispatches), dry_run, wrote)
     for dispatch in dispatches:
         public_urls.append(f"{BASE_URL}/{dispatch.slug}/")
-        public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
         dispatch_public_root = site_root / dispatch.slug
         dispatch_public_edition = dispatch_public_root / "editions" / dispatch.edition_date
         backup_dir = backup_root / dispatch.slug / dispatch.edition_date
@@ -691,7 +707,10 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
-        if not copied_real_edition:
+        if copied_real_edition:
+            public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
+        elif dispatch.slug != "cascadia":
+            public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
             edition_html = render_edition(dispatch)
             write_text(dispatch_public_edition / "index.html", edition_html, dry_run, wrote)
             edition_manifest, sources_manifest, curation_manifest = build_manifests(dispatch, site_root, backup_root, generated_at, warnings, errors)
@@ -710,6 +729,8 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
             write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
         if dispatch.slug in {"gaza", "cascadia"}:
+            if dispatch.slug == "cascadia":
+                remove_unlistable_public_cascadia_editions(site_root, dry_run, wrote)
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)

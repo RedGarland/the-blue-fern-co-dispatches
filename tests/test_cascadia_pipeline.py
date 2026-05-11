@@ -1648,7 +1648,8 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
             assert weekly_date in text
         for _, _, _, label in weekly_dates.values():
             assert f"The Cascadia Briefing - {label}" in text
-        assert "0 stories | No qualifying public signals identified" in text
+        assert "Reviewed week | No qualifying source-backed regional signals identified" in text
+        assert "0 stories | No qualifying public signals identified" not in text
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
 
@@ -1833,7 +1834,7 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert "source_record_ids" in manifest
         assert "source_urls" in manifest
         assert manifest["weekly_summary_bullets"] == []
-        assert manifest["public_archive_subtitle"] == "0 stories | No qualifying public signals identified"
+        assert manifest["public_archive_subtitle"] == "Reviewed week | No qualifying source-backed regional signals identified"
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     assert all(edition_date in archive for edition_date in expected)
 

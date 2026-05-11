@@ -30,6 +30,7 @@ PUBLIC_SITE_ASSETS = ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
 CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
 CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
+CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = "Reviewed week | No qualifying source-backed regional signals identified"
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia")
 DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia"}
@@ -450,11 +451,11 @@ def public_edition_subtitle(site_root: Path, dispatch: DispatchConfig, edition_d
     if dispatch.slug != "cascadia":
         return ""
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+    if manifest.get("public_story_count") == 0:
+        return CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE
     subtitle = str(manifest.get("public_archive_subtitle") or "").strip()
     if subtitle:
         return subtitle
-    if manifest.get("public_story_count") == 0:
-        return "0 stories | No qualifying public signals identified"
     parts = []
     if isinstance(manifest.get("public_story_count"), int):
         count = int(manifest["public_story_count"])

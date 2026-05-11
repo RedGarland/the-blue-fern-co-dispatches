@@ -17,6 +17,7 @@ from bluefern_dispatches.generator import (
     BASE_URL,
     CASCADIA_LOGO_ASSET,
     CASCADIA_PUBLIC_DESCRIPTION,
+    CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE,
     TEMPLATE_VERSION,
     DispatchConfig,
     discover_public_edition_dates,
@@ -310,7 +311,7 @@ def render_weekly_summary(bullets: list[str]) -> str:
 
 def archive_subtitle(stories: list[dict[str, Any]]) -> str:
     if not stories:
-        return "0 stories | No qualifying public signals identified"
+        return CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE
     parts = [f"{len(stories)} {'story' if len(stories) == 1 else 'stories'}"]
     states = public_story_states(stories)
     categories = public_story_categories(stories)

@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "source_record_id": "src-73e63f4d92cc2b46",
+    "source_id": "seattle-alerts",
+    "title": "Public Safety",
+    "url": "https://alert.seattle.gov/category/public-safety",
+    "publisher": "City of Seattle Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-11T22:46:54.756889+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-fb7596ce9bb8"
+    ],
+    "claim_ids": [
+      "story-fb7596ce9bb8"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-12",
+    "coverage_start": "2026-04-06",
+    "coverage_end": "2026-04-12",
+    "coverage_label": "Apr 6\u201312, 2026",
+    "region_scope": "WA",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://alert.seattle.gov/",
+    "search_start_date": "2026-04-06",
+    "search_end_date": "2026-04-12",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  }
+]

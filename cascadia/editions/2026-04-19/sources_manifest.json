@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "source_record_id": "src-bf028459a1c8c5e4",
+    "source_id": "portland-public-alerts",
+    "title": "Wildfire",
+    "url": "https://www.publicalerts.org/wildfire",
+    "publisher": "Portland Public Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-11T22:49:04.702048+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-7dfd23c0456d"
+    ],
+    "claim_ids": [
+      "story-7dfd23c0456d"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-19",
+    "coverage_start": "2026-04-13",
+    "coverage_end": "2026-04-19",
+    "coverage_label": "Apr 13\u201319, 2026",
+    "region_scope": "OR",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://www.publicalerts.org/",
+    "search_start_date": "2026-04-13",
+    "search_end_date": "2026-04-19",
+    "region_terms_matched": [
+      "portland"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  }
+]

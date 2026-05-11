@@ -271,3 +271,163 @@ def test_valid_manual_sources_are_first_choice(work_root, monkeypatch):
     assert result["ok"] is True
     assert result["source_mode_used"] == "manual"
     assert result["source_file"] == str(manual_path)
+
+
+def test_cross_edition_dedupe_suppresses_repeated_url_and_writes_diagnostic(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-001",
+                    "title": "Gaza aid crossing update",
+                    "url": "https://news.google.com/rss/articles/abc123?utm_source=rss",
+                    "canonical_url": "",
+                    "publisher": "Example News",
+                    "published_at": "",
+                    "retrieved_at": "2026-05-10T08:00:00+00:00",
+                    "category_hint": "humanitarian",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-src-002",
+            "title": "Gaza aid crossing update",
+            "url": "https://news.google.com/rss/articles/abc123?utm_source=other",
+            "canonical_url": "",
+            "publisher": "Example News",
+            "published_at": "",
+            "retrieved_at": "2026-05-11T08:00:00+00:00",
+            "category_hint": "humanitarian",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
+
+    assert kept == []
+    assert report["suppressed_candidate_count"] == 1
+    assert report["suppressed_candidates"][0]["matched_prior_edition"] == "2026-05-10"
+    assert report["suppressed_candidates"][0]["matched_key_type"] in {
+        "canonical_url",
+        "normalized_url",
+        "publisher_title",
+        "title_fingerprint",
+        "claim_fingerprint",
+    }
+
+
+def test_retrieved_at_alone_does_not_make_repeated_source_fresh(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-001",
+                    "title": "Hospital fuel warning in Gaza",
+                    "url": "https://example.com/story",
+                    "canonical_url": "https://example.com/story",
+                    "publisher": "Wire",
+                    "published_at": "2026-05-10T07:00:00+00:00",
+                    "retrieved_at": "2026-05-10T08:00:00+00:00",
+                    "category_hint": "humanitarian",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-src-003",
+            "title": "Hospital fuel warning in Gaza",
+            "url": "https://example.com/story",
+            "canonical_url": "https://example.com/story",
+            "publisher": "Wire",
+            "published_at": "2026-05-10T07:00:00+00:00",
+            "retrieved_at": "2026-05-11T08:00:00+00:00",
+            "category_hint": "humanitarian",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
+
+    assert kept == []
+    assert report["suppressed_candidate_count"] == 1
+
+
+def test_missing_published_at_is_stale_risk_when_repeated(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Ceasefire talks update",
+                    "url": "https://example.com/talks",
+                    "canonical_url": "https://example.com/talks",
+                    "publisher": "Daily Desk",
+                    "published_at": "",
+                    "retrieved_at": "2026-05-10T08:00:00+00:00",
+                    "category_hint": "diplomatic",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "title": "Ceasefire talks update",
+            "url": "https://example.com/talks",
+            "canonical_url": "https://example.com/talks",
+            "publisher": "Daily Desk",
+            "published_at": "",
+            "retrieved_at": "2026-05-11T08:00:00+00:00",
+            "category_hint": "diplomatic",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
+
+    assert kept == []
+    assert report["stale_risk_candidates"]
+
+
+def test_new_distinct_source_passes_cross_edition_dedupe(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Ceasefire talks update",
+                    "url": "https://example.com/talks",
+                    "canonical_url": "https://example.com/talks",
+                    "publisher": "Daily Desk",
+                    "published_at": "",
+                    "retrieved_at": "2026-05-10T08:00:00+00:00",
+                    "category_hint": "diplomatic",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "title": "Aid corridor inspection opens in northern Gaza",
+            "url": "https://example.com/new-aid",
+            "canonical_url": "https://example.com/new-aid",
+            "publisher": "Daily Desk",
+            "published_at": "2026-05-11T09:00:00+00:00",
+            "retrieved_at": "2026-05-11T09:30:00+00:00",
+            "category_hint": "humanitarian",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
+
+    assert len(kept) == 1
+    assert report["suppressed_candidate_count"] == 0

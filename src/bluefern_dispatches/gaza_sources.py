@@ -6,13 +6,15 @@ import hashlib
 import json
 import mimetypes
 import re
+import string
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
 REQUIRED_SOURCE_FIELDS = {
@@ -31,6 +33,34 @@ REQUIRED_SOURCE_FIELDS = {
 GAZA_TERMS = re.compile(r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|palestinian territories|occupied palestinian territory)\b", re.I)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PLACEHOLDER_RE = re.compile(r"^(replace with|actual source|actual publisher|actual-source-url)", re.I)
+WHITESPACE_RE = re.compile(r"\s+")
+PUNCT_TRANS = str.maketrans({char: " " for char in string.punctuation})
+SMART_CHAR_TRANS = str.maketrans(
+    {
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u2212": "-",
+        "\xa0": " ",
+    }
+)
+TRACKING_QUERY_KEYS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "utm_id",
+    "gclid",
+    "fbclid",
+    "ocid",
+    "ref",
+    "ref_src",
+    "igshid",
+}
 
 
 @dataclass(frozen=True)
@@ -48,6 +78,188 @@ class SourceDefinition:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def normalize_title(title: str) -> str:
+    value = str(title or "").strip().translate(SMART_CHAR_TRANS).lower()
+    value = value.translate(PUNCT_TRANS)
+    return WHITESPACE_RE.sub(" ", value).strip()
+
+
+def normalize_publisher(publisher: str) -> str:
+    value = normalize_title(publisher)
+    value = re.sub(r"\b(news|media|wire|agency|press|the)\b", " ", value)
+    return WHITESPACE_RE.sub(" ", value).strip()
+
+
+def canonicalize_url(url: str) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return raw.lower()
+    scheme = (parts.scheme or "https").lower()
+    netloc = parts.netloc.lower()
+    path = re.sub(r"/{2,}", "/", parts.path or "/").rstrip("/") or "/"
+    query_pairs = parse_qsl(parts.query, keep_blank_values=False)
+    filtered = [
+        (key, value)
+        for key, value in query_pairs
+        if key.lower() not in TRACKING_QUERY_KEYS and not key.lower().startswith("utm_")
+    ]
+    query = urlencode(filtered)
+    return urlunsplit((scheme, netloc, path, query, ""))
+
+
+def canonical_source_key(source: dict[str, Any]) -> dict[str, str]:
+    title = normalize_title(str(source.get("title") or ""))
+    publisher = normalize_publisher(str(source.get("publisher") or ""))
+    canonical_url = canonicalize_url(str(source.get("canonical_url") or source.get("url") or ""))
+    normalized_url = canonicalize_url(str(source.get("url") or ""))
+    publisher_title = f"{publisher}|{title}" if publisher and title else ""
+    return {
+        "canonical_url": canonical_url,
+        "normalized_url": normalized_url,
+        "publisher_title": publisher_title,
+        "title_fingerprint": title,
+    }
+
+
+def story_claim_fingerprint(source_or_story: dict[str, Any]) -> str:
+    title = normalize_title(str(source_or_story.get("title") or ""))
+    publisher = normalize_publisher(str(source_or_story.get("publisher") or ""))
+    category = normalize_title(str(source_or_story.get("category_hint") or source_or_story.get("category") or ""))
+    return "|".join(part for part in (publisher, title, category) if part)
+
+
+def _safe_parse_dt(value: str) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    candidate = text.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(candidate)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _is_google_news_rss(url: str) -> bool:
+    text = str(url or "").lower()
+    return "news.google.com" in text and "/rss/" in text
+
+
+def _iter_prior_source_manifests(root: Path, edition_date: str, lookback_days: int) -> list[tuple[str, Path]]:
+    target = date.fromisoformat(edition_date)
+    manifests: list[tuple[str, Path]] = []
+    for days_back in range(1, lookback_days + 1):
+        prior = (target - timedelta(days=days_back)).isoformat()
+        for manifest in (
+            root / "output" / "dispatches" / "gaza" / "editions" / prior / "sources_manifest.json",
+            root / "output" / "site" / "gaza" / "editions" / prior / "sources_manifest.json",
+        ):
+            if manifest.exists():
+                manifests.append((prior, manifest))
+    return manifests
+
+
+def filter_recent_duplicate_sources(
+    root: Path,
+    edition_date: str,
+    candidates: list[dict[str, Any]],
+    lookback_days: int = 7,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    seen_by_key: dict[tuple[str, str], dict[str, Any]] = {}
+    checked_editions: set[str] = set()
+    for prior_date, manifest_path in _iter_prior_source_manifests(root, edition_date, lookback_days):
+        checked_editions.add(prior_date)
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, list):
+            continue
+        for prior in payload:
+            if not isinstance(prior, dict):
+                continue
+            keys = canonical_source_key(prior)
+            claim = story_claim_fingerprint(prior)
+            for key_type in ("canonical_url", "normalized_url", "publisher_title", "title_fingerprint"):
+                value = keys.get(key_type) or ""
+                if value:
+                    seen_by_key.setdefault((key_type, value), {"edition_date": prior_date, "source": prior, "key_type": key_type})
+            if claim:
+                seen_by_key.setdefault(("claim_fingerprint", claim), {"edition_date": prior_date, "source": prior, "key_type": "claim_fingerprint"})
+
+    kept: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = []
+    stale_risk: list[dict[str, Any]] = []
+    for source in candidates:
+        keys = canonical_source_key(source)
+        claim = story_claim_fingerprint(source)
+        source["dedupe_key"] = keys.get("publisher_title") or keys.get("canonical_url") or keys.get("normalized_url") or keys.get("title_fingerprint") or ""
+        source["title_fingerprint"] = keys.get("title_fingerprint") or ""
+        source["claim_fingerprint"] = claim
+
+        matches: list[tuple[str, str, dict[str, Any]]] = []
+        for key_type in ("canonical_url", "normalized_url", "publisher_title", "title_fingerprint"):
+            value = keys.get(key_type) or ""
+            if value and (key_type, value) in seen_by_key:
+                matches.append((key_type, value, seen_by_key[(key_type, value)]))
+        if claim and ("claim_fingerprint", claim) in seen_by_key:
+            matches.append(("claim_fingerprint", claim, seen_by_key[("claim_fingerprint", claim)]))
+
+        if not matches:
+            kept.append(source)
+            continue
+
+        published_at = _safe_parse_dt(str(source.get("published_at") or ""))
+        suppress = True
+        reason = "matched recent prior edition"
+        matched = matches[0]
+        prior_src = matched[2]["source"]
+        prior_published_at = _safe_parse_dt(str(prior_src.get("published_at") or ""))
+        if published_at and prior_published_at and published_at > prior_published_at and matched[0] in {"canonical_url", "normalized_url"}:
+            suppress = False
+            reason = "newer publication timestamp than prior url match"
+        if str(source.get("published_at") or "").strip() == "":
+            stale_risk.append({"title": source.get("title"), "publisher": source.get("publisher"), "url": source.get("url")})
+        if _is_google_news_rss(str(source.get("url") or "")) and not str(source.get("canonical_url") or "").strip():
+            source["google_news_wrapper_url"] = keys.get("normalized_url") or ""
+        if suppress:
+            source["repeated_from_edition_date"] = matched[2]["edition_date"]
+            suppressed.append(
+                {
+                    "title": source.get("title"),
+                    "publisher": source.get("publisher"),
+                    "url": source.get("url"),
+                    "published_at": source.get("published_at"),
+                    "retrieved_at": source.get("retrieved_at"),
+                    "matched_prior_edition": matched[2]["edition_date"],
+                    "matched_key_type": matched[0],
+                    "matched_prior_title": prior_src.get("title"),
+                    "matched_prior_url": prior_src.get("url"),
+                    "reason": reason,
+                }
+            )
+        else:
+            kept.append(source)
+
+    report = {
+        "edition_date": edition_date,
+        "lookback_days": lookback_days,
+        "prior_editions_checked": sorted(checked_editions),
+        "input_candidate_count": len(candidates),
+        "kept_candidate_count": len(kept),
+        "suppressed_candidate_count": len(suppressed),
+        "suppressed_candidates": suppressed,
+        "stale_risk_candidates": stale_risk,
+        "warnings": [],
+    }
+    if candidates and not kept:
+        report["warnings"].append("all candidates were suppressed as repeated or stale-risk")
+    return kept, report
 
 
 def _strip_quotes(value: str) -> str:

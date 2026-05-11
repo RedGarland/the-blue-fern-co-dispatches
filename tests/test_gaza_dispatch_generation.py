@@ -144,3 +144,36 @@ def test_archive_rss_latest_and_shared_records(monkeypatch):
     assert records[0]["source_ids"]
     assert detail_packages == []
     assert (backup_root / "2026-05-01" / "sources_manifest.json").exists()
+
+
+def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    repeated = [
+        {
+            "source_record_id": "gaza-src-001",
+            "title": "Dispatches From Gaza - 2026-05-10",
+            "url": "https://news.google.com/rss/articles/abc123?utm_source=rss",
+            "publisher": "Google News",
+            "published_at": "2026-05-10T08:00:00+00:00",
+            "retrieved_at": "2026-05-10T08:00:00+00:00",
+            "summary_or_snippet": "Structured daily briefing synthesizing key developments from public reporting.",
+            "source_type": "rss",
+            "region_scope": "Gaza",
+            "category_hint": "general",
+            "reliability_tier": "reported-public-source",
+        }
+    ]
+    write_manual_sources(work, "2026-05-10", repeated)
+    first = run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert first["ok"] is True
+    write_manual_sources(work, "2026-05-11", repeated)
+
+    result = run_gaza_dispatch(work, "2026-05-11", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    dedupe_report = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-11" / "dedupe_report.json"
+    report = json.loads(dedupe_report.read_text(encoding="utf-8"))
+    assert result["ok"] is False
+    assert "No new source-backed Gaza developments after cross-edition dedupe" in " ".join(result["errors"])
+    assert report["suppressed_candidate_count"] >= 1

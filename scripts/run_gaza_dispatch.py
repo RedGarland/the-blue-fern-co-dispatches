@@ -27,6 +27,7 @@ from bluefern_dispatches.generator import (
     render_dispatch_index_for_dates,
     render_rss_for_dates,
 )
+from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -480,7 +481,15 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     normalized, norm_warnings, norm_errors = normalize_sources(manual_records, edition_date, generated_at)
     warnings.extend(norm_warnings)
     errors.extend(norm_errors)
+    normalized, cross_edition_report = filter_recent_duplicate_sources(root, edition_date, normalized, lookback_days=7)
     write_json(normalized_dir / "normalized_sources.json", normalized, dry_run, wrote)
+    write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "dedupe_report.json", cross_edition_report, dry_run, wrote)
+    if cross_edition_report.get("suppressed_candidate_count", 0):
+        warnings.append(
+            f"suppressed {cross_edition_report['suppressed_candidate_count']} repeated/stale candidate sources via cross-edition dedupe"
+        )
+    if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
+        errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
     stories = curate_stories(normalized, edition_date, generated_at)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories

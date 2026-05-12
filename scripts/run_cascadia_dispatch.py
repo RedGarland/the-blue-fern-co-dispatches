@@ -1,6 +1,7 @@
 from pathlib import Path
 import argparse
 import json
+import os
 import sys
 from datetime import date as local_date, timedelta
 
@@ -42,6 +43,13 @@ REQUIRED_SUCCESSFUL_SOURCE_GROUPS_FOR_CREDIBLE_ZERO = [
     "local_regional_source",
     "historical_search_provider",
 ]
+TRUTHY = {"1", "true", "yes", "on"}
+
+
+def registry_sources_disabled(args: argparse.Namespace) -> bool:
+    if bool(getattr(args, "no_registry_sources", False)):
+        return True
+    return str(os.getenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "")).strip().lower() in TRUTHY
 
 
 def run_pipeline(
@@ -860,6 +868,7 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
     historical_provider = args.historical_provider
     max_historical_queries = args.max_historical_queries
     historical_delay_seconds = args.historical_delay_seconds
+    disable_registry_sources = registry_sources_disabled(args)
     if args.quality_weekly:
         historical_provider = historical_provider or "all"
         max_historical_queries = max_historical_queries or 8
@@ -876,6 +885,7 @@ def run_weekly_public(args: argparse.Namespace, mode: str) -> dict[str, object]:
             historical_provider=historical_provider,
             max_historical_queries=max_historical_queries,
             historical_delay_seconds=historical_delay_seconds,
+            disable_registry_sources=disable_registry_sources,
         )
     else:
         aggregate = aggregate_weekly_curation(ROOT, args.date, local_date.fromisoformat(start), local_date.fromisoformat(end), edition_date=edition_date, dry_run=args.dry_run)
@@ -919,6 +929,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
     results = []
     warnings: list[str] = []
     errors: list[str] = []
+    disable_registry_sources = registry_sources_disabled(args)
     for start, end, edition_date in completed_week_windows(args.date, args.backfill_weeks):
         initial_public_story_count = manifest_public_story_count(edition_date)
         historical_search = args.historical_search or args.quality_weekly
@@ -934,6 +945,7 @@ def run_weekly_backfill(args: argparse.Namespace, mode: str) -> dict[str, object
                 historical_provider=args.historical_provider or "all",
                 max_historical_queries=args.max_historical_queries or (8 if args.quality_weekly else None),
                 historical_delay_seconds=args.historical_delay_seconds if args.historical_delay_seconds is not None else (10 if args.quality_weekly else None),
+                disable_registry_sources=disable_registry_sources,
             )
         elif args.from_existing_editions:
             aggregate = backfill_weekly_from_existing_editions(
@@ -1026,6 +1038,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--historical-provider", default="all")
     parser.add_argument("--max-historical-queries", type=int)
     parser.add_argument("--historical-delay-seconds", type=float)
+    parser.add_argument("--no-registry-sources", action="store_true", help="Disable Cascadia registry discovery for this run.")
     parser.add_argument("--create-manual-template", action="store_true")
     parser.add_argument("--validate-manual-sources", action="store_true")
     parser.add_argument("--source-gap-report", action="store_true")

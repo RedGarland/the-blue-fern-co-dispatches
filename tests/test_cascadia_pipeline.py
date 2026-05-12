@@ -450,6 +450,8 @@ sources:
 
 
 def test_historical_search_filters_dedupes_and_writes_diagnostics(cascadia_work_root, monkeypatch):
+    monkeypatch.setenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "1")
+
     class FakeGDELT(GDELTProvider):
         def search(self, start_date, end_date, query_terms, max_results):
             return [
@@ -868,6 +870,8 @@ def test_gdelt_provider_empty_and_non_json_responses_warn(cascadia_work_root, mo
 
 
 def test_historical_provider_failure_fails_safely(cascadia_work_root, monkeypatch):
+    monkeypatch.setenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "1")
+
     class FailingGDELT(GDELTProvider):
         def search(self, start_date, end_date, query_terms, max_results):
             raise OSError("network unavailable")
@@ -902,6 +906,8 @@ def test_historical_provider_rate_limit_enters_cooldown(cascadia_work_root, monk
 
 
 def test_manual_and_historical_sources_merge_with_source_type_preserved(cascadia_work_root, monkeypatch):
+    monkeypatch.setenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "1")
+
     week_start, week_end = containing_week("2026-04-28")
     manual_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
     manual_dir.mkdir(parents=True)
@@ -1342,6 +1348,7 @@ def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_wo
     import run_cascadia_dispatch
 
     monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    monkeypatch.setenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "1")
 
     class FakeGDELT(GDELTProvider):
         def search(self, start_date, end_date, query_terms, max_results):
@@ -1359,7 +1366,7 @@ def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_wo
             return []
 
     monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
-    code = run_cascadia_dispatch.main(["--weekly-public", "--backfill-weeks", "4", "--date", "2026-05-11", "--historical-search"])
+    code = run_cascadia_dispatch.main(["--weekly-public", "--backfill-weeks", "4", "--date", "2026-05-11", "--historical-search", "--no-registry-sources"])
 
     assert code == 0
     edition_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-10"
@@ -1382,6 +1389,44 @@ def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_wo
     assert "The Cascadia Briefing - May 4\u201310, 2026" in archive
     assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in rss
     assert "2026-05-07" not in archive
+
+
+def test_historical_registry_discovery_disabled_by_env(cascadia_work_root, monkeypatch):
+    monkeypatch.setenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "1")
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            return []
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-28"), edition_date="2026-05-03", run_date="2026-05-11")
+
+    assert result["report"]["registry_discovery_disabled"] is True
+    assert result["report"]["registry_sources_planned"] == 0
+    assert result["report"]["source_count_by_provider_planned"] == {"gdelt": 1, "manual": 1}
+
+
+def test_historical_registry_discovery_enabled_by_default(cascadia_work_root, monkeypatch):
+    monkeypatch.delenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", raising=False)
+    week_start, week_end = containing_week("2026-04-28")
+    calls = {"count": 0}
+
+    def fake_collect_registry_sources(root, week_start_arg, week_end_arg, retrieved_at=None, refresh_cache=False):
+        calls["count"] += 1
+        return {"records": [], "warnings": [], "errors": [], "report": {"registry_sources_planned": 1, "registry_sources_run": 1}}
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.collect_registry_sources", fake_collect_registry_sources)
+
+    class FakeGDELT(GDELTProvider):
+        def search(self, start_date, end_date, query_terms, max_results):
+            return []
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FakeGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, week_start, week_end, edition_date="2026-05-03", run_date="2026-05-11")
+
+    assert calls["count"] == 1
+    assert result["report"]["registry_discovery_disabled"] is False
+    assert result["report"]["registry_sources_run"] == 1
 
 
 def test_dedupe_records_handles_url_title_and_compound_keys():

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import email.utils
 import json
+import os
 import re
 import time
 import urllib.error
@@ -60,6 +61,7 @@ KNOWN_REGIONAL_DOMAINS = [
     "kxly.com",
 ]
 PROVIDER_BACKOFF_UNTIL: dict[str, float] = {}
+TRUTHY = {"1", "true", "yes", "on"}
 
 
 def utc_now() -> str:
@@ -661,13 +663,22 @@ def dedupe_records(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
     return kept, duplicates
 
 
-def parse_provider_mode(value: str | None) -> list[str]:
+def registry_discovery_disabled(disable_registry_sources: bool | None = None) -> bool:
+    if disable_registry_sources is not None:
+        return bool(disable_registry_sources)
+    return str(os.getenv("CASCADIA_DISABLE_REGISTRY_DISCOVERY", "")).strip().lower() in TRUTHY
+
+
+def parse_provider_mode(value: str | None, disable_registry_sources: bool = False) -> list[str]:
     if not value or value == "all":
-        return ["manual", "registry", "gdelt"]
-    providers = [item.strip().lower() for item in value.split(",") if item.strip()]
-    unknown = [item for item in providers if item not in {"manual", "registry", "gdelt"}]
-    if unknown:
-        raise ValueError(f"unsupported historical provider(s): {', '.join(unknown)}")
+        providers = ["manual", "registry", "gdelt"]
+    else:
+        providers = [item.strip().lower() for item in value.split(",") if item.strip()]
+        unknown = [item for item in providers if item not in {"manual", "registry", "gdelt"}]
+        if unknown:
+            raise ValueError(f"unsupported historical provider(s): {', '.join(unknown)}")
+    if disable_registry_sources:
+        providers = [provider for provider in providers if provider != "registry"]
     ordered = []
     for provider_id in ["manual", "registry", "gdelt"]:
         if provider_id in providers and provider_id not in ordered:
@@ -898,6 +909,7 @@ def retrieve_historical_sources(
     historical_provider: str | None = None,
     max_historical_queries: int | None = None,
     historical_delay_seconds: float | None = None,
+    disable_registry_sources: bool | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     edition_date = edition_date or week_end.isoformat()
@@ -905,8 +917,9 @@ def retrieve_historical_sources(
     config = load_historical_config(root)
     if max_historical_queries is not None:
         config.setdefault("query_groups", {})["max_queries_per_week"] = max_historical_queries
+    registry_disabled = registry_discovery_disabled(disable_registry_sources)
     provider_mode = historical_provider or "all"
-    provider_order = parse_provider_mode(provider_mode)
+    provider_order = parse_provider_mode(provider_mode, disable_registry_sources=registry_disabled)
     retrieved_at = utc_now()
     queries = build_queries(config)
     warnings: list[str] = []
@@ -967,6 +980,9 @@ def retrieve_historical_sources(
                 excluded[reason] += 1
                 continue
             raw_candidates.append(record)
+
+    if registry_disabled and (not historical_provider or historical_provider == "all" or "registry" in historical_provider.lower()):
+        warnings.append("registry discovery disabled via CASCADIA_DISABLE_REGISTRY_DISCOVERY or disable_registry_sources")
 
     if "registry" in provider_order:
         registry_result = collect_registry_sources(root, week_start, week_end, retrieved_at=retrieved_at, refresh_cache=refresh_cache)
@@ -1146,6 +1162,7 @@ def retrieve_historical_sources(
         "coverage_start": week_start.isoformat(),
         "coverage_end": week_end.isoformat(),
         "historical_provider_mode": provider_mode,
+        "registry_discovery_disabled": registry_disabled,
         "providers_used": providers_used,
         "queries_planned": queries_planned,
         "queries_run": queries_run,

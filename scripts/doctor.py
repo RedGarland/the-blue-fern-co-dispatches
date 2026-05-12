@@ -65,6 +65,7 @@ def check_required_folders(root: Path) -> CheckResult:
     required = [
         "assets",
         "data/dispatches/gaza",
+        "data/dispatches/american-pressure",
         "data/dispatches/cascadia",
         "docs",
         "logs",

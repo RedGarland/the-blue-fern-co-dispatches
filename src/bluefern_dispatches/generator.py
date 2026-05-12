@@ -30,6 +30,21 @@ PUBLIC_SITE_ASSETS = ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
 CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
 CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
+AMERICAN_PRESSURE_PUBLIC_DESCRIPTION = "Source-based reporting on the pressures reshaping household life across the United States."
+AMERICAN_PRESSURE_NO_SIGNAL = "No source-backed signal in this edition."
+AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
+    "source_record_id",
+    "title",
+    "url",
+    "publisher",
+    "published_at",
+    "retrieved_at",
+    "summary_or_snippet",
+    "source_type",
+    "region_scope",
+    "category_hint",
+    "reliability_tier",
+}
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_IDENTIFIED = "Reviewed week | No qualifying source-backed regional signals identified"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying source-backed regional signals surfaced"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
@@ -134,7 +149,156 @@ def gaza_body_html(edition_date: str) -> str:
     return GAZA_BODY_HTML.replace("Daily Briefing - 2026-05-03", f"Daily Briefing - {edition_date}")
 
 
-def seed_dispatches(now: str) -> list[DispatchConfig]:
+def _american_pressure_fixtures(root: Path, edition_date: str) -> tuple[list[dict[str, Any]], Path | None]:
+    base = root / "data" / "dispatches" / "american-pressure" / "sources"
+    direct = base / edition_date / "manual_sources.json"
+    if direct.exists():
+        return json.loads(direct.read_text(encoding="utf-8")), direct
+    if not base.exists():
+        return [], None
+    dated = sorted(path for path in base.glob("*/manual_sources.json") if path.is_file())
+    if not dated:
+        return [], None
+    chosen = dated[-1]
+    return json.loads(chosen.read_text(encoding="utf-8")), chosen
+
+
+def _source_category_to_story_category(source_category_hint: str) -> str:
+    value = source_category_hint.strip().lower()
+    if value in {"food", "food-pressure"}:
+        return "food-pressure"
+    if value in {"health", "health-access"}:
+        return "health-access-pressure"
+    if value in {"household", "household-cost"}:
+        return "household-cost-pressure"
+    if value in {"environment", "environmental"}:
+        return "environmental-pressure"
+    return "local-systems-note"
+
+
+def _render_american_pressure_section(title: str, story: StoryRecord | None, source: SourceRecord | None) -> str:
+    if not story or not source:
+        return f"<h2>{html.escape(title)}</h2><p>{AMERICAN_PRESSURE_NO_SIGNAL}</p>"
+    published = source.published_at or "date not listed"
+    return (
+        f"<h2>{html.escape(title)}</h2>"
+        f"<p>{html.escape(story.summary)}</p>"
+        f"<p><em>Source: <a href=\"{html.escape(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+        f"{html.escape(source.title)}</a> ({html.escape(source.publisher)}, {html.escape(published)})</em></p>"
+    )
+
+
+def _render_american_pressure_body(stories: list[StoryRecord], sources: list[SourceRecord]) -> str:
+    by_category = {story.category: story for story in stories}
+    by_source_id = {source.source_id: source for source in sources}
+
+    top_story = stories[0] if stories else None
+    top_source = by_source_id.get(top_story.source_ids[0]) if top_story and top_story.source_ids else None
+    if top_story and top_source:
+        top_html = (
+            "<h2>Top Signal</h2>"
+            f"<p>{html.escape(top_story.summary)}</p>"
+            f"<p><em>Source: <a href=\"{html.escape(top_source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">"
+            f"{html.escape(top_source.title)}</a> ({html.escape(top_source.publisher)})</em></p>"
+        )
+    else:
+        top_html = f"<h2>Top Signal</h2><p>{AMERICAN_PRESSURE_NO_SIGNAL}</p>"
+
+    sections = [
+        ("Food Pressure", "food-pressure"),
+        ("Health Access Pressure", "health-access-pressure"),
+        ("Household Cost Pressure", "household-cost-pressure"),
+        ("Environmental Pressure", "environmental-pressure"),
+        ("Local Systems Note", "local-systems-note"),
+    ]
+    section_html = []
+    for section_title, category in sections:
+        story = by_category.get(category)
+        source = by_source_id.get(story.source_ids[0]) if story and story.source_ids else None
+        section_html.append(_render_american_pressure_section(section_title, story, source))
+
+    why_it_matters = (
+        "<h2>What Changed / Why It Matters</h2>"
+        f"<p>{AMERICAN_PRESSURE_NO_SIGNAL}</p>"
+        if len(stories) < 2
+        else f"<h2>What Changed / Why It Matters</h2><p>{html.escape(stories[1].summary)}</p>"
+    )
+
+    source_lines = []
+    for story in stories:
+        for source_id in story.source_ids:
+            source = by_source_id.get(source_id)
+            if not source:
+                continue
+            source_lines.append(
+                f"<li><a href=\"{html.escape(source.url)}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(source.title)}</a> - "
+                f"{html.escape(source.publisher)}</li>"
+            )
+    sources_html = "<h2>Sources</h2><ul>" + "".join(source_lines) + "</ul>" if source_lines else f"<h2>Sources</h2><p>{AMERICAN_PRESSURE_NO_SIGNAL}</p>"
+    return f"<p><strong>The American Pressure Dispatch</strong></p>{top_html}{''.join(section_html)}{why_it_matters}{sources_html}"
+
+
+def _build_american_pressure_dispatch(root: Path, now: str, date: str, warnings: list[str], errors: list[str]) -> DispatchConfig:
+    fixture_rows, fixture_path = _american_pressure_fixtures(root, date)
+    valid_rows: list[dict[str, Any]] = []
+    for index, row in enumerate(fixture_rows):
+        missing = sorted(AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS - set(row.keys()))
+        if missing:
+            warnings.append(f"american-pressure fixture record {index + 1} missing required fields: {', '.join(missing)}")
+            continue
+        valid_rows.append(row)
+    sources: list[SourceRecord] = []
+    stories: list[StoryRecord] = []
+    for index, row in enumerate(valid_rows, start=1):
+        source_id = str(row["source_record_id"])
+        story_id = f"american-pressure-story-{index:03d}"
+        category = _source_category_to_story_category(str(row.get("category_hint") or ""))
+        sources.append(
+            SourceRecord(
+                source_id=source_id,
+                title=str(row["title"]),
+                url=str(row["url"]),
+                publisher=str(row["publisher"]),
+                published_at=str(row["published_at"]),
+                retrieved_at=str(row.get("retrieved_at") or now),
+                archive_path=None,
+                used_in_story_ids=[story_id],
+                claim_ids=[f"american-pressure-claim-{index:03d}"],
+                dispatch_slug="american-pressure",
+                edition_date=date,
+            )
+        )
+        stories.append(
+            StoryRecord(
+                story_id=story_id,
+                title=str(row["title"]),
+                summary=str(row["summary_or_snippet"]),
+                category=category,
+                score=50,
+                scoring_reasons=["source-backed fixture record"],
+                included_in_public_summary=True,
+                included_in_detail_dataset=False,
+                source_ids=[source_id],
+            )
+        )
+    if not sources:
+        warnings.append("american-pressure has no source-backed fixture records; rendering no-signal page")
+    if fixture_path is None:
+        warnings.append("american-pressure fixture file missing under data/dispatches/american-pressure/sources")
+    return DispatchConfig(
+        slug="american-pressure",
+        name="The American Pressure Dispatch",
+        edition_date=date,
+        tagline="Source-based reporting on household pressure in the United States",
+        logo="bluefern.png",
+        sources=sources,
+        stories=stories,
+        body_html=_render_american_pressure_body(stories, sources),
+        detail_artifacts=[],
+    )
+
+
+def seed_dispatches(root: Path, now: str, warnings: list[str], errors: list[str]) -> list[DispatchConfig]:
     # Use explicit seed edition date if provided via env, otherwise default
     # to the current run date (the 'now' param is an ISO timestamp).
     env_date = os.getenv("BLUEFERN_SEED_EDITION_DATE")
@@ -163,6 +327,7 @@ def seed_dispatches(now: str) -> list[DispatchConfig]:
             body_html=gaza_body_html(date),
             detail_artifacts=[],
         ),
+        _build_american_pressure_dispatch(root, now, date, warnings, errors),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
@@ -338,7 +503,7 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
 
 
 def header(brand: str, root_prefix: str, archive_href: str | None = None, section_href: str | None = None) -> str:
-    nav = '<a href="/gaza/">Gaza</a><a href="/cascadia/">Cascadia</a>'
+    nav = '<a href="/gaza/">Gaza</a><a href="/american-pressure/">American Pressure</a><a href="/cascadia/">Cascadia</a>'
     if archive_href:
         section_link = f'<a href="{section_href}">{html.escape(brand)}</a>' if section_href else ""
         nav = f'<a href="/">Dispatches Home</a>{section_link}<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
@@ -385,7 +550,13 @@ def render_dispatch_index(dispatch: DispatchConfig) -> str:
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
         signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
-    description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
+    description = (
+        CASCADIA_PUBLIC_DESCRIPTION
+        if dispatch.slug == "cascadia"
+        else AMERICAN_PRESSURE_PUBLIC_DESCRIPTION
+        if dispatch.slug == "american-pressure"
+        else "Structured briefings compiled from traceable source records."
+    )
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -519,7 +690,13 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
         signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
-    description = CASCADIA_PUBLIC_DESCRIPTION if dispatch.slug == "cascadia" else "Structured briefings compiled from traceable source records."
+    description = (
+        CASCADIA_PUBLIC_DESCRIPTION
+        if dispatch.slug == "cascadia"
+        else AMERICAN_PRESSURE_PUBLIC_DESCRIPTION
+        if dispatch.slug == "american-pressure"
+        else "Structured briefings compiled from traceable source records."
+    )
     site_root = site_root or Path("output") / "site"
     recent = "\n".join(
         render_edition_list_item(site_root, dispatch, date)
@@ -678,6 +855,22 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
             str(curation_manifest_public),
         ],
         "paid_or_detail_artifacts": [],
+        "future_paid_fields_todo": [
+            "county_fips",
+            "state",
+            "county",
+            "food_pressure_score",
+            "health_access_pressure_score",
+            "household_cost_pressure_score",
+            "environmental_pressure_score",
+            "local_system_strain_score",
+            "source_count",
+            "confidence_label",
+            "latest_update_date",
+            "movement_since_last_period",
+        ]
+        if dispatch.slug == "american-pressure"
+        else [],
         "detail_artifacts_publicly_exposed": False,
         "warnings": warnings,
         "errors": errors,
@@ -690,9 +883,10 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     site_root = root / "output" / "site"
     detail_roots = [root / "output" / name for name in DETAIL_ROOT_NAMES]
     generated_at = datetime.now(timezone.utc).isoformat()
-    dispatches = seed_dispatches(generated_at)
     warnings: list[str] = []
-    errors = validate_traceability(dispatches)
+    errors: list[str] = []
+    dispatches = seed_dispatches(root, generated_at, warnings, errors)
+    errors.extend(validate_traceability(dispatches))
     errors.extend(ensure_public_detail_separation(site_root, detail_roots))
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
@@ -722,9 +916,12 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
             write_text(dispatch_public_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
-            if dispatch.slug == "gaza":
+            if dispatch.slug in {"gaza", "american-pressure"}:
                 dispatch_output_edition = root / "output" / "dispatches" / dispatch.slug / "editions" / dispatch.edition_date
                 write_text(dispatch_output_edition / "index.html", edition_html, dry_run, wrote)
+                if dispatch.slug == "american-pressure":
+                    write_text(dispatch_output_edition / "edition.html", edition_html, dry_run, wrote)
+                    write_text(dispatch_output_edition / "edition.md", dispatch.body_html or "", dry_run, wrote)
                 write_text(dispatch_output_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)

@@ -69,6 +69,17 @@ def seed_dispatch_rows(now: str) -> list[dict[str, Any]]:
             "created_at": "2026-05-03T00:00:00Z",
             "updated_at": now,
         },
+        {
+            "dispatch_id": "dispatch-american-pressure",
+            "slug": "american-pressure",
+            "public_name": "The American Pressure Dispatch",
+            "internal_name": "American Pressure",
+            "description": "Source-based reporting on the pressures reshaping household life across the United States.",
+            "is_free_public": True,
+            "has_detail_tier": False,
+            "created_at": "2026-05-03T00:00:00Z",
+            "updated_at": now,
+        },
     ]
 
 

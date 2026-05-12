@@ -20,6 +20,7 @@ def _make_contract_root() -> Path:
         ".venv",
         "assets",
         "data/dispatches/gaza",
+        "data/dispatches/american-pressure",
         "data/dispatches/cascadia",
         "docs",
         "logs",

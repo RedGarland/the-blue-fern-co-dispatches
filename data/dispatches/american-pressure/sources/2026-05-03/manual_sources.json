@@ -1,0 +1,28 @@
+[
+  {
+    "source_record_id": "american-pressure-2026-05-03-usda-snap-001",
+    "title": "Characteristics of Supplemental Nutrition Assistance Program Households: Fiscal Year 2024",
+    "url": "https://www.fns.usda.gov/research/snap/characteristics-fiscal-year-2024",
+    "publisher": "USDA Food and Nutrition Service",
+    "published_at": "2026-04-30T00:00:00Z",
+    "retrieved_at": "2026-05-03T12:00:00Z",
+    "summary_or_snippet": "USDA reports monthly SNAP participation and household characteristics for fiscal year 2024, providing a source-backed signal on food pressure indicators.",
+    "source_type": "report",
+    "region_scope": "United States",
+    "category_hint": "food",
+    "reliability_tier": "official-public-source"
+  },
+  {
+    "source_record_id": "american-pressure-2026-05-03-noaa-heat-001",
+    "title": "National Temperature and Precipitation Maps",
+    "url": "https://www.ncei.noaa.gov/access/monitoring/monthly-report/national/202504",
+    "publisher": "NOAA National Centers for Environmental Information",
+    "published_at": "2026-05-01T00:00:00Z",
+    "retrieved_at": "2026-05-03T12:00:00Z",
+    "summary_or_snippet": "NOAA monthly conditions reporting provides source-backed environmental context relevant to heat and drought pressure on households and local systems.",
+    "source_type": "report",
+    "region_scope": "United States",
+    "category_hint": "environmental",
+    "reliability_tier": "official-public-source"
+  }
+]

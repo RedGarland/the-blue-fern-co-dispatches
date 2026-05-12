@@ -2,22 +2,31 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-11",
-  "generated_at": "2026-05-11T01:46:05.818094+00:00",
+  "generated_at": "2026-05-12T02:06:06.545272+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-11/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11",
-  "local_backup_path": "output\\tmp-backups-pages\\gaza\\2026-05-11",
-  "template_version": "dispatches-static-v1",
-  "source_count": 3,
-  "story_count": 1,
+  "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-11",
+  "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-05-11",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 0,
+  "story_count": 0,
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\curation_manifest.json",
   "free_public_artifacts": [
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\edition_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\sources_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
-  "warnings": [],
-  "errors": []
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 3 repeated/stale candidate sources via cross-edition dedupe"
+  ],
+  "errors": [
+    "No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition."
+  ]
 }

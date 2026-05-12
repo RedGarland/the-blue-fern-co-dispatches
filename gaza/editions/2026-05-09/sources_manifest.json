@@ -18,7 +18,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-001"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "al jazeera|one killed in gaza as turkish fm talks peace efforts with hamas official",
+    "title_fingerprint": "one killed in gaza as turkish fm talks peace efforts with hamas official",
+    "claim_fingerprint": "al jazeera|one killed in gaza as turkish fm talks peace efforts with hamas official|regional"
   },
   {
     "source_record_id": "gaza-2026-05-09-aljazeera-all-0307e87d21f5",
@@ -39,7 +42,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-002"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "al jazeera|nowhere left to go gaza residents return to rubble after israeli strike",
+    "title_fingerprint": "nowhere left to go gaza residents return to rubble after israeli strike",
+    "claim_fingerprint": "al jazeera|nowhere left to go gaza residents return to rubble after israeli strike|regional"
   },
   {
     "source_record_id": "gaza-2026-05-09-aljazeera-all-c80db321751a",
@@ -60,7 +66,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-003"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "al jazeera|israel to release two detained gaza flotilla activists",
+    "title_fingerprint": "israel to release two detained gaza flotilla activists",
+    "claim_fingerprint": "al jazeera|israel to release two detained gaza flotilla activists|regional"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-ed4b53eeb99d",
@@ -81,7 +90,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-004"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|nowhere left to go gaza residents return to rubble after israeli strike al jazeera",
+    "title_fingerprint": "nowhere left to go gaza residents return to rubble after israeli strike al jazeera",
+    "claim_fingerprint": "google|nowhere left to go gaza residents return to rubble after israeli strike al jazeera|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-2e3f65fb7fa7",
@@ -102,7 +114,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-005"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|israel to deport two gaza flotilla activists detained for past week the times of israel",
+    "title_fingerprint": "israel to deport two gaza flotilla activists detained for past week the times of israel",
+    "claim_fingerprint": "google|israel to deport two gaza flotilla activists detained for past week the times of israel|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-20f333c28d10",
@@ -123,7 +138,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-006"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|gaza flotilla activists to be released from israel detention and deported reuters",
+    "title_fingerprint": "gaza flotilla activists to be released from israel detention and deported reuters",
+    "claim_fingerprint": "google|gaza flotilla activists to be released from israel detention and deported reuters|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-8273a5319868",
@@ -144,7 +162,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-007"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|israel to release activists from gaza aid flotilla politico eu",
+    "title_fingerprint": "israel to release activists from gaza aid flotilla politico eu",
+    "claim_fingerprint": "google|israel to release activists from gaza aid flotilla politico eu|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-9bdb0825f156",
@@ -165,7 +186,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-008"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|surfers in war torn gaza find rare moments of joy taking to the waves sfgate",
+    "title_fingerprint": "surfers in war torn gaza find rare moments of joy taking to the waves sfgate",
+    "claim_fingerprint": "google|surfers in war torn gaza find rare moments of joy taking to the waves sfgate|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-a088c9408956",
@@ -186,7 +210,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-009"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|two gaza flotilla activists to be released from israeli detention and deported haaretz",
+    "title_fingerprint": "two gaza flotilla activists to be released from israeli detention and deported haaretz",
+    "claim_fingerprint": "google|two gaza flotilla activists to be released from israeli detention and deported haaretz|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-80fedb463193",
@@ -207,7 +234,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-010"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|palestinian war amputees compete in gaza marathon cnn",
+    "title_fingerprint": "palestinian war amputees compete in gaza marathon cnn",
+    "claim_fingerprint": "google|palestinian war amputees compete in gaza marathon cnn|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-880d623f1f11",
@@ -228,7 +258,10 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-011"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|gaza flotilla activists to be released from detention deported from israel the jerusalem post",
+    "title_fingerprint": "gaza flotilla activists to be released from detention deported from israel the jerusalem post",
+    "claim_fingerprint": "google|gaza flotilla activists to be released from detention deported from israel the jerusalem post|general"
   },
   {
     "source_record_id": "gaza-2026-05-09-google-news-gaza-1d0a2bb63f4c",
@@ -249,6 +282,9 @@
     "used_in_story_ids": [
       "gaza-story-2026-05-09-012"
     ],
-    "claim_ids": []
+    "claim_ids": [],
+    "dedupe_key": "google|in gaza surfers abide despite ongoing war taipei times",
+    "title_fingerprint": "in gaza surfers abide despite ongoing war taipei times",
+    "claim_fingerprint": "google|in gaza surfers abide despite ongoing war taipei times|general"
   }
 ]

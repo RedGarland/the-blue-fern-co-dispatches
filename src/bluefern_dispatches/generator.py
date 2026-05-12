@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from bluefern_dispatches.cascadia_weekly import format_coverage_label
+from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -906,6 +907,48 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
+        if dispatch.slug == "gaza" and not copied_real_edition:
+            seed_candidates = [
+                {
+                    "source_record_id": source.source_id,
+                    "title": source.title,
+                    "url": source.url,
+                    "canonical_url": source.url,
+                    "publisher": source.publisher,
+                    "published_at": source.published_at,
+                    "retrieved_at": source.retrieved_at,
+                    "category_hint": "humanitarian",
+                }
+                for source in dispatch.sources
+            ]
+            filtered_candidates, dedupe_report = filter_recent_duplicate_sources(root, dispatch.edition_date, seed_candidates, lookback_days=7)
+            dedupe_report_path = root / "data" / "dispatches" / "gaza" / "editions" / dispatch.edition_date / "dedupe_report.json"
+            write_text(dedupe_report_path, json.dumps(dedupe_report, indent=2), dry_run, wrote)
+            if dedupe_report.get("suppressed_candidate_count", 0):
+                warnings.append(
+                    f"gaza synthetic fallback suppressed {dedupe_report['suppressed_candidate_count']} repeated candidates via cross-edition dedupe"
+                )
+            if dedupe_report.get("input_candidate_count", 0) > 0 and not filtered_candidates:
+                errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
+                continue
+            kept_ids = {str(item.get("source_record_id") or "") for item in filtered_candidates}
+            kept_sources = [source for source in dispatch.sources if source.source_id in kept_ids]
+            kept_stories = [
+                story
+                for story in dispatch.stories
+                if any(source_id in kept_ids for source_id in story.source_ids)
+            ]
+            dispatch = DispatchConfig(
+                slug=dispatch.slug,
+                name=dispatch.name,
+                edition_date=dispatch.edition_date,
+                tagline=dispatch.tagline,
+                logo=dispatch.logo,
+                sources=kept_sources,
+                stories=kept_stories,
+                body_html=render_sources(kept_stories, kept_sources),
+                detail_artifacts=dispatch.detail_artifacts or [],
+            )
         if copied_real_edition:
             public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
         elif dispatch.slug != "cascadia":

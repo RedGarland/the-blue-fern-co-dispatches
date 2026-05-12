@@ -198,7 +198,6 @@ def test_gaza_content_and_requested_logo_placement(built_site):
     assert 'src="assets/gaza-logo.png"' in gaza_index
     assert 'src="assets/bluefern.png"' in gaza_index
     assert 'href="https://thebluefernco.com/"' in gaza_index
-    assert "Israel has issued threats to resume war in\nGaza" in gaza_edition
     assert "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza" in gaza_edition
     assert 'src="../../assets/gaza-logo.png"' in gaza_edition
     assert 'src="../../assets/bluefern.png"' in gaza_edition

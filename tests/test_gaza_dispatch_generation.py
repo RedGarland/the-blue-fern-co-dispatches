@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from bluefern_dispatches.generator import build_site
 from scripts.run_gaza_dispatch import run_gaza_dispatch
 
 
@@ -177,3 +178,57 @@ def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(mon
     assert result["ok"] is False
     assert "No new source-backed Gaza developments after cross-edition dedupe" in " ".join(result["errors"])
     assert report["suppressed_candidate_count"] >= 1
+
+
+def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publish(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    prior_edition = work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-11"
+    prior_edition.mkdir(parents=True, exist_ok=True)
+    repeated = [
+        {
+            "source_record_id": "gaza-src-prior-001",
+            "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
+            "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
+            "canonical_url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
+            "publisher": "The New York Times",
+            "published_at": "",
+            "retrieved_at": "2026-05-11T12:00:00+00:00",
+            "category_hint": "humanitarian",
+        },
+        {
+            "source_record_id": "gaza-src-prior-002",
+            "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
+            "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
+            "canonical_url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
+            "publisher": "Haaretz",
+            "published_at": "",
+            "retrieved_at": "2026-05-11T12:01:00+00:00",
+            "category_hint": "humanitarian",
+        },
+        {
+            "source_record_id": "gaza-src-prior-003",
+            "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
+            "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
+            "canonical_url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
+            "publisher": "The Times of Israel",
+            "published_at": "",
+            "retrieved_at": "2026-05-11T12:02:00+00:00",
+            "category_hint": "humanitarian",
+        },
+    ]
+    (prior_edition / "sources_manifest.json").write_text(json.dumps(repeated, indent=2), encoding="utf-8")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-12")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    dedupe_report = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-12" / "dedupe_report.json"
+    report = json.loads(dedupe_report.read_text(encoding="utf-8"))
+    assert result["ok"] is False
+    assert "No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition." in result["errors"]
+    assert report["suppressed_candidate_count"] == 3
+    assert all(
+        item["matched_key_type"] in {"canonical_url", "normalized_url", "publisher_title", "title_fingerprint", "claim_fingerprint"}
+        for item in report["suppressed_candidates"]
+    )
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "index.html").exists()

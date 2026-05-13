@@ -2042,3 +2042,98 @@ def test_backfill_weeks_from_existing_editions_preserves_traceability(cascadia_w
     assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in archive
     assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in rss
     assert "2026-04-28" not in archive
+
+
+def test_weekly_render_generates_public_map_files_and_embed(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+
+    assert result["ok"] is True
+    site_edition = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
+    assert (site_edition / "map_data.json").exists()
+    assert (site_edition / "map.html").exists()
+    html = (site_edition / "index.html").read_text(encoding="utf-8")
+    assert 'src="map.html"' in html
+    assert "markers may represent source or regional centroids, not exact incident locations" in html
+
+    map_data = read_json(site_edition / "map_data.json")
+    assert map_data["markers"]
+    assert all(marker.get("source_url", "").startswith("http") for marker in map_data["markers"])
+    assert all(marker.get("title") and marker.get("category") for marker in map_data["markers"])
+    assert all(marker.get("state_or_region") and marker.get("publisher") for marker in map_data["markers"])
+    assert all(marker.get("lat") is not None and marker.get("lon") is not None for marker in map_data["markers"])
+
+    curation = read_json(site_edition / "curation_manifest.json")
+    public_ids = {story["story_id"] for story in curation if story.get("included_in_public_summary")}
+    excluded_ids = {story["story_id"] for story in curation if not story.get("included_in_public_summary")}
+    marker_ids = {marker["story_id"] for marker in map_data["markers"]}
+    assert marker_ids <= public_ids
+    assert marker_ids.isdisjoint(excluded_ids)
+
+    assert not (cascadia_work_root / "output" / "site" / "detail").exists()
+    assert not (cascadia_work_root / "output" / "site" / "paid").exists()
+
+
+def test_map_coordinates_fallback_to_state_centroid_when_source_has_no_lat_lon(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-wa-1",
+                    "title": "Washington bridge inspection program",
+                    "summary": "Washington bridge inspection program update.",
+                    "category": "Transportation",
+                    "score": 88,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-wa-1"],
+                    "source_urls": ["https://example.com/wa-bridge"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-wa-1",
+                            "source_id": "wa-source",
+                            "title": "WA bridge source",
+                            "source_url": "https://example.com/wa-bridge",
+                            "url": "https://example.com/wa-bridge",
+                            "publisher": "Washington State Standard Feed",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "retrieved_at": "2026-05-03T01:00:00Z",
+                            "region_scope": "WA",
+                            "state_hint": "WA",
+                            "category_hint": "Transportation",
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert len(map_data["markers"]) == 1
+    marker = map_data["markers"][0]
+    assert marker["coordinate_basis"] == "source_default"
+    assert marker["source_url"] == "https://example.com/wa-bridge"

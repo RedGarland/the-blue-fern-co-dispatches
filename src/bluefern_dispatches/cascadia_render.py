@@ -36,6 +36,23 @@ DISPATCH_NAME = "The Cascadia Briefing"
 INTERNAL_PRODUCT_NAME = "Cascadia Signal"
 DISPATCH_SLUG = "cascadia"
 SHORT_PUBLIC_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
+MAP_NOTE = (
+    "Map shows source-backed public signals by state/source geography; markers may represent source or regional "
+    "centroids, not exact incident locations."
+)
+MAP_LOCATIONS_PATH = Path("data") / "dispatches" / "cascadia" / "map_locations.yml"
+DEFAULT_MAP_LOCATIONS: dict[str, Any] = {
+    "state_centroids": {
+        "WA": {"lat": 47.4009, "lon": -120.4508},
+        "OR": {"lat": 43.8041, "lon": -120.5542},
+        "ID": {"lat": 44.2405, "lon": -114.4788},
+    },
+    "source_defaults": {
+        "Washington State Standard Feed": {"lat": 47.0379, "lon": -122.9007},
+        "Idaho Capital Sun Feed": {"lat": 43.6150, "lon": -116.2023},
+        "Portland Public Alerts": {"lat": 45.5152, "lon": -122.6784},
+    },
+}
 
 
 def public_stories(curated: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -309,6 +326,230 @@ def render_weekly_summary(bullets: list[str]) -> str:
     return f"<h2>This week's signals</h2>\n<ul>{items}</ul>"
 
 
+def parse_simple_yaml_map(text: str) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    section: str | None = None
+    child: str | None = None
+    for raw_line in text.splitlines():
+        if not raw_line.strip() or raw_line.strip().startswith("#"):
+            continue
+        if not raw_line.startswith(" "):
+            if ":" in raw_line:
+                key = raw_line.split(":", 1)[0].strip()
+                section = key
+                result.setdefault(section, {})
+                child = None
+            continue
+        stripped = raw_line.strip()
+        if raw_line.startswith("  ") and stripped.endswith(":") and not raw_line.startswith("    "):
+            child = stripped[:-1].strip()
+            if section:
+                result.setdefault(section, {}).setdefault(child, {})
+            continue
+        if raw_line.startswith("    ") and ":" in stripped and section and child:
+            key, value = stripped.split(":", 1)
+            value_text = value.strip().strip("\"'")
+            lowered = value_text.lower()
+            parsed: Any = value_text
+            if lowered in {"true", "false"}:
+                parsed = lowered == "true"
+            else:
+                try:
+                    parsed = float(value_text)
+                except ValueError:
+                    parsed = value_text
+            result[section][child][key.strip()] = parsed
+    return result
+
+
+def load_map_locations(root: Path) -> dict[str, Any]:
+    path = root / MAP_LOCATIONS_PATH
+    payload: dict[str, Any] = {
+        "state_centroids": dict(DEFAULT_MAP_LOCATIONS["state_centroids"]),
+        "source_defaults": dict(DEFAULT_MAP_LOCATIONS["source_defaults"]),
+    }
+    if not path.exists():
+        return payload
+    text = path.read_text(encoding="utf-8")
+    try:
+        import yaml  # type: ignore
+
+        loaded = yaml.safe_load(text) or {}
+        if isinstance(loaded, dict):
+            payload["state_centroids"].update(loaded.get("state_centroids") or {})
+            payload["source_defaults"].update(loaded.get("source_defaults") or {})
+            return payload
+    except Exception:
+        pass
+    loaded = parse_simple_yaml_map(text)
+    payload["state_centroids"].update(loaded.get("state_centroids") or {})
+    payload["source_defaults"].update(loaded.get("source_defaults") or {})
+    return payload
+
+
+def _float_or_none(value: Any) -> float | None:
+    try:
+        if value is None or str(value).strip() == "":
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def resolve_marker_coordinates(source: dict[str, Any], map_locations: dict[str, Any]) -> tuple[float | None, float | None, str]:
+    explicit_lat = _float_or_none(source.get("lat"))
+    explicit_lon = _float_or_none(source.get("lon"))
+    if explicit_lat is None or explicit_lon is None:
+        explicit_lat = _float_or_none(source.get("latitude"))
+        explicit_lon = _float_or_none(source.get("longitude"))
+    if explicit_lat is not None and explicit_lon is not None:
+        return explicit_lat, explicit_lon, "explicit"
+
+    source_defaults = map_locations.get("source_defaults") if isinstance(map_locations.get("source_defaults"), dict) else {}
+    source_keys = [
+        str(source.get("source_id") or "").strip(),
+        str(source.get("provider_name") or "").strip(),
+        str(source.get("publisher") or "").strip(),
+    ]
+    for key in source_keys:
+        if not key:
+            continue
+        candidate = source_defaults.get(key)
+        if isinstance(candidate, dict):
+            lat = _float_or_none(candidate.get("lat"))
+            lon = _float_or_none(candidate.get("lon"))
+            if lat is not None and lon is not None:
+                return lat, lon, "source_default"
+
+    state_centroids = map_locations.get("state_centroids") if isinstance(map_locations.get("state_centroids"), dict) else {}
+    state = str(source.get("state_hint") or source.get("region_scope") or source.get("geography") or "").strip().upper()
+    if state in {"WASHINGTON", "WA"}:
+        state = "WA"
+    elif state in {"OREGON", "OR"}:
+        state = "OR"
+    elif state in {"IDAHO", "ID"}:
+        state = "ID"
+    centroid = state_centroids.get(state) if state else None
+    if isinstance(centroid, dict):
+        lat = _float_or_none(centroid.get("lat"))
+        lon = _float_or_none(centroid.get("lon"))
+        if lat is not None and lon is not None:
+            return lat, lon, "state_centroid"
+    return None, None, "missing"
+
+
+def build_cascadia_map_markers(
+    public_curation: list[dict[str, Any]],
+    sources_manifest: list[dict[str, Any]],
+    map_locations: dict[str, Any],
+) -> tuple[list[dict[str, Any]], list[str]]:
+    warnings: list[str] = []
+    by_source_record_id = {
+        str(source.get("source_record_id")): source
+        for source in sources_manifest
+        if isinstance(source, dict) and source.get("source_record_id")
+    }
+    markers: list[dict[str, Any]] = []
+    for story in public_curation:
+        if not story.get("included_in_public_summary"):
+            continue
+        if not story.get("title") or not story.get("category"):
+            warnings.append(f"map skipped story missing title/category: {story.get('story_id')}")
+            continue
+        source_ids = [str(item) for item in story.get("source_record_ids", []) if item]
+        linked_sources = [by_source_record_id[item] for item in source_ids if item in by_source_record_id]
+        if not linked_sources:
+            warnings.append(f"map skipped story with no linked source records: {story.get('story_id')}")
+            continue
+        source = linked_sources[0]
+        source_url = str(source.get("url") or source.get("source_url") or "").strip()
+        if not source_url or not source_url.startswith(("http://", "https://")):
+            warnings.append(f"map skipped story missing source URL: {story.get('story_id')}")
+            continue
+        region = str(source.get("state_hint") or source.get("region_scope") or source.get("geography") or "").strip()
+        if not region:
+            warnings.append(f"map skipped story missing state/region: {story.get('story_id')}")
+            continue
+        lat, lon, coordinate_basis = resolve_marker_coordinates(source, map_locations)
+        if lat is None or lon is None:
+            warnings.append(f"map skipped story missing coordinate fallback: {story.get('story_id')}")
+            continue
+        markers.append(
+            {
+                "story_id": story.get("story_id"),
+                "title": story.get("title"),
+                "category": story.get("category"),
+                "state_or_region": region,
+                "publisher": source.get("publisher"),
+                "published_at": source.get("published_at"),
+                "source_url": source_url,
+                "source_record_id": source.get("source_record_id"),
+                "lat": lat,
+                "lon": lon,
+                "coordinate_basis": coordinate_basis,
+            }
+        )
+    return markers, warnings
+
+
+def render_map_html(edition_date: str, note: str) -> str:
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cascadia Weekly Signal Map - {html.escape(edition_date)}</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    html, body, #map {{ height: 100%; margin: 0; }}
+    .map-note {{ font: 14px/1.4 Arial, sans-serif; margin: 8px; }}
+  </style>
+</head>
+<body>
+  <div class="map-note">{html.escape(note)}</div>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const map = L.map('map').setView([45.8, -120.5], 5);
+    L.tileLayer('https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }}).addTo(map);
+    fetch('./map_data.json').then((r) => r.json()).then((payload) => {{
+      const markers = payload.markers || [];
+      const bounds = [];
+      for (const item of markers) {{
+        const popup = `<strong>${{item.title}}</strong><br>` +
+          `Category: ${{item.category}}<br>` +
+          `State/region: ${{item.state_or_region}}<br>` +
+          `Publisher: ${{item.publisher || 'Unknown'}}<br>` +
+          `Published: ${{item.published_at || 'Unknown'}}<br>` +
+          `<a href="${{item.source_url}}" target="_blank" rel="noopener noreferrer">Source link</a>`;
+        const marker = L.marker([item.lat, item.lon]).addTo(map).bindPopup(popup);
+        bounds.push([item.lat, item.lon]);
+      }}
+      if (bounds.length) {{
+        map.fitBounds(bounds, {{padding: [24, 24]}});
+      }}
+    }});
+  </script>
+</body>
+</html>
+"""
+
+
+def render_map_embed_html() -> str:
+    return (
+        "<section class=\"cascadia-map\">"
+        "<h2>Weekly Signal Map</h2>"
+        f"<p>{html.escape(MAP_NOTE)}</p>"
+        "<iframe title=\"Cascadia weekly signal map\" src=\"map.html\" loading=\"lazy\" "
+        "referrerpolicy=\"no-referrer\" style=\"width:100%;height:420px;border:1px solid #cfd8de;\"></iframe>"
+        "<p><a href=\"map.html\" target=\"_blank\" rel=\"noopener noreferrer\">Open map in a new tab</a></p>"
+        "</section>"
+    )
+
+
 def archive_subtitle(stories: list[dict[str, Any]]) -> str:
     if not stories:
         return CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE
@@ -329,6 +570,7 @@ def render_cascadia_html(
     coverage_start: str | None = None,
     coverage_end: str | None = None,
     briefing_type: str = "weekly",
+    map_embed_html: str = "",
 ) -> str:
     coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else edition_date
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -362,6 +604,7 @@ def render_cascadia_html(
     <p>{html.escape(CASCADIA_PUBLIC_DESCRIPTION)}</p>
     <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>
     {weekly_summary}
+    {map_embed_html}
     {groups}
   </main>
 {footer("../../")}"""
@@ -515,7 +758,14 @@ def render_cascadia_edition(
     coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else None
     sources_manifest = sources_manifest_from_curated(stories, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
     curation_manifest = public_curation_manifest(curated_for_public, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
-    html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type)
+    public_curation = [item for item in curation_manifest if item.get("included_in_public_summary")]
+    map_locations = load_map_locations(root)
+    map_markers, map_warnings = build_cascadia_map_markers(public_curation, sources_manifest, map_locations)
+    warnings.extend(map_warnings)
+    map_data = {"edition_date": edition_date, "note": MAP_NOTE, "markers": map_markers}
+    map_html = render_map_html(edition_date, MAP_NOTE)
+    map_embed_html = render_map_embed_html()
+    html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type, map_embed_html=map_embed_html)
     weekly_summary_bullets = build_weekly_summary_bullets(stories)
     public_categories = public_story_categories(stories)
     public_state_hints = public_story_states(stories)
@@ -593,6 +843,8 @@ def render_cascadia_edition(
         write_json(out_dir / "edition_manifest.json", edition_manifest, dry_run, written)
         write_json(out_dir / "sources_manifest.json", sources_manifest, dry_run, written)
         write_json(out_dir / "curation_manifest.json", curation_manifest, dry_run, written)
+        write_json(out_dir / "map_data.json", map_data, dry_run, written)
+        write_text(out_dir / "map.html", map_html, dry_run, written)
     write_text(
         output_dispatch_dir / "editorial_review.md",
         editorial_checklist(coverage_label, stories, html_text, weekly_summary_bullets),

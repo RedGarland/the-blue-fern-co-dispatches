@@ -1,0 +1,21 @@
+state_centroids:
+  WA:
+    lat: 47.4009
+    lon: -120.4508
+  OR:
+    lat: 43.8041
+    lon: -120.5542
+  ID:
+    lat: 44.2405
+    lon: -114.4788
+
+source_defaults:
+  Washington State Standard Feed:
+    lat: 47.0379
+    lon: -122.9007
+  Idaho Capital Sun Feed:
+    lat: 43.6150
+    lon: -116.2023
+  Portland Public Alerts:
+    lat: 45.5152
+    lon: -122.6784

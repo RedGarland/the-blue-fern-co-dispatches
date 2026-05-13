@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import html
@@ -291,7 +291,7 @@ def _build_american_pressure_dispatch(root: Path, now: str, date: str, warnings:
         name="The American Pressure Dispatch",
         edition_date=date,
         tagline="Source-based reporting on household pressure in the United States",
-        logo="bluefern.png",
+        logo="american-pressure-logo.png",
         sources=sources,
         stories=stories,
         body_html=_render_american_pressure_body(stories, sources),
@@ -1398,3 +1398,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

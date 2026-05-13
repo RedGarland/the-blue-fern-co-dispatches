@@ -22,6 +22,7 @@ from bluefern_dispatches.generator import (
     ensure_public_detail_separation,
     publish_pages,
     normalize_expect_dispatches,
+    normalize_only_dispatches,
     public_edition_subtitle,
     validate_pages_publish,
     validate_pages_repo_after_copy,
@@ -669,3 +670,57 @@ def test_pages_publish_commits_on_gh_pages_branch(built_site):
     assert current.stdout.strip() == "gh-pages"
     assert (pages_repo / ".git").exists()
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
+
+
+def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    add_cascadia_dispatch_edition(work, "2026-05-10")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-10")
+
+    def fail_all_gaza_candidates(*args, **kwargs):
+        return [], {"input_candidate_count": 1, "suppressed_candidate_count": 1}
+
+    monkeypatch.setattr("bluefern_dispatches.generator.filter_recent_duplicate_sources", fail_all_gaza_candidates)
+
+    full = build_site(work, dry_run=False, backup_root=work / "backup")
+    cascadia_only = build_site(work, dry_run=False, backup_root=work / "backup", only_dispatches=("cascadia",))
+
+    assert full["ok"] is False
+    assert any("No new source-backed Gaza developments after cross-edition dedupe" in error for error in full["errors"])
+    assert cascadia_only["ok"] is True
+    assert (work / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html").exists()
+    root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
+    assert "Dispatches From Gaza" in root_index
+    assert "The American Pressure Dispatch" in root_index
+    assert "The Cascadia Briefing" in root_index
+
+
+def test_cascadia_only_publish_copies_map_files(built_site):
+    work, backup_root, _ = built_site
+    edition_dir = work / "output" / "dispatches" / "cascadia" / "editions" / "2026-05-03"
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "map.html").write_text("<html><body>map</body></html>", encoding="utf-8")
+    (edition_dir / "map_data.json").write_text(json.dumps({"markers": []}, indent=2), encoding="utf-8")
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("cascadia",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "map.html").exists()
+    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "map_data.json").exists()
+    assert result["only_dispatches"] == ["cascadia"]
+
+
+def test_normalize_only_dispatches_accepts_comma_and_repeat():
+    assert normalize_only_dispatches(("cascadia", "gaza,cascadia")) == ("cascadia", "gaza")

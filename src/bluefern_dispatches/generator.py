@@ -52,6 +52,7 @@ CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFAC
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia")
 DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia"}
+ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure")
 
 
 @dataclass(frozen=True)
@@ -424,7 +425,7 @@ def real_dispatch_edition_files(root: Path, slug: str, edition_date: str) -> lis
     required_names = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
     files = [edition_dir / name for name in required_names]
     if all(path.exists() for path in files):
-        return files
+        return sorted(path for path in edition_dir.iterdir() if path.is_file())
     return []
 
 
@@ -879,15 +880,23 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     return edition_manifest, asdicts(dispatch.sources), asdicts(dispatch.stories)
 
 
-def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BACKUP_ROOT) -> dict[str, Any]:
+def build_site(
+    root: Path,
+    dry_run: bool = False,
+    backup_root: Path = DEFAULT_BACKUP_ROOT,
+    only_dispatches: tuple[str, ...] = (),
+) -> dict[str, Any]:
     root = root.resolve()
     site_root = root / "output" / "site"
     detail_roots = [root / "output" / name for name in DETAIL_ROOT_NAMES]
     generated_at = datetime.now(timezone.utc).isoformat()
     warnings: list[str] = []
     errors: list[str] = []
-    dispatches = seed_dispatches(root, generated_at, warnings, errors)
-    errors.extend(validate_traceability(dispatches))
+    all_dispatches = seed_dispatches(root, generated_at, warnings, errors)
+    dispatches = all_dispatches
+    if only_dispatches:
+        dispatches = [dispatch for dispatch in all_dispatches if dispatch.slug in only_dispatches]
+    errors.extend(validate_traceability(all_dispatches))
     errors.extend(ensure_public_detail_separation(site_root, detail_roots))
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
@@ -895,7 +904,8 @@ def build_site(root: Path, dry_run: bool = False, backup_root: Path = DEFAULT_BA
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
 
-    write_text(site_root / "index.html", render_root(dispatches), dry_run, wrote)
+    # Keep root landing cards stable across scoped publishes.
+    write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
     for dispatch in dispatches:
         public_urls.append(f"{BASE_URL}/{dispatch.slug}/")
         dispatch_public_root = site_root / dispatch.slug
@@ -1005,7 +1015,7 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
-def collect_public_site_files(site_root: Path) -> list[Path]:
+def collect_public_site_files(site_root: Path, only_dispatches: tuple[str, ...] = ()) -> list[Path]:
     if not site_root.exists():
         return []
     files = []
@@ -1013,6 +1023,8 @@ def collect_public_site_files(site_root: Path) -> list[Path]:
         if not path.is_file():
             continue
         relative_parts = path.relative_to(site_root).parts
+        if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
+            continue
         if len(relative_parts) >= 4 and relative_parts[0] == "cascadia" and relative_parts[1] == "editions":
             edition_date = relative_parts[2]
             if not public_edition_is_listable(site_root, "cascadia", edition_date):
@@ -1028,6 +1040,7 @@ def validate_pages_publish(
     require_git: bool = True,
     expect_date: str | None = None,
     expect_dispatches: tuple[str, ...] = (),
+    only_dispatches: tuple[str, ...] = (),
 ) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -1049,9 +1062,10 @@ def validate_pages_publish(
     if not (site_root / "index.html").exists():
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
     dispatches_to_check = expect_dispatches or ALL_EXPECT_DISPATCHES
-    if not (site_root / "gaza" / "archive.html").exists():
-        errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
-    elif expect_date and "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
+    if (not only_dispatches) or ("gaza" in only_dispatches):
+        if not (site_root / "gaza" / "archive.html").exists():
+            errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
+    if expect_date and "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
         archive_text = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
         if expect_date not in archive_text:
             errors.append(f"output/site/gaza/archive.html does not contain expected date {expect_date}")
@@ -1076,7 +1090,7 @@ def validate_pages_publish(
     return errors, warnings
 
 
-def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool) -> tuple[list[str], list[str]]:
+def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool, only_dispatches: tuple[str, ...] = ()) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
         "output/paid/",
@@ -1090,7 +1104,7 @@ def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool) 
         ".pytest_cache/",
         f"{pages_repo / '.git'}",
     ]
-    for source in collect_public_site_files(site_root):
+    for source in collect_public_site_files(site_root, only_dispatches=only_dispatches):
         target = pages_repo / source.relative_to(site_root)
         copied.append(str(target))
         if dry_run:
@@ -1194,6 +1208,7 @@ def validate_pages_repo_after_copy(
     site_root: Path,
     expect_date: str | None,
     expect_dispatches: tuple[str, ...] = (),
+    only_dispatches: tuple[str, ...] = (),
 ) -> list[str]:
     errors: list[str] = []
     if not (pages_repo / ".git").exists():
@@ -1203,8 +1218,9 @@ def validate_pages_repo_after_copy(
         errors.append(f"CNAME does not contain {CNAME_VALUE}")
     if not (pages_repo / "index.html").exists():
         errors.append(f"Pages repo index does not exist: {pages_repo / 'index.html'}")
-    if not (pages_repo / "gaza" / "archive.html").exists():
-        errors.append(f"Pages repo Gaza archive does not exist: {pages_repo / 'gaza' / 'archive.html'}")
+    if (not only_dispatches) or ("gaza" in only_dispatches):
+        if not (pages_repo / "gaza" / "archive.html").exists():
+            errors.append(f"Pages repo Gaza archive does not exist: {pages_repo / 'gaza' / 'archive.html'}")
     if (pages_repo / "detail").exists() or (pages_repo / "paid").exists():
         errors.append("paid/detail artifacts were copied into the Pages repo")
     blocked_text = public_site_contains_blocked_public_text(pages_repo)
@@ -1263,8 +1279,9 @@ def publish_pages(
     pages_branch: str = DEFAULT_PAGES_BRANCH,
     expect_date: str | None = None,
     expect_dispatches: tuple[str, ...] = (),
+    only_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    build = build_site(root, dry_run=dry_run, backup_root=backup_root)
+    build = build_site(root, dry_run=dry_run, backup_root=backup_root, only_dispatches=only_dispatches)
     root = root.resolve()
     site_root = root / "output" / "site"
     pages_repo = pages_repo.resolve()
@@ -1276,6 +1293,7 @@ def publish_pages(
         require_git=not dry_run,
         expect_date=expect_date,
         expect_dispatches=expect_dispatches,
+        only_dispatches=only_dispatches,
     )
     errors.extend(validation_errors)
     warnings = list(build["warnings"])
@@ -1301,10 +1319,19 @@ def publish_pages(
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
 
     if not errors:
-        removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
-        copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run)
+        if not only_dispatches or "cascadia" in only_dispatches:
+            removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
+        copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run, only_dispatches=only_dispatches)
         if not dry_run:
-            errors.extend(validate_pages_repo_after_copy(pages_repo, site_root, expect_date, expect_dispatches=expect_dispatches))
+            errors.extend(
+                validate_pages_repo_after_copy(
+                    pages_repo,
+                    site_root,
+                    expect_date,
+                    expect_dispatches=expect_dispatches,
+                    only_dispatches=only_dispatches,
+                )
+            )
         commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
         if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
             errors.append(commit_result["message"])
@@ -1337,6 +1364,7 @@ def publish_pages(
         "manual_push_command": manual_push_command(pages_repo, pages_branch),
         "expect_date": expect_date,
         "expect_dispatches": list(expect_dispatches),
+        "only_dispatches": list(only_dispatches),
         "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root)
         and not public_site_contains_blocked_public_text(site_root),
         "warnings": warnings,
@@ -1355,6 +1383,22 @@ def normalize_expect_dispatches(values: list[str] | tuple[str, ...]) -> tuple[st
     return tuple(values)
 
 
+def normalize_only_dispatches(values: list[str] | tuple[str, ...]) -> tuple[str, ...]:
+    if not values:
+        return ()
+    normalized: list[str] = []
+    for raw in values:
+        for token in str(raw).split(","):
+            value = token.strip().lower()
+            if not value:
+                continue
+            if value not in ONLY_DISPATCH_CHOICES:
+                raise ValueError(f"--only-dispatch must be one of: {', '.join(ONLY_DISPATCH_CHOICES)}")
+            if value not in normalized:
+                normalized.append(value)
+    return tuple(normalized)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Dispatches From The Blue Fern Co. static site.")
     parser.add_argument("--dry-run", action="store_true", help="Report planned writes without touching output files.")
@@ -1370,11 +1414,18 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         help="Dispatch whose --expect-date edition must be present: gaza, cascadia, or all. Repeat for multiple dispatches. If omitted with --expect-date, legacy full-site checks are used.",
     )
+    parser.add_argument(
+        "--only-dispatch",
+        action="append",
+        default=[],
+        help="Build/copy only selected dispatches (repeat or comma-separate): gaza, cascadia, american-pressure.",
+    )
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
     args = parser.parse_args(argv)
     try:
         expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
+        only_dispatches = normalize_only_dispatches(tuple(args.only_dispatch))
     except ValueError as exc:
         parser.error(str(exc))
     if args.pages_repo:
@@ -1389,9 +1440,15 @@ def main(argv: list[str] | None = None) -> int:
             pages_branch=args.pages_branch,
             expect_date=args.expect_date,
             expect_dispatches=expect_dispatches,
+            only_dispatches=only_dispatches,
         )
     else:
-        result = build_site(Path.cwd(), dry_run=args.dry_run, backup_root=Path(args.backup_root))
+        result = build_site(
+            Path.cwd(),
+            dry_run=args.dry_run,
+            backup_root=Path(args.backup_root),
+            only_dispatches=only_dispatches,
+        )
     print(json.dumps(result, indent=2))
     return 0 if result["ok"] else 1
 

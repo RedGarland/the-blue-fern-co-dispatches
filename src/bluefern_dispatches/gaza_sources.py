@@ -161,6 +161,7 @@ def _iter_prior_source_manifests(root: Path, edition_date: str, lookback_days: i
         for manifest in (
             root / "output" / "dispatches" / "gaza" / "editions" / prior / "sources_manifest.json",
             root / "output" / "site" / "gaza" / "editions" / prior / "sources_manifest.json",
+            root / "bluefern-dispatches-pages" / "gaza" / "editions" / prior / "sources_manifest.json",
         ):
             if manifest.exists():
                 manifests.append((prior, manifest))

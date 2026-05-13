@@ -1,0 +1,346 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-09",
+  "candidates_seen": 12,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-09-001",
+      "title": "One killed in Gaza as Turkish FM talks peace efforts with Hamas official",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-002",
+      "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-003",
+      "title": "Israel to release two detained Gaza flotilla activists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-004",
+      "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike - Al Jazeera",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-005",
+      "title": "Israel to deport two Gaza flotilla activists detained for past week - The Times of Israel",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-006",
+      "title": "Gaza flotilla activists to be released from Israel detention and deported - Reuters",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-007",
+      "title": "Israel to release activists from Gaza aid flotilla - politico.eu",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-008",
+      "title": "Surfers in war-torn Gaza find rare moments of joy taking to the waves - SFGATE",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-010",
+      "title": "Palestinian war amputees compete in Gaza marathon - CNN",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-012",
+      "title": "In Gaza, surfers abide despite ongoing war - Taipei Times",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-09-009",
+      "title": "Two Gaza flotilla activists to be released from Israeli detention and deported - Haaretz",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-011",
+      "title": "Gaza flotilla activists to be released from detention, deported from Israel - The Jerusalem Post",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 2,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-05-09-006",
+      "merged_story_ids": [
+        "gaza-story-2026-05-09-009"
+      ],
+      "reasons": [
+        "within_edition_same_topic"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-05-09-006",
+      "merged_story_ids": [
+        "gaza-story-2026-05-09-011"
+      ],
+      "reasons": [
+        "within_edition_same_topic"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-09-009",
+      "title": "Two Gaza flotilla activists to be released from Israeli detention and deported - Haaretz",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-011",
+      "title": "Gaza flotilla activists to be released from detention, deported from Israel - The Jerusalem Post",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-001",
+      "title": "One killed in Gaza as Turkish FM talks peace efforts with Hamas official",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-002",
+      "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-003",
+      "title": "Israel to release two detained Gaza flotilla activists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-004",
+      "title": "\u201cNowhere left to go\u201d: Gaza residents return to rubble after Israeli strike - Al Jazeera",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-005",
+      "title": "Israel to deport two Gaza flotilla activists detained for past week - The Times of Israel",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-006",
+      "title": "Gaza flotilla activists to be released from Israel detention and deported - Reuters",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-007",
+      "title": "Israel to release activists from Gaza aid flotilla - politico.eu",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-008",
+      "title": "Surfers in war-torn Gaza find rare moments of joy taking to the waves - SFGATE",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-010",
+      "title": "Palestinian war amputees compete in Gaza marathon - CNN",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-09-012",
+      "title": "In Gaza, surfers abide despite ongoing war - Taipei Times",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-11",
-  "generated_at": "2026-05-12T02:06:06.545272+00:00",
+  "generated_at": "2026-05-13T22:29:53.236143+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-11/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-11",
@@ -23,10 +23,6 @@
   "is_free_public": true,
   "has_detail_tier": false,
   "public_exposed": true,
-  "warnings": [
-    "suppressed 3 repeated/stale candidate sources via cross-edition dedupe"
-  ],
-  "errors": [
-    "No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition."
-  ]
+  "warnings": [],
+  "errors": []
 }

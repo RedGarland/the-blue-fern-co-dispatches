@@ -1,0 +1,97 @@
+{
+  "edition_date": "2026-05-10",
+  "note": "Map shows source-backed public signals by state/source geography; markers may represent source or regional centroids, not exact incident locations.",
+  "markers": [
+    {
+      "story_id": "story-7dfd23c0456d",
+      "title": "Wildfire",
+      "category": "Public safety",
+      "state_or_region": "OR",
+      "publisher": "Portland Public Alerts",
+      "published_at": null,
+      "source_url": "https://www.publicalerts.org/wildfire",
+      "source_record_id": "src-bf028459a1c8c5e4",
+      "lat": 45.5152,
+      "lon": -122.6784,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-ae991974d195",
+      "title": "Wildfire Smoke",
+      "category": "Public safety",
+      "state_or_region": "OR",
+      "publisher": "Portland Public Alerts",
+      "published_at": null,
+      "source_url": "https://www.publicalerts.org/wildfire-smoke",
+      "source_record_id": "src-7a7b82bc50600603",
+      "lat": 45.5152,
+      "lon": -122.6784,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-c70b57fe375d",
+      "title": "As drought worsens, Western states brace for wildfires, water shortages",
+      "category": "Infrastructure",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-10T11:00:20Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
+      "source_record_id": "src-a52f3d778e723089",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-2ca931022bd8",
+      "title": "Legislative races to watch as Washington\u2019s election season revs up",
+      "category": "Government and public services",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-09T01:33:45Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/08/a-dozen-legislative-races-to-watch-as-washingtons-election-season-revs-up",
+      "source_record_id": "src-b7877bc94362a40f",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-258aa925cb62",
+      "title": "Housing advocates expect homelessness numbers to fall slightly",
+      "category": "Housing and homelessness",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-08T11:01:57Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
+      "source_record_id": "src-e7a30c95563071c6",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-b4094ad72277",
+      "title": "District 23: School choice money shapes rematch between former legislator, budget committee member",
+      "category": "Government and public services",
+      "state_or_region": "ID",
+      "publisher": "Idaho Capital Sun Feed",
+      "published_at": "2026-05-08T19:12:16Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/08/district-23-school-choice-money-shapes-rematch-between-former-legislator-budget-committee-member",
+      "source_record_id": "src-1ca157b28d74c471",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-040d9ae7448b",
+      "title": "Company withdraws its bid for data center water, but not because it\u2019s backing down",
+      "category": "Infrastructure",
+      "state_or_region": "ID",
+      "publisher": "Idaho Capital Sun Feed",
+      "published_at": "2026-05-08T14:15:56Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/08/repub/company-withdraws-its-bid-for-data-center-water-but-not-because-its-backing-down",
+      "source_record_id": "src-6fc820d2a01ab288",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "coordinate_basis": "source_default"
+    }
+  ]
+}

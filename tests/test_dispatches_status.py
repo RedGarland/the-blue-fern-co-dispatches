@@ -166,6 +166,15 @@ def test_detects_pages_wrong_branch(tmp_path, monkeypatch):
 
 def test_detects_gaza_duplicate_urls(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
+    _write(
+        root / "output" / "site" / "gaza" / "archive.html",
+        '<a href="editions/2026-05-08/">2026-05-08</a><a href="editions/2026-05-09/">2026-05-09</a>',
+    )
+    _write(
+        root / "output" / "site" / "gaza" / "rss.xml",
+        "<item><link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-08/</link></item>"
+        "<item><link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-09/</link></item>",
+    )
     for day in ["2026-05-09", "2026-05-08"]:
         _json(root / "output" / "site" / "gaza" / "editions" / day / "sources_manifest.json", [{"url": "https://dup.example/story"}])
         _json(root / "output" / "site" / "gaza" / "editions" / day / "edition_manifest.json", {"source_count": 1})
@@ -216,3 +225,47 @@ def test_scan_smtp_not_printed(tmp_path, monkeypatch):
     rendered = dispatches_status.render_text_status(status, [])
     assert "secret" not in rendered
     assert "SMTP_PASSWORD" in status["critical_errors"][0]
+
+
+def test_gaza_latest_public_comes_from_archive_rss_links_not_latest_folder(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    for day in ["2026-05-11", "2026-05-12"]:
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "edition_manifest.json", {"source_count": 1, "story_count": 1, "errors": []})
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "sources_manifest.json", [{"url": f"https://example.com/{day}"}])
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "curation_manifest.json", [{"story_id": day}])
+        _write(root / "output" / "site" / "gaza" / "editions" / day / "index.html", '<a href="https://example.com/src">src</a>')
+    _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-11/">2026-05-11</a>')
+    _write(root / "output" / "site" / "gaza" / "rss.xml", '<link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-11/</link>')
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    gaza = status["dispatches"]["gaza"]
+    assert gaza["latest_public_edition_date"] == "2026-05-11"
+    assert "2026-05-12" in gaza["stale_or_unlinked_edition_dates"]
+
+
+def test_gaza_linked_zero_source_is_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-10/">2026-05-10</a>')
+    _write(root / "output" / "site" / "gaza" / "rss.xml", '<link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-10/</link>')
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json", [])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "curation_manifest.json", [])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "edition_manifest.json", {"source_count": 0, "story_count": 0, "errors": []})
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert status["ok"] is False
+    assert "Gaza linked public edition has zero sources" in status["critical_errors"]
+
+
+def test_unlinked_dedupe_refused_gaza_folder_not_critical_by_itself(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-10/">2026-05-10</a>')
+    _write(root / "output" / "site" / "gaza" / "rss.xml", '<link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-10/</link>')
+    _json(
+        root / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "edition_manifest.json",
+        {"source_count": 0, "story_count": 0, "errors": ["No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition."]},
+    )
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "sources_manifest.json", [])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "curation_manifest.json", [])
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "Gaza linked public edition has dedupe-refusal errors" not in status["critical_errors"]

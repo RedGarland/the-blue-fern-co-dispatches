@@ -87,6 +87,14 @@ def extract_links(html_path: Path) -> list[str]:
     return URL_RE.findall(read_text(html_path))
 
 
+def extract_linked_edition_dates(*paths: Path) -> list[str]:
+    linked: set[str] = set()
+    for path in paths:
+        text = read_text(path)
+        linked.update(EDITION_LINK_RE.findall(text))
+    return sorted(linked)
+
+
 def git_tracking_status(repo: Path) -> str | None:
     ok, out = run_git(repo, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}")
     if not ok or not out:
@@ -259,10 +267,50 @@ def summarize_dispatch(root: Path, pages_root: Path, slug: str, public_name: str
 
 def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
     result = summarize_dispatch(root, pages_root, "gaza", "Dispatches From Gaza")
-    site_dates = list_edition_dates(root / "output" / "site" / "gaza" / "editions")
-    result["public_archive_dates"] = site_dates
+    site_editions = root / "output" / "site" / "gaza" / "editions"
+    site_dates = list_edition_dates(site_editions)
+    archive_path = root / "output" / "site" / "gaza" / "archive.html"
+    rss_path = root / "output" / "site" / "gaza" / "rss.xml"
+    linked_dates = extract_linked_edition_dates(archive_path, rss_path)
+    public_dates = [d for d in linked_dates if d in set(site_dates)]
+    latest_public = public_dates[-1] if public_dates else None
+    stale_or_unlinked = sorted([d for d in site_dates if d not in set(public_dates)])
 
-    latest = result.get("latest_public_edition_date")
+    result["public_archive_dates"] = public_dates
+    result["latest_public_edition_date"] = latest_public
+    result["latest_public_url"] = (
+        f"https://dispatches.thebluefernco.com/gaza/editions/{latest_public}/" if latest_public else None
+    )
+    result["stale_or_unlinked_edition_dates"] = stale_or_unlinked
+
+    latest = latest_public
+    if latest:
+        latest_sources = root / "output" / "dispatches" / "gaza" / "editions" / latest / "sources_manifest.json"
+        if not latest_sources.exists():
+            latest_sources = root / "output" / "site" / "gaza" / "editions" / latest / "sources_manifest.json"
+        latest_curation = root / "output" / "site" / "gaza" / "editions" / latest / "curation_manifest.json"
+        latest_manifest = root / "output" / "site" / "gaza" / "editions" / latest / "edition_manifest.json"
+        latest_index = root / "output" / "site" / "gaza" / "editions" / latest / "index.html"
+        result["latest_sources_manifest_path"] = str(latest_sources) if latest_sources.exists() else None
+        result["latest_source_count"] = count_sources(latest_sources) if latest_sources.exists() else None
+        curation_payload = read_json(latest_curation) if latest_curation.exists() else None
+        manifest_payload = read_json(latest_manifest) if latest_manifest.exists() else None
+        result["latest_story_count"] = len(curation_payload) if isinstance(curation_payload, list) else None
+        result["latest_manifest_errors"] = (
+            manifest_payload.get("errors") if isinstance(manifest_payload, dict) else None
+        )
+        result["latest_manifest_warnings"] = (
+            manifest_payload.get("warnings") if isinstance(manifest_payload, dict) else None
+        )
+        result["latest_has_visible_source_links"] = bool(extract_links(latest_index)) if latest_index.exists() else False
+    else:
+        result["latest_sources_manifest_path"] = None
+        result["latest_source_count"] = None
+        result["latest_story_count"] = None
+        result["latest_manifest_errors"] = None
+        result["latest_manifest_warnings"] = None
+        result["latest_has_visible_source_links"] = False
+
     dedupe_summary = None
     suppressed_dates: list[str] = []
     if latest:
@@ -289,17 +337,29 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
     result["suppressed_duplicate_dates"] = sorted(set(suppressed_dates))
     result["latest_dedupe_report"] = dedupe_summary
 
-    # source_count 0 but linked publicly
-    linked_dates = set(EDITION_LINK_RE.findall(read_text(root / "output" / "site" / "gaza" / "index.html")))
-    zero_source_linked = []
-    for d in linked_dates:
-        manifest = read_json(root / "output" / "site" / "gaza" / "editions" / d / "edition_manifest.json")
-        if isinstance(manifest, dict) and int(manifest.get("source_count", 0) or 0) == 0:
+    # linked edition health checks
+    zero_source_linked: list[str] = []
+    zero_story_linked: list[str] = []
+    dedupe_refusal_linked: list[str] = []
+    for d in public_dates:
+        manifest = read_json(site_editions / d / "edition_manifest.json")
+        sources_payload = read_json(site_editions / d / "sources_manifest.json")
+        curation_payload = read_json(site_editions / d / "curation_manifest.json")
+        source_count = len(sources_payload) if isinstance(sources_payload, list) else int((manifest or {}).get("source_count", 0) or 0)
+        story_count = len(curation_payload) if isinstance(curation_payload, list) else int((manifest or {}).get("story_count", 0) or 0)
+        if source_count == 0:
             zero_source_linked.append(d)
+        if story_count == 0:
+            zero_story_linked.append(d)
+        errors = manifest.get("errors") if isinstance(manifest, dict) else []
+        if isinstance(errors, list) and any("No new source-backed Gaza developments after cross-edition dedupe" in str(e) for e in errors):
+            dedupe_refusal_linked.append(d)
     result["public_linked_zero_source_dates"] = sorted(zero_source_linked)
+    result["public_linked_zero_story_dates"] = sorted(zero_story_linked)
+    result["public_linked_dedupe_refusal_dates"] = sorted(dedupe_refusal_linked)
 
     # repeated URLs across recent editions
-    recent = sorted(site_dates)[-5:]
+    recent = sorted(public_dates)[-5:]
     url_to_dates: dict[str, set[str]] = {}
     for d in recent:
         sources_payload = read_json(root / "output" / "site" / "gaza" / "editions" / d / "sources_manifest.json")
@@ -470,6 +530,12 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         critical_errors.append("bad FNS link appears in active American Pressure output")
     if gaza.get("repeated_source_urls_recent"):
         critical_errors.append("Gaza duplicate public edition detected")
+    if gaza.get("public_linked_zero_source_dates"):
+        critical_errors.append("Gaza linked public edition has zero sources")
+    if gaza.get("public_linked_zero_story_dates"):
+        critical_errors.append("Gaza linked public edition has zero stories")
+    if gaza.get("public_linked_dedupe_refusal_dates"):
+        critical_errors.append("Gaza linked public edition has dedupe-refusal errors")
     if cascadia.get("transitional_public_links"):
         critical_errors.append("Cascadia transitional dates publicly linked")
     if not gaza.get("latest_has_visible_source_links"):

@@ -5,6 +5,7 @@ This project is intentionally separate from the existing Gaza and FDA/Cascadia p
 Current dispatch slugs:
 
 - `gaza`
+- `american-pressure`
 - `cascadia`
 
 Current generated edition date:
@@ -424,3 +425,51 @@ This structure is dispatch-agnostic and should support Gaza, Cascadia, food inse
 Core rule: **NO FACT WITHOUT A TRACEABLE SOURCE.** Every public factual story, signal, score, trend, summary, and detail/data record must trace back to source records through manifests or the shared dispatch data layer.
 
 Paid/detail artifacts are private. Do not expose `output/detail/`, `output/paid/`, raw source dumps, or Cascadia Signal package files under `output/site/`.
+
+## American Pressure Weekly Manual Run
+
+American Pressure is currently weekly and manual-source-driven only. It does not run live scraping or automatic source ingestion in the publish path.
+
+Manual source input:
+
+```text
+data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json
+```
+
+Run a weekly edition from manual sources:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_american_pressure_dispatch.py --date YYYY-MM-DD --from-manual-sources --publish
+```
+
+Notification wrapper:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_american_pressure_and_notify.py --date YYYY-MM-DD --publish
+```
+
+SMTP-only diagnostic:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_american_pressure_and_notify.py --date YYYY-MM-DD --smtp-debug --send-test-email
+```
+
+No-source safety behavior:
+
+- missing `manual_sources.json` fails safely
+- zero valid source records fails safely
+- no fixture fallback publish is allowed
+- source registry entries are not auto-converted into public stories
+
+Suggested weekly Task Scheduler action:
+
+- Trigger: weekly Monday morning (Pacific local machine time)
+- Program/script: `powershell.exe`
+- Start in: `C:\PythonProjects\Dispatches From The Blue Fern Co`
+- Arguments:
+
+```text
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_american_pressure_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"
+```
+
+This cadence expects the weekly manual source file for the selected date to be prepared before execution.

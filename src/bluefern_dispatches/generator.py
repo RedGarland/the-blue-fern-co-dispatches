@@ -588,6 +588,22 @@ def is_weekly_cascadia_manifest(manifest: dict[str, Any], edition_date: str) -> 
 
 
 def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) -> bool:
+    if slug == "gaza":
+        manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+        if not manifest_path.exists():
+            return False
+        # Cross-edition dedupe failures are recorded in project-local Gaza run artifacts.
+        dedupe_path = site_root.parents[1] / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+        if dedupe_path.exists():
+            try:
+                dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return False
+            input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
+            kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
+            if input_count > 0 and kept_count == 0:
+                return False
+        return True
     if slug != "cascadia":
         return True
     manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
@@ -1025,9 +1041,10 @@ def collect_public_site_files(site_root: Path, only_dispatches: tuple[str, ...] 
         relative_parts = path.relative_to(site_root).parts
         if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
-        if len(relative_parts) >= 4 and relative_parts[0] == "cascadia" and relative_parts[1] == "editions":
+        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia"} and relative_parts[1] == "editions":
+            slug = relative_parts[0]
             edition_date = relative_parts[2]
-            if not public_edition_is_listable(site_root, "cascadia", edition_date):
+            if not public_edition_is_listable(site_root, slug, edition_date):
                 continue
         files.append(path)
     return sorted(files)

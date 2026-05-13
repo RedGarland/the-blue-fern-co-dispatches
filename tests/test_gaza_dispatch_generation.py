@@ -180,6 +180,23 @@ def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(mon
     assert report["suppressed_candidate_count"] >= 1
 
 
+def test_dedupe_report_is_rewritten_for_current_run(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-10")
+    dedupe_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "dedupe_report.json"
+    dedupe_path.parent.mkdir(parents=True, exist_ok=True)
+    dedupe_path.write_text(json.dumps({"sentinel": "old"}), encoding="utf-8")
+
+    result = run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert payload.get("edition_date") == "2026-05-10"
+    assert "sentinel" not in payload
+
+
 def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publish(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
@@ -232,3 +249,40 @@ def test_preserved_seed_path_runs_cross_edition_dedupe_and_refuses_repeated_publ
         for item in report["suppressed_candidates"]
     )
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-12" / "index.html").exists()
+
+
+def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    repeated = [
+        {
+            "source_record_id": "gaza-src-001",
+            "title": "Repeat source title",
+            "url": "https://example.com/repeat",
+            "publisher": "Example Desk",
+            "published_at": "2026-05-10T08:00:00+00:00",
+            "retrieved_at": "2026-05-10T08:00:00+00:00",
+            "summary_or_snippet": "repeat",
+            "source_type": "rss",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        }
+    ]
+    write_manual_sources(work, "2026-05-10", repeated)
+    write_manual_sources(work, "2026-05-11", repeated)
+    run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    run_gaza_dispatch(work, "2026-05-11", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    build_result = build_site(work, dry_run=False, backup_root=work / "backup")
+    assert build_result["ok"] is True
+
+    archive = read(work / "output" / "site" / "gaza" / "archive.html")
+    index = read(work / "output" / "site" / "gaza" / "index.html")
+    rss = read(work / "output" / "site" / "gaza" / "rss.xml")
+    assert "2026-05-10" in archive
+    assert "2026-05-10" in index
+    assert "2026-05-10" in rss
+    assert "2026-05-11" not in archive
+    assert "2026-05-11" not in index
+    assert "2026-05-11" not in rss

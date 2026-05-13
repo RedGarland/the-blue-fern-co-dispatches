@@ -1,0 +1,96 @@
+sources:
+  - source_id: usda-fns-snap-household-characteristics
+    name: SNAP Household Characteristics
+    url: https://www.fns.usda.gov/research/snap/household-characteristics
+    publisher: USDA Food and Nutrition Service
+    pillar: food_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: true
+    notes: Official USDA FNS research page for SNAP household characteristic reports.
+
+  - source_id: usda-fns-snap-data-tables
+    name: SNAP Data Tables
+    url: https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap
+    publisher: USDA Food and Nutrition Service
+    pillar: food_pressure
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    notes: Official USDA SNAP program participation and benefits data tables.
+
+  - source_id: cms-medicaid-chip-enrollment
+    name: Medicaid and CHIP Enrollment Data
+    url: https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data
+    publisher: Centers for Medicare and Medicaid Services
+    pillar: health_access_pressure
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    notes: National and state Medicaid and CHIP enrollment reporting.
+
+  - source_id: noaa-ncei-monthly-climate-report
+    name: NOAA NCEI Monthly Climate Reports
+    url: https://www.ncei.noaa.gov/access/monitoring/monthly-report/
+    publisher: NOAA National Centers for Environmental Information
+    pillar: environmental_pressure
+    geography: US
+    source_type: official_climate_report
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    notes: Official monthly climate indicators and narrative summaries.
+
+  - source_id: us-drought-monitor
+    name: U.S. Drought Monitor
+    url: https://droughtmonitor.unl.edu/
+    publisher: National Drought Mitigation Center and USDA and NOAA
+    pillar: environmental_pressure
+    geography: US
+    source_type: institutional_dashboard
+    reliability_tier: institutional
+    update_frequency: weekly
+    enabled: true
+    notes: Institutional drought condition map and weekly status updates.
+
+  - source_id: todo-household-cost-source
+    name: TODO Household Cost Source
+    url: https://example.invalid/todo-household-cost-source
+    publisher: TODO
+    pillar: household_cost_pressure
+    geography: US
+    source_type: todo
+    reliability_tier: context_only
+    update_frequency: TBD
+    enabled: false
+    notes: TODO: add a stable official or institutional household cost source per project conventions.
+
+  - source_id: todo-local-system-strain-source
+    name: TODO Local System Strain Source
+    url: https://example.invalid/todo-local-system-strain-source
+    publisher: TODO
+    pillar: local_system_strain
+    geography: US
+    source_type: todo
+    reliability_tier: context_only
+    update_frequency: TBD
+    enabled: false
+    notes: TODO: add stable local-system strain source with clear method and national coverage relevance.
+
+  - source_id: todo-policy-implementation-source
+    name: TODO Policy Implementation Source
+    url: https://example.invalid/todo-policy-implementation-source
+    publisher: TODO
+    pillar: policy_implementation
+    geography: US
+    source_type: todo
+    reliability_tier: context_only
+    update_frequency: TBD
+    enabled: false
+    notes: TODO: add stable policy implementation tracker source before enabling.

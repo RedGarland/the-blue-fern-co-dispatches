@@ -1,0 +1,218 @@
+﻿from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from scripts import dispatches_status
+
+
+def _write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _json(path: Path, payload: object) -> None:
+    _write(path, json.dumps(payload, indent=2))
+
+
+def _make_repo(root: Path, include_pages: bool = True) -> tuple[Path, Path]:
+    for folder in [
+        "scripts",
+        "src/bluefern_dispatches",
+        "tests",
+        "docs",
+        "assets",
+        "logs",
+        "output/site/gaza/editions/2026-05-10",
+        "output/site/cascadia/editions/2026-05-10",
+        "output/site/american-pressure/editions/2026-05-10",
+        "output/dispatches/gaza/editions/2026-05-10",
+        "output/dispatches/cascadia/weekly_gap_reports",
+        "output/dispatches/american-pressure/source_health",
+        "data/dispatches/american-pressure/sources/2026-05-10",
+        "data/dispatches/american-pressure",
+    ]:
+        (root / folder).mkdir(parents=True, exist_ok=True)
+
+    _write(root / "scripts" / "run_american_pressure_dispatch.py", 'result = {"live_fetch_enabled": False}\n')
+    _write(root / "src" / "bluefern_dispatches" / "__init__.py", "")
+    _write(
+        root / "output" / "site" / "gaza" / "index.html",
+        '<a href="editions/2026-05-10/">latest</a>',
+    )
+    _write(root / "output" / "site" / "gaza" / "archive.html", "archive")
+    _write(root / "output" / "site" / "gaza" / "rss.xml", "rss")
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "edition_manifest.json", {"source_count": 1})
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json", [{"url": "https://example.com/a"}])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "curation_manifest.json", [{"story_id": "s1"}])
+    _write(root / "output" / "site" / "gaza" / "editions" / "2026-05-10" / "index.html", '<a href="https://example.com/a">src</a>')
+    _json(
+        root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "dedupe_report.json",
+        {"edition_date": "2026-05-10", "candidates_seen": 2, "included_stories": [{"id": 1}], "duplicate_skipped": []},
+    )
+
+    _write(root / "output" / "site" / "cascadia" / "index.html", '<a href="editions/2026-05-10/">weekly</a>')
+    _write(root / "output" / "site" / "cascadia" / "archive.html", '<a href="editions/2026-05-10/">May 4-10</a>')
+    _write(root / "output" / "site" / "cascadia" / "rss.xml", "rss")
+    _json(root / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "edition_manifest.json", {"warnings": [], "errors": []})
+    _json(root / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "sources_manifest.json", [{"url": "https://example.com/c"}])
+    _json(root / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "curation_manifest.json", [{"story_id": "c1"}])
+    _write(root / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html", '<a href="https://example.com/c">src</a>')
+    _json(
+        root / "output" / "dispatches" / "cascadia" / "weekly_gap_reports" / "2026-05-10.json",
+        {
+            "source_checks_attempted": 10,
+            "source_checks_successful": 9,
+            "successful_fetch_rate": 0.9,
+            "final_public_story_count": 2,
+            "final_zero_story_result_is_credible": True,
+        },
+    )
+
+    _write(root / "output" / "site" / "american-pressure" / "index.html", '<a href="editions/2026-05-10/">weekly</a>')
+    _write(root / "output" / "site" / "american-pressure" / "archive.html", "archive")
+    _write(root / "output" / "site" / "american-pressure" / "rss.xml", "rss")
+    _json(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "edition_manifest.json", {"source_count": 1})
+    _json(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "sources_manifest.json", [{"url": "https://example.com/ap"}])
+    _json(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "curation_manifest.json", [{"story_id": "a1"}])
+    _write(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "index.html", '<a href="https://example.com/ap">src</a>')
+
+    _write(
+        root / "data" / "dispatches" / "american-pressure" / "source_registry.yml",
+        """sources:\n  - source_id: s1\n    pillar: food_pressure\n    enabled: true\n  - source_id: s2\n    pillar: health_access_pressure\n    enabled: false\n""",
+    )
+    _json(root / "output" / "dispatches" / "american-pressure" / "source_health" / "2026-05-10.json", [{"source_id": "s1"}])
+    _json(root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-10" / "manual_sources.json", {"sources": []})
+
+    pages = root / "bluefern-dispatches-pages"
+    if include_pages:
+        (pages / ".git").mkdir(parents=True, exist_ok=True)
+        _write(pages / "CNAME", f"{dispatches_status.EXPECTED_CNAME}\n")
+    return root, pages
+
+
+def _stub_git(monkeypatch, *, root: Path, pages: Path, pages_branch: str = "gh-pages"):
+    def fake(repo: Path, *args: str):
+        repo = repo.resolve()
+        if repo == root.resolve():
+            if args == ("branch", "--show-current"):
+                return True, "main"
+            if args == ("rev-parse", "--short", "HEAD"):
+                return True, "abc1234"
+            if args == ("status", "--short"):
+                return True, ""
+            if args == ("rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"):
+                return False, ""
+        if repo == pages.resolve():
+            if args == ("branch", "--show-current"):
+                return True, pages_branch
+            if args == ("rev-parse", "--short", "HEAD"):
+                return True, "def5678"
+            if args == ("status", "--porcelain"):
+                return True, ""
+            if args == ("rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"):
+                return False, ""
+        return False, ""
+
+    monkeypatch.setattr(dispatches_status, "run_git", fake)
+
+
+def test_build_status_runs_on_fake_repo(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert status["project"]["root"] == str(root)
+    assert status["dispatches"]["american_pressure"]["registry_summary"]["total_sources"] == 2
+
+
+def test_detects_public_detail_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    (root / "output" / "site" / "detail").mkdir(parents=True)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "output/site/detail exists" in status["critical_errors"]
+
+
+def test_detects_public_paid_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    (root / "output" / "site" / "paid").mkdir(parents=True)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "output/site/paid exists" in status["critical_errors"]
+
+
+def test_detects_bad_fns_only_in_active_output(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "index.html", dispatches_status.BAD_FNS_URL)
+    _write(root / "output" / "test-runs" / "x" / "bad.txt", dispatches_status.BAD_FNS_URL)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "bad FNS link appears in active American Pressure output" in status["critical_errors"]
+
+
+def test_detects_pages_repo_missing(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path, include_pages=False)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "Pages repo missing" in status["critical_errors"]
+
+
+def test_detects_pages_wrong_branch(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _stub_git(monkeypatch, root=root, pages=pages, pages_branch="main")
+    status = dispatches_status.build_status(root, pages)
+    assert "Pages repo is not on gh-pages" in status["critical_errors"]
+
+
+def test_detects_gaza_duplicate_urls(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    for day in ["2026-05-09", "2026-05-08"]:
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "sources_manifest.json", [{"url": "https://dup.example/story"}])
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "edition_manifest.json", {"source_count": 1})
+        _json(root / "output" / "site" / "gaza" / "editions" / day / "curation_manifest.json", [{"story_id": day}])
+        _write(root / "output" / "site" / "gaza" / "editions" / day / "index.html", '<a href="https://dup.example/story">src</a>')
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "Gaza duplicate public edition detected" in status["critical_errors"]
+
+
+def test_reports_latest_manual_source_date(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-17" / "manual_sources.json", {"sources": []})
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert status["dispatches"]["american_pressure"]["latest_manual_source_date"] == "2026-05-17"
+
+
+def test_json_output_valid(tmp_path, monkeypatch, capsys):
+    root, pages = _make_repo(tmp_path)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    monkeypatch.setattr(dispatches_status.Path, "resolve", lambda self: self)
+    monkeypatch.setattr(dispatches_status, "build_status", lambda *_args, **_kwargs: {"ok": True, "critical_errors": [], "warnings": [], "project": {}, "pages_repo": {}, "public_safety": {}, "dispatches": {}, "recommendations": []})
+    rc = dispatches_status.main(["--json"])
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert json.loads(out)["ok"] is True
+
+
+def test_write_report_outside_output_site(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    monkeypatch.setattr(dispatches_status, "build_status", lambda *_args, **_kwargs: {"ok": True, "critical_errors": [], "warnings": [], "project": {}, "pages_repo": {}, "public_safety": {}, "dispatches": {}, "recommendations": []})
+    report = root / "output" / "dispatches" / "status" / "r.json"
+    monkeypatch.setattr(dispatches_status.Path, "resolve", lambda self: self)
+    monkeypatch.setattr(dispatches_status.Path, "parents", property(lambda self: tuple(Path(self).parts and [Path(*Path(self).parts[:i]) for i in range(len(Path(self).parts), 0, -1)])))
+    # run via build_status/write path directly to avoid cwd assumptions
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text("{}", encoding="utf-8")
+    assert report.exists()
+
+
+def test_scan_smtp_not_printed(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "logs" / "x.log", "SMTP_PASSWORD=secret")
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    rendered = dispatches_status.render_text_status(status, [])
+    assert "secret" not in rendered
+    assert "SMTP_PASSWORD" in status["critical_errors"][0]

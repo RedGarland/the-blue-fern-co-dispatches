@@ -29,6 +29,7 @@ from bluefern_dispatches.generator import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
+from bluefern_dispatches.gaza_sources import rank_gaza_candidates
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -179,20 +180,26 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
                 "claim_ids": [],
             }
         )
-    return normalized, warnings, errors
+    ranked = rank_gaza_candidates(normalized, edition_date)
+    return ranked, warnings, errors
 
 
 def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -> list[dict[str, Any]]:
     stories: list[dict[str, Any]] = []
     for index, source in enumerate(sources, start=1):
+        source_score = int(source.get("candidate_score") or 0)
+        score = max(1, source_score)
+        ranking_reasons = list(source.get("ranking_reasons") or [])
+        breakdown = dict(source.get("candidate_score_breakdown") or {})
         stories.append(
             {
                 "story_id": f"gaza-story-{edition_date}-{index:03d}",
                 "title": source["title"],
                 "summary": source["summary_or_snippet"],
                 "category": source["category_hint"],
-                "score": 100 - index,
-                "scoring_reasons": ["Included because a complete project-local source record was provided."],
+                "score": score,
+                "scoring_reasons": ranking_reasons or ["Included because a complete project-local source record was provided."],
+                "candidate_score_breakdown": breakdown,
                 "included_in_public_summary": True,
                 "included_in_detail_dataset": False,
                 "source_record_ids": [source["source_record_id"]],
@@ -527,19 +534,45 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         )
     if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
+    provider_diagnostics = [
+        {
+            "provider": "manual_sources_json",
+            "status": "ok" if manual_records else "no_candidates",
+            "raw_items": len(manual_records),
+            "accepted": int(cross_edition_report.get("kept_candidate_count", 0)),
+        }
+    ]
+    rejected_by_reason = {
+        "normalization_errors": len(norm_errors),
+        "cross_edition_duplicates": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+    }
+    stage_counts = {
+        "registry_sources": 1,
+        "providers_attempted": 1,
+        "providers_successful": 1 if manual_records else 0,
+        "raw_candidates": len(manual_records),
+        "normalized_candidates": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
+    }
     collection_report = {
         "edition_date": edition_date,
         "lookback_window_days": 7,
-        "source_providers_attempted": [{"provider": "manual_sources_json", "status": "ok" if manual_records else "no_candidates"}],
+        "source_providers_attempted": provider_diagnostics,
         "provider_failures": [],
         "raw_candidate_count": len(manual_records),
         "normalized_candidate_count": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
-        "rejection_counts_by_reason": {"normalization_errors": len(norm_errors)},
+        "rejection_counts_by_reason": rejected_by_reason,
         "top_rejected_examples": norm_errors[:5],
         "no_story_credibility_decision": "",
+        "providers_attempted_count": 1,
+        "providers_successful_count": 1 if manual_records else 0,
+        "provider_diagnostics": provider_diagnostics,
+        "stage_counts": stage_counts,
+        "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),
+        "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
     }
     if collection_report["raw_candidate_count"] == 0:
         collection_report["no_story_credibility_decision"] = "no_candidates_found"

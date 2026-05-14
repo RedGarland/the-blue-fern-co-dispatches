@@ -62,6 +62,23 @@ TRACKING_QUERY_KEYS = {
     "igshid",
 }
 
+RANK_KEYWORDS = {
+    "humanitarian_impact": ("humanitarian", "aid", "famine", "hunger", "shelter", "relief", "unrwa", "ocha", "unicef", "wfp", "who"),
+    "aid_access": ("aid convoy", "crossing", "access", "corridor", "blockade", "entry", "distribution"),
+    "ceasefire_diplomacy": ("ceasefire", "truce", "talks", "negotiation", "mediator", "diplom", "agreement"),
+    "civilian_harm": ("civilian", "killed", "injured", "casualties", "strike", "bomb", "attack"),
+    "displacement": ("displaced", "evacuation", "shelter", "camp", "refugee"),
+    "health_infrastructure": ("hospital", "clinic", "water", "sanitation", "power", "electricity", "infrastructure", "disease"),
+    "accountability_legal": ("icj", "icc", "un security council", "investigation", "legal", "court", "rights", "accountability"),
+}
+
+RELIABILITY_SCORES = {
+    "official-humanitarian-source": 20,
+    "official-public-source": 18,
+    "reported-public-source": 14,
+    "editorial-record": 10,
+}
+
 
 @dataclass(frozen=True)
 class SourceDefinition:
@@ -281,6 +298,14 @@ def filter_recent_duplicate_sources(
         "suppressed_candidates": suppressed,
         "stale_risk_candidates": stale_risk,
         "warnings": [],
+        "google_wrapper_count": sum(
+            1
+            for source in candidates
+            if bool(source.get("wrapper_url")) or _is_google_news_rss(str(source.get("url") or ""))
+        ),
+        "canonical_publisher_url_count": sum(
+            1 for source in kept if str(source.get("canonical_url") or "").strip()
+        ),
     }
     if candidates and not kept:
         report["warnings"].append("all candidates were suppressed as repeated or stale-risk")
@@ -509,6 +534,55 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     }
 
 
+
+def _keyword_points(text: str, keywords: tuple[str, ...], points: int) -> int:
+    lowered = text.lower()
+    return points if any(keyword in lowered for keyword in keywords) else 0
+
+
+def rank_gaza_candidate(record: dict[str, Any], edition_date: str) -> dict[str, Any]:
+    text = " ".join(
+        [
+            str(record.get("title") or ""),
+            str(record.get("summary_or_snippet") or ""),
+            str(record.get("category_hint") or ""),
+            str(record.get("publisher") or ""),
+        ]
+    )
+    score = 0
+    breakdown: dict[str, int] = {}
+
+    for key, keywords in RANK_KEYWORDS.items():
+        points = _keyword_points(text, keywords, 12 if key in {"humanitarian_impact", "aid_access", "civilian_harm"} else 8)
+        breakdown[key] = points
+        score += points
+
+    reliability_tier = str(record.get("reliability_tier") or "").strip().lower()
+    reliability_points = RELIABILITY_SCORES.get(reliability_tier, 8)
+    breakdown["source_reliability"] = reliability_points
+    score += reliability_points
+
+    published_at = str(record.get("published_at") or "").strip()
+    date_confidence = 0
+    if published_at:
+        if published_at.startswith(edition_date):
+            date_confidence = 18
+        else:
+            date_confidence = 10
+    breakdown["date_confidence"] = date_confidence
+    score += date_confidence
+
+    ranked = dict(record)
+    ranked["candidate_score"] = int(score)
+    ranked["candidate_score_breakdown"] = breakdown
+    ranked["ranking_reasons"] = [k for k, v in breakdown.items() if v > 0]
+    return ranked
+
+
+def rank_gaza_candidates(records: list[dict[str, Any]], edition_date: str) -> list[dict[str, Any]]:
+    return [rank_gaza_candidate(record, edition_date) for record in records]
+
+
 def validate_source_records(records: list[dict[str, Any]], min_sources: int = 1) -> list[str]:
     errors: list[str] = []
     if len(records) < min_sources:
@@ -600,6 +674,14 @@ def collect_gaza_sources(
     lookback_end = date.fromisoformat(edition_date)
     provider_diagnostics: list[dict[str, Any]] = []
     rejected_by_reason: dict[str, int] = {}
+    stage_counts: dict[str, int] = {
+        "registry_sources": len(definitions),
+        "providers_attempted": 0,
+        "providers_successful": 0,
+        "raw_candidates": 0,
+        "normalized_candidates": 0,
+        "accepted_before_rank": 0,
+    }
 
     def reject(reason: str) -> None:
         rejected_by_reason[reason] = int(rejected_by_reason.get(reason, 0)) + 1
@@ -607,6 +689,7 @@ def collect_gaza_sources(
     for source in definitions:
         if len(records) >= max_sources:
             break
+        stage_counts["providers_attempted"] += 1
         if not source.enabled:
             provider_diagnostics.append({"source_id": source.source_id, "status": "skipped", "reason": "disabled"})
             continue
@@ -618,6 +701,7 @@ def collect_gaza_sources(
         try:
             items = fetch_rss_items(source.url)
             diag["raw_items"] = len(items)
+            stage_counts["raw_candidates"] += len(items)
         except (urllib.error.URLError, TimeoutError, ET.ParseError, OSError, ValueError) as exc:
             reason = f"{type(exc).__name__}: {exc}"
             warnings.append(f"{source.source_id}: {reason}")
@@ -648,13 +732,18 @@ def collect_gaza_sources(
                 continue
             seen_urls.add(url_key)
             records.append(record)
+            stage_counts["normalized_candidates"] += 1
             diag["accepted"] = int(diag.get("accepted", 0)) + 1
+        if len(records) > source_record_start:
+            stage_counts["providers_successful"] += 1
         if len(records) == source_record_start:
             failed_source_ids.append({"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"})
             if diag.get("status") == "ok":
                 diag["status"] = "no_matches"
         provider_diagnostics.append(diag)
 
+    stage_counts["accepted_before_rank"] = len(records)
+    records = rank_gaza_candidates(records, edition_date)
     validation_errors = validate_source_records(records, min_sources=min_sources)
     errors.extend(validation_errors)
     source_file = None
@@ -670,6 +759,7 @@ def collect_gaza_sources(
         "errors": errors,
         "failed_source_ids": failed_source_ids,
         "source_mode_used": "auto",
+        "stage_counts": stage_counts,
         "lookback_start_date": lookback_start.isoformat(),
         "lookback_end_date": lookback_end.isoformat(),
         "provider_diagnostics": provider_diagnostics,

@@ -89,3 +89,21 @@ sources:
     reliability_tier: reported-public-source
     category_hint: conflict
     region_scope: Gaza
+  - source_id: haaretz-israel-news
+    name: Haaretz Israel News
+    url: https://www.haaretz.com/srv/haaretz-rss
+    type: rss
+    enabled: true
+    publisher: Haaretz
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: times-of-israel-rss
+    name: Times of Israel
+    url: https://www.timesofisrael.com/feed/
+    type: rss
+    enabled: true
+    publisher: Times of Israel
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza

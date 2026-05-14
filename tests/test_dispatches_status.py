@@ -339,6 +339,10 @@ def test_cascadia_summary_includes_failure_counts_and_top_sources(tmp_path, monk
     assert cascadia["registry_fetch_error_count"] == 1
     assert cascadia["gdelt_timeout_rate_limit_count"] == 1
     assert cascadia["top_failing_source_ids"][0]["source_id"] == "or-odot-news"
+    assert cascadia["registry_fetch_errors_by_source_status"][0]["source_id"] == "or-odot-news"
+    assert cascadia["registry_fetch_errors_by_source_status"][0]["status_code"] == 404
+    assert cascadia["repeated_registry_failures"][0]["source_id"] == "or-odot-news"
+    assert cascadia["repeated_registry_failures"][0]["count"] == 2
 
 
 def test_build_cascadia_source_reliability_audit_classifies_dead_and_diagnostics(tmp_path):

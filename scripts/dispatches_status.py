@@ -439,6 +439,8 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
     registry_fetch_error_count = 0
     gdelt_timeout_rate_limit_count = 0
     top_failing: list[dict[str, Any]] = []
+    registry_fetch_errors_by_source_status: list[dict[str, Any]] = []
+    repeated_failure_patterns: list[dict[str, Any]] = []
     warning_counts_by_source: dict[str, int] = {}
     if isinstance(quality_payload, dict):
         warnings = quality_payload.get("warnings") or []
@@ -463,6 +465,7 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
         warning_counts_by_source = dict(sorted(weak_by_source.items()))
     if isinstance(registry_payload, dict):
         failing_sources: Counter[tuple[str, str]] = Counter()
+        failing_source_status: Counter[tuple[str, int | str, str]] = Counter()
         for diag in registry_payload.get("diagnostics", []):
             if not isinstance(diag, dict):
                 continue
@@ -485,9 +488,30 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
                 failure_reason = f"http_{status_code}"
             if diag.get("errors"):
                 failing_sources[(source_id, failure_reason)] += 1
+                status_key: int | str = status_code if isinstance(status_code, int) else "unknown"
+                failing_source_status[(source_id, status_key, failure_reason)] += 1
         top_failing = [
             {"source_id": source_id, "reason": reason, "count": count}
             for (source_id, reason), count in failing_sources.most_common(5)
+        ]
+        registry_fetch_errors_by_source_status = [
+            {
+                "source_id": source_id,
+                "status_code": status,
+                "reason": reason,
+                "count": count,
+            }
+            for (source_id, status, reason), count in failing_source_status.most_common()
+        ]
+        repeated_failure_patterns = [
+            {
+                "source_id": source_id,
+                "status_code": status,
+                "reason": reason,
+                "count": count,
+            }
+            for (source_id, status, reason), count in failing_source_status.most_common()
+            if count >= 2
         ]
 
     result["target_fetch_success_rate"] = 0.75
@@ -495,6 +519,8 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
     result["registry_fetch_error_count"] = registry_fetch_error_count
     result["gdelt_timeout_rate_limit_count"] = gdelt_timeout_rate_limit_count
     result["top_failing_source_ids"] = top_failing
+    result["registry_fetch_errors_by_source_status"] = registry_fetch_errors_by_source_status
+    result["repeated_registry_failures"] = repeated_failure_patterns
     result["weak_date_warnings_by_source_id"] = warning_counts_by_source
     result["latest_weekly_quality_report_path"] = str(quality_path) if quality_path else None
     result["latest_registry_source_report_path"] = str(registry_report_path) if registry_report_path else None

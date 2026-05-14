@@ -1,0 +1,95 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-14-001",
+    "title": "Gaza sisters win prize for turning rubble into reusable bricks",
+    "summary": "Displaced teenagers Farah and Tala wanted to 'turn destruction into something useful'.",
+    "category": "conflict",
+    "score": 32,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-14-bbc-middle-east-4901a2700118"
+    ],
+    "source_ids": [
+      "gaza-2026-05-14-bbc-middle-east-4901a2700118"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-14T19:14:38.084469+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-14-002",
+    "title": "The secret mission to rescue the UN's vital Palestinian refugee archive",
+    "summary": "Millions of documents chronicling generations of trauma saved from Gaza and East Jerusalem in 10-month Unrwa operation East Jerusalem to Amman should have been an easy trip: a short drive down to the Dead Sea, across the border checkpoint and swiftly on to the Jordanian capital. But in the early summer of 2024, the distance appeared an almost insurmountable obstacle to humanitarian workers from Unrwa (the United Nations Relief and Works Agency for Palestine Refugees), as they sought to safeguard huge quantities of archival documents vitally important to decades of recent Palestinian history.",
+    "category": "conflict",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-14-guardian-world-cab82fce8bd4"
+    ],
+    "source_ids": [
+      "gaza-2026-05-14-guardian-world-cab82fce8bd4"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/14/secret-mission-palestinian-refugee-archive-unrwa-israel"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-14T19:14:38.084469+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  }
+]

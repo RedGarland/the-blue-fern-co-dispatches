@@ -553,79 +553,368 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
     return cards
 
 
-def _select_codex_prompt_goal(status_json: dict[str, Any]) -> tuple[str, list[str]]:
+def _select_codex_prompt_goal(status_json: dict[str, Any]) -> tuple[str, str]:
     health = classify_health(status_json)
     cards = build_health_cards(status_json)
     if health["flags"]["has_critical_errors"]:
         issue = (status_json.get("critical_errors") or ["first critical error"])[0]
-        return "Critical error remediation.", [
-            "Goal:",
-            f"Fix the first blocking critical error: {issue}",
-        ]
-    if health["flags"]["gaza_repeated_urls"] and (
+        return "Critical error remediation.", "critical"
+    if (
         health["flags"]["gaza_zero_source_linked"]
         or health["flags"]["gaza_zero_story_linked"]
         or health["flags"]["gaza_dedupe_refusal_linked"]
     ):
-        return "Gaza historical duplicate URL cleanup.", [
-            "Goal:",
-            "Review and clean older linked Gaza editions with repeated source URLs without inventing sources.",
-            "",
-            "Requirements:",
-            "- Identify repeated URLs across public archive dates.",
-            "- Determine whether each repeated edition should be kept, replaced with valid source-backed records, or removed from public archive/RSS.",
-            "- Do not use rendered prose as source material.",
-            "- Do not publish zero-source or duplicate editions.",
-            "- Keep current latest valid Gaza edition intact.",
-            "- Update archive/RSS only through generator/listability logic if possible.",
-        ]
-    if health["flags"]["cascadia_fetch_rate_low"] or health["warning_counts"]["registry_fetch_error_count"] > 0:
-        return "Cascadia source reliability cleanup.", [
-            "Goal:",
-            "Improve Cascadia source reliability and reduce warning noise.",
-            "",
-            "Requirements:",
-            "- Summarize registry fetch errors by source_id/status.",
-            "- Identify sources causing repeated 403/404/DNS failures.",
-            "- Disable or mark dead sources as diagnostics-only.",
-            "- Aggregate weak-date warnings instead of emitting repeated messages.",
-            "- Keep weekly public output source-backed.",
-            "- Do not weaken validation.",
-        ]
+        return "Gaza duplicate/public-listing cleanup.", "gaza_public_linked_issue"
+    if health["flags"]["gaza_undercollection_review"]:
+        return "Gaza source collection / under-collection fix.", "gaza_undercollection"
+    if health["flags"]["cascadia_fetch_rate_low"] or health["warning_counts"]["registry_fetch_error_count"] > 0 or health["warning_counts"]["weak_date_warning_count"] > 0:
+        return "Cascadia source reliability cleanup.", "cascadia_reliability"
     if cards["american_pressure"]["coverage_gaps"]:
-        return "American Pressure source expansion.", [
-            "Goal:",
-            "Expand American Pressure source registry coverage for missing pillars.",
-        ]
+        return "American Pressure source coverage expansion.", "american_pressure_coverage"
     if health["flags"]["source_changes"]:
-        return "Source commit review checklist.", [
-            "Goal:",
-            "Review and prepare source/test/doc changes for commit (no generated/runtime artifacts).",
-        ]
-    return "Routine maintenance checks.", [
-        "Goal:",
-        "Run maintenance checks and prepare next weekly manual source file.",
-    ]
+        return "Source/test/doc commit review checklist.", "source_review"
+    return "General maintenance/status cleanup.", "maintenance"
 
 
 def suggested_prompt_title(status_json: dict[str, Any]) -> str:
-    title, _ = _select_codex_prompt_goal(status_json)
+    title, _template = _select_codex_prompt_goal(status_json)
     return title
 
 
 def generate_codex_prompt(status_json: dict[str, Any]) -> str:
-    base = [
-        "Read docs/project-contract.md first.",
-        "Do not violate it.",
-        "Do not push.",
-        "Do not use git add .",
-        "Report files changed.",
-        "Do not expose secrets.",
-        "Do not commit generated output/logs/runtime artifacts.",
-        "Run focused tests, full pytest, doctor, and dispatches_status.py.",
-    ]
-    _, goal = _select_codex_prompt_goal(status_json)
-    return "\n".join(base + [""] + goal)
+    health = classify_health(status_json)
+    cards = build_health_cards(status_json)
+    title, template_key = _select_codex_prompt_goal(status_json)
+    cascadia = cards.get("cascadia", {})
+    gaza = cards.get("gaza", {})
+    ap = cards.get("american_pressure", {})
+    warnings = health.get("warning_counts", {})
+    gaza_collection = ((status_json.get("dispatches") or {}).get("gaza") or {}).get("latest_collection_report") or {}
+    gaza_raw_candidates = gaza_collection.get("raw_candidate_count")
+    gaza_kept_candidates = gaza_collection.get("kept_after_dedupe")
+    fetch_rate = cascadia.get("fetch_success_rate")
+    fetch_rate_pct = f"{int(float(fetch_rate) * 100)}%" if isinstance(fetch_rate, (int, float)) else "n/a"
+    fetch_target = cascadia.get("target_fetch_success_rate")
+    fetch_target_pct = f"{int(float(fetch_target) * 100)}%" if isinstance(fetch_target, (int, float)) else "75%"
+
+    common_rules = "\n".join(
+        [
+            "- Read docs/project-contract.md first.",
+            "- Do not violate it.",
+            "- Do not push.",
+            "- Do not use git add .",
+            "- Report files changed.",
+            "- Do not expose secrets.",
+            "- Do not commit generated output/logs/runtime artifacts.",
+            "- Run focused tests, full pytest, doctor, and dispatches_status.py.",
+        ]
+    )
+    common_validation = "\n".join(
+        [
+            "- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")",
+            "- .\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider --basetemp \"$bt\"",
+            "- .\\.venv\\Scripts\\python.exe scripts\\doctor.py",
+            "- .\\.venv\\Scripts\\python.exe scripts\\dispatches_status.py",
+        ]
+    )
+
+    template_map: dict[str, str] = {
+        "cascadia_reliability": f"""Goal
+Improve Cascadia source reliability and reduce warning noise while preserving source-backed weekly output.
+
+Current status
+- Latest public edition: {cascadia.get('latest_public_edition_date')}
+- Source/story count: {cascadia.get('sources')} / {cascadia.get('stories')}
+- Source checks attempted/successful: {cascadia.get('source_checks_attempted')} / {cascadia.get('source_checks_successful')}
+- Fetch success rate: {fetch_rate_pct} (target {fetch_target_pct})
+- Weak-date warning count: {warnings.get('weak_date_warning_count')}
+- Registry fetch error count: {warnings.get('registry_fetch_error_count')}
+- GDELT timeout/rate-limit count: {warnings.get('gdelt_timeout_rate_limit_count')}
+- Current recommendation: {cascadia.get('next_action')}
+
+Core rules
+{common_rules}
+
+Files likely involved
+- scripts/dispatches_status.py
+- scripts/dispatches_control_panel.py
+- src/bluefern_dispatches/cascadia_ingest.py
+- src/bluefern_dispatches/cascadia_normalize.py
+- src/bluefern_dispatches/cascadia_source_registry.py
+- tests/test_cascadia_pipeline.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Audit source reliability.
+- Summarize registry fetch errors by source_id/status.
+- Identify repeated 403/404/DNS/TLS/timeout failures.
+- Mark dead sources disabled or diagnostics-only where appropriate.
+- Aggregate weak-date warnings.
+- Do not weaken validation.
+- Do not treat retrieved_at as published_at.
+- Preserve source-backed weekly output.
+- Update dashboard/control panel if status fields change.
+
+Tests
+- Add/update deterministic tests for reliability summary and prompt content.
+
+Validation commands
+- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")
+- .\\.venv\\Scripts\\python.exe -B -m pytest tests\\test_cascadia_pipeline.py tests\\test_dispatches_status.py tests\\test_dispatches_control_panel.py -q -p no:cacheprovider --basetemp \"$bt\"
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, key reliability decisions, test results, and whether anything was staged/committed/pushed.
+""",
+        "gaza_undercollection": f"""Goal
+Fix Gaza under-collection before dedupe/render and improve diagnostics.
+
+Current status
+- Latest public edition: {gaza.get('latest_public_edition_date')}
+- Source/story count: {gaza.get('sources')} / {gaza.get('stories')}
+- repeated source URL count: {gaza.get('repeated_source_url_count')}
+- Zero-source linked dates: {len(gaza.get('zero_source_linked_dates') or [])}
+- Zero-story linked dates: {len(gaza.get('zero_story_linked_dates') or [])}
+- Dedupe-refusal linked dates: {len(gaza.get('dedupe_refusal_linked_dates') or [])}
+- Collection health: raw={gaza_raw_candidates}, kept={gaza_kept_candidates}
+
+Core rules
+{common_rules}
+
+Files likely involved
+- src/bluefern_dispatches/gaza_sources.py
+- scripts/run_gaza_dispatch.py
+- scripts/backfill_gaza_dispatch.py
+- tests/test_gaza_sources.py
+- tests/test_gaza_dispatch_generation.py
+- tests/test_gaza_backfill.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Fix under-collection before dedupe.
+- Do not relax dedupe.
+- Expand or diagnose providers.
+- Preserve canonical URL handling.
+- Write collection diagnostics.
+- No zero-source public editions.
+- Test fresh fixture items and duplicate suppression.
+
+Tests
+- Add/update deterministic fixture tests for freshness, dedupe suppression, and zero-source safe failure.
+
+Validation commands
+- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")
+- .\\.venv\\Scripts\\python.exe -B -m pytest tests\\test_gaza_sources.py tests\\test_run_daily_gaza.py tests\\test_gaza_dispatch_generation.py tests\\test_gaza_backfill.py tests\\test_dispatches_status.py tests\\test_dispatches_control_panel.py -q -p no:cacheprovider --basetemp \"$bt\"
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, provider/diagnostic updates, test results, and whether anything was staged/committed/pushed.
+""",
+        "gaza_public_linked_issue": f"""Goal
+Remove/exclude duplicate/zero-source/dedupe-refused Gaza dates from public archive/index/RSS while preserving valid editions.
+
+Current status
+- Latest public edition: {gaza.get('latest_public_edition_date')}
+- Source/story count: {gaza.get('sources')} / {gaza.get('stories')}
+- repeated source URL count: {gaza.get('repeated_source_url_count')}
+- Zero-source linked dates: {len(gaza.get('zero_source_linked_dates') or [])}
+- Zero-story linked dates: {len(gaza.get('zero_story_linked_dates') or [])}
+- Dedupe-refusal linked dates: {len(gaza.get('dedupe_refusal_linked_dates') or [])}
+
+Core rules
+{common_rules}
+
+Files likely involved
+- scripts/run_gaza_dispatch.py
+- scripts/backfill_gaza_dispatch.py
+- src/bluefern_dispatches/gaza_sources.py
+- tests/test_gaza_dispatch_generation.py
+- tests/test_gaza_backfill.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Remove or exclude duplicate/zero-source/dedupe-refused dates from public archive/RSS/index.
+- Preserve valid source-backed editions.
+- Treat stale folders as informational when unlinked.
+- Do not invent sources and do not republish duplicate editions.
+
+Tests
+- Add/update deterministic tests for linked vs unlinked stale folders and public listability.
+
+Validation commands
+- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")
+- .\\.venv\\Scripts\\python.exe -B -m pytest tests\\test_gaza_dispatch_generation.py tests\\test_gaza_backfill.py tests\\test_dispatches_status.py tests\\test_dispatches_control_panel.py -q -p no:cacheprovider --basetemp \"$bt\"
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, date-listability outcomes, test results, and whether anything was staged/committed/pushed.
+""",
+        "american_pressure_coverage": f"""Goal
+Expand American Pressure source coverage for missing pillars with reliable, source-backed workflow.
+
+Current status
+- Latest public edition: {ap.get('latest_public_edition_date')}
+- Source/story count: {ap.get('sources')} / {ap.get('stories')}
+- Registry enabled/total: {ap.get('registry_enabled')} / {ap.get('registry_total')}
+- Enabled by pillar: {ap.get('enabled_by_pillar')}
+- Missing pillar coverage: {ap.get('coverage_gaps')}
+- Latest manual source date: {ap.get('latest_manual_source_date')}
+
+Core rules
+{common_rules}
+
+Files likely involved
+- data/dispatches/american-pressure/source_registry.yml
+- scripts/run_american_pressure_dispatch.py
+- src/bluefern_dispatches/american_pressure_sources.py
+- tests/test_american_pressure_sources.py
+- tests/test_american_pressure_dispatch.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Expand registry coverage for missing pillars.
+- Prioritize household_cost_pressure first.
+- Do not auto-create public claims from registry only.
+- Require manual source records for editions.
+- Add source-health validation if needed.
+
+Tests
+- Add/update deterministic tests for missing-pillar coverage and source-health checks.
+
+Validation commands
+- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")
+- .\\.venv\\Scripts\\python.exe -B -m pytest tests\\test_american_pressure_sources.py tests\\test_american_pressure_dispatch.py tests\\test_dispatches_status.py tests\\test_dispatches_control_panel.py -q -p no:cacheprovider --basetemp \"$bt\"
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, coverage expansion details, test results, and whether anything was staged/committed/pushed.
+""",
+        "source_review": f"""Goal
+Review source/test/doc changes and prepare a safe commit checklist.
+
+Current status
+- Source/test/doc changes are present in the working tree.
+
+Core rules
+{common_rules}
+
+Files likely involved
+- src/
+- scripts/
+- tests/
+- docs/
+- assets/
+
+Requirements
+- Classify source/test/doc changes vs generated/runtime dirt.
+- Ensure no generated output/log/runtime artifacts are included.
+- Provide exact commit checklist and verification steps.
+
+Tests
+- Run relevant focused tests for changed areas.
+
+Validation commands
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, safe commit scope, test results, and whether anything was staged/committed/pushed.
+""",
+        "maintenance": f"""Goal
+General maintenance/status cleanup.
+
+Current status
+- No active blocking issue selected; perform routine maintenance validation.
+
+Core rules
+{common_rules}
+
+Files likely involved
+- scripts/dispatches_status.py
+- scripts/doctor.py
+- scripts/dispatches_control_panel.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Verify status/doctor outputs are clean.
+- Tighten diagnostics and prompt quality where useful.
+- Keep safety/reporting behavior unchanged.
+
+Tests
+- Add/update deterministic tests for any behavior changes.
+
+Validation commands
+- $bt = \"$env:TEMP\\bluefern-pytest-\" + (Get-Date -Format \"yyyyMMdd-HHmmss\")
+- .\\.venv\\Scripts\\python.exe -B -m pytest tests\\test_dispatches_status.py tests\\test_dispatches_control_panel.py -q -p no:cacheprovider --basetemp \"$bt\"
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, validation results, and whether anything was staged/committed/pushed.
+""",
+        "critical": f"""Goal
+Remediate the first blocking critical error from dashboard status.
+
+Current status
+- First critical error: {(status_json.get('critical_errors') or ['n/a'])[0]}
+
+Core rules
+{common_rules}
+
+Files likely involved
+- scripts/dispatches_status.py
+- scripts/dispatches_control_panel.py
+- tests/test_dispatches_status.py
+- tests/test_dispatches_control_panel.py
+
+Requirements
+- Fix the first blocking critical error safely.
+- Preserve all existing safety constraints.
+- Keep public/detail separation and no-secret behavior.
+
+Tests
+- Add/update deterministic tests for the critical condition.
+
+Validation commands
+{common_validation}
+
+Git rules
+- Do not push.
+- Do not use git add .
+
+Final response required
+- Report files changed, critical issue resolution, test results, and whether anything was staged/committed/pushed.
+""",
+    }
+    body = template_map.get(template_key, template_map["maintenance"])
+    return f"{title}\n\n{body}"
 
 
 def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:

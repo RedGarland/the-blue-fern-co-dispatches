@@ -207,22 +207,26 @@ def test_generated_prompt_prefers_gaza_cleanup():
     raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {"https://x": ["2026-05-09", "2026-05-10"]}
     raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = ["2026-05-09"]
     prompt = cp.generate_codex_prompt(raw)
-    assert "Gaza" in prompt
-    assert "repeated source URLs" in prompt
+    assert "Gaza duplicate/public-listing cleanup." in prompt
+    assert "repeated source URL count" in prompt
 
 
 def test_generated_prompt_chooses_cascadia_when_no_gaza_issue():
     raw = _base_status()
     raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
     prompt = cp.generate_codex_prompt(raw)
-    assert "Cascadia" in prompt
+    assert "Cascadia source reliability cleanup." in prompt
 
 
 def test_generated_prompt_includes_required_language():
     prompt = cp.generate_codex_prompt(_base_status())
     assert "Read docs/project-contract.md first." in prompt
+    assert "Do not violate it." in prompt
     assert "Do not push." in prompt
     assert "Do not use git add ." in prompt
+    assert "Report files changed." in prompt
+    assert "Do not expose secrets." in prompt
+    assert "Do not commit generated output/logs/runtime artifacts." in prompt
     assert "Run focused tests, full pytest, doctor, and dispatches_status.py." in prompt
 
 
@@ -276,7 +280,7 @@ def test_generated_prompt_prefers_cascadia_when_gaza_has_no_active_public_issue(
     raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {"https://x": ["2026-05-09", "2026-05-10"]}
     # No zero-source/zero-story/dedupe-refusal linked issue => Cascadia should still win.
     prompt = cp.generate_codex_prompt(raw)
-    assert "Improve Cascadia source reliability and reduce warning noise." in prompt
+    assert "Cascadia source reliability cleanup." in prompt
 
 
 def test_publish_status_label_allowed_when_no_blockers():
@@ -344,3 +348,74 @@ def test_suggested_prompt_preview_shows_selected_title():
     text = cp.format_main_summary_text(summary)
     assert "Suggested Codex Prompt (preview)" in text
     assert "Cascadia source reliability cleanup." in text
+
+
+def test_cascadia_prompt_includes_dashboard_facts_and_commands():
+    prompt = cp.generate_codex_prompt(_base_status())
+    assert "Current status" in prompt
+    assert "Latest public edition: 2026-05-10" in prompt
+    assert "Source/story count: 7 / 6" in prompt
+    assert "Source checks attempted/successful: 53 / 34" in prompt
+    assert "Fetch success rate: 64% (target 75%)" in prompt
+    assert "Weak-date warning count: 2" in prompt
+    assert "Registry fetch error count: 1" in prompt
+    assert "GDELT timeout/rate-limit count: 1" in prompt
+    assert "tests\\test_cascadia_pipeline.py" in prompt
+
+
+def test_gaza_undercollection_prompt_contains_required_rules():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {"raw_candidate_count": 0, "kept_after_dedupe": 0, "provider_failures": []}
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["cascadia"]["latest_weekly_gap_report"]["successful_fetch_rate"] = 0.95
+    raw["dispatches"]["cascadia"]["latest_manifest_warnings"] = []
+    prompt = cp.generate_codex_prompt(raw)
+    assert "Gaza source collection / under-collection fix." in prompt
+    assert "Do not relax dedupe." in prompt
+    assert "No zero-source public editions." in prompt
+
+
+def test_gaza_public_linked_issue_outranks_cascadia():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = ["2026-05-09"]
+    prompt = cp.generate_codex_prompt(raw)
+    assert "Gaza duplicate/public-listing cleanup." in prompt
+
+
+def test_american_pressure_prompt_selected_when_only_growth_gap():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["cascadia"]["latest_weekly_gap_report"]["successful_fetch_rate"] = 0.95
+    raw["dispatches"]["cascadia"]["latest_manifest_warnings"] = []
+    prompt = cp.generate_codex_prompt(raw)
+    assert "American Pressure source coverage expansion." in prompt
+    assert "Prioritize household_cost_pressure first." in prompt
+
+
+def test_prompt_includes_likely_files_and_final_response_required():
+    prompt = cp.generate_codex_prompt(_base_status())
+    assert "Files likely involved" in prompt
+    assert "Final response required" in prompt
+
+
+def test_prompt_has_required_sections():
+    prompt = cp.generate_codex_prompt(_base_status())
+    for heading in (
+        "Goal",
+        "Current status",
+        "Core rules",
+        "Files likely involved",
+        "Requirements",
+        "Tests",
+        "Validation commands",
+        "Git rules",
+        "Final response required",
+    ):
+        assert heading in prompt
+
+
+def test_generated_prompt_does_not_include_secrets():
+    raw = _base_status()
+    raw["warnings"] = ["SMTP_PASSWORD=secret123"]
+    prompt = cp.generate_codex_prompt(raw)
+    assert "secret123" not in prompt

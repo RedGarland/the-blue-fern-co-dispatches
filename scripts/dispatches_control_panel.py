@@ -239,6 +239,10 @@ def _severity_review() -> str:
     return "Review"
 
 
+def _severity_growth() -> str:
+    return "Growth"
+
+
 def _severity_ok() -> str:
     return "OK"
 
@@ -248,7 +252,7 @@ def _severity_info() -> str:
 
 
 def _merge_severity(*levels: str) -> str:
-    order = {_severity_ok(): 0, _severity_info(): 1, _severity_review(): 2, _severity_blocked(): 3}
+    order = {_severity_ok(): 0, _severity_info(): 1, _severity_growth(): 2, _severity_review(): 3, _severity_blocked(): 4}
     return max(levels, key=lambda item: order.get(item, 0))
 
 
@@ -337,6 +341,7 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
 
     blocked_reasons: list[str] = []
     review_reasons: list[str] = []
+    growth_reasons: list[str] = []
     info_reasons: list[str] = []
     if flags["do_not_publish"] or flags["has_critical_errors"]:
         blocked_reasons.append("Status reports blocked publish conditions.")
@@ -364,15 +369,15 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
     if flags["manual_source_missing_ap"]:
         review_reasons.append("American Pressure latest manual source is missing.")
     if flags["ap_coverage_gaps_present"]:
-        review_reasons.append("American Pressure source coverage expansion is needed for missing pillars.")
+        growth_reasons.append("American Pressure source coverage expansion is needed for missing pillars.")
     if flags["gaza_stale_unlinked_folders"]:
-        info_reasons.append("Gaza has stale/unlinked generated folders; informational unless publicly linked.")
+        info_reasons.append("Gaza has stale/unlinked generated folders; these are not public archive entries unless linked.")
     if flags["generated_runtime_dirt"] and not flags["source_changes"]:
         info_reasons.append("Generated/runtime dirt exists; no commit needed unless source files changed.")
 
     if blocked_reasons:
         overall = _severity_blocked()
-    elif review_reasons:
+    elif review_reasons or growth_reasons:
         overall = _severity_review()
     elif info_reasons:
         overall = _severity_info()
@@ -385,6 +390,7 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "fetch_rate": fetch_rate,
         "blocked_reasons": blocked_reasons,
         "review_reasons": review_reasons,
+        "growth_reasons": growth_reasons,
         "info_reasons": info_reasons,
         "overall": overall,
     }
@@ -409,7 +415,6 @@ def build_recommendations(status_json: dict[str, Any]) -> list[dict[str, str]]:
     review_priority = [
         "Cascadia fetch success rate",
         "Cascadia has weak-date warning noise",
-        "American Pressure source coverage expansion",
         "American Pressure latest manual source is missing",
         "Source repo has source/test/doc changes",
         "Pages repo has uncommitted changes",
@@ -423,11 +428,13 @@ def build_recommendations(status_json: dict[str, Any]) -> list[dict[str, str]]:
     for text in health["review_reasons"]:
         if not any(item["text"] == text for item in items):
             items.append({"severity": _severity_review(), "text": text})
+    for text in health["growth_reasons"]:
+        items.append({"severity": _severity_growth(), "text": text})
     for text in health["info_reasons"]:
         items.append({"severity": _severity_info(), "text": text})
     if not health["blocked_reasons"]:
         items.insert(0, {"severity": _severity_ok(), "text": "No blocking issues found."})
-    order = {_severity_blocked(): 0, _severity_review(): 1, _severity_info(): 2, _severity_ok(): 3}
+    order = {_severity_blocked(): 0, _severity_review(): 1, _severity_growth(): 2, _severity_info(): 3, _severity_ok(): 4}
     return sorted(items, key=lambda i: order[i["severity"]])[:5]
 
 
@@ -505,6 +512,8 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "target_fetch_success_rate": cascadia.get("target_fetch_success_rate", 0.75),
             "source_checks_attempted": gap.get("source_checks_attempted"),
             "source_checks_successful": gap.get("source_checks_successful"),
+            "final_public_story_count": gap.get("final_public_story_count"),
+            "candidate_story_pool_count": cascadia.get("latest_story_count"),
             "weak_date_warning_count": health["warning_counts"]["weak_date_warning_count"],
             "registry_fetch_error_count": health["warning_counts"]["registry_fetch_error_count"],
             "gdelt_timeout_rate_limit_count": health["warning_counts"]["gdelt_timeout_rate_limit_count"],
@@ -517,6 +526,10 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "latest_pages_edition_date": american.get("latest_pages_edition_date"),
             "sources": american.get("latest_source_count"),
             "stories": american.get("latest_story_count"),
+            "archive_exists": american.get("archive_exists"),
+            "rss_exists": american.get("rss_exists"),
+            "visible_source_links": american.get("latest_has_visible_source_links"),
+            "public_url": american.get("latest_public_url"),
             "latest_manual_source_date": american.get("latest_manual_source_date"),
             "manual_source_present": american.get("latest_manual_source_exists_for_latest_public_edition"),
             "registry_enabled": (american.get("registry_summary") or {}).get("enabled_sources"),
@@ -530,31 +543,21 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
     return cards
 
 
-def generate_codex_prompt(status_json: dict[str, Any]) -> str:
+def _select_codex_prompt_goal(status_json: dict[str, Any]) -> tuple[str, list[str]]:
     health = classify_health(status_json)
     cards = build_health_cards(status_json)
-    base = [
-        "Read docs/project-contract.md first.",
-        "Do not violate it.",
-        "Do not push.",
-        "Do not use git add .",
-        "Report files changed.",
-        "Do not expose secrets.",
-        "Do not commit generated output/logs/runtime artifacts.",
-        "Run focused tests, full pytest, doctor, and dispatches_status.py.",
-    ]
     if health["flags"]["has_critical_errors"]:
         issue = (status_json.get("critical_errors") or ["first critical error"])[0]
-        goal = [
+        return "Critical error remediation.", [
             "Goal:",
             f"Fix the first blocking critical error: {issue}",
         ]
-    elif health["flags"]["gaza_repeated_urls"] and (
+    if health["flags"]["gaza_repeated_urls"] and (
         health["flags"]["gaza_zero_source_linked"]
         or health["flags"]["gaza_zero_story_linked"]
         or health["flags"]["gaza_dedupe_refusal_linked"]
     ):
-        goal = [
+        return "Gaza historical duplicate URL cleanup.", [
             "Goal:",
             "Review and clean older linked Gaza editions with repeated source URLs without inventing sources.",
             "",
@@ -566,8 +569,8 @@ def generate_codex_prompt(status_json: dict[str, Any]) -> str:
             "- Keep current latest valid Gaza edition intact.",
             "- Update archive/RSS only through generator/listability logic if possible.",
         ]
-    elif health["flags"]["cascadia_fetch_rate_low"] or health["warning_counts"]["registry_fetch_error_count"] > 0:
-        goal = [
+    if health["flags"]["cascadia_fetch_rate_low"] or health["warning_counts"]["registry_fetch_error_count"] > 0:
+        return "Cascadia source reliability cleanup.", [
             "Goal:",
             "Improve Cascadia source reliability and reduce warning noise.",
             "",
@@ -579,21 +582,39 @@ def generate_codex_prompt(status_json: dict[str, Any]) -> str:
             "- Keep weekly public output source-backed.",
             "- Do not weaken validation.",
         ]
-    elif cards["american_pressure"]["coverage_gaps"]:
-        goal = [
+    if cards["american_pressure"]["coverage_gaps"]:
+        return "American Pressure source expansion.", [
             "Goal:",
             "Expand American Pressure source registry coverage for missing pillars.",
         ]
-    elif health["flags"]["source_changes"]:
-        goal = [
+    if health["flags"]["source_changes"]:
+        return "Source commit review checklist.", [
             "Goal:",
             "Review and prepare source/test/doc changes for commit (no generated/runtime artifacts).",
         ]
-    else:
-        goal = [
-            "Goal:",
-            "Run maintenance checks and prepare next weekly manual source file.",
-        ]
+    return "Routine maintenance checks.", [
+        "Goal:",
+        "Run maintenance checks and prepare next weekly manual source file.",
+    ]
+
+
+def suggested_prompt_title(status_json: dict[str, Any]) -> str:
+    title, _ = _select_codex_prompt_goal(status_json)
+    return title
+
+
+def generate_codex_prompt(status_json: dict[str, Any]) -> str:
+    base = [
+        "Read docs/project-contract.md first.",
+        "Do not violate it.",
+        "Do not push.",
+        "Do not use git add .",
+        "Report files changed.",
+        "Do not expose secrets.",
+        "Do not commit generated output/logs/runtime artifacts.",
+        "Run focused tests, full pytest, doctor, and dispatches_status.py.",
+    ]
+    _, goal = _select_codex_prompt_goal(status_json)
     return "\n".join(base + [""] + goal)
 
 
@@ -619,14 +640,13 @@ def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:
                 else "Healthy"
             ),
             "publish_status_label": (
-                "Not allowed: resolve blocking safety issues."
+                "Blocked"
                 if health["overall"] == _severity_blocked()
-                else "Allowed, review warnings first."
-                if health["overall"] == _severity_review()
-                else "Allowed."
+                else "Allowed"
             ),
             "blocking_issues_count": len(health["blocked_reasons"]),
             "review_items_count": len(health["review_reasons"]),
+            "growth_items_count": len(health["growth_reasons"]),
             "housekeeping_items_count": len(health["info_reasons"]),
             "source_repo": _severity_review() if health["flags"]["source_changes"] else _severity_ok(),
             "pages_repo": _severity_blocked() if health["flags"]["pages_missing_or_wrong"] else _severity_review() if health["flags"]["pages_dirty"] else _severity_ok(),
@@ -655,9 +675,17 @@ def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:
             "american_pressure": cards["american_pressure"],
         },
         "what_needs_attention": recs,
+        "attention_sections": {
+            "blocked": [item["text"] for item in recs if item.get("severity") == _severity_blocked()],
+            "review": [item["text"] for item in recs if item.get("severity") == _severity_review()],
+            "growth": [item["text"] for item in recs if item.get("severity") == _severity_growth()],
+            "housekeeping": [item["text"] for item in recs if item.get("severity") == _severity_info()],
+            "ok": [item["text"] for item in recs if item.get("severity") == _severity_ok()],
+        },
         "recommendations": [item["text"] for item in recs],
         "flags": health["flags"],
         "warning_counts": health["warning_counts"],
+        "suggested_codex_prompt_title": suggested_prompt_title(status),
         "suggested_codex_prompt": generate_codex_prompt(status),
         "raw_details": {
             "critical_errors": critical,
@@ -702,7 +730,7 @@ def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
             [
                 f"- Newest generated folder: {card.get('newest_generated_folder_date')}",
                 f"- Public archive dates: {len(card.get('public_archive_dates') or [])}",
-                f"- Stale/unlinked dates: {len(card.get('stale_or_unlinked_edition_dates') or [])}",
+                f"- Stale/unlinked folders (not public archive entries): {len(card.get('stale_or_unlinked_edition_dates') or [])}",
                 f"- Repeated source URL count: {card.get('repeated_source_url_count')}",
                 f"- Zero-source linked dates: {len(card.get('zero_source_linked_dates') or [])}",
                 f"- Zero-story linked dates: {len(card.get('zero_story_linked_dates') or [])}",
@@ -719,7 +747,8 @@ def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
                 f"- Weekly edition: {card.get('latest_weekly_edition_date')}",
                 f"- Source checks attempted/successful: {card.get('source_checks_attempted')} / {card.get('source_checks_successful')}",
                 f"- Fetch success rate: {rate_text} / target {target_text}",
-                f"- Final public story count: {card.get('final_public_story_count')}",
+                f"- Public story count: {card.get('final_public_story_count')}",
+                f"- Candidate/accepted pool: {card.get('candidate_story_pool_count')}",
                 f"- Weak-date warning count: {card.get('weak_date_warning_count')}",
                 f"- Registry fetch error count: {card.get('registry_fetch_error_count')}",
                 f"- GDELT timeout/rate-limit count: {card.get('gdelt_timeout_rate_limit_count')}",
@@ -745,13 +774,13 @@ def format_main_summary_text(summary: dict[str, Any]) -> str:
     health = summary.get("health_summary", {})
     pages_source = summary.get("pages_source_card", {})
     cards = summary.get("dispatch_cards", {})
-    attention = summary.get("what_needs_attention", [])
     lines = [
         "Health Summary",
         f"- Overall: {health.get('overall_label')}",
         f"- Publish status: {health.get('publish_status_label')}",
         f"- Blocking issues: {health.get('blocking_issues_count')}",
         f"- Review items: {health.get('review_items_count')}",
+        f"- Growth items: {health.get('growth_items_count')}",
         f"- Housekeeping items: {health.get('housekeeping_items_count')}",
         f"- Source repo: {health.get('source_repo')}",
         f"- Pages repo: {health.get('pages_repo')}",
@@ -776,13 +805,38 @@ def format_main_summary_text(summary: dict[str, Any]) -> str:
         "",
         "What Needs Attention",
     ]
-    for item in attention:
-        lines.append(f"- {item.get('severity')}: {item.get('text')}")
+    sections = summary.get("attention_sections", {})
+    blocked_items = sections.get("blocked") or []
+    review_items = sections.get("review") or []
+    growth_items = sections.get("growth") or []
+    housekeeping_items = sections.get("housekeeping") or []
+    lines.append("- Review")
+    if review_items:
+        for text in review_items:
+            lines.append(f"  - {text}")
+    else:
+        lines.append("  - none")
+    lines.append("- Growth")
+    if growth_items:
+        for text in growth_items:
+            lines.append(f"  - {text}")
+    else:
+        lines.append("  - none")
+    lines.append("- Housekeeping")
+    if housekeeping_items:
+        for text in housekeeping_items:
+            lines.append(f"  - {text}")
+    else:
+        lines.append("  - none")
+    if blocked_items:
+        lines.append("- Blocked")
+        for text in blocked_items:
+            lines.append(f"  - {text}")
     lines.extend(
         [
             "",
             "Suggested Codex Prompt (preview)",
-            summary.get("suggested_codex_prompt", "").splitlines()[0] if summary.get("suggested_codex_prompt") else "",
+            summary.get("suggested_codex_prompt_title", ""),
         ]
     )
     return "\n".join(lines)

@@ -75,6 +75,10 @@ def _base_status() -> dict:
                 "latest_pages_edition_date": "2026-05-19",
                 "latest_source_count": 2,
                 "latest_story_count": 2,
+                "archive_exists": True,
+                "rss_exists": True,
+                "latest_has_visible_source_links": True,
+                "latest_public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-19/",
                 "latest_manual_source_date": "2026-05-19",
                 "latest_manual_source_exists_for_latest_public_edition": True,
                 "registry_summary": {
@@ -273,3 +277,58 @@ def test_generated_prompt_prefers_cascadia_when_gaza_has_no_active_public_issue(
     # No zero-source/zero-story/dedupe-refusal linked issue => Cascadia should still win.
     prompt = cp.generate_codex_prompt(raw)
     assert "Improve Cascadia source reliability and reduce warning noise." in prompt
+
+
+def test_publish_status_label_allowed_when_no_blockers():
+    summary = cp.summarize_status_for_gui(_base_status())
+    assert summary["health_summary"]["publish_status_label"] == "Allowed"
+
+
+def test_ap_card_uses_archive_rss_visible_links_and_public_url():
+    summary = cp.summarize_status_for_gui(_base_status())
+    card = summary["dispatch_cards"]["american_pressure"]
+    assert card["archive_exists"] is True
+    assert card["rss_exists"] is True
+    assert card["visible_source_links"] is True
+    assert "american-pressure/editions/2026-05-19/" in card["public_url"]
+
+
+def test_ap_missing_pillars_are_growth_not_review():
+    raw = _base_status()
+    summary = cp.summarize_status_for_gui(raw)
+    assert summary["health_summary"]["growth_items_count"] >= 1
+    assert any("source coverage expansion" in item for item in summary["attention_sections"]["growth"])
+    assert not any("source coverage expansion" in item for item in summary["attention_sections"]["review"])
+
+
+def test_attention_sections_split_review_growth_housekeeping():
+    raw = _base_status()
+    raw["project"]["has_generated_runtime_dirt"] = True
+    summary = cp.summarize_status_for_gui(raw)
+    sections = summary["attention_sections"]
+    assert "review" in sections
+    assert "growth" in sections
+    assert "housekeeping" in sections
+    assert any("Generated/runtime dirt exists" in text for text in sections["housekeeping"])
+
+
+def test_gaza_stale_unlinked_wording_marks_not_public_archive():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = ["2026-05-09"]
+    summary = cp.summarize_status_for_gui(raw)
+    text = cp.format_main_summary_text(summary)
+    assert "not public archive entries" in text
+
+
+def test_cascadia_shows_public_story_count_and_candidate_pool():
+    summary = cp.summarize_status_for_gui(_base_status())
+    text = cp.format_main_summary_text(summary)
+    assert "Public story count: 6" in text
+    assert "Candidate/accepted pool: 6" in text
+
+
+def test_suggested_prompt_preview_shows_selected_title():
+    summary = cp.summarize_status_for_gui(_base_status())
+    text = cp.format_main_summary_text(summary)
+    assert "Suggested Codex Prompt (preview)" in text
+    assert "Cascadia source reliability cleanup." in text

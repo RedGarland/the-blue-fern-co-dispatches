@@ -31,6 +31,17 @@ GENERATED_DIR_PREFIXES = (
     "data/records/",
     "bluefern-dispatches-pages/",
 )
+GAZA_RUNTIME_DATE_DIR_RE = re.compile(
+    r"^data/dispatches/gaza/(raw|normalized|curated|editions|sources)/\d{4}-\d{2}-\d{2}/"
+)
+
+
+def _is_gaza_runtime_artifact_path(path: str) -> bool:
+    return bool(GAZA_RUNTIME_DATE_DIR_RE.match(path))
+
+
+def _is_trackable_source_path(path: str) -> bool:
+    return path == "data/dispatches/gaza/sources.yml"
 
 
 def run_git(repo: Path, *args: str) -> tuple[bool, str]:
@@ -121,10 +132,12 @@ def parse_git_status(repo: Path) -> dict[str, Any]:
     for row in rows:
         path = row[3:] if len(row) > 3 else row
         normalized = path.replace("\\", "/")
-        if normalized.startswith(SOURCE_DIR_PREFIXES):
+        if normalized.startswith(SOURCE_DIR_PREFIXES) or _is_trackable_source_path(normalized):
             source_changes.append(normalized)
-        if normalized.startswith(GENERATED_DIR_PREFIXES):
+        if normalized.startswith(GENERATED_DIR_PREFIXES) or _is_gaza_runtime_artifact_path(normalized):
             generated_changes.append(normalized)
+            if normalized in source_changes:
+                source_changes.remove(normalized)
     return {
         "raw_rows": rows,
         "source_changes": source_changes,

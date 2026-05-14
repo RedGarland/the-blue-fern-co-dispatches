@@ -7,6 +7,13 @@ output/test-runs/
 output/local_worktree_cleanup_report.md
 output/smtp-debug*.log
 data/dispatches/*/cache/
+# Gaza generated per-run artifacts
+data/dispatches/gaza/raw/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/gaza/normalized/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/gaza/curated/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/gaza/editions/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/gaza/sources/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+!data/dispatches/gaza/sources.yml
 repair-and-reclone*.log
 reclone*.log
 

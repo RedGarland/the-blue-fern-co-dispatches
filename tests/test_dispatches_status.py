@@ -373,3 +373,31 @@ def test_build_cascadia_source_reliability_audit_classifies_dead_and_diagnostics
     actions = {row["source_id"]: row["recommended_action"] for row in audit["sources"]}
     assert actions["dead-source"] == "disable_dead_source"
     assert actions["blocked-source"] == "diagnostics_only"
+
+
+def test_parse_git_status_classifies_gaza_dated_runtime_paths_as_generated(monkeypatch, tmp_path):
+    rows = "\n".join(
+        [
+            "?? data/dispatches/gaza/raw/2026-05-14/raw_sources.json",
+            "?? data/dispatches/gaza/normalized/2026-05-14/normalized_sources.json",
+            "?? data/dispatches/gaza/curated/2026-05-14/curation_manifest.json",
+            "?? data/dispatches/gaza/editions/2026-05-14/collection_report.json",
+            "?? data/dispatches/gaza/sources/2026-05-14/manual_sources.json",
+        ]
+    )
+
+    monkeypatch.setattr(dispatches_status, "run_git", lambda *_args, **_kwargs: (True, rows))
+    parsed = dispatches_status.parse_git_status(tmp_path)
+
+    assert parsed["has_generated_changes"] is True
+    assert parsed["has_source_changes"] is False
+    assert any("data/dispatches/gaza/raw/2026-05-14" in path for path in parsed["generated_changes"])
+
+
+def test_parse_git_status_keeps_gaza_sources_yml_as_source_change(monkeypatch, tmp_path):
+    rows = " M data/dispatches/gaza/sources.yml"
+    monkeypatch.setattr(dispatches_status, "run_git", lambda *_args, **_kwargs: (True, rows))
+    parsed = dispatches_status.parse_git_status(tmp_path)
+    assert parsed["has_source_changes"] is True
+    assert "data/dispatches/gaza/sources.yml" in parsed["source_changes"]
+    assert "data/dispatches/gaza/sources.yml" not in parsed["generated_changes"]

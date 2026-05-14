@@ -30,6 +30,8 @@ from bluefern_dispatches.generator import (
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
 from bluefern_dispatches.gaza_sources import rank_gaza_candidates
+from bluefern_dispatches.gaza_sources import clean_feed_text
+from bluefern_dispatches.gaza_sources import gaza_relevance_decision
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -142,6 +144,15 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             errors.append(f"source record {index} has invalid URL: {url}")
             continue
         source_id = str(record["source_record_id"]).strip()
+        clean_title = clean_feed_text(str(record["title"]).strip())
+        clean_summary = clean_feed_text(str(record["summary_or_snippet"]).strip())
+        is_relevant, relevance_reason = gaza_relevance_decision(
+            {"title": clean_title, "summary_or_snippet": clean_summary, "url": url},
+            None,
+        )
+        if (not is_relevant) and relevance_reason == "weak_liveblog_unrelated_topic":
+            warnings.append(f"rejected non-gaza topical source record {source_id}: {relevance_reason}")
+            continue
         key = (url.lower(), str(record["title"]).strip().lower())
         if key in seen:
             warnings.append(f"deduped duplicate source record: {source_id}")
@@ -160,7 +171,7 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             {
                 "source_record_id": source_id,
                 "source_id": source_id,
-                "title": str(record["title"]).strip(),
+                "title": clean_title,
                 "url": url,
                 "canonical_url": canonical_url,
                 "canonical_url_attempted": bool(record.get("canonical_url_attempted") or wrapper_url),
@@ -169,7 +180,7 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
                 "publisher": str(record["publisher"]).strip(),
                 "published_at": str(record["published_at"]).strip(),
                 "retrieved_at": str(record.get("retrieved_at") or now).strip(),
-                "summary_or_snippet": str(record["summary_or_snippet"]).strip(),
+                "summary_or_snippet": clean_summary,
                 "source_type": str(record["source_type"]).strip(),
                 "region_scope": str(record["region_scope"]).strip(),
                 "category_hint": str(record["category_hint"]).strip(),

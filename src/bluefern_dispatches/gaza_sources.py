@@ -3,6 +3,7 @@ from __future__ import annotations
 import email.utils
 import gzip
 import hashlib
+import html
 import json
 import mimetypes
 import re
@@ -31,9 +32,21 @@ REQUIRED_SOURCE_FIELDS = {
     "reliability_tier",
 }
 GAZA_TERMS = re.compile(r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|palestinian territories|occupied palestinian territory)\b", re.I)
+STRONG_GAZA_TERMS = re.compile(r"\b(gaza|palestin|unrwa|ocha|rafah|khan younis|deir al-balah|jabalia)\b", re.I)
+WEAK_ONLY_GAZA_PATTERNS = (
+    "live",
+    "live blog",
+    "australia",
+    "coal",
+    "ev",
+    "election",
+    "budget",
+    "domestic politics",
+)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PLACEHOLDER_RE = re.compile(r"^(replace with|actual source|actual publisher|actual-source-url)", re.I)
 WHITESPACE_RE = re.compile(r"\s+")
+TAG_RE = re.compile(r"<[^>]+>")
 PUNCT_TRANS = str.maketrans({char: " " for char in string.punctuation})
 SMART_CHAR_TRANS = str.maketrans(
     {
@@ -100,6 +113,16 @@ def _looks_like_google_news_wrapper(url: str) -> bool:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def clean_feed_text(value: str) -> str:
+    raw = str(value or "")
+    decoded = html.unescape(raw).translate(SMART_CHAR_TRANS)
+    stripped = TAG_RE.sub(" ", decoded)
+    stripped = re.sub(r"https?://\S+", " ", stripped)
+    stripped = stripped.replace("Continue reading...", " ")
+    stripped = stripped.replace("Continue reading", " ")
+    return WHITESPACE_RE.sub(" ", stripped).strip()
 
 
 def normalize_title(title: str) -> str:
@@ -467,9 +490,31 @@ def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
     return records
 
 
-def is_gaza_relevant(item: dict[str, str]) -> bool:
-    haystack = " ".join([item.get("title", ""), item.get("summary_or_snippet", ""), item.get("url", "")])
-    return bool(GAZA_TERMS.search(haystack))
+def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | None = None) -> tuple[bool, str]:
+    title = clean_feed_text(item.get("title", ""))
+    summary = clean_feed_text(item.get("summary_or_snippet", ""))
+    url = str(item.get("url") or "")
+    source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
+    strong_title = bool(STRONG_GAZA_TERMS.search(title))
+    strong_summary = bool(STRONG_GAZA_TERMS.search(summary))
+    strong_url = bool(STRONG_GAZA_TERMS.search(url))
+    strong_source = bool(STRONG_GAZA_TERMS.search(source_name))
+    weak_markers = " ".join([title.lower(), summary.lower(), url.lower()])
+    if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url):
+        return False, "weak_liveblog_unrelated_topic"
+    if strong_title or strong_url:
+        return True, "strong_title_or_url"
+    if strong_summary and (strong_source or len(summary) < 240):
+        return True, "strong_summary"
+    haystack = " ".join([title, summary, url])
+    if GAZA_TERMS.search(haystack):
+        return False, "gaza_mention_only_without_strong_topic_signal"
+    return False, "not_gaza_relevant"
+
+
+def is_gaza_relevant(item: dict[str, str], source: SourceDefinition | None = None) -> bool:
+    accepted, _reason = gaza_relevance_decision(item, source)
+    return accepted
 
 
 def is_on_requested_date(published_at: str, edition_date: str) -> bool:
@@ -501,7 +546,7 @@ def source_record_id(source_id: str, title: str, url: str, edition_date: str) ->
 
 
 def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_date: str, retrieved_at: str) -> dict[str, Any] | None:
-    title = (item.get("title") or "").strip()
+    title = clean_feed_text(item.get("title", ""))
     url = (item.get("url") or "").strip()
     if not title or not url or not url.startswith(("http://", "https://")):
         return None
@@ -514,6 +559,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         canonical_status = "wrapper_unresolved"
     if not wrapper_url:
         canonical_status = "direct_url"
+    summary = clean_feed_text(item.get("summary_or_snippet", ""))
     return {
         "source_record_id": source_record_id(source.source_id, title, url, edition_date),
         "title": title,
@@ -521,7 +567,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "publisher": source.publisher,
         "published_at": published_at,
         "retrieved_at": retrieved_at,
-        "summary_or_snippet": item.get("summary_or_snippet", ""),
+        "summary_or_snippet": summary,
         "source_type": "rss",
         "region_scope": source.region_scope,
         "category_hint": source.category_hint,
@@ -713,8 +759,9 @@ def collect_gaza_sources(
         for item in items:
             if len(records) >= max_sources:
                 break
-            if not is_gaza_relevant(item):
-                reject("not_gaza_relevant")
+            relevant, relevance_reason = gaza_relevance_decision(item, source)
+            if not relevant:
+                reject(relevance_reason)
                 continue
             if not _date_in_window(item.get("published_at", ""), lookback_start, lookback_end):
                 if str(item.get("published_at") or "").strip():

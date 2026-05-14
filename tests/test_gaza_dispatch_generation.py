@@ -123,12 +123,19 @@ def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(
 
     site_edition = work / "output" / "site" / "gaza" / "editions" / "2026-05-13"
     dispatch_manifest = work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-13" / "edition_manifest.json"
+    collection_report = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-13" / "collection_report.json"
     payload = json.loads(read(dispatch_manifest))
+    report = json.loads(read(collection_report))
     assert result["ok"] is False
     assert not site_edition.exists()
     assert payload["public_exposed"] is False
     assert payload["source_count"] == 0
     assert payload["story_count"] == 0
+    assert report["no_story_credibility_decision"] == "no_candidates_found"
+    assert report["providers_attempted_count"] == 1
+    assert report["providers_successful_count"] == 0
+    assert report["google_wrapper_count"] == 0
+    assert report["canonical_publisher_url_count"] == 0
 
 
 def test_zero_story_run_refuses_public_generation(monkeypatch):
@@ -404,3 +411,92 @@ def test_zero_source_or_zero_story_gaza_editions_are_not_listed(monkeypatch):
     assert "2026-05-11" not in archive
     assert "2026-05-11" not in index
     assert "2026-05-11" not in rss
+
+
+def test_rendered_gaza_html_strips_escaped_feed_markup(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-05-14",
+        [
+            {
+                "source_record_id": "gaza-src-2026-05-14-001",
+                "title": "UNRWA archive update for Gaza",
+                "url": "https://www.theguardian.com/world/2026/may/14/unrwa-gaza-aid-access",
+                "publisher": "The Guardian",
+                "published_at": "2026-05-14T12:00:00Z",
+                "retrieved_at": "2026-05-14T18:00:00Z",
+                "summary_or_snippet": "&lt;p&gt;Aid note&lt;/p&gt; &lt;a href='https://x'&gt;Continue reading...&lt;/a&gt; &#x27;quoted&#x27;",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            }
+        ],
+    )
+    result = run_gaza_dispatch(work, "2026-05-14", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "index.html")
+    assert result["ok"] is True
+    assert "&lt;p&gt;" not in html
+    assert "&lt;/p&gt;" not in html
+    assert "&lt;a href=" not in html
+    assert "Continue reading..." not in html
+
+
+def test_manual_sources_apply_topical_relevance_filter(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-05-14",
+        [
+            {
+                "source_record_id": "gaza-src-2026-05-14-001",
+                "title": "Gaza sisters win prize for turning rubble into reusable bricks",
+                "url": "https://www.bbc.com/news/articles/ce8p7vngmp3o",
+                "publisher": "BBC News",
+                "published_at": "2026-05-14T12:00:00Z",
+                "retrieved_at": "2026-05-14T18:00:00Z",
+                "summary_or_snippet": "Families in Gaza are reusing rubble to rebuild housing.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-05-14-002",
+                "title": "Taylor vows to run coal long and hard and scrap EV concessions in budget reply",
+                "url": "https://www.theguardian.com/australia-news/live/2026/may/14/budget-reply-live-blog",
+                "publisher": "The Guardian",
+                "published_at": "2026-05-14T12:30:00Z",
+                "retrieved_at": "2026-05-14T18:01:00Z",
+                "summary_or_snippet": "Live blog includes incidental mention of Gaza among unrelated Australia politics updates.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-05-14-003",
+                "title": "The secret mission to rescue the UN’s vital Palestinian refugee archive",
+                "url": "https://www.theguardian.com/world/2026/may/14/secret-mission-palestinian-refugee-archive-unrwa-israel",
+                "publisher": "The Guardian",
+                "published_at": "2026-05-14T13:00:00Z",
+                "retrieved_at": "2026-05-14T18:02:00Z",
+                "summary_or_snippet": "UNRWA documents from Gaza and East Jerusalem were moved for preservation.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+    result = run_gaza_dispatch(work, "2026-05-14", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "index.html")
+    assert result["ok"] is True
+    assert "Taylor vows to run coal" not in html
+    assert "Gaza sisters win prize for turning rubble into reusable bricks" in html
+    assert "secret mission to rescue the UN" in html

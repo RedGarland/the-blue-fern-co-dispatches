@@ -567,3 +567,108 @@ def test_cross_edition_dedupe_reads_output_site_manifest(work_root):
     assert kept == []
     assert report["suppressed_candidate_count"] == 1
     assert report["suppressed_candidates"][0]["matched_prior_edition"] == "2026-05-10"
+
+
+def test_rank_gaza_candidates_prioritizes_humanitarian_high_value_items():
+    ranked = gaza_sources.rank_gaza_candidates(
+        [
+            {
+                "title": "Sports update elsewhere",
+                "summary_or_snippet": "No Gaza relevance terms",
+                "category_hint": "general",
+                "publisher": "Blog",
+                "reliability_tier": "editorial-record",
+                "published_at": "",
+            },
+            {
+                "title": "UNRWA says aid convoy crossing access expands in Gaza hospitals",
+                "summary_or_snippet": "Humanitarian aid, civilian harm and health infrastructure pressure",
+                "category_hint": "humanitarian",
+                "publisher": "UNRWA",
+                "reliability_tier": "official-humanitarian-source",
+                "published_at": "2026-05-07T08:00:00+00:00",
+            },
+        ],
+        "2026-05-07",
+    )
+    by_title = {row["title"]: row for row in ranked}
+    high = by_title["UNRWA says aid convoy crossing access expands in Gaza hospitals"]
+    low = by_title["Sports update elsewhere"]
+    assert high["candidate_score"] > low["candidate_score"]
+    assert high["candidate_score_breakdown"]["source_reliability"] >= 20
+    assert high["candidate_score_breakdown"]["date_confidence"] >= 18
+
+
+def test_relevance_rejects_guardian_australia_coal_live_blog():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Taylor vows to run coal long and hard as election campaign heats up",
+        "url": "https://www.theguardian.com/australia-news/live/2026/may/14/election-live-blog",
+        "summary_or_snippet": "Live blog includes a sidebar mention of Gaza among many unrelated domestic updates.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is False
+    assert reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}
+
+
+def test_relevance_keeps_guardian_unrwa_archive_story():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="humanitarian",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "UNRWA says Gaza aid access worsens as archive records grow",
+        "url": "https://www.theguardian.com/world/2026/may/14/unrwa-gaza-aid-access",
+        "summary_or_snippet": "UNRWA details direct Gaza humanitarian access constraints.",
+    }
+    accepted, _reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is True
+
+
+def test_relevance_keeps_bbc_gaza_rubble_story():
+    source = gaza_sources.SourceDefinition(
+        source_id="bbc-middle-east",
+        name="BBC Middle East",
+        url="https://feeds.bbci.co.uk/news/world/middle_east/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="BBC News",
+        reliability_tier="reported-public-source",
+        category_hint="humanitarian",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Gaza rubble is being reused as families rebuild homes",
+        "url": "https://www.bbc.com/news/articles/gaza-rubble-reuse-bricks",
+        "summary_or_snippet": "Residents in Gaza describe rebuilding and salvage challenges.",
+    }
+    accepted, _reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is True
+
+
+def test_feed_html_summary_is_cleaned_to_plain_text():
+    cleaned = gaza_sources.clean_feed_text(
+        "&lt;p&gt;Aid update in Gaza&lt;/p&gt; &lt;a href='https://x'&gt;Continue reading...&lt;/a&gt; &#x27;quoted&#x27;"
+    )
+    assert "<p>" not in cleaned
+    assert "</p>" not in cleaned
+    assert "<a href=" not in cleaned
+    assert "Continue reading..." not in cleaned
+    assert "'quoted'" in cleaned

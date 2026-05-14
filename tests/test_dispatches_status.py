@@ -271,6 +271,22 @@ def test_unlinked_dedupe_refused_gaza_folder_not_critical_by_itself(tmp_path, mo
     assert "Gaza linked public edition has dedupe-refusal errors" not in status["critical_errors"]
 
 
+def test_unlinked_zero_source_gaza_folder_is_stale_info_not_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-10/">2026-05-10</a>')
+    _write(root / "output" / "site" / "gaza" / "rss.xml", '<link>https://dispatches.thebluefernco.com/gaza/editions/2026-05-10/</link>')
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-13" / "sources_manifest.json", [])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-13" / "curation_manifest.json", [])
+    _json(
+        root / "output" / "site" / "gaza" / "editions" / "2026-05-13" / "edition_manifest.json",
+        {"source_count": 0, "story_count": 0, "public_exposed": False, "errors": ["No valid traceable Gaza sources survived normalization and dedupe; refusing public edition generation."]},
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert "2026-05-13" in status["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"]
+    assert "Gaza linked public edition has zero sources" not in status["critical_errors"]
+
+
 def test_gaza_collection_report_zero_candidates_is_warning_not_critical(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     _json(

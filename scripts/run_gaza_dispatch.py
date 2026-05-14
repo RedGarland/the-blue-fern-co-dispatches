@@ -258,14 +258,38 @@ def discover_edition_dates(site_root: Path) -> list[str]:
     editions_root = site_root / DISPATCH_SLUG / "editions"
     if not editions_root.exists():
         return []
-    return sorted((
-        path.name
-        for path in editions_root.iterdir()
-        if path.is_dir() and DATE_RE.match(path.name) and (path / "index.html").exists()
-    ), reverse=True)
+    def _is_listable(path: Path) -> bool:
+        manifest_path = path / "edition_manifest.json"
+        sources_path = path / "sources_manifest.json"
+        curation_path = path / "curation_manifest.json"
+        if not manifest_path.exists() or not sources_path.exists() or not curation_path.exists():
+            return False
+        try:
+            manifest = read_json(manifest_path)
+            sources = read_json(sources_path)
+            stories = read_json(curation_path)
+        except Exception:
+            return False
+        if not isinstance(manifest, dict) or not isinstance(sources, list) or not isinstance(stories, list):
+            return False
+        if len(sources) <= 0 or len(stories) <= 0:
+            return False
+        return not any(
+            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
+            for item in (manifest.get("errors") or [])
+        )
+
+    return sorted(
+        (
+            path.name
+            for path in editions_root.iterdir()
+            if path.is_dir() and DATE_RE.match(path.name) and (path / "index.html").exists() and _is_listable(path)
+        ),
+        reverse=True,
+    )
 
 
-def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> None:
+def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str], include_current: bool = True) -> None:
     site_root = root / "output" / "site"
     dispatch = DispatchConfig(
         slug=DISPATCH_SLUG,
@@ -278,7 +302,7 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
         detail_artifacts=[],
     )
     dates = discover_edition_dates(site_root)
-    if edition_date not in dates:
+    if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     gaza_root = site_root / DISPATCH_SLUG
     write_text(gaza_root / "index.html", render_dispatch_index_for_dates(dispatch, dates), dry_run, wrote)
@@ -529,9 +553,13 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     stories = curate_stories(normalized, edition_date, generated_at)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    if len(normalized) == 0:
+        errors.append("No valid traceable Gaza sources survived normalization and dedupe; refusing public edition generation.")
+    if len(stories) == 0:
+        errors.append("No source-backed Gaza stories survived curation/dedupe; refusing public edition generation.")
     write_json(curated_dir / "curation_manifest.json", stories, dry_run, wrote)
     should_render = render or all_steps
-    if should_render:
+    if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
             root, edition_date, normalized, stories, generated_at, warnings, errors
@@ -546,7 +574,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
             write_json(base / "curation_manifest.json", curation_manifest, dry_run, wrote)
         for asset in ("site.css", "gaza-logo.png", "bluefern.png"):
             copy_file(root / "assets" / asset, root / "output" / "site" / DISPATCH_SLUG / "assets" / asset, dry_run, wrote, warnings)
-        render_archive_index_rss(root, edition_date, dry_run, wrote)
+        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=True)
         backup_dir = BACKUP_ROOT / edition_date
         write_text(backup_dir / "index.html", html_content, dry_run, wrote)
         write_json(backup_dir / "edition_manifest.json", edition_manifest, dry_run, wrote)
@@ -554,6 +582,38 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         write_json(backup_dir / "curation_manifest.json", curation_manifest, dry_run, wrote)
         write_json(backup_dir / "run_manifest.json", run_manifest, dry_run, wrote)
         update_shared_records(root, edition_date, normalized, stories, generated_at, dry_run, wrote)
+    elif should_render:
+        failed_manifest = {
+            "dispatch_name": DISPATCH_NAME,
+            "dispatch_slug": DISPATCH_SLUG,
+            "edition_date": edition_date,
+            "generated_at": generated_at,
+            "public_url": None,
+            "local_output_path": None,
+            "local_dispatch_output_path": str(root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date),
+            "local_backup_path": None,
+            "template_version": "gaza-source-record-v1",
+            "source_count": len(normalized),
+            "story_count": len(stories),
+            "free_public_artifacts": [],
+            "paid_or_detail_artifacts": [],
+            "detail_artifacts_publicly_exposed": False,
+            "is_free_public": True,
+            "has_detail_tier": False,
+            "public_exposed": False,
+            "warnings": warnings,
+            "errors": errors,
+        }
+        dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
+        write_json(dispatch_dir / "edition_manifest.json", failed_manifest, dry_run, wrote)
+        write_json(dispatch_dir / "sources_manifest.json", normalized, dry_run, wrote)
+        write_json(dispatch_dir / "curation_manifest.json", stories, dry_run, wrote)
+        site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
+        if site_dir.exists():
+            wrote.append(str(site_dir))
+            if not dry_run:
+                shutil.rmtree(site_dir)
+        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False)
     return {
         "ok": not errors,
         "dispatch_slug": DISPATCH_SLUG,
@@ -567,7 +627,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "errors": errors,
         "is_free_public": True,
         "has_detail_tier": False,
-        "public_exposed": True,
+        "public_exposed": not errors,
         "backup_root": str(BACKUP_ROOT),
     }
 

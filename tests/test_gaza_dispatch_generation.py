@@ -21,7 +21,7 @@ def make_work_root(repo: Path) -> Path:
 def write_manual_sources(work: Path, edition_date: str, records: list[dict] | None = None) -> Path:
     path = work / "data" / "dispatches" / "gaza" / "sources" / edition_date / "manual_sources.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    payload = records or [
+    payload = records if records is not None else [
         {
             "source_record_id": f"gaza-src-{edition_date}-001",
             "title": "UN says durable shelter materials remain blocked from Gaza",
@@ -104,12 +104,60 @@ def test_invalid_source_record_does_not_invent_sources(monkeypatch):
     result = run_gaza_dispatch(work, "2026-04-29", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
 
     edition_dir = work / "output" / "site" / "gaza" / "editions" / "2026-04-29"
-    sources = json.loads(read(edition_dir / "sources_manifest.json"))
-    curation = json.loads(read(edition_dir / "curation_manifest.json"))
+    dispatch_manifest = work / "output" / "dispatches" / "gaza" / "editions" / "2026-04-29" / "edition_manifest.json"
+    manifest_payload = json.loads(read(dispatch_manifest))
     assert result["ok"] is False
-    assert sources == []
-    assert curation == []
-    assert "No source records were available" in read(edition_dir / "index.html")
+    assert not edition_dir.exists()
+    assert manifest_payload["public_exposed"] is False
+    assert manifest_payload["source_count"] == 0
+    assert manifest_payload["story_count"] == 0
+
+
+def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-13", [])
+
+    result = run_gaza_dispatch(work, "2026-05-13", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    site_edition = work / "output" / "site" / "gaza" / "editions" / "2026-05-13"
+    dispatch_manifest = work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-13" / "edition_manifest.json"
+    payload = json.loads(read(dispatch_manifest))
+    assert result["ok"] is False
+    assert not site_edition.exists()
+    assert payload["public_exposed"] is False
+    assert payload["source_count"] == 0
+    assert payload["story_count"] == 0
+
+
+def test_zero_story_run_refuses_public_generation(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    repeated = [
+        {
+            "source_record_id": "gaza-src-001",
+            "title": "Repeat source title",
+            "url": "https://example.com/repeat",
+            "publisher": "Example Desk",
+            "published_at": "2026-05-10T08:00:00+00:00",
+            "retrieved_at": "2026-05-10T08:00:00+00:00",
+            "summary_or_snippet": "repeat",
+            "source_type": "rss",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        }
+    ]
+    write_manual_sources(work, "2026-05-10", repeated)
+    run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    write_manual_sources(work, "2026-05-11", repeated)
+
+    result = run_gaza_dispatch(work, "2026-05-11", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    site_edition = work / "output" / "site" / "gaza" / "editions" / "2026-05-11"
+    assert result["ok"] is False
+    assert not site_edition.exists()
 
 
 def test_archive_rss_latest_and_shared_records(monkeypatch):
@@ -118,7 +166,25 @@ def test_archive_rss_latest_and_shared_records(monkeypatch):
     backup_root = work / "output" / "test-backups" / "gaza"
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", backup_root)
     write_manual_sources(work, "2026-04-30")
-    write_manual_sources(work, "2026-05-01")
+    write_manual_sources(
+        work,
+        "2026-05-01",
+        [
+            {
+                "source_record_id": "gaza-src-2026-05-01-001",
+                "title": "UN agency reports new aid convoy access in Gaza",
+                "url": "https://valid.test/gaza-2026-05-01-aid",
+                "publisher": "UN OCHA",
+                "published_at": "2026-05-01T12:00:00Z",
+                "retrieved_at": "2026-05-01T18:00:00Z",
+                "summary_or_snippet": "Distinct source-backed update for 2026-05-01.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            }
+        ],
+    )
 
     run_gaza_dispatch(work, "2026-04-30", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
     run_gaza_dispatch(work, "2026-05-01", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
@@ -286,6 +352,16 @@ def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeyp
     assert "2026-05-11" not in archive
     assert "2026-05-11" not in index
     assert "2026-05-11" not in rss
+
+
+def test_valid_source_backed_edition_remains_public(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-09")
+    result = run_gaza_dispatch(work, "2026-05-09", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is True
+    assert (work / "output" / "site" / "gaza" / "editions" / "2026-05-09" / "index.html").exists()
 
 
 def test_zero_source_or_zero_story_gaza_editions_are_not_listed(monkeypatch):

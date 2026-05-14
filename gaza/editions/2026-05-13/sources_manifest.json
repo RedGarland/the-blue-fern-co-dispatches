@@ -1,0 +1,46 @@
+[
+  {
+    "source_record_id": "gaza-2026-05-13-bbc-middle-east-4901a2700118",
+    "source_id": "gaza-2026-05-13-bbc-middle-east-4901a2700118",
+    "title": "Gaza sisters win prize for turning rubble into reusable bricks",
+    "url": "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-13T11:44:48+00:00",
+    "retrieved_at": "2026-05-14T19:44:09.004283+00:00",
+    "summary_or_snippet": "Displaced teenagers Farah and Tala wanted to 'turn destruction into something useful'.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-13",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-13-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "dedupe_key": "bbc|gaza sisters win prize for turning rubble into reusable bricks",
+    "title_fingerprint": "gaza sisters win prize for turning rubble into reusable bricks",
+    "claim_fingerprint": "bbc|gaza sisters win prize for turning rubble into reusable bricks|conflict"
+  }
+]

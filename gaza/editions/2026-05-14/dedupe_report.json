@@ -1,22 +1,11 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-14",
-  "candidates_seen": 2,
+  "candidates_seen": 1,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-05-14-001",
-      "title": "Gaza sisters win prize for turning rubble into reusable bricks",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-14-002",
-      "title": "The secret mission to rescue the UN's vital Palestinian refugee archive",
+      "title": "Lamine Yamal divides opinion with Palestinian flag gesture",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -34,21 +23,7 @@
   "reasons": [
     {
       "story_id": "gaza-story-2026-05-14-001",
-      "title": "Gaza sisters win prize for turning rubble into reusable bricks",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-14-002",
-      "title": "The secret mission to rescue the UN's vital Palestinian refugee archive",
+      "title": "Lamine Yamal divides opinion with Palestinian flag gesture",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -62,7 +37,8 @@
     }
   ],
   "prior_editions_checked": [
-    "2026-05-11",
+    "2026-05-13",
+    "2026-05-10",
     "2026-05-09",
     "2026-05-07",
     "2026-05-05",

@@ -1,61 +1,17 @@
 [
   {
-    "source_record_id": "gaza-2026-05-14-bbc-middle-east-4901a2700118",
-    "source_id": "gaza-2026-05-14-bbc-middle-east-4901a2700118",
-    "title": "Gaza sisters win prize for turning rubble into reusable bricks",
-    "url": "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss",
-    "canonical_url": "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss",
+    "source_record_id": "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d",
+    "source_id": "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d",
+    "title": "Lamine Yamal divides opinion with Palestinian flag gesture",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/14/lamine-yamal-divides-opinion-with-palestinian-flag-gesture?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/14/lamine-yamal-divides-opinion-with-palestinian-flag-gesture?traffic_source=rss",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "BBC News",
-    "published_at": "2026-05-13T11:44:48+00:00",
-    "retrieved_at": "2026-05-14T16:26:47.053425+00:00",
-    "summary_or_snippet": "Displaced teenagers Farah and Tala wanted to 'turn destruction into something useful'.",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-14",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-14-001"
-    ],
-    "claim_ids": [],
-    "candidate_score": 32,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "ranking_reasons": [
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "dedupe_key": "bbc|gaza sisters win prize for turning rubble into reusable bricks",
-    "title_fingerprint": "gaza sisters win prize for turning rubble into reusable bricks",
-    "claim_fingerprint": "bbc|gaza sisters win prize for turning rubble into reusable bricks|conflict"
-  },
-  {
-    "source_record_id": "gaza-2026-05-14-guardian-world-cab82fce8bd4",
-    "source_id": "gaza-2026-05-14-guardian-world-cab82fce8bd4",
-    "title": "The secret mission to rescue the UN's vital Palestinian refugee archive",
-    "url": "https://www.theguardian.com/world/2026/may/14/secret-mission-palestinian-refugee-archive-unrwa-israel",
-    "canonical_url": "https://www.theguardian.com/world/2026/may/14/secret-mission-palestinian-refugee-archive-unrwa-israel",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "The Guardian",
-    "published_at": "2026-05-14T04:00:16+00:00",
-    "retrieved_at": "2026-05-14T16:26:47.053425+00:00",
-    "summary_or_snippet": "Millions of documents chronicling generations of trauma saved from Gaza and East Jerusalem in 10-month Unrwa operation East Jerusalem to Amman should have been an easy trip: a short drive down to the Dead Sea, across the border checkpoint and swiftly on to the Jordanian capital. But in the early summer of 2024, the distance appeared an almost insurmountable obstacle to humanitarian workers from Unrwa (the United Nations Relief and Works Agency for Palestine Refugees), as they sought to safeguard huge quantities of archival documents vitally important to decades of recent Palestinian history.",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-14T16:23:28+00:00",
+    "retrieved_at": "2026-05-14T19:44:11.231363+00:00",
+    "summary_or_snippet": "A mural of Barcelona player Lamine Yamal was painted in Gaza after the teenager waved a Palestinian flag.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -66,26 +22,24 @@
       "gaza-story-2026-05-14-002"
     ],
     "claim_ids": [],
-    "candidate_score": 52,
+    "candidate_score": 32,
     "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
+      "humanitarian_impact": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
-      "displacement": 8,
+      "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "ranking_reasons": [
-      "humanitarian_impact",
-      "displacement",
       "source_reliability",
       "date_confidence"
     ],
-    "dedupe_key": "guardian|the secret mission to rescue the un s vital palestinian refugee archive",
-    "title_fingerprint": "the secret mission to rescue the un s vital palestinian refugee archive",
-    "claim_fingerprint": "guardian|the secret mission to rescue the un s vital palestinian refugee archive|conflict"
+    "dedupe_key": "al jazeera|lamine yamal divides opinion with palestinian flag gesture",
+    "title_fingerprint": "lamine yamal divides opinion with palestinian flag gesture",
+    "claim_fingerprint": "al jazeera|lamine yamal divides opinion with palestinian flag gesture|conflict"
   }
 ]

@@ -1,11 +1,12 @@
 [
   {
-    "story_id": "gaza-story-2026-05-14-001",
-    "title": "Lamine Yamal divides opinion with Palestinian flag gesture",
-    "summary": "A mural of Barcelona player Lamine Yamal was painted in Gaza after the teenager waved a Palestinian flag.",
+    "story_id": "gaza-story-2026-05-13-001",
+    "title": "Gaza sisters win prize for turning rubble into reusable bricks",
+    "summary": "Displaced teenagers Farah and Tala wanted to 'turn destruction into something useful'.",
     "category": "conflict",
-    "score": 32,
+    "score": 40,
     "scoring_reasons": [
+      "displacement",
       "source_reliability",
       "date_confidence"
     ],
@@ -14,7 +15,7 @@
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
-      "displacement": 0,
+      "displacement": 8,
       "health_infrastructure": 0,
       "accountability_legal": 0,
       "source_reliability": 14,
@@ -23,18 +24,18 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d"
+      "gaza-2026-05-13-bbc-middle-east-4901a2700118"
     ],
     "source_ids": [
-      "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d"
+      "gaza-2026-05-13-bbc-middle-east-4901a2700118"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/5/14/lamine-yamal-divides-opinion-with-palestinian-flag-gesture?traffic_source=rss"
+      "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss"
     ],
     "publisher_names": [
-      "Al Jazeera"
+      "BBC News"
     ],
-    "generated_at": "2026-05-14T19:44:13.310543+00:00",
+    "generated_at": "2026-05-14T19:44:11.194577+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"

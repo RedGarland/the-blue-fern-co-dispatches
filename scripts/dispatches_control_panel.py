@@ -331,24 +331,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "cascadia_fetch_rate_low": isinstance(fetch_rate, (int, float)) and float(fetch_rate) < 0.75,
         "cascadia_weak_date_warnings": warning_counts["weak_date_warning_count"] > 0,
         "manual_source_missing_ap": not bool(american.get("latest_manual_source_exists_for_latest_public_edition")),
-        "pages_public_date_mismatch": (
-            bool(gaza.get("stale_or_unlinked_edition_dates"))
-            or (
-                gaza.get("latest_public_edition_date")
-                and gaza.get("latest_pages_edition_date")
-                and gaza.get("latest_public_edition_date") != gaza.get("latest_pages_edition_date")
-            )
-            or (
-                cascadia.get("latest_public_edition_date")
-                and cascadia.get("latest_pages_edition_date")
-                and cascadia.get("latest_public_edition_date") != cascadia.get("latest_pages_edition_date")
-            )
-            or (
-                american.get("latest_public_edition_date")
-                and american.get("latest_pages_edition_date")
-                and american.get("latest_public_edition_date") != american.get("latest_pages_edition_date")
-            )
-        ),
+        "gaza_stale_unlinked_folders": bool(gaza.get("stale_or_unlinked_edition_dates")),
+        "ap_coverage_gaps_present": bool(_ap_coverage_gaps((american.get("registry_summary") or {}).get("enabled_by_pillar") or {})),
     }
 
     blocked_reasons: list[str] = []
@@ -377,10 +361,12 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         review_reasons.append("Source repo has source/test/doc changes.")
     if flags["pages_dirty"]:
         review_reasons.append("Pages repo has uncommitted changes.")
-    if flags["pages_public_date_mismatch"]:
-        review_reasons.append("Pages/public edition dates differ due to stale/unlinked folders.")
     if flags["manual_source_missing_ap"]:
         review_reasons.append("American Pressure latest manual source is missing.")
+    if flags["ap_coverage_gaps_present"]:
+        review_reasons.append("American Pressure source coverage expansion is needed for missing pillars.")
+    if flags["gaza_stale_unlinked_folders"]:
+        info_reasons.append("Gaza has stale/unlinked generated folders; informational unless publicly linked.")
     if flags["generated_runtime_dirt"] and not flags["source_changes"]:
         info_reasons.append("Generated/runtime dirt exists; no commit needed unless source files changed.")
 
@@ -420,8 +406,23 @@ def build_recommendations(status_json: dict[str, Any]) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []
     for text in health["blocked_reasons"]:
         items.append({"severity": _severity_blocked(), "text": text})
+    review_priority = [
+        "Cascadia fetch success rate",
+        "Cascadia has weak-date warning noise",
+        "American Pressure source coverage expansion",
+        "American Pressure latest manual source is missing",
+        "Source repo has source/test/doc changes",
+        "Pages repo has uncommitted changes",
+        "Gaza older archive entries have repeated source URLs",
+        "General warnings are present",
+    ]
+    for key in review_priority:
+        for text in health["review_reasons"]:
+            if key in text:
+                items.append({"severity": _severity_review(), "text": text})
     for text in health["review_reasons"]:
-        items.append({"severity": _severity_review(), "text": text})
+        if not any(item["text"] == text for item in items):
+            items.append({"severity": _severity_review(), "text": text})
     for text in health["info_reasons"]:
         items.append({"severity": _severity_info(), "text": text})
     if not health["blocked_reasons"]:
@@ -472,7 +473,7 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
         "gaza": {
             "status": _severity_blocked() if health["flags"]["gaza_zero_source_linked"] or health["flags"]["gaza_zero_story_linked"] or health["flags"]["gaza_dedupe_refusal_linked"] else _severity_review() if health["flags"]["gaza_repeated_urls"] else _severity_ok(),
             "latest_public_edition_date": gaza.get("latest_public_edition_date"),
-            "latest_pages_edition_date": gaza.get("latest_pages_edition_date"),
+            "newest_generated_folder_date": gaza.get("latest_pages_edition_date"),
             "sources": gaza.get("latest_source_count"),
             "stories": gaza.get("latest_story_count"),
             "archive_exists": gaza.get("archive_exists"),
@@ -500,7 +501,8 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "rss_exists": cascadia.get("rss_exists"),
             "visible_source_links": cascadia.get("latest_has_visible_source_links"),
             "public_url": cascadia.get("latest_public_url"),
-            "fetch_rate": health["fetch_rate"],
+            "fetch_success_rate": health["fetch_rate"],
+            "target_fetch_success_rate": cascadia.get("target_fetch_success_rate", 0.75),
             "source_checks_attempted": gap.get("source_checks_attempted"),
             "source_checks_successful": gap.get("source_checks_successful"),
             "weak_date_warning_count": health["warning_counts"]["weak_date_warning_count"],
@@ -547,7 +549,11 @@ def generate_codex_prompt(status_json: dict[str, Any]) -> str:
             "Goal:",
             f"Fix the first blocking critical error: {issue}",
         ]
-    elif health["flags"]["gaza_repeated_urls"]:
+    elif health["flags"]["gaza_repeated_urls"] and (
+        health["flags"]["gaza_zero_source_linked"]
+        or health["flags"]["gaza_zero_story_linked"]
+        or health["flags"]["gaza_dedupe_refusal_linked"]
+    ):
         goal = [
             "Goal:",
             "Review and clean older linked Gaza editions with repeated source URLs without inventing sources.",
@@ -623,7 +629,7 @@ def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:
             "review_items_count": len(health["review_reasons"]),
             "housekeeping_items_count": len(health["info_reasons"]),
             "source_repo": _severity_review() if health["flags"]["source_changes"] else _severity_ok(),
-            "pages_repo": cards["source_pages"]["status"] if cards["source_pages"]["status"] in (_severity_blocked(), _severity_review()) else _severity_ok(),
+            "pages_repo": _severity_blocked() if health["flags"]["pages_missing_or_wrong"] else _severity_review() if health["flags"]["pages_dirty"] else _severity_ok(),
             "gaza": cards["gaza"]["status"],
             "cascadia": cards["cascadia"]["status"],
             "american_pressure": cards["american_pressure"]["status"],
@@ -683,7 +689,7 @@ def open_path(path: Path) -> bool:
 def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
     lines = [
         f"{name} [{card.get('status', 'OK')}]",
-        f"- Latest public/pages: {card.get('latest_public_edition_date')} / {card.get('latest_pages_edition_date')}",
+        f"- Latest public edition: {card.get('latest_public_edition_date')}",
         f"- Sources/Stories: {card.get('sources')} / {card.get('stories')}",
         f"- Archive/RSS: {card.get('archive_exists')} / {card.get('rss_exists')}",
         f"- Visible source links: {card.get('visible_source_links')}",
@@ -694,6 +700,7 @@ def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
     if name == "Gaza":
         lines.extend(
             [
+                f"- Newest generated folder: {card.get('newest_generated_folder_date')}",
                 f"- Public archive dates: {len(card.get('public_archive_dates') or [])}",
                 f"- Stale/unlinked dates: {len(card.get('stale_or_unlinked_edition_dates') or [])}",
                 f"- Repeated source URL count: {card.get('repeated_source_url_count')}",
@@ -704,12 +711,14 @@ def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
         )
     if name == "Cascadia":
         rate = card.get("fetch_success_rate")
+        target = card.get("target_fetch_success_rate")
         rate_text = f"{int(float(rate) * 100)}%" if isinstance(rate, (int, float)) else "not available"
+        target_text = f"{int(float(target) * 100)}%" if isinstance(target, (int, float)) else "not available"
         lines.extend(
             [
                 f"- Weekly edition: {card.get('latest_weekly_edition_date')}",
                 f"- Source checks attempted/successful: {card.get('source_checks_attempted')} / {card.get('source_checks_successful')}",
-                f"- Fetch success rate: {rate_text}",
+                f"- Fetch success rate: {rate_text} / target {target_text}",
                 f"- Final public story count: {card.get('final_public_story_count')}",
                 f"- Weak-date warning count: {card.get('weak_date_warning_count')}",
                 f"- Registry fetch error count: {card.get('registry_fetch_error_count')}",

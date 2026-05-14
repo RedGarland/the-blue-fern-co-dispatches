@@ -201,6 +201,7 @@ def test_recommendation_ordering_blocked_before_review_before_info():
 def test_generated_prompt_prefers_gaza_cleanup():
     raw = _base_status()
     raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {"https://x": ["2026-05-09", "2026-05-10"]}
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = ["2026-05-09"]
     prompt = cp.generate_codex_prompt(raw)
     assert "Gaza" in prompt
     assert "repeated source URLs" in prompt
@@ -224,3 +225,51 @@ def test_generated_prompt_includes_required_language():
 def test_copy_prompt_button_logic_without_clipboard():
     summary = cp.summarize_status_for_gui(_base_status())
     assert "suggested_codex_prompt" in summary
+
+
+def test_pages_repo_ok_when_clean_even_with_stale_gaza_folders():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = ["2026-05-09"]
+    summary = cp.summarize_status_for_gui(raw)
+    assert summary["health_summary"]["pages_repo"] == "OK"
+
+
+def test_gaza_stale_unlinked_is_info_not_review():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = ["2026-05-09"]
+    health = cp.classify_health(raw)
+    assert all("stale/unlinked" not in reason.lower() for reason in health["review_reasons"])
+    assert any("stale/unlinked" in reason.lower() for reason in health["info_reasons"])
+
+
+def test_gaza_card_labels_public_vs_newest_generated():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_public_edition_date"] = "2026-05-09"
+    raw["dispatches"]["gaza"]["latest_pages_edition_date"] = "2026-05-10"
+    summary = cp.summarize_status_for_gui(raw)
+    text = cp.format_main_summary_text(summary)
+    assert "Latest public edition: 2026-05-09" in text
+    assert "Newest generated folder: 2026-05-10" in text
+
+
+def test_cascadia_fetch_rate_display_includes_target():
+    summary = cp.summarize_status_for_gui(_base_status())
+    text = cp.format_main_summary_text(summary)
+    assert "Fetch success rate: 64% / target 75%" in text
+
+
+def test_attention_prioritizes_cascadia_then_ap_coverage():
+    raw = _base_status()
+    summary = cp.summarize_status_for_gui(raw)
+    attention = summary["what_needs_attention"]
+    review_lines = [item["text"] for item in attention if item["severity"] == "Review"]
+    assert review_lines
+    assert "Cascadia fetch success rate" in review_lines[0]
+
+
+def test_generated_prompt_prefers_cascadia_when_gaza_has_no_active_public_issue():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {"https://x": ["2026-05-09", "2026-05-10"]}
+    # No zero-source/zero-story/dedupe-refusal linked issue => Cascadia should still win.
+    prompt = cp.generate_codex_prompt(raw)
+    assert "Improve Cascadia source reliability and reduce warning noise." in prompt

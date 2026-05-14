@@ -284,10 +284,13 @@ def _count_substrings(items: list[Any], tokens: tuple[str, ...]) -> int:
 def summarize_warning_counts(status_json: dict[str, Any]) -> dict[str, int]:
     cascadia = ((status_json.get("dispatches") or {}).get("cascadia") or {})
     cascadia_warn = list(cascadia.get("latest_manifest_warnings") or [])
+    weak_direct = cascadia.get("weak_date_warning_count")
+    registry_direct = cascadia.get("registry_fetch_error_count")
+    gdelt_direct = cascadia.get("gdelt_timeout_rate_limit_count")
     return {
-        "weak_date_warning_count": _count_substrings(cascadia_warn, ("weak", "date")),
-        "registry_fetch_error_count": _count_substrings(cascadia_warn, ("registry", "fetch", "http", "dns", "403", "404")),
-        "gdelt_timeout_rate_limit_count": _count_substrings(cascadia_warn, ("gdelt", "timeout", "rate limit", "429")),
+        "weak_date_warning_count": int(weak_direct) if isinstance(weak_direct, int) else _count_substrings(cascadia_warn, ("weak", "date")),
+        "registry_fetch_error_count": int(registry_direct) if isinstance(registry_direct, int) else _count_substrings(cascadia_warn, ("registry", "fetch", "http", "dns", "403", "404")),
+        "gdelt_timeout_rate_limit_count": int(gdelt_direct) if isinstance(gdelt_direct, int) else _count_substrings(cascadia_warn, ("gdelt", "timeout", "rate limit", "429")),
     }
 
 

@@ -171,6 +171,19 @@ def test_long_cascadia_warnings_summarized_counts():
     assert counts["gdelt_timeout_rate_limit_count"] >= 1
 
 
+def test_warning_counts_use_status_fields_when_present():
+    raw = _base_status()
+    raw["dispatches"]["cascadia"]["weak_date_warning_count"] = 137
+    raw["dispatches"]["cascadia"]["registry_fetch_error_count"] = 18
+    raw["dispatches"]["cascadia"]["gdelt_timeout_rate_limit_count"] = 2
+    counts = cp.summarize_warning_counts(raw)
+    assert counts == {
+        "weak_date_warning_count": 137,
+        "registry_fetch_error_count": 18,
+        "gdelt_timeout_rate_limit_count": 2,
+    }
+
+
 def test_raw_warning_list_not_in_main_summary_by_default():
     summary = cp.summarize_status_for_gui(_base_status())
     main = cp.format_main_summary_text(summary)

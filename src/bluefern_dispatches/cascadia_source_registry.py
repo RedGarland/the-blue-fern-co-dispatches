@@ -169,8 +169,19 @@ def parse_yaml_scalar(value: str) -> Any:
         return text.strip("\"'")
 
 
+def source_operational_state(source: dict[str, Any]) -> str:
+    if source.get("enabled") is False:
+        return "disabled"
+    status = str(source.get("status") or "").strip().lower()
+    if status in {"disabled", "diagnostics_only", "degraded"}:
+        return status
+    if source.get("diagnostics_only") is True:
+        return "diagnostics_only"
+    return "enabled"
+
+
 def enabled_sources(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [source for source in sources if source.get("enabled", False)]
+    return [source for source in sources if source_operational_state(source) != "disabled"]
 
 
 def parse_datetime(value: str | None) -> datetime | None:
@@ -601,11 +612,15 @@ def normalize_registry_item(item: dict[str, Any], source: dict[str, Any], week_s
     published_at = item.get("published_at")
     parsed_published = parse_datetime(published_at)
     date_basis = "published_at"
+    date_basis_confidence = "high"
+    date_basis_note = "Source provided parseable published_at metadata."
     warning: str | None = None
     if parsed_published is None:
         if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES and str(source.get("refresh_mode") or "") != "current":
             return None, "weak_date_basis"
-        date_basis = "current_page_weak_date" if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES else "retrieved_at_weak"
+        date_basis = "unknown" if source.get("source_type") in OFFICIAL_PAGE_SOURCE_TYPES else "retrieved_only"
+        date_basis_confidence = "low"
+        date_basis_note = "published_at unavailable or unparseable; retrieved_at is not evidence of event date."
         warning = f"{source.get('source_id')} item has weak date basis; published_at unavailable or unparseable"
     elif not (week_start <= parsed_published.date() <= week_end):
         return None, "outside_date_window"
@@ -637,6 +652,8 @@ def normalize_registry_item(item: dict[str, Any], source: dict[str, Any], week_s
         "reliability_tier": source.get("reliability_tier") or "public-source",
         "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
         "date_basis": date_basis,
+        "date_basis_confidence": date_basis_confidence,
+        "date_basis_note": date_basis_note,
     }
     return record, warning
 
@@ -666,6 +683,7 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
     raw_count = 0
     for source in sources:
         source_type = str(source.get("source_type") or "")
+        state = source_operational_state(source)
         if source_type not in FETCHABLE_SOURCE_TYPES:
             unsupported_source_type_count += 1
             diagnostics.append(
@@ -676,6 +694,7 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
                     "url": source.get("url"),
                     "skipped": True,
                     "skip_reason": "unsupported_source_type",
+                    "source_operational_state": state,
                     "recommendation": None,
                 }
             )
@@ -712,6 +731,8 @@ def collect_registry_sources(root: Path, week_start: date, week_end: date, retri
                 excluded[reason] += 1
                 if source_type in OFFICIAL_PAGE_SOURCE_TYPES:
                     official_links_excluded[reason] += 1
+                continue
+            if state in {"diagnostics_only", "degraded"}:
                 continue
             if source_type in OFFICIAL_PAGE_SOURCE_TYPES:
                 official_links_saved += 1

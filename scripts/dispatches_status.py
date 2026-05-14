@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -399,6 +400,75 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
                 "final_zero_story_result_is_credible": payload.get("final_zero_story_result_is_credible"),
             }
     result["latest_weekly_gap_report"] = gap_summary
+    quality_path = find_latest_file(root / "data" / "dispatches" / "cascadia" / "sources", "*/weekly_quality_report.json")
+    registry_report_path = find_latest_file(root / "data" / "dispatches" / "cascadia" / "sources", "*/registry_source_report.json")
+    quality_payload = read_json(quality_path) if quality_path else None
+    registry_payload = read_json(registry_report_path) if registry_report_path else None
+
+    weak_count = 0
+    registry_fetch_error_count = 0
+    gdelt_timeout_rate_limit_count = 0
+    top_failing: list[dict[str, Any]] = []
+    warning_counts_by_source: dict[str, int] = {}
+    if isinstance(quality_payload, dict):
+        warnings = quality_payload.get("warnings") or []
+        weak_count = sum(1 for item in warnings if "weak date basis" in str(item).lower())
+        registry_fetch_error_count = sum(1 for item in warnings if "registry source fetch error" in str(item).lower())
+        gdelt_timeout_rate_limit_count = sum(
+            1
+            for item in warnings
+            if "gdelt" in str(item).lower()
+            and (
+                "timeout" in str(item).lower()
+                or "timed out" in str(item).lower()
+                or "rate limit" in str(item).lower()
+                or "429" in str(item)
+            )
+        )
+        weak_by_source: Counter[str] = Counter()
+        for warning in warnings:
+            text = str(warning)
+            if "weak date basis" in text.lower():
+                weak_by_source[text.split(" item has weak date basis", 1)[0].strip()] += 1
+        warning_counts_by_source = dict(sorted(weak_by_source.items()))
+    if isinstance(registry_payload, dict):
+        failing_sources: Counter[tuple[str, str]] = Counter()
+        for diag in registry_payload.get("diagnostics", []):
+            if not isinstance(diag, dict):
+                continue
+            source_id = str(diag.get("source_id") or "unknown")
+            status_code = diag.get("status_code")
+            failure_reason = str(diag.get("failure_reason") or "unknown")
+            for err in diag.get("errors") or []:
+                err_text = str(err).lower()
+                if "403" in err_text:
+                    failure_reason = "http_403"
+                elif "404" in err_text:
+                    failure_reason = "http_404"
+                elif "getaddrinfo" in err_text or "dns" in err_text:
+                    failure_reason = "dns_failure"
+                elif "timeout" in err_text:
+                    failure_reason = "timeout"
+                elif "tls" in err_text or "certificate" in err_text or "revocation" in err_text:
+                    failure_reason = "tls_or_certificate"
+            if status_code in (403, 404):
+                failure_reason = f"http_{status_code}"
+            if diag.get("errors"):
+                failing_sources[(source_id, failure_reason)] += 1
+        top_failing = [
+            {"source_id": source_id, "reason": reason, "count": count}
+            for (source_id, reason), count in failing_sources.most_common(5)
+        ]
+
+    result["target_fetch_success_rate"] = 0.75
+    result["weak_date_warning_count"] = weak_count
+    result["registry_fetch_error_count"] = registry_fetch_error_count
+    result["gdelt_timeout_rate_limit_count"] = gdelt_timeout_rate_limit_count
+    result["top_failing_source_ids"] = top_failing
+    result["weak_date_warnings_by_source_id"] = warning_counts_by_source
+    result["latest_weekly_quality_report_path"] = str(quality_path) if quality_path else None
+    result["latest_registry_source_report_path"] = str(registry_report_path) if registry_report_path else None
+    result["recommended_next_action"] = "Disable/deprioritize dead registry sources and reduce weak-date warning noise."
     return result
 
 
@@ -468,6 +538,119 @@ def summarize_american_pressure(root: Path, pages_root: Path) -> dict[str, Any]:
     result["latest_public_source_count_gt_zero"] = bool((result.get("latest_source_count") or 0) > 0)
     result["bad_fns_hits_in_active_output"] = _scan_bad_fns_in_active_ap_output(root)
     return result
+
+
+def _recommended_source_action(failure_reason: str, status_code: int | None, weak_date_count: int, accepted_count: int) -> str:
+    reason = failure_reason.lower()
+    if status_code == 404 or reason == "http_404" or reason == "dns_failure":
+        return "disable_dead_source"
+    if status_code == 403 or reason == "http_403":
+        return "diagnostics_only"
+    if "timeout" in reason or "rate" in reason or reason == "blocked":
+        return "keep_but_summarize_warnings"
+    if "tls" in reason or "certificate" in reason or "revocation" in reason:
+        return "needs_manual_review"
+    if accepted_count == 0 and weak_date_count > 0:
+        return "needs_date_parser"
+    if weak_date_count > 0:
+        return "keep_but_summarize_warnings"
+    return "keep_enabled"
+
+
+def build_cascadia_source_reliability_audit(root: Path) -> dict[str, Any]:
+    registry = _parse_simple_registry_yaml(root / "data" / "dispatches" / "cascadia" / "source_registry.yml")
+    reports = sorted((root / "data" / "dispatches" / "cascadia" / "sources").glob("*/registry_source_report.json"))
+    weak_by_source: Counter[str] = Counter()
+    source_windows: Counter[str] = Counter()
+    latest_failure_reason: dict[str, str] = {}
+    latest_status_code: dict[str, int | None] = {}
+    fetch_successes: Counter[str] = Counter()
+    fetch_failures: Counter[str] = Counter()
+    candidate_count: Counter[str] = Counter()
+    accepted_count: Counter[str] = Counter()
+    for report_path in reports:
+        payload = read_json(report_path)
+        if not isinstance(payload, dict):
+            continue
+        per_source_saved = payload.get("records_by_source_id") or {}
+        if isinstance(per_source_saved, dict):
+            for source_id, value in per_source_saved.items():
+                accepted_count[str(source_id)] += int(value or 0)
+        for warning in payload.get("warnings") or []:
+            text = str(warning)
+            if " item has weak date basis" in text:
+                source_id = text.split(" item has weak date basis", 1)[0].strip()
+                if source_id:
+                    weak_by_source[source_id] += 1
+        for diag in payload.get("diagnostics") or []:
+            if not isinstance(diag, dict):
+                continue
+            source_id = str(diag.get("source_id") or "unknown")
+            source_windows[source_id] += 1
+            candidate_count[source_id] += int(diag.get("raw_count") or 0)
+            if diag.get("fetch_successful"):
+                fetch_successes[source_id] += 1
+            else:
+                fetch_failures[source_id] += 1
+            status_code = diag.get("status_code")
+            if isinstance(status_code, int):
+                latest_status_code[source_id] = status_code
+            failure_reason = str(diag.get("failure_reason") or "")
+            for err in diag.get("errors") or []:
+                err_text = str(err).lower()
+                if "403" in err_text:
+                    failure_reason = "http_403"
+                elif "404" in err_text:
+                    failure_reason = "http_404"
+                elif "getaddrinfo" in err_text or "dns" in err_text:
+                    failure_reason = "dns_failure"
+                elif "timeout" in err_text:
+                    failure_reason = "timeout"
+                elif "tls" in err_text or "certificate" in err_text or "revocation" in err_text:
+                    failure_reason = "tls_or_certificate"
+            if failure_reason:
+                latest_failure_reason[source_id] = failure_reason
+    rows: list[dict[str, Any]] = []
+    for source in registry:
+        source_id = str(source.get("source_id") or "unknown")
+        status_code = latest_status_code.get(source_id)
+        failure_reason = latest_failure_reason.get(source_id, "none")
+        weak_count = int(weak_by_source.get(source_id, 0))
+        candidates = int(candidate_count.get(source_id, 0))
+        accepted = int(accepted_count.get(source_id, 0))
+        action = _recommended_source_action(failure_reason, status_code, weak_count, accepted)
+        rows.append(
+            {
+                "source_id": source_id,
+                "url": source.get("url"),
+                "source_group": source.get("geographic_scope") or source.get("state_scope"),
+                "attempted_checks": int(source_windows.get(source_id, 0)),
+                "successes": int(fetch_successes.get(source_id, 0)),
+                "failures": int(fetch_failures.get(source_id, 0)),
+                "latest_failure_reason": failure_reason,
+                "status_code": status_code,
+                "weak_date_warning_count": weak_count,
+                "candidate_count": candidates,
+                "accepted_candidate_count": accepted,
+                "recommended_action": action,
+            }
+        )
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "sources_audited": len(rows),
+        "report_windows": len(reports),
+        "sources": rows,
+    }
+
+
+def write_cascadia_source_reliability_audit(root: Path) -> Path:
+    audit = build_cascadia_source_reliability_audit(root)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    out_dir = root / "output" / "dispatches" / "cascadia" / "source_reliability"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"cascadia_source_reliability_audit_{stamp}.json"
+    out_path.write_text(json.dumps(audit, indent=2), encoding="utf-8")
+    return out_path
 
 
 def run_doctor(root: Path) -> dict[str, Any]:
@@ -662,6 +845,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pages-repo", type=Path)
     parser.add_argument("--run-doctor", action="store_true")
     parser.add_argument("--run-tests", action="store_true", help="Opt-in; currently reports unsupported and does not execute tests.")
+    parser.add_argument("--write-cascadia-audit", action="store_true", help="Write Cascadia source reliability audit JSON.")
     return parser.parse_args(argv)
 
 
@@ -669,6 +853,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = Path(__file__).resolve().parents[1]
     pages_repo = (args.pages_repo or (root / "bluefern-dispatches-pages")).resolve()
+    audit_path = write_cascadia_source_reliability_audit(root) if args.write_cascadia_audit else None
 
     status = build_status(root, pages_repo, run_doctor_flag=args.run_doctor)
     strict_errors = apply_strict_failures(status) if args.strict else []
@@ -688,6 +873,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.run_tests:
             print("--run-tests requested but execution is intentionally disabled in this status script.")
         print(render_text_status(status, strict_errors))
+        if audit_path:
+            print(f"Cascadia reliability audit written: {audit_path}")
         if report_path:
             print(f"Report written: {report_path}")
 

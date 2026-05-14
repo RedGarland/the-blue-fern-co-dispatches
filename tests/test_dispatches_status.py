@@ -269,3 +269,71 @@ def test_unlinked_dedupe_refused_gaza_folder_not_critical_by_itself(tmp_path, mo
     _stub_git(monkeypatch, root=root, pages=pages)
     status = dispatches_status.build_status(root, pages)
     assert "Gaza linked public edition has dedupe-refusal errors" not in status["critical_errors"]
+
+
+def test_cascadia_summary_includes_failure_counts_and_top_sources(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"
+    week.mkdir(parents=True, exist_ok=True)
+    _json(
+        week / "weekly_quality_report.json",
+        {
+            "warnings": [
+                "seattle-alerts item has weak date basis; published_at unavailable or unparseable",
+                "registry source fetch error: HTTP Error 404: Not Found",
+                "historical provider gdelt failed for query X: <urlopen error timed out>",
+            ]
+        },
+    )
+    _json(
+        week / "registry_source_report.json",
+        {
+            "diagnostics": [
+                {"source_id": "or-odot-news", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"},
+                {"source_id": "or-odot-news", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"},
+                {"source_id": "wa-ecology-news", "status_code": 403, "errors": ["HTTP Error 403: Forbidden"], "failure_reason": "http_403"},
+            ],
+            "records_by_source_id": {"seattle-alerts": 3},
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    cascadia = status["dispatches"]["cascadia"]
+    assert cascadia["weak_date_warning_count"] == 1
+    assert cascadia["registry_fetch_error_count"] == 1
+    assert cascadia["gdelt_timeout_rate_limit_count"] == 1
+    assert cascadia["top_failing_source_ids"][0]["source_id"] == "or-odot-news"
+
+
+def test_build_cascadia_source_reliability_audit_classifies_dead_and_diagnostics(tmp_path):
+    root, _pages = _make_repo(tmp_path)
+    _write(
+        root / "data" / "dispatches" / "cascadia" / "source_registry.yml",
+        """sources:
+  - source_id: dead-source
+    url: https://example.com/dead
+    enabled: true
+    geographic_scope: WA
+  - source_id: blocked-source
+    url: https://example.com/blocked
+    enabled: true
+    geographic_scope: OR
+""",
+    )
+    week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"
+    week.mkdir(parents=True, exist_ok=True)
+    _json(
+        week / "registry_source_report.json",
+        {
+            "warnings": ["dead-source item has weak date basis; published_at unavailable or unparseable"],
+            "diagnostics": [
+                {"source_id": "dead-source", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"},
+                {"source_id": "blocked-source", "status_code": 403, "errors": ["HTTP Error 403: Forbidden"], "failure_reason": "http_403"},
+            ],
+            "records_by_source_id": {},
+        },
+    )
+    audit = dispatches_status.build_cascadia_source_reliability_audit(root)
+    actions = {row["source_id"]: row["recommended_action"] for row in audit["sources"]}
+    assert actions["dead-source"] == "disable_dead_source"
+    assert actions["blocked-source"] == "diagnostics_only"

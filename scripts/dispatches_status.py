@@ -372,6 +372,23 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
                         url_to_dates.setdefault(url, set()).add(d)
     repeats = {url: sorted(list(dates)) for url, dates in url_to_dates.items() if len(dates) > 1}
     result["repeated_source_urls_recent"] = repeats
+    collection_report_path = find_latest_file(root / "data" / "dispatches" / "gaza" / "editions", "*/collection_report.json")
+    collection_report = read_json(collection_report_path) if collection_report_path else None
+    result["latest_collection_report_path"] = str(collection_report_path) if collection_report_path else None
+    if isinstance(collection_report, dict):
+        result["latest_collection_report"] = {
+            "edition_date": collection_report.get("edition_date"),
+            "raw_candidate_count": collection_report.get("raw_candidate_count"),
+            "accepted_candidate_count_before_dedupe": collection_report.get("accepted_candidate_count_before_dedupe"),
+            "kept_after_dedupe": collection_report.get("kept_after_dedupe"),
+            "suppressed_after_dedupe": collection_report.get("suppressed_after_dedupe"),
+            "rejection_counts_by_reason": collection_report.get("rejection_counts_by_reason") or {},
+            "source_providers_attempted": collection_report.get("source_providers_attempted") or [],
+            "provider_failures": collection_report.get("provider_failures") or [],
+            "no_story_credibility_decision": collection_report.get("no_story_credibility_decision"),
+        }
+    else:
+        result["latest_collection_report"] = None
     return result
 
 
@@ -728,6 +745,17 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         critical_errors.append("Cascadia transitional dates publicly linked")
     if not gaza.get("latest_has_visible_source_links"):
         critical_errors.append("latest public Gaza edition missing source links")
+    gaza_collection = gaza.get("latest_collection_report") or {}
+    if gaza_collection:
+        kept = int(gaza_collection.get("kept_after_dedupe") or 0)
+        raw = int(gaza_collection.get("raw_candidate_count") or 0)
+        failures = gaza_collection.get("provider_failures") or []
+        if raw == 0:
+            warnings.append("Gaza public archive is clean, but recent collection found zero candidates.")
+        elif kept == 0:
+            warnings.append("Gaza found candidates, but all were deduped or rejected.")
+        if failures:
+            warnings.append("Gaza source collection had provider failures; review providers.")
 
     recommendations = []
     if pages.get("clean") and pages.get("tracking") and str(pages.get("tracking", "")).startswith("ahead"):

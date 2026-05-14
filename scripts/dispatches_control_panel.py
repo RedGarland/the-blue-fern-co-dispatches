@@ -336,8 +336,15 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "cascadia_weak_date_warnings": warning_counts["weak_date_warning_count"] > 0,
         "manual_source_missing_ap": not bool(american.get("latest_manual_source_exists_for_latest_public_edition")),
         "gaza_stale_unlinked_folders": bool(gaza.get("stale_or_unlinked_edition_dates")),
+        "gaza_undercollection_review": False,
         "ap_coverage_gaps_present": bool(_ap_coverage_gaps((american.get("registry_summary") or {}).get("enabled_by_pillar") or {})),
     }
+    gaza_collection = gaza.get("latest_collection_report") or {}
+    if isinstance(gaza_collection, dict) and gaza_collection:
+        raw_candidates = int(gaza_collection.get("raw_candidate_count") or 0)
+        kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
+        provider_failures = list(gaza_collection.get("provider_failures") or [])
+        flags["gaza_undercollection_review"] = raw_candidates == 0 or kept_candidates == 0 or bool(provider_failures)
 
     blocked_reasons: list[str] = []
     review_reasons: list[str] = []
@@ -357,6 +364,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         review_reasons.append("General warnings are present.")
     if flags["gaza_repeated_urls"]:
         review_reasons.append("Gaza older archive entries have repeated source URLs.")
+    if flags["gaza_undercollection_review"]:
+        review_reasons.append("Gaza public archive is clean, but collection health indicates possible under-collection.")
     if flags["cascadia_fetch_rate_low"]:
         pct = int(float(fetch_rate) * 100) if isinstance(fetch_rate, (int, float)) else 0
         review_reasons.append(f"Cascadia fetch success rate is {pct}%, below 75% target.")
@@ -478,7 +487,7 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "generated_runtime_dirt": project.get("has_generated_runtime_dirt"),
         },
         "gaza": {
-            "status": _severity_blocked() if health["flags"]["gaza_zero_source_linked"] or health["flags"]["gaza_zero_story_linked"] or health["flags"]["gaza_dedupe_refusal_linked"] else _severity_review() if health["flags"]["gaza_repeated_urls"] else _severity_ok(),
+            "status": _severity_blocked() if health["flags"]["gaza_zero_source_linked"] or health["flags"]["gaza_zero_story_linked"] or health["flags"]["gaza_dedupe_refusal_linked"] else _severity_review() if health["flags"]["gaza_repeated_urls"] or health["flags"]["gaza_undercollection_review"] else _severity_ok(),
             "latest_public_edition_date": gaza.get("latest_public_edition_date"),
             "newest_generated_folder_date": gaza.get("latest_pages_edition_date"),
             "sources": gaza.get("latest_source_count"),
@@ -487,15 +496,16 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "rss_exists": gaza.get("rss_exists"),
             "visible_source_links": gaza.get("latest_has_visible_source_links"),
             "public_url": gaza.get("latest_public_url"),
-            "main_issue": "Older public archive entries share repeated source URLs." if health["flags"]["gaza_repeated_urls"] else "No current blocking Gaza issue.",
+            "main_issue": "Older public archive entries share repeated source URLs." if health["flags"]["gaza_repeated_urls"] else ("Collection may be underpowered despite clean public archive." if health["flags"]["gaza_undercollection_review"] else "No current blocking Gaza issue."),
             "impact": "Current latest Gaza edition is source-backed." if (gaza.get("latest_source_count") or 0) > 0 else "Latest edition needs source review.",
-            "next_action": "Review older duplicate URLs when convenient, or run focused historical cleanup." if health["flags"]["gaza_repeated_urls"] else "No immediate Gaza action needed.",
+            "next_action": "Review older duplicate URLs when convenient, or run focused historical cleanup." if health["flags"]["gaza_repeated_urls"] else ("Review Gaza source providers and latest collection report diagnostics." if health["flags"]["gaza_undercollection_review"] else "No immediate Gaza action needed."),
             "public_archive_dates": gaza.get("public_archive_dates") or [],
             "stale_or_unlinked_edition_dates": gaza.get("stale_or_unlinked_edition_dates") or [],
             "repeated_source_url_count": len(gaza.get("repeated_source_urls_recent") or {}),
             "zero_source_linked_dates": gaza.get("public_linked_zero_source_dates") or [],
             "zero_story_linked_dates": gaza.get("public_linked_zero_story_dates") or [],
             "dedupe_refusal_linked_dates": gaza.get("public_linked_dedupe_refusal_dates") or [],
+            "latest_collection_report": gaza.get("latest_collection_report") or {},
         },
         "cascadia": {
             "status": _severity_review() if health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] else _severity_ok(),

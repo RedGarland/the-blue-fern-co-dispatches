@@ -320,6 +320,18 @@ def test_gaza_stale_unlinked_wording_marks_not_public_archive():
     assert "not public archive entries" in text
 
 
+def test_gaza_undercollection_sets_review():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "raw_candidate_count": 0,
+        "kept_after_dedupe": 0,
+        "provider_failures": [],
+    }
+    health = cp.classify_health(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+    assert any("under-collection" in reason.lower() for reason in health["review_reasons"])
+
+
 def test_cascadia_shows_public_story_count_and_candidate_pool():
     summary = cp.summarize_status_for_gui(_base_status())
     text = cp.format_main_summary_text(summary)

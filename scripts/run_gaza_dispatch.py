@@ -28,6 +28,7 @@ from bluefern_dispatches.generator import (
     render_rss_for_dates,
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
+from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -145,13 +146,25 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             warnings.append(f"deduped duplicate source record: {source_id}")
             continue
         seen.add(key)
+        canonical_url = str(record.get("canonical_url") or "").strip()
+        wrapper_url = str(record.get("wrapper_url") or "").strip()
+        canonicalization_status = str(record.get("canonicalization_status") or "").strip()
+        if not canonical_url:
+            extracted, status = extract_canonical_from_google_wrapper(url)
+            canonical_url = extracted or canonicalize_url(url)
+            canonicalization_status = canonicalization_status or status
+            if status != "not_wrapper":
+                wrapper_url = wrapper_url or url
         normalized.append(
             {
                 "source_record_id": source_id,
                 "source_id": source_id,
                 "title": str(record["title"]).strip(),
                 "url": url,
-                "canonical_url": url,
+                "canonical_url": canonical_url,
+                "canonical_url_attempted": bool(record.get("canonical_url_attempted") or wrapper_url),
+                "canonicalization_status": canonicalization_status or ("direct_url" if not wrapper_url else "wrapper_unresolved"),
+                "wrapper_url": wrapper_url or None,
                 "publisher": str(record["publisher"]).strip(),
                 "published_at": str(record["published_at"]).strip(),
                 "retrieved_at": str(record.get("retrieved_at") or now).strip(),
@@ -490,6 +503,29 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         )
     if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
+    collection_report = {
+        "edition_date": edition_date,
+        "lookback_window_days": 7,
+        "source_providers_attempted": [{"provider": "manual_sources_json", "status": "ok" if manual_records else "no_candidates"}],
+        "provider_failures": [],
+        "raw_candidate_count": len(manual_records),
+        "normalized_candidate_count": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
+        "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
+        "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "rejection_counts_by_reason": {"normalization_errors": len(norm_errors)},
+        "top_rejected_examples": norm_errors[:5],
+        "no_story_credibility_decision": "",
+    }
+    if collection_report["raw_candidate_count"] == 0:
+        collection_report["no_story_credibility_decision"] = "no_candidates_found"
+    elif collection_report["accepted_candidate_count_before_dedupe"] > 0 and collection_report["kept_after_dedupe"] == 0:
+        collection_report["no_story_credibility_decision"] = "all_candidates_deduped"
+    elif norm_errors:
+        collection_report["no_story_credibility_decision"] = "candidates_rejected"
+    else:
+        collection_report["no_story_credibility_decision"] = "stories_available"
+    write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     stories = curate_stories(normalized, edition_date, generated_at)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories

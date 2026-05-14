@@ -145,7 +145,26 @@ def test_gaza_relevance_and_date_filtering(work_root, monkeypatch):
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1)
 
     assert result["ok"] is True
-    assert [record["url"] for record in result["sources"]] == ["https://valid.test/gaza"]
+    assert [record["url"] for record in result["sources"]] == ["https://valid.test/old-gaza", "https://valid.test/gaza"]
+
+
+def test_missing_published_at_is_not_accepted_as_fresh_in_collection(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_rss_items",
+        lambda _url: [
+            {
+                "title": "Gaza crossing update",
+                "url": "https://valid.test/gaza-no-date",
+                "published_at": "",
+                "summary_or_snippet": "Date missing.",
+            }
+        ],
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=0)
+    assert result["source_count"] == 0
+    assert result["rejected_by_reason"]["missing_published_at"] == 1
 
 
 def test_no_fake_sources_are_invented(work_root, monkeypatch):
@@ -355,6 +374,39 @@ def test_retrieved_at_alone_does_not_make_repeated_source_fresh(work_root):
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
 
+    assert kept == []
+    assert report["suppressed_candidate_count"] == 1
+
+
+def test_google_wrapper_with_different_wrapper_urls_suppresses_by_canonical(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Aid update",
+                    "url": "https://news.google.com/rss/articles/abc?url=https%3A%2F%2Freuters.com%2Fa",
+                    "canonical_url": "https://reuters.com/a",
+                    "publisher": "Reuters",
+                    "published_at": "2026-05-10T07:00:00+00:00",
+                    "category_hint": "humanitarian",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "title": "Aid update",
+            "url": "https://news.google.com/rss/articles/xyz?url=https%3A%2F%2Freuters.com%2Fa",
+            "canonical_url": "https://reuters.com/a",
+            "publisher": "Reuters",
+            "published_at": "2026-05-10T07:00:00+00:00",
+            "category_hint": "humanitarian",
+        }
+    ]
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
     assert kept == []
     assert report["suppressed_candidate_count"] == 1
 

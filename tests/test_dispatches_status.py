@@ -271,6 +271,26 @@ def test_unlinked_dedupe_refused_gaza_folder_not_critical_by_itself(tmp_path, mo
     assert "Gaza linked public edition has dedupe-refusal errors" not in status["critical_errors"]
 
 
+def test_gaza_collection_report_zero_candidates_is_warning_not_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "collection_report.json",
+        {
+            "edition_date": "2026-05-10",
+            "raw_candidate_count": 0,
+            "accepted_candidate_count_before_dedupe": 0,
+            "kept_after_dedupe": 0,
+            "suppressed_after_dedupe": 0,
+            "provider_failures": [],
+            "source_providers_attempted": [{"provider": "manual_sources_json", "status": "no_candidates"}],
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert any("recent collection found zero candidates" in w for w in status["warnings"])
+    assert not any("collection found zero candidates" in e for e in status["critical_errors"])
+
+
 def test_cascadia_summary_includes_failure_counts_and_top_sources(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"

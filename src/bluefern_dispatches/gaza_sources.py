@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote
 
 
 REQUIRED_SOURCE_FIELDS = {
@@ -76,6 +76,11 @@ class SourceDefinition:
     region_scope: str
 
 
+def _looks_like_google_news_wrapper(url: str) -> bool:
+    text = str(url or "").lower()
+    return "news.google.com" in text and "/rss/articles/" in text
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -111,6 +116,25 @@ def canonicalize_url(url: str) -> str:
     ]
     query = urlencode(filtered)
     return urlunsplit((scheme, netloc, path, query, ""))
+
+
+def extract_canonical_from_google_wrapper(url: str) -> tuple[str, str]:
+    raw = str(url or "").strip()
+    if not _looks_like_google_news_wrapper(raw):
+        return "", "not_wrapper"
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return "", "invalid_wrapper_url"
+    query_pairs = dict(parse_qsl(parts.query, keep_blank_values=False))
+    candidate = ""
+    for key in ("url", "u", "q"):
+        if key in query_pairs:
+            candidate = unquote(str(query_pairs.get(key) or "")).strip()
+            break
+    if not candidate.startswith(("http://", "https://")):
+        return "", "wrapper_without_extractable_canonical"
+    return canonicalize_url(candidate), "resolved_from_query"
 
 
 def canonical_source_key(source: dict[str, Any]) -> dict[str, str]:
@@ -329,12 +353,15 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
     for index, item in enumerate(raw_sources, start=1):
         if not isinstance(item, dict):
             raise ValueError(f"sources.yml item {index} is not an object")
+        source_type = str(item.get("type") or "").strip().lower()
+        if source_type == "rss_or_page":
+            source_type = "rss"
         definitions.append(
             SourceDefinition(
-                source_id=str(item.get("source_id") or "").strip(),
+                source_id=str(item.get("source_id") or item.get("id") or "").strip(),
                 name=str(item.get("name") or "").strip(),
                 url=str(item.get("url") or "").strip(),
-                type=str(item.get("type") or "").strip().lower(),
+                type=source_type,
                 enabled=bool(item.get("enabled")),
                 publisher=str(item.get("publisher") or item.get("name") or "").strip(),
                 reliability_tier=str(item.get("reliability_tier") or "").strip(),
@@ -429,6 +456,20 @@ def is_on_requested_date(published_at: str, edition_date: str) -> bool:
     return match.group(1) == edition_date
 
 
+def _date_in_window(published_at: str, start_date: date, end_date: date) -> bool:
+    text = str(published_at or "").strip()
+    if not text:
+        return False
+    match = re.match(r"^(\d{4}-\d{2}-\d{2})", text)
+    if not match:
+        return False
+    try:
+        published = date.fromisoformat(match.group(1))
+    except ValueError:
+        return False
+    return start_date <= published <= end_date
+
+
 def source_record_id(source_id: str, title: str, url: str, edition_date: str) -> str:
     digest = hashlib.sha1(f"{source_id}|{title}|{url}".encode("utf-8")).hexdigest()[:12]
     return f"gaza-{edition_date}-{source_id}-{digest}"
@@ -439,19 +480,32 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     url = (item.get("url") or "").strip()
     if not title or not url or not url.startswith(("http://", "https://")):
         return None
-    published_at = item.get("published_at") or ""
+    published_at = (item.get("published_at") or "").strip()
+    canonical_url, canonical_status = extract_canonical_from_google_wrapper(url)
+    wrapper_url = url if _looks_like_google_news_wrapper(url) else ""
+    if not canonical_url:
+        canonical_url = canonicalize_url(url)
+    if wrapper_url and canonical_status == "not_wrapper":
+        canonical_status = "wrapper_unresolved"
+    if not wrapper_url:
+        canonical_status = "direct_url"
     return {
         "source_record_id": source_record_id(source.source_id, title, url, edition_date),
         "title": title,
         "url": url,
         "publisher": source.publisher,
-        "published_at": published_at or f"{edition_date}T00:00:00+00:00",
+        "published_at": published_at,
         "retrieved_at": retrieved_at,
         "summary_or_snippet": item.get("summary_or_snippet", ""),
         "source_type": "rss",
         "region_scope": source.region_scope,
         "category_hint": source.category_hint,
         "reliability_tier": source.reliability_tier,
+        "canonical_url_attempted": bool(wrapper_url),
+        "canonical_url": canonical_url,
+        "canonicalization_status": canonical_status,
+        "wrapper_url": wrapper_url or None,
+        "published_at_missing": published_at == "",
     }
 
 
@@ -542,37 +596,64 @@ def collect_gaza_sources(
     definitions = load_sources_config(config_path)
     records: list[dict[str, Any]] = []
     seen_urls: set[str] = set()
+    lookback_start = date.fromisoformat(edition_date) - timedelta(days=2)
+    lookback_end = date.fromisoformat(edition_date)
+    provider_diagnostics: list[dict[str, Any]] = []
+    rejected_by_reason: dict[str, int] = {}
+
+    def reject(reason: str) -> None:
+        rejected_by_reason[reason] = int(rejected_by_reason.get(reason, 0)) + 1
 
     for source in definitions:
         if len(records) >= max_sources:
             break
-        if not source.enabled or source.type != "rss":
+        if not source.enabled:
+            provider_diagnostics.append({"source_id": source.source_id, "status": "skipped", "reason": "disabled"})
+            continue
+        if source.type != "rss":
+            provider_diagnostics.append({"source_id": source.source_id, "status": "skipped", "reason": f"unsupported_type:{source.type}"})
             continue
         source_record_start = len(records)
+        diag: dict[str, Any] = {"source_id": source.source_id, "url": source.url, "status": "ok", "raw_items": 0, "accepted": 0}
         try:
             items = fetch_rss_items(source.url)
+            diag["raw_items"] = len(items)
         except (urllib.error.URLError, TimeoutError, ET.ParseError, OSError, ValueError) as exc:
             reason = f"{type(exc).__name__}: {exc}"
             warnings.append(f"{source.source_id}: {reason}")
             failed_source_ids.append({"source_id": source.source_id, "reason": reason})
+            diag["status"] = "failed"
+            diag["error"] = reason
+            provider_diagnostics.append(diag)
             continue
         for item in items:
             if len(records) >= max_sources:
                 break
             if not is_gaza_relevant(item):
+                reject("not_gaza_relevant")
                 continue
-            if not is_on_requested_date(item.get("published_at", ""), edition_date):
+            if not _date_in_window(item.get("published_at", ""), lookback_start, lookback_end):
+                if str(item.get("published_at") or "").strip():
+                    reject("published_at_outside_lookback_window")
+                else:
+                    reject("missing_published_at")
                 continue
             record = normalize_rss_item(item, source, edition_date, retrieved_at)
             if record is None:
+                reject("normalization_failed")
                 continue
-            url_key = record["url"].lower()
+            url_key = canonicalize_url(str(record.get("canonical_url") or record["url"])).lower()
             if url_key in seen_urls:
+                reject("duplicate_url_in_collection")
                 continue
             seen_urls.add(url_key)
             records.append(record)
+            diag["accepted"] = int(diag.get("accepted", 0)) + 1
         if len(records) == source_record_start:
             failed_source_ids.append({"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"})
+            if diag.get("status") == "ok":
+                diag["status"] = "no_matches"
+        provider_diagnostics.append(diag)
 
     validation_errors = validate_source_records(records, min_sources=min_sources)
     errors.extend(validation_errors)
@@ -589,4 +670,8 @@ def collect_gaza_sources(
         "errors": errors,
         "failed_source_ids": failed_source_ids,
         "source_mode_used": "auto",
+        "lookback_start_date": lookback_start.isoformat(),
+        "lookback_end_date": lookback_end.isoformat(),
+        "provider_diagnostics": provider_diagnostics,
+        "rejected_by_reason": rejected_by_reason,
     }

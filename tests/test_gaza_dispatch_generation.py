@@ -286,3 +286,45 @@ def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeyp
     assert "2026-05-11" not in archive
     assert "2026-05-11" not in index
     assert "2026-05-11" not in rss
+
+
+def test_zero_source_or_zero_story_gaza_editions_are_not_listed(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+
+    write_manual_sources(work, "2026-05-09")
+    run_gaza_dispatch(work, "2026-05-09", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    bad_dir = work / "output" / "site" / "gaza" / "editions" / "2026-05-11"
+    bad_dir.mkdir(parents=True, exist_ok=True)
+    (bad_dir / "index.html").write_text("<html>bad</html>", encoding="utf-8")
+    (bad_dir / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (bad_dir / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    (bad_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": "2026-05-11",
+                "source_count": 0,
+                "story_count": 0,
+                "errors": [
+                    "No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition."
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    build_result = build_site(work, dry_run=False, backup_root=work / "backup")
+    assert build_result["ok"] is True
+
+    archive = read(work / "output" / "site" / "gaza" / "archive.html")
+    index = read(work / "output" / "site" / "gaza" / "index.html")
+    rss = read(work / "output" / "site" / "gaza" / "rss.xml")
+    assert "2026-05-09" in archive
+    assert "2026-05-09" in index
+    assert "2026-05-09" in rss
+    assert "2026-05-11" not in archive
+    assert "2026-05-11" not in index
+    assert "2026-05-11" not in rss

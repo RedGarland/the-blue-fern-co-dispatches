@@ -592,6 +592,40 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         if not manifest_path.exists():
             return False
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if not isinstance(manifest, dict):
+            return False
+        errors = manifest.get("errors")
+        if isinstance(errors, list) and any(
+            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
+            for item in errors
+        ):
+            return False
+        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
+        curation_manifest_path = site_root / slug / "editions" / edition_date / "curation_manifest.json"
+        sources_payload: list[dict[str, Any]] | None = None
+        curation_payload: list[dict[str, Any]] | None = None
+        if sources_manifest_path.exists():
+            try:
+                loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return False
+            if isinstance(loaded, list):
+                sources_payload = loaded
+        if curation_manifest_path.exists():
+            try:
+                loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return False
+            if isinstance(loaded, list):
+                curation_payload = loaded
+        source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
+        story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
+        if source_count <= 0 or story_count <= 0:
+            return False
         # Cross-edition dedupe failures are recorded in project-local Gaza run artifacts.
         dedupe_path = site_root.parents[1] / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
         if dedupe_path.exists():

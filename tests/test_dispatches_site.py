@@ -483,9 +483,18 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
     edition = site_root / "gaza" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
     (edition / "index.html").write_text("<html><body>Gaza daily</body></html>", encoding="utf-8")
-    (edition / "edition_manifest.json").write_text(json.dumps({"dispatch_slug": "gaza", "edition_date": edition_date}), encoding="utf-8")
-    (edition / "sources_manifest.json").write_text("[]", encoding="utf-8")
-    (edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "gaza", "edition_date": edition_date, "source_count": 1, "story_count": 1}),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "gaza-src-001", "url": "https://example.com/gaza"}]),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "gaza-story-001", "source_ids": ["gaza-src-001"]}]),
+        encoding="utf-8",
+    )
     archive = site_root / "gaza" / "archive.html"
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
 

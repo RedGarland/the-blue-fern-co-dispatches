@@ -528,8 +528,13 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         critical_errors.append("Pages CNAME missing or incorrect")
     if american["bad_fns_hits_in_active_output"]:
         critical_errors.append("bad FNS link appears in active American Pressure output")
-    if gaza.get("repeated_source_urls_recent"):
-        critical_errors.append("Gaza duplicate public edition detected")
+    repeated_urls = gaza.get("repeated_source_urls_recent") or {}
+    if repeated_urls:
+        latest_public = gaza.get("latest_public_edition_date")
+        if latest_public and any(latest_public in dates for dates in repeated_urls.values() if isinstance(dates, list)):
+            critical_errors.append("Gaza duplicate public edition detected")
+        else:
+            warnings.append("Gaza duplicate URLs detected in older linked public editions")
     if gaza.get("public_linked_zero_source_dates"):
         critical_errors.append("Gaza linked public edition has zero sources")
     if gaza.get("public_linked_zero_story_dates"):

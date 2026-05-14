@@ -231,118 +231,440 @@ def load_status_json(root: Path) -> dict[str, Any]:
     return payload
 
 
-def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:
-    critical = list(status.get("critical_errors") or [])
-    warnings = list(status.get("warnings") or [])
-    pages = status.get("pages_repo") or {}
-    project = status.get("project") or {}
-    safety = status.get("public_safety") or {}
-    dispatches = status.get("dispatches") or {}
+def _severity_blocked() -> str:
+    return "Blocked"
 
-    def _clean(value: Any) -> Any:
-        if isinstance(value, str) and "SMTP_PASSWORD" in value:
-            return "[REDACTED]"
-        if isinstance(value, list):
-            return [_clean(v) for v in value]
-        if isinstance(value, dict):
-            return {k: _clean(v) for k, v in value.items()}
-        return value
 
+def _severity_review() -> str:
+    return "Review"
+
+
+def _severity_ok() -> str:
+    return "OK"
+
+
+def _severity_info() -> str:
+    return "Informational"
+
+
+def _merge_severity(*levels: str) -> str:
+    order = {_severity_ok(): 0, _severity_info(): 1, _severity_review(): 2, _severity_blocked(): 3}
+    return max(levels, key=lambda item: order.get(item, 0))
+
+
+def _status_color(level: str) -> str:
+    if level == _severity_blocked():
+        return "red"
+    if level == _severity_review():
+        return "#b58900"
+    if level == _severity_info():
+        return "#5b6f8f"
+    return "green"
+
+
+def _sanitize(value: Any) -> Any:
+    if isinstance(value, str) and "SMTP_PASSWORD" in value:
+        return "[REDACTED]"
+    if isinstance(value, list):
+        return [_sanitize(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _sanitize(v) for k, v in value.items()}
+    return value
+
+
+def _count_substrings(items: list[Any], tokens: tuple[str, ...]) -> int:
+    count = 0
+    for item in items:
+        text = str(item).lower()
+        if any(token in text for token in tokens):
+            count += 1
+    return count
+
+
+def summarize_warning_counts(status_json: dict[str, Any]) -> dict[str, int]:
+    cascadia = ((status_json.get("dispatches") or {}).get("cascadia") or {})
+    cascadia_warn = list(cascadia.get("latest_manifest_warnings") or [])
+    return {
+        "weak_date_warning_count": _count_substrings(cascadia_warn, ("weak", "date")),
+        "registry_fetch_error_count": _count_substrings(cascadia_warn, ("registry", "fetch", "http", "dns", "403", "404")),
+        "gdelt_timeout_rate_limit_count": _count_substrings(cascadia_warn, ("gdelt", "timeout", "rate limit", "429")),
+    }
+
+
+def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
+    critical = list(status_json.get("critical_errors") or [])
+    warnings = list(status_json.get("warnings") or [])
+    pages = status_json.get("pages_repo") or {}
+    project = status_json.get("project") or {}
+    safety = status_json.get("public_safety") or {}
+    dispatches = status_json.get("dispatches") or {}
     gaza = dispatches.get("gaza") or {}
     cascadia = dispatches.get("cascadia") or {}
     american = dispatches.get("american_pressure") or {}
-    dedupe = gaza.get("latest_dedupe_report") or {}
     gap = cascadia.get("latest_weekly_gap_report") or {}
-    registry = american.get("registry_summary") or {}
+    warning_counts = summarize_warning_counts(status_json)
+    fetch_rate = gap.get("successful_fetch_rate")
+    if isinstance(fetch_rate, str):
+        try:
+            fetch_rate = float(fetch_rate)
+        except ValueError:
+            fetch_rate = None
 
     flags = {
-        "do_not_publish": not bool(status.get("ok", False)),
-        "pages_dirty": pages.get("clean") is False,
+        "do_not_publish": not bool(status_json.get("ok", False)),
+        "has_critical_errors": bool(critical),
+        "has_warnings": bool(warnings),
         "source_changes": bool(project.get("has_source_test_doc_changes")),
+        "generated_runtime_dirt": bool(project.get("has_generated_runtime_dirt")),
+        "pages_dirty": pages.get("clean") is False,
+        "pages_missing_or_wrong": (not bool(pages.get("exists"))) or pages.get("branch") != "gh-pages" or not bool(pages.get("cname_ok")),
         "output_site_detail_exists": bool(safety.get("output_site_detail_exists")),
         "output_site_paid_exists": bool(safety.get("output_site_paid_exists")),
+        "smtp_password_in_logs": bool(safety.get("smtp_password_in_logs")),
         "gaza_zero_source_linked": bool(gaza.get("public_linked_zero_source_dates")),
         "gaza_zero_story_linked": bool(gaza.get("public_linked_zero_story_dates")),
         "gaza_dedupe_refusal_linked": bool(gaza.get("public_linked_dedupe_refusal_dates")),
         "gaza_repeated_urls": bool(gaza.get("repeated_source_urls_recent")),
+        "cascadia_fetch_rate_low": isinstance(fetch_rate, (int, float)) and float(fetch_rate) < 0.75,
+        "cascadia_weak_date_warnings": warning_counts["weak_date_warning_count"] > 0,
+        "manual_source_missing_ap": not bool(american.get("latest_manual_source_exists_for_latest_public_edition")),
+        "pages_public_date_mismatch": (
+            bool(gaza.get("stale_or_unlinked_edition_dates"))
+            or (
+                gaza.get("latest_public_edition_date")
+                and gaza.get("latest_pages_edition_date")
+                and gaza.get("latest_public_edition_date") != gaza.get("latest_pages_edition_date")
+            )
+            or (
+                cascadia.get("latest_public_edition_date")
+                and cascadia.get("latest_pages_edition_date")
+                and cascadia.get("latest_public_edition_date") != cascadia.get("latest_pages_edition_date")
+            )
+            or (
+                american.get("latest_public_edition_date")
+                and american.get("latest_pages_edition_date")
+                and american.get("latest_public_edition_date") != american.get("latest_pages_edition_date")
+            )
+        ),
     }
 
-    return _clean(
-        {
-            "overview": {
-                "ok": bool(status.get("ok", False)),
+    blocked_reasons: list[str] = []
+    review_reasons: list[str] = []
+    info_reasons: list[str] = []
+    if flags["do_not_publish"] or flags["has_critical_errors"]:
+        blocked_reasons.append("Status reports blocked publish conditions.")
+    if flags["output_site_detail_exists"] or flags["output_site_paid_exists"]:
+        blocked_reasons.append("Public safety check failed: output/site/detail or output/site/paid exists.")
+    if flags["smtp_password_in_logs"]:
+        blocked_reasons.append("SMTP_PASSWORD appears in logs.")
+    if flags["pages_missing_or_wrong"]:
+        blocked_reasons.append("Pages repo missing or invalid branch/CNAME state.")
+    if flags["gaza_zero_source_linked"] or flags["gaza_zero_story_linked"] or flags["gaza_dedupe_refusal_linked"]:
+        blocked_reasons.append("Gaza linked public edition has zero-source/zero-story/dedupe-refusal issue.")
+    if flags["has_warnings"]:
+        review_reasons.append("General warnings are present.")
+    if flags["gaza_repeated_urls"]:
+        review_reasons.append("Gaza older archive entries have repeated source URLs.")
+    if flags["cascadia_fetch_rate_low"]:
+        pct = int(float(fetch_rate) * 100) if isinstance(fetch_rate, (int, float)) else 0
+        review_reasons.append(f"Cascadia fetch success rate is {pct}%, below 75% target.")
+    if flags["cascadia_weak_date_warnings"]:
+        review_reasons.append("Cascadia has weak-date warning noise.")
+    if flags["source_changes"]:
+        review_reasons.append("Source repo has source/test/doc changes.")
+    if flags["pages_dirty"]:
+        review_reasons.append("Pages repo has uncommitted changes.")
+    if flags["pages_public_date_mismatch"]:
+        review_reasons.append("Pages/public edition dates differ due to stale/unlinked folders.")
+    if flags["manual_source_missing_ap"]:
+        review_reasons.append("American Pressure latest manual source is missing.")
+    if flags["generated_runtime_dirt"] and not flags["source_changes"]:
+        info_reasons.append("Generated/runtime dirt exists; no commit needed unless source files changed.")
+
+    if blocked_reasons:
+        overall = _severity_blocked()
+    elif review_reasons:
+        overall = _severity_review()
+    elif info_reasons:
+        overall = _severity_info()
+    else:
+        overall = _severity_ok()
+
+    return {
+        "flags": flags,
+        "warning_counts": warning_counts,
+        "fetch_rate": fetch_rate,
+        "blocked_reasons": blocked_reasons,
+        "review_reasons": review_reasons,
+        "info_reasons": info_reasons,
+        "overall": overall,
+    }
+
+
+def build_publish_decision(status_json: dict[str, Any]) -> str:
+    health = classify_health(status_json)
+    if health["overall"] == _severity_blocked():
+        return "Publishing is blocked: resolve blocking safety issues first."
+    if health["overall"] == _severity_review():
+        if health["flags"]["gaza_repeated_urls"] and health["flags"]["cascadia_fetch_rate_low"]:
+            return "Publishing is allowed, but review Gaza older-archive duplicate URLs and Cascadia source-quality warnings."
+        return "Publishing is allowed, but review warning items first."
+    return "Publishing is allowed: no blocking safety issues found."
+
+
+def build_recommendations(status_json: dict[str, Any]) -> list[dict[str, str]]:
+    health = classify_health(status_json)
+    items: list[dict[str, str]] = []
+    for text in health["blocked_reasons"]:
+        items.append({"severity": _severity_blocked(), "text": text})
+    for text in health["review_reasons"]:
+        items.append({"severity": _severity_review(), "text": text})
+    for text in health["info_reasons"]:
+        items.append({"severity": _severity_info(), "text": text})
+    if not health["blocked_reasons"]:
+        items.insert(0, {"severity": _severity_ok(), "text": "No blocking issues found."})
+    order = {_severity_blocked(): 0, _severity_review(): 1, _severity_info(): 2, _severity_ok(): 3}
+    return sorted(items, key=lambda i: order[i["severity"]])[:5]
+
+
+def _ap_coverage_gaps(enabled_by_pillar: dict[str, Any]) -> list[str]:
+    required = ("household_cost_pressure", "local_system_strain", "policy_implementation")
+    gaps = []
+    for pillar in required:
+        if int(enabled_by_pillar.get(pillar, 0) or 0) == 0:
+            gaps.append(pillar)
+    return gaps
+
+
+def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
+    dispatches = status_json.get("dispatches") or {}
+    pages = status_json.get("pages_repo") or {}
+    project = status_json.get("project") or {}
+    gaza = dispatches.get("gaza") or {}
+    cascadia = dispatches.get("cascadia") or {}
+    american = dispatches.get("american_pressure") or {}
+    gap = cascadia.get("latest_weekly_gap_report") or {}
+    health = classify_health(status_json)
+    enabled_by_pillar = (american.get("registry_summary") or {}).get("enabled_by_pillar") or {}
+    ap_gaps = _ap_coverage_gaps(enabled_by_pillar)
+
+    source_status = _severity_review() if health["flags"]["source_changes"] else _severity_ok()
+    pages_status = _severity_blocked() if health["flags"]["pages_missing_or_wrong"] else _severity_review() if health["flags"]["pages_dirty"] else _severity_ok()
+    runtime_status = _severity_info() if health["flags"]["generated_runtime_dirt"] and not health["flags"]["source_changes"] else _severity_review() if health["flags"]["generated_runtime_dirt"] else _severity_ok()
+
+    cards = {
+        "source_pages": {
+            "status": _merge_severity(source_status, pages_status, runtime_status),
+            "source_repo_line": "Source Repo: OK — no source/test/doc changes." if source_status == _severity_ok() else "Source Repo: Needs Review — source/test/doc changes exist.",
+            "pages_repo_line": "Pages Repo: OK — clean, up-to-date, CNAME valid." if pages_status == _severity_ok() else "Pages Repo: Needs Review — verify cleanliness/branch/CNAME before publish.",
+            "runtime_line": "Runtime Artifacts: Info — generated output/log dirt exists; no commit needed." if runtime_status == _severity_info() else "Runtime Artifacts: OK.",
+            "branch": pages.get("branch"),
+            "sha": pages.get("head_short_sha"),
+            "tracking": pages.get("tracking"),
+            "clean": pages.get("clean"),
+            "cname": pages.get("cname_value"),
+            "source_changes": project.get("has_source_test_doc_changes"),
+            "generated_runtime_dirt": project.get("has_generated_runtime_dirt"),
+        },
+        "gaza": {
+            "status": _severity_blocked() if health["flags"]["gaza_zero_source_linked"] or health["flags"]["gaza_zero_story_linked"] or health["flags"]["gaza_dedupe_refusal_linked"] else _severity_review() if health["flags"]["gaza_repeated_urls"] else _severity_ok(),
+            "latest_public_edition_date": gaza.get("latest_public_edition_date"),
+            "latest_pages_edition_date": gaza.get("latest_pages_edition_date"),
+            "sources": gaza.get("latest_source_count"),
+            "stories": gaza.get("latest_story_count"),
+            "archive_exists": gaza.get("archive_exists"),
+            "rss_exists": gaza.get("rss_exists"),
+            "visible_source_links": gaza.get("latest_has_visible_source_links"),
+            "public_url": gaza.get("latest_public_url"),
+            "main_issue": "Older public archive entries share repeated source URLs." if health["flags"]["gaza_repeated_urls"] else "No current blocking Gaza issue.",
+            "impact": "Current latest Gaza edition is source-backed." if (gaza.get("latest_source_count") or 0) > 0 else "Latest edition needs source review.",
+            "next_action": "Review older duplicate URLs when convenient, or run focused historical cleanup." if health["flags"]["gaza_repeated_urls"] else "No immediate Gaza action needed.",
+            "public_archive_dates": gaza.get("public_archive_dates") or [],
+            "stale_or_unlinked_edition_dates": gaza.get("stale_or_unlinked_edition_dates") or [],
+            "repeated_source_url_count": len(gaza.get("repeated_source_urls_recent") or {}),
+            "zero_source_linked_dates": gaza.get("public_linked_zero_source_dates") or [],
+            "zero_story_linked_dates": gaza.get("public_linked_zero_story_dates") or [],
+            "dedupe_refusal_linked_dates": gaza.get("public_linked_dedupe_refusal_dates") or [],
+        },
+        "cascadia": {
+            "status": _severity_review() if health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] else _severity_ok(),
+            "latest_weekly_edition_date": cascadia.get("latest_weekly_edition_date"),
+            "latest_public_edition_date": cascadia.get("latest_public_edition_date"),
+            "latest_pages_edition_date": cascadia.get("latest_pages_edition_date"),
+            "sources": cascadia.get("latest_source_count"),
+            "stories": cascadia.get("latest_story_count"),
+            "archive_exists": cascadia.get("archive_exists"),
+            "rss_exists": cascadia.get("rss_exists"),
+            "visible_source_links": cascadia.get("latest_has_visible_source_links"),
+            "public_url": cascadia.get("latest_public_url"),
+            "fetch_rate": health["fetch_rate"],
+            "source_checks_attempted": gap.get("source_checks_attempted"),
+            "source_checks_successful": gap.get("source_checks_successful"),
+            "weak_date_warning_count": health["warning_counts"]["weak_date_warning_count"],
+            "registry_fetch_error_count": health["warning_counts"]["registry_fetch_error_count"],
+            "gdelt_timeout_rate_limit_count": health["warning_counts"]["gdelt_timeout_rate_limit_count"],
+            "main_issue": "Discovery works, but source reliability needs cleanup." if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"]) else "No blocking Cascadia issue.",
+            "next_action": "Disable/deprioritize dead registry sources and reduce weak-date warning noise." if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"]) else "No immediate Cascadia action needed.",
+        },
+        "american_pressure": {
+            "status": _severity_review() if health["flags"]["manual_source_missing_ap"] else _severity_ok(),
+            "latest_public_edition_date": american.get("latest_public_edition_date"),
+            "latest_pages_edition_date": american.get("latest_pages_edition_date"),
+            "sources": american.get("latest_source_count"),
+            "stories": american.get("latest_story_count"),
+            "latest_manual_source_date": american.get("latest_manual_source_date"),
+            "manual_source_present": american.get("latest_manual_source_exists_for_latest_public_edition"),
+            "registry_enabled": (american.get("registry_summary") or {}).get("enabled_sources"),
+            "registry_total": (american.get("registry_summary") or {}).get("total_sources"),
+            "enabled_by_pillar": enabled_by_pillar,
+            "coverage_gaps": ap_gaps,
+            "bad_fns_link_hits": american.get("bad_fns_hits_in_active_output") or [],
+            "next_action": "Add one household-cost source next." if ap_gaps else "No immediate American Pressure action needed.",
+        },
+    }
+    return cards
+
+
+def generate_codex_prompt(status_json: dict[str, Any]) -> str:
+    health = classify_health(status_json)
+    cards = build_health_cards(status_json)
+    base = [
+        "Read docs/project-contract.md first.",
+        "Do not violate it.",
+        "Do not push.",
+        "Do not use git add .",
+        "Report files changed.",
+        "Do not expose secrets.",
+        "Do not commit generated output/logs/runtime artifacts.",
+        "Run focused tests, full pytest, doctor, and dispatches_status.py.",
+    ]
+    if health["flags"]["has_critical_errors"]:
+        issue = (status_json.get("critical_errors") or ["first critical error"])[0]
+        goal = [
+            "Goal:",
+            f"Fix the first blocking critical error: {issue}",
+        ]
+    elif health["flags"]["gaza_repeated_urls"]:
+        goal = [
+            "Goal:",
+            "Review and clean older linked Gaza editions with repeated source URLs without inventing sources.",
+            "",
+            "Requirements:",
+            "- Identify repeated URLs across public archive dates.",
+            "- Determine whether each repeated edition should be kept, replaced with valid source-backed records, or removed from public archive/RSS.",
+            "- Do not use rendered prose as source material.",
+            "- Do not publish zero-source or duplicate editions.",
+            "- Keep current latest valid Gaza edition intact.",
+            "- Update archive/RSS only through generator/listability logic if possible.",
+        ]
+    elif health["flags"]["cascadia_fetch_rate_low"] or health["warning_counts"]["registry_fetch_error_count"] > 0:
+        goal = [
+            "Goal:",
+            "Improve Cascadia source reliability and reduce warning noise.",
+            "",
+            "Requirements:",
+            "- Summarize registry fetch errors by source_id/status.",
+            "- Identify sources causing repeated 403/404/DNS failures.",
+            "- Disable or mark dead sources as diagnostics-only.",
+            "- Aggregate weak-date warnings instead of emitting repeated messages.",
+            "- Keep weekly public output source-backed.",
+            "- Do not weaken validation.",
+        ]
+    elif cards["american_pressure"]["coverage_gaps"]:
+        goal = [
+            "Goal:",
+            "Expand American Pressure source registry coverage for missing pillars.",
+        ]
+    elif health["flags"]["source_changes"]:
+        goal = [
+            "Goal:",
+            "Review and prepare source/test/doc changes for commit (no generated/runtime artifacts).",
+        ]
+    else:
+        goal = [
+            "Goal:",
+            "Run maintenance checks and prepare next weekly manual source file.",
+        ]
+    return "\n".join(base + [""] + goal)
+
+
+def summarize_status_for_gui(status: dict[str, Any]) -> dict[str, Any]:
+    health = classify_health(status)
+    cards = build_health_cards(status)
+    recs = build_recommendations(status)
+    overview = status.get("project") or {}
+    pages = status.get("pages_repo") or {}
+    critical = list(status.get("critical_errors") or [])
+    warnings = list(status.get("warnings") or [])
+
+    summary = {
+        "health_summary": {
+            "overall_status": health["overall"],
+            "overall_label": (
+                "Stable, with review items"
+                if health["overall"] == _severity_review()
+                else "Blocked by safety issues"
+                if health["overall"] == _severity_blocked()
+                else "Stable, informational notes only"
+                if health["overall"] == _severity_info()
+                else "Healthy"
+            ),
+            "publish_status_label": (
+                "Not allowed: resolve blocking safety issues."
+                if health["overall"] == _severity_blocked()
+                else "Allowed, review warnings first."
+                if health["overall"] == _severity_review()
+                else "Allowed."
+            ),
+            "blocking_issues_count": len(health["blocked_reasons"]),
+            "review_items_count": len(health["review_reasons"]),
+            "housekeeping_items_count": len(health["info_reasons"]),
+            "source_repo": _severity_review() if health["flags"]["source_changes"] else _severity_ok(),
+            "pages_repo": cards["source_pages"]["status"] if cards["source_pages"]["status"] in (_severity_blocked(), _severity_review()) else _severity_ok(),
+            "gaza": cards["gaza"]["status"],
+            "cascadia": cards["cascadia"]["status"],
+            "american_pressure": cards["american_pressure"]["status"],
+        },
+        "publish_decision": build_publish_decision(status),
+        "overview": {
+            "ok": bool(status.get("ok", False)),
+            "critical_error_count": len(critical),
+            "warning_count": len(warnings),
+            "project_root": overview.get("root"),
+            "source_repo_branch": overview.get("branch"),
+            "source_repo_head_short_sha": overview.get("head_short_sha"),
+            "source_repo_tracking": overview.get("tracking"),
+            "source_changes": overview.get("has_source_test_doc_changes"),
+            "generated_runtime_dirt": overview.get("has_generated_runtime_dirt"),
+            "python_executable": overview.get("python"),
+            "status_timestamp": overview.get("timestamp"),
+        },
+        "pages_source_card": cards["source_pages"],
+        "dispatch_cards": {
+            "gaza": cards["gaza"],
+            "cascadia": cards["cascadia"],
+            "american_pressure": cards["american_pressure"],
+        },
+        "what_needs_attention": recs,
+        "recommendations": [item["text"] for item in recs],
+        "flags": health["flags"],
+        "warning_counts": health["warning_counts"],
+        "suggested_codex_prompt": generate_codex_prompt(status),
+        "raw_details": {
+            "critical_errors": critical,
+            "warnings": warnings,
+            "status_json_excerpt": {
+                "ok": status.get("ok"),
                 "critical_errors": critical,
                 "warnings": warnings,
-                "project_root": project.get("root"),
-                "source_repo_branch": project.get("branch"),
-                "source_repo_head_short_sha": project.get("head_short_sha"),
-                "source_repo_tracking": project.get("tracking"),
-                "source_changes": project.get("has_source_test_doc_changes"),
-                "generated_runtime_dirt": project.get("has_generated_runtime_dirt"),
-                "python_executable": project.get("python"),
-                "status_timestamp": project.get("timestamp"),
+                "project": overview,
+                "pages_repo": pages,
+                "public_safety": status.get("public_safety") or {},
+                "dispatches": status.get("dispatches") or {},
             },
-            "pages_repo_summary": {
-                "path": pages.get("path"),
-                "exists": pages.get("exists"),
-                "branch": pages.get("branch"),
-                "head_short_sha": pages.get("head_short_sha"),
-                "clean": pages.get("clean"),
-                "tracking": pages.get("tracking"),
-                "cname_value": pages.get("cname_value"),
-                "cname_ok": pages.get("cname_ok"),
-            },
-            "public_safety_checks": {
-                "output_site_detail_exists": safety.get("output_site_detail_exists"),
-                "output_site_paid_exists": safety.get("output_site_paid_exists"),
-                "smtp_password_in_logs": safety.get("smtp_password_in_logs") or [],
-                "bad_fns_link_hits": safety.get("bad_fns_link_hits") or [],
-                "old_project_runtime_hits": safety.get("old_project_runtime_hits") or [],
-            },
-            "dispatch_stats": {
-                "gaza": gaza,
-                "cascadia": cascadia,
-                "american_pressure": american,
-            },
-            "gaza_dedupe_stats": {
-                "public_archive_dates": gaza.get("public_archive_dates") or [],
-                "stale_or_unlinked_edition_dates": gaza.get("stale_or_unlinked_edition_dates") or [],
-                "public_linked_zero_source_dates": gaza.get("public_linked_zero_source_dates") or [],
-                "repeated_source_url_count": len(gaza.get("repeated_source_urls_recent") or {}),
-                "latest_dedupe_report_edition_date": dedupe.get("edition_date"),
-                "input_candidates": dedupe.get("input_candidate_count"),
-                "kept_candidates": dedupe.get("kept_candidate_count"),
-                "suppressed_candidates": dedupe.get("suppressed_candidate_count"),
-                "dedupe_warnings": dedupe.get("warnings") or [],
-            },
-            "cascadia_discovery_stats": {
-                "latest_weekly_edition_date": cascadia.get("latest_weekly_edition_date"),
-                "weekly_labels_only": cascadia.get("weekly_labels_only"),
-                "transitional_public_links": cascadia.get("transitional_public_links") or [],
-                "source_checks_attempted": gap.get("source_checks_attempted"),
-                "source_checks_successful": gap.get("source_checks_successful"),
-                "successful_fetch_rate": gap.get("successful_fetch_rate"),
-                "final_public_story_count": gap.get("final_public_story_count"),
-                "final_zero_story_result_credible": gap.get("final_zero_story_result_is_credible"),
-                "latest_weekly_gap_report_path": gap.get("path"),
-            },
-            "american_pressure_stats": {
-                "source_registry_exists": american.get("source_registry_exists"),
-                "total_registry_sources": registry.get("total_sources"),
-                "enabled_registry_sources": registry.get("enabled_sources"),
-                "enabled_sources_by_pillar": registry.get("enabled_by_pillar") or {},
-                "latest_source_health_report_path": american.get("latest_source_health_report"),
-                "latest_manual_source_date": american.get("latest_manual_source_date"),
-                "latest_manual_source_exists_for_latest_public_edition": american.get(
-                    "latest_manual_source_exists_for_latest_public_edition"
-                ),
-                "live_fetch_disabled_by_default": american.get("live_fetch_disabled_by_default"),
-                "latest_public_source_count_gt_zero": american.get("latest_public_source_count_gt_zero"),
-                "bad_fns_hits_in_active_output": american.get("bad_fns_hits_in_active_output") or [],
-            },
-            "flags": flags,
-        }
-    )
+        },
+    }
+    return _sanitize(summary)
 
 
 def open_path(path: Path) -> bool:
@@ -353,6 +675,110 @@ def open_path(path: Path) -> bool:
     except Exception:
         return False
     return True
+
+
+def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
+    lines = [
+        f"{name} [{card.get('status', 'OK')}]",
+        f"- Latest public/pages: {card.get('latest_public_edition_date')} / {card.get('latest_pages_edition_date')}",
+        f"- Sources/Stories: {card.get('sources')} / {card.get('stories')}",
+        f"- Archive/RSS: {card.get('archive_exists')} / {card.get('rss_exists')}",
+        f"- Visible source links: {card.get('visible_source_links')}",
+        f"- Public URL: {card.get('public_url')}",
+        f"- Main issue: {card.get('main_issue')}",
+        f"- Next action: {card.get('next_action')}",
+    ]
+    if name == "Gaza":
+        lines.extend(
+            [
+                f"- Public archive dates: {len(card.get('public_archive_dates') or [])}",
+                f"- Stale/unlinked dates: {len(card.get('stale_or_unlinked_edition_dates') or [])}",
+                f"- Repeated source URL count: {card.get('repeated_source_url_count')}",
+                f"- Zero-source linked dates: {len(card.get('zero_source_linked_dates') or [])}",
+                f"- Zero-story linked dates: {len(card.get('zero_story_linked_dates') or [])}",
+                f"- Dedupe-refusal linked dates: {len(card.get('dedupe_refusal_linked_dates') or [])}",
+            ]
+        )
+    if name == "Cascadia":
+        rate = card.get("fetch_success_rate")
+        rate_text = f"{int(float(rate) * 100)}%" if isinstance(rate, (int, float)) else "not available"
+        lines.extend(
+            [
+                f"- Weekly edition: {card.get('latest_weekly_edition_date')}",
+                f"- Source checks attempted/successful: {card.get('source_checks_attempted')} / {card.get('source_checks_successful')}",
+                f"- Fetch success rate: {rate_text}",
+                f"- Final public story count: {card.get('final_public_story_count')}",
+                f"- Weak-date warning count: {card.get('weak_date_warning_count')}",
+                f"- Registry fetch error count: {card.get('registry_fetch_error_count')}",
+                f"- GDELT timeout/rate-limit count: {card.get('gdelt_timeout_rate_limit_count')}",
+            ]
+        )
+    if name == "American Pressure":
+        gaps = card.get("coverage_gaps") or []
+        lines.extend(
+            [
+                f"- Latest manual source date: {card.get('latest_manual_source_date')}",
+                "- Manual source exists for latest public edition: "
+                f"{card.get('manual_source_present')}",
+                f"- Registry enabled/total: {card.get('registry_enabled')} / {card.get('registry_total')}",
+                f"- Enabled by pillar: {card.get('enabled_by_pillar')}",
+                f"- Source coverage gaps: {', '.join(gaps) if gaps else 'none'}",
+                f"- Bad FNS link hits: {len(card.get('bad_fns_link_hits') or [])}",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def format_main_summary_text(summary: dict[str, Any]) -> str:
+    health = summary.get("health_summary", {})
+    pages_source = summary.get("pages_source_card", {})
+    cards = summary.get("dispatch_cards", {})
+    attention = summary.get("what_needs_attention", [])
+    lines = [
+        "Health Summary",
+        f"- Overall: {health.get('overall_label')}",
+        f"- Publish status: {health.get('publish_status_label')}",
+        f"- Blocking issues: {health.get('blocking_issues_count')}",
+        f"- Review items: {health.get('review_items_count')}",
+        f"- Housekeeping items: {health.get('housekeeping_items_count')}",
+        f"- Source repo: {health.get('source_repo')}",
+        f"- Pages repo: {health.get('pages_repo')}",
+        f"- Gaza: {health.get('gaza')}",
+        f"- Cascadia: {health.get('cascadia')}",
+        f"- American Pressure: {health.get('american_pressure')}",
+        "",
+        f"Can I publish? {summary.get('publish_decision')}",
+        "",
+        "Pages/Source Card",
+        f"- {pages_source.get('source_repo_line')}",
+        f"- {pages_source.get('pages_repo_line')}",
+        f"- {pages_source.get('runtime_line')}",
+        f"- Branch/SHA: {pages_source.get('branch')} / {pages_source.get('sha')}",
+        f"- Tracking/Clean/CNAME: {pages_source.get('tracking')} / {pages_source.get('clean')} / {pages_source.get('cname')}",
+        "",
+        _format_dispatch_card("Gaza", cards.get("gaza") or {}),
+        "",
+        _format_dispatch_card("Cascadia", cards.get("cascadia") or {}),
+        "",
+        _format_dispatch_card("American Pressure", cards.get("american_pressure") or {}),
+        "",
+        "What Needs Attention",
+    ]
+    for item in attention:
+        lines.append(f"- {item.get('severity')}: {item.get('text')}")
+    lines.extend(
+        [
+            "",
+            "Suggested Codex Prompt (preview)",
+            summary.get("suggested_codex_prompt", "").splitlines()[0] if summary.get("suggested_codex_prompt") else "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def format_raw_details_text(summary: dict[str, Any]) -> str:
+    raw = summary.get("raw_details", {})
+    return json.dumps(raw, indent=2)
 
 
 @dataclass
@@ -379,6 +805,7 @@ class DispatchesControlPanel:
         self.publish_toggle_var = tk.BooleanVar(value=True)
 
         self.status_banner_var = tk.StringVar(value=STATUS_BANNER_WARN)
+        self.raw_details_visible = tk.BooleanVar(value=False)
         self.execution_var = tk.StringVar(value="Ready")
         self.command_var = tk.StringVar(value="")
 
@@ -462,7 +889,11 @@ class DispatchesControlPanel:
         self.banner_label = ttk.Label(top, textvariable=self.status_banner_var)
         self.banner_label.pack(side=tk.LEFT)
         ttk.Button(top, text="Refresh Statistics", command=self.refresh_status).pack(side=tk.LEFT, padx=8)
-        ttk.Button(top, text="Copy JSON status", command=self.copy_status_json).pack(side=tk.LEFT, padx=8)
+        ttk.Button(top, text="Copy status summary", command=self.copy_status_summary).pack(side=tk.LEFT, padx=8)
+        ttk.Button(top, text="Show Raw Details", command=self.show_raw_details).pack(side=tk.LEFT, padx=8)
+        ttk.Button(top, text="Hide Raw Details", command=self.hide_raw_details).pack(side=tk.LEFT, padx=8)
+        ttk.Button(top, text="Generate Codex Prompt", command=self.generate_codex_prompt_ui).pack(side=tk.LEFT, padx=8)
+        ttk.Button(top, text="Copy Codex Prompt", command=self.copy_codex_prompt).pack(side=tk.LEFT, padx=8)
 
         open_row = ttk.Frame(frame)
         open_row.pack(fill=tk.X, padx=10, pady=6)
@@ -472,9 +903,13 @@ class DispatchesControlPanel:
         ttk.Button(open_row, text="Open Gaza archive", command=lambda: self._open(self.root_dir / "output" / "site" / "gaza" / "archive.html")).pack(side=tk.LEFT, padx=6)
         ttk.Button(open_row, text="Open Cascadia archive", command=lambda: self._open(self.root_dir / "output" / "site" / "cascadia" / "archive.html")).pack(side=tk.LEFT, padx=6)
         ttk.Button(open_row, text="Open American Pressure archive", command=lambda: self._open(self.root_dir / "output" / "site" / "american-pressure" / "archive.html")).pack(side=tk.LEFT, padx=6)
+        ttk.Button(open_row, text="Open output/site", command=lambda: self._open(self.root_dir / "output" / "site")).pack(side=tk.LEFT, padx=6)
+        ttk.Button(open_row, text="Open Pages repo", command=lambda: self._open(self.root_dir / "bluefern-dispatches-pages")).pack(side=tk.LEFT, padx=6)
 
-        self.stats_text = ScrolledText(frame, height=30)
+        self.stats_text = ScrolledText(frame, height=22)
         self.stats_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
+        self.raw_details_text = ScrolledText(frame, height=10)
+        self.prompt_text = ScrolledText(frame, height=8)
 
     def _build_logs_tab(self, frame: ttk.Frame) -> None:
         ttk.Label(frame, text="Live command output is mirrored from Run Dispatches tab.").pack(anchor="w", padx=10, pady=10)
@@ -584,42 +1019,72 @@ class DispatchesControlPanel:
         threading.Thread(target=_worker, daemon=True).start()
 
     def _render_status(self, summary: dict[str, Any], raw_status: dict[str, Any]) -> None:
-        flags = summary.get("flags", {})
-        if flags.get("do_not_publish"):
+        health = summary.get("health_summary", {})
+        overall = health.get("overall_status")
+        if overall == _severity_blocked():
             self.status_banner_var.set(STATUS_BANNER_STOP)
             self.banner_label.configure(foreground="red")
-        elif flags.get("pages_dirty") or flags.get("source_changes"):
+        elif overall == _severity_review():
             self.status_banner_var.set(STATUS_BANNER_WARN)
             self.banner_label.configure(foreground="#b58900")
+        elif overall == _severity_info():
+            self.status_banner_var.set("Informational")
+            self.banner_label.configure(foreground="#5b6f8f")
         else:
             self.status_banner_var.set(STATUS_BANNER_OK)
             self.banner_label.configure(foreground="green")
 
-        lines = [json.dumps(summary, indent=2)]
-        if flags.get("output_site_detail_exists") or flags.get("output_site_paid_exists"):
-            lines.append("CRITICAL: output/site/detail or output/site/paid exists.")
-        if flags.get("gaza_zero_source_linked"):
-            lines.append("CRITICAL: Linked Gaza edition has zero sources.")
-        if flags.get("gaza_zero_story_linked"):
-            lines.append("CRITICAL: Linked Gaza edition has zero stories.")
-        if flags.get("gaza_dedupe_refusal_linked"):
-            lines.append("CRITICAL: Linked Gaza dedupe refusal detected.")
-        if flags.get("gaza_repeated_urls"):
-            lines.append("WARNING: Repeated Gaza source URLs across recent public editions.")
-
         self.stats_text.delete("1.0", tk.END)
-        self.stats_text.insert(tk.END, "\n\n".join(lines))
+        self.stats_text.insert(tk.END, format_main_summary_text(summary))
         self.stats_text.see(tk.END)
+        self.raw_details_text.delete("1.0", tk.END)
+        self.raw_details_text.insert(tk.END, format_raw_details_text(summary))
+        if self.raw_details_visible.get():
+            self.raw_details_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=4)
+        else:
+            self.raw_details_text.pack_forget()
+        self.prompt_text.delete("1.0", tk.END)
+        self.prompt_text.insert(tk.END, summary.get("suggested_codex_prompt", ""))
+        self.prompt_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=4)
+
+        self._latest_status_summary = summary
         self._latest_raw_status = raw_status
 
-    def copy_status_json(self) -> None:
-        payload = getattr(self, "_latest_raw_status", None)
+    def copy_status_summary(self) -> None:
+        payload = getattr(self, "_latest_status_summary", None)
         if not payload:
             messagebox.showinfo("Status", "Refresh statistics first.")
             return
         self.root_win.clipboard_clear()
-        self.root_win.clipboard_append(json.dumps(payload, indent=2))
-        self._append_output("[status] copied JSON to clipboard")
+        self.root_win.clipboard_append(format_main_summary_text(payload))
+        self._append_output("[status] copied status summary to clipboard")
+
+    def show_raw_details(self) -> None:
+        self.raw_details_visible.set(True)
+        self.raw_details_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=4)
+
+    def hide_raw_details(self) -> None:
+        self.raw_details_visible.set(False)
+        self.raw_details_text.pack_forget()
+
+    def generate_codex_prompt_ui(self) -> None:
+        payload = getattr(self, "_latest_raw_status", None)
+        if not payload:
+            messagebox.showinfo("Status", "Refresh statistics first.")
+            return
+        prompt = generate_codex_prompt(payload)
+        self.prompt_text.delete("1.0", tk.END)
+        self.prompt_text.insert(tk.END, prompt)
+        self._append_output("[status] generated codex prompt")
+
+    def copy_codex_prompt(self) -> None:
+        prompt = self.prompt_text.get("1.0", tk.END).strip()
+        if not prompt:
+            messagebox.showinfo("Prompt", "Generate prompt first.")
+            return
+        self.root_win.clipboard_clear()
+        self.root_win.clipboard_append(prompt)
+        self._append_output("[status] copied codex prompt to clipboard")
 
     def open_archive(self) -> None:
         slug = self.dispatch_var.get().lower().replace(" ", "-")

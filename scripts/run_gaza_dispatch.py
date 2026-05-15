@@ -32,6 +32,7 @@ from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical
 from bluefern_dispatches.gaza_sources import rank_gaza_candidates
 from bluefern_dispatches.gaza_sources import clean_feed_text
 from bluefern_dispatches.gaza_sources import gaza_relevance_decision
+from bluefern_dispatches.gaza_sources import is_palestinian_development_text
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -159,8 +160,8 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             {"title": clean_title, "summary_or_snippet": clean_summary, "url": url},
             None,
         )
-        if (not is_relevant) and relevance_reason == "weak_liveblog_unrelated_topic":
-            warnings.append(f"rejected non-gaza topical source record {source_id}: {relevance_reason}")
+        if (not is_relevant) and relevance_reason in {"weak_liveblog_unrelated_topic", "rejected_no_palestinian_anchor"}:
+            warnings.append(f"rejected non-gaza/palestinian source record {source_id}: {relevance_reason}")
             continue
         key = (url.lower(), str(record["title"]).strip().lower())
         if key in seen:
@@ -215,26 +216,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
         ).lower()
         if "gaza" in text or any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
             return "core_gaza"
-        palestinian_terms = (
-            "palestinian",
-            "palestine",
-            "west bank",
-            "east jerusalem",
-            "unrwa",
-            "nakba",
-            "right of return",
-            "settler violence",
-            "detention",
-            "prisoner",
-            "displacement",
-            "civil rights",
-            "human rights",
-            "accountability",
-            "icc",
-            "icj",
-            "refugee",
-        )
-        if any(token in text for token in palestinian_terms):
+        if is_palestinian_development_text(text):
             return "palestinian_development"
         return "core_gaza"
 
@@ -648,6 +630,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         diag["tls_error"] = bool(diag.get("tls_error"))
         diag["backend_used"] = str(diag.get("backend_used") or "python")
     rejected_by_reason = dict(context.get("rejected_by_reason") or {})
+    rejected_no_anchor_count = sum(1 for warning in norm_warnings if "rejected_no_palestinian_anchor" in str(warning))
+    if rejected_no_anchor_count > 0:
+        rejected_by_reason["rejected_no_palestinian_anchor"] = int(rejected_by_reason.get("rejected_no_palestinian_anchor") or 0) + rejected_no_anchor_count
     rejected_by_reason["normalization_errors"] = int(rejected_by_reason.get("normalization_errors") or 0) + len(norm_errors)
     rejected_by_reason["cross_edition_duplicates"] = int(cross_edition_report.get("suppressed_candidate_count", 0))
     stage_counts = {

@@ -736,6 +736,72 @@ def test_relevance_keeps_bbc_gaza_rubble_story():
     assert accepted is True
 
 
+def test_relevance_rejects_equatorial_guinea_asylum_without_palestinian_anchor():
+    source = gaza_sources.SourceDefinition(
+        source_id="generic-world",
+        name="Generic World",
+        url="https://example.com/world/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Example",
+        reliability_tier="reported-public-source",
+        category_hint="rights",
+        region_scope="Global",
+    )
+    item = {
+        "title": "UN pleads for Equatorial Guinea not to send US asylum seekers to their home countries",
+        "url": "https://example.com/equatorial-guinea-asylum",
+        "summary_or_snippet": "The UN says deportees face persecution and life in danger.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is False
+    assert reason == "rejected_no_palestinian_anchor"
+
+
+def test_relevance_rejects_generic_un_human_rights_without_palestinian_anchor():
+    source = gaza_sources.SourceDefinition(
+        source_id="generic-un",
+        name="Generic UN",
+        url="https://example.com/un/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Example",
+        reliability_tier="reported-public-source",
+        category_hint="rights",
+        region_scope="Global",
+    )
+    item = {
+        "title": "UN experts warn of refoulement risks in global deportation cases",
+        "url": "https://example.com/un-refoulement",
+        "summary_or_snippet": "A broad human rights statement unrelated to this publication scope.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is False
+    assert reason == "rejected_no_palestinian_anchor"
+
+
+def test_relevance_keeps_foreign_protest_when_directly_tied_to_palestinian_accountability():
+    source = gaza_sources.SourceDefinition(
+        source_id="global-rights",
+        name="Global Rights",
+        url="https://example.com/global/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Example",
+        reliability_tier="reported-public-source",
+        category_hint="rights",
+        region_scope="Global",
+    )
+    item = {
+        "title": "Foreign protest targets legal accountability for Palestinian detainees",
+        "url": "https://example.com/protest-palestinian-detainees",
+        "summary_or_snippet": "Protesters demand accountability tied to Israeli detention policy affecting Palestinians.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is True
+    assert reason == "palestinian_development_material"
+
+
 def test_feed_html_summary_is_cleaned_to_plain_text():
     cleaned = gaza_sources.clean_feed_text(
         "&lt;p&gt;Aid update in Gaza&lt;/p&gt; &lt;a href='https://x'&gt;Continue reading...&lt;/a&gt; &#x27;quoted&#x27;"
@@ -1143,6 +1209,40 @@ def test_low_relevance_gaza_term_enters_review_queue_not_accepted(work_root, mon
     assert len(result["review_candidates"]) >= 1
     assert result["review_candidates"][0]["rejection_reason"] in {"rejected_low_relevance", "rejected_off_topic"}
 
+
+def test_no_palestinian_anchor_rejection_counted_and_not_in_review_queue(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": "UN pleads for Equatorial Guinea not to send US asylum seekers to their home countries",
+                        "url": "https://example.com/equatorial-guinea-asylum",
+                        "published_at": "2026-05-07T10:00:00+00:00",
+                        "summary_or_snippet": "General refoulement and human rights concerns in an unrelated case.",
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    assert result["rejected_by_reason"]["rejected_no_palestinian_anchor"] == 1
+    assert result["review_candidates"] == []
 
 def test_off_topic_without_gaza_palestine_not_in_review_queue(work_root, monkeypatch):
     write_config(work_root)

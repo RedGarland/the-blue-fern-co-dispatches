@@ -36,8 +36,16 @@ REQUIRED_SOURCE_FIELDS = {
 GAZA_TERMS = re.compile(r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|palestinian territories|occupied palestinian territory)\b", re.I)
 STRONG_GAZA_TERMS = re.compile(r"\b(gaza|palestin|unrwa|ocha|rafah|khan younis|deir al-balah|jabalia)\b", re.I)
 PALESTINE_TERMS = re.compile(r"\b(palestin(e|ian|ians)?)\b", re.I)
+PALESTINIAN_ANCHOR_TERMS = re.compile(
+    r"\b(palestin(e|ian|ians)?|gaza|west bank|east jerusalem|unrwa|nakba|right of return|palestinian refugee(s)?)\b",
+    re.I,
+)
 PALESTINIAN_DEVELOPMENT_TERMS = re.compile(
     r"\b(west bank|east jerusalem|palestinian refugee|refugee|unrwa|nakba|right of return|settler violence|detention|prisoner|civil rights|human rights|accountability)\b",
+    re.I,
+)
+PALESTINIAN_POLICY_IMPACT_TERMS = re.compile(
+    r"\b(settler violence|israeli policy|detention|prisoner|civil rights|human rights|accountability|legal|court|icc|icj|refugee|asylum|deport|refoulement)\b",
     re.I,
 )
 GAZA_CONTEXT_TERMS = re.compile(
@@ -146,6 +154,23 @@ class SourceDefinition:
     source_state: str = "enabled"
     disabled_reason: str = ""
     diagnostics_reason: str = ""
+
+
+def has_palestinian_anchor_text(text: str) -> bool:
+    return bool(PALESTINIAN_ANCHOR_TERMS.search(str(text or "")))
+
+
+def is_palestinian_development_text(text: str) -> bool:
+    haystack = str(text or "")
+    if not has_palestinian_anchor_text(haystack):
+        return False
+    if any(token in haystack.lower() for token in LOW_RELEVANCE_KEYWORDS) and not PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack):
+        return False
+    if PALESTINIAN_DEVELOPMENT_TERMS.search(haystack):
+        return True
+    if PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack):
+        return True
+    return bool(re.search(r"\b(west bank|east jerusalem|unrwa|nakba|right of return)\b", haystack, re.I))
 
 
 def _looks_like_google_news_wrapper(url: str) -> bool:
@@ -726,13 +751,15 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         return False, "weak_liveblog_unrelated_topic"
     if strong_title or strong_url:
         return True, "strong_title_or_url"
-    if PALESTINIAN_DEVELOPMENT_TERMS.search(" ".join([title, summary, url])):
+    haystack = " ".join([title, summary, url])
+    if is_palestinian_development_text(haystack):
         return True, "palestinian_development_material"
-    if PALESTINE_TERMS.search(" ".join([title, summary, url])) and GAZA_CONTEXT_TERMS.search(" ".join([title, summary, url])):
+    if (PALESTINIAN_DEVELOPMENT_TERMS.search(haystack) or PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack)) and not has_palestinian_anchor_text(haystack):
+        return False, "rejected_no_palestinian_anchor"
+    if PALESTINE_TERMS.search(haystack) and GAZA_CONTEXT_TERMS.search(haystack):
         return True, "palestine_with_gaza_context"
     if strong_summary and (strong_source or len(summary) < 240):
         return True, "strong_summary"
-    haystack = " ".join([title, summary, url])
     if GAZA_TERMS.search(haystack):
         return False, "gaza_mention_only_without_strong_topic_signal"
     return False, "not_gaza_relevant"
@@ -1116,6 +1143,7 @@ def collect_gaza_sources(
                 "rejected_missing_published_at": 0,
                 "rejected_weak_date_basis": 0,
                 "rejected_low_relevance": 0,
+                "rejected_no_palestinian_anchor": 0,
                 "rejected_parse_error": 0,
             },
             "top_rejected_examples": [],
@@ -1200,6 +1228,8 @@ def collect_gaza_sources(
                 low_relevance = "low" if any(token in item_text.lower() for token in LOW_RELEVANCE_KEYWORDS) else "peripheral"
                 if relevance_reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}:
                     _provider_reject(diag, "rejected_low_relevance", item, relevance_band=low_relevance)
+                elif relevance_reason == "rejected_no_palestinian_anchor":
+                    _provider_reject(diag, "rejected_no_palestinian_anchor", item, relevance_band="off_topic")
                 else:
                     _provider_reject(diag, "rejected_off_topic", item, relevance_band="off_topic")
                 continue

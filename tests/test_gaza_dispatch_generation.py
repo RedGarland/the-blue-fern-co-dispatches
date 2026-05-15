@@ -720,3 +720,46 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
     report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
     assert report["core_gaza_count"] >= 1
     assert report["palestinian_development_count"] >= 1
+
+
+def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-05-15",
+        [
+            {
+                "source_record_id": "gaza-src-001",
+                "title": "Gaza hospitals face acute aid shortages after airstrikes",
+                "url": "https://example.com/gaza-hospitals",
+                "publisher": "BBC News",
+                "published_at": "2026-05-15T10:00:00Z",
+                "retrieved_at": "2026-05-15T12:00:00Z",
+                "summary_or_snippet": "Core Gaza humanitarian impact update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-002",
+                "title": "UN pleads for Equatorial Guinea not to send US asylum seekers to their home countries",
+                "url": "https://example.com/equatorial-guinea-asylum",
+                "publisher": "Example",
+                "published_at": "2026-05-15T10:10:00Z",
+                "retrieved_at": "2026-05-15T12:10:00Z",
+                "summary_or_snippet": "Generic asylum and refoulement case outside the publication scope.",
+                "source_type": "news",
+                "region_scope": "Global",
+                "category_hint": "rights",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+    result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-15" / "index.html")
+    assert "Gaza hospitals face acute aid shortages after airstrikes" in html
+    assert "Equatorial Guinea" not in html

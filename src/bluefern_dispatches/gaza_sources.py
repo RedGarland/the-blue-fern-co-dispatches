@@ -35,6 +35,11 @@ REQUIRED_SOURCE_FIELDS = {
 }
 GAZA_TERMS = re.compile(r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|palestinian territories|occupied palestinian territory)\b", re.I)
 STRONG_GAZA_TERMS = re.compile(r"\b(gaza|palestin|unrwa|ocha|rafah|khan younis|deir al-balah|jabalia)\b", re.I)
+PALESTINE_TERMS = re.compile(r"\b(palestin(e|ian|ians)?)\b", re.I)
+GAZA_CONTEXT_TERMS = re.compile(
+    r"\b(gaza|israel|war|aid|humanitarian|unrwa|ocha|ceasefire|hostage|airstrike|hospital|famine|food|displacement|military)\b",
+    re.I,
+)
 WEAK_ONLY_GAZA_PATTERNS = (
     "live",
     "live blog",
@@ -717,12 +722,56 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         return False, "weak_liveblog_unrelated_topic"
     if strong_title or strong_url:
         return True, "strong_title_or_url"
+    if PALESTINE_TERMS.search(" ".join([title, summary, url])) and GAZA_CONTEXT_TERMS.search(" ".join([title, summary, url])):
+        return True, "palestine_with_gaza_context"
     if strong_summary and (strong_source or len(summary) < 240):
         return True, "strong_summary"
     haystack = " ".join([title, summary, url])
     if GAZA_TERMS.search(haystack):
         return False, "gaza_mention_only_without_strong_topic_signal"
     return False, "not_gaza_relevant"
+
+
+def _matched_terms(item: dict[str, str]) -> list[str]:
+    text = " ".join(
+        [
+            clean_feed_text(item.get("title", "")),
+            clean_feed_text(item.get("summary_or_snippet", "")),
+            str(item.get("url") or ""),
+        ]
+    ).lower()
+    terms = [
+        "gaza",
+        "palestine",
+        "unrwa",
+        "ocha",
+        "ceasefire",
+        "aid",
+        "hospital",
+        "famine",
+        "food",
+        "displacement",
+        "hostage",
+        "airstrike",
+        "military",
+    ]
+    return [term for term in terms if term in text][:8]
+
+
+def _date_basis(published_at: str, start_date: date, end_date: date) -> str:
+    text = str(published_at or "").strip()
+    if not text:
+        return "missing_published_at"
+    match = re.match(r"^(\d{4}-\d{2}-\d{2})", text)
+    if not match:
+        return "weak_date_basis"
+    try:
+        parsed = date.fromisoformat(match.group(1))
+    except ValueError:
+        return "weak_date_basis"
+    if start_date <= parsed <= end_date:
+        return "in_window"
+    return "out_of_window"
 
 
 def is_gaza_relevant(item: dict[str, str], source: SourceDefinition | None = None) -> bool:
@@ -959,6 +1008,25 @@ def collect_gaza_sources(
     def reject(reason: str) -> None:
         rejected_by_reason[reason] = int(rejected_by_reason.get(reason, 0)) + 1
 
+    def _provider_reject(diag: dict[str, Any], reason: str, item: dict[str, str], *, relevance_band: str = "n/a", date_basis: str = "n/a") -> None:
+        by_reason = diag.setdefault("rejected_counts", {})
+        by_reason[reason] = int(by_reason.get(reason, 0)) + 1
+        reject(reason)
+        examples: list[dict[str, Any]] = diag.setdefault("top_rejected_examples", [])
+        if len(examples) < 8:
+            examples.append(
+                {
+                    "source_id": diag.get("source_id"),
+                    "title": clean_feed_text(item.get("title", ""))[:200],
+                    "url": str(item.get("url") or "")[:500],
+                    "published_at": str(item.get("published_at") or ""),
+                    "rejection_reason": reason,
+                    "matched_terms": _matched_terms(item),
+                    "relevance_band": relevance_band,
+                    "date_basis": date_basis,
+                }
+            )
+
     for source in definitions:
         if len(records) >= max_sources:
             break
@@ -1001,6 +1069,21 @@ def collect_gaza_sources(
             "accepted": 0,
             "source_tier": source.source_tier,
             "source_state": source.source_state,
+            "items_with_gaza_terms": 0,
+            "items_with_palestine_terms": 0,
+            "items_in_date_window": 0,
+            "accepted": 0,
+            "rejected_counts": {
+                "rejected_off_topic": 0,
+                "rejected_date_out_of_window": 0,
+                "rejected_missing_url": 0,
+                "rejected_missing_title": 0,
+                "rejected_missing_published_at": 0,
+                "rejected_weak_date_basis": 0,
+                "rejected_low_relevance": 0,
+                "rejected_parse_error": 0,
+            },
+            "top_rejected_examples": [],
         }
         fetch = fetch_feed_payload(source.source_id, source.url)
         diag["backend_used"] = str(fetch.get("backend_used") or "python")
@@ -1051,28 +1134,57 @@ def collect_gaza_sources(
             diag["error"] = reason
             diag["status_code"] = fetch.get("status_code")
             diag["exception_type"] = type(exc).__name__
+            diag["rejected_counts"]["rejected_parse_error"] = int(diag["rejected_counts"].get("rejected_parse_error", 0)) + 1
             provider_diagnostics.append(diag)
             continue
         for item in items:
             if len(records) >= max_sources:
                 break
+            title = clean_feed_text(item.get("title", ""))
+            url = str(item.get("url") or "").strip()
+            summary = clean_feed_text(item.get("summary_or_snippet", ""))
+            item_text = " ".join([title, summary, url])
+            if "gaza" in item_text.lower():
+                diag["items_with_gaza_terms"] = int(diag.get("items_with_gaza_terms") or 0) + 1
+            if PALESTINE_TERMS.search(item_text):
+                diag["items_with_palestine_terms"] = int(diag.get("items_with_palestine_terms") or 0) + 1
+            if not title:
+                _provider_reject(diag, "rejected_missing_title", item, date_basis="unknown")
+                continue
+            if not url:
+                _provider_reject(diag, "rejected_missing_url", item, date_basis="unknown")
+                continue
             relevant, relevance_reason = gaza_relevance_decision(item, source)
             if not relevant:
-                reject(relevance_reason)
-                continue
-            if not _date_in_window(item.get("published_at", ""), lookback_start, lookback_end):
-                if str(item.get("published_at") or "").strip():
-                    reject("published_at_outside_lookback_window")
+                low_relevance = "low" if any(token in item_text.lower() for token in LOW_RELEVANCE_KEYWORDS) else "peripheral"
+                if relevance_reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}:
+                    _provider_reject(diag, "rejected_low_relevance", item, relevance_band=low_relevance)
                 else:
-                    reject("missing_published_at")
+                    _provider_reject(diag, "rejected_off_topic", item, relevance_band="off_topic")
                 continue
+            basis = _date_basis(item.get("published_at", ""), lookback_start, lookback_end)
+            if basis == "missing_published_at":
+                _provider_reject(diag, "rejected_missing_published_at", item, date_basis=basis)
+                continue
+            if basis == "weak_date_basis":
+                _provider_reject(diag, "rejected_weak_date_basis", item, date_basis=basis)
+                continue
+            if basis == "out_of_window":
+                _provider_reject(diag, "rejected_date_out_of_window", item, date_basis=basis)
+                continue
+            diag["items_in_date_window"] = int(diag.get("items_in_date_window") or 0) + 1
             record = normalize_rss_item(item, source, edition_date, retrieved_at)
             if record is None:
-                reject("normalization_failed")
+                if not title:
+                    _provider_reject(diag, "rejected_missing_title", item, date_basis=basis)
+                elif not url:
+                    _provider_reject(diag, "rejected_missing_url", item, date_basis=basis)
+                else:
+                    _provider_reject(diag, "rejected_parse_error", item, date_basis=basis)
                 continue
             url_key = canonicalize_url(str(record.get("canonical_url") or record["url"])).lower()
             if url_key in seen_urls:
-                reject("duplicate_url_in_collection")
+                _provider_reject(diag, "duplicate_url_in_collection", item, relevance_band=str(record.get("relevance_band") or "core"), date_basis=basis)
                 continue
             seen_urls.add(url_key)
             records.append(record)
@@ -1085,6 +1197,12 @@ def collect_gaza_sources(
             failed_source_ids.append({"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"})
             if diag.get("status") == "ok":
                 diag["status"] = "no_matches"
+        rejected_counts = dict(diag.get("rejected_counts") or {})
+        diag["most_common_rejection_reasons"] = [
+            {"reason": reason, "count": count}
+            for reason, count in sorted(rejected_counts.items(), key=lambda kv: kv[1], reverse=True)
+            if int(count) > 0
+        ][:5]
         provider_diagnostics.append(diag)
 
     stage_counts["accepted_before_rank"] = len(records)
@@ -1114,4 +1232,10 @@ def collect_gaza_sources(
         "providers_successful": sorted(set(working_providers)),
         "skipped_providers": skipped_providers,
         "working_providers": sorted(set(working_providers)),
+        "top_rejected_examples": [
+            example
+            for diag in provider_diagnostics
+            if isinstance(diag, dict)
+            for example in list(diag.get("top_rejected_examples") or [])
+        ][:25],
     }

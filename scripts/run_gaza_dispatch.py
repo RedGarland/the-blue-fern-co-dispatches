@@ -599,10 +599,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         diag["kept_after_dedupe"] = diag.get("kept_after_dedupe")
         diag["tls_error"] = bool(diag.get("tls_error"))
         diag["backend_used"] = str(diag.get("backend_used") or "python")
-    rejected_by_reason = {
-        "normalization_errors": len(norm_errors),
-        "cross_edition_duplicates": int(cross_edition_report.get("suppressed_candidate_count", 0)),
-    }
+    rejected_by_reason = dict(context.get("rejected_by_reason") or {})
+    rejected_by_reason["normalization_errors"] = int(rejected_by_reason.get("normalization_errors") or 0) + len(norm_errors)
+    rejected_by_reason["cross_edition_duplicates"] = int(cross_edition_report.get("suppressed_candidate_count", 0))
     stage_counts = {
         "registry_sources": int(context_stage.get("registry_sources") or 1),
         "enabled_providers_configured": int(context_stage.get("enabled_providers_configured") or 1),
@@ -637,10 +636,10 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "rejection_counts_by_reason": rejected_by_reason,
-        "top_rejected_examples": norm_errors[:5],
-        "rejected_off_topic": int(rejected_by_reason.get("normalization_errors", 0)),
-        "rejected_weak_date": 0,
-        "rejected_missing_url_or_title": int(rejected_by_reason.get("normalization_errors", 0)),
+        "top_rejected_examples": list(context.get("top_rejected_examples") or [])[:25],
+        "rejected_off_topic": int(rejected_by_reason.get("rejected_off_topic", 0)),
+        "rejected_weak_date": int(rejected_by_reason.get("rejected_weak_date_basis", 0)) + int(rejected_by_reason.get("rejected_missing_published_at", 0)),
+        "rejected_missing_url_or_title": int(rejected_by_reason.get("rejected_missing_url", 0)) + int(rejected_by_reason.get("rejected_missing_title", 0)),
         "suppressed_duplicate": int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "final_story_count": 0,
         "low_relevance_survivors": low_relevance_survivors,

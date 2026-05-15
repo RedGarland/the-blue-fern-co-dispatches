@@ -212,7 +212,7 @@ def test_missing_published_at_is_not_accepted_as_fresh_in_collection(work_root, 
     })
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=0)
     assert result["source_count"] == 0
-    assert result["rejected_by_reason"]["missing_published_at"] == 1
+    assert result["rejected_by_reason"]["rejected_missing_published_at"] == 1
 
 
 def test_no_fake_sources_are_invented(work_root, monkeypatch):
@@ -1006,3 +1006,113 @@ def test_checker_and_collection_use_shared_fetch_helper(work_root, monkeypatch):
     assert collect["source_count"] >= 1
     assert report["providers_attempted"] >= 1
     assert len(calls) >= 2
+
+
+def test_guardian_gaza_title_item_accepted(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Gaza aid access worsens, says aid agencies", "url": "https://www.theguardian.com/world/2026/may/15/gaza-aid", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "Humanitarian update."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 1
+
+
+def test_aljazeera_gaza_or_palestine_context_item_accepted(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Palestine aid talks continue as Gaza hospitals collapse", "url": "https://www.aljazeera.com/news/2026/05/07/palestine-aid-gaza", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "Aid and war context."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 1
+
+
+def test_unrelated_live_blog_with_incidental_gaza_rejected(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Australia election live blog", "url": "https://example.com/live", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "Incidental mention of Gaza in unrelated politics thread."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    diag = next(d for d in result["provider_diagnostics"] if d.get("source_id") == "test-rss")
+    assert diag["rejected_counts"]["rejected_low_relevance"] >= 1
+
+
+def test_provider_rejection_diagnostics_and_examples_present(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {"title": "", "url": "https://example.com/missing-title", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "x"},
+                    {"title": "Gaza update missing date", "url": "https://example.com/missing-date", "published_at": "", "summary_or_snippet": "x"},
+                    {"title": "Gaza aid update", "url": "https://example.com/ok", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "x"},
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    diag = next(d for d in result["provider_diagnostics"] if d.get("source_id") == "test-rss")
+    assert diag["raw_items"] == 3
+    assert diag["accepted"] == 1
+    assert diag["rejected_counts"]["rejected_missing_title"] >= 1
+    assert diag["rejected_counts"]["rejected_missing_published_at"] >= 1
+    assert len(diag["top_rejected_examples"]) >= 1
+    assert len(result["top_rejected_examples"]) >= 1

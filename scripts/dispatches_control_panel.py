@@ -367,37 +367,56 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         and not bool(gaza.get("public_linked_dedupe_refusal_dates"))
     )
     gaza_collection = gaza.get("latest_collection_report") or {}
+    has_current_gaza_collection = False
+    current_gaza_collection_viable = False
     if isinstance(gaza_collection, dict) and gaza_collection:
         latest_public = str(gaza.get("latest_public_edition_date") or "")
         report_date = str(gaza_collection.get("edition_date") or "")
         is_current_collection = bool(latest_public) and bool(report_date) and latest_public == report_date
+        has_current_gaza_collection = bool(is_current_collection)
         raw_candidates = int(gaza_collection.get("raw_candidate_count") or 0)
-        final_story_count = int(gaza_collection.get("final_story_count") or 0)
+        final_story_count_value = gaza_collection.get("final_story_count")
+        final_story_count = int(final_story_count_value) if isinstance(final_story_count_value, (int, float)) else int(gaza_latest_stories if is_current_collection else 0)
         kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
         review_candidates = list(gaza_collection.get("review_candidates") or [])
         provider_failures = list(gaza_collection.get("provider_failures") or [])
+        providers_successful_count = int(
+            gaza_collection.get("providers_successful_count")
+            or len(list(gaza_collection.get("providers_successful") or []))
+            or 0
+        )
         providers_attempted_count = int(
             gaza_collection.get("providers_attempted_count")
             or len(list(gaza_collection.get("providers_attempted") or []))
+            or len(list(gaza_collection.get("enabled_auto_providers_attempted") or []))
             or 0
         )
         enabled_auto = int(gaza_collection.get("enabled_auto_provider_count") or 0)
+        enabled_auto_attempted_count = len(list(gaza_collection.get("enabled_auto_providers_attempted") or []))
+        enabled_auto_tls_failures = int(gaza_collection.get("enabled_auto_tls_failures") or 0)
         accepted_before = int(gaza_collection.get("accepted_candidate_count_before_dedupe") or 0)
         low_attempt_threshold = min(2, enabled_auto) if enabled_auto > 0 else 0
         providers_attempted_too_low = enabled_auto > 0 and providers_attempted_count < low_attempt_threshold
+        enabled_auto_not_attempted = enabled_auto > 0 and enabled_auto_attempted_count <= 0
+        enabled_all_failed_tls = enabled_auto > 0 and enabled_auto_tls_failures >= enabled_auto
+        enabled_all_failed_source = enabled_auto > 0 and enabled_auto_attempted_count >= enabled_auto and providers_successful_count <= 0
+        provider_failures_blocking = bool(provider_failures) and is_current_collection and final_story_count <= 0
         high_raw_low_accept = raw_candidates >= 50 and accepted_before <= 2 and bool(review_candidates)
         no_viable_story_current = (
             is_current_collection
             and gaza_public_clean
             and (kept_candidates <= 0 or final_story_count <= 0)
         )
+        current_gaza_collection_viable = bool(is_current_collection and kept_candidates > 0 and final_story_count > 0)
         collection_undercollection = (
-            (enabled_auto > 0 and providers_attempted_count <= 0)
+            enabled_auto_not_attempted
             or providers_attempted_too_low
             or (is_current_collection and raw_candidates <= 0)
             or (is_current_collection and accepted_before <= 0)
             or (is_current_collection and final_story_count <= 0)
-            or bool(provider_failures)
+            or provider_failures_blocking
+            or enabled_all_failed_tls
+            or enabled_all_failed_source
             or high_raw_low_accept
             or no_viable_story_current
         )
@@ -414,7 +433,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         enabled = int(gaza_health.get("providers_enabled") or 0)
         attempted = int(gaza_health.get("providers_attempted") or 0)
         failed = int(gaza_health.get("providers_failed") or 0)
-        if enabled > 0 and (attempted <= 0 or failed >= max(1, (enabled + 1) // 2)):
+        health_indicates_failure = enabled > 0 and (attempted <= 0 or failed >= max(1, (enabled + 1) // 2))
+        if health_indicates_failure and not (flags["gaza_public_safe"] and has_current_gaza_collection and current_gaza_collection_viable):
             flags["gaza_undercollection_review"] = True
 
     blocked_reasons: list[str] = []

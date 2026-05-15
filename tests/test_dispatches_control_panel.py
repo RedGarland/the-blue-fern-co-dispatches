@@ -417,6 +417,104 @@ def test_gaza_source_backed_healthy_state_is_ok():
     assert not any("under-collection" in reason.lower() for reason in health["review_reasons"])
 
 
+def test_gaza_exact_current_metrics_2026_05_15_is_ok_even_with_provider_no_matches():
+    raw = _base_status()
+    raw["dispatches"]["gaza"].update(
+        {
+            "latest_public_edition_date": "2026-05-15",
+            "latest_pages_edition_date": "2026-05-15",
+            "latest_source_count": 4,
+            "latest_story_count": 4,
+            "archive_exists": True,
+            "rss_exists": True,
+            "latest_has_visible_source_links": True,
+            "stale_or_unlinked_edition_dates": [],
+            "repeated_source_urls_recent": {},
+            "public_linked_zero_source_dates": [],
+            "public_linked_zero_story_dates": [],
+            "public_linked_dedupe_refusal_dates": [],
+            "public_archive_dates": [f"2026-05-{d:02d}" for d in range(7, 16)],
+            "latest_collection_report": {
+                "edition_date": "2026-05-15",
+                "raw_candidate_count": 141,
+                "accepted_candidate_count_before_dedupe": 6,
+                "kept_after_dedupe": 4,
+                "final_story_count": 4,
+                "provider_failures": [{"source_id": "who-news", "reason": "no matching Gaza items for 2026-05-15"}],
+                "enabled_auto_provider_count": 4,
+                "enabled_auto_providers_attempted": ["who-news", "bbc-middle-east", "guardian-world", "aljazeera-middle-east"],
+                "enabled_auto_tls_failures": 0,
+                "providers_successful_count": 4,
+                "review_candidates": [{"title": "x"}],
+            },
+        }
+    )
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_undercollection_review"] is False
+    assert cards["gaza"]["status"] == "OK"
+    assert cards["gaza"]["main_issue"] == "No current blocking Gaza issue."
+    assert cards["gaza"]["next_action"] == "No immediate Gaza action needed."
+
+
+def test_gaza_ok_even_when_generic_warnings_present_if_no_current_gaza_blockers():
+    raw = _base_status()
+    raw["warnings"] = ["General provider warning outside Gaza."]
+    raw["dispatches"]["gaza"]["latest_source_count"] = 4
+    raw["dispatches"]["gaza"]["latest_story_count"] = 4
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = []
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_zero_story_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_dedupe_refusal_dates"] = []
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "raw_candidate_count": 4,
+        "accepted_candidate_count_before_dedupe": 4,
+        "kept_after_dedupe": 4,
+        "final_story_count": 4,
+        "provider_failures": [],
+    }
+    cards = cp.build_health_cards(raw)
+    assert cards["gaza"]["status"] == "OK"
+
+
+def test_gaza_public_safe_current_viable_collection_overrides_source_health_failure_summary():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_public_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_pages_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_source_count"] = 4
+    raw["dispatches"]["gaza"]["latest_story_count"] = 4
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = []
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_zero_story_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_dedupe_refusal_dates"] = []
+    raw["dispatches"]["gaza"]["public_archive_dates"] = [f"2026-05-{d:02d}" for d in range(7, 16)]
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-15",
+        "raw_candidate_count": 141,
+        "accepted_candidate_count_before_dedupe": 6,
+        "kept_after_dedupe": 4,
+        "final_story_count": 4,
+        "provider_failures": [{"source_id": "who-news", "reason": "no matching Gaza items for 2026-05-15"}],
+        "enabled_auto_provider_count": 4,
+        "enabled_auto_providers_attempted": ["who-news", "bbc-middle-east", "guardian-world", "aljazeera-middle-east"],
+        "enabled_auto_tls_failures": 0,
+        "providers_successful_count": 4,
+    }
+    raw["dispatches"]["gaza"]["latest_source_health_report"] = {
+        "providers_enabled": 4,
+        "providers_attempted": 4,
+        "providers_successful": 0,
+        "providers_failed": 4,
+    }
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_undercollection_review"] is False
+    assert cards["gaza"]["status"] == "OK"
+
+
 def test_gaza_undercollection_not_triggered_by_stale_historical_warning_fields():
     raw = _base_status()
     raw["dispatches"]["gaza"]["latest_public_edition_date"] = "2026-05-15"
@@ -487,6 +585,15 @@ def test_gaza_review_triggers_for_zero_source_or_zero_story_linked_dates():
     assert health["flags"]["gaza_zero_source_linked"] is True
     assert health["flags"]["gaza_zero_story_linked"] is True
     assert cards["gaza"]["status"] == "Blocked"
+
+
+def test_real_gaza_zero_source_linked_date_triggers_blocked_and_cleanup_prompt():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = ["2026-05-14"]
+    cards = cp.build_health_cards(raw)
+    prompt = cp.generate_codex_prompt(raw)
+    assert cards["gaza"]["status"] == "Blocked"
+    assert "Gaza duplicate/public-listing cleanup." in prompt
 
 
 def test_gaza_review_high_raw_low_accepted_with_review_candidates_and_no_source_backed_latest():

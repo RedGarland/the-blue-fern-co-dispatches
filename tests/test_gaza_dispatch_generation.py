@@ -624,3 +624,99 @@ def test_manual_sources_apply_topical_relevance_filter(monkeypatch):
     assert "Taylor vows to run coal" not in html
     assert "Gaza sisters win prize for turning rubble into reusable bricks" in html
     assert "secret mission to rescue the UN" in html
+
+
+def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-05-15",
+        [
+            {
+                "source_record_id": "gaza-src-001",
+                "title": "Gaza hospitals face acute aid shortages after airstrikes",
+                "url": "https://example.com/gaza-hospitals",
+                "publisher": "BBC News",
+                "published_at": "2026-05-15T10:00:00Z",
+                "retrieved_at": "2026-05-15T12:00:00Z",
+                "summary_or_snippet": "Core Gaza humanitarian impact update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-002",
+                "title": "Settler violence rises in West Bank communities",
+                "url": "https://example.com/west-bank-settler-violence",
+                "publisher": "The Guardian",
+                "published_at": "2026-05-15T10:30:00Z",
+                "retrieved_at": "2026-05-15T12:10:00Z",
+                "summary_or_snippet": "Palestinian civil rights and security impact.",
+                "source_type": "news",
+                "region_scope": "Palestine",
+                "category_hint": "rights",
+                "reliability_tier": "reported-public-source",
+            },
+                {
+                    "source_record_id": "gaza-src-003",
+                    "title": "East Jerusalem hospital access restrictions affect Palestinian patients",
+                    "url": "https://example.com/east-jerusalem-rights",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-05-15T11:00:00Z",
+                    "retrieved_at": "2026-05-15T12:20:00Z",
+                    "summary_or_snippet": "Health and mobility restrictions in East Jerusalem affect Palestinian care.",
+                    "source_type": "news",
+                    "region_scope": "Palestine",
+                    "category_hint": "rights",
+                    "reliability_tier": "reported-public-source",
+                },
+            {
+                "source_record_id": "gaza-src-004",
+                "title": "UNRWA warns Palestinian refugee services face new cuts",
+                "url": "https://example.com/unrwa-refugee-services",
+                "publisher": "Reuters",
+                "published_at": "2026-05-15T11:30:00Z",
+                "retrieved_at": "2026-05-15T12:30:00Z",
+                "summary_or_snippet": "Refugee and aid service impacts.",
+                "source_type": "news",
+                "region_scope": "Palestine",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-005",
+                "title": "Nakba memory and right of return debate gains legal attention",
+                "url": "https://example.com/nakba-right-of-return",
+                "publisher": "AP",
+                "published_at": "2026-05-15T12:00:00Z",
+                "retrieved_at": "2026-05-15T12:40:00Z",
+                "summary_or_snippet": "Legal/accountability discourse affecting Palestinian rights.",
+                "source_type": "news",
+                "region_scope": "Palestine",
+                "category_hint": "rights",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+    result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-15" / "index.html")
+    assert "<h2>Top Story</h2>" in html
+    assert "<h2>Other Gaza Developments</h2>" in html
+    assert "<h2>Palestinian Developments</h2>" in html
+    assert "Gaza hospitals face acute aid shortages after airstrikes" in html
+    assert "Settler violence rises in West Bank communities" in html
+    assert "East Jerusalem hospital access restrictions affect Palestinian patients" in html
+    assert "UNRWA warns Palestinian refugee services face new cuts" in html
+    assert "Nakba memory and right of return debate gains legal attention" in html
+    # Verify visible links are present for Palestinian developments.
+    assert 'href="https://example.com/west-bank-settler-violence"' in html
+    assert 'href="https://example.com/east-jerusalem-rights"' in html
+    curation = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "curation_manifest.json"))
+    assert any(item.get("category") == "palestinian_development" for item in curation)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
+    assert report["core_gaza_count"] >= 1
+    assert report["palestinian_development_count"] >= 1

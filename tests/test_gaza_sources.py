@@ -1192,3 +1192,28 @@ def test_weak_date_but_relevant_enters_review_queue(work_root, monkeypatch):
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 0
     assert any(item["rejection_reason"] == "rejected_weak_date_basis" for item in result["review_candidates"])
+
+
+def test_generic_iran_lebanon_story_without_palestinian_relevance_rejected(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Iran and Lebanon trade talks expand", "url": "https://example.com/iran-lebanon", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "No local relevance."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    assert result["review_candidates"] == []

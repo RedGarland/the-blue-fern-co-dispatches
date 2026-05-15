@@ -308,7 +308,7 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
 
     html = (root / "output" / "site" / "gaza" / "editions" / "2026-05-08" / "index.html").read_text(encoding="utf-8")
     glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
-    other = html.split("<h2>Other Developments</h2>", 1)[1]
+    other = html.split("<h2>Other Gaza Developments</h2>", 1)[1]
     assert result["ok"] is True
     assert glance.count("Hospital fuel warning issued") == 1
     assert "Hospital fuel warning issued" not in other

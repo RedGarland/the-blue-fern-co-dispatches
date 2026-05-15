@@ -205,18 +205,53 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
 
 
 def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -> list[dict[str, Any]]:
+    def _story_scope(source: dict[str, Any]) -> str:
+        text = " ".join(
+            [
+                str(source.get("title") or ""),
+                str(source.get("summary_or_snippet") or ""),
+                str(source.get("url") or ""),
+            ]
+        ).lower()
+        if "gaza" in text or any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
+            return "core_gaza"
+        palestinian_terms = (
+            "palestinian",
+            "palestine",
+            "west bank",
+            "east jerusalem",
+            "unrwa",
+            "nakba",
+            "right of return",
+            "settler violence",
+            "detention",
+            "prisoner",
+            "displacement",
+            "civil rights",
+            "human rights",
+            "accountability",
+            "icc",
+            "icj",
+            "refugee",
+        )
+        if any(token in text for token in palestinian_terms):
+            return "palestinian_development"
+        return "core_gaza"
+
     stories: list[dict[str, Any]] = []
     for index, source in enumerate(sources, start=1):
         source_score = int(source.get("candidate_score") or 0)
         score = max(1, source_score)
         ranking_reasons = list(source.get("ranking_reasons") or [])
         breakdown = dict(source.get("candidate_score_breakdown") or {})
+        scope = _story_scope(source)
         stories.append(
             {
                 "story_id": f"gaza-story-{edition_date}-{index:03d}",
                 "title": source["title"],
                 "summary": source["summary_or_snippet"],
-                "category": source["category_hint"],
+                "category": scope if scope == "palestinian_development" else source["category_hint"],
+                "story_scope": scope,
                 "score": score,
                 "scoring_reasons": ranking_reasons or ["Included because a complete project-local source record was provided."],
                 "candidate_score_breakdown": breakdown,
@@ -269,6 +304,12 @@ def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], source
         chunks.append("</ul></article>")
 
     chunks: list[str] = []
+    core_gaza_stories = [story for story in stories if str(story.get("story_scope") or "") == "core_gaza"]
+    palestinian_stories = [story for story in stories if str(story.get("story_scope") or "") == "palestinian_development"]
+    top_story = core_gaza_stories[0] if core_gaza_stories else (stories[0] if stories else None)
+    other_gaza = [story for story in core_gaza_stories if top_story is None or story["story_id"] != top_story["story_id"]]
+    palestinian_section = [story for story in palestinian_stories if top_story is None or story["story_id"] != top_story["story_id"]]
+
     chunks.append("<h1>Dispatches From Gaza</h1>")
     if stories:
         chunks.append("<h2>At A Glance</h2>")
@@ -277,13 +318,20 @@ def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], source
             chunks.append(f"<li>{html.escape(story['title'])}</li>")
         chunks.append("</ul>")
         chunks.append("<h2>Top Story</h2>")
-        render_story(stories[0])
-        chunks.append("<h2>Other Developments</h2>")
-        if len(stories) > 1:
-            for story in stories[1:]:
+        if top_story is not None:
+            render_story(top_story)
+        chunks.append("<h2>Other Gaza Developments</h2>")
+        if other_gaza:
+            for story in other_gaza:
                 render_story(story)
         else:
-            chunks.append("<p>No additional source-backed developments cleared the public threshold for this edition.</p>")
+            chunks.append("<p>No additional core Gaza developments cleared the public threshold for this edition.</p>")
+        chunks.append("<h2>Palestinian Developments</h2>")
+        if palestinian_section:
+            for story in palestinian_section:
+                render_story(story)
+        else:
+            chunks.append("<p>No additional source-backed Palestinian developments cleared the public threshold for this edition.</p>")
     else:
         chunks.append("<p>No source-backed Gaza stories were generated for this date. Add project-local source records before publishing factual coverage.</p>")
         chunks.append("<h2>Sources</h2><p>No source records were available.</p>")
@@ -656,6 +704,11 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     }
     stories = curate_stories(normalized, edition_date, generated_at)
     collection_report["final_story_count"] = len(stories)
+    collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
+    collection_report["palestinian_development_count"] = sum(
+        1 for story in stories if str(story.get("story_scope") or "") == "palestinian_development"
+    )
+    collection_report["rejected_count"] = int(sum(int(v or 0) for v in rejected_by_reason.values()))
     if len(normalized) > 0 and len(stories) == 0:
         collection_report["no_story_explanation"] = "all_candidates_rejected_or_deduped_in_curation"
         collection_report["no_story_credibility_decision"] = "candidates_rejected"

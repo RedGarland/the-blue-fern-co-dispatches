@@ -36,6 +36,10 @@ REQUIRED_SOURCE_FIELDS = {
 GAZA_TERMS = re.compile(r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|palestinian territories|occupied palestinian territory)\b", re.I)
 STRONG_GAZA_TERMS = re.compile(r"\b(gaza|palestin|unrwa|ocha|rafah|khan younis|deir al-balah|jabalia)\b", re.I)
 PALESTINE_TERMS = re.compile(r"\b(palestin(e|ian|ians)?)\b", re.I)
+PALESTINIAN_DEVELOPMENT_TERMS = re.compile(
+    r"\b(west bank|east jerusalem|palestinian refugee|refugee|unrwa|nakba|right of return|settler violence|detention|prisoner|civil rights|human rights|accountability)\b",
+    re.I,
+)
 GAZA_CONTEXT_TERMS = re.compile(
     r"\b(gaza|israel|war|aid|humanitarian|unrwa|ocha|ceasefire|hostage|airstrike|hospital|famine|food|displacement|military)\b",
     re.I,
@@ -722,6 +726,8 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         return False, "weak_liveblog_unrelated_topic"
     if strong_title or strong_url:
         return True, "strong_title_or_url"
+    if PALESTINIAN_DEVELOPMENT_TERMS.search(" ".join([title, summary, url])):
+        return True, "palestinian_development_material"
     if PALESTINE_TERMS.search(" ".join([title, summary, url])) and GAZA_CONTEXT_TERMS.search(" ".join([title, summary, url])):
         return True, "palestine_with_gaza_context"
     if strong_summary and (strong_source or len(summary) < 240):

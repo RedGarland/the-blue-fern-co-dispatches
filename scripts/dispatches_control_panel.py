@@ -345,6 +345,9 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
         provider_failures = list(gaza_collection.get("provider_failures") or [])
         flags["gaza_undercollection_review"] = raw_candidates == 0 or kept_candidates == 0 or bool(provider_failures)
+        flags["gaza_tls_env_review"] = bool(gaza_collection.get("enabled_auto_all_failed_tls"))
+    else:
+        flags["gaza_tls_env_review"] = False
     gaza_health = gaza.get("latest_source_health_report") or {}
     if isinstance(gaza_health, dict) and gaza_health:
         enabled = int(gaza_health.get("providers_enabled") or 0)
@@ -371,7 +374,12 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
     if flags["gaza_repeated_urls"]:
         review_reasons.append("Gaza older archive entries have repeated source URLs.")
     if flags["gaza_undercollection_review"]:
-        review_reasons.append("Gaza public archive is clean, but collection health indicates possible under-collection.")
+        if flags.get("gaza_tls_env_review"):
+            review_reasons.append(
+                "Enabled Gaza sources were attempted but failed due TLS/certificate verification; check local fetch backend or CA trust."
+            )
+        else:
+            review_reasons.append("Gaza public archive is clean, but collection health indicates possible under-collection.")
     if flags["cascadia_fetch_rate_low"]:
         pct = int(float(fetch_rate) * 100) if isinstance(fetch_rate, (int, float)) else 0
         review_reasons.append(f"Cascadia fetch success rate is {pct}%, below 75% target.")

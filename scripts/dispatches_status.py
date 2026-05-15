@@ -470,6 +470,16 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
     collection_report = read_json(collection_report_path) if collection_report_path else None
     result["latest_collection_report_path"] = str(collection_report_path) if collection_report_path else None
     if isinstance(collection_report, dict):
+        providers_attempted = list(collection_report.get("providers_attempted") or [])
+        provider_failures = list(collection_report.get("provider_failures") or [])
+        auto_attempted = [pid for pid in providers_attempted if str(pid) != "manual_sources_json"]
+        tls_failures = 0
+        for failure in provider_failures:
+            if not isinstance(failure, dict):
+                continue
+            reason = str(failure.get("reason") or "").lower()
+            if failure.get("tls_error") is True or "tls_certificate_verification_failed" in reason or "certificate" in reason or "tls" in reason:
+                tls_failures += 1
         result["latest_collection_report"] = {
             "edition_date": collection_report.get("edition_date"),
             "raw_candidate_count": collection_report.get("raw_candidate_count"),
@@ -478,12 +488,15 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
             "suppressed_after_dedupe": collection_report.get("suppressed_after_dedupe"),
             "rejection_counts_by_reason": collection_report.get("rejection_counts_by_reason") or {},
             "source_providers_attempted": collection_report.get("source_providers_attempted") or [],
-            "provider_failures": collection_report.get("provider_failures") or [],
+            "provider_failures": provider_failures,
             "no_story_credibility_decision": collection_report.get("no_story_credibility_decision"),
             "providers_configured": collection_report.get("providers_configured") or [],
-            "providers_attempted": collection_report.get("providers_attempted") or [],
+            "providers_attempted": providers_attempted,
             "providers_successful": collection_report.get("providers_successful") or [],
             "no_story_explanation": collection_report.get("no_story_explanation"),
+            "enabled_auto_providers_attempted": auto_attempted,
+            "enabled_auto_tls_failures": tls_failures,
+            "enabled_auto_all_failed_tls": bool(auto_attempted) and tls_failures >= len(auto_attempted),
         }
     else:
         result["latest_collection_report"] = None
@@ -916,12 +929,17 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         kept = int(gaza_collection.get("kept_after_dedupe") or 0)
         raw = int(gaza_collection.get("raw_candidate_count") or 0)
         failures = gaza_collection.get("provider_failures") or []
+        tls_all_failed = bool(gaza_collection.get("enabled_auto_all_failed_tls"))
         if raw == 0:
             warnings.append("Gaza public archive is clean, but recent collection found zero candidates.")
         elif kept == 0:
             warnings.append("Gaza found candidates, but all were deduped or rejected.")
         if failures:
             warnings.append("Gaza source collection had provider failures; review providers.")
+        if tls_all_failed:
+            warnings.append(
+                "Enabled Gaza sources were attempted but failed due TLS/certificate verification; check local fetch backend or CA trust."
+            )
 
     recommendations = []
     if pages.get("clean") and pages.get("tracking") and str(pages.get("tracking", "")).startswith("ahead"):

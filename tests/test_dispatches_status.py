@@ -320,6 +320,28 @@ def test_gaza_source_health_summary_is_included(tmp_path, monkeypatch):
     assert report["providers_failed"] == 3
 
 
+def test_gaza_tls_all_enabled_fail_adds_environment_warning(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "collection_report.json",
+        {
+            "edition_date": "2026-05-10",
+            "raw_candidate_count": 0,
+            "accepted_candidate_count_before_dedupe": 0,
+            "kept_after_dedupe": 0,
+            "suppressed_after_dedupe": 0,
+            "providers_attempted": ["who-news", "bbc-middle-east"],
+            "provider_failures": [
+                {"source_id": "who-news", "reason": "tls_certificate_verification_failed", "tls_error": True},
+                {"source_id": "bbc-middle-east", "reason": "tls_certificate_verification_failed", "tls_error": True},
+            ],
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert any("failed due TLS/certificate verification" in w for w in status["warnings"])
+
+
 def test_gaza_latest_public_counts_prefer_manifest_and_report_1_1(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-14/">2026-05-14</a>')

@@ -11,6 +11,20 @@ from bluefern_dispatches import gaza_sources
 from scripts import check_gaza_sources
 
 
+def _rss_payload(items: list[dict[str, str]]) -> bytes:
+    entries = []
+    for item in items:
+        entries.append(
+            "<item>"
+            f"<title>{item.get('title','')}</title>"
+            f"<link>{item.get('url','')}</link>"
+            f"<pubDate>{item.get('published_at','')}</pubDate>"
+            f"<description>{item.get('summary_or_snippet','')}</description>"
+            "</item>"
+        )
+    return ("<?xml version='1.0'?><rss><channel>" + "".join(entries) + "</channel></rss>").encode("utf-8")
+
+
 def write_config(root: Path) -> Path:
     path = root / "data" / "dispatches" / "gaza" / "sources.yml"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -93,18 +107,32 @@ def test_sources_yml_loads(work_root):
 def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
     write_config(work_root)
 
-    def fake_fetch(url):
+    def fake_fetch(source_id, url, timeout=20):
+        assert source_id == "test-rss"
         assert url == "https://example.com/rss.xml"
-        return [
-            {
-                "title": "Aid convoys enter Gaza",
-                "url": "https://valid.test/gaza-aid",
-                "published_at": "2026-05-07T08:00:00+00:00",
-                "summary_or_snippet": "Humanitarian update for Gaza.",
-            }
-        ]
+        return {
+            "ok": True,
+            "source_id": source_id,
+            "url": url,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([
+                {
+                    "title": "Aid convoys enter Gaza",
+                    "url": "https://valid.test/gaza-aid",
+                    "published_at": "2026-05-07T08:00:00+00:00",
+                    "summary_or_snippet": "Humanitarian update for Gaza.",
+                }
+            ]),
+            "content_text": None,
+        }
 
-    monkeypatch.setattr(gaza_sources, "fetch_rss_items", fake_fetch)
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_fetch)
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1)
 
@@ -119,10 +147,18 @@ def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
 
 def test_gaza_relevance_and_date_filtering(work_root, monkeypatch):
     write_config(work_root)
-    monkeypatch.setattr(
-        gaza_sources,
-        "fetch_rss_items",
-        lambda _url: [
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {
+        "ok": True,
+        "source_id": "test-rss",
+        "url": "https://example.com/rss.xml",
+        "status_code": 200,
+        "failure_reason": None,
+        "exception_type": None,
+        "tls_error": False,
+        "backend_used": "python",
+        "content_type": "application/rss+xml",
+        "content_encoding": "",
+        "content_bytes": _rss_payload([
             {
                 "title": "Regional weather update",
                 "url": "https://valid.test/weather",
@@ -141,8 +177,9 @@ def test_gaza_relevance_and_date_filtering(work_root, monkeypatch):
                 "published_at": "2026-05-07T08:00:00+00:00",
                 "summary_or_snippet": "Gaza update.",
             },
-        ],
-    )
+        ]),
+        "content_text": None,
+    })
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1)
 
@@ -152,18 +189,27 @@ def test_gaza_relevance_and_date_filtering(work_root, monkeypatch):
 
 def test_missing_published_at_is_not_accepted_as_fresh_in_collection(work_root, monkeypatch):
     write_config(work_root)
-    monkeypatch.setattr(
-        gaza_sources,
-        "fetch_rss_items",
-        lambda _url: [
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {
+        "ok": True,
+        "source_id": "test-rss",
+        "url": "https://example.com/rss.xml",
+        "status_code": 200,
+        "failure_reason": None,
+        "exception_type": None,
+        "tls_error": False,
+        "backend_used": "python",
+        "content_type": "application/rss+xml",
+        "content_encoding": "",
+        "content_bytes": _rss_payload([
             {
                 "title": "Gaza crossing update",
                 "url": "https://valid.test/gaza-no-date",
                 "published_at": "",
                 "summary_or_snippet": "Date missing.",
             }
-        ],
-    )
+        ]),
+        "content_text": None,
+    })
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=0)
     assert result["source_count"] == 0
     assert result["rejected_by_reason"]["missing_published_at"] == 1
@@ -171,7 +217,7 @@ def test_missing_published_at_is_not_accepted_as_fresh_in_collection(work_root, 
 
 def test_no_fake_sources_are_invented(work_root, monkeypatch):
     write_config(work_root)
-    monkeypatch.setattr(gaza_sources, "fetch_rss_items", lambda _url: [])
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {"ok": True, "content_bytes": _rss_payload([]), "content_type": "application/rss+xml", "content_encoding": "", "backend_used": "python", "tls_error": False})
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1)
 
@@ -183,25 +229,50 @@ def test_no_fake_sources_are_invented(work_root, monkeypatch):
 def test_bad_feed_is_skipped_with_failed_source_id(work_root, monkeypatch):
     write_two_feed_config(work_root)
 
-    def fake_fetch(url):
+    def fake_fetch(source_id, url, timeout=20):
         if url.endswith("/bad.xml"):
-            raise ValueError("non-XML feed response (content-type=text/html)")
-        return [
+            return {
+                "ok": False,
+                "source_id": source_id,
+                "url": url,
+                "status_code": 200,
+                "failure_reason": "ValueError: non-XML feed response (content-type=text/html)",
+                "exception_type": "ValueError",
+                "tls_error": False,
+                "backend_used": "python",
+                "content_bytes": None,
+                "content_text": None,
+            }
+        return {
+            "ok": True,
+            "source_id": source_id,
+            "url": url,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([
             {
                 "title": "Gaza aid crossing update",
                 "url": "https://valid.test/gaza-aid",
                 "published_at": "2026-05-07T08:00:00+00:00",
                 "summary_or_snippet": "Humanitarian update for Gaza.",
             }
-        ]
+            ]),
+            "content_text": None,
+        }
 
-    monkeypatch.setattr(gaza_sources, "fetch_rss_items", fake_fetch)
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_fetch)
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1)
 
     assert result["ok"] is True
     assert result["source_count"] == 1
-    assert result["failed_source_ids"] == [{"source_id": "bad-rss", "reason": "ValueError: non-XML feed response (content-type=text/html)"}]
+    assert result["failed_source_ids"][0]["source_id"] == "bad-rss"
+    assert "non-XML feed response" in result["failed_source_ids"][0]["reason"]
     assert "bad-rss: ValueError: non-XML feed response" in result["warnings"][0]
 
 
@@ -779,8 +850,25 @@ def test_disabled_diagnostics_manual_states_skipped_in_collection(work_root, mon
     )
     monkeypatch.setattr(
         gaza_sources,
-        "fetch_rss_items",
-        lambda url: [{"title": "Gaza aid update", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00+00:00", "summary_or_snippet": "aid"}] if url.endswith("enabled.xml") else pytest.fail("only enabled source should be fetched"),
+        "fetch_feed_payload",
+        lambda source_id, url, timeout=20: (
+            {
+                "ok": True,
+                "source_id": source_id,
+                "url": url,
+                "status_code": 200,
+                "failure_reason": None,
+                "exception_type": None,
+                "tls_error": False,
+                "backend_used": "python",
+                "content_type": "application/rss+xml",
+                "content_encoding": "",
+                "content_bytes": _rss_payload([{"title": "Gaza aid update", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00+00:00", "summary_or_snippet": "aid"}]),
+                "content_text": None,
+            }
+            if url.endswith("enabled.xml")
+            else pytest.fail("only enabled source should be fetched")
+        ),
     )
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 1
@@ -799,16 +887,29 @@ def test_health_checker_recommendations_for_404_and_403_401(monkeypatch):
 
     monkeypatch.setattr(check_gaza_sources, "load_sources_config", lambda _p: [S("s404"), S("s403"), S("s401"), S("ok")])
 
-    def fake_fetch(url: str):
+    def fake_fetch(source_id: str, url: str, timeout: int = 20):
         if "s404" in url:
-            raise urllib.error.HTTPError(url, 404, "Not Found", hdrs=None, fp=None)
+            return {"ok": False, "source_id": source_id, "url": url, "status_code": 404, "failure_reason": "HTTPError: 404", "exception_type": "HTTPError", "tls_error": False, "backend_used": "python"}
         if "s403" in url:
-            raise urllib.error.HTTPError(url, 403, "Forbidden", hdrs=None, fp=None)
+            return {"ok": False, "source_id": source_id, "url": url, "status_code": 403, "failure_reason": "HTTPError: 403", "exception_type": "HTTPError", "tls_error": False, "backend_used": "python"}
         if "s401" in url:
-            raise urllib.error.HTTPError(url, 401, "Unauthorized", hdrs=None, fp=None)
-        return [{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}]
+            return {"ok": False, "source_id": source_id, "url": url, "status_code": 401, "failure_reason": "HTTPError: 401", "exception_type": "HTTPError", "tls_error": False, "backend_used": "python"}
+        return {
+            "ok": True,
+            "source_id": source_id,
+            "url": url,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}]),
+            "content_text": None,
+        }
 
-    monkeypatch.setattr(check_gaza_sources, "fetch_rss_items", fake_fetch)
+    monkeypatch.setattr(check_gaza_sources, "fetch_feed_payload", fake_fetch)
     monkeypatch.setattr(
         check_gaza_sources,
         "load_sources_config",
@@ -825,3 +926,83 @@ def test_health_checker_recommendations_for_404_and_403_401(monkeypatch):
     assert by_id["s403"]["recommendation"] == "manual_only_or_diagnostics_only"
     assert by_id["s401"]["recommendation"] == "manual_only_or_diagnostics_only"
     assert by_id["ok"]["status"] == "ok"
+
+
+def test_fetch_payload_tls_failure_classified(monkeypatch):
+    class FakeUrlErr(Exception):
+        pass
+
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "python")
+    monkeypatch.setattr(
+        gaza_sources.urllib.request,
+        "urlopen",
+        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+    )
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is False
+    assert payload["tls_error"] is True
+    assert payload["failure_reason"] == gaza_sources.TLS_FAILURE_REASON
+
+
+def test_fetch_payload_auto_uses_curl_after_python_tls_failure(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("GAZA_ALLOW_CURL_NO_REVOKE", "1")
+    monkeypatch.setattr(
+        gaza_sources.urllib.request,
+        "urlopen",
+        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+    )
+
+    class Proc:
+        returncode = 0
+        stdout = _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
+        stderr = b""
+
+    monkeypatch.setattr(gaza_sources.subprocess, "run", lambda *args, **kwargs: Proc())
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is True
+    assert payload["backend_used"] == "curl"
+
+
+def test_fetch_payload_no_curl_fallback_when_python_backend_forced(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "python")
+    monkeypatch.setattr(
+        gaza_sources.urllib.request,
+        "urlopen",
+        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+    )
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is False
+    assert payload["backend_used"] == "python"
+
+
+def test_checker_and_collection_use_shared_fetch_helper(work_root, monkeypatch):
+    write_config(work_root)
+    calls: list[tuple[str, str]] = []
+
+    def fake_payload(source_id: str, url: str, timeout: int = 20):
+        calls.append((source_id, url))
+        return {
+            "ok": True,
+            "source_id": source_id,
+            "url": url,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Aid convoys enter Gaza", "url": "https://valid.test/gaza-aid", "published_at": "2026-05-07T08:00:00+00:00", "summary_or_snippet": "Humanitarian update for Gaza."}]),
+            "content_text": None,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_payload)
+    monkeypatch.setattr(check_gaza_sources, "fetch_feed_payload", fake_payload)
+    monkeypatch.setattr(check_gaza_sources, "ROOT", work_root)
+
+    collect = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=0, prefer_manual=False)
+    report = check_gaza_sources.build_report()
+    assert collect["source_count"] >= 1
+    assert report["providers_attempted"] >= 1
+    assert len(calls) >= 2

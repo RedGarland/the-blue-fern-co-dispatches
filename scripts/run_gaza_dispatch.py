@@ -589,6 +589,16 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
             "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         }
     ]
+    for diag in provider_diagnostics:
+        if not isinstance(diag, dict):
+            continue
+        raw_candidates = int(diag.get("raw_candidates") or diag.get("raw_items") or 0)
+        accepted_before = int(diag.get("accepted_before_dedupe") or diag.get("accepted") or 0)
+        diag["raw_candidates"] = raw_candidates
+        diag["accepted_before_dedupe"] = accepted_before
+        diag["kept_after_dedupe"] = diag.get("kept_after_dedupe")
+        diag["tls_error"] = bool(diag.get("tls_error"))
+        diag["backend_used"] = str(diag.get("backend_used") or "python")
     rejected_by_reason = {
         "normalization_errors": len(norm_errors),
         "cross_edition_duplicates": int(cross_edition_report.get("suppressed_candidate_count", 0)),

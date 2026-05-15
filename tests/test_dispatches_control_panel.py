@@ -336,6 +336,19 @@ def test_gaza_undercollection_sets_review():
     assert any("under-collection" in reason.lower() for reason in health["review_reasons"])
 
 
+def test_gaza_tls_environment_review_wording():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "raw_candidate_count": 0,
+        "kept_after_dedupe": 0,
+        "provider_failures": [{"source_id": "who-news", "reason": "tls_certificate_verification_failed"}],
+        "enabled_auto_all_failed_tls": True,
+    }
+    health = cp.classify_health(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+    assert any("failed due TLS/certificate verification" in reason for reason in health["review_reasons"])
+
+
 def test_gaza_source_health_most_enabled_fail_sets_review():
     raw = _base_status()
     raw["dispatches"]["gaza"]["latest_source_health_report"] = {

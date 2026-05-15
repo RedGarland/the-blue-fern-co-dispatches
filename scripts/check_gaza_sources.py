@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import argparse
 import json
-import ssl
-import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from bluefern_dispatches.gaza_sources import fetch_rss_items, load_sources_config
+from bluefern_dispatches.gaza_sources import (
+    TLS_FAILURE_REASON,
+    fetch_feed_payload,
+    load_sources_config,
+    parse_rss_items,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +47,9 @@ def _probe_source(source: Any) -> dict[str, Any]:
         "failure_reason": None,
         "raw_candidates": 0,
         "recommendation": None,
+        "backend_used": None,
+        "tls_error": False,
+        "exception_type": None,
     }
     if source.source_state != "enabled":
         row["failure_reason"] = f"state:{source.source_state}"
@@ -51,30 +57,37 @@ def _probe_source(source: Any) -> dict[str, Any]:
     if source.type != "rss":
         row["failure_reason"] = f"unsupported_type:{source.type}"
         return row
+    fetch = fetch_feed_payload(source.source_id, source.url)
+    row["backend_used"] = fetch.get("backend_used")
+    row["tls_error"] = bool(fetch.get("tls_error"))
+    row["exception_type"] = fetch.get("exception_type")
+    if not fetch.get("ok"):
+        row["status"] = "failed"
+        row["status_code"] = fetch.get("status_code")
+        reason = str(fetch.get("failure_reason") or "feed_fetch_failed")
+        row["failure_reason"] = (
+            "tls_certificate_verification_failed (environment-sensitive)"
+            if reason == TLS_FAILURE_REASON
+            else reason
+        )
+        row["recommendation"] = _recommendation_for_failure(row["status_code"], row["failure_reason"])
+        return row
     try:
-        items = fetch_rss_items(source.url)
+        items = parse_rss_items(
+            fetch.get("content_bytes") or b"",
+            content_type=str(fetch.get("content_type") or ""),
+            content_encoding=str(fetch.get("content_encoding") or ""),
+        )
         row["status"] = "ok"
         row["raw_candidates"] = len(items)
         if len(items) == 0:
             row["status"] = "no_candidates"
             row["failure_reason"] = "feed_returned_zero_items"
-    except urllib.error.HTTPError as exc:
-        row["status"] = "failed"
-        row["status_code"] = int(exc.code)
-        row["failure_reason"] = f"HTTPError: {exc}"
-        row["recommendation"] = _recommendation_for_failure(int(exc.code), str(exc))
-    except urllib.error.URLError as exc:
-        row["status"] = "failed"
-        row["failure_reason"] = f"URLError: {exc}"
-        row["recommendation"] = _recommendation_for_failure(None, str(exc))
-    except ssl.SSLError as exc:
-        row["status"] = "failed"
-        row["failure_reason"] = f"SSLError: {exc}"
-        row["recommendation"] = _recommendation_for_failure(None, str(exc))
     except Exception as exc:  # noqa: BLE001
         row["status"] = "failed"
         row["failure_reason"] = f"{type(exc).__name__}: {exc}"
-        row["recommendation"] = _recommendation_for_failure(None, str(exc))
+        row["exception_type"] = type(exc).__name__
+        row["recommendation"] = _recommendation_for_failure(fetch.get("status_code"), row["failure_reason"])
     return row
 
 
@@ -114,4 +127,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

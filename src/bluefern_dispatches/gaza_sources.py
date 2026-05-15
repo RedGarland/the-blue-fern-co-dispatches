@@ -6,7 +6,9 @@ import hashlib
 import html
 import json
 import mimetypes
+import os
 import re
+import subprocess
 import string
 import urllib.error
 import urllib.request
@@ -116,6 +118,7 @@ HIGH_RELEVANCE_KEYWORDS = (
 )
 LOW_RELEVANCE_KEYWORDS = ("sports", "football", "soccer", "flag", "culture", "symbolic")
 SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
+TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 
 
 @dataclass(frozen=True)
@@ -521,20 +524,148 @@ def _text(element: ET.Element, child_name: str) -> str:
     return ""
 
 
-def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
-    request = urllib.request.Request(url, headers={"User-Agent": "BlueFernDispatches/1.0"})
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        data = response.read()
-        content_type = str(response.headers.get("Content-Type") or "").lower()
-        content_encoding = str(response.headers.get("Content-Encoding") or "").lower()
-    if content_encoding == "gzip" or data.startswith(b"\x1f\x8b"):
+def _is_tls_error(exc_text: str) -> bool:
+    lowered = str(exc_text or "").lower()
+    return (
+        "certificate_verify_failed" in lowered
+        or "ssl" in lowered
+        or "tls" in lowered
+        or "certificate verification" in lowered
+        or "schannel" in lowered
+        or "sec_e_" in lowered
+        or "acquirecredentialshandle failed" in lowered
+    )
+
+
+def _curl_fetch(url: str, timeout: int, allow_no_revoke: bool) -> tuple[bytes, str]:
+    cmd = ["curl.exe", "--silent", "--show-error", "--location", "--max-time", str(timeout), "--fail", url]
+    if allow_no_revoke:
+        cmd.insert(1, "--ssl-no-revoke")
+    proc = subprocess.run(cmd, capture_output=True, text=False, check=False)
+    if proc.returncode != 0:
+        stderr_text = (proc.stderr or b"").decode("utf-8", errors="replace")
+        raise RuntimeError(f"curl_failed(rc={proc.returncode}): {stderr_text.strip()}")
+    return proc.stdout or b"", "curl"
+
+
+def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str, Any]:
+    backend_pref = str(os.getenv("GAZA_FETCH_BACKEND", "auto") or "auto").strip().lower()
+    allow_no_revoke = str(os.getenv("GAZA_ALLOW_CURL_NO_REVOKE", "")).strip() == "1"
+
+    def _python_fetch() -> dict[str, Any]:
+        request = urllib.request.Request(url, headers={"User-Agent": "BlueFernDispatches/1.0"})
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return {
+                    "ok": True,
+                    "source_id": source_id,
+                    "url": url,
+                    "status_code": int(getattr(response, "status", 200) or 200),
+                    "failure_reason": None,
+                    "exception_type": None,
+                    "tls_error": False,
+                    "backend_used": "python",
+                    "content_type": str(response.headers.get("Content-Type") or ""),
+                    "content_encoding": str(response.headers.get("Content-Encoding") or ""),
+                    "content_bytes": response.read(),
+                    "content_text": None,
+                }
+        except urllib.error.HTTPError as exc:
+            return {
+                "ok": False,
+                "source_id": source_id,
+                "url": url,
+                "status_code": int(exc.code),
+                "failure_reason": f"HTTPError: {exc}",
+                "exception_type": type(exc).__name__,
+                "tls_error": False,
+                "backend_used": "python",
+                "content_bytes": None,
+                "content_text": None,
+            }
+        except Exception as exc:  # noqa: BLE001
+            tls_error = _is_tls_error(str(exc))
+            return {
+                "ok": False,
+                "source_id": source_id,
+                "url": url,
+                "status_code": None,
+                "failure_reason": TLS_FAILURE_REASON if tls_error else f"{type(exc).__name__}: {exc}",
+                "exception_type": type(exc).__name__,
+                "tls_error": tls_error,
+                "backend_used": "python",
+                "content_bytes": None,
+                "content_text": None,
+            }
+
+    if backend_pref not in {"auto", "python", "curl"}:
+        backend_pref = "auto"
+
+    result = _python_fetch() if backend_pref in {"auto", "python"} else None
+    if result is not None and result["ok"]:
+        return result
+    if backend_pref == "python":
+        return result or {}
+
+    if backend_pref == "curl" or (backend_pref == "auto" and bool(result and result.get("tls_error"))):
+        try:
+            body, backend = _curl_fetch(url, timeout=timeout, allow_no_revoke=allow_no_revoke)
+            return {
+                "ok": True,
+                "source_id": source_id,
+                "url": url,
+                "status_code": 200,
+                "failure_reason": None,
+                "exception_type": None,
+                "tls_error": False,
+                "backend_used": backend,
+                "content_type": "",
+                "content_encoding": "",
+                "content_bytes": body,
+                "content_text": None,
+            }
+        except Exception as exc:  # noqa: BLE001
+            failure = str(exc)
+            tls_error = _is_tls_error(failure)
+            return {
+                "ok": False,
+                "source_id": source_id,
+                "url": url,
+                "status_code": None,
+                "failure_reason": TLS_FAILURE_REASON if tls_error else failure,
+                "exception_type": type(exc).__name__,
+                "tls_error": tls_error,
+                "backend_used": "curl",
+                "content_bytes": None,
+                "content_text": None,
+            }
+
+    return result or {
+        "ok": False,
+        "source_id": source_id,
+        "url": url,
+        "status_code": None,
+        "failure_reason": "unknown_fetch_failure",
+        "exception_type": "RuntimeError",
+        "tls_error": False,
+        "backend_used": "python",
+        "content_bytes": None,
+        "content_text": None,
+    }
+
+
+def parse_rss_items(content: bytes, content_type: str = "", content_encoding: str = "") -> list[dict[str, str]]:
+    data = content
+    ctype = str(content_type or "").lower()
+    cenc = str(content_encoding or "").lower()
+    if cenc == "gzip" or data.startswith(b"\x1f\x8b"):
         data = gzip.decompress(data)
     stripped = data.lstrip(b"\xef\xbb\xbf\r\n\t ")
     if not stripped:
         raise ValueError("empty feed response")
     if not stripped.startswith(b"<"):
-        guessed = mimetypes.guess_extension(content_type.split(";", 1)[0].strip()) if content_type else None
-        detail = f"content-type={content_type}" if content_type else "response does not start with XML"
+        guessed = mimetypes.guess_extension(ctype.split(";", 1)[0].strip()) if ctype else None
+        detail = f"content-type={ctype}" if ctype else "response does not start with XML"
         if guessed:
             detail = f"{detail}, guessed_extension={guessed}"
         raise ValueError(f"non-XML feed response ({detail})")
@@ -559,6 +690,17 @@ def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
             }
         )
     return records
+
+
+def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
+    payload = fetch_feed_payload("unknown", url, timeout=timeout)
+    if not payload.get("ok"):
+        raise RuntimeError(str(payload.get("failure_reason") or "feed_fetch_failed"))
+    return parse_rss_items(
+        payload.get("content_bytes") or b"",
+        content_type=str(payload.get("content_type") or ""),
+        content_encoding=str(payload.get("content_encoding") or ""),
+    )
 
 
 def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | None = None) -> tuple[bool, str]:
@@ -860,16 +1002,55 @@ def collect_gaza_sources(
             "source_tier": source.source_tier,
             "source_state": source.source_state,
         }
-        try:
-            items = fetch_rss_items(source.url)
-            diag["raw_items"] = len(items)
-            stage_counts["raw_candidates"] += len(items)
-        except (urllib.error.URLError, TimeoutError, ET.ParseError, OSError, ValueError) as exc:
-            reason = f"{type(exc).__name__}: {exc}"
+        fetch = fetch_feed_payload(source.source_id, source.url)
+        diag["backend_used"] = str(fetch.get("backend_used") or "python")
+        diag["tls_error"] = bool(fetch.get("tls_error"))
+        if not fetch.get("ok"):
+            reason = str(fetch.get("failure_reason") or "feed_fetch_failed")
+            if diag["tls_error"] and reason == TLS_FAILURE_REASON:
+                reason = "tls_certificate_verification_failed (environment-sensitive)"
             warnings.append(f"{source.source_id}: {reason}")
-            failed_source_ids.append({"source_id": source.source_id, "reason": reason})
+            failed_source_ids.append(
+                {
+                    "source_id": source.source_id,
+                    "reason": reason,
+                    "status_code": fetch.get("status_code"),
+                    "tls_error": bool(fetch.get("tls_error")),
+                    "backend_used": str(fetch.get("backend_used") or "python"),
+                    "exception_type": fetch.get("exception_type"),
+                }
+            )
             diag["status"] = "failed"
             diag["error"] = reason
+            diag["status_code"] = fetch.get("status_code")
+            diag["exception_type"] = fetch.get("exception_type")
+            provider_diagnostics.append(diag)
+            continue
+        try:
+            items = parse_rss_items(
+                fetch.get("content_bytes") or b"",
+                content_type=str(fetch.get("content_type") or ""),
+                content_encoding=str(fetch.get("content_encoding") or ""),
+            )
+            diag["raw_items"] = len(items)
+            stage_counts["raw_candidates"] += len(items)
+        except (TimeoutError, ET.ParseError, OSError, ValueError) as exc:
+            reason = f"{type(exc).__name__}: {exc}"
+            warnings.append(f"{source.source_id}: {reason}")
+            failed_source_ids.append(
+                {
+                    "source_id": source.source_id,
+                    "reason": reason,
+                    "status_code": fetch.get("status_code"),
+                    "tls_error": False,
+                    "backend_used": str(fetch.get("backend_used") or "python"),
+                    "exception_type": type(exc).__name__,
+                }
+            )
+            diag["status"] = "failed"
+            diag["error"] = reason
+            diag["status_code"] = fetch.get("status_code")
+            diag["exception_type"] = type(exc).__name__
             provider_diagnostics.append(diag)
             continue
         for item in items:

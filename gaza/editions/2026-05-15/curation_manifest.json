@@ -1,12 +1,12 @@
 [
   {
-    "story_id": "gaza-story-2026-05-13-001",
-    "title": "Gaza sisters win prize for turning rubble into reusable bricks",
-    "summary": "Displaced teenagers Farah and Tala wanted to 'turn destruction into something useful'.",
+    "story_id": "gaza-story-2026-05-15-001",
+    "title": "New York Times defends journalist after Israel threatens to sue",
+    "summary": "Israel's prime minister says he has ordered legal action over an article which alleged Israeli security officials raped Palestinian detainees.",
     "category": "conflict",
     "score": 40,
     "scoring_reasons": [
-      "displacement",
+      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
@@ -15,27 +15,27 @@
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
-      "displacement": 8,
+      "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
+      "accountability_legal": 8,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-13-bbc-middle-east-4901a2700118"
+      "gaza-2026-05-15-bbc-middle-east-0c4fa20f02d5"
     ],
     "source_ids": [
-      "gaza-2026-05-13-bbc-middle-east-4901a2700118"
+      "gaza-2026-05-15-bbc-middle-east-0c4fa20f02d5"
     ],
     "source_urls": [
-      "https://www.bbc.com/news/articles/ce8p7vngmp3o?at_medium=RSS&at_campaign=rss"
+      "https://www.bbc.com/news/articles/c9wedpk155jo?at_medium=RSS&at_campaign=rss"
     ],
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-15T15:55:21.502177+00:00",
+    "generated_at": "2026-05-15T17:09:15.737359+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"

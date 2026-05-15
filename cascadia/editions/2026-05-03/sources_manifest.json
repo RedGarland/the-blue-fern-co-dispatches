@@ -1,18 +1,18 @@
 [
   {
-    "source_record_id": "src-03be2eb7e6fc2e1c",
-    "source_id": "gdelt",
-    "title": "Pangborn Airport Adds Portland Flights Starting Oct . 3 | Columbia Basin",
-    "url": "https://www.yoursourceone.com/columbia_basin/wenatchee-valleys-pangborn-airport-adds-portland-flights-via-alaska-airlines-starting-oct-3/article_98e68817-60e4-4a93-b399-cb4d57e4c178.html",
-    "publisher": "yoursourceone.com",
-    "published_at": "2026-04-29T21:15:00Z",
-    "retrieved_at": "2026-05-10T23:35:15.897960+00:00",
+    "source_record_id": "src-11e01ac2ee956518",
+    "source_id": "washington-state-standard-feed",
+    "title": "Two friends plan a 90-mile kindness walk in western Washington",
+    "url": "https://washingtonstatestandard.com/2026/05/03/two-friends-plan-a-90-mile-kindness-walk-in-western-washington",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-03T16:12:54Z",
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-43438ab1d80e"
+      "story-51f60cd0c67e"
     ],
     "claim_ids": [
-      "story-43438ab1d80e"
+      "story-51f60cd0c67e"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -22,35 +22,35 @@
     "coverage_start": "2026-04-27",
     "coverage_end": "2026-05-03",
     "coverage_label": "Apr 27\u2013May 3, 2026",
-    "region_scope": "OR",
-    "category_hint": "Transportation",
-    "source_type": "historical_search",
-    "provider_id": "gdelt",
-    "provider_name": "GDELT 2.1 Document API",
-    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
     "search_start_date": "2026-04-27",
     "search_end_date": "2026-05-03",
     "region_terms_matched": [
-      "portland"
+      "washington"
     ],
-    "state_hint": "OR",
-    "reliability_tier": "unknown",
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-1f2b6234aa32eb7d",
-    "source_id": "boise-state-public-radio-rss",
-    "title": "Wyoming celebrates 'nuclear renaissance' as feds approve license for a new reactor",
-    "url": "https://www.boisestatepublicradio.org/news/2026-05-01/wyoming-celebrates-nuclear-renaissance-as-feds-approve-license-for-a-new-reactor",
-    "publisher": "Boise State Public Radio News RSS",
-    "published_at": "2026-05-02T04:01:00Z",
-    "retrieved_at": "2026-05-10T23:35:15.897960+00:00",
+    "source_record_id": "src-2dc4ffff4048e7ea",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "Medicaid contract is stalled after a lawsuit. Now, Idaho officials are delaying privatization.",
+    "url": "https://idahocapitalsun.com/2026/04/30/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-04-30T10:15:07Z",
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-bed3e820a369"
+      "story-1975ff247cbe"
     ],
     "claim_ids": [
-      "story-bed3e820a369"
+      "story-1975ff247cbe"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -65,30 +65,30 @@
     "source_type": "rss",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
-    "query_used": "https://www.boisestatepublicradio.org/index.rss",
+    "query_used": "https://idahocapitalsun.com/feed/",
     "search_start_date": "2026-04-27",
     "search_end_date": "2026-05-03",
     "region_terms_matched": [
-      "boise"
+      "idaho"
     ],
     "state_hint": "ID",
-    "reliability_tier": "public-media",
+    "reliability_tier": "reputable-regional-media",
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-480ae6027db43339",
-    "source_id": "gdelt",
-    "title": "Washington Scenic State Park In The Columbia River Gorge Is The Perfect Stop For Water Recreation",
-    "url": "https://www.islands.com/2156088/spring-creek-hatchery-state-park-washington-columbia-river-gorge-national-scenic-area-perfect-water-recreation",
-    "publisher": "islands.com",
-    "published_at": "2026-04-28T02:45:00Z",
-    "retrieved_at": "2026-05-10T23:35:15.897960+00:00",
+    "source_record_id": "src-5fb4004118fcd42d",
+    "source_id": "washington-state-standard-feed",
+    "title": "No timeline yet for reopening damaged stretch of North Cascades Highway",
+    "url": "https://washingtonstatestandard.com/briefs/no-timeline-yet-for-reopening-damaged-stretch-of-north-cascades-highway",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-01T23:57:18Z",
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-224f89d4d5e1"
+      "story-a59af3730fcf"
     ],
     "claim_ids": [
-      "story-224f89d4d5e1"
+      "story-a59af3730fcf"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -99,34 +99,110 @@
     "coverage_end": "2026-05-03",
     "coverage_label": "Apr 27\u2013May 3, 2026",
     "region_scope": "WA",
-    "category_hint": "Infrastructure",
-    "source_type": "historical_search",
-    "provider_id": "gdelt",
-    "provider_name": "GDELT 2.1 Document API",
-    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "category_hint": "transportation",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
     "search_start_date": "2026-04-27",
     "search_end_date": "2026-05-03",
     "region_terms_matched": [
       "washington"
     ],
     "state_hint": "WA",
-    "reliability_tier": "unknown",
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-8c78785478347270",
-    "source_id": "gdelt",
-    "title": "Between Seattle And Portland Is Washington Lesser - Known Lake State Park With Idyllic Fishing And Camping",
-    "url": "https://www.islands.com/2154259/ike-kinswa-state-park-washington-between-tacoma-portland-fishing-spots-camping",
-    "publisher": "islands.com",
-    "published_at": "2026-04-29T02:30:00Z",
-    "retrieved_at": "2026-05-10T23:35:15.897960+00:00",
+    "source_record_id": "src-bf028459a1c8c5e4",
+    "source_id": "portland-public-alerts",
+    "title": "Wildfire",
+    "url": "https://www.publicalerts.org/wildfire",
+    "publisher": "Portland Public Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-d45e113ab29a"
+      "story-7dfd23c0456d"
     ],
     "claim_ids": [
-      "story-d45e113ab29a"
+      "story-7dfd23c0456d"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026",
+    "region_scope": "OR",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://www.publicalerts.org/",
+    "search_start_date": "2026-04-27",
+    "search_end_date": "2026-05-03",
+    "region_terms_matched": [
+      "portland"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-c915c046ef8dc944",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+    "url": "https://idahocapitalsun.com/2026/05/01/repub/utahs-heading-into-an-especially-dangerous-wildfire-season",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-05-01T18:09:25Z",
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-7075b00bddec"
+    ],
+    "claim_ids": [
+      "story-7075b00bddec"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-10",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026",
+    "region_scope": "ID",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://idahocapitalsun.com/feed/",
+    "search_start_date": "2026-04-27",
+    "search_end_date": "2026-05-03",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-eec952826319a124",
+    "source_id": "washington-state-standard-feed",
+    "title": "I served my country, but it\u2019s leaving me high and dry",
+    "url": "https://washingtonstatestandard.com/2026/05/01/i-served-my-country-but-its-leaving-me-high-and-dry",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-01T20:47:18Z",
+    "retrieved_at": "2026-05-14T22:15:17.430788+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-7875770095c1"
+    ],
+    "claim_ids": [
+      "story-7875770095c1"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -137,21 +213,18 @@
     "coverage_end": "2026-05-03",
     "coverage_label": "Apr 27\u2013May 3, 2026",
     "region_scope": "WA",
-    "category_hint": "Transportation",
-    "source_type": "historical_search",
-    "provider_id": "gdelt",
-    "provider_name": "GDELT 2.1 Document API",
-    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "category_hint": "housing",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
     "search_start_date": "2026-04-27",
     "search_end_date": "2026-05-03",
     "region_terms_matched": [
-      "washington",
-      "seattle",
-      "tacoma",
-      "portland"
+      "washington"
     ],
     "state_hint": "WA",
-    "reliability_tier": "unknown",
-    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   }
 ]

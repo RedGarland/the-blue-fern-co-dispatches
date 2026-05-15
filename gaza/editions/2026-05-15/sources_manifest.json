@@ -1,0 +1,47 @@
+[
+  {
+    "source_record_id": "gaza-2026-05-15-bbc-middle-east-0c4fa20f02d5",
+    "source_id": "gaza-2026-05-15-bbc-middle-east-0c4fa20f02d5",
+    "title": "New York Times defends journalist after Israel threatens to sue",
+    "url": "https://www.bbc.com/news/articles/c9wedpk155jo?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/c9wedpk155jo?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-15T16:30:31+00:00",
+    "retrieved_at": "2026-05-15T17:09:13.892065+00:00",
+    "summary_or_snippet": "Israel's prime minister says he has ordered legal action over an article which alleged Israeli security officials raped Palestinian detainees.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-15",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-15-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "bbc|new york times defends journalist after israel threatens to sue",
+    "title_fingerprint": "new york times defends journalist after israel threatens to sue",
+    "claim_fingerprint": "bbc|new york times defends journalist after israel threatens to sue|conflict"
+  }
+]

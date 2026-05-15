@@ -40,6 +40,7 @@ sources:
     reliability_tier: official_primary
     update_frequency: annual
     enabled: true
+    source_state: enabled
     notes: valid
 """
 
@@ -151,3 +152,9 @@ def test_checker_script_write_report(work_root):
     assert report_path.exists()
     payload = json.loads(report_path.read_text(encoding="utf-8"))
     assert payload and payload[0]["source_id"] == "usda-snap"
+
+
+def test_invalid_source_state_is_rejected(work_root):
+    _write_registry(work_root, _minimal_valid_registry().replace("source_state: enabled", "source_state: bad_state"))
+    errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
+    assert any("invalid source_state" in error for error in errors)

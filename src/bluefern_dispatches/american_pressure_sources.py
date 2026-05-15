@@ -24,6 +24,12 @@ REQUIRED_FIELDS = {
     "enabled",
     "notes",
 }
+ALLOWED_SOURCE_STATES = {
+    "enabled",
+    "manual_only",
+    "diagnostics_only",
+    "disabled",
+}
 ALLOWED_PILLARS = {
     "food_pressure",
     "health_access_pressure",
@@ -31,6 +37,7 @@ ALLOWED_PILLARS = {
     "environmental_pressure",
     "local_system_strain",
     "policy_implementation",
+    "financial_distress_pressure",
 }
 ALLOWED_RELIABILITY_TIERS = {
     "official_primary",
@@ -61,6 +68,7 @@ class SourceCheckResult:
     status_code: int | None
     failure_reason: str | None
     checked_at: str
+    source_state: str
 
 
 def _utc_now() -> str:
@@ -161,6 +169,13 @@ def validate_registry_sources(sources: list[dict[str, Any]]) -> list[str]:
         source_type = str(source.get("source_type") or "").strip()
         if not source_type:
             errors.append(f"{prefix} has empty source_type")
+        source_state = str(source.get("source_state") or ("enabled" if enabled else "disabled")).strip()
+        if source_state not in ALLOWED_SOURCE_STATES:
+            errors.append(f"{prefix} has invalid source_state: {source_state!r}")
+        if source_state == "enabled" and enabled is not True:
+            errors.append(f"{prefix} source_state is enabled but enabled is not true")
+        if source_state in {"manual_only", "diagnostics_only", "disabled"} and enabled is True:
+            errors.append(f"{prefix} source_state is {source_state} but enabled is true")
         url = str(source.get("url") or "").strip()
         if not _is_valid_url(url):
             errors.append(f"{prefix} has malformed URL: {url!r}")
@@ -218,6 +233,7 @@ def build_source_health_report(
             status_code=status_code,
             failure_reason=failure_reason,
             checked_at=checked,
+            source_state=str(source.get("source_state") or ("enabled" if enabled else "disabled")),
         )
         report.append(row.__dict__)
     return report

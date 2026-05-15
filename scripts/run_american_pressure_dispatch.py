@@ -9,6 +9,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +45,43 @@ REQUIRED_FIELDS = {
     "source_type",
     "summary_or_snippet",
     "reliability_tier",
+}
+PUBLIC_PRESSURE_KEYWORDS = {
+    "job",
+    "jobs",
+    "layoff",
+    "layoffs",
+    "worker",
+    "workers",
+    "hospital",
+    "healthcare",
+    "clinic",
+    "food",
+    "supplier",
+    "grocery",
+    "housing",
+    "rent",
+    "mortgage",
+    "utility",
+    "utilities",
+    "rural",
+    "household",
+    "consumer",
+    "county",
+    "district",
+    "service",
+    "services",
+    "employer",
+    "employment",
+}
+INVESTOR_ONLY_KEYWORDS = {
+    "shareholder",
+    "bondholder",
+    "equity holder",
+    "equityholders",
+    "investor presentation",
+    "capital structure optimization",
+    "eps guidance",
 }
 
 
@@ -111,18 +149,28 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
     warnings: list[str] = []
     errors: list[str] = []
     seen_ids: set[str] = set()
+    seen_keys: set[tuple[str, str]] = set()
+    diagnostics = {
+        "sources_attempted": len(records),
+        "candidates_found": 0,
+        "candidates_accepted": 0,
+        "rejected_investor_only": 0,
+        "rejected_no_public_pressure_angle": 0,
+        "rejected_duplicate_or_stale": 0,
+    }
     for index, record in enumerate(records, start=1):
         missing = sorted(field for field in REQUIRED_FIELDS if not str(record.get(field) or "").strip())
         if missing:
             errors.append(f"source record {index} missing required fields: {', '.join(missing)}")
             continue
+        diagnostics["candidates_found"] += 1
         source_record_id = str(record.get("source_record_id") or "").strip()
         source_id = str(record.get("source_id") or source_record_id).strip()
         if not source_id:
             errors.append(f"source record {index} missing required source_id/source_record_id")
             continue
         if source_id in seen_ids:
-            errors.append(f"source record {index} has duplicate source_id: {source_id}")
+            diagnostics["rejected_duplicate_or_stale"] += 1
             continue
         seen_ids.add(source_id)
         url = str(record.get("url") or "").strip()
@@ -137,25 +185,93 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
         if not category_hint:
             errors.append(f"source record {index} missing category_hint/pillar")
             continue
+        title = str(record["title"]).strip()
+        summary = str(record["summary_or_snippet"]).strip()
+        combined_text = f"{title} {summary}".lower()
+        host = (urlsplit(url).netloc or "").lower()
+        dedupe_key = (host, title.lower())
+        if dedupe_key in seen_keys:
+            diagnostics["rejected_duplicate_or_stale"] += 1
+            continue
+        seen_keys.add(dedupe_key)
+        if any(term in combined_text for term in INVESTOR_ONLY_KEYWORDS):
+            diagnostics["rejected_investor_only"] += 1
+            continue
+        is_bankruptcy_story = any(
+            term in combined_text
+            for term in ("bankrupt", "bankruptcy", "chapter 11", "chapter 7", "chapter 13", "insolvency")
+        )
+        has_public_pressure_angle = any(term in combined_text for term in PUBLIC_PRESSURE_KEYWORDS) or (
+            "debt" in combined_text and any(term in combined_text for term in ("household", "consumer"))
+        )
+        if is_bankruptcy_story and not has_public_pressure_angle and "uscourts.gov" not in host:
+            diagnostics["rejected_no_public_pressure_angle"] += 1
+            continue
+        pillar = str(record.get("pillar") or "").strip()
+        signal_family = str(record.get("signal_family") or "").strip()
+        bankruptcy_subtype = str(record.get("bankruptcy_subtype") or "").strip()
+        if is_bankruptcy_story:
+            pillar = "financial_distress_pressure"
+            signal_family, bankruptcy_subtype = classify_bankruptcy_signal(
+                title=title,
+                summary=summary,
+                category_hint=category_hint,
+                source_type=str(record["source_type"]).strip(),
+            )
+        diagnostics["candidates_accepted"] += 1
         normalized.append(
             {
                 "source_record_id": source_record_id,
                 "source_id": source_id,
-                "title": str(record["title"]).strip(),
+                "title": title,
                 "url": url,
                 "publisher": str(record["publisher"]).strip(),
                 "published_at": str(record["published_at"]).strip(),
                 "retrieved_at": str(record["retrieved_at"]).strip(),
-                "summary_or_snippet": str(record["summary_or_snippet"]).strip(),
+                "summary_or_snippet": summary,
                 "source_type": str(record["source_type"]).strip(),
                 "region_scope": region_scope,
                 "category_hint": category_hint,
+                "pillar": pillar,
+                "signal_family": signal_family,
+                "bankruptcy_subtype": bankruptcy_subtype,
+                "is_official_filings_data": bool("uscourts.gov" in host and any(t in combined_text for t in ("bankruptcy", "filings"))),
                 "reliability_tier": str(record["reliability_tier"]).strip(),
                 "edition_date": edition_date,
                 "dispatch_slug": DISPATCH_SLUG,
             }
         )
+    warnings.append(f"bankruptcy_diagnostics={json.dumps(diagnostics, sort_keys=True)}")
     return normalized, warnings, errors
+
+
+def classify_bankruptcy_signal(*, title: str, summary: str, category_hint: str, source_type: str) -> tuple[str, str]:
+    text = f"{title} {summary} {category_hint} {source_type}".lower()
+    if any(t in text for t in ("hospital", "healthcare", "clinic")):
+        return "local_service_disruption_bankruptcy", "healthcare"
+    if any(t in text for t in ("food", "grocery", "supplier")):
+        return "local_service_disruption_bankruptcy", "food_system"
+    if any(t in text for t in ("housing", "real estate", "rent")):
+        return "local_service_disruption_bankruptcy", "housing"
+    if any(t in text for t in ("job", "jobs", "layoff", "employer", "worker")):
+        return "employer_bankruptcy_job_risk", "employer_jobs"
+    if "rural" in text:
+        return "local_service_disruption_bankruptcy", "rural_services"
+    if any(t in text for t in ("chapter 13", "household repayment", "consumer filing")):
+        return "chapter_13_household_repayment", "consumer"
+    if any(t in text for t in ("consumer bankruptcy", "household debt")):
+        return "consumer_bankruptcy_pressure", "consumer"
+    if any(t in text for t in ("small business", "main street")):
+        return "small_business_distress", "small_business"
+    if "chapter 7" in text:
+        return "chapter_7_liquidation", "business"
+    if "chapter 11" in text:
+        return "chapter_11_restructuring", "business"
+    if any(t in text for t in ("county", "district filings", "rate")):
+        return "county_bankruptcy_rate", "consumer"
+    if "business" in text or "corporate" in text:
+        return "business_bankruptcy_pressure", "business"
+    return "bankruptcy_filings", "consumer"
 
 
 def _category_to_section(value: str) -> str:
@@ -170,6 +286,8 @@ def _category_to_section(value: str) -> str:
         return "environmental-pressure"
     if "policy" in normalized:
         return "policy-implementation"
+    if "financial" in normalized or "distress" in normalized or "bankrupt" in normalized:
+        return "financial-distress-pressure"
     return "local-system-strain"
 
 
@@ -181,7 +299,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
                 "story_id": f"american-pressure-story-{edition_date}-{index:03d}",
                 "title": source["title"],
                 "summary": source["summary_or_snippet"],
-                "category": _category_to_section(source["category_hint"]),
+                "category": _category_to_section(str(source.get("pillar") or source["category_hint"])),
                 "score": 100 - index,
                 "scoring_reasons": ["Included because a complete project-local manual source record was provided."],
                 "included_in_public_summary": True,
@@ -210,15 +328,43 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
         )
     else:
         chunks.append("<p>No source-backed signal in this edition.</p>")
-    chunks.append("<h2>Stories</h2>")
+    section_titles = {
+        "food-pressure": "Food Pressure",
+        "health-access-pressure": "Health Access Pressure",
+        "household-cost-pressure": "Household Cost Pressure",
+        "environmental-pressure": "Environmental Pressure",
+        "financial-distress-pressure": "Financial Distress",
+        "policy-implementation": "Policy Implementation",
+        "local-system-strain": "Local System Strain",
+    }
+    stories_by_category: dict[str, list[dict[str, Any]]] = {}
     for story in stories:
-        source = source_by_id[story["source_record_ids"][0]]
-        chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
-        chunks.append(f"<p>{html.escape(story['summary'])}</p>")
-        chunks.append(
-            f'<p><em>Source: <a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> '
-            f'({html.escape(source["publisher"])})</em></p></article>'
-        )
+        stories_by_category.setdefault(story["category"], []).append(story)
+    chunks.append("<h2>Stories</h2>")
+    for category in (
+        "food-pressure",
+        "health-access-pressure",
+        "household-cost-pressure",
+        "environmental-pressure",
+        "financial-distress-pressure",
+        "policy-implementation",
+        "local-system-strain",
+    ):
+        items = stories_by_category.get(category, [])
+        chunks.append(f"<h3>{html.escape(section_titles[category])}</h3>")
+        if not items:
+            chunks.append("<p>No source-backed signal in this edition.</p>")
+            continue
+        for story in items:
+            source = source_by_id[story["source_record_ids"][0]]
+            chunks.append(f"<article><h4>{html.escape(story['title'])}</h4>")
+            chunks.append(f"<p>{html.escape(story['summary'])}</p>")
+            if source.get("is_official_filings_data"):
+                chunks.append("<p><strong>Official filings data:</strong></p>")
+            chunks.append(
+                f'<p><em>Source: <a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> '
+                f'({html.escape(source["publisher"])})</em></p></article>'
+            )
     chunks.append("<h2>Source Note</h2>")
     chunks.append("<p>This edition is generated only from project-local manual source records for the requested date.</p>")
     body = f"""{header(DISPATCH_NAME, "../../", "../../archive.html", "/american-pressure/")}

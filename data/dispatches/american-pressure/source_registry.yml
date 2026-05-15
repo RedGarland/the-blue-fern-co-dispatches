@@ -9,6 +9,7 @@ sources:
     reliability_tier: official_primary
     update_frequency: annual
     enabled: true
+    source_state: enabled
     notes: Official USDA FNS research page for SNAP household characteristic reports.
 
   - source_id: usda-fns-snap-data-tables
@@ -21,6 +22,7 @@ sources:
     reliability_tier: official_primary
     update_frequency: monthly
     enabled: true
+    source_state: enabled
     notes: Official USDA SNAP program participation and benefits data tables.
 
   - source_id: cms-medicaid-chip-enrollment
@@ -33,6 +35,7 @@ sources:
     reliability_tier: official_primary
     update_frequency: monthly
     enabled: true
+    source_state: enabled
     notes: National and state Medicaid and CHIP enrollment reporting.
 
   - source_id: noaa-ncei-monthly-climate-report
@@ -45,6 +48,7 @@ sources:
     reliability_tier: official_primary
     update_frequency: monthly
     enabled: true
+    source_state: enabled
     notes: Official monthly climate indicators and narrative summaries.
 
   - source_id: us-drought-monitor
@@ -57,6 +61,7 @@ sources:
     reliability_tier: institutional
     update_frequency: weekly
     enabled: true
+    source_state: enabled
     notes: Institutional drought condition map and weekly status updates.
 
   - source_id: todo-household-cost-source
@@ -69,6 +74,7 @@ sources:
     reliability_tier: context_only
     update_frequency: TBD
     enabled: false
+    source_state: disabled
     notes: TODO: add a stable official or institutional household cost source per project conventions.
 
   - source_id: todo-local-system-strain-source
@@ -81,6 +87,7 @@ sources:
     reliability_tier: context_only
     update_frequency: TBD
     enabled: false
+    source_state: disabled
     notes: TODO: add stable local-system strain source with clear method and national coverage relevance.
 
   - source_id: todo-policy-implementation-source
@@ -93,4 +100,44 @@ sources:
     reliability_tier: context_only
     update_frequency: TBD
     enabled: false
+    source_state: disabled
     notes: TODO: add stable policy implementation tracker source before enabling.
+
+  - source_id: us-courts-bankruptcy-filings-statistics
+    name: U.S. Courts Bankruptcy Filings Statistics
+    url: https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics
+    publisher: Administrative Office of the U.S. Courts
+    pillar: financial_distress_pressure
+    geography: US
+    source_type: official_statistics_page
+    reliability_tier: official_primary
+    update_frequency: quarterly
+    enabled: true
+    source_state: enabled
+    notes: Official national bankruptcy filings baseline including chapter and business/nonbusiness breakdowns.
+
+  - source_id: us-courts-bankruptcy-data-visualizations
+    name: U.S. Courts Bankruptcy Data Visualizations
+    url: https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables
+    publisher: Administrative Office of the U.S. Courts
+    pillar: financial_distress_pressure
+    geography: US
+    source_type: official_data_visualization
+    reliability_tier: official_primary
+    update_frequency: periodic
+    enabled: true
+    source_state: enabled
+    notes: Official judiciary reporting and visuals for bankruptcy filing trends and chapter mix.
+
+  - source_id: reuters-business-bankruptcy-impact
+    name: Reuters Bankruptcy Public-Impact Tracker
+    url: https://www.reuters.com/world/us/
+    publisher: Reuters
+    pillar: financial_distress_pressure
+    geography: US
+    source_type: reputable_reporting
+    reliability_tier: reputable_reporting
+    update_frequency: daily
+    enabled: false
+    source_state: manual_only
+    notes: Manual-only event layer for verified US bankruptcy stories with jobs, services, healthcare, housing, food, or rural-system impact.

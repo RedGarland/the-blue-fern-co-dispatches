@@ -487,6 +487,18 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
         }
     else:
         result["latest_collection_report"] = None
+    source_health_path = find_latest_file(root / "output" / "dispatches" / "gaza" / "source_health", "gaza_source_health_*.json")
+    source_health = read_json(source_health_path) if source_health_path else None
+    result["latest_source_health_report_path"] = str(source_health_path) if source_health_path else None
+    if isinstance(source_health, dict):
+        result["latest_source_health_report"] = {
+            "providers_enabled": int(source_health.get("providers_enabled") or 0),
+            "providers_attempted": int(source_health.get("providers_attempted") or 0),
+            "providers_successful": int(source_health.get("providers_successful") or 0),
+            "providers_failed": int(source_health.get("providers_failed") or 0),
+        }
+    else:
+        result["latest_source_health_report"] = None
     return result
 
 

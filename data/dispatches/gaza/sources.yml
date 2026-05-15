@@ -4,7 +4,9 @@ tiers:
       name: OCHA OPT Updates
       url: https://www.ochaopt.org/updates/rss.xml
       type: rss
-      enabled: true
+      enabled: false
+      source_state: disabled
+      disabled_reason: "dead endpoint (historical 404)"
       publisher: OCHA
       reliability_tier: official-humanitarian-source
       category_hint: humanitarian
@@ -14,7 +16,9 @@ tiers:
       name: UNRWA Updates
       url: https://www.unrwa.org/newsroom/rss.xml
       type: rss
-      enabled: true
+      enabled: false
+      source_state: manual_only
+      diagnostics_reason: "blocked endpoint (historical 403)"
       publisher: UNRWA
       reliability_tier: official-humanitarian-source
       category_hint: humanitarian
@@ -25,6 +29,7 @@ tiers:
       url: https://www.who.int/rss-feeds/news-english.xml
       type: rss
       enabled: true
+      source_state: enabled
       publisher: WHO
       reliability_tier: official-humanitarian-source
       category_hint: health
@@ -34,7 +39,9 @@ tiers:
       name: UNICEF Press Releases
       url: https://www.unicef.org/press-releases/rss.xml
       type: rss
-      enabled: true
+      enabled: false
+      source_state: disabled
+      disabled_reason: "dead endpoint (historical 404)"
       publisher: UNICEF
       reliability_tier: official-humanitarian-source
       category_hint: humanitarian
@@ -44,7 +51,9 @@ tiers:
       name: WFP Newsroom
       url: https://www.wfp.org/news/rss.xml
       type: rss
-      enabled: true
+      enabled: false
+      source_state: disabled
+      disabled_reason: "dead endpoint (historical 404)"
       publisher: WFP
       reliability_tier: official-humanitarian-source
       category_hint: humanitarian
@@ -55,7 +64,9 @@ tiers:
       name: Reuters Middle East
       url: https://www.reuters.com/world/middle-east/rss
       type: rss
-      enabled: true
+      enabled: false
+      source_state: diagnostics_only
+      diagnostics_reason: "blocked endpoint (historical 401/forbidden)"
       publisher: Reuters
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -65,7 +76,9 @@ tiers:
       name: AP Middle East
       url: https://apnews.com/hub/middle-east/rss
       type: rss
-      enabled: true
+      enabled: false
+      source_state: disabled
+      disabled_reason: "dead endpoint (historical 404)"
       publisher: Associated Press
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -76,6 +89,7 @@ tiers:
       url: https://feeds.bbci.co.uk/news/world/middle_east/rss.xml
       type: rss
       enabled: true
+      source_state: enabled
       publisher: BBC News
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -86,6 +100,7 @@ tiers:
       url: https://www.theguardian.com/world/rss
       type: rss
       enabled: true
+      source_state: enabled
       publisher: The Guardian
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -96,6 +111,7 @@ tiers:
       url: https://www.aljazeera.com/xml/rss/all.xml
       type: rss
       enabled: true
+      source_state: enabled
       publisher: Al Jazeera
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -106,7 +122,9 @@ tiers:
       name: Haaretz Israel News
       url: https://www.haaretz.com/srv/haaretz-rss
       type: rss
-      enabled: true
+      enabled: false
+      source_state: disabled
+      disabled_reason: "dead endpoint (historical 404)"
       publisher: Haaretz
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -116,7 +134,9 @@ tiers:
       name: Times of Israel
       url: https://www.timesofisrael.com/feed/
       type: rss
-      enabled: true
+      enabled: false
+      source_state: manual_only
+      diagnostics_reason: "blocked endpoint (historical 403)"
       publisher: Times of Israel
       reliability_tier: reported-public-source
       category_hint: conflict
@@ -127,7 +147,9 @@ tiers:
       name: Manual Supplements
       url: data/dispatches/gaza/sources/YYYY-MM-DD/manual_sources.json
       type: manual
-      enabled: true
+      enabled: false
+      source_state: manual_only
+      diagnostics_reason: "manual entry inventory only"
       publisher: Blue Fern Dispatch Records
       reliability_tier: editorial-record
       category_hint: manual

@@ -345,6 +345,12 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
         provider_failures = list(gaza_collection.get("provider_failures") or [])
         flags["gaza_undercollection_review"] = raw_candidates == 0 or kept_candidates == 0 or bool(provider_failures)
+    gaza_health = gaza.get("latest_source_health_report") or {}
+    if isinstance(gaza_health, dict) and gaza_health:
+        enabled = int(gaza_health.get("providers_enabled") or 0)
+        failed = int(gaza_health.get("providers_failed") or 0)
+        if enabled > 0 and failed >= max(1, (enabled + 1) // 2):
+            flags["gaza_undercollection_review"] = True
 
     blocked_reasons: list[str] = []
     review_reasons: list[str] = []

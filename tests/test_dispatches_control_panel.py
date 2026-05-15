@@ -336,6 +336,18 @@ def test_gaza_undercollection_sets_review():
     assert any("under-collection" in reason.lower() for reason in health["review_reasons"])
 
 
+def test_gaza_source_health_most_enabled_fail_sets_review():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_source_health_report"] = {
+        "providers_enabled": 6,
+        "providers_attempted": 6,
+        "providers_successful": 2,
+        "providers_failed": 4,
+    }
+    health = cp.classify_health(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+
+
 def test_cascadia_shows_public_story_count_and_candidate_pool():
     summary = cp.summarize_status_for_gui(_base_status())
     text = cp.format_main_summary_text(summary)

@@ -2,11 +2,13 @@ import json
 import shutil
 import uuid
 import gzip
+import urllib.error
 from pathlib import Path
 
 import pytest
 
 from bluefern_dispatches import gaza_sources
+from scripts import check_gaza_sources
 
 
 def write_config(root: Path) -> Path:
@@ -725,3 +727,101 @@ def test_low_relevance_symbolic_sports_item_is_downgraded():
     assert by_title["Football star waves Palestinian flag after final"]["relevance_band"] == "low"
     assert by_title["Aid convoy reaches Gaza hospitals after ceasefire talks"]["relevance_band"] == "core"
     assert by_title["Aid convoy reaches Gaza hospitals after ceasefire talks"]["candidate_score"] > by_title["Football star waves Palestinian flag after final"]["candidate_score"]
+
+
+def test_disabled_diagnostics_manual_states_skipped_in_collection(work_root, monkeypatch):
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: disabled-src
+    name: Disabled
+    url: https://example.com/disabled.xml
+    type: rss
+    enabled: false
+    source_state: disabled
+    publisher: Disabled
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: diag-src
+    name: Diag
+    url: https://example.com/diag.xml
+    type: rss
+    enabled: false
+    source_state: diagnostics_only
+    publisher: Diag
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: manual-src
+    name: Manual
+    url: https://example.com/manual.xml
+    type: rss
+    enabled: false
+    source_state: manual_only
+    publisher: Manual
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: enabled-src
+    name: Enabled
+    url: https://example.com/enabled.xml
+    type: rss
+    enabled: true
+    source_state: enabled
+    publisher: Enabled
+    reliability_tier: reported-public-source
+    category_hint: humanitarian
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_rss_items",
+        lambda url: [{"title": "Gaza aid update", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00+00:00", "summary_or_snippet": "aid"}] if url.endswith("enabled.xml") else pytest.fail("only enabled source should be fetched"),
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 1
+    assert result["stage_counts"]["providers_attempted"] == 1
+    assert len(result["skipped_providers"]) == 3
+
+
+def test_health_checker_recommendations_for_404_and_403_401(monkeypatch):
+    class S:
+        def __init__(self, source_id: str, source_state: str = "enabled", url: str = "https://x"):
+            self.source_id = source_id
+            self.source_tier = "tier"
+            self.source_state = source_state
+            self.url = url
+            self.type = "rss"
+
+    monkeypatch.setattr(check_gaza_sources, "load_sources_config", lambda _p: [S("s404"), S("s403"), S("s401"), S("ok")])
+
+    def fake_fetch(url: str):
+        if "s404" in url:
+            raise urllib.error.HTTPError(url, 404, "Not Found", hdrs=None, fp=None)
+        if "s403" in url:
+            raise urllib.error.HTTPError(url, 403, "Forbidden", hdrs=None, fp=None)
+        if "s401" in url:
+            raise urllib.error.HTTPError(url, 401, "Unauthorized", hdrs=None, fp=None)
+        return [{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}]
+
+    monkeypatch.setattr(check_gaza_sources, "fetch_rss_items", fake_fetch)
+    monkeypatch.setattr(
+        check_gaza_sources,
+        "load_sources_config",
+        lambda _p: [
+            S("s404", url="https://x/s404"),
+            S("s403", url="https://x/s403"),
+            S("s401", url="https://x/s401"),
+            S("ok", url="https://x/ok"),
+        ],
+    )
+    report = check_gaza_sources.build_report()
+    by_id = {row["source_id"]: row for row in report["providers"]}
+    assert by_id["s404"]["recommendation"] == "disabled_dead_source"
+    assert by_id["s403"]["recommendation"] == "manual_only_or_diagnostics_only"
+    assert by_id["s401"]["recommendation"] == "manual_only_or_diagnostics_only"
+    assert by_id["ok"]["status"] == "ok"

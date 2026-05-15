@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import ssl
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from bluefern_dispatches.gaza_sources import collect_gaza_sources, filter_recent_duplicate_sources
+from bluefern_dispatches.gaza_sources import fetch_rss_items, load_sources_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,58 +18,93 @@ def _stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
 
-def _audit_path() -> Path:
-    return ROOT / "output" / "dispatches" / "gaza" / "source_collection" / f"gaza_collection_audit_{_stamp()}.json"
+def _report_path() -> Path:
+    return ROOT / "output" / "dispatches" / "gaza" / "source_health" / f"gaza_source_health_{_stamp()}.json"
 
 
-def build_report(edition_date: str) -> dict[str, Any]:
-    collected = collect_gaza_sources(ROOT, edition_date, max_sources=50, min_sources=0, output_filename="manual_sources.json", prefer_manual=False)
-    candidates = list(collected.get("sources") or [])
-    kept, dedupe_report = filter_recent_duplicate_sources(ROOT, edition_date, candidates, lookback_days=7)
-    providers = collected.get("provider_diagnostics") or []
-    rejected = collected.get("rejected_by_reason") or {}
-    missing_published = sum(1 for item in candidates if not str(item.get("published_at") or "").strip())
-    wrapper_count = sum(1 for item in candidates if str(item.get("wrapper_url") or "").strip())
-    direct_count = len(candidates) - wrapper_count
-    publishers: dict[str, int] = {}
-    for item in candidates:
-        name = str(item.get("publisher") or "unknown").strip() or "unknown"
-        publishers[name] = int(publishers.get(name, 0)) + 1
-    top_publishers = sorted(({"publisher": k, "count": v} for k, v in publishers.items()), key=lambda row: row["count"], reverse=True)[:10]
-    recommendations: list[str] = []
-    if wrapper_count > direct_count:
-        recommendations.append("Increase direct publisher or official feeds; Google wrapper URLs dominate.")
-    if missing_published:
-        recommendations.append("Prioritize providers that emit parseable published_at values.")
-    if int(dedupe_report.get("suppressed_candidate_count", 0)) >= int(dedupe_report.get("input_candidate_count", 0)) and int(dedupe_report.get("input_candidate_count", 0)) > 0:
-        recommendations.append("Collection found candidates but all were deduped; expand provider diversity.")
-    if not recommendations:
-        recommendations.append("Collection balance looks acceptable; continue monitoring.")
+def _recommendation_for_failure(status_code: int | None, reason: str) -> str:
+    lowered = reason.lower()
+    if status_code == 404 or "404" in lowered:
+        return "disabled_dead_source"
+    if status_code in {401, 403} or "401" in lowered or "403" in lowered:
+        return "manual_only_or_diagnostics_only"
+    if "certificate_verify_failed" in lowered or "tls" in lowered or "ssl" in lowered:
+        return "diagnostics_only_tls_blocked"
+    return "investigate_endpoint"
+
+
+def _probe_source(source: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "source_id": source.source_id,
+        "tier": source.source_tier,
+        "state": source.source_state,
+        "url": source.url,
+        "status": "skipped",
+        "status_code": None,
+        "failure_reason": None,
+        "raw_candidates": 0,
+        "recommendation": None,
+    }
+    if source.source_state != "enabled":
+        row["failure_reason"] = f"state:{source.source_state}"
+        return row
+    if source.type != "rss":
+        row["failure_reason"] = f"unsupported_type:{source.type}"
+        return row
+    try:
+        items = fetch_rss_items(source.url)
+        row["status"] = "ok"
+        row["raw_candidates"] = len(items)
+        if len(items) == 0:
+            row["status"] = "no_candidates"
+            row["failure_reason"] = "feed_returned_zero_items"
+    except urllib.error.HTTPError as exc:
+        row["status"] = "failed"
+        row["status_code"] = int(exc.code)
+        row["failure_reason"] = f"HTTPError: {exc}"
+        row["recommendation"] = _recommendation_for_failure(int(exc.code), str(exc))
+    except urllib.error.URLError as exc:
+        row["status"] = "failed"
+        row["failure_reason"] = f"URLError: {exc}"
+        row["recommendation"] = _recommendation_for_failure(None, str(exc))
+    except ssl.SSLError as exc:
+        row["status"] = "failed"
+        row["failure_reason"] = f"SSLError: {exc}"
+        row["recommendation"] = _recommendation_for_failure(None, str(exc))
+    except Exception as exc:  # noqa: BLE001
+        row["status"] = "failed"
+        row["failure_reason"] = f"{type(exc).__name__}: {exc}"
+        row["recommendation"] = _recommendation_for_failure(None, str(exc))
+    return row
+
+
+def build_report() -> dict[str, Any]:
+    definitions = load_sources_config(ROOT / "data" / "dispatches" / "gaza" / "sources.yml")
+    rows = [_probe_source(source) for source in definitions]
+    enabled = [row for row in rows if row["state"] == "enabled"]
+    attempted = [row for row in enabled if row["status"] in {"ok", "no_candidates", "failed"}]
+    successes = [row for row in attempted if row["status"] == "ok"]
+    failures = [row for row in attempted if row["status"] == "failed"]
+    skipped = [row for row in rows if row["status"] == "skipped"]
     return {
-        "edition_date": edition_date,
-        "source_feeds_checked": [row.get("url") for row in providers if isinstance(row, dict) and row.get("url")],
-        "source_providers_attempted": providers,
-        "candidates_found": len(candidates),
-        "candidates_accepted": len(kept),
-        "candidates_rejected_by_reason": rejected,
-        "candidates_suppressed_by_dedupe": dedupe_report.get("suppressed_candidate_count", 0),
-        "candidates_missing_published_at": missing_published,
-        "google_news_wrapper_url_count": wrapper_count,
-        "direct_canonical_url_count": direct_count,
-        "top_publishers_found": top_publishers,
-        "recommended_fixes": recommendations,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "providers_total": len(rows),
+        "providers_enabled": len(enabled),
+        "providers_attempted": len(attempted),
+        "providers_successful": len(successes),
+        "providers_failed": len(failures),
+        "providers_skipped_by_state_or_type": len(skipped),
+        "providers": rows,
     }
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Read-only Gaza source diagnostics.")
-    parser.add_argument("--date", help="Edition date YYYY-MM-DD (default: UTC today).")
-    parser.add_argument("--write-report", action="store_true", help="Write JSON report under output/dispatches/gaza/source_collection.")
+    parser = argparse.ArgumentParser(description="Gaza source health checker.")
+    parser.add_argument("--write-report", action="store_true", help="Write report under output/dispatches/gaza/source_health")
     args = parser.parse_args()
-    edition_date = args.date or datetime.now(timezone.utc).date().isoformat()
-    report = build_report(edition_date)
+    report = build_report()
     if args.write_report:
-        out = _audit_path()
+        out = _report_path()
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(report, indent=2), encoding="utf-8")
         report["report_path"] = str(out)
@@ -77,3 +114,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

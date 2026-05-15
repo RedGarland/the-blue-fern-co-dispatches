@@ -115,6 +115,7 @@ HIGH_RELEVANCE_KEYWORDS = (
     "icj",
 )
 LOW_RELEVANCE_KEYWORDS = ("sports", "football", "soccer", "flag", "culture", "symbolic")
+SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
 
 
 @dataclass(frozen=True)
@@ -130,6 +131,9 @@ class SourceDefinition:
     region_scope: str
     source_tier: str = "unspecified"
     source_group: str = "unspecified"
+    source_state: str = "enabled"
+    disabled_reason: str = ""
+    diagnostics_reason: str = ""
 
 
 def _looks_like_google_news_wrapper(url: str) -> bool:
@@ -460,19 +464,28 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
         source_type = str(item.get("type") or "").strip().lower()
         if source_type == "rss_or_page":
             source_type = "rss"
+        source_state = str(item.get("source_state") or "").strip().lower()
+        if not source_state:
+            source_state = "enabled" if bool(item.get("enabled")) else "disabled"
+        if source_state not in SOURCE_STATES:
+            raise ValueError(f"sources.yml item {index} has unsupported source_state: {source_state}")
+        enabled = source_state == "enabled"
         definitions.append(
             SourceDefinition(
                 source_id=str(item.get("source_id") or item.get("id") or "").strip(),
                 name=str(item.get("name") or "").strip(),
                 url=str(item.get("url") or "").strip(),
                 type=source_type,
-                enabled=bool(item.get("enabled")),
+                enabled=enabled,
                 publisher=str(item.get("publisher") or item.get("name") or "").strip(),
                 reliability_tier=str(item.get("reliability_tier") or "").strip(),
                 category_hint=str(item.get("category_hint") or "").strip(),
                 region_scope=str(item.get("region_scope") or "").strip(),
                 source_tier=str(item.get("source_tier") or item.get("tier") or "unspecified").strip(),
                 source_group=str(item.get("source_group") or item.get("group") or "unspecified").strip(),
+                source_state=source_state,
+                disabled_reason=str(item.get("disabled_reason") or "").strip(),
+                diagnostics_reason=str(item.get("diagnostics_reason") or "").strip(),
             )
         )
     return definitions
@@ -787,9 +800,13 @@ def collect_gaza_sources(
     lookback_start = date.fromisoformat(edition_date) - timedelta(days=2)
     lookback_end = date.fromisoformat(edition_date)
     provider_diagnostics: list[dict[str, Any]] = []
+    skipped_providers: list[dict[str, Any]] = []
+    working_providers: list[str] = []
     rejected_by_reason: dict[str, int] = {}
+    enabled_provider_count = sum(1 for item in definitions if item.source_state == "enabled" and item.type == "rss")
     stage_counts: dict[str, int] = {
         "registry_sources": len(definitions),
+        "enabled_providers_configured": enabled_provider_count,
         "providers_attempted": 0,
         "providers_successful": 0,
         "raw_candidates": 0,
@@ -803,15 +820,46 @@ def collect_gaza_sources(
     for source in definitions:
         if len(records) >= max_sources:
             break
-        stage_counts["providers_attempted"] += 1
-        if not source.enabled:
-            provider_diagnostics.append({"source_id": source.source_id, "status": "skipped", "reason": "disabled"})
+        if source.source_state != "enabled":
+            skip_reason = source.source_state
+            if source.source_state == "disabled" and source.disabled_reason:
+                skip_reason = f"disabled:{source.disabled_reason}"
+            elif source.source_state == "diagnostics_only" and source.diagnostics_reason:
+                skip_reason = f"diagnostics_only:{source.diagnostics_reason}"
+            skipped = {
+                "source_id": source.source_id,
+                "source_state": source.source_state,
+                "status": "skipped",
+                "reason": skip_reason,
+                "source_tier": source.source_tier,
+                "url": source.url,
+            }
+            provider_diagnostics.append(skipped)
+            skipped_providers.append(skipped)
             continue
         if source.type != "rss":
-            provider_diagnostics.append({"source_id": source.source_id, "status": "skipped", "reason": f"unsupported_type:{source.type}"})
+            skipped = {
+                "source_id": source.source_id,
+                "source_state": source.source_state,
+                "status": "skipped",
+                "reason": f"unsupported_type:{source.type}",
+                "source_tier": source.source_tier,
+                "url": source.url,
+            }
+            provider_diagnostics.append(skipped)
+            skipped_providers.append(skipped)
             continue
+        stage_counts["providers_attempted"] += 1
         source_record_start = len(records)
-        diag: dict[str, Any] = {"source_id": source.source_id, "url": source.url, "status": "ok", "raw_items": 0, "accepted": 0}
+        diag: dict[str, Any] = {
+            "source_id": source.source_id,
+            "url": source.url,
+            "status": "ok",
+            "raw_items": 0,
+            "accepted": 0,
+            "source_tier": source.source_tier,
+            "source_state": source.source_state,
+        }
         try:
             items = fetch_rss_items(source.url)
             diag["raw_items"] = len(items)
@@ -851,6 +899,7 @@ def collect_gaza_sources(
             diag["accepted"] = int(diag.get("accepted", 0)) + 1
         if len(records) > source_record_start:
             stage_counts["providers_successful"] += 1
+            working_providers.append(source.source_id)
         if len(records) == source_record_start:
             failed_source_ids.append({"source_id": source.source_id, "reason": f"no matching Gaza items for {edition_date}"})
             if diag.get("status") == "ok":
@@ -879,4 +928,9 @@ def collect_gaza_sources(
         "lookback_end_date": lookback_end.isoformat(),
         "provider_diagnostics": provider_diagnostics,
         "rejected_by_reason": rejected_by_reason,
+        "providers_configured": [item.source_id for item in definitions if item.source_state == "enabled" and item.type == "rss"],
+        "providers_attempted": [row.get("source_id") for row in provider_diagnostics if row.get("status") != "skipped"],
+        "providers_successful": sorted(set(working_providers)),
+        "skipped_providers": skipped_providers,
+        "working_providers": sorted(set(working_providers)),
     }

@@ -307,6 +307,19 @@ def test_gaza_collection_report_zero_candidates_is_warning_not_critical(tmp_path
     assert not any("collection found zero candidates" in e for e in status["critical_errors"])
 
 
+def test_gaza_source_health_summary_is_included(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "output" / "dispatches" / "gaza" / "source_health" / "gaza_source_health_20260515_000000.json",
+        {"providers_enabled": 4, "providers_attempted": 4, "providers_successful": 1, "providers_failed": 3, "providers": []},
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    report = status["dispatches"]["gaza"]["latest_source_health_report"]
+    assert report["providers_enabled"] == 4
+    assert report["providers_failed"] == 3
+
+
 def test_gaza_latest_public_counts_prefer_manifest_and_report_1_1(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-14/">2026-05-14</a>')

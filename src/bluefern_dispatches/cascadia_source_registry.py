@@ -173,15 +173,20 @@ def source_operational_state(source: dict[str, Any]) -> str:
     if source.get("enabled") is False:
         return "disabled"
     status = str(source.get("status") or "").strip().lower()
-    if status in {"disabled", "diagnostics_only", "degraded"}:
+    if status in {"disabled", "diagnostics_only", "manual_only", "degraded"}:
         return status
     if source.get("diagnostics_only") is True:
         return "diagnostics_only"
+    if source.get("manual_only") is True:
+        return "manual_only"
     return "enabled"
 
 
-def enabled_sources(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [source for source in sources if source_operational_state(source) != "disabled"]
+def enabled_sources(sources: list[dict[str, Any]], include_diagnostics: bool = False) -> list[dict[str, Any]]:
+    allowed_states = {"enabled", "degraded"}
+    if include_diagnostics:
+        allowed_states.update({"diagnostics_only", "manual_only"})
+    return [source for source in sources if source_operational_state(source) in allowed_states]
 
 
 def parse_datetime(value: str | None) -> datetime | None:
@@ -658,11 +663,18 @@ def normalize_registry_item(item: dict[str, Any], source: dict[str, Any], week_s
     return record, warning
 
 
-def collect_registry_sources(root: Path, week_start: date, week_end: date, retrieved_at: str | None = None, refresh_cache: bool = False) -> dict[str, Any]:
+def collect_registry_sources(
+    root: Path,
+    week_start: date,
+    week_end: date,
+    retrieved_at: str | None = None,
+    refresh_cache: bool = False,
+    include_diagnostics: bool = False,
+) -> dict[str, Any]:
     root = root.resolve()
     retrieved_at = retrieved_at or utc_now()
     registry = load_source_registry(root)
-    sources = enabled_sources(registry)
+    sources = enabled_sources(registry, include_diagnostics=include_diagnostics)
     records: list[dict[str, Any]] = []
     warnings: list[str] = []
     errors: list[str] = []

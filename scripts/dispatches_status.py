@@ -582,21 +582,11 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
                 continue
             source_id = str(diag.get("source_id") or "unknown")
             status_code = diag.get("status_code")
-            failure_reason = str(diag.get("failure_reason") or "unknown")
-            for err in diag.get("errors") or []:
-                err_text = str(err).lower()
-                if "403" in err_text:
-                    failure_reason = "http_403"
-                elif "404" in err_text:
-                    failure_reason = "http_404"
-                elif "getaddrinfo" in err_text or "dns" in err_text:
-                    failure_reason = "dns_failure"
-                elif "timeout" in err_text:
-                    failure_reason = "timeout"
-                elif "tls" in err_text or "certificate" in err_text or "revocation" in err_text:
-                    failure_reason = "tls_or_certificate"
-            if status_code in (403, 404):
-                failure_reason = f"http_{status_code}"
+            failure_reason = _normalize_failure_reason(
+                status_code if isinstance(status_code, int) else None,
+                str(diag.get("failure_reason") or ""),
+                list(diag.get("errors") or []),
+            )
             if diag.get("errors"):
                 failing_sources[(source_id, failure_reason)] += 1
                 status_key: int | str = status_code if isinstance(status_code, int) else "unknown"
@@ -611,6 +601,7 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
                 "status_code": status,
                 "reason": reason,
                 "count": count,
+                "recommended_action": _recommended_source_action_from_count(reason, count),
             }
             for (source_id, status, reason), count in failing_source_status.most_common()
         ]
@@ -620,10 +611,16 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
                 "status_code": status,
                 "reason": reason,
                 "count": count,
+                "recommended_action": _recommended_source_action_from_count(reason, count),
             }
             for (source_id, status, reason), count in failing_source_status.most_common()
             if count >= 2
         ]
+    persistent_failure_type_counts: Counter[str] = Counter()
+    for item in repeated_failure_patterns:
+        reason = str(item.get("reason") or "")
+        if reason in {"http_401", "http_403", "http_404", "dns_failure", "tls_or_certificate", "timeout", "rate_limit", "http_429"}:
+            persistent_failure_type_counts[reason] += int(item.get("count") or 0)
 
     result["target_fetch_success_rate"] = 0.75
     result["weak_date_warning_count"] = weak_count
@@ -632,10 +629,14 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
     result["top_failing_source_ids"] = top_failing
     result["registry_fetch_errors_by_source_status"] = registry_fetch_errors_by_source_status
     result["repeated_registry_failures"] = repeated_failure_patterns
+    result["persistent_failure_type_counts"] = dict(sorted(persistent_failure_type_counts.items()))
     result["weak_date_warnings_by_source_id"] = warning_counts_by_source
     result["latest_weekly_quality_report_path"] = str(quality_path) if quality_path else None
     result["latest_registry_source_report_path"] = str(registry_report_path) if registry_report_path else None
-    result["recommended_next_action"] = "Disable/deprioritize dead registry sources and reduce weak-date warning noise."
+    result["recommended_next_action"] = _recommended_overall_cascadia_action(
+        registry_fetch_error_count=registry_fetch_error_count,
+        repeated_failure_patterns=repeated_failure_patterns,
+    )
     return result
 
 
@@ -707,16 +708,57 @@ def summarize_american_pressure(root: Path, pages_root: Path) -> dict[str, Any]:
     return result
 
 
+def _normalize_failure_reason(status_code: int | None, failure_reason: str, errors: list[Any]) -> str:
+    reason = str(failure_reason or "").strip().lower()
+    if status_code in {401, 403, 404, 429}:
+        return f"http_{status_code}"
+    joined = " ".join(str(err).lower() for err in errors)
+    if "401" in joined:
+        return "http_401"
+    if "403" in joined:
+        return "http_403"
+    if "404" in joined:
+        return "http_404"
+    if "429" in joined or "rate limit" in joined:
+        return "rate_limit"
+    if "getaddrinfo" in joined or "dns" in joined:
+        return "dns_failure"
+    if "tls" in joined or "certificate" in joined or "revocation" in joined:
+        return "tls_or_certificate"
+    if "timed out" in joined or "timeout" in joined:
+        return "timeout"
+    return reason or "unknown"
+
+
+def _recommended_source_action_from_count(reason: str, count: int) -> str:
+    persistent = count >= 2
+    if reason in {"http_404", "dns_failure"}:
+        return "disable_or_diagnostics_only" if persistent else "diagnostics_and_monitor"
+    if reason in {"http_401", "http_403"}:
+        return "manual_or_diagnostics_only" if persistent else "diagnostics_and_monitor"
+    if reason == "tls_or_certificate":
+        return "environment_sensitive_manual_review"
+    if reason in {"timeout", "rate_limit", "http_429"}:
+        return "degraded_or_diagnostics_only_if_persistent" if persistent else "diagnostics_and_monitor"
+    return "diagnostics_and_monitor"
+
+
+def _recommended_overall_cascadia_action(registry_fetch_error_count: int, repeated_failure_patterns: list[dict[str, Any]]) -> str:
+    if registry_fetch_error_count <= 1 and not repeated_failure_patterns:
+        return "Avoid overreacting to a single fetch error; keep sources enabled and improve diagnostics/reporting."
+    return "Disable/deprioritize dead registry sources and reduce weak-date warning noise."
+
+
 def _recommended_source_action(failure_reason: str, status_code: int | None, weak_date_count: int, accepted_count: int) -> str:
     reason = failure_reason.lower()
     if status_code == 404 or reason == "http_404" or reason == "dns_failure":
         return "disable_dead_source"
-    if status_code == 403 or reason == "http_403":
-        return "diagnostics_only"
+    if status_code in {401, 403} or reason in {"http_401", "http_403"}:
+        return "manual_or_diagnostics_only"
     if "timeout" in reason or "rate" in reason or reason == "blocked":
         return "keep_but_summarize_warnings"
     if "tls" in reason or "certificate" in reason or "revocation" in reason:
-        return "needs_manual_review"
+        return "environment_sensitive_manual_review"
     if accepted_count == 0 and weak_date_count > 0:
         return "needs_date_parser"
     if weak_date_count > 0:
@@ -762,19 +804,11 @@ def build_cascadia_source_reliability_audit(root: Path) -> dict[str, Any]:
             status_code = diag.get("status_code")
             if isinstance(status_code, int):
                 latest_status_code[source_id] = status_code
-            failure_reason = str(diag.get("failure_reason") or "")
-            for err in diag.get("errors") or []:
-                err_text = str(err).lower()
-                if "403" in err_text:
-                    failure_reason = "http_403"
-                elif "404" in err_text:
-                    failure_reason = "http_404"
-                elif "getaddrinfo" in err_text or "dns" in err_text:
-                    failure_reason = "dns_failure"
-                elif "timeout" in err_text:
-                    failure_reason = "timeout"
-                elif "tls" in err_text or "certificate" in err_text or "revocation" in err_text:
-                    failure_reason = "tls_or_certificate"
+            failure_reason = _normalize_failure_reason(
+                status_code if isinstance(status_code, int) else None,
+                str(diag.get("failure_reason") or ""),
+                list(diag.get("errors") or []),
+            )
             if failure_reason:
                 latest_failure_reason[source_id] = failure_reason
     rows: list[dict[str, Any]] = []

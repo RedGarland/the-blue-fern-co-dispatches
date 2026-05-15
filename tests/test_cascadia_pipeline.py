@@ -2181,7 +2181,52 @@ sources:
     week_start, week_end = containing_week("2026-04-28")
     result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
     assert result["records"] == []
-    assert result["report"]["registry_sources_run"] == 1
+    assert result["report"]["registry_sources_run"] == 0
+
+
+def test_registry_manual_only_source_skipped_in_normal_collection(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: manual-only-feed
+    name: Manual Only Feed
+    tier: 2
+    source_type: rss
+    url: https://example.com/feed.xml
+    enabled: true
+    status: manual_only
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [infrastructure]
+    reliability_tier: test
+    publisher: Example
+    refresh_mode: archive_limited
+""",
+        encoding="utf-8",
+    )
+    feed = """<?xml version="1.0"?><rss><channel>
+<item><title>Washington infrastructure update</title><link>https://example.com/story</link><pubDate>Tue, 28 Apr 2026 12:00:00 GMT</pubDate><description>Infrastructure systems update.</description></item>
+</channel></rss>"""
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return feed.encode("utf-8")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", lambda request, timeout: FakeResponse())
+    week_start, week_end = containing_week("2026-04-28")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+    assert result["records"] == []
+    assert result["report"]["registry_sources_run"] == 0
 
 
 def test_registry_date_basis_does_not_treat_retrieved_at_as_published_date(cascadia_work_root, monkeypatch):

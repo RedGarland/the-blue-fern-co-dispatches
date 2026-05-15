@@ -499,7 +499,50 @@ def test_build_cascadia_source_reliability_audit_classifies_dead_and_diagnostics
     audit = dispatches_status.build_cascadia_source_reliability_audit(root)
     actions = {row["source_id"]: row["recommended_action"] for row in audit["sources"]}
     assert actions["dead-source"] == "disable_dead_source"
-    assert actions["blocked-source"] == "diagnostics_only"
+    assert actions["blocked-source"] == "manual_or_diagnostics_only"
+
+
+def test_cascadia_single_registry_error_recommendation_avoids_overreaction(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"
+    week.mkdir(parents=True, exist_ok=True)
+    _json(week / "weekly_quality_report.json", {"warnings": ["registry source fetch error: HTTP Error 404: Not Found"]})
+    _json(
+        week / "registry_source_report.json",
+        {
+            "diagnostics": [{"source_id": "one-off", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"}],
+            "records_by_source_id": {},
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    cascadia = status["dispatches"]["cascadia"]
+    assert "Avoid overreacting to a single fetch error" in cascadia["recommended_next_action"]
+    assert cascadia["repeated_registry_failures"] == []
+
+
+def test_cascadia_registry_fetch_summary_has_recommended_actions_and_tls_classification(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"
+    week.mkdir(parents=True, exist_ok=True)
+    _json(
+        week / "registry_source_report.json",
+        {
+            "diagnostics": [
+                {"source_id": "dead", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"},
+                {"source_id": "dead", "status_code": 404, "errors": ["HTTP Error 404: Not Found"], "failure_reason": "http_404"},
+                {"source_id": "tlsy", "status_code": None, "errors": ["certificate verify failed"], "failure_reason": ""},
+            ],
+            "records_by_source_id": {},
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    cascadia = status["dispatches"]["cascadia"]
+    grouped = cascadia["registry_fetch_errors_by_source_status"]
+    assert grouped[0]["source_id"] == "dead"
+    assert grouped[0]["recommended_action"] == "disable_or_diagnostics_only"
+    assert any(item["reason"] == "tls_or_certificate" and item["recommended_action"] == "environment_sensitive_manual_review" for item in grouped)
 
 
 def test_parse_git_status_classifies_gaza_dated_runtime_paths_as_generated(monkeypatch, tmp_path):

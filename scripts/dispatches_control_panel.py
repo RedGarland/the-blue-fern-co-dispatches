@@ -337,6 +337,7 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "manual_source_missing_ap": not bool(american.get("latest_manual_source_exists_for_latest_public_edition")),
         "gaza_stale_unlinked_folders": bool(gaza.get("stale_or_unlinked_edition_dates")),
         "gaza_undercollection_review": False,
+        "gaza_high_raw_low_accept_review": False,
         "ap_coverage_gaps_present": bool(_ap_coverage_gaps((american.get("registry_summary") or {}).get("enabled_by_pillar") or {})),
     }
     gaza_collection = gaza.get("latest_collection_report") or {}
@@ -345,6 +346,10 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
         provider_failures = list(gaza_collection.get("provider_failures") or [])
         flags["gaza_undercollection_review"] = raw_candidates == 0 or kept_candidates == 0 or bool(provider_failures)
+        accepted_before = int(gaza_collection.get("accepted_candidate_count_before_dedupe") or 0)
+        if raw_candidates >= 50 and accepted_before <= 2:
+            flags["gaza_undercollection_review"] = True
+            flags["gaza_high_raw_low_accept_review"] = True
         flags["gaza_tls_env_review"] = bool(gaza_collection.get("enabled_auto_all_failed_tls"))
     else:
         flags["gaza_tls_env_review"] = False
@@ -377,6 +382,10 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         if flags.get("gaza_tls_env_review"):
             review_reasons.append(
                 "Enabled Gaza sources were attempted but failed due TLS/certificate verification; check local fetch backend or CA trust."
+            )
+        elif flags.get("gaza_high_raw_low_accept_review"):
+            review_reasons.append(
+                "Gaza collection found many raw items, but relevance filtering accepted few. Review rejected candidate examples."
             )
         else:
             review_reasons.append("Gaza public archive is clean, but collection health indicates possible under-collection.")

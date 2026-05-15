@@ -342,6 +342,25 @@ def test_gaza_tls_all_enabled_fail_adds_environment_warning(tmp_path, monkeypatc
     assert any("failed due TLS/certificate verification" in w for w in status["warnings"])
 
 
+def test_gaza_high_raw_low_accept_adds_review_warning(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "collection_report.json",
+        {
+            "edition_date": "2026-05-10",
+            "raw_candidate_count": 135,
+            "accepted_candidate_count_before_dedupe": 2,
+            "kept_after_dedupe": 1,
+            "suppressed_after_dedupe": 1,
+            "providers_attempted": ["guardian-world", "aljazeera-middle-east"],
+            "provider_failures": [],
+        },
+    )
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert any("relevance filtering accepted few" in w for w in status["warnings"])
+
+
 def test_gaza_latest_public_counts_prefer_manifest_and_report_1_1(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-14/">2026-05-14</a>')

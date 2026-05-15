@@ -181,6 +181,20 @@ def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
                         "date_basis": "missing_published_at",
                     }
                 ],
+                "review_candidates": [
+                    {
+                        "source_id": "guardian-world",
+                        "title": "Gaza update in live blog",
+                        "url": "https://example.com/live",
+                        "publisher": "Guardian",
+                        "published_at": "",
+                        "rejection_reason": "rejected_weak_date_basis",
+                        "matched_terms": ["gaza"],
+                        "relevance_band": "low",
+                        "date_basis": "weak_date_basis",
+                        "summary_or_snippet": "Possible relevance",
+                    }
+                ],
                 "provider_diagnostics": [
                     {
                         "source_id": "guardian-world",
@@ -206,6 +220,7 @@ def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
     assert report["rejected_off_topic"] == 3
     assert report["rejected_weak_date"] == 2
     assert len(report["top_rejected_examples"]) == 1
+    assert len(report["review_candidates"]) == 1
     assert report["provider_diagnostics"][0]["items_with_gaza_terms"] == 3
 
 
@@ -236,6 +251,44 @@ def test_zero_story_run_refuses_public_generation(monkeypatch):
     site_edition = work / "output" / "site" / "gaza" / "editions" / "2026-05-11"
     assert result["ok"] is False
     assert not site_edition.exists()
+
+
+def test_review_candidates_never_create_public_story(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-16", [])
+    ctx_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-16" / "source_collection_context.json"
+    ctx_path.parent.mkdir(parents=True, exist_ok=True)
+    ctx_path.write_text(
+        json.dumps(
+            {
+                "providers_configured": ["guardian-world"],
+                "providers_attempted": ["guardian-world"],
+                "providers_successful": [],
+                "provider_failures": [],
+                "review_candidates": [
+                    {
+                        "source_id": "guardian-world",
+                        "title": "Gaza live update",
+                        "url": "https://example.com/live",
+                        "publisher": "Guardian",
+                        "published_at": "",
+                        "rejection_reason": "rejected_low_relevance",
+                        "matched_terms": ["gaza"],
+                        "relevance_band": "low",
+                        "date_basis": "missing_published_at",
+                        "summary_or_snippet": "candidate",
+                    }
+                ],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = run_gaza_dispatch(work, "2026-05-16", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is False
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-16" / "index.html").exists()
 
 
 def test_archive_rss_latest_and_shared_records(monkeypatch):

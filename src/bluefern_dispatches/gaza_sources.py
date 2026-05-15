@@ -994,6 +994,7 @@ def collect_gaza_sources(
     skipped_providers: list[dict[str, Any]] = []
     working_providers: list[str] = []
     rejected_by_reason: dict[str, int] = {}
+    review_candidates: list[dict[str, Any]] = []
     enabled_provider_count = sum(1 for item in definitions if item.source_state == "enabled" and item.type == "rss")
     stage_counts: dict[str, int] = {
         "registry_sources": len(definitions),
@@ -1007,6 +1008,32 @@ def collect_gaza_sources(
 
     def reject(reason: str) -> None:
         rejected_by_reason[reason] = int(rejected_by_reason.get(reason, 0)) + 1
+
+    def _maybe_queue_review(diag: dict[str, Any], reason: str, item: dict[str, str], *, relevance_band: str, date_basis: str) -> None:
+        # Review queue holds rejected-but-possibly-relevant items for operator inspection.
+        # It is diagnostics-only and never auto-published.
+        text = " ".join([clean_feed_text(item.get("title", "")), clean_feed_text(item.get("summary_or_snippet", "")), str(item.get("url") or "")])
+        has_terms = bool(GAZA_TERMS.search(text) or PALESTINE_TERMS.search(text))
+        if not has_terms:
+            return
+        if reason not in {"rejected_low_relevance", "rejected_off_topic", "rejected_missing_published_at", "rejected_weak_date_basis"}:
+            return
+        if len(review_candidates) >= 40:
+            return
+        review_candidates.append(
+            {
+                "source_id": str(diag.get("source_id") or ""),
+                "publisher": str(diag.get("publisher") or ""),
+                "title": clean_feed_text(item.get("title", ""))[:220],
+                "url": str(item.get("url") or "")[:500],
+                "published_at": str(item.get("published_at") or ""),
+                "rejection_reason": reason,
+                "matched_terms": _matched_terms(item),
+                "relevance_band": relevance_band,
+                "date_basis": date_basis,
+                "summary_or_snippet": clean_feed_text(item.get("summary_or_snippet", ""))[:400],
+            }
+        )
 
     def _provider_reject(diag: dict[str, Any], reason: str, item: dict[str, str], *, relevance_band: str = "n/a", date_basis: str = "n/a") -> None:
         by_reason = diag.setdefault("rejected_counts", {})
@@ -1026,6 +1053,7 @@ def collect_gaza_sources(
                     "date_basis": date_basis,
                 }
             )
+        _maybe_queue_review(diag, reason, item, relevance_band=relevance_band, date_basis=date_basis)
 
     for source in definitions:
         if len(records) >= max_sources:
@@ -1063,6 +1091,7 @@ def collect_gaza_sources(
         source_record_start = len(records)
         diag: dict[str, Any] = {
             "source_id": source.source_id,
+            "publisher": source.publisher,
             "url": source.url,
             "status": "ok",
             "raw_items": 0,
@@ -1140,6 +1169,12 @@ def collect_gaza_sources(
         for item in items:
             if len(records) >= max_sources:
                 break
+            # Filtering gates order (pre-dedupe):
+            # 1) missing title/url
+            # 2) topical relevance (off-topic / low relevance)
+            # 3) published_at basis (missing/weak/out-of-window)
+            # 4) normalization integrity
+            # 5) in-run URL dedupe
             title = clean_feed_text(item.get("title", ""))
             url = str(item.get("url") or "").strip()
             summary = clean_feed_text(item.get("summary_or_snippet", ""))
@@ -1238,4 +1273,5 @@ def collect_gaza_sources(
             if isinstance(diag, dict)
             for example in list(diag.get("top_rejected_examples") or [])
         ][:25],
+        "review_candidates": review_candidates[:25],
     }

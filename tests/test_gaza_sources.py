@@ -1116,3 +1116,79 @@ def test_provider_rejection_diagnostics_and_examples_present(work_root, monkeypa
     assert diag["rejected_counts"]["rejected_missing_published_at"] >= 1
     assert len(diag["top_rejected_examples"]) >= 1
     assert len(result["top_rejected_examples"]) >= 1
+
+
+def test_low_relevance_gaza_term_enters_review_queue_not_accepted(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Election live blog: sports star waves Palestinian flag", "url": "https://example.com/sports-live", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "Incidental Gaza mention in unrelated coverage."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    assert len(result["review_candidates"]) >= 1
+    assert result["review_candidates"][0]["rejection_reason"] in {"rejected_low_relevance", "rejected_off_topic"}
+
+
+def test_off_topic_without_gaza_palestine_not_in_review_queue(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Quarterly shipping forecast", "url": "https://example.com/shipping", "published_at": "2026-05-07T10:00:00+00:00", "summary_or_snippet": "No relevant geography."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    assert result["review_candidates"] == []
+
+
+def test_weak_date_but_relevant_enters_review_queue(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([{"title": "Gaza aid corridor update", "url": "https://example.com/gaza-aid", "published_at": "unknown", "summary_or_snippet": "Humanitarian update."}]),
+            "content_text": None,
+        },
+    )
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
+    assert result["source_count"] == 0
+    assert any(item["rejection_reason"] == "rejected_weak_date_basis" for item in result["review_candidates"])

@@ -494,6 +494,7 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
             "providers_attempted": providers_attempted,
             "providers_successful": collection_report.get("providers_successful") or [],
             "no_story_explanation": collection_report.get("no_story_explanation"),
+            "review_candidates": collection_report.get("review_candidates") or [],
             "enabled_auto_providers_attempted": auto_attempted,
             "enabled_auto_tls_failures": tls_failures,
             "enabled_auto_all_failed_tls": bool(auto_attempted) and tls_failures >= len(auto_attempted),
@@ -939,6 +940,11 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         if tls_all_failed:
             warnings.append(
                 "Enabled Gaza sources were attempted but failed due TLS/certificate verification; check local fetch backend or CA trust."
+            )
+        accepted_before = int(gaza_collection.get("accepted_candidate_count_before_dedupe") or 0)
+        if raw >= 50 and accepted_before <= 2:
+            warnings.append(
+                "Gaza collection found many raw items, but relevance filtering accepted few. Review rejected candidate examples."
             )
 
     recommendations = []

@@ -349,6 +349,19 @@ def test_gaza_tls_environment_review_wording():
     assert any("failed due TLS/certificate verification" in reason for reason in health["review_reasons"])
 
 
+def test_gaza_high_raw_low_accepted_review_wording():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "raw_candidate_count": 135,
+        "accepted_candidate_count_before_dedupe": 2,
+        "kept_after_dedupe": 1,
+        "provider_failures": [],
+    }
+    health = cp.classify_health(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+    assert any("relevance filtering accepted few" in reason for reason in health["review_reasons"])
+
+
 def test_gaza_source_health_most_enabled_fail_sets_review():
     raw = _base_status()
     raw["dispatches"]["gaza"]["latest_source_health_report"] = {

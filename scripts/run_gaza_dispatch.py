@@ -258,7 +258,7 @@ def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], source
         chunks.append("<p>No source-backed Gaza stories were generated for this date. Add project-local source records before publishing factual coverage.</p>")
         chunks.append("<h2>Sources</h2><p>No source records were available.</p>")
     chunks.append("<h2>Source Note</h2>")
-    chunks.append("<p>This free public edition is generated only from project-local source records listed in the manifests.</p>")
+    chunks.append("<p>This briefing is based only on saved source records. Each story includes source links so readers can verify where the information came from.</p>")
     body_chunks = "\n    ".join(chunks)
     body = f"""{header(DISPATCH_NAME, "../../", "../../archive.html", "/gaza/")}
   <main class="briefing">

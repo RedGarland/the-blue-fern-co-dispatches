@@ -362,6 +362,20 @@ def test_gaza_source_count_mismatch_is_reported_clearly(tmp_path, monkeypatch):
     assert any("Gaza source count mismatch" in msg for msg in status["critical_errors"])
 
 
+def test_gaza_dedupe_zero_candidates_with_public_story_is_critical(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _write(root / "output" / "site" / "gaza" / "archive.html", '<a href="editions/2026-05-14/">2026-05-14</a>')
+    _write(root / "output" / "site" / "gaza" / "rss.xml", '<a href="editions/2026-05-14/">2026-05-14</a>')
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "edition_manifest.json", {"source_count": 1, "story_count": 1, "errors": []})
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "sources_manifest.json", [{"url": "https://example.com/1"}])
+    _json(root / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "curation_manifest.json", [{"story_id": "s1"}])
+    _write(root / "output" / "site" / "gaza" / "editions" / "2026-05-14" / "index.html", '<a href="https://example.com/1">src</a>')
+    _json(root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-14" / "dedupe_report.json", {"edition_date": "2026-05-14", "input_candidate_count": 0})
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert any("candidates_seen/input_candidate_count is 0" in msg for msg in status["critical_errors"])
+
+
 def test_cascadia_summary_includes_failure_counts_and_top_sources(tmp_path, monkeypatch):
     root, pages = _make_repo(tmp_path)
     week = root / "data" / "dispatches" / "cascadia" / "sources" / "2026-05-04_2026-05-10"

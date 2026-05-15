@@ -1,109 +1,135 @@
-sources:
-  - source_id: reuters-middle-east-rss
-    name: Reuters Middle East
-    url: https://www.reuters.com/world/middle-east/rss
-    type: rss
-    enabled: true
-    publisher: Reuters
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: ap-middle-east-rss
-    name: AP Middle East
-    url: https://apnews.com/hub/middle-east/rss
-    type: rss
-    enabled: true
-    publisher: Associated Press
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: unicef-press-releases
-    name: UNICEF Press Releases
-    url: https://www.unicef.org/press-releases/rss.xml
-    type: rss
-    enabled: true
-    publisher: UNICEF
-    reliability_tier: official-humanitarian-source
-    category_hint: humanitarian
-    region_scope: Gaza
-  - source_id: wfp-newsroom
-    name: WFP Newsroom
-    url: https://www.wfp.org/news/rss.xml
-    type: rss
-    enabled: true
-    publisher: WFP
-    reliability_tier: official-humanitarian-source
-    category_hint: humanitarian
-    region_scope: Gaza
-  - source_id: who-news
-    name: WHO News
-    url: https://www.who.int/rss-feeds/news-english.xml
-    type: rss
-    enabled: true
-    publisher: WHO
-    reliability_tier: official-humanitarian-source
-    category_hint: health
-    region_scope: Gaza
-  - source_id: unrwa-updates
-    name: UNRWA Updates
-    url: https://www.unrwa.org/newsroom/rss.xml
-    type: rss
-    enabled: true
-    publisher: UNRWA
-    reliability_tier: official-humanitarian-source
-    category_hint: humanitarian
-    region_scope: Gaza
-  - source_id: ocha-opt-updates
-    name: OCHA OPT Updates
-    url: https://www.ochaopt.org/updates/rss.xml
-    type: rss
-    enabled: true
-    publisher: OCHA
-    reliability_tier: official-humanitarian-source
-    category_hint: humanitarian
-    region_scope: Gaza
-  - source_id: bbc-middle-east
-    name: BBC Middle East
-    url: https://feeds.bbci.co.uk/news/world/middle_east/rss.xml
-    type: rss
-    enabled: true
-    publisher: BBC News
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: guardian-world
-    name: Guardian World
-    url: https://www.theguardian.com/world/rss
-    type: rss
-    enabled: true
-    publisher: The Guardian
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: aljazeera-middle-east
-    name: Al Jazeera Middle East
-    url: https://www.aljazeera.com/xml/rss/all.xml
-    type: rss
-    enabled: true
-    publisher: Al Jazeera
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: haaretz-israel-news
-    name: Haaretz Israel News
-    url: https://www.haaretz.com/srv/haaretz-rss
-    type: rss
-    enabled: true
-    publisher: Haaretz
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
-  - source_id: times-of-israel-rss
-    name: Times of Israel
-    url: https://www.timesofisrael.com/feed/
-    type: rss
-    enabled: true
-    publisher: Times of Israel
-    reliability_tier: reported-public-source
-    category_hint: conflict
-    region_scope: Gaza
+tiers:
+  official_humanitarian:
+    - source_id: ocha-opt-updates
+      name: OCHA OPT Updates
+      url: https://www.ochaopt.org/updates/rss.xml
+      type: rss
+      enabled: true
+      publisher: OCHA
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+    - source_id: unrwa-updates
+      name: UNRWA Updates
+      url: https://www.unrwa.org/newsroom/rss.xml
+      type: rss
+      enabled: true
+      publisher: UNRWA
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+    - source_id: who-news
+      name: WHO News
+      url: https://www.who.int/rss-feeds/news-english.xml
+      type: rss
+      enabled: true
+      publisher: WHO
+      reliability_tier: official-humanitarian-source
+      category_hint: health
+      region_scope: Gaza
+      source_group: institutional
+    - source_id: unicef-press-releases
+      name: UNICEF Press Releases
+      url: https://www.unicef.org/press-releases/rss.xml
+      type: rss
+      enabled: true
+      publisher: UNICEF
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+    - source_id: wfp-newsroom
+      name: WFP Newsroom
+      url: https://www.wfp.org/news/rss.xml
+      type: rss
+      enabled: true
+      publisher: WFP
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+  wire_and_major_international:
+    - source_id: reuters-middle-east-rss
+      name: Reuters Middle East
+      url: https://www.reuters.com/world/middle-east/rss
+      type: rss
+      enabled: true
+      publisher: Reuters
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: wire
+    - source_id: ap-middle-east-rss
+      name: AP Middle East
+      url: https://apnews.com/hub/middle-east/rss
+      type: rss
+      enabled: true
+      publisher: Associated Press
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: wire
+    - source_id: bbc-middle-east
+      name: BBC Middle East
+      url: https://feeds.bbci.co.uk/news/world/middle_east/rss.xml
+      type: rss
+      enabled: true
+      publisher: BBC News
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major
+    - source_id: guardian-world
+      name: Guardian World
+      url: https://www.theguardian.com/world/rss
+      type: rss
+      enabled: true
+      publisher: The Guardian
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major
+    - source_id: aljazeera-middle-east
+      name: Al Jazeera Middle East
+      url: https://www.aljazeera.com/xml/rss/all.xml
+      type: rss
+      enabled: true
+      publisher: Al Jazeera
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major
+  region_specialist:
+    - source_id: haaretz-israel-news
+      name: Haaretz Israel News
+      url: https://www.haaretz.com/srv/haaretz-rss
+      type: rss
+      enabled: true
+      publisher: Haaretz
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: region-specialist
+    - source_id: times-of-israel-rss
+      name: Times of Israel
+      url: https://www.timesofisrael.com/feed/
+      type: rss
+      enabled: true
+      publisher: Times of Israel
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: region-specialist
+  manual_supplements:
+    - source_id: manual-supplement
+      name: Manual Supplements
+      url: data/dispatches/gaza/sources/YYYY-MM-DD/manual_sources.json
+      type: manual
+      enabled: true
+      publisher: Blue Fern Dispatch Records
+      reliability_tier: editorial-record
+      category_hint: manual
+      region_scope: Gaza
+      source_group: manual

@@ -672,3 +672,56 @@ def test_feed_html_summary_is_cleaned_to_plain_text():
     assert "<a href=" not in cleaned
     assert "Continue reading..." not in cleaned
     assert "'quoted'" in cleaned
+
+
+def test_tiered_sources_yml_loads(work_root):
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """tiers:
+  official_humanitarian:
+    - source_id: ocha
+      name: OCHA
+      url: https://example.com/ocha.xml
+      type: rss
+      enabled: true
+      publisher: OCHA
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+""",
+        encoding="utf-8",
+    )
+    sources = gaza_sources.load_sources_config(path)
+    assert len(sources) == 1
+    assert sources[0].source_tier == "official_humanitarian"
+    assert sources[0].source_group == "institutional"
+
+
+def test_low_relevance_symbolic_sports_item_is_downgraded():
+    ranked = gaza_sources.rank_gaza_candidates(
+        [
+            {
+                "title": "Football star waves Palestinian flag after final",
+                "summary_or_snippet": "Sports celebration with symbolic flag mention.",
+                "category_hint": "culture",
+                "publisher": "Example",
+                "reliability_tier": "reported-public-source",
+                "published_at": "2026-05-07T08:00:00+00:00",
+            },
+            {
+                "title": "Aid convoy reaches Gaza hospitals after ceasefire talks",
+                "summary_or_snippet": "Humanitarian and ceasefire development in Gaza.",
+                "category_hint": "humanitarian",
+                "publisher": "Reuters",
+                "reliability_tier": "reported-public-source",
+                "published_at": "2026-05-07T09:00:00+00:00",
+            },
+        ],
+        "2026-05-07",
+    )
+    by_title = {row["title"]: row for row in ranked}
+    assert by_title["Football star waves Palestinian flag after final"]["relevance_band"] == "low"
+    assert by_title["Aid convoy reaches Gaza hospitals after ceasefire talks"]["relevance_band"] == "core"
+    assert by_title["Aid convoy reaches Gaza hospitals after ceasefire talks"]["candidate_score"] > by_title["Football star waves Palestinian flag after final"]["candidate_score"]

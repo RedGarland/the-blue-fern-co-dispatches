@@ -223,6 +223,27 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
     return stories
 
 
+def _assert_gaza_artifact_consistency(
+    edition_manifest: dict[str, Any],
+    sources_manifest: list[dict[str, Any]],
+    curation_manifest: list[dict[str, Any]],
+    html_rendered: bool,
+) -> list[str]:
+    errors: list[str] = []
+    source_count = int(edition_manifest.get("source_count") or 0)
+    story_count = int(edition_manifest.get("story_count") or 0)
+    public_exposed = bool(edition_manifest.get("public_exposed"))
+    if source_count != len(sources_manifest):
+        errors.append("sources_manifest count does not match edition_manifest.source_count")
+    if story_count != len(curation_manifest):
+        errors.append("curation_manifest count does not match edition_manifest.story_count")
+    if html_rendered and not public_exposed:
+        errors.append("public HTML exists for non-public edition")
+    if public_exposed and (source_count == 0 or story_count == 0):
+        errors.append("public_exposed=true requires non-zero source_count and story_count")
+    return errors
+
+
 def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]]) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
 
@@ -547,10 +568,14 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
     provider_diagnostics = [
         {
-            "provider": "manual_sources_json",
+            "source_id": "manual_sources_json",
+            "source_tier": "manual_supplements",
             "status": "ok" if manual_records else "no_candidates",
-            "raw_items": len(manual_records),
-            "accepted": int(cross_edition_report.get("kept_candidate_count", 0)),
+            "reason": "manual records loaded" if manual_records else "no manual records for date",
+            "raw_candidates": len(manual_records),
+            "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
+            "suppressed_duplicate": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+            "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         }
     ]
     rejected_by_reason = {
@@ -565,11 +590,21 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "normalized_candidates": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
     }
+    low_relevance_survivors = sum(1 for row in normalized if str(row.get("relevance_band") or "") == "low")
+    no_story_explanation = "stories_available"
+    if len(manual_records) == 0:
+        no_story_explanation = "no_candidates_found_from_attempted_providers"
+    elif int(cross_edition_report.get("input_candidate_count", 0)) > 0 and len(normalized) == 0:
+        no_story_explanation = "all_candidates_suppressed_as_duplicates_or_stale"
+    elif low_relevance_survivors > 0 and low_relevance_survivors == len(normalized):
+        no_story_explanation = "only_low_relevance_items_survived"
     collection_report = {
         "edition_date": edition_date,
         "lookback_window_days": 7,
-        "source_providers_attempted": provider_diagnostics,
-        "provider_failures": [],
+        "providers_configured": ["manual_sources_json"],
+        "providers_attempted": ["manual_sources_json"],
+        "providers_successful": ["manual_sources_json"] if manual_records else [],
+        "provider_failures": [] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}],
         "raw_candidate_count": len(manual_records),
         "normalized_candidate_count": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
@@ -577,24 +612,30 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "rejection_counts_by_reason": rejected_by_reason,
         "top_rejected_examples": norm_errors[:5],
-        "no_story_credibility_decision": "",
+        "rejected_off_topic": int(rejected_by_reason.get("normalization_errors", 0)),
+        "rejected_weak_date": 0,
+        "rejected_missing_url_or_title": int(rejected_by_reason.get("normalization_errors", 0)),
+        "suppressed_duplicate": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "final_story_count": 0,
+        "low_relevance_survivors": low_relevance_survivors,
+        "no_story_explanation": no_story_explanation,
+        "no_story_credibility_decision": "no_candidates_found" if no_story_explanation == "no_candidates_found_from_attempted_providers" else no_story_explanation,
         "providers_attempted_count": 1,
         "providers_successful_count": 1 if manual_records else 0,
         "provider_diagnostics": provider_diagnostics,
+        "source_providers_attempted": provider_diagnostics,
         "stage_counts": stage_counts,
         "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),
         "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
     }
-    if collection_report["raw_candidate_count"] == 0:
-        collection_report["no_story_credibility_decision"] = "no_candidates_found"
-    elif collection_report["accepted_candidate_count_before_dedupe"] > 0 and collection_report["kept_after_dedupe"] == 0:
-        collection_report["no_story_credibility_decision"] = "all_candidates_deduped"
-    elif norm_errors:
-        collection_report["no_story_credibility_decision"] = "candidates_rejected"
-    else:
-        collection_report["no_story_credibility_decision"] = "stories_available"
-    write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     stories = curate_stories(normalized, edition_date, generated_at)
+    collection_report["final_story_count"] = len(stories)
+    if len(normalized) > 0 and len(stories) == 0:
+        collection_report["no_story_explanation"] = "all_candidates_rejected_or_deduped_in_curation"
+        collection_report["no_story_credibility_decision"] = "candidates_rejected"
+    elif collection_report["no_story_explanation"] == "all_candidates_suppressed_as_duplicates_or_stale":
+        collection_report["no_story_credibility_decision"] = "all_candidates_deduped"
+    write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
     if len(normalized) == 0:
@@ -603,6 +644,17 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         errors.append("No source-backed Gaza stories survived curation/dedupe; refusing public edition generation.")
     write_json(curated_dir / "curation_manifest.json", stories, dry_run, wrote)
     should_render = render or all_steps
+    if should_render and not errors:
+        html_content = render_gaza_edition(edition_date, stories, normalized)
+        edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
+            root, edition_date, normalized, stories, generated_at, warnings, errors
+        )
+        consistency_errors = _assert_gaza_artifact_consistency(edition_manifest, sources_manifest, curation_manifest, html_rendered=True)
+        if consistency_errors:
+            errors.extend(consistency_errors)
+            edition_manifest["errors"] = list(edition_manifest.get("errors") or []) + consistency_errors
+            edition_manifest["public_exposed"] = False
+            should_render = False
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
@@ -648,6 +700,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
             "warnings": warnings,
             "errors": errors,
         }
+        failed_manifest["errors"] = list(failed_manifest.get("errors") or []) + _assert_gaza_artifact_consistency(
+            failed_manifest, normalized, stories, html_rendered=False
+        )
         dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
         write_json(dispatch_dir / "edition_manifest.json", failed_manifest, dry_run, wrote)
         write_json(dispatch_dir / "sources_manifest.json", normalized, dry_run, wrote)

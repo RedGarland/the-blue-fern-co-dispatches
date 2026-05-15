@@ -91,6 +91,30 @@ RELIABILITY_SCORES = {
     "reported-public-source": 14,
     "editorial-record": 10,
 }
+HIGH_RELEVANCE_KEYWORDS = (
+    "gaza",
+    "aid",
+    "ceasefire",
+    "negotiat",
+    "hostage",
+    "prisoner",
+    "military",
+    "civilian",
+    "displace",
+    "hospital",
+    "famine",
+    "food",
+    "water",
+    "fuel",
+    "unrwa",
+    "ocha",
+    "who",
+    "wfp",
+    "unicef",
+    "icc",
+    "icj",
+)
+LOW_RELEVANCE_KEYWORDS = ("sports", "football", "soccer", "flag", "culture", "symbolic")
 
 
 @dataclass(frozen=True)
@@ -104,6 +128,8 @@ class SourceDefinition:
     reliability_tier: str
     category_hint: str
     region_scope: str
+    source_tier: str = "unspecified"
+    source_group: str = "unspecified"
 
 
 def _looks_like_google_news_wrapper(url: str) -> bool:
@@ -355,6 +381,7 @@ def _minimal_yaml_load(text: str) -> dict[str, Any]:
     """Load the small list-of-maps schema used by data/dispatches/gaza/sources.yml."""
     result: dict[str, Any] = {}
     current_key: str | None = None
+    current_tier: str | None = None
     current_item: dict[str, Any] | None = None
     for raw_line in text.splitlines():
         line = raw_line.rstrip()
@@ -362,7 +389,15 @@ def _minimal_yaml_load(text: str) -> dict[str, Any]:
             continue
         if not line.startswith(" ") and line.endswith(":"):
             current_key = line[:-1].strip()
-            result[current_key] = []
+            result[current_key] = [] if current_key != "tiers" else {}
+            current_tier = None
+            current_item = None
+            continue
+        if current_key == "tiers" and line.startswith("  ") and line.strip().endswith(":") and not line.strip().startswith("- "):
+            current_tier = line.strip()[:-1].strip()
+            tiers = result.setdefault("tiers", {})
+            if isinstance(tiers, dict):
+                tiers[current_tier] = []
             current_item = None
             continue
         stripped = line.strip()
@@ -370,7 +405,16 @@ def _minimal_yaml_load(text: str) -> dict[str, Any]:
             if current_key is None:
                 raise ValueError("YAML item found before a list key")
             current_item = {}
-            result[current_key].append(current_item)
+            if current_key == "tiers":
+                tiers = result.setdefault("tiers", {})
+                if not isinstance(tiers, dict) or not current_tier:
+                    raise ValueError("tiers entry found before tier key")
+                tier_rows = tiers.setdefault(current_tier, [])
+                if not isinstance(tier_rows, list):
+                    raise ValueError("tiers row is not a list")
+                tier_rows.append(current_item)
+            else:
+                result[current_key].append(current_item)
             rest = stripped[2:].strip()
             if rest:
                 key, value = rest.split(":", 1)
@@ -395,6 +439,18 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
     except Exception:
         payload = _minimal_yaml_load(text)
     raw_sources = payload.get("sources") if isinstance(payload, dict) else None
+    if isinstance(payload, dict) and isinstance(payload.get("tiers"), dict):
+        expanded: list[dict[str, Any]] = []
+        for tier_name, entries in payload["tiers"].items():
+            if not isinstance(entries, list):
+                continue
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+                item = dict(entry)
+                item.setdefault("source_tier", str(tier_name))
+                expanded.append(item)
+        raw_sources = list(raw_sources or []) + expanded
     if not isinstance(raw_sources, list):
         raise ValueError("sources.yml must contain a sources list")
     definitions: list[SourceDefinition] = []
@@ -415,6 +471,8 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
                 reliability_tier=str(item.get("reliability_tier") or "").strip(),
                 category_hint=str(item.get("category_hint") or "").strip(),
                 region_scope=str(item.get("region_scope") or "").strip(),
+                source_tier=str(item.get("source_tier") or item.get("tier") or "unspecified").strip(),
+                source_group=str(item.get("source_group") or item.get("group") or "unspecified").strip(),
             )
         )
     return definitions
@@ -572,6 +630,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "region_scope": source.region_scope,
         "category_hint": source.category_hint,
         "reliability_tier": source.reliability_tier,
+        "source_tier": source.source_tier,
+        "source_group": source.source_group,
         "canonical_url_attempted": bool(wrapper_url),
         "canonical_url": canonical_url,
         "canonicalization_status": canonical_status,
@@ -619,9 +679,17 @@ def rank_gaza_candidate(record: dict[str, Any], edition_date: str) -> dict[str, 
     score += date_confidence
 
     ranked = dict(record)
+    lowered = text.lower()
+    high_hits = sum(1 for token in HIGH_RELEVANCE_KEYWORDS if token in lowered)
+    low_hits = sum(1 for token in LOW_RELEVANCE_KEYWORDS if token in lowered)
+    relevance_band = "core" if high_hits > 0 else "peripheral"
+    if low_hits > 0 and high_hits == 0:
+        relevance_band = "low"
+        score = max(0, score - 20)
     ranked["candidate_score"] = int(score)
     ranked["candidate_score_breakdown"] = breakdown
     ranked["ranking_reasons"] = [k for k, v in breakdown.items() if v > 0]
+    ranked["relevance_band"] = relevance_band
     return ranked
 
 

@@ -374,6 +374,7 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
             manifest_payload.get("warnings") if isinstance(manifest_payload, dict) else None
         )
         result["latest_has_visible_source_links"] = bool(extract_links(latest_index)) if latest_index.exists() else False
+        result["latest_index_exists"] = latest_index.exists()
     else:
         result["latest_sources_manifest_path"] = None
         result["latest_source_count"] = None
@@ -381,6 +382,7 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
         result["latest_manifest_errors"] = None
         result["latest_manifest_warnings"] = None
         result["latest_has_visible_source_links"] = False
+        result["latest_index_exists"] = False
 
     dedupe_summary = None
     suppressed_dates: list[str] = []
@@ -441,6 +443,8 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
             zero_source_linked.append(d)
         if story_count == 0:
             zero_story_linked.append(d)
+        if isinstance(manifest, dict) and manifest.get("public_exposed") is False and (site_editions / d / "index.html").exists():
+            zero_story_linked.append(d)
         errors = manifest.get("errors") if isinstance(manifest, dict) else []
         if isinstance(errors, list) and any("No new source-backed Gaza developments after cross-edition dedupe" in str(e) for e in errors):
             dedupe_refusal_linked.append(d)
@@ -476,6 +480,10 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
             "source_providers_attempted": collection_report.get("source_providers_attempted") or [],
             "provider_failures": collection_report.get("provider_failures") or [],
             "no_story_credibility_decision": collection_report.get("no_story_credibility_decision"),
+            "providers_configured": collection_report.get("providers_configured") or [],
+            "providers_attempted": collection_report.get("providers_attempted") or [],
+            "providers_successful": collection_report.get("providers_successful") or [],
+            "no_story_explanation": collection_report.get("no_story_explanation"),
         }
     else:
         result["latest_collection_report"] = None
@@ -882,6 +890,15 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         critical_errors.append("Cascadia transitional dates publicly linked")
     if not gaza.get("latest_has_visible_source_links"):
         critical_errors.append("latest public Gaza edition missing source links")
+    dedupe = gaza.get("latest_dedupe_report") or {}
+    dedupe_seen = dedupe.get("input_candidate_count")
+    if (
+        gaza.get("latest_story_count")
+        and isinstance(dedupe_seen, int)
+        and dedupe_seen == 0
+        and str(dedupe.get("edition_date") or "") == str(gaza.get("latest_public_edition_date") or "")
+    ):
+        critical_errors.append("Gaza dedupe report candidates_seen/input_candidate_count is 0 while public stories exist")
     gaza_collection = gaza.get("latest_collection_report") or {}
     if gaza_collection:
         kept = int(gaza_collection.get("kept_after_dedupe") or 0)

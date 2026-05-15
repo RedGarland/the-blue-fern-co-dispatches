@@ -136,6 +136,22 @@ def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(
     assert report["providers_successful_count"] == 0
     assert report["google_wrapper_count"] == 0
     assert report["canonical_publisher_url_count"] == 0
+    assert report["providers_attempted"] == ["manual_sources_json"]
+    assert report["provider_failures"][0]["source_id"] == "manual_sources_json"
+
+
+def test_collection_report_includes_provider_attempted_success_counts(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-15")
+    result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
+    assert result["ok"] is True
+    assert report["providers_configured"] == ["manual_sources_json"]
+    assert report["providers_attempted"] == ["manual_sources_json"]
+    assert report["providers_successful"] == ["manual_sources_json"]
+    assert report["final_story_count"] >= 1
 
 
 def test_zero_story_run_refuses_public_generation(monkeypatch):

@@ -203,6 +203,7 @@ def _resolve_sources(root: Path, edition_date: str, source_mode: str, max_source
                 "working_providers": list(auto.get("working_providers") or []),
                 "stage_counts": dict(auto.get("stage_counts") or {}),
                 "rejected_by_reason": dict(auto.get("rejected_by_reason") or {}),
+                "top_rejected_examples": list(auto.get("top_rejected_examples") or []),
                 "raw_candidate_count": int((auto.get("stage_counts") or {}).get("raw_candidates") or 0) + (len(manual_rows) if source_mode == "both" else 0),
                 "accepted_candidate_count_before_dedupe": int((auto.get("stage_counts") or {}).get("accepted_before_rank") or 0) + (len(manual_rows) if source_mode == "both" else 0),
                 "enabled_auto_provider_count": int((auto.get("stage_counts") or {}).get("enabled_providers_configured") or 0),

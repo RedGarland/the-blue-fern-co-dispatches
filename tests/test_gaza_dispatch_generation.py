@@ -154,6 +154,61 @@ def test_collection_report_includes_provider_attempted_success_counts(monkeypatc
     assert report["final_story_count"] >= 1
 
 
+def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-15")
+    ctx_path = work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "source_collection_context.json"
+    ctx_path.parent.mkdir(parents=True, exist_ok=True)
+    ctx_path.write_text(
+        json.dumps(
+            {
+                "providers_configured": ["guardian-world"],
+                "providers_attempted": ["guardian-world"],
+                "providers_successful": [],
+                "provider_failures": [],
+                "rejected_by_reason": {"rejected_off_topic": 3, "rejected_missing_published_at": 2},
+                "top_rejected_examples": [
+                    {
+                        "source_id": "guardian-world",
+                        "title": "Live politics blog",
+                        "url": "https://example.com/live",
+                        "published_at": "",
+                        "rejection_reason": "rejected_low_relevance",
+                        "matched_terms": ["gaza"],
+                        "relevance_band": "low",
+                        "date_basis": "missing_published_at",
+                    }
+                ],
+                "provider_diagnostics": [
+                    {
+                        "source_id": "guardian-world",
+                        "raw_items": 10,
+                        "items_with_gaza_terms": 3,
+                        "items_with_palestine_terms": 2,
+                        "items_in_date_window": 4,
+                        "accepted": 1,
+                        "rejected_counts": {"rejected_low_relevance": 3},
+                        "most_common_rejection_reasons": [{"reason": "rejected_low_relevance", "count": 3}],
+                        "top_rejected_examples": [],
+                    }
+                ],
+                "stage_counts": {"raw_candidates": 10, "providers_attempted": 1, "providers_successful": 0},
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
+    assert result["ok"] is True
+    assert report["rejected_off_topic"] == 3
+    assert report["rejected_weak_date"] == 2
+    assert len(report["top_rejected_examples"]) == 1
+    assert report["provider_diagnostics"][0]["items_with_gaza_terms"] == 3
+
+
 def test_zero_story_run_refuses_public_generation(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)

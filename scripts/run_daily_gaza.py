@@ -276,6 +276,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
             "working_providers": list(collected.get("working_providers") or []),
             "stage_counts": dict(collected.get("stage_counts") or {}),
             "rejected_by_reason": dict(collected.get("rejected_by_reason") or {}),
+            "top_rejected_examples": list(collected.get("top_rejected_examples") or []),
             "raw_candidate_count": int((collected.get("stage_counts") or {}).get("raw_candidates") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
             "accepted_candidate_count_before_dedupe": int((collected.get("stage_counts") or {}).get("accepted_before_rank") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
             "enabled_auto_provider_count": int((collected.get("stage_counts") or {}).get("enabled_providers_configured") or 0),

@@ -136,6 +136,39 @@ def test_cascadia_fetch_rate_below_target_review():
     assert health["flags"]["cascadia_fetch_rate_low"] is True
 
 
+def test_cascadia_wording_when_only_fetch_rate_is_issue():
+    raw = _base_status()
+    raw["dispatches"]["cascadia"]["weak_date_warning_count"] = 0
+    raw["dispatches"]["cascadia"]["registry_fetch_error_count"] = 1
+    raw["dispatches"]["cascadia"]["gdelt_timeout_rate_limit_count"] = 0
+    raw["dispatches"]["cascadia"]["latest_manifest_warnings"] = []
+    raw["dispatches"]["cascadia"]["repeated_registry_failures"] = []
+    raw["dispatches"]["cascadia"]["persistent_failure_type_counts"] = {}
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["cascadia_fetch_rate_low"] is True
+    assert health["flags"]["cascadia_weak_date_warnings"] is False
+    assert health["flags"]["cascadia_registry_errors_need_review"] is False
+    assert cards["cascadia"]["main_issue"] == "Fetch success rate is below target."
+    assert "do not disable sources unless failures are persistent" in cards["cascadia"]["next_action"]
+
+
+def test_cascadia_registry_persistent_failures_trigger_source_action_wording():
+    raw = _base_status()
+    raw["dispatches"]["cascadia"]["weak_date_warning_count"] = 0
+    raw["dispatches"]["cascadia"]["registry_fetch_error_count"] = 1
+    raw["dispatches"]["cascadia"]["latest_manifest_warnings"] = []
+    raw["dispatches"]["cascadia"]["repeated_registry_failures"] = [
+        {"source_id": "or-odot-news", "status_code": 404, "reason": "http_404", "count": 2}
+    ]
+    raw["dispatches"]["cascadia"]["persistent_failure_type_counts"] = {"http_404": 2}
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["cascadia_registry_errors_need_review"] is True
+    assert any("persistent registry fetch failures" in reason for reason in health["review_reasons"])
+    assert cards["cascadia"]["next_action"] == "Disable/deprioritize dead registry sources and reduce reliability warning noise."
+
+
 def test_generated_runtime_dirt_no_source_changes_informational():
     raw = _base_status()
     raw["dispatches"]["cascadia"]["latest_weekly_gap_report"]["successful_fetch_rate"] = 0.9

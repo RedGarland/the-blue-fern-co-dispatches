@@ -310,6 +310,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
     american = dispatches.get("american_pressure") or {}
     gap = cascadia.get("latest_weekly_gap_report") or {}
     warning_counts = summarize_warning_counts(status_json)
+    repeated_registry_failures = list(cascadia.get("repeated_registry_failures") or [])
+    persistent_failure_counts = dict(cascadia.get("persistent_failure_type_counts") or {})
     fetch_rate = gap.get("successful_fetch_rate")
     if isinstance(fetch_rate, str):
         try:
@@ -334,6 +336,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "gaza_repeated_urls": bool(gaza.get("repeated_source_urls_recent")),
         "cascadia_fetch_rate_low": isinstance(fetch_rate, (int, float)) and float(fetch_rate) < 0.75,
         "cascadia_weak_date_warnings": warning_counts["weak_date_warning_count"] > 0,
+        "cascadia_registry_persistent_failures": bool(repeated_registry_failures),
+        "cascadia_registry_errors_need_review": warning_counts["registry_fetch_error_count"] > 1 or bool(repeated_registry_failures),
         "manual_source_missing_ap": not bool(american.get("latest_manual_source_exists_for_latest_public_edition")),
         "gaza_stale_unlinked_folders": bool(gaza.get("stale_or_unlinked_edition_dates")),
         "gaza_undercollection_review": False,
@@ -473,6 +477,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         review_reasons.append(f"Cascadia fetch success rate is {pct}%, below 75% target.")
     if flags["cascadia_weak_date_warnings"]:
         review_reasons.append("Cascadia has weak-date warning noise.")
+    if flags["cascadia_registry_errors_need_review"]:
+        review_reasons.append("Cascadia has persistent registry fetch failures that need source-level action.")
     if flags["source_changes"]:
         review_reasons.append("Source repo has source/test/doc changes.")
     if flags["pages_dirty"]:
@@ -499,6 +505,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "flags": flags,
         "warning_counts": warning_counts,
         "fetch_rate": fetch_rate,
+        "repeated_registry_failures": repeated_registry_failures,
+        "persistent_failure_type_counts": persistent_failure_counts,
         "blocked_reasons": blocked_reasons,
         "review_reasons": review_reasons,
         "growth_reasons": growth_reasons,
@@ -610,7 +618,7 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "latest_collection_report": gaza.get("latest_collection_report") or {},
         },
         "cascadia": {
-            "status": _severity_review() if health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] else _severity_ok(),
+            "status": _severity_review() if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] or health["flags"]["cascadia_registry_errors_need_review"]) else _severity_ok(),
             "latest_weekly_edition_date": cascadia.get("latest_weekly_edition_date"),
             "latest_public_edition_date": cascadia.get("latest_public_edition_date"),
             "latest_pages_edition_date": cascadia.get("latest_pages_edition_date"),
@@ -629,8 +637,22 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "weak_date_warning_count": health["warning_counts"]["weak_date_warning_count"],
             "registry_fetch_error_count": health["warning_counts"]["registry_fetch_error_count"],
             "gdelt_timeout_rate_limit_count": health["warning_counts"]["gdelt_timeout_rate_limit_count"],
-            "main_issue": "Discovery works, but source reliability needs cleanup." if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"]) else "No blocking Cascadia issue.",
-            "next_action": "Disable/deprioritize dead registry sources and reduce weak-date warning noise." if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"]) else "No immediate Cascadia action needed.",
+            "repeated_registry_failures": health.get("repeated_registry_failures") or [],
+            "persistent_failure_type_counts": health.get("persistent_failure_type_counts") or {},
+            "main_issue": (
+                "Fetch success rate is below target."
+                if health["flags"]["cascadia_fetch_rate_low"] and not health["flags"]["cascadia_weak_date_warnings"] and not health["flags"]["cascadia_registry_errors_need_review"]
+                else "Discovery works, but source reliability needs cleanup."
+                if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] or health["flags"]["cascadia_registry_errors_need_review"])
+                else "No blocking Cascadia issue."
+            ),
+            "next_action": (
+                "Raise fetch success rate to target and monitor isolated registry errors; do not disable sources unless failures are persistent."
+                if health["flags"]["cascadia_fetch_rate_low"] and not health["flags"]["cascadia_weak_date_warnings"] and not health["flags"]["cascadia_registry_errors_need_review"]
+                else "Disable/deprioritize dead registry sources and reduce reliability warning noise."
+                if (health["flags"]["cascadia_weak_date_warnings"] or health["flags"]["cascadia_registry_errors_need_review"])
+                else "No immediate Cascadia action needed."
+            ),
         },
         "american_pressure": {
             "status": _severity_review() if health["flags"]["manual_source_missing_ap"] else _severity_ok(),

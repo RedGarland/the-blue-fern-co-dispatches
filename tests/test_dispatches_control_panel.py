@@ -326,9 +326,14 @@ def test_gaza_stale_unlinked_wording_marks_not_public_archive():
 
 def test_gaza_undercollection_sets_review():
     raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_source_count"] = 0
+    raw["dispatches"]["gaza"]["latest_story_count"] = 0
     raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
         "raw_candidate_count": 0,
         "kept_after_dedupe": 0,
+        "accepted_candidate_count_before_dedupe": 0,
+        "final_story_count": 0,
         "provider_failures": [],
     }
     health = cp.classify_health(raw)
@@ -339,8 +344,11 @@ def test_gaza_undercollection_sets_review():
 def test_gaza_tls_environment_review_wording():
     raw = _base_status()
     raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
         "raw_candidate_count": 0,
         "kept_after_dedupe": 0,
+        "accepted_candidate_count_before_dedupe": 0,
+        "final_story_count": 0,
         "provider_failures": [{"source_id": "who-news", "reason": "tls_certificate_verification_failed"}],
         "enabled_auto_all_failed_tls": True,
     }
@@ -352,9 +360,11 @@ def test_gaza_tls_environment_review_wording():
 def test_gaza_high_raw_low_accepted_review_wording():
     raw = _base_status()
     raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
         "raw_candidate_count": 135,
         "accepted_candidate_count_before_dedupe": 2,
         "kept_after_dedupe": 1,
+        "review_candidates": [{"title": "x", "rejection_reason": "rejected_off_topic"}],
         "provider_failures": [],
     }
     health = cp.classify_health(raw)
@@ -372,6 +382,131 @@ def test_gaza_source_health_most_enabled_fail_sets_review():
     }
     health = cp.classify_health(raw)
     assert health["flags"]["gaza_undercollection_review"] is True
+
+
+def test_gaza_source_backed_healthy_state_is_ok():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_public_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_pages_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_source_count"] = 4
+    raw["dispatches"]["gaza"]["latest_story_count"] = 4
+    raw["dispatches"]["gaza"]["public_archive_dates"] = [f"2026-05-{d:02d}" for d in range(7, 16)]
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = []
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_zero_story_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_dedupe_refusal_dates"] = []
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-15",
+        "raw_candidate_count": 8,
+        "normalized_candidate_count": 6,
+        "accepted_candidate_count_before_dedupe": 6,
+        "kept_after_dedupe": 4,
+        "final_story_count": 4,
+        "provider_failures": [],
+        "providers_attempted_count": 5,
+        "review_candidates": [],
+    }
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_public_safe"] is True
+    assert health["flags"]["gaza_undercollection_review"] is False
+    assert cards["gaza"]["status"] == "OK"
+    assert cards["gaza"]["main_issue"] == "No current blocking Gaza issue."
+    assert cards["gaza"]["next_action"] == "No immediate Gaza action needed."
+    assert not any("under-collection" in reason.lower() for reason in health["review_reasons"])
+
+
+def test_gaza_undercollection_not_triggered_by_stale_historical_warning_fields():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_public_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_pages_edition_date"] = "2026-05-15"
+    raw["dispatches"]["gaza"]["latest_source_count"] = 4
+    raw["dispatches"]["gaza"]["latest_story_count"] = 4
+    raw["dispatches"]["gaza"]["public_archive_dates"] = [f"2026-05-{d:02d}" for d in range(7, 16)]
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "raw_candidate_count": 0,
+        "kept_after_dedupe": 0,
+        "accepted_candidate_count_before_dedupe": 0,
+        "final_story_count": 0,
+        "provider_failures": [],
+    }
+    health = cp.classify_health(raw)
+    assert health["flags"]["gaza_public_safe"] is True
+    assert health["flags"]["gaza_undercollection_review"] is False
+
+
+def test_gaza_ok_state_prefers_cascadia_prompt_when_fetch_rate_low():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_source_count"] = 4
+    raw["dispatches"]["gaza"]["latest_story_count"] = 4
+    raw["dispatches"]["gaza"]["stale_or_unlinked_edition_dates"] = []
+    raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_zero_story_dates"] = []
+    raw["dispatches"]["gaza"]["public_linked_dedupe_refusal_dates"] = []
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "raw_candidate_count": 4,
+        "kept_after_dedupe": 4,
+        "accepted_candidate_count_before_dedupe": 4,
+        "final_story_count": 4,
+        "provider_failures": [],
+    }
+    raw["dispatches"]["cascadia"]["latest_weekly_gap_report"]["successful_fetch_rate"] = 0.64
+    prompt = cp.generate_codex_prompt(raw)
+    assert "Cascadia source reliability cleanup." in prompt
+    assert "Gaza source collection / under-collection fix." not in prompt
+
+
+def test_gaza_review_triggers_when_enabled_providers_not_attempted():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "enabled_auto_provider_count": 4,
+        "providers_attempted_count": 0,
+        "raw_candidate_count": 4,
+        "kept_after_dedupe": 4,
+        "accepted_candidate_count_before_dedupe": 4,
+        "final_story_count": 4,
+        "provider_failures": [],
+    }
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+    assert cards["gaza"]["status"] == "Review"
+
+
+def test_gaza_review_triggers_for_zero_source_or_zero_story_linked_dates():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["public_linked_zero_source_dates"] = ["2026-05-09"]
+    raw["dispatches"]["gaza"]["public_linked_zero_story_dates"] = ["2026-05-08"]
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_zero_source_linked"] is True
+    assert health["flags"]["gaza_zero_story_linked"] is True
+    assert cards["gaza"]["status"] == "Blocked"
+
+
+def test_gaza_review_high_raw_low_accepted_with_review_candidates_and_no_source_backed_latest():
+    raw = _base_status()
+    raw["dispatches"]["gaza"]["latest_source_count"] = 0
+    raw["dispatches"]["gaza"]["latest_story_count"] = 0
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "raw_candidate_count": 120,
+        "accepted_candidate_count_before_dedupe": 1,
+        "kept_after_dedupe": 0,
+        "final_story_count": 0,
+        "review_candidates": [{"title": "x", "rejection_reason": "rejected_off_topic"}],
+        "provider_failures": [],
+    }
+    health = cp.classify_health(raw)
+    cards = cp.build_health_cards(raw)
+    assert health["flags"]["gaza_undercollection_review"] is True
+    assert health["flags"]["gaza_high_raw_low_accept_review"] is True
+    assert cards["gaza"]["status"] == "Review"
 
 
 def test_cascadia_shows_public_story_count_and_candidate_pool():
@@ -403,7 +538,16 @@ def test_cascadia_prompt_includes_dashboard_facts_and_commands():
 
 def test_gaza_undercollection_prompt_contains_required_rules():
     raw = _base_status()
-    raw["dispatches"]["gaza"]["latest_collection_report"] = {"raw_candidate_count": 0, "kept_after_dedupe": 0, "provider_failures": []}
+    raw["dispatches"]["gaza"]["latest_source_count"] = 0
+    raw["dispatches"]["gaza"]["latest_story_count"] = 0
+    raw["dispatches"]["gaza"]["latest_collection_report"] = {
+        "edition_date": "2026-05-10",
+        "raw_candidate_count": 0,
+        "kept_after_dedupe": 0,
+        "accepted_candidate_count_before_dedupe": 0,
+        "final_story_count": 0,
+        "provider_failures": [],
+    }
     raw["dispatches"]["gaza"]["repeated_source_urls_recent"] = {}
     raw["dispatches"]["cascadia"]["latest_weekly_gap_report"]["successful_fetch_rate"] = 0.95
     raw["dispatches"]["cascadia"]["latest_manifest_warnings"] = []

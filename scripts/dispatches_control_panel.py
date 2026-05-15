@@ -340,14 +340,70 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
         "gaza_high_raw_low_accept_review": False,
         "ap_coverage_gaps_present": bool(_ap_coverage_gaps((american.get("registry_summary") or {}).get("enabled_by_pillar") or {})),
     }
+    gaza_latest_sources = int(gaza.get("latest_source_count") or 0)
+    gaza_latest_stories = int(gaza.get("latest_story_count") or 0)
+    gaza_archive_dates = list(gaza.get("public_archive_dates") or [])
+    gaza_stale_unlinked = list(gaza.get("stale_or_unlinked_edition_dates") or [])
+    flags["gaza_public_safe"] = (
+        gaza_latest_sources > 0
+        and gaza_latest_stories > 0
+        and bool(gaza.get("archive_exists"))
+        and bool(gaza.get("rss_exists"))
+        and bool(gaza.get("latest_has_visible_source_links"))
+        and not bool(gaza.get("repeated_source_urls_recent"))
+        and not bool(gaza.get("public_linked_zero_source_dates"))
+        and not bool(gaza.get("public_linked_zero_story_dates"))
+        and not bool(gaza.get("public_linked_dedupe_refusal_dates"))
+        and len(gaza_stale_unlinked) == 0
+    )
+    gaza_public_clean = (
+        bool(gaza_archive_dates)
+        and bool(gaza.get("archive_exists"))
+        and bool(gaza.get("rss_exists"))
+        and bool(gaza.get("latest_has_visible_source_links"))
+        and not bool(gaza.get("repeated_source_urls_recent"))
+        and not bool(gaza.get("public_linked_zero_source_dates"))
+        and not bool(gaza.get("public_linked_zero_story_dates"))
+        and not bool(gaza.get("public_linked_dedupe_refusal_dates"))
+    )
     gaza_collection = gaza.get("latest_collection_report") or {}
     if isinstance(gaza_collection, dict) and gaza_collection:
+        latest_public = str(gaza.get("latest_public_edition_date") or "")
+        report_date = str(gaza_collection.get("edition_date") or "")
+        is_current_collection = bool(latest_public) and bool(report_date) and latest_public == report_date
         raw_candidates = int(gaza_collection.get("raw_candidate_count") or 0)
+        final_story_count = int(gaza_collection.get("final_story_count") or 0)
         kept_candidates = int(gaza_collection.get("kept_after_dedupe") or 0)
+        review_candidates = list(gaza_collection.get("review_candidates") or [])
         provider_failures = list(gaza_collection.get("provider_failures") or [])
-        flags["gaza_undercollection_review"] = raw_candidates == 0 or kept_candidates == 0 or bool(provider_failures)
+        providers_attempted_count = int(
+            gaza_collection.get("providers_attempted_count")
+            or len(list(gaza_collection.get("providers_attempted") or []))
+            or 0
+        )
+        enabled_auto = int(gaza_collection.get("enabled_auto_provider_count") or 0)
         accepted_before = int(gaza_collection.get("accepted_candidate_count_before_dedupe") or 0)
-        if raw_candidates >= 50 and accepted_before <= 2:
+        low_attempt_threshold = min(2, enabled_auto) if enabled_auto > 0 else 0
+        providers_attempted_too_low = enabled_auto > 0 and providers_attempted_count < low_attempt_threshold
+        high_raw_low_accept = raw_candidates >= 50 and accepted_before <= 2 and bool(review_candidates)
+        no_viable_story_current = (
+            is_current_collection
+            and gaza_public_clean
+            and (kept_candidates <= 0 or final_story_count <= 0)
+        )
+        collection_undercollection = (
+            (enabled_auto > 0 and providers_attempted_count <= 0)
+            or providers_attempted_too_low
+            or (is_current_collection and raw_candidates <= 0)
+            or (is_current_collection and accepted_before <= 0)
+            or (is_current_collection and final_story_count <= 0)
+            or bool(provider_failures)
+            or high_raw_low_accept
+            or no_viable_story_current
+        )
+        flags["gaza_undercollection_review"] = bool(collection_undercollection)
+        accepted_before = int(gaza_collection.get("accepted_candidate_count_before_dedupe") or 0)
+        if high_raw_low_accept:
             flags["gaza_undercollection_review"] = True
             flags["gaza_high_raw_low_accept_review"] = True
         flags["gaza_tls_env_review"] = bool(gaza_collection.get("enabled_auto_all_failed_tls"))
@@ -356,8 +412,9 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
     gaza_health = gaza.get("latest_source_health_report") or {}
     if isinstance(gaza_health, dict) and gaza_health:
         enabled = int(gaza_health.get("providers_enabled") or 0)
+        attempted = int(gaza_health.get("providers_attempted") or 0)
         failed = int(gaza_health.get("providers_failed") or 0)
-        if enabled > 0 and failed >= max(1, (enabled + 1) // 2):
+        if enabled > 0 and (attempted <= 0 or failed >= max(1, (enabled + 1) // 2)):
             flags["gaza_undercollection_review"] = True
 
     blocked_reasons: list[str] = []
@@ -387,6 +444,8 @@ def classify_health(status_json: dict[str, Any]) -> dict[str, Any]:
             review_reasons.append(
                 "Gaza collection found many raw items, but relevance filtering accepted few. Review rejected candidate examples."
             )
+        elif flags["gaza_public_safe"]:
+            pass
         else:
             review_reasons.append("Gaza public archive is clean, but collection health indicates possible under-collection.")
     if flags["cascadia_fetch_rate_low"]:

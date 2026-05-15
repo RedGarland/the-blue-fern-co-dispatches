@@ -96,6 +96,17 @@ def validate_date(value: str) -> str:
     return value
 
 
+def validate_not_future_date(edition_date: str, *, allow_future: bool) -> None:
+    if allow_future:
+        return
+    today = datetime.now().date()
+    requested = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    if requested > today:
+        raise ValueError(
+            f"future edition date refused without --allow-future: {edition_date} (today: {today.isoformat()})"
+        )
+
+
 def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -131,12 +142,32 @@ def manual_source_path(root: Path, edition_date: str) -> Path:
     return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / edition_date / "manual_sources.json"
 
 
+def init_manual_sources_file(root: Path, edition_date: str, *, dry_run: bool, wrote: list[str]) -> Path:
+    path = manual_source_path(root, edition_date)
+    if path.exists():
+        return path
+    payload = {
+        "sources": [],
+        "_guidance": (
+            "Add source-backed records to sources[]. "
+            "Each record must include required fields used by scripts/run_american_pressure_dispatch.py."
+        ),
+    }
+    write_json(path, payload, dry_run, wrote)
+    return path
+
+
 def load_manual_sources(root: Path, edition_date: str, from_manual_sources: bool) -> tuple[Path, list[dict[str, Any]]]:
     if not from_manual_sources:
         raise ValueError("American Pressure generation currently requires --from-manual-sources")
     path = manual_source_path(root, edition_date)
     if not path.exists():
-        raise FileNotFoundError(f"manual source file is required: {path}")
+        raise FileNotFoundError(
+            "manual source file is required: "
+            f"{path}\n"
+            f"Create it with:\n"
+            f"  .\\.venv\\Scripts\\python.exe scripts\\run_american_pressure_dispatch.py --date {edition_date} --init-manual-sources"
+        )
     payload = read_json(path)
     records = payload.get("sources") if isinstance(payload, dict) else payload
     if not isinstance(records, list):
@@ -438,11 +469,35 @@ def run_american_pressure_dispatch(
     publish: bool,
     dry_run: bool,
     from_manual_sources: bool,
+    init_manual_sources: bool = False,
+    allow_future: bool = False,
 ) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
+    validate_not_future_date(edition_date, allow_future=allow_future)
     wrote: list[str] = []
     warnings: list[str] = []
     errors: list[str] = []
+    if init_manual_sources:
+        path = init_manual_sources_file(root, edition_date, dry_run=dry_run, wrote=wrote)
+        return {
+            "ok": True,
+            "dispatch_slug": DISPATCH_SLUG,
+            "edition_date": edition_date,
+            "manual_source_path": str(path),
+            "source_count": 0,
+            "story_count": 0,
+            "generated": False,
+            "initialized_manual_sources": True,
+            "archive_updated": False,
+            "rss_updated": False,
+            "pages_repo_updated": False,
+            "pushed": False,
+            "wrote": wrote,
+            "warnings": warnings,
+            "errors": errors,
+            "live_fetch_enabled": False,
+            "registry_used_for_public_claims": False,
+        }
     generated_at = utc_now()
     manual_path, raw_records = load_manual_sources(root, edition_date, from_manual_sources=from_manual_sources)
     sources, source_warnings, source_errors = normalize_sources(raw_records, edition_date)
@@ -533,6 +588,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--publish", action="store_true", help="Update American Pressure public index/archive/rss after edition generation.")
     parser.add_argument("--dry-run", action="store_true", help="Report writes without changing files.")
     parser.add_argument("--from-manual-sources", action="store_true", help="Require project-local manual source records.")
+    parser.add_argument("--init-manual-sources", action="store_true", help="Create starter manual source file for --date when missing.")
+    parser.add_argument("--allow-future", action="store_true", help="Allow future --date values (disabled by default).")
     return parser.parse_args(argv)
 
 
@@ -545,6 +602,8 @@ def main(argv: list[str] | None = None) -> int:
             publish=bool(args.publish),
             dry_run=bool(args.dry_run),
             from_manual_sources=bool(args.from_manual_sources),
+            init_manual_sources=bool(args.init_manual_sources),
+            allow_future=bool(args.allow_future),
         )
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}

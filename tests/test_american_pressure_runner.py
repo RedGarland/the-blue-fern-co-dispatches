@@ -1,6 +1,7 @@
 import json
 import shutil
 import uuid
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -77,8 +78,53 @@ def test_runner_generates_from_valid_manual_source_file(work_root):
 
 
 def test_runner_refuses_missing_manual_source_file(work_root):
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(FileNotFoundError) as excinfo:
         ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True)
+    message = str(excinfo.value)
+    expected_path = work_root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-12" / "manual_sources.json"
+    assert str(expected_path) in message
+    assert "--init-manual-sources" in message
+
+
+def test_init_manual_sources_creates_expected_file(work_root):
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-12",
+        publish=True,
+        dry_run=False,
+        from_manual_sources=False,
+        init_manual_sources=True,
+    )
+    assert result["ok"] is True
+    path = work_root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-12" / "manual_sources.json"
+    assert path.exists()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    assert isinstance(payload, dict)
+    assert payload.get("sources") == []
+
+
+def test_init_manual_sources_does_not_publish(work_root):
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-12",
+        publish=True,
+        dry_run=False,
+        from_manual_sources=False,
+        init_manual_sources=True,
+    )
+    assert result["ok"] is True
+    assert result["generated"] is False
+    assert result["archive_updated"] is False
+    assert result["rss_updated"] is False
+    assert not (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").exists()
+
+
+def test_future_date_refused_without_allow_future(work_root):
+    future_date = (datetime.now().date() + timedelta(days=1)).isoformat()
+    _write_manual_sources(work_root, future_date, [_valid_record()])
+    with pytest.raises(ValueError) as excinfo:
+        ap_runner.run_american_pressure_dispatch(work_root, future_date, publish=False, dry_run=False, from_manual_sources=True)
+    assert "--allow-future" in str(excinfo.value)
 
 
 def test_runner_refuses_zero_valid_records(work_root):
@@ -88,6 +134,14 @@ def test_runner_refuses_zero_valid_records(work_root):
     )
     assert result["ok"] is False
     assert "No valid source-backed American Pressure records found for 2026-05-12" in " ".join(result["errors"])
+
+
+def test_past_date_runs_with_manual_source(work_root):
+    _write_manual_sources(work_root, "2026-05-11", [_valid_record()])
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root, "2026-05-11", publish=False, dry_run=False, from_manual_sources=True
+    )
+    assert result["ok"] is True
 
 
 def test_runner_refuses_missing_required_fields(work_root):

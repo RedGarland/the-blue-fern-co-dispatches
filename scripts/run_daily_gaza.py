@@ -64,6 +64,7 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "errors",
     "manual_push_command",
 )
+COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
 
 def validate_date(value: str) -> str:
@@ -120,10 +121,38 @@ def validate_source_file(path: Path, min_sources: int) -> tuple[list[dict[str, A
     return records, errors
 
 
+def _dedupe_source_rows(rows: list[dict[str, Any]], max_sources: int) -> list[dict[str, Any]]:
+    seen: set[tuple[str, str]] = set()
+    out: list[dict[str, Any]] = []
+    for row in rows:
+        url = str(row.get("url") or "").strip().lower()
+        title = str(row.get("title") or "").strip().lower()
+        key = (url, title)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(row)
+        if len(out) >= max_sources:
+            break
+    return out
+
+
+def _context_path(edition_date: str) -> Path:
+    return ROOT / "data" / "dispatches" / "gaza" / "editions" / edition_date / COLLECTION_CONTEXT_NAME
+
+
+def _write_collection_context(edition_date: str, payload: dict[str, Any]) -> None:
+    path = _context_path(edition_date)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
 def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], log_path: Path) -> tuple[Path | None, list[dict[str, Any]]]:
     ensure_source_folder(args.date)
     manual_path = source_file_for(args.date)
     tried_invalid_manual = False
+    manual_records: list[dict[str, Any]] = []
+    manual_valid = False
     if args.source_mode in {"manual", "both"} and manual_path.exists():
         log_line(log_path, f"Loading manual source file: {manual_path}")
         try:
@@ -144,34 +173,115 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                 summary["warnings"].append(f"manual_sources.json was present but invalid: {'; '.join(errors)}")
                 log_line(log_path, f"Manual source file invalid; falling back to auto collection: {errors}")
             else:
-                summary["source_file"] = str(manual_path)
-                summary["source_count"] = len(records)
-                return manual_path, records[: args.max_sources]
+                manual_records = records[: args.max_sources]
+                manual_valid = True
+                if args.source_mode == "manual":
+                    summary["source_file"] = str(manual_path)
+                    summary["source_count"] = len(manual_records)
+                    _write_collection_context(
+                        args.date,
+                        {
+                            "source_mode": "manual",
+                            "providers_configured": ["manual_sources_json"],
+                            "providers_attempted": ["manual_sources_json"],
+                            "providers_successful": ["manual_sources_json"] if manual_records else [],
+                            "provider_failures": [] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}],
+                            "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok" if manual_records else "no_candidates", "raw_candidates": len(manual_records)}],
+                            "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1 if manual_records else 0, "raw_candidates": len(manual_records)},
+                            "raw_candidate_count": len(manual_records),
+                            "accepted_candidate_count_before_dedupe": len(manual_records),
+                        },
+                    )
+                    return manual_path, manual_records
 
     if args.source_mode == "manual":
         summary["errors"].append(f"manual source file is required: {manual_path}")
         return manual_path, []
 
-    log_line(log_path, "Manual source file was not usable; attempting auto source collection.")
-    collected = collect_gaza_sources(
-        ROOT,
-        args.date,
-        max_sources=args.max_sources,
-        min_sources=args.min_sources,
-        output_filename="manual_sources.json",
-        prefer_manual=not tried_invalid_manual,
-    )
+    log_line(log_path, "Running auto source collection.")
+    try:
+        collected = collect_gaza_sources(
+            ROOT,
+            args.date,
+            max_sources=args.max_sources,
+            min_sources=0 if args.source_mode == "both" else args.min_sources,
+            output_filename="manual_sources.json",
+            prefer_manual=False,
+        )
+    except Exception as exc:  # noqa: BLE001
+        if args.source_mode == "both" and manual_valid and manual_records:
+            summary["warnings"].append(f"auto source collection unavailable; using manual sources only: {exc}")
+            summary["source_file"] = str(manual_path)
+            summary["source_count"] = len(manual_records)
+            _write_collection_context(
+                args.date,
+                {
+                    "source_mode": "both",
+                    "providers_configured": ["manual_sources_json"],
+                    "providers_attempted": ["manual_sources_json"],
+                    "providers_successful": ["manual_sources_json"],
+                    "provider_failures": [],
+                    "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok", "raw_candidates": len(manual_records)}],
+                    "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1, "raw_candidates": len(manual_records)},
+                    "raw_candidate_count": len(manual_records),
+                    "accepted_candidate_count_before_dedupe": len(manual_records),
+                    "enabled_auto_provider_count": 0,
+                },
+            )
+            return manual_path, manual_records
+        summary["errors"].append(str(exc))
+        return None, []
     summary["warnings"].extend(collected.get("warnings", []))
     summary["errors"].extend(collected.get("errors", []))
     summary["failed_source_ids"].extend(collected.get("failed_source_ids", []))
     summary["source_count"] = int(collected.get("source_count") or 0)
-    if not collected.get("ok"):
+    if not collected.get("ok") and args.source_mode == "auto":
         return None, []
-    source_path = Path(str(collected["source_file"]))
-    records = list(collected.get("sources") or [])
+    auto_records = list(collected.get("sources") or [])
+    records = list(auto_records)
+    source_mode_used = "auto"
+    if args.source_mode == "both":
+        source_mode_used = "both"
+        records = _dedupe_source_rows([*auto_records, *manual_records], args.max_sources)
+        manual_path.parent.mkdir(parents=True, exist_ok=True)
+        manual_path.write_text(json.dumps(records, indent=2), encoding="utf-8")
+    source_path = Path(str(collected["source_file"])) if collected.get("source_file") else manual_path
+    if args.source_mode == "both":
+        source_path = manual_path
     summary["source_file"] = str(source_path)
     summary["source_count"] = len(records)
-    log_line(log_path, f"Auto source collection wrote {len(records)} records to {source_path}")
+    providers_configured = list(collected.get("providers_configured") or [])
+    providers_attempted = list(collected.get("providers_attempted") or [])
+    providers_successful = list(collected.get("providers_successful") or [])
+    provider_failures = list(collected.get("failed_source_ids") or [])
+    provider_diagnostics = list(collected.get("provider_diagnostics") or [])
+    if args.source_mode == "both":
+        providers_configured = [*providers_configured, "manual_sources_json"]
+        providers_attempted = [*providers_attempted, "manual_sources_json"]
+        if manual_valid and manual_records:
+            providers_successful = sorted(set([*providers_successful, "manual_sources_json"]))
+        provider_diagnostics.append(
+            {"source_id": "manual_sources_json", "status": "ok" if manual_valid and manual_records else "no_candidates", "raw_candidates": len(manual_records)}
+        )
+    _write_collection_context(
+        args.date,
+        {
+            "source_mode": source_mode_used,
+            "providers_configured": providers_configured,
+            "providers_attempted": providers_attempted,
+            "providers_successful": providers_successful,
+            "provider_failures": provider_failures,
+            "provider_diagnostics": provider_diagnostics,
+            "skipped_providers": list(collected.get("skipped_providers") or []),
+            "working_providers": list(collected.get("working_providers") or []),
+            "stage_counts": dict(collected.get("stage_counts") or {}),
+            "rejected_by_reason": dict(collected.get("rejected_by_reason") or {}),
+            "raw_candidate_count": int((collected.get("stage_counts") or {}).get("raw_candidates") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
+            "accepted_candidate_count_before_dedupe": int((collected.get("stage_counts") or {}).get("accepted_before_rank") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
+            "enabled_auto_provider_count": int((collected.get("stage_counts") or {}).get("enabled_providers_configured") or 0),
+        },
+    )
+    log_line(log_path, f"Source collection resolved {len(records)} records to {source_path}")
     return source_path, records
 
 

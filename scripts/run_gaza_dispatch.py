@@ -56,6 +56,7 @@ REQUIRED_SOURCE_FIELDS = {
     "category_hint",
     "reliability_tier",
 }
+COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
 
 def utc_now() -> str:
@@ -124,6 +125,14 @@ def load_manual_sources(root: Path, edition_date: str) -> tuple[Path, list[dict[
     if not isinstance(records, list):
         raise ValueError("manual_sources.json must be a list or an object with a sources list")
     return path, records
+
+
+def _load_collection_context(root: Path, edition_date: str) -> dict[str, Any]:
+    path = root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / COLLECTION_CONTEXT_NAME
+    if not path.exists():
+        return {}
+    payload = read_json(path)
+    return payload if isinstance(payload, dict) else {}
 
 
 def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str) -> tuple[list[dict[str, Any]], list[str], list[str]]:
@@ -566,7 +575,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         )
     if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
-    provider_diagnostics = [
+    context = _load_collection_context(root, edition_date)
+    context_stage = dict(context.get("stage_counts") or {})
+    provider_diagnostics = list(context.get("provider_diagnostics") or []) or [
         {
             "source_id": "manual_sources_json",
             "source_tier": "manual_supplements",
@@ -583,10 +594,11 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "cross_edition_duplicates": int(cross_edition_report.get("suppressed_candidate_count", 0)),
     }
     stage_counts = {
-        "registry_sources": 1,
-        "providers_attempted": 1,
-        "providers_successful": 1 if manual_records else 0,
-        "raw_candidates": len(manual_records),
+        "registry_sources": int(context_stage.get("registry_sources") or 1),
+        "enabled_providers_configured": int(context_stage.get("enabled_providers_configured") or 1),
+        "providers_attempted": int(context_stage.get("providers_attempted") or 1),
+        "providers_successful": int(context_stage.get("providers_successful") or (1 if manual_records else 0)),
+        "raw_candidates": int(context_stage.get("raw_candidates") or len(manual_records)),
         "normalized_candidates": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
     }
@@ -598,14 +610,18 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         no_story_explanation = "all_candidates_suppressed_as_duplicates_or_stale"
     elif low_relevance_survivors > 0 and low_relevance_survivors == len(normalized):
         no_story_explanation = "only_low_relevance_items_survived"
+    providers_configured = list(context.get("providers_configured") or ["manual_sources_json"])
+    providers_attempted = list(context.get("providers_attempted") or ["manual_sources_json"])
+    providers_successful = list(context.get("providers_successful") or (["manual_sources_json"] if manual_records else []))
+    provider_failures = list(context.get("provider_failures") or ([] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}]))
     collection_report = {
         "edition_date": edition_date,
         "lookback_window_days": 7,
-        "providers_configured": ["manual_sources_json"],
-        "providers_attempted": ["manual_sources_json"],
-        "providers_successful": ["manual_sources_json"] if manual_records else [],
-        "provider_failures": [] if manual_records else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}],
-        "raw_candidate_count": len(manual_records),
+        "providers_configured": providers_configured,
+        "providers_attempted": providers_attempted,
+        "providers_successful": providers_successful,
+        "provider_failures": provider_failures,
+        "raw_candidate_count": int(context.get("raw_candidate_count") or len(manual_records)),
         "normalized_candidate_count": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
@@ -620,8 +636,8 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "low_relevance_survivors": low_relevance_survivors,
         "no_story_explanation": no_story_explanation,
         "no_story_credibility_decision": "no_candidates_found" if no_story_explanation == "no_candidates_found_from_attempted_providers" else no_story_explanation,
-        "providers_attempted_count": 1,
-        "providers_successful_count": 1 if manual_records else 0,
+        "providers_attempted_count": len(providers_attempted),
+        "providers_successful_count": len(providers_successful),
         "provider_diagnostics": provider_diagnostics,
         "source_providers_attempted": provider_diagnostics,
         "stage_counts": stage_counts,
@@ -635,6 +651,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         collection_report["no_story_credibility_decision"] = "candidates_rejected"
     elif collection_report["no_story_explanation"] == "all_candidates_suppressed_as_duplicates_or_stale":
         collection_report["no_story_credibility_decision"] = "all_candidates_deduped"
+    enabled_auto = int(context.get("enabled_auto_provider_count") or 0)
+    if enabled_auto > 0 and not providers_attempted:
+        collection_report.setdefault("warnings", []).append("enabled automatic providers exist but none were attempted")
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories

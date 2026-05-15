@@ -21,6 +21,7 @@ from scripts.run_gaza_dispatch import discover_edition_dates, read_json, render_
 
 DISPATCH_SLUG = "gaza"
 SOURCE_MODES = ("manual", "auto", "both")
+COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
 
 def _utc_stamp() -> str:
@@ -45,6 +46,24 @@ def _load_manual_sources(path: Path) -> list[dict[str, Any]]:
     if errors:
         raise ValueError("; ".join(errors))
     return rows
+
+
+def _dedupe_source_rows(rows: list[dict[str, Any]], max_sources: int) -> list[dict[str, Any]]:
+    seen: set[tuple[str, str]] = set()
+    out: list[dict[str, Any]] = []
+    for row in rows:
+        key = (str(row.get("url") or "").strip().lower(), str(row.get("title") or "").strip().lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(row)
+        if len(out) >= max_sources:
+            break
+    return out
+
+
+def _context_path(root: Path, edition_date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / COLLECTION_CONTEXT_NAME
 
 
 def _expand_dates(single_date: str | None, dates: list[str], start_date: str | None, end_date: str | None) -> list[str]:
@@ -75,6 +94,8 @@ def _resolve_sources(root: Path, edition_date: str, source_mode: str, max_source
     diagnostics: dict[str, Any] = {}
 
     manual_path = _manual_source_path(root, edition_date)
+    manual_rows: list[dict[str, Any]] = []
+    manual_valid = False
     if source_mode in {"manual", "both"} and manual_path.exists():
         try:
             rows = _load_manual_sources(manual_path)
@@ -84,26 +105,113 @@ def _resolve_sources(root: Path, edition_date: str, source_mode: str, max_source
                 return "manual", manual_path, [], diagnostics, warnings, errors
             warnings.append(f"manual source file invalid: {exc}")
         else:
-            return "manual", manual_path, rows[:max_sources], diagnostics, warnings, errors
+            manual_rows = rows[:max_sources]
+            manual_valid = True
+            if source_mode == "manual":
+                _context_path(root, edition_date).parent.mkdir(parents=True, exist_ok=True)
+                _context_path(root, edition_date).write_text(
+                    json.dumps(
+                        {
+                            "source_mode": "manual",
+                            "providers_configured": ["manual_sources_json"],
+                            "providers_attempted": ["manual_sources_json"],
+                            "providers_successful": ["manual_sources_json"] if manual_rows else [],
+                            "provider_failures": [] if manual_rows else [{"source_id": "manual_sources_json", "reason": "zero_candidates", "status": "no_candidates"}],
+                            "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok" if manual_rows else "no_candidates", "raw_candidates": len(manual_rows)}],
+                            "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1 if manual_rows else 0, "raw_candidates": len(manual_rows)},
+                            "raw_candidate_count": len(manual_rows),
+                            "accepted_candidate_count_before_dedupe": len(manual_rows),
+                        },
+                        indent=2,
+                    ),
+                    encoding="utf-8",
+                )
+                return "manual", manual_path, manual_rows, diagnostics, warnings, errors
 
     if source_mode == "manual":
         errors.append(f"manual source file is required: {manual_path}")
         return "manual", manual_path, [], diagnostics, warnings, errors
 
-    auto = collect_gaza_sources(
-        root,
-        edition_date,
-        max_sources=max_sources,
-        min_sources=0,
-        output_filename="manual_sources.json",
-        prefer_manual=False,
-    )
+    try:
+        auto = collect_gaza_sources(
+            root,
+            edition_date,
+            max_sources=max_sources,
+            min_sources=0,
+            output_filename="manual_sources.json",
+            prefer_manual=False,
+        )
+    except Exception as exc:  # noqa: BLE001
+        if source_mode == "both" and manual_valid and manual_rows:
+            warnings.append(f"auto source collection unavailable; using manual sources only: {exc}")
+            _context_path(root, edition_date).parent.mkdir(parents=True, exist_ok=True)
+            _context_path(root, edition_date).write_text(
+                json.dumps(
+                    {
+                        "source_mode": "both",
+                        "providers_configured": ["manual_sources_json"],
+                        "providers_attempted": ["manual_sources_json"],
+                        "providers_successful": ["manual_sources_json"],
+                        "provider_failures": [],
+                        "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok", "raw_candidates": len(manual_rows)}],
+                        "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1, "raw_candidates": len(manual_rows)},
+                        "raw_candidate_count": len(manual_rows),
+                        "accepted_candidate_count_before_dedupe": len(manual_rows),
+                        "enabled_auto_provider_count": 0,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+            return "both", manual_path, manual_rows, diagnostics, warnings, errors
+        errors.append(str(exc))
+        return "auto", None, [], diagnostics, warnings, errors
     warnings.extend(list(auto.get("warnings") or []))
     errors.extend(list(auto.get("errors") or []))
     diagnostics = auto
-    rows = list(auto.get("sources") or [])
+    auto_rows = list(auto.get("sources") or [])
+    rows = list(auto_rows)
+    source_mode_used = "auto"
     source_path = Path(str(auto["source_file"])) if auto.get("source_file") else _manual_source_path(root, edition_date)
-    return "auto", source_path, rows, diagnostics, warnings, errors
+    if source_mode == "both":
+        source_mode_used = "both"
+        rows = _dedupe_source_rows([*auto_rows, *manual_rows], max_sources)
+        manual_path.parent.mkdir(parents=True, exist_ok=True)
+        manual_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+        source_path = manual_path
+    providers_configured = list(auto.get("providers_configured") or [])
+    providers_attempted = list(auto.get("providers_attempted") or [])
+    providers_successful = list(auto.get("providers_successful") or [])
+    provider_diagnostics = list(auto.get("provider_diagnostics") or [])
+    if source_mode == "both":
+        providers_configured = [*providers_configured, "manual_sources_json"]
+        providers_attempted = [*providers_attempted, "manual_sources_json"]
+        if manual_valid and manual_rows:
+            providers_successful = sorted(set([*providers_successful, "manual_sources_json"]))
+        provider_diagnostics.append({"source_id": "manual_sources_json", "status": "ok" if manual_valid and manual_rows else "no_candidates", "raw_candidates": len(manual_rows)})
+    _context_path(root, edition_date).parent.mkdir(parents=True, exist_ok=True)
+    _context_path(root, edition_date).write_text(
+        json.dumps(
+            {
+                "source_mode": source_mode_used,
+                "providers_configured": providers_configured,
+                "providers_attempted": providers_attempted,
+                "providers_successful": providers_successful,
+                "provider_failures": list(auto.get("failed_source_ids") or []),
+                "provider_diagnostics": provider_diagnostics,
+                "skipped_providers": list(auto.get("skipped_providers") or []),
+                "working_providers": list(auto.get("working_providers") or []),
+                "stage_counts": dict(auto.get("stage_counts") or {}),
+                "rejected_by_reason": dict(auto.get("rejected_by_reason") or {}),
+                "raw_candidate_count": int((auto.get("stage_counts") or {}).get("raw_candidates") or 0) + (len(manual_rows) if source_mode == "both" else 0),
+                "accepted_candidate_count_before_dedupe": int((auto.get("stage_counts") or {}).get("accepted_before_rank") or 0) + (len(manual_rows) if source_mode == "both" else 0),
+                "enabled_auto_provider_count": int((auto.get("stage_counts") or {}).get("enabled_providers_configured") or 0),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return source_mode_used, source_path, rows, diagnostics, warnings, errors
 
 
 def _collection_report_path(root: Path, edition_date: str) -> Path:

@@ -106,6 +106,19 @@ def count_sources(sources_manifest: Path) -> int | None:
     return None
 
 
+def count_valid_source_records(payload: Any) -> int | None:
+    if not isinstance(payload, list):
+        return None
+    valid = 0
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        url = str(item.get("url") or "").strip()
+        if url:
+            valid += 1
+    return valid
+
+
 def extract_links(html_path: Path) -> list[str]:
     if not html_path.exists():
         return []
@@ -327,7 +340,7 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
         curation_payload = read_json(latest_curation) if latest_curation.exists() else None
         manifest_payload = read_json(latest_manifest) if latest_manifest.exists() else None
         latest_sources_payload = read_json(latest_sources) if latest_sources.exists() else None
-        source_count_from_sources = len(latest_sources_payload) if isinstance(latest_sources_payload, list) else None
+        source_count_from_sources = count_valid_source_records(latest_sources_payload)
         source_count_from_manifest = (
             int(manifest_payload.get("source_count", 0))
             if isinstance(manifest_payload, dict) and isinstance(manifest_payload.get("source_count"), int)
@@ -403,7 +416,7 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
         manifest = read_json(site_editions / d / "edition_manifest.json")
         sources_payload = read_json(site_editions / d / "sources_manifest.json")
         curation_payload = read_json(site_editions / d / "curation_manifest.json")
-        source_count_from_sources = len(sources_payload) if isinstance(sources_payload, list) else None
+        source_count_from_sources = count_valid_source_records(sources_payload)
         source_count_from_manifest = (
             int(manifest.get("source_count", 0))
             if isinstance(manifest, dict) and isinstance(manifest.get("source_count"), int)
@@ -846,15 +859,25 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
         critical_errors.append("Gaza linked public edition has dedupe-refusal errors")
     source_count_mismatches = gaza.get("source_count_mismatches") or []
     if source_count_mismatches:
+        mismatch_details = ", ".join(
+            f"{item.get('edition_date')}: manifest={item.get('manifest_source_count')} sources={item.get('sources_manifest_count')}"
+            for item in source_count_mismatches
+            if isinstance(item, dict)
+        )
         severe = any(
             int(item.get("manifest_source_count") or 0) == 0 and int(item.get("sources_manifest_count") or 0) > 0
             for item in source_count_mismatches
             if isinstance(item, dict)
         )
         if severe:
-            critical_errors.append("Gaza source count mismatch: edition_manifest reports 0 while sources_manifest has source records")
+            critical_errors.append(
+                "Gaza source count mismatch: edition_manifest reports 0 while sources_manifest has source records"
+            )
+            if mismatch_details:
+                critical_errors.append(f"Gaza source count mismatch details: {mismatch_details}")
         else:
-            warnings.append("Gaza source count mismatch between edition_manifest and sources_manifest")
+            base = "Gaza source count mismatch between edition_manifest and sources_manifest"
+            warnings.append(f"{base}: {mismatch_details}" if mismatch_details else base)
     if cascadia.get("transitional_public_links"):
         critical_errors.append("Cascadia transitional dates publicly linked")
     if not gaza.get("latest_has_visible_source_links"):

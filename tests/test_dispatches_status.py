@@ -405,3 +405,28 @@ def test_parse_git_status_keeps_gaza_sources_yml_as_source_change(monkeypatch, t
     assert parsed["has_source_changes"] is True
     assert "data/dispatches/gaza/sources.yml" in parsed["source_changes"]
     assert "data/dispatches/gaza/sources.yml" not in parsed["generated_changes"]
+
+
+def test_parse_git_status_classifies_cascadia_dated_runtime_paths_as_generated(monkeypatch, tmp_path):
+    rows = "\n".join(
+        [
+            "?? data/dispatches/cascadia/raw/2026-05-10/raw_sources.json",
+            "?? data/dispatches/cascadia/normalized/2026-05-10/normalized_sources.json",
+            "?? data/dispatches/cascadia/curated/2026-05-10/curation_manifest.json",
+            "?? data/dispatches/cascadia/sources/2026-05-04_2026-05-10/weekly_quality_report.json",
+        ]
+    )
+    monkeypatch.setattr(dispatches_status, "run_git", lambda *_args, **_kwargs: (True, rows))
+    parsed = dispatches_status.parse_git_status(tmp_path)
+    assert parsed["has_generated_changes"] is True
+    assert parsed["has_source_changes"] is False
+    assert any("data/dispatches/cascadia/raw/2026-05-10" in path for path in parsed["generated_changes"])
+
+
+def test_parse_git_status_keeps_cascadia_source_registry_as_source_change(monkeypatch, tmp_path):
+    rows = " M data/dispatches/cascadia/source_registry.yml"
+    monkeypatch.setattr(dispatches_status, "run_git", lambda *_args, **_kwargs: (True, rows))
+    parsed = dispatches_status.parse_git_status(tmp_path)
+    assert parsed["has_source_changes"] is True
+    assert "data/dispatches/cascadia/source_registry.yml" in parsed["source_changes"]
+    assert "data/dispatches/cascadia/source_registry.yml" not in parsed["generated_changes"]

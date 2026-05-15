@@ -34,14 +34,27 @@ GENERATED_DIR_PREFIXES = (
 GAZA_RUNTIME_DATE_DIR_RE = re.compile(
     r"^data/dispatches/gaza/(raw|normalized|curated|editions|sources)/\d{4}-\d{2}-\d{2}/"
 )
+CASCADIA_RUNTIME_DATE_DIR_RE = re.compile(
+    r"^data/dispatches/cascadia/(raw|normalized|curated)/\d{4}-\d{2}-\d{2}/"
+)
+CASCADIA_RUNTIME_WEEK_DIR_RE = re.compile(
+    r"^data/dispatches/cascadia/sources/\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/"
+)
 
 
 def _is_gaza_runtime_artifact_path(path: str) -> bool:
     return bool(GAZA_RUNTIME_DATE_DIR_RE.match(path))
 
 
+def _is_cascadia_runtime_artifact_path(path: str) -> bool:
+    return bool(CASCADIA_RUNTIME_DATE_DIR_RE.match(path) or CASCADIA_RUNTIME_WEEK_DIR_RE.match(path))
+
+
 def _is_trackable_source_path(path: str) -> bool:
-    return path == "data/dispatches/gaza/sources.yml"
+    return path in {
+        "data/dispatches/gaza/sources.yml",
+        "data/dispatches/cascadia/source_registry.yml",
+    }
 
 
 def run_git(repo: Path, *args: str) -> tuple[bool, str]:
@@ -134,7 +147,11 @@ def parse_git_status(repo: Path) -> dict[str, Any]:
         normalized = path.replace("\\", "/")
         if normalized.startswith(SOURCE_DIR_PREFIXES) or _is_trackable_source_path(normalized):
             source_changes.append(normalized)
-        if normalized.startswith(GENERATED_DIR_PREFIXES) or _is_gaza_runtime_artifact_path(normalized):
+        if (
+            normalized.startswith(GENERATED_DIR_PREFIXES)
+            or _is_gaza_runtime_artifact_path(normalized)
+            or _is_cascadia_runtime_artifact_path(normalized)
+        ):
             generated_changes.append(normalized)
             if normalized in source_changes:
                 source_changes.remove(normalized)

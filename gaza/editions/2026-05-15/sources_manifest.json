@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-05-15T16:30:31+00:00",
-    "retrieved_at": "2026-05-15T17:39:18.657699+00:00",
+    "retrieved_at": "2026-05-15T18:18:23.009603+00:00",
     "summary_or_snippet": "Israel's prime minister says he has ordered legal action over an article which alleged Israeli security officials raped Palestinian detainees.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -43,5 +43,139 @@
     "dedupe_key": "bbc|new york times defends journalist after israel threatens to sue",
     "title_fingerprint": "new york times defends journalist after israel threatens to sue",
     "claim_fingerprint": "bbc|new york times defends journalist after israel threatens to sue|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-15-aljazeera-middle-east-5ce369da38f2",
+    "source_id": "gaza-2026-05-15-aljazeera-middle-east-5ce369da38f2",
+    "title": "Nakba: Jewish voices are challenging the stories Israel tells about itself",
+    "url": "https://www.aljazeera.com/features/2026/5/15/nakba-jewish-voices-are-challenging-the-stories-israel-tells-about-itself?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/features/2026/5/15/nakba-jewish-voices-are-challenging-the-stories-israel-tells-about-itself?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-15T14:32:24+00:00",
+    "retrieved_at": "2026-05-15T18:18:23.009603+00:00",
+    "summary_or_snippet": "A film director, historian and Holocaust survivor speak to Al Jazeera as opinions shift.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-15",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-15-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|nakba jewish voices are challenging the stories israel tells about itself",
+    "title_fingerprint": "nakba jewish voices are challenging the stories israel tells about itself",
+    "claim_fingerprint": "al jazeera|nakba jewish voices are challenging the stories israel tells about itself|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-15-aljazeera-middle-east-bc88b76a3fb3",
+    "source_id": "gaza-2026-05-15-aljazeera-middle-east-bc88b76a3fb3",
+    "title": "Historical reckoning: The push for the US to acknowledge the Nakba",
+    "url": "https://www.aljazeera.com/news/2026/5/15/historical-reckoning-the-push-for-the-us-to-acknowledge-the-nakba?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/15/historical-reckoning-the-push-for-the-us-to-acknowledge-the-nakba?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-15T14:31:48+00:00",
+    "retrieved_at": "2026-05-15T18:18:23.009603+00:00",
+    "summary_or_snippet": "On the 78th anniversary of the mass expulsion of Palestinians, experts say US 'political amnesia' continues.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-15",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-15-005"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|historical reckoning the push for the us to acknowledge the nakba",
+    "title_fingerprint": "historical reckoning the push for the us to acknowledge the nakba",
+    "claim_fingerprint": "al jazeera|historical reckoning the push for the us to acknowledge the nakba|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-15-aljazeera-middle-east-00955dcd4d57",
+    "source_id": "gaza-2026-05-15-aljazeera-middle-east-00955dcd4d57",
+    "title": "Israeli settler attacks activist during tour on settler violence",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/15/israeli-settler-attacks-activist-during-tour-on-settler-violence?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/15/israeli-settler-attacks-activist-during-tour-on-settler-violence?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-15T12:49:21+00:00",
+    "retrieved_at": "2026-05-15T18:00:04.147475+00:00",
+    "summary_or_snippet": "A group of Israeli settlers attacked Israeli rights activists in the occupied West Bank.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-15",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-15-006"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|israeli settler attacks activist during tour on settler violence",
+    "title_fingerprint": "israeli settler attacks activist during tour on settler violence",
+    "claim_fingerprint": "al jazeera|israeli settler attacks activist during tour on settler violence|conflict"
   }
 ]

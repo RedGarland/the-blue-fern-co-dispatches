@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-14",
-  "generated_at": "2026-05-14T19:44:13.310543+00:00",
+  "generated_at": "2026-05-15T18:18:22.954009+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-14/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-14",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-14",
@@ -24,6 +24,7 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
+    "rejected non-gaza/palestinian source record gaza-2026-05-14-guardian-world-69c527f05996: rejected_no_palestinian_anchor",
     "suppressed 1 repeated/stale candidate sources via cross-edition dedupe"
   ],
   "errors": []

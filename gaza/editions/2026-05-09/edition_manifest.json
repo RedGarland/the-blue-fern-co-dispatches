@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-09",
-  "generated_at": "2026-05-14T16:32:51.218163+00:00",
+  "generated_at": "2026-05-15T18:18:19.860773+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-09/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-09",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-09",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-05-09",
   "template_version": "gaza-source-record-v1",
-  "source_count": 12,
-  "story_count": 10,
+  "source_count": 10,
+  "story_count": 9,
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-09\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-09\\curation_manifest.json",
   "free_public_artifacts": [
@@ -23,6 +23,8 @@
   "is_free_public": true,
   "has_detail_tier": false,
   "public_exposed": true,
-  "warnings": [],
+  "warnings": [
+    "suppressed 2 repeated/stale candidate sources via cross-edition dedupe"
+  ],
   "errors": []
 }

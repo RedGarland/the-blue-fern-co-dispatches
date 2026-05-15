@@ -1,44 +1,47 @@
 [
   {
-    "source_record_id": "gaza-2026-05-07-ap-hamas-negotiator-son",
-    "source_id": "gaza-2026-05-07-ap-hamas-negotiator-son",
-    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
-    "url": "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f",
-    "canonical_url": "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f",
-    "publisher": "Associated Press",
-    "published_at": "2026-05-07T00:00:00Z",
-    "retrieved_at": "2026-05-07T00:00:00-07:00",
-    "summary_or_snippet": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
-    "source_type": "news",
+    "source_record_id": "gaza-2026-05-07-bbc-middle-east-a9bc268ae456",
+    "source_id": "gaza-2026-05-07-bbc-middle-east-a9bc268ae456",
+    "title": "Fears of renewed Gaza war as Hamas disarmament talks stall",
+    "url": "https://www.bbc.com/news/articles/cd6p5l3n2q3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/cd6p5l3n2q3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-07T14:22:20+00:00",
+    "retrieved_at": "2026-05-15T18:18:18.124802+00:00",
+    "summary_or_snippet": "Israeli media reports suggest Israel is preparing to resume fighting because of the impasse in talks with Hamas.",
+    "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
-    "reliability_tier": "wire-service",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-07",
     "used_in_story_ids": [
       "gaza-story-2026-05-07-001"
     ],
-    "claim_ids": []
-  },
-  {
-    "source_record_id": "gaza-2026-05-07-xinhua-ocha-confined",
-    "source_id": "gaza-2026-05-07-xinhua-ocha-confined",
-    "title": "Gazans confined to less than half of strip: UN",
-    "url": "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml",
-    "canonical_url": "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml",
-    "publisher": "Xinhua",
-    "published_at": "2026-05-07T00:00:00Z",
-    "retrieved_at": "2026-05-07T00:00:00-07:00",
-    "summary_or_snippet": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
-    "source_type": "news",
-    "region_scope": "Gaza",
-    "category_hint": "humanitarian",
-    "reliability_tier": "wire-service",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-07",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-07-002"
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
     ],
-    "claim_ids": []
+    "relevance_band": "core",
+    "dedupe_key": "bbc|fears of renewed gaza war as hamas disarmament talks stall",
+    "title_fingerprint": "fears of renewed gaza war as hamas disarmament talks stall",
+    "claim_fingerprint": "bbc|fears of renewed gaza war as hamas disarmament talks stall|conflict"
   }
 ]

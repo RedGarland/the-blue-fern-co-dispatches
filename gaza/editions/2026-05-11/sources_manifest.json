@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "source_record_id": "gaza-2026-05-11-bbc-middle-east-9d49f03ee166",
+    "source_id": "gaza-2026-05-11-bbc-middle-east-9d49f03ee166",
+    "title": "EU agrees sanctions on Israeli settlers over West Bank violence",
+    "url": "https://www.bbc.com/news/articles/c202wp2rl09o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/c202wp2rl09o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-11T19:37:17+00:00",
+    "retrieved_at": "2026-05-15T18:18:20.542500+00:00",
+    "summary_or_snippet": "The EU's foreign policy chief said \"extremism and violence carry consequences\", while Israel branded the move \"arbitrary\".",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-11",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-11-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "bbc|eu agrees sanctions on israeli settlers over west bank violence",
+    "title_fingerprint": "eu agrees sanctions on israeli settlers over west bank violence",
+    "claim_fingerprint": "bbc|eu agrees sanctions on israeli settlers over west bank violence|conflict"
+  }
+]

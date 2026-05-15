@@ -1,1 +1,49 @@
-[]
+[
+  {
+    "story_id": "gaza-story-2026-05-11-001",
+    "title": "EU agrees sanctions on Israeli settlers over West Bank violence",
+    "summary": "The EU's foreign policy chief said \"extremism and violence carry consequences\", while Israel branded the move \"arbitrary\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-11-bbc-middle-east-9d49f03ee166"
+    ],
+    "source_ids": [
+      "gaza-2026-05-11-bbc-middle-east-9d49f03ee166"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c202wp2rl09o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-15T18:18:21.022452+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  }
+]

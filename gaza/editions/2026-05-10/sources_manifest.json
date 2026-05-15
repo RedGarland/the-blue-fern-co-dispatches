@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-05-10T11:55:09+00:00",
-    "retrieved_at": "2026-05-15T17:15:07.167116+00:00",
+    "retrieved_at": "2026-05-15T18:18:19.922305+00:00",
     "summary_or_snippet": "Spanish national Saif Abu Keshek and Brazilian Thiago \u00c1vila were detained by Israel after sailing in a Gaza-bound aid flotilla.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -45,18 +45,18 @@
     "claim_fingerprint": "bbc|israel deports two activists detained on board gaza flotilla|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-10-bbc-middle-east-48ca7801059f",
-    "source_id": "gaza-2026-05-10-bbc-middle-east-48ca7801059f",
-    "title": "Return of Palestine Marathon attracts thousands of runners",
-    "url": "https://www.bbc.com/news/videos/cm2p4n000pko?at_medium=RSS&at_campaign=rss",
-    "canonical_url": "https://www.bbc.com/news/videos/cm2p4n000pko?at_medium=RSS&at_campaign=rss",
+    "source_record_id": "gaza-2026-05-10-bbc-middle-east-46987adb300e",
+    "source_id": "gaza-2026-05-10-bbc-middle-east-46987adb300e",
+    "title": "His father had just been buried. Then West Bank settlers forced him to dig up the body",
+    "url": "https://www.bbc.com/news/articles/cjrpnjpl39po?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/cjrpnjpl39po?at_medium=RSS&at_campaign=rss",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
     "publisher": "BBC News",
-    "published_at": "2026-05-08T17:23:28+00:00",
-    "retrieved_at": "2026-05-15T17:15:07.167116+00:00",
-    "summary_or_snippet": "Thousands of people have taken part in the Palestine Marathon, which returns to Bethlehem after a two-year pause over the Gaza War.",
+    "published_at": "2026-05-10T19:56:45+00:00",
+    "retrieved_at": "2026-05-15T18:18:19.922305+00:00",
+    "summary_or_snippet": "The UN human rights office condemns incident as \"'appalling and emblematic of the dehumanisation of Palestinians\" in the West Bank.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -67,7 +67,7 @@
       "gaza-story-2026-05-10-002"
     ],
     "claim_ids": [],
-    "candidate_score": 24,
+    "candidate_score": 40,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
@@ -75,17 +75,18 @@
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
+      "accountability_legal": 8,
       "source_reliability": 14,
-      "date_confidence": 10
+      "date_confidence": 18
     },
     "ranking_reasons": [
+      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
-    "relevance_band": "core",
-    "dedupe_key": "bbc|return of palestine marathon attracts thousands of runners",
-    "title_fingerprint": "return of palestine marathon attracts thousands of runners",
-    "claim_fingerprint": "bbc|return of palestine marathon attracts thousands of runners|conflict"
+    "relevance_band": "peripheral",
+    "dedupe_key": "bbc|his father had just been buried then west bank settlers forced him to dig up the body",
+    "title_fingerprint": "his father had just been buried then west bank settlers forced him to dig up the body",
+    "claim_fingerprint": "bbc|his father had just been buried then west bank settlers forced him to dig up the body|conflict"
   }
 ]

@@ -4,6 +4,7 @@
     "title": "Israel deports two activists detained on board Gaza flotilla",
     "summary": "Spanish national Saif Abu Keshek and Brazilian Thiago \u00c1vila were detained by Israel after sailing in a Gaza-bound aid flotilla.",
     "category": "conflict",
+    "story_scope": "core_gaza",
     "score": 44,
     "scoring_reasons": [
       "humanitarian_impact",
@@ -35,7 +36,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-15T17:15:08.772940+00:00",
+    "generated_at": "2026-05-15T18:18:20.483656+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
@@ -47,11 +48,13 @@
   },
   {
     "story_id": "gaza-story-2026-05-10-002",
-    "title": "Return of Palestine Marathon attracts thousands of runners",
-    "summary": "Thousands of people have taken part in the Palestine Marathon, which returns to Bethlehem after a two-year pause over the Gaza War.",
-    "category": "conflict",
-    "score": 24,
+    "title": "His father had just been buried. Then West Bank settlers forced him to dig up the body",
+    "summary": "The UN human rights office condemns incident as \"'appalling and emblematic of the dehumanisation of Palestinians\" in the West Bank.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 40,
     "scoring_reasons": [
+      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
@@ -62,25 +65,25 @@
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
+      "accountability_legal": 8,
       "source_reliability": 14,
-      "date_confidence": 10
+      "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-10-bbc-middle-east-48ca7801059f"
+      "gaza-2026-05-10-bbc-middle-east-46987adb300e"
     ],
     "source_ids": [
-      "gaza-2026-05-10-bbc-middle-east-48ca7801059f"
+      "gaza-2026-05-10-bbc-middle-east-46987adb300e"
     ],
     "source_urls": [
-      "https://www.bbc.com/news/videos/cm2p4n000pko?at_medium=RSS&at_campaign=rss"
+      "https://www.bbc.com/news/articles/cjrpnjpl39po?at_medium=RSS&at_campaign=rss"
     ],
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-15T17:15:08.772940+00:00",
+    "generated_at": "2026-05-15T18:18:20.483656+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"

@@ -1,17 +1,17 @@
 [
   {
-    "source_record_id": "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d",
-    "source_id": "gaza-2026-05-14-aljazeera-middle-east-016525e77f2d",
-    "title": "Lamine Yamal divides opinion with Palestinian flag gesture",
-    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/14/lamine-yamal-divides-opinion-with-palestinian-flag-gesture?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/14/lamine-yamal-divides-opinion-with-palestinian-flag-gesture?traffic_source=rss",
+    "source_record_id": "gaza-2026-05-14-guardian-world-094c055812cd",
+    "source_id": "gaza-2026-05-14-guardian-world-094c055812cd",
+    "title": "'It's like stealing': Palestinian family's seized property listed on Booking.com",
+    "url": "https://www.theguardian.com/world/2026/may/14/palestinian-family-seized-property-listed-on-booking-com",
+    "canonical_url": "https://www.theguardian.com/world/2026/may/14/palestinian-family-seized-property-listed-on-booking-com",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-14T16:23:28+00:00",
-    "retrieved_at": "2026-05-14T19:44:11.231363+00:00",
-    "summary_or_snippet": "A mural of Barcelona player Lamine Yamal was painted in Gaza after the teenager waved a Palestinian flag.",
+    "publisher": "The Guardian",
+    "published_at": "2026-05-14T14:26:48+00:00",
+    "retrieved_at": "2026-05-15T18:18:22.377686+00:00",
+    "summary_or_snippet": "West Bank home described as 'ideal for outdoor gatherings' is among 41 listed rentals in illegal Israeli settlements Some of Mohammad al-Sbeih's fondest childhood memories are of his small farm in the hills south of Bethlehem, where three generations of his family grew wheat and barley. \"It was a hard plot to farm as it was on a hillside with terraces, but it was so beautiful,\" Sbeih remembers.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -22,7 +22,7 @@
       "gaza-story-2026-05-14-002"
     ],
     "claim_ids": [],
-    "candidate_score": 32,
+    "candidate_score": 40,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
@@ -30,16 +30,18 @@
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
+      "accountability_legal": 8,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "ranking_reasons": [
+      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
-    "dedupe_key": "al jazeera|lamine yamal divides opinion with palestinian flag gesture",
-    "title_fingerprint": "lamine yamal divides opinion with palestinian flag gesture",
-    "claim_fingerprint": "al jazeera|lamine yamal divides opinion with palestinian flag gesture|conflict"
+    "relevance_band": "peripheral",
+    "dedupe_key": "guardian|it s like stealing palestinian family s seized property listed on booking com",
+    "title_fingerprint": "it s like stealing palestinian family s seized property listed on booking com",
+    "claim_fingerprint": "guardian|it s like stealing palestinian family s seized property listed on booking com|conflict"
   }
 ]

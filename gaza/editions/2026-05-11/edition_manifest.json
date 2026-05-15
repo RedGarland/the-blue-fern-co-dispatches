@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-11",
-  "generated_at": "2026-05-13T22:29:53.236143+00:00",
+  "generated_at": "2026-05-15T18:18:21.022452+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-11/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-11",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-05-11",
   "template_version": "gaza-source-record-v1",
-  "source_count": 0,
-  "story_count": 0,
+  "source_count": 1,
+  "story_count": 1,
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-11\\curation_manifest.json",
   "free_public_artifacts": [
@@ -23,6 +23,9 @@
   "is_free_public": true,
   "has_detail_tier": false,
   "public_exposed": true,
-  "warnings": [],
+  "warnings": [
+    "rejected non-gaza/palestinian source record gaza-2026-05-11-bbc-middle-east-cea66eab6e01: rejected_no_palestinian_anchor",
+    "suppressed 2 repeated/stale candidate sources via cross-edition dedupe"
+  ],
   "errors": []
 }

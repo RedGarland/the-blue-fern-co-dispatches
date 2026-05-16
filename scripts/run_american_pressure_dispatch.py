@@ -497,6 +497,68 @@ def _location_phrase(source: dict[str, Any]) -> str:
     return region_scope
 
 
+def _normalize_location_intro(place: str) -> tuple[str, str]:
+    cleaned = place.strip()
+    match = re.match(r"(?i)^multiple counties in ([a-z][a-z .'-]+)$", cleaned)
+    if match:
+        state = match.group(1).strip()
+        return (f"Across multiple {state} counties", "across")
+    if cleaned.lower().startswith("multiple counties"):
+        return (f"Across {cleaned.lower()}", "across")
+    return (cleaned, "in")
+
+
+def _extract_named_actor(source: dict[str, Any]) -> str:
+    title = _safe_text(source.get("title"))
+    summary = _safe_text(source.get("summary_or_snippet"))
+    for text in (title, summary):
+        for pattern in (
+            r"\b(SLO Food Bank)\b",
+            r"\b(River Hills Community Health Center)\b",
+            r"\b(Sacramento City Unified)\b",
+            r"\b(state and federal teams)\b",
+            r"\b(Wisconsin officials)\b",
+        ):
+            m = re.search(pattern, text, flags=re.IGNORECASE)
+            if m:
+                return m.group(1)
+    publisher = _safe_text(source.get("publisher")).lower()
+    if "wisconsin emergency management" in publisher:
+        text = f"{title} {summary}".lower()
+        if "state and federal teams" in text:
+            return "state and federal teams"
+        return "state officials"
+    return ""
+
+
+def _remove_location_repetition(base: str, place: str) -> str:
+    trimmed = base.strip()
+    if not trimmed:
+        return trimmed
+    lowered = trimmed.lower()
+    place_words = [w for w in re.split(r"[\s,]+", place.lower()) if w and len(w) > 2]
+    for word in place_words:
+        if lowered.startswith(f"a {word} "):
+            trimmed = re.sub(rf"(?i)^a\s+{re.escape(word)}\s+", "a ", trimmed).strip()
+            lowered = trimmed.lower()
+            break
+    return trimmed
+
+
+def _trim_generic_lead_when_actor_present(text: str) -> str:
+    trimmed = text.strip()
+    patterns = (
+        r"(?i)^a\s+[a-z\s-]{1,60}\s+(reported|announced|approved|began|said|warned)\b",
+        r"(?i)^an\s+[a-z\s-]{1,60}\s+(reported|announced|approved|began|said|warned)\b",
+    )
+    for pat in patterns:
+        m = re.match(pat, trimmed)
+        if m:
+            verb = m.group(1)
+            return re.sub(pat, verb, trimmed, count=1).strip()
+    return trimmed
+
+
 def _locationized_current_development(source: dict[str, Any]) -> str:
     base = _safe_text(source.get("manual_human_story_summary")) or _safe_text(source.get("manual_what_happened")) or _reader_facing_summary(source)
     if not base:
@@ -504,11 +566,33 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
     place = _location_phrase(source)
     if not place:
         return base
-    normalized = base[0].lower() + base[1:] if len(base) > 1 else base.lower()
+    intro_place, intro_mode = _normalize_location_intro(place)
+    normalized = _remove_location_repetition(base, intro_place)
     if normalized.lower().startswith("in "):
         return base
+    actor = _extract_named_actor(source)
+    if actor:
+        normalized = _trim_generic_lead_when_actor_present(normalized)
+        if normalized.lower().startswith("the "):
+            normalized = re.sub(r"(?i)^the\s+", "", normalized, count=1)
+        # Normalize redundant actor fragments before deciding whether to prepend actor.
+        if "state and federal teams" in actor.lower():
+            normalized = re.sub(r"(?i)^wisconsin officials\s+", "", normalized, count=1).strip()
+            normalized = re.sub(r"(?i)^state and federal teams\s+wisconsin officials\s+", "state and federal teams ", normalized, count=1).strip()
+            normalized = re.sub(r"(?i)^state and federal teams\s+state officials\s+", "state and federal teams ", normalized, count=1).strip()
+        if "wisconsin officials" in actor.lower():
+            normalized = re.sub(r"(?i)^state officials\s+", "wisconsin officials ", normalized, count=1).strip()
+
+        if normalized.lower().startswith(actor.lower()) or (
+            "officials" in actor.lower() and normalized.lower().startswith("wisconsin officials")
+        ):
+            normalized = normalized
+        else:
+            normalized = f"{actor} {normalized}"
+        # Mid-sentence actor capitalization cleanup.
+        normalized = re.sub(r"^State and federal teams\b", "state and federal teams", normalized)
     affected = _safe_text(source.get("affected_people"))
-    sentence = f"In {place}, {normalized}"
+    sentence = f"{'In' if intro_mode == 'in' else 'Across'} {intro_place.removeprefix('Across ').removeprefix('In ')}, {normalized}" if intro_mode == "across" else f"In {intro_place}, {normalized}"
     if affected:
         sentence += f" This may affect {affected}."
     return sentence

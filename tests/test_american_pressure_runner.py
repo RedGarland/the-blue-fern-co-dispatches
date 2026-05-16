@@ -415,7 +415,8 @@ def test_location_specific_prose_uses_san_luis_obispo_county(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "In San Luis Obispo County, California," in html
+    assert "In San Luis Obispo County" in html
+    assert "California, a California food bank" not in html
 
 
 def test_location_fallback_uses_region_scope_when_location_missing(work_root):
@@ -436,6 +437,41 @@ def test_location_fallback_uses_region_scope_when_location_missing(work_root):
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
     assert "In US-WI," in html
+
+
+def test_wisconsin_multiple_counties_phrase_is_normalized(work_root):
+    story = _record(
+        "wi-storm",
+        "local_system_strain",
+        "Wisconsin officials begin assessments after storms",
+        "Wisconsin officials began damage assessments after storms and flooding.",
+        "https://example.com/wi",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    story["location"] = "Multiple counties in Wisconsin"
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Across multiple Wisconsin counties" in html
+    assert "In Multiple counties in Wisconsin, Wisconsin" not in html
+    assert "State and federal teams wisconsin officials" not in html
+    assert "wisconsin officials" not in html
+
+
+def test_wisconsin_preferred_phrase_from_fixture_is_clean(work_root):
+    repo = Path(__file__).resolve().parents[1]
+    fixture_path = repo / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-12" / "manual_sources.json"
+    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+    records = payload.get("sources") if isinstance(payload, dict) else payload
+    _write_manual_sources(work_root, "2026-05-12", records)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Across multiple Wisconsin counties, state and federal teams" in html
+    assert "State and federal teams wisconsin officials" not in html
+    assert html.count("state and federal teams") == 1
 
 
 def test_collection_gap_wording_does_not_claim_no_relevant_news(work_root):

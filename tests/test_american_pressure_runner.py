@@ -85,6 +85,8 @@ def test_food_bank_story_links_to_snap_anchor(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "<strong>Current Development:</strong>" in html
+    assert "<strong>Data Context:</strong>" in html
     assert "Real-life story sources:" in html
     assert "Data/context sources:" in html
     assert "USDA SNAP Household Characteristics" in html
@@ -112,7 +114,9 @@ def test_baseline_only_item_gets_baseline_label(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "Baseline gauge: useful for tracking, but not enough by itself to show what changed this week." in html
+    assert "<strong>Data Context:</strong>" in html
+    assert "<strong>Current Development:</strong>" not in html
+    assert "Type: baseline_gauge" not in html
 
 
 def test_data_anchor_not_mislabeled_current_week_development(work_root):
@@ -141,6 +145,9 @@ def test_story_count_counts_mini_briefs_not_sources_and_counts_reconcile(work_ro
     assert manifest["source_count"] == len(sources)
     assert manifest["story_count"] == len(curation["stories"])
     assert manifest["story_count"] < manifest["source_count"]
+    assert curation["stories"][0]["item_type"] in {"current_week_development", "baseline_gauge"}
+    assert curation["stories"][0]["brief_quality"] in {"story_plus_data", "baseline_only", "watchlist_only", "official_release_only"}
+    assert any(source.get("manual_source_role") for source in sources)
 
 
 def test_no_duplicate_reader_headlines(work_root):
@@ -190,3 +197,43 @@ def test_both_mode_with_manual_human_stories_produces_story_plus_data(work_root)
     assert result["ok"] is True
     manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
     assert manifest["brief_quality_counts"]["story_plus_data"] > 0
+
+
+def test_public_output_hides_internal_labels_and_uses_plain_summary(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand story", "Pantry demand rose this week.", "https://example.com/story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["ap-2026-05-12-snap"]),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "This week’s sources point to pressure around groceries, debt, housing costs, health coverage, jobs, and local disruptions." in html
+    for disallowed in ("current_week_development", "baseline_gauge", "story_plus_data", "source_role", "item_type", "Type:", "Brief quality:"):
+        assert disallowed not in html
+
+
+def test_story_plus_data_renders_current_development_before_data_context(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand story", "Pantry demand rose this week.", "https://example.com/story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["ap-2026-05-12-snap"]),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    current_idx = html.index("<strong>Current Development:</strong>")
+    data_idx = html.index("<strong>Data Context:</strong>")
+    assert current_idx < data_idx
+
+
+def test_baseline_only_note_appears_once_when_present(work_root):
+    manual = [
+        _record("cpi", "housing_household_cost_pressure", "BLS CPI Shelter Index", "Official baseline indicator source.", "https://example.com/cpi", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    note = "Some items are baseline data points. They help track pressure, but they do not by themselves prove what changed this week."
+    assert html.count(note) == 1

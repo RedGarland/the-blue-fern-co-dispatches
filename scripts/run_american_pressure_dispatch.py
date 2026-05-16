@@ -736,24 +736,21 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
     source_by_id = {source["source_record_id"]: source for source in sources}
     pillars_present, pillars_missing, _, _ = _coverage(stories, sources)
     chunks: list[str] = ["<h1>The American Pressure Dispatch</h1>", f"<p class=\"eyebrow\">Weekly briefing / {edition_date}</p>"]
-    chunks.append("<h2>This Week’s Read</h2>")
-    chunks.append(
-        "<p>American Pressure tracks how everyday life pressure is moving for households across groceries, bills, jobs, health care, debt, and local services. "
-        "Official baselines are the evidence layer, not the headline layer.</p>"
-    )
-    chunks.append("<h2>What This Means</h2>")
     item_counts = _item_type_counts(stories)
-    baseline_only = item_counts.get("baseline_gauge", 0) > 0 and item_counts.get("current_week_development", 0) == 0
-    chunks.append("<p>This week reads mostly as a pressure map, not a full account of change. Food, debt, housing, health access, jobs, and local strain signals help show where stress may be building. Some signals are baseline gauges, and they need current-week reporting to confirm what actually changed.</p>")
-    if baseline_only:
-        chunks.append("<p><strong>This edition is mostly baseline gauges. That means it is useful for tracking pressure, but it needs more current-week news and local developments before it can fully describe what changed this week.</strong></p>")
-    chunks.append("<h2>What Feels Tight</h2>")
+    current_developments = item_counts.get("current_week_development", 0)
+    data_context_briefs = item_counts.get("baseline_gauge", 0)
+    baseline_only_briefs = sum(1 for story in stories if _safe_text(story.get("brief_quality")) == "baseline_only")
+    chunks.append("<h2>This Week at a Glance</h2>")
     chunks.append(
-        f"<p>{len(stories)} source-backed signals are active across {len(pillars_present)} pillars. "
-        "Read these as gauges of where pressure is showing up, who may be getting squeezed, and what to watch next.</p>"
+        "<p>This week’s sources point to pressure around groceries, debt, housing costs, health coverage, jobs, and local disruptions. "
+        "Some items are real-world developments; others are official data points that help show where pressure may be building.</p>"
     )
-    chunks.append("<h2>What Changed</h2>")
-    chunks.append("<p>Current-week developments are listed first in each section, followed by baseline gauges for context.</p>")
+    chunks.append(
+        f"<p>In this edition, {current_developments} items are current developments and {data_context_briefs} items are data context. "
+        "Watch for whether local disruptions spread, whether job and benefit access weakens, and whether cost pressure broadens.</p>"
+    )
+    if baseline_only_briefs > 0:
+        chunks.append("<p><strong>Some items are baseline data points. They help track pressure, but they do not by themselves prove what changed this week.</strong></p>")
 
     stories_by_pillar: dict[str, list[dict[str, Any]]] = {pillar: [] for pillar in PILLAR_ORDER}
     for story in stories:
@@ -767,23 +764,18 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
             continue
         guide = PILLAR_GUIDANCE[pillar]
         for story in items:
-            item_type = str(story.get("item_type") or "baseline_gauge")
-            quality = _safe_text(story.get("brief_quality"))
             chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
-            chunks.append(f"<p><strong>Type:</strong> {html.escape(item_type)}</p>")
-            chunks.append(f"<p><strong>Brief quality:</strong> {html.escape(quality)}</p>")
-            if quality == "baseline_only":
-                chunks.append("<p><strong>Baseline gauge: useful for tracking, but not enough by itself to show what changed this week.</strong></p>")
-            if _safe_text(story.get("human_story_summary")):
-                chunks.append(f"<p><strong>Human story / current development:</strong> {html.escape(str(story.get('human_story_summary')))}</p>")
-            chunks.append(f"<p><strong>Data context:</strong> {html.escape(str(story.get('data_context_summary') or guide['why_it_matters']))}</p>")
-            chunks.append(f"<p><strong>What happened:</strong> {html.escape(str(story.get('what_happened')))}</p>")
-            chunks.append(f"<p><strong>Potential relevance:</strong> {html.escape(str(story.get('potential_relevance') or guide['why_it_matters']))}</p>")
-            chunks.append(f"<p><strong>Who may feel it:</strong> {html.escape(str(story.get('who_may_feel_it') or guide['who_may_feel_it']))}</p>")
-            chunks.append(f"<p><strong>What to watch next:</strong> {html.escape(str(story.get('what_to_watch_next') or guide['watch_next']))}</p>")
+            human_story_summary = _safe_text(story.get("human_story_summary"))
+            if human_story_summary:
+                chunks.append(f"<p><strong>Current Development:</strong> {html.escape(human_story_summary)}</p>")
+            chunks.append(f"<p><strong>Data Context:</strong> {html.escape(str(story.get('data_context_summary') or guide['why_it_matters']))}</p>")
+            chunks.append(f"<p><strong>Potential Relevance:</strong> {html.escape(str(story.get('potential_relevance') or guide['why_it_matters']))}</p>")
+            chunks.append(f"<p><strong>Who May Feel It:</strong> {html.escape(str(story.get('who_may_feel_it') or guide['who_may_feel_it']))}</p>")
+            chunks.append(f"<p><strong>What to Watch Next:</strong> {html.escape(str(story.get('what_to_watch_next') or guide['watch_next']))}</p>")
             human_ids = [str(x) for x in story.get("human_story_source_ids", [])]
             data_ids = [str(x) for x in story.get("data_anchor_source_ids", [])]
             watch_ids = [str(x) for x in story.get("watchlist_source_ids", [])]
+            chunks.append("<p><strong>Sources:</strong></p>")
             if human_ids:
                 links = []
                 for source_id in human_ids:
@@ -958,6 +950,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "missing_human_story_pillars": missing_human_story_pillars,
         "baseline_only_edition": item_type_counts.get("baseline_gauge", 0) > 0 and item_type_counts.get("current_week_development", 0) == 0,
         "low_quality_story_ids": low_quality_story_ids,
+        "future_enhancements": {
+            "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+        },
         "warnings": warnings,
         "errors": errors,
     }
@@ -980,6 +975,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "baseline_only_briefs": baseline_only_briefs,
         "missing_human_story_pillars": missing_human_story_pillars,
         "low_quality_story_ids": low_quality_story_ids,
+        "future_enhancements": {
+            "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+        },
     }
 
     if errors:

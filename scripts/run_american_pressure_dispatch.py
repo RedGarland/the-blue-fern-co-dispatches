@@ -6,7 +6,7 @@ import json
 import re
 import shutil
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -37,6 +37,23 @@ DISPATCH_NAME = "The American Pressure Dispatch"
 DISPATCH_TAGLINE = "Weekly source-backed household pressure briefing"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SOURCE_MODES = {"manual", "auto", "both"}
+IMPORTANT_CURRENT_DEVELOPMENT_PILLARS = [
+    "housing_household_cost_pressure",
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "local_system_strain",
+]
+REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS = {
+    "food_pressure": "food bank demand / SNAP / grocery pressure",
+    "financial_distress_pressure": "bankruptcy / closure / debt stress",
+    "housing_household_cost_pressure": "housing / rent / eviction / utility pressure",
+    "health_access_pressure": "clinic / hospital / pharmacy / health access",
+    "labor_income_pressure": "layoffs / WARN / employer cuts",
+    "local_system_strain": "disaster / drought / flood / heat / local service strain",
+    "policy_implementation": "benefit or policy implementation problems",
+}
 PILLAR_ORDER = [
     "food_pressure",
     "financial_distress_pressure",
@@ -192,11 +209,24 @@ def manual_source_path(root: Path, edition_date: str) -> Path:
     return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / edition_date / "manual_sources.json"
 
 
+def daily_candidate_source_path(root: Path, day: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "candidates" / day / "candidate_sources.json"
+
+
 def init_manual_sources_file(root: Path, edition_date: str, *, dry_run: bool, wrote: list[str]) -> Path:
     path = manual_source_path(root, edition_date)
     if path.exists():
         return path
     payload = {"sources": [], "_guidance": "Add source-backed records to sources[]."}
+    write_json(path, payload, dry_run, wrote)
+    return path
+
+
+def init_daily_candidates_file(root: Path, day: str, *, dry_run: bool, wrote: list[str]) -> Path:
+    path = daily_candidate_source_path(root, day)
+    if path.exists():
+        return path
+    payload = {"sources": [], "_guidance": "Add daily candidate current-development records to sources[]."}
     write_json(path, payload, dry_run, wrote)
     return path
 
@@ -237,6 +267,28 @@ def load_manual_sources(root: Path, edition_date: str) -> tuple[Path, list[dict[
     if not isinstance(records, list):
         raise ValueError("manual_sources.json must be a list or an object with a sources list")
     return path, [record for record in records if isinstance(record, dict)]
+
+
+def load_daily_candidate_sources(root: Path, edition_date: str, *, lookback_days: int = 6) -> tuple[list[dict[str, Any]], list[str]]:
+    warnings: list[str] = []
+    out: list[dict[str, Any]] = []
+    end_date = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    for offset in range(lookback_days + 1):
+        day = (end_date - timedelta(days=offset)).isoformat()
+        path = daily_candidate_source_path(root, day)
+        if not path.exists():
+            continue
+        payload = read_json(path)
+        records = payload.get("sources") if isinstance(payload, dict) else payload
+        if not isinstance(records, list):
+            warnings.append(f"daily candidate file has invalid shape (expected list/sources list): {path}")
+            continue
+        for record in records:
+            if isinstance(record, dict):
+                enriched = dict(record)
+                enriched.setdefault("candidate_collected_on", day)
+                out.append(enriched)
+    return out, warnings
 
 
 def load_auto_sources(root: Path, edition_date: str) -> list[dict[str, Any]]:
@@ -387,6 +439,12 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "manual_pressure_area": _safe_text(record.get("pressure_area")),
                 "manual_source_role": _safe_text(record.get("source_role")).lower(),
                 "linked_data_anchor_ids": _safe_list_of_text(record.get("linked_data_anchor_ids")),
+                "key_stat_label": _safe_text(record.get("key_stat_label")),
+                "key_stat_value": _safe_text(record.get("key_stat_value")),
+                "key_stat_unit": _safe_text(record.get("key_stat_unit")),
+                "key_stat_context": _safe_text(record.get("key_stat_context")),
+                "key_stat_source_id": _safe_text(record.get("key_stat_source_id")),
+                "candidate_collected_on": _safe_text(record.get("candidate_collected_on")),
             }
         )
     warnings.append(f"curation_diagnostics={json.dumps(diagnostics, sort_keys=True)}")
@@ -482,6 +540,54 @@ def _is_low_quality_public_item(story: dict[str, Any]) -> bool:
         if phrase in combined and all(token not in combined for token in ("may", "could", "can", "signal", "watch")):
             return True
     return False
+
+
+def _extract_layoff_stat_from_text(source: dict[str, Any]) -> tuple[str, str, str] | None:
+    text = f"{_safe_text(source.get('title'))} {_safe_text(source.get('summary_or_snippet'))}".lower()
+    if "layoff" not in text and "laid off" not in text:
+        return None
+    for pattern in (r"\b(\d{2,6})\s+employees?\s+laid off\b", r"\b(\d{2,6})\s+laid off\b", r"\b(\d{2,6})\s+layoffs?\b"):
+        match = re.search(pattern, text)
+        if match:
+            return ("Reported layoffs", match.group(1), "workers")
+    return None
+
+
+def _choose_key_stat_for_story(story_sources: list[dict[str, Any]], story: dict[str, Any]) -> dict[str, str] | None:
+    source_by_record_id = {str(source.get("source_record_id") or ""): source for source in story_sources}
+    source_by_source_id = {str(source.get("source_id") or ""): source for source in story_sources}
+    for source in story_sources:
+        label = _safe_text(source.get("key_stat_label"))
+        value = _safe_text(source.get("key_stat_value"))
+        source_ref = _safe_text(source.get("key_stat_source_id"))
+        if label and value and source_ref:
+            stat_source = source_by_record_id.get(source_ref) or source_by_source_id.get(source_ref)
+            if stat_source:
+                unit = _safe_text(source.get("key_stat_unit"))
+                context = _safe_text(source.get("key_stat_context"))
+                return {
+                    "label": label,
+                    "value": value,
+                    "unit": unit,
+                    "context": context,
+                    "source_record_id": _safe_text(stat_source.get("source_record_id")),
+                }
+    for source in story_sources:
+        source_id = _safe_text(source.get("source_id"))
+        if not source_id:
+            continue
+        extracted = _extract_layoff_stat_from_text(source)
+        if extracted is None:
+            continue
+        label, value, unit = extracted
+        return {
+            "label": label,
+            "value": value,
+            "unit": unit,
+            "context": "",
+            "source_record_id": _safe_text(source.get("source_record_id")),
+        }
+    return None
 
 
 def _classify_item_type(source: dict[str, Any]) -> str:
@@ -648,6 +754,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
         combined_urls = [str(s["url"]) for s in combined_sources]
         combined_publishers = [str(s["publisher"]) for s in combined_sources]
         location_scope = _safe_text(primary_source.get("manual_location") or primary_source.get("location_scope")) if primary_source else ""
+        key_stat = _choose_key_stat_for_story(combined_sources, primary_source or {})
         stories.append(
             {
                 "story_id": f"american-pressure-story-{edition_date}-{index:03d}",
@@ -683,6 +790,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
                 "pressure_area": _safe_text(primary_source.get("manual_pressure_area")),
                 "pressure_direction": _safe_text(primary_source.get("pressure_direction")),
                 "public_pressure_angle": _safe_text(primary_source.get("public_pressure_angle")),
+                "key_stat": key_stat,
                 "generated_at": generated_at,
             }
         )
@@ -769,6 +877,16 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
             if human_story_summary:
                 chunks.append(f"<p><strong>Current Development:</strong> {html.escape(human_story_summary)}</p>")
             chunks.append(f"<p><strong>Data Context:</strong> {html.escape(str(story.get('data_context_summary') or guide['why_it_matters']))}</p>")
+            key_stat = story.get("key_stat") if isinstance(story.get("key_stat"), dict) else None
+            if key_stat:
+                text = f"{_safe_text(key_stat.get('label'))}: {_safe_text(key_stat.get('value'))}"
+                unit = _safe_text(key_stat.get("unit"))
+                if unit:
+                    text += f" {unit}"
+                context = _safe_text(key_stat.get("context"))
+                if context:
+                    text += f" ({context})"
+                chunks.append(f"<p><strong>Key number:</strong> {html.escape(text)}</p>")
             chunks.append(f"<p><strong>Potential Relevance:</strong> {html.escape(str(story.get('potential_relevance') or guide['why_it_matters']))}</p>")
             chunks.append(f"<p><strong>Who May Feel It:</strong> {html.escape(str(story.get('who_may_feel_it') or guide['who_may_feel_it']))}</p>")
             chunks.append(f"<p><strong>What to Watch Next:</strong> {html.escape(str(story.get('what_to_watch_next') or guide['watch_next']))}</p>")
@@ -849,7 +967,7 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     write_text(dispatch_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
 
 
-def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bool, dry_run: bool, from_manual_sources: bool, source_mode: str = "both", init_manual_sources: bool = False, allow_future: bool = False) -> dict[str, Any]:
+def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bool, dry_run: bool, from_manual_sources: bool, source_mode: str = "both", init_manual_sources: bool = False, init_daily_candidates: bool = False, allow_future: bool = False) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     validate_not_future_date(edition_date, allow_future=allow_future)
     mode = source_mode.strip().lower()
@@ -862,6 +980,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
     if init_manual_sources:
         path = init_manual_sources_file(root, edition_date, dry_run=dry_run, wrote=wrote)
         return {"ok": True, "dispatch_slug": DISPATCH_SLUG, "edition_date": edition_date, "manual_source_path": str(path), "source_count": 0, "story_count": 0, "generated": False, "initialized_manual_sources": True, "archive_updated": False, "rss_updated": False, "pages_repo_updated": False, "pushed": False, "wrote": wrote, "warnings": warnings, "errors": errors}
+    if init_daily_candidates:
+        path = init_daily_candidates_file(root, edition_date, dry_run=dry_run, wrote=wrote)
+        return {"ok": True, "dispatch_slug": DISPATCH_SLUG, "edition_date": edition_date, "daily_candidate_path": str(path), "source_count": 0, "story_count": 0, "generated": False, "initialized_daily_candidates": True, "archive_updated": False, "rss_updated": False, "pages_repo_updated": False, "pushed": False, "wrote": wrote, "warnings": warnings, "errors": errors}
 
     manual_path = manual_source_path(root, edition_date)
     raw_records: list[dict[str, Any]] = []
@@ -873,6 +994,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
             _ = load_manual_sources(root, edition_date)
         else:
             warnings.append(f"manual sources not found for {edition_date}; continuing with auto baseline sources only")
+        daily_candidate_records, daily_candidate_warnings = load_daily_candidate_sources(root, edition_date)
+        raw_records.extend(daily_candidate_records)
+        warnings.extend(daily_candidate_warnings)
     if mode in {"auto", "both"}:
         raw_records.extend(load_auto_sources(root, edition_date))
     if from_manual_sources and mode == "auto":
@@ -904,6 +1028,12 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
             )
         ]
     )
+    current_development_count_by_pillar = _pillar_counts([s for s in sources if _classify_item_type(s) == "current_week_development"])
+    human_story_count_by_pillar = _pillar_counts([s for s in sources if _classify_source_role(s) == "human_story"])
+    missing_required_current_development_pillars = sorted([p for p in IMPORTANT_CURRENT_DEVELOPMENT_PILLARS if current_development_count_by_pillar.get(p, 0) == 0])
+    searched_pillars = sorted(REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS.keys())
+    story_plus_data_count = int(brief_quality_counts.get("story_plus_data", 0) or 0)
+    baseline_only_count = int(brief_quality_counts.get("baseline_only", 0) or 0)
 
     if not sources:
         errors.append(f"No valid source-backed American Pressure records found for {edition_date}; refusing zero-source edition.")
@@ -915,6 +1045,11 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         warnings.append("coverage_weak: SNAP/weather-only pattern")
     if item_type_counts.get("current_week_development", 0) == 0:
         warnings.append("coverage_watchlist: no current_week_development records; add manual weekly developments")
+    if missing_required_current_development_pillars:
+        warnings.append(
+            "coverage_watchlist: missing important current-development pillars: "
+            + ",".join(missing_required_current_development_pillars)
+        )
     low_quality_story_ids = [str(story.get("story_id")) for story in stories if _is_low_quality_public_item(story)]
     if low_quality_story_ids:
         warnings.append(f"curation_validation: low-quality public item prose for story_ids={','.join(low_quality_story_ids)}")
@@ -944,6 +1079,13 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "item_type_counts": item_type_counts,
         "source_role_counts": source_role_counts,
         "brief_quality_counts": brief_quality_counts,
+        "searched_pillars": searched_pillars,
+        "required_current_development_search_targets": REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS,
+        "current_development_count_by_pillar": current_development_count_by_pillar,
+        "human_story_count_by_pillar": human_story_count_by_pillar,
+        "missing_required_current_development_pillars": missing_required_current_development_pillars,
+        "story_plus_data_count": story_plus_data_count,
+        "baseline_only_count": baseline_only_count,
         "briefs_with_human_story": briefs_with_human_story,
         "briefs_with_data_anchor": briefs_with_data_anchor,
         "baseline_only_briefs": baseline_only_briefs,
@@ -970,6 +1112,13 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "item_type_counts": item_type_counts,
         "source_role_counts": source_role_counts,
         "brief_quality_counts": brief_quality_counts,
+        "searched_pillars": searched_pillars,
+        "required_current_development_search_targets": REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS,
+        "current_development_count_by_pillar": current_development_count_by_pillar,
+        "human_story_count_by_pillar": human_story_count_by_pillar,
+        "missing_required_current_development_pillars": missing_required_current_development_pillars,
+        "story_plus_data_count": story_plus_data_count,
+        "baseline_only_count": baseline_only_count,
         "briefs_with_human_story": briefs_with_human_story,
         "briefs_with_data_anchor": briefs_with_data_anchor,
         "baseline_only_briefs": baseline_only_briefs,
@@ -1035,6 +1184,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--from-manual-sources", action="store_true", help="Legacy flag; manual mode now controlled by --source-mode.")
     parser.add_argument("--source-mode", choices=sorted(SOURCE_MODES), default="both", help="Source input mode: manual, auto, or both.")
     parser.add_argument("--init-manual-sources", action="store_true", help="Create starter manual source file for --date when missing.")
+    parser.add_argument("--init-daily-candidates", action="store_true", help="Create starter daily candidate file for --date when missing.")
     parser.add_argument("--allow-future", action="store_true", help="Allow future --date values (disabled by default).")
     return parser.parse_args(argv)
 
@@ -1050,6 +1200,7 @@ def main(argv: list[str] | None = None) -> int:
             from_manual_sources=bool(args.from_manual_sources),
             source_mode=str(args.source_mode),
             init_manual_sources=bool(args.init_manual_sources),
+            init_daily_candidates=bool(args.init_daily_candidates),
             allow_future=bool(args.allow_future),
         )
     except Exception as exc:  # noqa: BLE001

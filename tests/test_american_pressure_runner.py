@@ -28,6 +28,13 @@ def _write_manual_sources(root: Path, edition_date: str, records: list[dict]) ->
     return path
 
 
+def _write_daily_candidates(root: Path, day: str, records: list[dict]) -> Path:
+    path = root / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"sources": records}, indent=2), encoding="utf-8")
+    return path
+
+
 def _record(source_id: str, pillar: str, title: str, summary: str, url: str, *, source_type: str = "official_dataset_page", source_role: str | None = None, linked_data_anchor_ids: list[str] | None = None) -> dict:
     row = {
         "source_record_id": f"ap-2026-05-12-{source_id}",
@@ -197,6 +204,159 @@ def test_both_mode_with_manual_human_stories_produces_story_plus_data(work_root)
     assert result["ok"] is True
     manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
     assert manifest["brief_quality_counts"]["story_plus_data"] > 0
+
+
+def test_weekly_cadence_label_remains_public(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Weekly briefing / 2026-05-12" in html
+
+
+def test_daily_candidates_feed_weekly_edition(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    candidate = _record(
+        "labor-story-daily",
+        "labor_income_pressure",
+        "Employer announces layoffs",
+        "Local employer announced layoffs this week.",
+        "https://example.com/daily-layoff",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    _write_daily_candidates(work_root, "2026-05-10", [candidate])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["human_story_count_by_pillar"]["labor_income_pressure"] >= 1
+
+
+def test_required_coverage_diagnostics_are_produced(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
+    for key in (
+        "searched_pillars",
+        "current_development_count_by_pillar",
+        "human_story_count_by_pillar",
+        "missing_required_current_development_pillars",
+        "story_plus_data_count",
+        "baseline_only_count",
+    ):
+        assert key in manifest
+
+
+def test_missing_housing_and_debt_current_developments_create_warning(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    joined = " | ".join(result["warnings"])
+    assert "missing important current-development pillars" in joined
+    assert "housing_household_cost_pressure" in joined
+    assert "financial_distress_pressure" in joined
+
+
+def test_key_stat_renders_only_when_sourced(work_root):
+    stat_story = _record(
+        "labor-story",
+        "labor_income_pressure",
+        "District announces layoffs",
+        "District announced layoffs this week.",
+        "https://example.com/labor",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    stat_story["key_stat_label"] = "Reported layoffs"
+    stat_story["key_stat_value"] = "503"
+    stat_story["key_stat_unit"] = "workers"
+    stat_story["key_stat_context"] = "district budget crisis"
+    stat_story["key_stat_source_id"] = "ap-labor-story"
+    stat_story["source_id"] = "ap-labor-story"
+    _write_manual_sources(work_root, "2026-05-12", [stat_story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Key number:" in html
+    assert "503 workers" in html
+
+
+def test_unsourced_key_stat_is_suppressed(work_root):
+    stat_story = _record(
+        "labor-story",
+        "labor_income_pressure",
+        "District announces layoffs",
+        "District announced layoffs this week.",
+        "https://example.com/labor",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    stat_story["key_stat_label"] = "Reported layoffs"
+    stat_story["key_stat_value"] = "9999"
+    stat_story["key_stat_source_id"] = ""
+    _write_manual_sources(work_root, "2026-05-12", [stat_story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Key number:" not in html
+
+
+def test_one_stat_per_brief_behavior(work_root):
+    stat_story = _record(
+        "labor-story",
+        "labor_income_pressure",
+        "District announces layoffs",
+        "District announced layoffs this week.",
+        "https://example.com/labor",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    stat_story["key_stat_label"] = "Reported layoffs"
+    stat_story["key_stat_value"] = "503"
+    stat_story["key_stat_source_id"] = "ap-labor-story"
+    stat_story["source_id"] = "ap-labor-story"
+    data_anchor = _record("bls", "labor_income_pressure", "BLS Employment Situation", "Official baseline indicator source.", "https://example.com/bls", source_role="data_anchor")
+    data_anchor["key_stat_label"] = "Unemployment rate"
+    data_anchor["key_stat_value"] = "4.1"
+    data_anchor["key_stat_unit"] = "%"
+    data_anchor["key_stat_source_id"] = "bls"
+    _write_manual_sources(work_root, "2026-05-12", [stat_story, data_anchor])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert html.count("Key number:") == 1
+
+
+def test_capradio_503_layoff_stat_renders_when_present_in_source_text(work_root):
+    cap = _record(
+        "labor-story-capradio",
+        "labor_income_pressure",
+        "Amidst district budget crisis, 503 employees laid off and receivership looms",
+        "District approved layoffs amid cash flow concerns.",
+        "https://example.com/capradio",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    _write_manual_sources(work_root, "2026-05-12", [cap])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Key number:" in html
+    assert "503 workers" in html
 
 
 def test_public_output_hides_internal_labels_and_uses_plain_summary(work_root):

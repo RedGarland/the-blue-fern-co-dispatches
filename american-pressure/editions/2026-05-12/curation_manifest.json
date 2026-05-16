@@ -55,7 +55,7 @@
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Food assistance demand and household grocery stress.",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-002",
@@ -103,7 +103,7 @@
       "pressure_area": "",
       "pressure_direction": "",
       "public_pressure_angle": "",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-003",
@@ -147,7 +147,7 @@
       "pressure_area": "",
       "pressure_direction": "",
       "public_pressure_angle": "",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-004",
@@ -196,7 +196,7 @@
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Care-access pressure from local service contraction.",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-005",
@@ -245,7 +245,7 @@
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Layoff-driven income and service pressure.",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-006",
@@ -293,7 +293,7 @@
       "pressure_area": "",
       "pressure_direction": "",
       "public_pressure_angle": "",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     },
     {
       "story_id": "american-pressure-story-2026-05-12-007",
@@ -346,7 +346,7 @@
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
-      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+      "generated_at": "2026-05-16T14:51:35.018423+00:00"
     }
   ],
   "pillars_present": [
@@ -409,5 +409,8 @@
     "financial_distress_pressure",
     "housing_household_cost_pressure"
   ],
-  "low_quality_story_ids": []
+  "low_quality_story_ids": [],
+  "future_enhancements": {
+    "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+  }
 }

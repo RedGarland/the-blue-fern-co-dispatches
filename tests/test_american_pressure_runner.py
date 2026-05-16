@@ -122,7 +122,7 @@ def test_baseline_only_item_gets_baseline_label(work_root):
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
     assert "<strong>Data Context:</strong>" in html
-    assert "<strong>Current Development:</strong>" not in html
+    assert "No current-development source was captured for this pillar." in html
     assert "Type: baseline_gauge" not in html
 
 
@@ -269,6 +269,10 @@ def test_missing_housing_and_debt_current_developments_create_warning(work_root)
     assert "missing important current-development pillars" in joined
     assert "housing_household_cost_pressure" in joined
     assert "financial_distress_pressure" in joined
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert "collection_gap_pillars" in manifest
+    assert "housing_household_cost_pressure" in manifest["collection_gap_pillars"]
+    assert "financial_distress_pressure" in manifest["collection_gap_pillars"]
 
 
 def test_key_stat_renders_only_when_sourced(work_root):
@@ -357,6 +361,93 @@ def test_capradio_503_layoff_stat_renders_when_present_in_source_text(work_root)
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
     assert "Key number:" in html
     assert "503 workers" in html
+
+
+def test_location_specific_prose_uses_centerville_iowa(work_root):
+    clinic = _record(
+        "clinic",
+        "health_access_pressure",
+        "River Hills Community Health Center announces clinic closure",
+        "A community health center announced closure of a rural clinic.",
+        "https://example.com/clinic",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    clinic["human_story_summary"] = "A community health center announced closure of a rural clinic."
+    clinic["location"] = "Centerville, Iowa"
+    _write_manual_sources(work_root, "2026-05-12", [clinic])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "In Centerville, Iowa," in html
+
+
+def test_location_specific_prose_uses_sacramento_california(work_root):
+    layoffs = _record(
+        "layoff",
+        "labor_income_pressure",
+        "District approves layoffs affecting 503 employees",
+        "District approved layoffs affecting 503 employees.",
+        "https://example.com/layoff",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    layoffs["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-12", [layoffs])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "In Sacramento, California," in html
+
+
+def test_location_specific_prose_uses_san_luis_obispo_county(work_root):
+    food = _record(
+        "food",
+        "food_pressure",
+        "SLO Food Bank reports rising demand",
+        "The SLO Food Bank reported rising demand.",
+        "https://example.com/food",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    food["location"] = "San Luis Obispo County, California"
+    _write_manual_sources(work_root, "2026-05-12", [food])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "In San Luis Obispo County, California," in html
+
+
+def test_location_fallback_uses_region_scope_when_location_missing(work_root):
+    story = _record(
+        "wi-storm",
+        "local_system_strain",
+        "Damage assessments begin after storms",
+        "Officials began damage assessments after storms and flooding.",
+        "https://example.com/wi",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    story.pop("location", None)
+    story.pop("location_scope", None)
+    story["region_scope"] = "US-WI"
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "In US-WI," in html
+
+
+def test_collection_gap_wording_does_not_claim_no_relevant_news(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "No current-development source was captured for this pillar." in html
+    assert "no relevant news" not in html.lower()
 
 
 def test_public_output_hides_internal_labels_and_uses_plain_summary(work_root):

@@ -1,0 +1,10 @@
+{
+    "_todo":  [
+                  "Collection gap follow-up: add source-backed current-development records for financial_distress_pressure (bankruptcy/closure/debt distress targets).",
+                  "Collection gap follow-up: add source-backed current-development records for housing_household_cost_pressure (eviction/rent/utility burden targets).",
+                  "Do not add inferred or synthetic records; include only traceable published sources."
+              ],
+    "sources":  [
+
+                ]
+}

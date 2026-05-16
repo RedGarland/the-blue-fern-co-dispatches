@@ -47,8 +47,8 @@ IMPORTANT_CURRENT_DEVELOPMENT_PILLARS = [
 ]
 REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS = {
     "food_pressure": "food bank demand / SNAP / grocery pressure",
-    "financial_distress_pressure": "bankruptcy / closure / debt stress",
-    "housing_household_cost_pressure": "housing / rent / eviction / utility pressure",
+    "financial_distress_pressure": "bankruptcy / Chapter 11 / Chapter 7 / business closure / employer bankruptcy / hospital bankruptcy / nursing home bankruptcy / retail closure / debt distress / foreclosure",
+    "housing_household_cost_pressure": "eviction filings / rent increases / utility shutoffs / utility rate hikes / energy burden / homelessness shelter demand / housing authority waitlist / insurance premium increases / mobile home park rent / property tax pressure",
     "health_access_pressure": "clinic / hospital / pharmacy / health access",
     "labor_income_pressure": "layoffs / WARN / employer cuts",
     "local_system_strain": "disaster / drought / flood / heat / local service strain",
@@ -486,6 +486,34 @@ def _reader_facing_summary(source: dict[str, Any]) -> str:
     return summary
 
 
+def _location_phrase(source: dict[str, Any]) -> str:
+    explicit = _safe_text(source.get("manual_location") or source.get("location"))
+    if explicit:
+        return explicit
+    scope = _safe_text(source.get("location_scope"))
+    if scope and scope not in {"local", "regional", "national"}:
+        return scope
+    region_scope = _safe_text(source.get("region_scope"))
+    return region_scope
+
+
+def _locationized_current_development(source: dict[str, Any]) -> str:
+    base = _safe_text(source.get("manual_human_story_summary")) or _safe_text(source.get("manual_what_happened")) or _reader_facing_summary(source)
+    if not base:
+        return ""
+    place = _location_phrase(source)
+    if not place:
+        return base
+    normalized = base[0].lower() + base[1:] if len(base) > 1 else base.lower()
+    if normalized.lower().startswith("in "):
+        return base
+    affected = _safe_text(source.get("affected_people"))
+    sentence = f"In {place}, {normalized}"
+    if affected:
+        sentence += f" This may affect {affected}."
+    return sentence
+
+
 def _reader_facing_headline(source: dict[str, Any]) -> str:
     manual = _safe_text(source.get("reader_headline"))
     if manual:
@@ -744,9 +772,9 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
         else:
             brief_quality = "watchlist_only"
 
-        human_summary = _safe_text(primary_source.get("manual_human_story_summary")) if primary_source else ""
-        if not human_summary and human_story_sources:
-            human_summary = _reader_facing_summary(human_story_sources[0])
+        human_summary = ""
+        if human_story_sources:
+            human_summary = _locationized_current_development(human_story_sources[0])
 
         headline = _dedupe_headline(_reader_facing_headline(primary_source), headline_seen) if primary_source else _dedupe_headline(PILLAR_HEADINGS[pillar], headline_seen)
         combined_sources = [*human_story_sources, *data_anchor_sources, *watchlist_sources]
@@ -857,6 +885,10 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
         f"<p>In this edition, {current_developments} items are current developments and {data_context_briefs} items are data context. "
         "Watch for whether local disruptions spread, whether job and benefit access weakens, and whether cost pressure broadens.</p>"
     )
+    collection_gap_pillars = [str(p) for p in stories[0].get("collection_gap_pillars", [])] if stories else []
+    if collection_gap_pillars:
+        readable = ", ".join(PILLAR_HEADINGS.get(p, p) for p in collection_gap_pillars)
+        chunks.append(f"<p><strong>Collection gaps this week:</strong> {html.escape(readable)}. No current-development source was captured for this pillar.</p>")
     if baseline_only_briefs > 0:
         chunks.append("<p><strong>Some items are baseline data points. They help track pressure, but they do not by themselves prove what changed this week.</strong></p>")
 
@@ -876,6 +908,8 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
             human_story_summary = _safe_text(story.get("human_story_summary"))
             if human_story_summary:
                 chunks.append(f"<p><strong>Current Development:</strong> {html.escape(human_story_summary)}</p>")
+            elif _safe_text(story.get("item_type")) == "baseline_gauge":
+                chunks.append("<p><strong>Current Development:</strong> No current-development source was captured for this pillar.</p>")
             chunks.append(f"<p><strong>Data Context:</strong> {html.escape(str(story.get('data_context_summary') or guide['why_it_matters']))}</p>")
             key_stat = story.get("key_stat") if isinstance(story.get("key_stat"), dict) else None
             if key_stat:
@@ -1030,10 +1064,13 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
     )
     current_development_count_by_pillar = _pillar_counts([s for s in sources if _classify_item_type(s) == "current_week_development"])
     human_story_count_by_pillar = _pillar_counts([s for s in sources if _classify_source_role(s) == "human_story"])
-    missing_required_current_development_pillars = sorted([p for p in IMPORTANT_CURRENT_DEVELOPMENT_PILLARS if current_development_count_by_pillar.get(p, 0) == 0])
+    missing_required_current_development_pillars = sorted([p for p in IMPORTANT_CURRENT_DEVELOPMENT_PILLARS if human_story_count_by_pillar.get(p, 0) == 0])
+    collection_gap_pillars = list(missing_required_current_development_pillars)
     searched_pillars = sorted(REQUIRED_CURRENT_DEVELOPMENT_SEARCH_TARGETS.keys())
     story_plus_data_count = int(brief_quality_counts.get("story_plus_data", 0) or 0)
     baseline_only_count = int(brief_quality_counts.get("baseline_only", 0) or 0)
+    for story in stories:
+        story["collection_gap_pillars"] = collection_gap_pillars
 
     if not sources:
         errors.append(f"No valid source-backed American Pressure records found for {edition_date}; refusing zero-source edition.")
@@ -1050,6 +1087,7 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
             "coverage_watchlist: missing important current-development pillars: "
             + ",".join(missing_required_current_development_pillars)
         )
+        warnings.append("coverage_watchlist: No current-development source was captured for this pillar.")
     low_quality_story_ids = [str(story.get("story_id")) for story in stories if _is_low_quality_public_item(story)]
     if low_quality_story_ids:
         warnings.append(f"curation_validation: low-quality public item prose for story_ids={','.join(low_quality_story_ids)}")
@@ -1084,6 +1122,7 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "current_development_count_by_pillar": current_development_count_by_pillar,
         "human_story_count_by_pillar": human_story_count_by_pillar,
         "missing_required_current_development_pillars": missing_required_current_development_pillars,
+        "collection_gap_pillars": collection_gap_pillars,
         "story_plus_data_count": story_plus_data_count,
         "baseline_only_count": baseline_only_count,
         "briefs_with_human_story": briefs_with_human_story,
@@ -1117,6 +1156,7 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "current_development_count_by_pillar": current_development_count_by_pillar,
         "human_story_count_by_pillar": human_story_count_by_pillar,
         "missing_required_current_development_pillars": missing_required_current_development_pillars,
+        "collection_gap_pillars": collection_gap_pillars,
         "story_plus_data_count": story_plus_data_count,
         "baseline_only_count": baseline_only_count,
         "briefs_with_human_story": briefs_with_human_story,

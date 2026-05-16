@@ -46,6 +46,8 @@ def _record(source_id: str, pillar: str, title: str, summary: str, url: str, *, 
     }
     if source_role:
         row["source_role"] = source_role
+        if source_role == "human_story":
+            row["public_pressure_angle"] = "Household pressure signal from current-week local impacts."
     if linked_data_anchor_ids:
         row["linked_data_anchor_ids"] = linked_data_anchor_ids
     return row
@@ -152,3 +154,39 @@ def test_no_duplicate_reader_headlines(work_root):
     curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
     titles = [story["title"] for story in curation["stories"]]
     assert len(titles) == len(set(titles))
+
+
+def test_linked_data_anchor_ids_must_resolve(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand story", "Pantry demand rose this week.", "https://example.com/story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["missing-anchor-id"]),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    manual[0]["public_pressure_angle"] = "Food assistance demand pressure."
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is False
+    assert any("unknown linked_data_anchor_id" in err for err in result["errors"])
+
+
+def test_human_story_without_public_pressure_angle_rejected(work_root):
+    manual = [
+        _record("labor-story", "labor_income_pressure", "Local layoffs announced", "Employer announced layoffs this week.", "https://example.com/labor-story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["bls-unemployment-situation"]),
+        _record("bls", "labor_income_pressure", "BLS Employment Situation", "Official baseline indicator source.", "https://example.com/bls", source_role="data_anchor"),
+    ]
+    manual[0].pop("public_pressure_angle", None)
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is False
+    assert any("public_pressure_angle" in err for err in result["errors"])
+
+
+def test_both_mode_with_manual_human_stories_produces_story_plus_data(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand story", "Pantry demand rose this week.", "https://example.com/story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["usda-fns-snap-data-tables"]),
+    ]
+    manual[0]["public_pressure_angle"] = "Food assistance demand pressure."
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
+    assert result["ok"] is True
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["brief_quality_counts"]["story_plus_data"] > 0

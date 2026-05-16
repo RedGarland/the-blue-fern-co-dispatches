@@ -550,6 +550,47 @@ def _build_data_context_summary(data_anchors: list[dict[str, Any]], pillar: str)
     return f"Data context from {labels} provides baseline evidence for this pressure area."
 
 
+def _validate_manual_human_story_records(sources: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
+    warnings: list[str] = []
+    errors: list[str] = []
+    known_record_ids = {str(source.get("source_record_id") or "").strip() for source in sources}
+    known_source_ids = {str(source.get("source_id") or "").strip() for source in sources}
+    for source in sources:
+        role = _classify_source_role(source)
+        if role != "human_story":
+            continue
+        source_id = _safe_text(source.get("source_id") or source.get("source_record_id"))
+        required_fields = {
+            "url": _safe_text(source.get("url")),
+            "publisher": _safe_text(source.get("publisher")),
+            "title": _safe_text(source.get("title")),
+            "published_at": _safe_text(source.get("published_at")),
+            "summary_or_snippet": _safe_text(source.get("summary_or_snippet")),
+            "public_pressure_angle": _safe_text(source.get("public_pressure_angle")),
+        }
+        missing = sorted([field for field, value in required_fields.items() if not value])
+        if missing:
+            errors.append(f"human_story record {source_id} missing required fields: {', '.join(missing)}")
+        resolved_ids: list[str] = []
+        for linked_id in source.get("linked_data_anchor_ids", []):
+            candidate = _safe_text(linked_id)
+            if not candidate:
+                continue
+            if candidate in known_record_ids:
+                resolved_ids.append(candidate)
+                continue
+            if candidate in known_source_ids:
+                linked_source = next((item for item in sources if _safe_text(item.get('source_id')) == candidate), None)
+                if linked_source:
+                    resolved_ids.append(_safe_text(linked_source.get("source_record_id")))
+                    continue
+            errors.append(f"human_story record {source_id} has unknown linked_data_anchor_id: {candidate}")
+        source["linked_data_anchor_ids"] = resolved_ids
+        if not resolved_ids:
+            warnings.append(f"human_story record {source_id} has no linked data anchors")
+    return warnings, errors
+
+
 def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_at: str) -> list[dict[str, Any]]:
     stories: list[dict[str, Any]] = []
     source_by_id = {str(source["source_record_id"]): source for source in sources}
@@ -849,6 +890,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
     sources, source_warnings, source_errors, diagnostics = normalize_sources(raw_records, edition_date)
     warnings.extend(source_warnings)
     errors.extend(source_errors)
+    human_story_warnings, human_story_errors = _validate_manual_human_story_records(sources)
+    warnings.extend(human_story_warnings)
+    errors.extend(human_story_errors)
 
     stories = curate_stories(sources, edition_date, generated_at)
     pillars_present, pillars_missing, source_count_by_pillar, story_count_by_pillar = _coverage(stories, sources)

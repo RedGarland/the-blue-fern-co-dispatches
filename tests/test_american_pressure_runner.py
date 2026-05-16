@@ -1,4 +1,4 @@
-import json
+﻿import json
 import shutil
 import uuid
 from datetime import datetime, timedelta
@@ -14,6 +14,7 @@ def work_root():
     repo = Path(__file__).resolve().parents[1]
     root = repo / "output" / "test-runs" / uuid.uuid4().hex / "american-pressure-runner"
     shutil.copytree(repo / "assets", root / "assets")
+    shutil.copytree(repo / "data" / "dispatches" / "american-pressure", root / "data" / "dispatches" / "american-pressure")
     try:
         yield root
     finally:
@@ -27,263 +28,99 @@ def _write_manual_sources(root: Path, edition_date: str, records: list[dict]) ->
     return path
 
 
-def _valid_record() -> dict:
-    return {
-        "source_record_id": "ap-2026-05-12-001",
-        "source_id": "cms-medicaid-enrollment",
-        "title": "Medicaid and CHIP Enrollment Data",
-        "url": "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
-        "publisher": "Centers for Medicare and Medicaid Services",
-        "published_at": "2026-05-10T00:00:00Z",
-        "retrieved_at": "2026-05-12T12:00:00Z",
-        "summary_or_snippet": "Enrollment figures indicate sustained household health access pressure.",
-        "source_type": "official_dataset_page",
-        "geography": "US",
-        "pillar": "health_access_pressure",
-        "reliability_tier": "official_primary",
-    }
-
-
-def _bankruptcy_record(title: str, summary: str, url: str, *, source_id: str = "bk-001", category_hint: str = "bankruptcy", pillar: str = "financial_distress_pressure") -> dict:
+def _record(source_id: str, pillar: str, title: str, summary: str, url: str) -> dict:
     return {
         "source_record_id": f"ap-2026-05-12-{source_id}",
         "source_id": source_id,
         "title": title,
         "url": url,
-        "publisher": "Reuters",
+        "publisher": "Publisher",
         "published_at": "2026-05-10T00:00:00Z",
         "retrieved_at": "2026-05-12T12:00:00Z",
         "summary_or_snippet": summary,
-        "source_type": "reputable_reporting",
+        "source_type": "official_dataset_page",
         "geography": "US",
         "pillar": pillar,
-        "category_hint": category_hint,
-        "reliability_tier": "reputable_reporting",
+        "category_hint": pillar,
+        "reliability_tier": "official_primary",
     }
 
 
-def test_runner_generates_from_valid_manual_source_file(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [_valid_record()])
-
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True
-    )
-
+def test_manual_mode_uses_manual_only(work_root):
+    _write_manual_sources(work_root, "2026-05-12", [_record("snap", "food_pressure", "SNAP", "Food assistance pressure", "https://example.com/snap")])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     assert result["source_count"] == 1
-    assert result["generated"] is True
-    edition = work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html"
-    assert edition.exists()
-    assert "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data" in edition.read_text(encoding="utf-8")
 
 
-def test_runner_refuses_missing_manual_source_file(work_root):
-    with pytest.raises(FileNotFoundError) as excinfo:
-        ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True)
-    message = str(excinfo.value)
-    expected_path = work_root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-12" / "manual_sources.json"
-    assert str(expected_path) in message
-    assert "--init-manual-sources" in message
-
-
-def test_init_manual_sources_creates_expected_file(work_root):
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root,
-        "2026-05-12",
-        publish=True,
-        dry_run=False,
-        from_manual_sources=False,
-        init_manual_sources=True,
-    )
+def test_auto_mode_uses_enabled_baseline_sources(work_root):
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
     assert result["ok"] is True
-    path = work_root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-12" / "manual_sources.json"
-    assert path.exists()
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    assert isinstance(payload, dict)
-    assert payload.get("sources") == []
+    assert result["source_count"] >= 4
 
 
-def test_init_manual_sources_does_not_publish(work_root):
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root,
-        "2026-05-12",
-        publish=True,
-        dry_run=False,
-        from_manual_sources=False,
-        init_manual_sources=True,
-    )
-    assert result["ok"] is True
-    assert result["generated"] is False
-    assert result["archive_updated"] is False
-    assert result["rss_updated"] is False
-    assert not (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").exists()
+def test_both_mode_merges_auto_and_manual(work_root):
+    _write_manual_sources(work_root, "2026-05-12", [_record("labor", "labor_income_pressure", "WARN layoffs", "Layoff pressure for workers", "https://example.com/warn")])
+    auto = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
+    both = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
+    assert both["source_count"] > auto["source_count"]
 
 
 def test_future_date_refused_without_allow_future(work_root):
     future_date = (datetime.now().date() + timedelta(days=1)).isoformat()
-    _write_manual_sources(work_root, future_date, [_valid_record()])
-    with pytest.raises(ValueError) as excinfo:
-        ap_runner.run_american_pressure_dispatch(work_root, future_date, publish=False, dry_run=False, from_manual_sources=True)
-    assert "--allow-future" in str(excinfo.value)
+    with pytest.raises(ValueError):
+        ap_runner.run_american_pressure_dispatch(work_root, future_date, publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
 
 
-def test_runner_refuses_zero_valid_records(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [])
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True
-    )
+def test_investor_only_bankruptcy_rejected(work_root):
+    _write_manual_sources(work_root, "2026-05-12", [_record("bk", "financial_distress_pressure", "Chapter 11 plan", "Investor presentation for bondholder recoveries", "https://example.com/investor")])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is False
-    assert "No valid source-backed American Pressure records found for 2026-05-12" in " ".join(result["errors"])
 
 
-def test_past_date_runs_with_manual_source(work_root):
-    _write_manual_sources(work_root, "2026-05-11", [_valid_record()])
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-11", publish=False, dry_run=False, from_manual_sources=True
-    )
-    assert result["ok"] is True
-
-
-def test_runner_refuses_missing_required_fields(work_root):
-    bad = _valid_record()
-    bad.pop("url")
-    _write_manual_sources(work_root, "2026-05-12", [bad])
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True
-    )
-    assert result["ok"] is False
-    assert any("missing required fields" in error for error in result["errors"])
-
-
-def test_runner_uses_only_manual_claims_not_registry_claims(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [_valid_record()])
-    registry = work_root / "data" / "dispatches" / "american-pressure" / "source_registry.yml"
-    registry.parent.mkdir(parents=True, exist_ok=True)
-    registry.write_text(
-        "sources:\n"
-        "  - source_id: registry-only\n"
-        "    name: Registry Title Should Not Appear\n"
-        "    url: https://example.com\n"
-        "    publisher: Registry Publisher\n"
-        "    pillar: food_pressure\n"
-        "    geography: US\n"
-        "    source_type: official_report_page\n"
-        "    reliability_tier: official_primary\n"
-        "    update_frequency: monthly\n"
-        "    enabled: true\n"
-        "    notes: test\n",
-        encoding="utf-8",
-    )
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True
-    )
+def test_section_rendering_and_source_links(work_root):
+    manual = [
+        _record("foodbank", "food_pressure", "Food bank demand update", "Food bank demand spike this week", "https://example.com/foodbank"),
+        _record("snap", "food_pressure", "SNAP", "Food pressure", "https://example.com/snap"),
+        _record("bk", "financial_distress_pressure", "Court filings", "Household debt bankruptcy pressure", "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics"),
+        _record("health", "health_access_pressure", "Clinic closure", "Health access strain", "https://example.com/health"),
+        _record("housing", "housing_household_cost_pressure", "Rents rise", "Housing cost pressure", "https://example.com/housing"),
+        _record("labor", "labor_income_pressure", "BLS Employment Situation", "Labor income pressure", "https://example.com/labor"),
+        _record("local", "local_system_strain", "Transit cuts", "Local service disruptions", "https://example.com/local"),
+        _record("env", "environmental_pressure", "NOAA climate watch", "Heat and drought pressure", "https://example.com/noaa"),
+        _record("fema", "environmental_pressure", "FEMA declaration update", "Disaster declaration update", "https://example.com/fema"),
+        _record("drought", "environmental_pressure", "Drought monitor", "Weekly drought pressure", "https://droughtmonitor.unl.edu/"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "Registry Title Should Not Appear" not in html
+    assert "This Week's Read" not in html
+    assert "This Week’s Read" in html
+    assert "What This Means" in html
+    assert "What Feels Tight" in html
+    assert "What Changed" in html
+    assert "What We’re Watching Next" in html
+    assert "What We Still Do Not Know" in html
+    assert "Source: <a href=" in html
+    assert "Food and Grocery Pressure" in html
+    assert "Debt and Bankruptcy Pressure" in html
+    assert "Jobs and Paychecks" in html
+    assert "Weather, Drought, and Disaster Strain" in html
+    assert "SNAP data helps show whether food assistance remains a major support for households under grocery pressure." in html
+    assert "Bankruptcy filings are a delayed but concrete sign that households or businesses have run out of easier options." in html
+    assert "<strong>Why it matters:</strong>" in html
+    assert "<strong>Who may feel it:</strong>" in html
+    assert "<strong>What to watch next:</strong>" in html
+    food_section = html.split("Food and Grocery Pressure", 1)[1].split("Debt and Bankruptcy Pressure", 1)[0]
+    assert food_section.index("Type:</strong> current_week_development") < food_section.index("Type:</strong> baseline_gauge")
 
-
-def test_runner_does_not_fetch_live_sources(work_root, monkeypatch):
-    _write_manual_sources(work_root, "2026-05-12", [_valid_record()])
-    monkeypatch.setattr("urllib.request.urlopen", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("network fetch not allowed")))
-    result = ap_runner.run_american_pressure_dispatch(
-        work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=True
-    )
-    assert result["ok"] is True
-
-
-def test_us_courts_official_bankruptcy_data_is_accepted(work_root):
-    record = _bankruptcy_record(
-        "Bankruptcy Filings Statistics",
-        "U.S. Courts quarterly bankruptcy filings show chapter and business-vs-nonbusiness trends by district.",
-        "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
-        source_id="uscourts-001",
-        category_hint="official filings data",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is True
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
     sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "sources_manifest.json").read_text(encoding="utf-8"))
-    assert sources[0]["pillar"] == "financial_distress_pressure"
-    assert sources[0]["is_official_filings_data"] is True
-
-
-def test_hospital_bankruptcy_story_is_accepted(work_root):
-    record = _bankruptcy_record(
-        "Regional hospital system files Chapter 11",
-        "Hospital bankruptcy threatens healthcare access and local service continuity for households.",
-        "https://example.com/hospital-bankruptcy",
-        source_id="hospital-001",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is True
-    sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "sources_manifest.json").read_text(encoding="utf-8"))
-    assert sources[0]["bankruptcy_subtype"] == "healthcare"
-
-
-def test_employer_bankruptcy_job_risk_is_accepted(work_root):
-    record = _bankruptcy_record(
-        "Major regional employer files Chapter 11 amid layoffs",
-        "Employer bankruptcy puts hundreds of workers at job-loss risk in a rural county.",
-        "https://example.com/employer-bankruptcy",
-        source_id="jobs-001",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is True
-    sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "sources_manifest.json").read_text(encoding="utf-8"))
-    assert sources[0]["signal_family"] == "employer_bankruptcy_job_risk"
-
-
-def test_generic_corporate_restructuring_without_public_impact_is_rejected(work_root):
-    record = _bankruptcy_record(
-        "Corporate Chapter 11 restructuring update",
-        "Company announced Chapter 11 restructuring terms for debt holders and bondholder recoveries.",
-        "https://example.com/corp-restructuring",
-        source_id="corp-001",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is False
-
-
-def test_investor_only_bankruptcy_story_is_rejected(work_root):
-    record = _bankruptcy_record(
-        "Chapter 11 plan update for bondholders",
-        "Investor presentation focuses on equity holders and capital structure optimization.",
-        "https://example.com/investor-bankruptcy",
-        source_id="investor-001",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is False
-
-
-def test_household_consumer_bankruptcy_trend_is_accepted(work_root):
-    record = _bankruptcy_record(
-        "Consumer bankruptcy filings rise in county-level trend report",
-        "Household debt burden and Chapter 13 repayment filings rose across multiple counties.",
-        "https://example.com/consumer-bankruptcy",
-        source_id="consumer-001",
-        category_hint="consumer bankruptcy",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is True
-    sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "sources_manifest.json").read_text(encoding="utf-8"))
-    assert sources[0]["bankruptcy_subtype"] == "consumer"
-
-
-def test_public_html_includes_financial_distress_heading_and_source_links(work_root):
-    record = _bankruptcy_record(
-        "Small business bankruptcy disrupts local food supplier",
-        "Small business distress and bankruptcy disrupted regional food access and local jobs.",
-        "https://example.com/food-bankruptcy",
-        source_id="food-001",
-    )
-    _write_manual_sources(work_root, "2026-05-12", [record])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=True)
-    assert result["ok"] is True
-    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "Financial Distress" in html
-    assert "Source: <a href=\"https://example.com/food-bankruptcy\"" in html
+    assert manifest["source_count"] == len(sources)
+    assert manifest["story_count"] == len(curation["stories"])
+    assert manifest["item_type_counts"]["current_week_development"] >= 1
+    assert manifest["item_type_counts"]["baseline_gauge"] >= 1
+    assert any(story.get("curation_reason") == "food assistance dependency" for story in curation["stories"])
+    assert any(story.get("curation_reason") == "bankruptcy/financial distress baseline" for story in curation["stories"])

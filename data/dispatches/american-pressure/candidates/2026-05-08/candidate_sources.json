@@ -1,0 +1,67 @@
+{
+  "sources": [
+    {
+      "source_record_id": "ap-2026-05-09-labor-story-capradio-layoffs",
+      "source_id": "ap-labor-story-capradio-layoffs-0509",
+      "title": "Amidst Sacramento City Unified's budget crisis, 503 employees laid off and receivership looms",
+      "url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+      "publisher": "CapRadio",
+      "published_at": "2026-05-08T00:00:00-07:00",
+      "retrieved_at": "2026-05-16T16:45:00Z",
+      "summary_or_snippet": "Sacramento City Unified finalized layoffs of 503 positions amid a major budget shortfall and insolvency concerns.",
+      "source_type": "news_report",
+      "region_scope": "US-CA",
+      "category_hint": "labor_income_pressure",
+      "pillar": "labor_income_pressure",
+      "reliability_tier": "reputable_local_news",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "reader_headline": "Large local layoffs show how quickly paycheck stability can weaken",
+      "human_story_summary": "In Sacramento, California, Sacramento City Unified finalized layoffs affecting 503 positions amid continuing fiscal crisis.",
+      "what_happened": "The school board approved layoffs while district leadership discussed insolvency risk and future payroll pressure.",
+      "potential_relevance": "Large local layoffs can weaken household income stability and add spillover risk for nearby businesses and services.",
+      "who_may_feel_it": "Laid-off workers, school families, and communities tied to district employment.",
+      "what_to_watch_next": "Watch for additional layoff rounds, service changes, and receivership decisions.",
+      "location": "Sacramento, California",
+      "location_scope": "local",
+      "affected_people": "District employees, students, and households dependent on school employment income.",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Layoff-driven income and service pressure.",
+      "linked_data_anchor_ids": [
+        "bls-unemployment-situation"
+      ]
+    },
+    {
+      "source_record_id": "ap-2026-05-09-financial-story-mizell-ch11",
+      "source_id": "ap-financial-story-mizell-ch11-0509",
+      "title": "Mizell Memorial Hospital in Opp files for Chapter 11 bankruptcy protection",
+      "url": "https://www.waka.com/2026/05/08/mizell-memorial-hospital-in-opp-files-for-chapter-11-bankruptcy-protection/",
+      "publisher": "WAKA Action 8 News",
+      "published_at": "2026-05-08T13:49:00-05:00",
+      "retrieved_at": "2026-05-16T16:45:00Z",
+      "summary_or_snippet": "Mizell Memorial Hospital in Opp, Alabama filed for Chapter 11 and said services would remain open during restructuring; the hospital reported more than 200 on-site employees and significant local economic impact.",
+      "source_type": "news_report",
+      "region_scope": "US-AL",
+      "category_hint": "financial_distress_pressure",
+      "pillar": "financial_distress_pressure",
+      "reliability_tier": "reputable_local_news",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "reader_headline": "Hospital Chapter 11 filings can signal debt stress with local jobs and service risk",
+      "human_story_summary": "In Opp, Alabama, Mizell Memorial Hospital filed for Chapter 11 while saying services would remain open during financial restructuring.",
+      "what_happened": "Hospital leadership announced a Chapter 11 filing tied to financial strain, while emphasizing continuity of emergency and clinic services.",
+      "potential_relevance": "Bankruptcy at a major local employer can affect household income expectations and raise concern about future service reductions.",
+      "who_may_feel_it": "Patients relying on local hospital care, hospital workers, and households tied to local health-system employment.",
+      "what_to_watch_next": "Watch court milestones, staffing decisions, and whether restructuring changes service availability.",
+      "location": "Opp, Alabama",
+      "location_scope": "local",
+      "affected_people": "Patients and workers connected to the hospital and its affiliated local services.",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Debt distress in essential local institutions can spill into household service and job insecurity.",
+      "linked_data_anchor_ids": [
+        "us-courts-bankruptcy-filings-statistics",
+        "us-courts-bankruptcy-data-visualizations"
+      ]
+    }
+  ]
+}

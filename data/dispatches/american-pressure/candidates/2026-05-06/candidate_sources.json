@@ -1,0 +1,35 @@
+{
+  "sources": [
+    {
+      "source_record_id": "ap-2026-05-09-housing-story-peoples-gas-rate-request",
+      "source_id": "ap-housing-story-peoples-gas-rate-request-0509",
+      "title": "Cut with ‘an axe’: Watchdogs, AG call for massive cuts to Peoples Gas rate request",
+      "url": "https://www.wvik.org/illinois/2026-05-06/cut-with-an-axe-watchdogs-ag-call-for-massive-cuts-to-peoples-gas-rate-request",
+      "publisher": "WVIK / Capitol News Illinois",
+      "published_at": "2026-05-06T15:34:00-05:00",
+      "retrieved_at": "2026-05-16T16:45:00Z",
+      "summary_or_snippet": "Illinois advocates and the attorney general urged regulators to cut or reject a major gas rate request that could raise typical residential monthly bills in Chicago.",
+      "source_type": "news_report",
+      "region_scope": "US-IL",
+      "category_hint": "housing_household_cost_pressure",
+      "pillar": "housing_household_cost_pressure",
+      "reliability_tier": "reputable_local_news",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "reader_headline": "Utility rate fights can signal mounting monthly-bill pressure for households",
+      "human_story_summary": "In Chicago, consumer groups and the state attorney general challenged a large gas rate request that could raise residential monthly bills.",
+      "what_happened": "Watchdogs and state officials filed testimony asking regulators to sharply reduce or reject a major utility rate hike request.",
+      "potential_relevance": "Higher gas bills can compound housing and monthly-cost pressure, especially for households already balancing rent, groceries, and debt.",
+      "who_may_feel_it": "Renters, homeowners on fixed incomes, and households with limited savings buffers.",
+      "what_to_watch_next": "Watch regulator decisions, final approved bill changes, and whether protections for high-arrears customers are strengthened.",
+      "location": "Chicago, Illinois",
+      "location_scope": "local",
+      "affected_people": "Residential utility customers, especially lower-income households with high heating burdens.",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Utility cost pressure can quickly tighten household budgets and increase arrears risk.",
+      "linked_data_anchor_ids": [
+        "bls-cpi-shelter"
+      ]
+    }
+  ]
+}

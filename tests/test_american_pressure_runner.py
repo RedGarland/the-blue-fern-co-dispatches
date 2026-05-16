@@ -144,7 +144,7 @@ def test_story_count_counts_mini_briefs_not_sources_and_counts_reconcile(work_ro
         _record("jobs", "labor_income_pressure", "BLS Employment Situation", "Official baseline indicator source.", "https://example.com/jobs", source_role="data_anchor"),
     ]
     _write_manual_sources(work_root, "2026-05-12", manual)
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
     assert result["ok"] is True
     manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
     curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
@@ -214,7 +214,38 @@ def test_weekly_cadence_label_remains_public(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "Weekly briefing / 2026-05-12" in html
+    assert "Weekly briefing / May 6–May 12, 2026" in html
+
+
+def test_weekly_manifest_includes_date_range_metadata(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-09", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-09", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-09" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["week_start_date"] == "2026-05-03"
+    assert manifest["week_end_date"] == "2026-05-09"
+    assert manifest["display_date_range"] == "May 3–May 9, 2026"
+
+
+def test_publish_filters_future_american_pressure_editions_from_archive(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-09", manual)
+    future = work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-19"
+    future.mkdir(parents=True, exist_ok=True)
+    (future / "index.html").write_text("<html>future</html>", encoding="utf-8")
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-09", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    index_html = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    archive_html = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
+    rss_xml = (work_root / "output" / "site" / "american-pressure" / "rss.xml").read_text(encoding="utf-8")
+    assert "2026-05-19" not in index_html
+    assert "2026-05-19" not in archive_html
+    assert "2026-05-19" not in rss_xml
 
 
 def test_daily_candidates_feed_weekly_edition(work_root):
@@ -232,7 +263,7 @@ def test_daily_candidates_feed_weekly_edition(work_root):
     )
     _write_manual_sources(work_root, "2026-05-12", manual)
     _write_daily_candidates(work_root, "2026-05-10", [candidate])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
     assert result["ok"] is True
     manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
     assert manifest["human_story_count_by_pillar"]["labor_income_pressure"] >= 1

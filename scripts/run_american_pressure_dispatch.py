@@ -174,6 +174,21 @@ def validate_not_future_date(edition_date: str, *, allow_future: bool) -> None:
         )
 
 
+def _week_start_date(edition_date: str) -> str:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    return (end - timedelta(days=6)).isoformat()
+
+
+def _display_date_range(edition_date: str) -> str:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    month_start = start.strftime("%B")
+    month_end = end.strftime("%B")
+    if month_start == month_end:
+        return f"{month_start} {start.day}–{month_end} {end.day}, {end.year}"
+    return f"{month_start} {start.day}–{month_end} {end.day}, {end.year}"
+
+
 def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -952,10 +967,11 @@ def _brief_quality_counts(stories: list[dict[str, Any]]) -> dict[str, int]:
     return counts
 
 
-def render_edition_html(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]], source_mode: str) -> str:
+def render_edition_html(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]], source_mode: str, *, display_date_range: str | None = None) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
     pillars_present, pillars_missing, _, _ = _coverage(stories, sources)
-    chunks: list[str] = ["<h1>The American Pressure Dispatch</h1>", f"<p class=\"eyebrow\">Weekly briefing / {edition_date}</p>"]
+    display = display_date_range or edition_date
+    chunks: list[str] = ["<h1>The American Pressure Dispatch</h1>", f"<p class=\"eyebrow\">Weekly briefing / {display}</p>"]
     item_counts = _item_type_counts(stories)
     current_developments = item_counts.get("current_week_development", 0)
     data_context_briefs = item_counts.get("baseline_gauge", 0)
@@ -1053,9 +1069,10 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
     return page(f"{DISPATCH_NAME} - {edition_date}", f"{BASE_URL}/american-pressure/editions/{edition_date}/", "../../assets/site.css", body, DISPATCH_NAME)
 
 
-def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]]) -> str:
+def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]], *, display_date_range: str | None = None) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
-    lines = [f"# {DISPATCH_NAME}", "", f"Weekly briefing / {edition_date}", ""]
+    display = display_date_range or edition_date
+    lines = [f"# {DISPATCH_NAME}", "", f"Weekly briefing / {display}", ""]
     for story in stories:
         lines.append(f"## {story['title']}")
         lines.append(story.get("human_story_summary") or story.get("data_context_summary") or story["summary"])
@@ -1077,6 +1094,8 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     site_root = root / "output" / "site"
     dispatch = DispatchConfig(slug=DISPATCH_SLUG, name=DISPATCH_NAME, edition_date=edition_date, tagline=DISPATCH_TAGLINE, logo="american-pressure-logo.png", sources=[], stories=[], detail_artifacts=[])
     dates = discover_edition_dates(site_root)
+    # Keep public listing bounded to the requested weekly build point.
+    dates = [d for d in dates if d <= edition_date]
     if edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     dispatch_root = site_root / DISPATCH_SLUG
@@ -1112,15 +1131,18 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
             _ = load_manual_sources(root, edition_date)
         else:
             warnings.append(f"manual sources not found for {edition_date}; continuing with auto baseline sources only")
-        daily_candidate_records, daily_candidate_warnings = load_daily_candidate_sources(root, edition_date)
-        raw_records.extend(daily_candidate_records)
-        warnings.extend(daily_candidate_warnings)
+        if mode == "both":
+            daily_candidate_records, daily_candidate_warnings = load_daily_candidate_sources(root, edition_date)
+            raw_records.extend(daily_candidate_records)
+            warnings.extend(daily_candidate_warnings)
     if mode in {"auto", "both"}:
         raw_records.extend(load_auto_sources(root, edition_date))
     if from_manual_sources and mode == "auto":
         warnings.append("--from-manual-sources ignored when --source-mode auto")
 
     generated_at = utc_now()
+    week_start_date = _week_start_date(edition_date)
+    display_date_range = _display_date_range(edition_date)
     sources, source_warnings, source_errors, diagnostics = normalize_sources(raw_records, edition_date)
     warnings.extend(source_warnings)
     errors.extend(source_errors)
@@ -1176,12 +1198,15 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
     if low_quality_story_ids:
         warnings.append(f"curation_validation: low-quality public item prose for story_ids={','.join(low_quality_story_ids)}")
 
-    html_content = render_edition_html(edition_date, stories, sources, mode)
-    markdown_content = render_edition_markdown(edition_date, stories, sources)
+    html_content = render_edition_html(edition_date, stories, sources, mode, display_date_range=display_date_range)
+    markdown_content = render_edition_markdown(edition_date, stories, sources, display_date_range=display_date_range)
     edition_manifest = {
         "dispatch_name": DISPATCH_NAME,
         "dispatch_slug": DISPATCH_SLUG,
         "edition_date": edition_date,
+        "week_start_date": week_start_date,
+        "week_end_date": edition_date,
+        "display_date_range": display_date_range,
         "generated_at": generated_at,
         "public_url": f"{BASE_URL}/american-pressure/editions/{edition_date}/",
         "source_count": len(sources),
@@ -1224,6 +1249,10 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
 
     curation_manifest = {
         "stories": stories,
+        "edition_date": edition_date,
+        "week_start_date": week_start_date,
+        "week_end_date": edition_date,
+        "display_date_range": display_date_range,
         "pillars_present": pillars_present,
         "pillars_missing": pillars_missing,
         "source_count_by_pillar": source_count_by_pillar,

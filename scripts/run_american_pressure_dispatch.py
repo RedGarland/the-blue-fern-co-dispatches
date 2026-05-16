@@ -284,7 +284,13 @@ def load_manual_sources(root: Path, edition_date: str) -> tuple[Path, list[dict[
     return path, [record for record in records if isinstance(record, dict)]
 
 
-def load_daily_candidate_sources(root: Path, edition_date: str, *, lookback_days: int = 6) -> tuple[list[dict[str, Any]], list[str]]:
+def load_daily_candidate_sources(
+    root: Path,
+    edition_date: str,
+    *,
+    lookback_days: int = 6,
+    include_approved_only: bool = False,
+) -> tuple[list[dict[str, Any]], list[str]]:
     warnings: list[str] = []
     out: list[dict[str, Any]] = []
     end_date = datetime.strptime(edition_date, "%Y-%m-%d").date()
@@ -300,6 +306,8 @@ def load_daily_candidate_sources(root: Path, edition_date: str, *, lookback_days
             continue
         for record in records:
             if isinstance(record, dict):
+                if include_approved_only and _safe_text(record.get("review_status")).lower() != "approved":
+                    continue
                 enriched = dict(record)
                 enriched.setdefault("candidate_collected_on", day)
                 out.append(enriched)
@@ -1117,7 +1125,19 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     write_text(dispatch_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
 
 
-def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bool, dry_run: bool, from_manual_sources: bool, source_mode: str = "both", init_manual_sources: bool = False, init_daily_candidates: bool = False, allow_future: bool = False) -> dict[str, Any]:
+def run_american_pressure_dispatch(
+    root: Path,
+    edition_date: str,
+    *,
+    publish: bool,
+    dry_run: bool,
+    from_manual_sources: bool,
+    source_mode: str = "both",
+    init_manual_sources: bool = False,
+    init_daily_candidates: bool = False,
+    allow_future: bool = False,
+    include_approved_candidates: bool = False,
+) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     validate_not_future_date(edition_date, allow_future=allow_future)
     mode = source_mode.strip().lower()
@@ -1145,7 +1165,11 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         else:
             warnings.append(f"manual sources not found for {edition_date}; continuing with auto baseline sources only")
         if mode == "both":
-            daily_candidate_records, daily_candidate_warnings = load_daily_candidate_sources(root, edition_date)
+            daily_candidate_records, daily_candidate_warnings = load_daily_candidate_sources(
+                root,
+                edition_date,
+                include_approved_only=include_approved_candidates,
+            )
             raw_records.extend(daily_candidate_records)
             warnings.extend(daily_candidate_warnings)
     if mode in {"auto", "both"}:
@@ -1339,6 +1363,7 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "source_count_by_pillar": source_count_by_pillar,
         "story_count_by_pillar": story_count_by_pillar,
         "source_mode": mode,
+        "include_approved_candidates": include_approved_candidates,
     }
 
 
@@ -1352,6 +1377,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--init-manual-sources", action="store_true", help="Create starter manual source file for --date when missing.")
     parser.add_argument("--init-daily-candidates", action="store_true", help="Create starter daily candidate file for --date when missing.")
     parser.add_argument("--allow-future", action="store_true", help="Allow future --date values (disabled by default).")
+    parser.add_argument("--include-approved-candidates", action="store_true", help="Include only approved daily candidates from the 7-day window when --source-mode both.")
     return parser.parse_args(argv)
 
 
@@ -1368,6 +1394,7 @@ def main(argv: list[str] | None = None) -> int:
             init_manual_sources=bool(args.init_manual_sources),
             init_daily_candidates=bool(args.init_daily_candidates),
             allow_future=bool(args.allow_future),
+            include_approved_candidates=bool(args.include_approved_candidates),
         )
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}

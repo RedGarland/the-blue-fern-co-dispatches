@@ -1,0 +1,93 @@
+{
+  "target_groups": {
+    "food_pressure": {
+      "search_phrases": [
+        "food bank demand rising",
+        "SNAP benefit delays households",
+        "grocery affordability pressure families"
+      ],
+      "data_anchor_hints": [
+        "usda-fns-snap-data-tables",
+        "usda-ers-food-price-outlook"
+      ]
+    },
+    "financial_distress_pressure": {
+      "search_phrases": [
+        "chapter 11 bankruptcy jobs risk",
+        "business closure payroll disruption",
+        "household debt distress local impact"
+      ],
+      "data_anchor_hints": [
+        "us-courts-bankruptcy-filings-statistics",
+        "us-courts-bankruptcy-data-visualizations"
+      ]
+    },
+    "housing_household_cost_pressure": {
+      "search_phrases": [
+        "rent increase utility burden residents",
+        "eviction filing surge county",
+        "housing affordability monthly bills strain"
+      ],
+      "data_anchor_hints": [
+        "bls-cpi-shelter",
+        "hud-pit-homelessness"
+      ]
+    },
+    "health_access_pressure": {
+      "search_phrases": [
+        "clinic closure health access residents",
+        "hospital service cuts local patients",
+        "medicaid access delays coverage"
+      ],
+      "data_anchor_hints": [
+        "cms-medicaid-chip-enrollment",
+        "hrsa-shortage-areas"
+      ]
+    },
+    "labor_income_pressure": {
+      "search_phrases": [
+        "layoffs announced local employer",
+        "hours cut workers paycheck pressure",
+        "WARN notice job losses county"
+      ],
+      "data_anchor_hints": [
+        "bls-unemployment-situation",
+        "dol-warn-guidance"
+      ]
+    },
+    "local_system_strain": {
+      "search_phrases": [
+        "local agency strain service disruption",
+        "school district budget cuts services",
+        "county emergency services under strain"
+      ],
+      "data_anchor_hints": [
+        "fema-disaster-declarations",
+        "cdc-svi"
+      ]
+    },
+    "environmental_pressure": {
+      "search_phrases": [
+        "storm flooding damage assessments county",
+        "heat emergency utility strain households",
+        "wildfire smoke disruption local services"
+      ],
+      "data_anchor_hints": [
+        "us-drought-monitor",
+        "noaa-ncei-monthly-climate-report"
+      ]
+    },
+    "policy_implementation": {
+      "search_phrases": [
+        "benefit implementation delays households",
+        "program enrollment backlog local agency",
+        "utility assistance policy access problems"
+      ],
+      "data_anchor_hints": [
+        "hhs-liheap",
+        "us-treasury-emergency-rental-assistance"
+      ]
+    }
+  }
+}
+

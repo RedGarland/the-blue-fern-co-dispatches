@@ -1,0 +1,112 @@
+from __future__ import annotations
+
+import argparse
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from scripts.scout_american_pressure_candidates import PILLARS, _candidate_path, _load_targets, _safe_text, _validate_date
+
+
+ROOT = Path(__file__).resolve().parents[1]
+REVIEW_ROOT = ROOT / "output" / "dispatches" / "american-pressure" / "review"
+
+
+def _load_candidates(day: str) -> dict[str, Any]:
+    path = _candidate_path(day)
+    if not path.exists():
+        return {"date": day, "sources": [], "rejected_candidates": [], "missing_file": True}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(payload, dict):
+        payload.setdefault("sources", [])
+        payload.setdefault("rejected_candidates", [])
+        payload.setdefault("date", day)
+        return payload
+    return {"date": day, "sources": [], "rejected_candidates": [], "invalid_shape": True}
+
+
+def _bucket(rows: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
+    return [row for row in rows if _safe_text(row.get("candidate_bucket")) == key]
+
+
+def _find_missing_pillars(rows: list[dict[str, Any]]) -> list[str]:
+    present = {str(row.get("pillar") or "") for row in rows if _safe_text(row.get("candidate_bucket")) in {"recommended", "maybe"}}
+    return [pillar for pillar in PILLARS if pillar not in present]
+
+
+def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
+    rows = [row for row in payload.get("sources", []) if isinstance(row, dict)]
+    recommended = sorted(_bucket(rows, "recommended"), key=lambda x: int(x.get("candidate_score") or 0), reverse=True)
+    maybe = sorted(_bucket(rows, "maybe"), key=lambda x: int(x.get("candidate_score") or 0), reverse=True)
+    rejected_scored = sorted(_bucket(rows, "rejected"), key=lambda x: int(x.get("candidate_score") or 0))
+    rejected_raw = [row for row in payload.get("rejected_candidates", []) if isinstance(row, dict)]
+    missing = _find_missing_pillars(rows)
+    targets = _load_targets().get("target_groups", {})
+    lines: list[str] = []
+    lines.append(f"# American Pressure Candidate Review - {day}")
+    lines.append("")
+    lines.append(f"Generated at: {datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}")
+    lines.append("")
+    lines.append("## Recommended candidates")
+    if not recommended:
+        lines.append("- None")
+    for row in recommended:
+        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
+    lines.append("")
+    lines.append("## Maybe candidates")
+    if not maybe:
+        lines.append("- None")
+    for row in maybe:
+        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
+    lines.append("")
+    lines.append("## Rejected candidates")
+    if not rejected_scored and not rejected_raw:
+        lines.append("- None")
+    for row in rejected_scored:
+        reasons = ", ".join(row.get("rejection_reasons", []))
+        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | reasons={reasons or 'low_score'}")
+    for row in rejected_raw:
+        lines.append(f"- {row.get('title')} | pillar={row.get('pillar')} | reason={row.get('reason')}")
+    lines.append("")
+    lines.append("## Missing required pillars")
+    if not missing:
+        lines.append("- None")
+    for pillar in missing:
+        lines.append(f"- {pillar}")
+    lines.append("")
+    lines.append("## Suggested data anchors")
+    for pillar in PILLARS:
+        hints = targets.get(pillar, {}).get("data_anchor_hints", [])
+        hint_text = ", ".join(hints) if hints else "none"
+        lines.append(f"- {pillar}: {hint_text}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Review daily American Pressure candidate files.")
+    parser.add_argument("--date", required=True, help="Candidate date YYYY-MM-DD")
+    parser.add_argument("--write", action="store_true", help="Write review report markdown")
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    try:
+        day = _validate_date(args.date)
+        payload = _load_candidates(day)
+        markdown = build_review_markdown(day, payload)
+        out_path = REVIEW_ROOT / f"{day}_candidate_review.md"
+        if args.write:
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(markdown, encoding="utf-8")
+        print(json.dumps({"ok": True, "date": day, "review_report": str(out_path), "written": bool(args.write)}, indent=2))
+        return 0
+    except Exception as exc:  # noqa: BLE001
+        print(json.dumps({"ok": False, "errors": [str(exc)]}, indent=2))
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

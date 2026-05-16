@@ -457,12 +457,36 @@ data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json
   --init-candidates
 ```
 
+Daily scout intake (no publish):
+
+```powershell
+.\.venv\Scripts\python.exe scripts\scout_american_pressure_candidates.py `
+  --start-date YYYY-MM-DD `
+  --end-date YYYY-MM-DD `
+  --write `
+  --max-per-pillar 4
+```
+
+Daily candidate review report:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\review_american_pressure_candidates.py `
+  --date YYYY-MM-DD `
+  --write
+```
+
+Review model:
+- New candidate records are written with `review_status: needs_review`.
+- Approved merge is explicit: only records marked `review_status: approved` are eligible for weekly intake.
+- Rejected candidates are never merged into weekly generation.
+
 2. Generate weekly edition:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
   --week-ending YYYY-MM-DD `
-  --source-mode both
+  --source-mode both `
+  --include-approved-candidates
 ```
 
 3. Publish locally:
@@ -471,6 +495,7 @@ data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json
 .\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
   --week-ending YYYY-MM-DD `
   --source-mode both `
+  --include-approved-candidates `
   --publish
 ```
 
@@ -480,6 +505,7 @@ data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json
 .\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
   --week-ending YYYY-MM-DD `
   --source-mode both `
+  --include-approved-candidates `
   --publish `
   --push
 ```

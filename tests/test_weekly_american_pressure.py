@@ -34,3 +34,35 @@ def test_init_candidates_creates_daily_files(monkeypatch, tmp_path):
     for path in created:
         assert Path(path).exists()
 
+
+def test_include_approved_candidates_flag_passed(monkeypatch, tmp_path):
+    monkeypatch.setattr(weekly, "ROOT", tmp_path)
+    dispatch_dir = tmp_path / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-09"
+    dispatch_dir.mkdir(parents=True, exist_ok=True)
+    (dispatch_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "week_start_date": "2026-05-03",
+                "display_date_range": "May 3-May 9, 2026",
+                "source_count": 1,
+                "story_count": 1,
+                "story_plus_data_count": 1,
+                "baseline_only_count": 0,
+                "missing_required_current_development_pillars": [],
+                "collection_gap_pillars": [],
+                "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-09/",
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[dict] = []
+
+    def fake_run(_root, _edition_date, **kwargs):
+        calls.append(kwargs)
+        return {"ok": True, "source_count": 1, "story_count": 1, "warnings": [], "errors": []}
+
+    monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
+    rc = weekly.main(["--week-ending", "2026-05-09", "--include-approved-candidates"])
+    assert rc == 0
+    assert calls
+    assert calls[-1]["include_approved_candidates"] is True

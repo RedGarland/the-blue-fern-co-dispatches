@@ -26,6 +26,8 @@ These are the current non-negotiable operating rules for this project.
 - Candidate intake may run daily.
 - Candidate files live under `data/dispatches/american-pressure/candidates/YYYY-MM-DD/candidate_sources.json`.
 - Weekly manual/curated source records may live under `data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json`.
+- Daily scouting is intake-only and must not publish.
+- Candidate review status defaults to `needs_review`; only explicitly `approved` candidates may flow into weekly merge.
 
 3. Editorial model:
 - Public briefs pair relatable current developments with reliable data anchors.
@@ -64,3 +66,9 @@ These are the current non-negotiable operating rules for this project.
 - policy implementation when available
 
 If a pillar has no human story, report it as a collection gap. Do not imply that no relevant news existed.
+
+9. Candidate safety and approvals:
+- No candidate without a traceable source URL.
+- No invented summaries or generated prose as source material.
+- Reject or downrank investor-only, opinion-only, duplicate/stale, and no-public-impact items.
+- Approved-candidate merge is opt-in (`--include-approved-candidates`) and must exclude unapproved/rejected candidates.

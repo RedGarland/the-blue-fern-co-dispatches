@@ -578,14 +578,30 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
     base = _safe_text(source.get("manual_human_story_summary")) or _safe_text(source.get("manual_what_happened")) or _reader_facing_summary(source)
     if not base:
         return ""
+    base = re.sub(r"\s+", " ", base).strip()
     place = _location_phrase(source)
+    affected = _safe_text(source.get("affected_people"))
+    affected = re.sub(r"\s+", " ", affected).strip().rstrip(".")
+    if affected and affected[:1].isupper() and not affected[:2].isupper():
+        affected = affected[:1].lower() + affected[1:]
+
+    def _with_affected(sentence: str) -> str:
+        cleaned = sentence.strip().rstrip(".")
+        if affected:
+            return f"{cleaned}. This may affect {affected}."
+        return f"{cleaned}."
+
     if not place:
-        return base
+        return _with_affected(base)
+    if re.match(r"(?i)^(in|across)\s+", base):
+        return _with_affected(base)
     intro_place, intro_mode = _normalize_location_intro(place)
     normalized = _remove_location_repetition(base, intro_place)
     if normalized.lower().startswith("in "):
-        return base
+        return _with_affected(base)
     actor = _extract_named_actor(source)
+    if "state and federal teams" in normalized.lower():
+        actor = "state and federal teams"
     if actor:
         normalized = _trim_generic_lead_when_actor_present(normalized)
         if normalized.lower().startswith("the "):
@@ -606,11 +622,8 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
             normalized = f"{actor} {normalized}"
         # Mid-sentence actor capitalization cleanup.
         normalized = re.sub(r"^State and federal teams\b", "state and federal teams", normalized)
-    affected = _safe_text(source.get("affected_people"))
     sentence = f"{'In' if intro_mode == 'in' else 'Across'} {intro_place.removeprefix('Across ').removeprefix('In ')}, {normalized}" if intro_mode == "across" else f"In {intro_place}, {normalized}"
-    if affected:
-        sentence += f" This may affect {affected}."
-    return sentence
+    return _with_affected(sentence)
 
 
 def _reader_facing_headline(source: dict[str, Any]) -> str:

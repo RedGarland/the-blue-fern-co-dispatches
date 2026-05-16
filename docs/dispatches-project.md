@@ -426,50 +426,73 @@ Core rule: **NO FACT WITHOUT A TRACEABLE SOURCE.** Every public factual story, s
 
 Paid/detail artifacts are private. Do not expose `output/detail/`, `output/paid/`, raw source dumps, or Cascadia Signal package files under `output/site/`.
 
-## American Pressure Weekly Manual Run
+## American Pressure Weekly Operating Model
 
-American Pressure is currently weekly and manual-source-driven only. It does not run live scraping or automatic source ingestion in the publish path.
+- Public product: weekly dispatch.
+- Intake model: daily candidate files plus weekly manual/curated sources.
+- Source mode: both, using current-week human-story records plus official data anchors.
+- Edition date: completed week-ending Saturday.
+- Display date range: full date range, for example `May 3-May 9, 2026`.
+- Public output: lay-reader mini-briefs with real-life story sources and data/context sources.
+- Live push: opt-in only.
 
-Manual source input:
+Candidate intake file path:
+
+```text
+data/dispatches/american-pressure/candidates/YYYY-MM-DD/candidate_sources.json
+```
+
+Manual/curated weekly source file path:
 
 ```text
 data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json
 ```
 
-Run a weekly edition from manual sources:
+1. Initialize daily candidates:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_american_pressure_dispatch.py --date YYYY-MM-DD --from-manual-sources --publish
+.\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
+  --start-date YYYY-MM-DD `
+  --end-date YYYY-MM-DD `
+  --init-candidates
 ```
 
-Notification wrapper:
+2. Generate weekly edition:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_american_pressure_and_notify.py --date YYYY-MM-DD --publish
+.\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
+  --week-ending YYYY-MM-DD `
+  --source-mode both
 ```
 
-SMTP-only diagnostic:
+3. Publish locally:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_american_pressure_and_notify.py --date YYYY-MM-DD --smtp-debug --send-test-email
+.\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
+  --week-ending YYYY-MM-DD `
+  --source-mode both `
+  --publish
 ```
 
-No-source safety behavior:
+4. Publish live:
 
-- missing `manual_sources.json` fails safely
-- zero valid source records fails safely
-- no fixture fallback publish is allowed
-- source registry entries are not auto-converted into public stories
-
-Suggested weekly Task Scheduler action:
-
-- Trigger: weekly Monday morning (Pacific local machine time)
-- Program/script: `powershell.exe`
-- Start in: `C:\PythonProjects\Dispatches From The Blue Fern Co`
-- Arguments:
-
-```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_american_pressure_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"
+```powershell
+.\.venv\Scripts\python.exe scripts\run_weekly_american_pressure.py `
+  --week-ending YYYY-MM-DD `
+  --source-mode both `
+  --publish `
+  --push
 ```
 
-This cadence expects the weekly manual source file for the selected date to be prepared before execution.
+5. Task Scheduler command:
+
+Program/script:
+`powershell.exe`
+
+Arguments:
+`-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_weekly_american_pressure.py' --week-ending previous-saturday --source-mode both --publish --push"`
+
+- `--publish` updates the local Pages repo.
+- `--push` pushes live from `bluefern-dispatches-pages` on `gh-pages`.
+- Never run `git push origin gh-pages` from the source repo.
+- Source repo branch and Pages repo branch are separate.

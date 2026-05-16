@@ -474,8 +474,8 @@ def test_wisconsin_multiple_counties_phrase_is_normalized(work_root):
     story = _record(
         "wi-storm",
         "local_system_strain",
-        "Wisconsin officials begin assessments after storms",
-        "Wisconsin officials began damage assessments after storms and flooding.",
+        "State and federal teams begin assessments after storms",
+        "Across multiple Wisconsin counties, state and federal teams began damage assessments after storms and flooding.",
         "https://example.com/wi",
         source_type="news_report",
         source_role="human_story",
@@ -489,6 +489,10 @@ def test_wisconsin_multiple_counties_phrase_is_normalized(work_root):
     assert "In Multiple counties in Wisconsin, Wisconsin" not in html
     assert "State and federal teams wisconsin officials" not in html
     assert "wisconsin officials" not in html
+    assert "state officials Across multiple Wisconsin counties" not in html
+    assert "This may affect Residents" not in html
+    assert "communities.." not in html
+    assert "Across multiple Wisconsin counties, state and federal teams began damage assessments" in html
 
 
 def test_wisconsin_preferred_phrase_from_fixture_is_clean(work_root):
@@ -503,6 +507,9 @@ def test_wisconsin_preferred_phrase_from_fixture_is_clean(work_root):
     assert "Across multiple Wisconsin counties, state and federal teams" in html
     assert "State and federal teams wisconsin officials" not in html
     assert html.count("state and federal teams") == 1
+    assert "state officials Across multiple Wisconsin counties" not in html
+    assert "This may affect Residents" not in html
+    assert "communities.." not in html
 
 
 def test_collection_gap_wording_does_not_claim_no_relevant_news(work_root):

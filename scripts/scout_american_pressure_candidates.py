@@ -4,6 +4,7 @@ import argparse
 import html
 import json
 import re
+import sys
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -13,6 +14,11 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 TARGETS_PATH = ROOT / "data" / "dispatches" / "american-pressure" / "search_targets.yml"
 CANDIDATES_ROOT = ROOT / "data" / "dispatches" / "american-pressure" / "candidates"
 RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"

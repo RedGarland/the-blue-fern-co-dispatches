@@ -516,9 +516,10 @@ Program/script:
 `powershell.exe`
 
 Arguments:
-`-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_weekly_american_pressure.py' --week-ending previous-saturday --source-mode both --publish --push"`
+`-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_weekly_american_pressure.py' --week-ending previous-saturday --source-mode both --include-approved-candidates --publish --push"`
 
 - `--publish` updates the local Pages repo.
 - `--push` pushes live from `bluefern-dispatches-pages` on `gh-pages`.
 - Never run `git push origin gh-pages` from the source repo.
 - Source repo branch and Pages repo branch are separate.
+- Command examples in this section use direct script invocation style (`python scripts\...`) consistently.

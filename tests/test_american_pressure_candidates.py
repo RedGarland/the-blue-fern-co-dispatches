@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import scripts.review_american_pressure_candidates as review_script
@@ -212,3 +214,47 @@ def test_unapproved_candidates_do_not_feed_weekly_run(tmp_path):
     manifest = json.loads((tmp_path / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-10" / "edition_manifest.json").read_text(encoding="utf-8"))
     assert manifest["human_story_count_by_pillar"]["labor_income_pressure"] == 0
     assert manifest["source_count"] == len(json.loads((tmp_path / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "sources_manifest.json").read_text(encoding="utf-8")))
+
+
+def test_review_script_help_direct_and_module():
+    root = Path(__file__).resolve().parents[1]
+    direct = subprocess.run(
+        [sys.executable, "scripts\\review_american_pressure_candidates.py", "--help"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    module = subprocess.run(
+        [sys.executable, "-m", "scripts.review_american_pressure_candidates", "--help"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert direct.returncode == 0
+    assert module.returncode == 0
+    assert "usage:" in direct.stdout.lower()
+    assert "usage:" in module.stdout.lower()
+
+
+def test_scout_script_help_direct_and_module():
+    root = Path(__file__).resolve().parents[1]
+    direct = subprocess.run(
+        [sys.executable, "scripts\\scout_american_pressure_candidates.py", "--help"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    module = subprocess.run(
+        [sys.executable, "-m", "scripts.scout_american_pressure_candidates", "--help"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert direct.returncode == 0
+    assert module.returncode == 0
+    assert "usage:" in direct.stdout.lower()
+    assert "usage:" in module.stdout.lower()

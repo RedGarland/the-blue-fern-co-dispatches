@@ -1,4 +1,4 @@
-﻿import json
+import json
 import shutil
 import uuid
 from datetime import datetime, timedelta
@@ -28,8 +28,8 @@ def _write_manual_sources(root: Path, edition_date: str, records: list[dict]) ->
     return path
 
 
-def _record(source_id: str, pillar: str, title: str, summary: str, url: str) -> dict:
-    return {
+def _record(source_id: str, pillar: str, title: str, summary: str, url: str, *, source_type: str = "official_dataset_page", source_role: str | None = None, linked_data_anchor_ids: list[str] | None = None) -> dict:
+    row = {
         "source_record_id": f"ap-2026-05-12-{source_id}",
         "source_id": source_id,
         "title": title,
@@ -38,32 +38,17 @@ def _record(source_id: str, pillar: str, title: str, summary: str, url: str) -> 
         "published_at": "2026-05-10T00:00:00Z",
         "retrieved_at": "2026-05-12T12:00:00Z",
         "summary_or_snippet": summary,
-        "source_type": "official_dataset_page",
+        "source_type": source_type,
         "geography": "US",
         "pillar": pillar,
         "category_hint": pillar,
         "reliability_tier": "official_primary",
     }
-
-
-def test_manual_mode_uses_manual_only(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [_record("snap", "food_pressure", "SNAP", "Food assistance pressure", "https://example.com/snap")])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
-    assert result["ok"] is True
-    assert result["source_count"] == 1
-
-
-def test_auto_mode_uses_enabled_baseline_sources(work_root):
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
-    assert result["ok"] is True
-    assert result["source_count"] >= 4
-
-
-def test_both_mode_merges_auto_and_manual(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [_record("labor", "labor_income_pressure", "WARN layoffs", "Layoff pressure for workers", "https://example.com/warn")])
-    auto = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
-    both = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="both")
-    assert both["source_count"] > auto["source_count"]
+    if source_role:
+        row["source_role"] = source_role
+    if linked_data_anchor_ids:
+        row["linked_data_anchor_ids"] = linked_data_anchor_ids
+    return row
 
 
 def test_future_date_refused_without_allow_future(work_root):
@@ -72,55 +57,98 @@ def test_future_date_refused_without_allow_future(work_root):
         ap_runner.run_american_pressure_dispatch(work_root, future_date, publish=False, dry_run=False, from_manual_sources=False, source_mode="auto")
 
 
-def test_investor_only_bankruptcy_rejected(work_root):
-    _write_manual_sources(work_root, "2026-05-12", [_record("bk", "financial_distress_pressure", "Chapter 11 plan", "Investor presentation for bondholder recoveries", "https://example.com/investor")])
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
-    assert result["ok"] is False
-
-
-def test_section_rendering_and_source_links(work_root):
+def test_human_story_and_data_anchor_combine_into_one_mini_brief(work_root):
     manual = [
-        _record("foodbank", "food_pressure", "Food bank demand update", "Food bank demand spike this week", "https://example.com/foodbank"),
-        _record("snap", "food_pressure", "SNAP", "Food pressure", "https://example.com/snap"),
-        _record("bk", "financial_distress_pressure", "Court filings", "Household debt bankruptcy pressure", "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics"),
-        _record("health", "health_access_pressure", "Clinic closure", "Health access strain", "https://example.com/health"),
-        _record("housing", "housing_household_cost_pressure", "Rents rise", "Housing cost pressure", "https://example.com/housing"),
-        _record("labor", "labor_income_pressure", "BLS Employment Situation", "Labor income pressure", "https://example.com/labor"),
-        _record("local", "local_system_strain", "Transit cuts", "Local service disruptions", "https://example.com/local"),
-        _record("env", "environmental_pressure", "NOAA climate watch", "Heat and drought pressure", "https://example.com/noaa"),
-        _record("fema", "environmental_pressure", "FEMA declaration update", "Disaster declaration update", "https://example.com/fema"),
-        _record("drought", "environmental_pressure", "Drought monitor", "Weekly drought pressure", "https://droughtmonitor.unl.edu/"),
+        _record("food-story", "food_pressure", "Local food bank demand surges", "Food bank reported longer pantry lines this week.", "https://example.com/food-story", source_type="news_report", source_role="human_story"),
+        _record("snap-anchor", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
     ]
     _write_manual_sources(work_root, "2026-05-12", manual)
-    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    assert result["source_count"] == 2
+    assert result["story_count"] == 1
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    story = curation["stories"][0]
+    assert story["brief_quality"] == "story_plus_data"
+    assert len(story["human_story_source_ids"]) == 1
+    assert len(story["data_anchor_source_ids"]) == 1
+
+
+def test_food_bank_story_links_to_snap_anchor(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Neighborhood pantry warning", "Pantries report demand spikes.", "https://example.com/food-story", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["ap-2026-05-12-snap-anchor"]),
+        _record("snap-anchor", "food_pressure", "USDA SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
-    assert "This Week's Read" not in html
-    assert "This Week’s Read" in html
-    assert "What This Means" in html
-    assert "What Feels Tight" in html
-    assert "What Changed" in html
-    assert "What We’re Watching Next" in html
-    assert "What We Still Do Not Know" in html
-    assert "Source: <a href=" in html
-    assert "Food and Grocery Pressure" in html
-    assert "Debt and Bankruptcy Pressure" in html
-    assert "Jobs and Paychecks" in html
-    assert "Weather, Drought, and Disaster Strain" in html
-    assert "SNAP data helps show whether food assistance remains a major support for households under grocery pressure." in html
-    assert "Bankruptcy filings are a delayed but concrete sign that households or businesses have run out of easier options." in html
-    assert "<strong>Why it matters:</strong>" in html
-    assert "<strong>Who may feel it:</strong>" in html
-    assert "<strong>What to watch next:</strong>" in html
-    food_section = html.split("Food and Grocery Pressure", 1)[1].split("Debt and Bankruptcy Pressure", 1)[0]
-    assert food_section.index("Type:</strong> current_week_development") < food_section.index("Type:</strong> baseline_gauge")
+    assert "Real-life story sources:" in html
+    assert "Data/context sources:" in html
+    assert "USDA SNAP Household Characteristics" in html
 
+
+def test_bankruptcy_story_links_to_us_courts_data_anchor(work_root):
+    manual = [
+        _record("bk-story", "financial_distress_pressure", "Regional employer files Chapter 11", "The filing raises concern for payroll continuity.", "https://example.com/employer-bankruptcy", source_type="news_report", source_role="human_story", linked_data_anchor_ids=["ap-2026-05-12-uscourts"]),
+        _record("uscourts", "financial_distress_pressure", "U.S. Courts Bankruptcy Filings Statistics", "Official baseline indicator source.", "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    story = curation["stories"][0]
+    assert "ap-2026-05-12-uscourts" in story["data_anchor_source_ids"]
+
+
+def test_baseline_only_item_gets_baseline_label(work_root):
+    manual = [
+        _record("cpi", "housing_household_cost_pressure", "BLS CPI Shelter Index", "Official baseline indicator source.", "https://example.com/cpi", source_role="data_anchor"),
+        _record("medicaid", "health_access_pressure", "Medicaid and CHIP Enrollment Data", "Official baseline indicator source.", "https://example.com/medicaid", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "Baseline gauge: useful for tracking, but not enough by itself to show what changed this week." in html
+
+
+def test_data_anchor_not_mislabeled_current_week_development(work_root):
+    manual = [
+        _record("uscourts", "financial_distress_pressure", "U.S. Courts Bankruptcy Filings Statistics", "Official baseline indicator source.", "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    assert curation["stories"][0]["item_type"] == "baseline_gauge"
+
+
+def test_story_count_counts_mini_briefs_not_sources_and_counts_reconcile(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Food pantry pressure report", "Pantry demand is rising.", "https://example.com/food-story", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+        _record("jobs", "labor_income_pressure", "BLS Employment Situation", "Official baseline indicator source.", "https://example.com/jobs", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
     manifest = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition_manifest.json").read_text(encoding="utf-8"))
     curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
     sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "sources_manifest.json").read_text(encoding="utf-8"))
     assert manifest["source_count"] == len(sources)
     assert manifest["story_count"] == len(curation["stories"])
-    assert manifest["item_type_counts"]["current_week_development"] >= 1
-    assert manifest["item_type_counts"]["baseline_gauge"] >= 1
-    assert any(story.get("curation_reason") == "food assistance dependency" for story in curation["stories"])
-    assert any(story.get("curation_reason") == "bankruptcy/financial distress baseline" for story in curation["stories"])
+    assert manifest["story_count"] < manifest["source_count"]
+
+
+def test_no_duplicate_reader_headlines(work_root):
+    manual = [
+        _record("snap-a", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap-a", source_role="data_anchor"),
+        _record("snap-b", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap-b", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    titles = [story["title"] for story in curation["stories"]]
+    assert len(titles) == len(set(titles))

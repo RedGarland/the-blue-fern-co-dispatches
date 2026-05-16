@@ -128,6 +128,11 @@ PUBLIC_PRESSURE_KEYWORDS = {
 INVESTOR_ONLY_KEYWORDS = {
     "shareholder", "bondholder", "equity holder", "equityholders", "investor presentation", "capital structure optimization", "eps guidance",
 }
+LOW_QUALITY_PUBLIC_ITEM_PHRASES = (
+    "official baseline",
+    "data table",
+    "research page",
+)
 
 
 def utc_now() -> str:
@@ -204,6 +209,18 @@ def _normalize_pillar(value: str) -> str:
         "housing_cost_pressure": "housing_household_cost_pressure",
     }
     return mapping.get(norm, norm)
+
+
+def _safe_text(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def _safe_list_of_text(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [_safe_text(item) for item in value if _safe_text(item)]
+    if isinstance(value, str) and value.strip():
+        return [_safe_text(part) for part in value.split(",") if _safe_text(part)]
+    return []
 
 
 def load_manual_sources(root: Path, edition_date: str) -> tuple[Path, list[dict[str, Any]]]:
@@ -356,6 +373,20 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "edition_date": edition_date,
                 "dispatch_slug": DISPATCH_SLUG,
                 "is_baseline_auto": bool(record.get("is_baseline_auto")),
+                "reader_headline": _safe_text(record.get("reader_headline")),
+                "manual_what_happened": _safe_text(record.get("what_happened")),
+                "manual_potential_relevance": _safe_text(record.get("potential_relevance")),
+                "manual_who_may_feel_it": _safe_text(record.get("who_may_feel_it")),
+                "manual_what_to_watch_next": _safe_text(record.get("what_to_watch_next")),
+                "location_scope": _safe_text(record.get("location_scope")),
+                "affected_people": _safe_text(record.get("affected_people")),
+                "pressure_direction": _safe_text(record.get("pressure_direction")),
+                "public_pressure_angle": _safe_text(record.get("public_pressure_angle")),
+                "manual_human_story_summary": _safe_text(record.get("human_story_summary")),
+                "manual_location": _safe_text(record.get("location")),
+                "manual_pressure_area": _safe_text(record.get("pressure_area")),
+                "manual_source_role": _safe_text(record.get("source_role")).lower(),
+                "linked_data_anchor_ids": _safe_list_of_text(record.get("linked_data_anchor_ids")),
             }
         )
     warnings.append(f"curation_diagnostics={json.dumps(diagnostics, sort_keys=True)}")
@@ -397,6 +428,62 @@ def _reader_facing_summary(source: dict[str, Any]) -> str:
     return summary
 
 
+def _reader_facing_headline(source: dict[str, Any]) -> str:
+    manual = _safe_text(source.get("reader_headline"))
+    if manual:
+        return manual
+    text = f"{source.get('title', '')} {source.get('summary_or_snippet', '')}".lower()
+    if "snap" in text or "fns" in text:
+        return "Food help remains one of the clearest signs of household strain"
+    if "bankrupt" in text or "chapter 11" in text or "chapter 7" in text or "chapter 13" in text:
+        return "Bankruptcy filings help show where debt stress is breaking through"
+    if "shelter" in text or "housing" in text or "rent" in text:
+        return "Housing costs are still the budget pressure that can crowd out everything else"
+    if "medicaid" in text or "chip" in text:
+        return "Health coverage data helps show who may be exposed if access changes"
+    if "employment situation" in text or "payroll" in text or "unemployment" in text or "jobs" in text:
+        return "Jobs and paychecks remain the first line of defense against household pressure"
+    if "noaa" in text or "ncei" in text or "climate" in text or "drought" in text:
+        return "Weather and climate conditions can turn into cost pressure"
+    if "fema" in text or "disaster declaration" in text:
+        return "Disaster declarations show where local systems may be stretched"
+    return _safe_text(source.get("title")) or "Source-backed pressure signal"
+
+
+def _potential_relevance(source: dict[str, Any], pillar: str) -> str:
+    manual = _safe_text(source.get("manual_potential_relevance"))
+    if manual:
+        return manual
+    if pillar == "food_pressure":
+        return "This signal may show up later as tighter grocery tradeoffs, higher pantry demand, and less room in monthly budgets."
+    if pillar == "financial_distress_pressure":
+        return "This signal can show where debt stress could break into missed payments, service disruption, or local job risk."
+    if pillar == "housing_household_cost_pressure":
+        return "This is a baseline for watching whether housing and utility costs keep crowding out other essentials."
+    if pillar == "health_access_pressure":
+        return "This signal may matter if households could face coverage gaps, delayed care, or higher out-of-pocket pressure."
+    if pillar == "labor_income_pressure":
+        return "This is a signal of whether paycheck stability can still absorb rising costs."
+    if pillar == "environmental_pressure":
+        return "This can show up later as food, energy, insurance, and repair cost pressure."
+    if pillar == "policy_implementation":
+        return "This is a baseline for watching whether support can reach people quickly when pressure rises."
+    return "This signal may indicate where local systems could have less buffer if conditions worsen."
+
+
+def _is_low_quality_public_item(story: dict[str, Any]) -> bool:
+    combined = " ".join(
+        _safe_text(story.get(field)).lower()
+        for field in ("what_happened", "potential_relevance", "who_may_feel_it", "what_to_watch_next")
+    )
+    if not combined:
+        return True
+    for phrase in LOW_QUALITY_PUBLIC_ITEM_PHRASES:
+        if phrase in combined and all(token not in combined for token in ("may", "could", "can", "signal", "watch")):
+            return True
+    return False
+
+
 def _classify_item_type(source: dict[str, Any]) -> str:
     source_type = str(source.get("source_type") or "").lower()
     text = f"{source.get('title', '')} {source.get('summary_or_snippet', '')}".lower()
@@ -411,16 +498,84 @@ def _classify_item_type(source: dict[str, Any]) -> str:
     return "baseline_gauge"
 
 
+def _classify_source_role(source: dict[str, Any]) -> str:
+    manual = _safe_text(source.get("manual_source_role")).lower()
+    if manual in {"human_story", "data_anchor", "watchlist_signal"}:
+        return manual
+    item_type = _classify_item_type(source)
+    source_type = _safe_text(source.get("source_type")).lower()
+    text = f"{source.get('title', '')} {source.get('summary_or_snippet', '')}".lower()
+    if item_type == "baseline_gauge":
+        return "data_anchor"
+    if "dataset" in source_type or "statistics" in source_type:
+        return "data_anchor"
+    if any(t in text for t in ("watch", "monitor", "outlook", "forecast")):
+        return "watchlist_signal"
+    return "human_story"
+
+
 def _item_sort_key(story: dict[str, Any]) -> tuple[int, int]:
-    item_type = str(story.get("item_type") or "baseline_gauge")
-    rank = {"current_week_development": 0, "baseline_gauge": 1, "watchlist_item": 2}.get(item_type, 3)
+    quality = _safe_text(story.get("brief_quality"))
+    rank = {
+        "story_plus_data": 0,
+        "official_release_only": 1,
+        "baseline_only": 2,
+        "watchlist_only": 3,
+    }.get(quality, 4)
     return (rank, int(story.get("score") or 0) * -1)
+
+
+def _dedupe_headline(headline: str, seen: dict[str, int]) -> str:
+    key = headline.strip().lower()
+    seen[key] = seen.get(key, 0) + 1
+    if seen[key] == 1:
+        return headline
+    return f"{headline} ({seen[key]})"
+
+
+def _build_data_context_summary(data_anchors: list[dict[str, Any]], pillar: str) -> str:
+    if not data_anchors:
+        return "No data anchor was available for this item this week."
+    labels = ", ".join(anchor["title"] for anchor in data_anchors[:3])
+    if pillar == "food_pressure":
+        return f"Data context from {labels} is a baseline for tracking whether food pressure is broadening."
+    if pillar == "financial_distress_pressure":
+        return f"Data context from {labels} helps anchor whether debt stress may be moving from warning signs to hard outcomes."
+    if pillar == "housing_household_cost_pressure":
+        return f"Data context from {labels} is a baseline for whether housing and bill pressure remains persistent."
+    if pillar == "health_access_pressure":
+        return f"Data context from {labels} helps track whether coverage and access pressure could widen."
+    if pillar == "labor_income_pressure":
+        return f"Data context from {labels} helps show whether job and paycheck stability is holding."
+    return f"Data context from {labels} provides baseline evidence for this pressure area."
 
 
 def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_at: str) -> list[dict[str, Any]]:
     stories: list[dict[str, Any]] = []
-    for index, source in enumerate(sources, start=1):
-        pillar = str(source.get("pillar") or "local_system_strain")
+    source_by_id = {str(source["source_record_id"]): source for source in sources}
+    grouped: dict[str, list[dict[str, Any]]] = {pillar: [] for pillar in PILLAR_ORDER}
+    for source in sources:
+        grouped.setdefault(str(source.get("pillar") or "local_system_strain"), []).append(source)
+
+    headline_seen: dict[str, int] = {}
+    for index, pillar in enumerate(PILLAR_ORDER, start=1):
+        bucket = grouped.get(pillar, [])
+        if not bucket:
+            continue
+        human_story_sources = [s for s in bucket if _classify_source_role(s) == "human_story"]
+        data_anchor_sources = [s for s in bucket if _classify_source_role(s) == "data_anchor"]
+        watchlist_sources = [s for s in bucket if _classify_source_role(s) == "watchlist_signal"]
+
+        linked_anchors: list[dict[str, Any]] = []
+        for src in human_story_sources:
+            for linked_id in src.get("linked_data_anchor_ids", []):
+                linked = source_by_id.get(str(linked_id))
+                if linked and linked not in linked_anchors:
+                    linked_anchors.append(linked)
+        if linked_anchors:
+            data_anchor_sources = [*linked_anchors, *[s for s in data_anchor_sources if s not in linked_anchors]]
+
+        primary_source = human_story_sources[0] if human_story_sources else (data_anchor_sources[0] if data_anchor_sources else watchlist_sources[0])
         curation_reason = {
             "food_pressure": "food assistance dependency",
             "financial_distress_pressure": "bankruptcy/financial distress baseline",
@@ -431,20 +586,62 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
             "local_system_strain": "drought/disaster/local-system strain",
             "policy_implementation": "policy implementation pressure",
         }.get(pillar, "local-system strain baseline")
+        has_human = bool(human_story_sources)
+        has_data = bool(data_anchor_sources)
+        if has_human and has_data:
+            brief_quality = "story_plus_data"
+        elif has_data and any(_classify_item_type(s) == "current_week_development" for s in data_anchor_sources):
+            brief_quality = "official_release_only"
+        elif has_data:
+            brief_quality = "baseline_only"
+        else:
+            brief_quality = "watchlist_only"
+
+        human_summary = _safe_text(primary_source.get("manual_human_story_summary")) if primary_source else ""
+        if not human_summary and human_story_sources:
+            human_summary = _reader_facing_summary(human_story_sources[0])
+
+        headline = _dedupe_headline(_reader_facing_headline(primary_source), headline_seen) if primary_source else _dedupe_headline(PILLAR_HEADINGS[pillar], headline_seen)
+        combined_sources = [*human_story_sources, *data_anchor_sources, *watchlist_sources]
+        combined_ids = [str(s["source_record_id"]) for s in combined_sources]
+        combined_urls = [str(s["url"]) for s in combined_sources]
+        combined_publishers = [str(s["publisher"]) for s in combined_sources]
+        location_scope = _safe_text(primary_source.get("manual_location") or primary_source.get("location_scope")) if primary_source else ""
         stories.append(
             {
                 "story_id": f"american-pressure-story-{edition_date}-{index:03d}",
-                "title": source["title"],
-                "summary": source["summary_or_snippet"],
-                "category": CATEGORY_BY_PILLAR.get(str(source.get("pillar") or ""), "local-system-strain"),
+                "title": headline,
+                "summary": _safe_text(primary_source.get("summary_or_snippet")) if primary_source else "",
+                "category": CATEGORY_BY_PILLAR.get(str(pillar), "local-system-strain"),
                 "pillar": pillar,
                 "curation_reason": curation_reason,
-                "item_type": _classify_item_type(source),
+                "item_type": "current_week_development" if has_human else "baseline_gauge",
+                "source_role_counts": {
+                    "human_story": len(human_story_sources),
+                    "data_anchor": len(data_anchor_sources),
+                    "watchlist_signal": len(watchlist_sources),
+                },
+                "brief_quality": brief_quality,
                 "score": 100 - index,
                 "included_in_public_summary": True,
-                "source_record_ids": [source["source_record_id"]],
-                "source_urls": [source["url"]],
-                "publisher_names": [source["publisher"]],
+                "source_record_ids": combined_ids,
+                "source_urls": combined_urls,
+                "publisher_names": combined_publishers,
+                "human_story_source_ids": [str(s["source_record_id"]) for s in human_story_sources],
+                "data_anchor_source_ids": [str(s["source_record_id"]) for s in data_anchor_sources],
+                "watchlist_source_ids": [str(s["source_record_id"]) for s in watchlist_sources],
+                "reader_headline": headline,
+                "human_story_summary": human_summary,
+                "data_context_summary": _build_data_context_summary(data_anchor_sources, pillar),
+                "what_happened": _safe_text(primary_source.get("manual_what_happened")) or _reader_facing_summary(primary_source),
+                "potential_relevance": _potential_relevance(primary_source, pillar),
+                "who_may_feel_it": _safe_text(primary_source.get("manual_who_may_feel_it")) or PILLAR_GUIDANCE[pillar]["who_may_feel_it"],
+                "what_to_watch_next": _safe_text(primary_source.get("manual_what_to_watch_next")) or PILLAR_GUIDANCE[pillar]["watch_next"],
+                "location_scope": location_scope,
+                "affected_people": _safe_text(primary_source.get("affected_people")),
+                "pressure_area": _safe_text(primary_source.get("manual_pressure_area")),
+                "pressure_direction": _safe_text(primary_source.get("pressure_direction")),
+                "public_pressure_angle": _safe_text(primary_source.get("public_pressure_angle")),
                 "generated_at": generated_at,
             }
         )
@@ -478,6 +675,22 @@ def _item_type_counts(stories: list[dict[str, Any]]) -> dict[str, int]:
     return counts
 
 
+def _source_role_counts(sources: list[dict[str, Any]]) -> dict[str, int]:
+    counts = {"human_story": 0, "data_anchor": 0, "watchlist_signal": 0}
+    for source in sources:
+        role = _classify_source_role(source)
+        counts[role] = counts.get(role, 0) + 1
+    return counts
+
+
+def _brief_quality_counts(stories: list[dict[str, Any]]) -> dict[str, int]:
+    counts = {"story_plus_data": 0, "official_release_only": 0, "baseline_only": 0, "watchlist_only": 0}
+    for story in stories:
+        quality = _safe_text(story.get("brief_quality")) or "watchlist_only"
+        counts[quality] = counts.get(quality, 0) + 1
+    return counts
+
+
 def render_edition_html(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]], source_mode: str) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
     pillars_present, pillars_missing, _, _ = _coverage(stories, sources)
@@ -488,10 +701,11 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
         "Official baselines are the evidence layer, not the headline layer.</p>"
     )
     chunks.append("<h2>What This Means</h2>")
-    chunks.append(
-        "<p>This edition does not point to one single national emergency. It shows several pressure gauges moving across food, debt, housing, health coverage, work, and local disruption. "
-        "The purpose is to track whether ordinary households are getting more room to breathe or less.</p>"
-    )
+    item_counts = _item_type_counts(stories)
+    baseline_only = item_counts.get("baseline_gauge", 0) > 0 and item_counts.get("current_week_development", 0) == 0
+    chunks.append("<p>This week reads mostly as a pressure map, not a full account of change. Food, debt, housing, health access, jobs, and local strain signals help show where stress may be building. Some signals are baseline gauges, and they need current-week reporting to confirm what actually changed.</p>")
+    if baseline_only:
+        chunks.append("<p><strong>This edition is mostly baseline gauges. That means it is useful for tracking pressure, but it needs more current-week news and local developments before it can fully describe what changed this week.</strong></p>")
     chunks.append("<h2>What Feels Tight</h2>")
     chunks.append(
         f"<p>{len(stories)} source-backed signals are active across {len(pillars_present)} pillars. "
@@ -512,15 +726,42 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
             continue
         guide = PILLAR_GUIDANCE[pillar]
         for story in items:
-            source = source_by_id[story["source_record_ids"][0]]
             item_type = str(story.get("item_type") or "baseline_gauge")
+            quality = _safe_text(story.get("brief_quality"))
             chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
             chunks.append(f"<p><strong>Type:</strong> {html.escape(item_type)}</p>")
-            chunks.append(f"<p><strong>What happened:</strong> {html.escape(_reader_facing_summary(source))}</p>")
-            chunks.append(f"<p><strong>Why it matters:</strong> {html.escape(guide['why_it_matters'])}</p>")
-            chunks.append(f"<p><strong>Who may feel it:</strong> {html.escape(guide['who_may_feel_it'])}</p>")
-            chunks.append(f"<p><strong>What to watch next:</strong> {html.escape(guide['watch_next'])}</p>")
-            chunks.append(f'<p><em>Source: <a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> ({html.escape(source["publisher"])})</em></p></article>')
+            chunks.append(f"<p><strong>Brief quality:</strong> {html.escape(quality)}</p>")
+            if quality == "baseline_only":
+                chunks.append("<p><strong>Baseline gauge: useful for tracking, but not enough by itself to show what changed this week.</strong></p>")
+            if _safe_text(story.get("human_story_summary")):
+                chunks.append(f"<p><strong>Human story / current development:</strong> {html.escape(str(story.get('human_story_summary')))}</p>")
+            chunks.append(f"<p><strong>Data context:</strong> {html.escape(str(story.get('data_context_summary') or guide['why_it_matters']))}</p>")
+            chunks.append(f"<p><strong>What happened:</strong> {html.escape(str(story.get('what_happened')))}</p>")
+            chunks.append(f"<p><strong>Potential relevance:</strong> {html.escape(str(story.get('potential_relevance') or guide['why_it_matters']))}</p>")
+            chunks.append(f"<p><strong>Who may feel it:</strong> {html.escape(str(story.get('who_may_feel_it') or guide['who_may_feel_it']))}</p>")
+            chunks.append(f"<p><strong>What to watch next:</strong> {html.escape(str(story.get('what_to_watch_next') or guide['watch_next']))}</p>")
+            human_ids = [str(x) for x in story.get("human_story_source_ids", [])]
+            data_ids = [str(x) for x in story.get("data_anchor_source_ids", [])]
+            watch_ids = [str(x) for x in story.get("watchlist_source_ids", [])]
+            if human_ids:
+                links = []
+                for source_id in human_ids:
+                    source = source_by_id[source_id]
+                    links.append(f'<a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> ({html.escape(source["publisher"])})')
+                chunks.append(f"<p><em>Real-life story sources: {'; '.join(links)}</em></p>")
+            if data_ids:
+                links = []
+                for source_id in data_ids:
+                    source = source_by_id[source_id]
+                    links.append(f'<a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> ({html.escape(source["publisher"])})')
+                chunks.append(f"<p><em>Data/context sources: {'; '.join(links)}</em></p>")
+            if watch_ids:
+                links = []
+                for source_id in watch_ids:
+                    source = source_by_id[source_id]
+                    links.append(f'<a href="{html.escape(source["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(source["title"])}</a> ({html.escape(source["publisher"])})')
+                chunks.append(f"<p><em>Watchlist sources: {'; '.join(links)}</em></p>")
+            chunks.append("</article>")
 
     chunks.append("<h2>What We’re Watching Next</h2>")
     chunks.append("<p>Watch for developments in layoffs/WARN notices, local closures, food-bank demand, utility burden, benefit access changes, and local budget stress.</p>")
@@ -547,10 +788,11 @@ def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], so
     source_by_id = {source["source_record_id"]: source for source in sources}
     lines = [f"# {DISPATCH_NAME}", "", f"Weekly briefing / {edition_date}", ""]
     for story in stories:
-        source = source_by_id[story["source_record_ids"][0]]
         lines.append(f"## {story['title']}")
-        lines.append(story["summary"])
-        lines.append(f"Source: [{source['title']}]({source['url']}) ({source['publisher']}, {source['published_at']})")
+        lines.append(story.get("human_story_summary") or story.get("data_context_summary") or story["summary"])
+        for source_id in story.get("source_record_ids", []):
+            source = source_by_id[source_id]
+            lines.append(f"Source: [{source['title']}]({source['url']}) ({source['publisher']}, {source['published_at']})")
         lines.append("")
     return "\n".join(lines).strip() + "\n"
 
@@ -611,6 +853,21 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
     stories = curate_stories(sources, edition_date, generated_at)
     pillars_present, pillars_missing, source_count_by_pillar, story_count_by_pillar = _coverage(stories, sources)
     item_type_counts = _item_type_counts(stories)
+    source_role_counts = _source_role_counts(sources)
+    brief_quality_counts = _brief_quality_counts(stories)
+    briefs_with_human_story = sum(1 for story in stories if story.get("source_role_counts", {}).get("human_story", 0) > 0)
+    briefs_with_data_anchor = sum(1 for story in stories if story.get("source_role_counts", {}).get("data_anchor", 0) > 0)
+    baseline_only_briefs = sum(1 for story in stories if _safe_text(story.get("brief_quality")) == "baseline_only")
+    missing_human_story_pillars = sorted(
+        [
+            pillar for pillar in PILLAR_ORDER
+            if source_count_by_pillar.get(pillar, 0) > 0
+            and not any(
+                story.get("pillar") == pillar and story.get("source_role_counts", {}).get("human_story", 0) > 0
+                for story in stories
+            )
+        ]
+    )
 
     if not sources:
         errors.append(f"No valid source-backed American Pressure records found for {edition_date}; refusing zero-source edition.")
@@ -622,6 +879,9 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         warnings.append("coverage_weak: SNAP/weather-only pattern")
     if item_type_counts.get("current_week_development", 0) == 0:
         warnings.append("coverage_watchlist: no current_week_development records; add manual weekly developments")
+    low_quality_story_ids = [str(story.get("story_id")) for story in stories if _is_low_quality_public_item(story)]
+    if low_quality_story_ids:
+        warnings.append(f"curation_validation: low-quality public item prose for story_ids={','.join(low_quality_story_ids)}")
 
     html_content = render_edition_html(edition_date, stories, sources, mode)
     markdown_content = render_edition_markdown(edition_date, stories, sources)
@@ -646,6 +906,14 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "has_detail_tier": False,
         "source_mode": mode,
         "item_type_counts": item_type_counts,
+        "source_role_counts": source_role_counts,
+        "brief_quality_counts": brief_quality_counts,
+        "briefs_with_human_story": briefs_with_human_story,
+        "briefs_with_data_anchor": briefs_with_data_anchor,
+        "baseline_only_briefs": baseline_only_briefs,
+        "missing_human_story_pillars": missing_human_story_pillars,
+        "baseline_only_edition": item_type_counts.get("baseline_gauge", 0) > 0 and item_type_counts.get("current_week_development", 0) == 0,
+        "low_quality_story_ids": low_quality_story_ids,
         "warnings": warnings,
         "errors": errors,
     }
@@ -661,6 +929,13 @@ def run_american_pressure_dispatch(root: Path, edition_date: str, *, publish: bo
         "rejected_duplicate_or_stale": diagnostics["rejected_duplicate_or_stale"],
         "rejected_missing_required_fields": diagnostics["rejected_missing_required_fields"],
         "item_type_counts": item_type_counts,
+        "source_role_counts": source_role_counts,
+        "brief_quality_counts": brief_quality_counts,
+        "briefs_with_human_story": briefs_with_human_story,
+        "briefs_with_data_anchor": briefs_with_data_anchor,
+        "baseline_only_briefs": baseline_only_briefs,
+        "missing_human_story_pillars": missing_human_story_pillars,
+        "low_quality_story_ids": low_quality_story_ids,
     }
 
     if errors:

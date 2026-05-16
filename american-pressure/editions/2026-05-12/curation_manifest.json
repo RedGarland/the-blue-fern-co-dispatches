@@ -1,36 +1,413 @@
-[
-  {
-    "story_id": "american-pressure-story-001",
-    "title": "Characteristics of Supplemental Nutrition Assistance Program Households: Fiscal Year 2024",
-    "summary": "USDA reports monthly SNAP participation and household characteristics for fiscal year 2024, providing a source-backed signal on food pressure indicators.",
-    "category": "food-pressure",
-    "score": 50,
-    "scoring_reasons": [
-      "source-backed fixture record"
-    ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_ids": [
-      "american-pressure-2026-05-03-usda-snap-001"
-    ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+{
+  "stories": [
+    {
+      "story_id": "american-pressure-story-2026-05-12-001",
+      "title": "Local food bank strain can be an early sign that household budgets are tightening",
+      "summary": "SLO Food Bank said demand is rising while a major funding source faces cuts, raising concern about service capacity.",
+      "category": "food-pressure",
+      "pillar": "food_pressure",
+      "curation_reason": "food assistance dependency",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 1,
+        "data_anchor": 3,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 99,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-12-food-story-keyt-demand",
+        "auto-2026-05-12-usda-fns-snap-data-tables",
+        "auto-2026-05-12-usda-ers-food-price-outlook",
+        "auto-2026-05-12-usda-fns-snap-household-characteristics"
+      ],
+      "source_urls": [
+        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
+        "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
+        "https://www.ers.usda.gov/data-products/food-price-outlook/",
+        "https://www.fns.usda.gov/research/snap/household-characteristics"
+      ],
+      "publisher_names": [
+        "News Channel 3-12 (KEYT)",
+        "USDA Food and Nutrition Service",
+        "USDA Economic Research Service",
+        "USDA Food and Nutrition Service"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-12-food-story-keyt-demand"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-usda-fns-snap-data-tables",
+        "auto-2026-05-12-usda-ers-food-price-outlook",
+        "auto-2026-05-12-usda-fns-snap-household-characteristics"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Local food bank strain can be an early sign that household budgets are tightening",
+      "human_story_summary": "A California food bank reported rising demand while warning that funding pressure could make it harder to meet local need.",
+      "data_context_summary": "Data context from SNAP Data Tables, USDA ERS Food Price Outlook, SNAP Household Characteristics is a baseline for tracking whether food pressure is broadening.",
+      "what_happened": "The SLO Food Bank said demand is increasing and that expected funding cuts may reduce purchasing power.",
+      "potential_relevance": "This may signal that more households are relying on food assistance as grocery and living costs stay difficult to absorb.",
+      "who_may_feel_it": "Lower-income households, families with children, seniors, and local producers tied to food-bank purchasing.",
+      "what_to_watch_next": "Watch whether pantry lines, emergency distribution, and local food-support wait times continue to rise.",
+      "location_scope": "San Luis Obispo County, California",
+      "affected_people": "Households using food bank support and nearby food-system partners.",
+      "pressure_area": "",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Food assistance demand and household grocery stress.",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-002",
+      "title": "Bankruptcy filings help show where debt stress is breaking through",
+      "summary": "Official bankruptcy filings baseline including chapter and business/nonbusiness splits.",
+      "category": "financial-distress-pressure",
+      "pillar": "financial_distress_pressure",
+      "curation_reason": "bankruptcy/financial distress baseline",
+      "item_type": "baseline_gauge",
+      "source_role_counts": {
+        "human_story": 0,
+        "data_anchor": 2,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "official_release_only",
+      "score": 98,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "auto-2026-05-12-us-courts-bankruptcy-filings-statistics",
+        "auto-2026-05-12-us-courts-bankruptcy-data-visualizations"
+      ],
+      "source_urls": [
+        "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
+        "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables"
+      ],
+      "publisher_names": [
+        "Administrative Office of the U.S. Courts",
+        "Administrative Office of the U.S. Courts"
+      ],
+      "human_story_source_ids": [],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-us-courts-bankruptcy-filings-statistics",
+        "auto-2026-05-12-us-courts-bankruptcy-data-visualizations"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Bankruptcy filings help show where debt stress is breaking through",
+      "human_story_summary": "",
+      "data_context_summary": "Data context from U.S. Courts Bankruptcy Filings Statistics, U.S. Courts Caseload Data Tables helps anchor whether debt stress may be moving from warning signs to hard outcomes.",
+      "what_happened": "Bankruptcy filings are a delayed but concrete sign that households or businesses have run out of easier options.",
+      "potential_relevance": "This signal can show where debt stress could break into missed payments, service disruption, or local job risk.",
+      "who_may_feel_it": "Heavily indebted households, small businesses, and workers tied to stressed employers.",
+      "what_to_watch_next": "Watch for spillover into layoffs, service disruptions, and local business closures.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-003",
+      "title": "Housing costs are still the budget pressure that can crowd out everything else",
+      "summary": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
+      "category": "housing-household-cost-pressure",
+      "pillar": "housing_household_cost_pressure",
+      "curation_reason": "shelter cost pressure",
+      "item_type": "baseline_gauge",
+      "source_role_counts": {
+        "human_story": 0,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "baseline_only",
+      "score": 97,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "auto-2026-05-12-bls-cpi-shelter"
+      ],
+      "source_urls": [
+        "https://www.bls.gov/cpi/"
+      ],
+      "publisher_names": [
+        "U.S. Bureau of Labor Statistics"
+      ],
+      "human_story_source_ids": [],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-bls-cpi-shelter"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Housing costs are still the budget pressure that can crowd out everything else",
+      "human_story_summary": "",
+      "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
+      "what_happened": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
+      "potential_relevance": "This is a baseline for watching whether housing and utility costs keep crowding out other essentials.",
+      "who_may_feel_it": "Renters, first-time buyers, and households already cost-burdened on monthly bills.",
+      "what_to_watch_next": "Watch whether shelter and utility pressure is broadening or stabilizing.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-004",
+      "title": "Local clinic closures can quickly turn access gaps into household health risk",
+      "summary": "A rural Iowa clinic closure was announced, with the provider acknowledging likely impact on patients and community access.",
+      "category": "health-access-pressure",
+      "pillar": "health_access_pressure",
+      "curation_reason": "health coverage/access pressure",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 1,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 96,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-12-health-story-kcrg-clinic-closure",
+        "auto-2026-05-12-cms-medicaid-chip-enrollment"
+      ],
+      "source_urls": [
+        "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+        "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data"
+      ],
+      "publisher_names": [
+        "KCRG",
+        "Centers for Medicare and Medicaid Services"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-12-health-story-kcrg-clinic-closure"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-cms-medicaid-chip-enrollment"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Local clinic closures can quickly turn access gaps into household health risk",
+      "human_story_summary": "A community health center announced closure of a rural clinic, citing operational pressure and acknowledging community impact.",
+      "data_context_summary": "Data context from Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
+      "what_happened": "River Hills CHC said it would close its Centerville clinic, a key local access point for care.",
+      "potential_relevance": "This may reduce routine care access and could push more people toward longer travel or delayed treatment.",
+      "who_may_feel_it": "Rural patients, caregivers, and people with chronic health needs who relied on nearby care.",
+      "what_to_watch_next": "Watch for replacement capacity, longer travel times, and signs of delayed or deferred care.",
+      "location_scope": "Centerville, Iowa",
+      "affected_people": "Patients in Appanoose County and surrounding communities.",
+      "pressure_area": "",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Care-access pressure from local service contraction.",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-005",
+      "title": "Large local layoffs show how quickly paycheck stability can weaken",
+      "summary": "Sacramento City Unified approved hundreds of layoffs amid a major budget shortfall, with district leaders warning about payroll risk.",
+      "category": "labor-income-pressure",
+      "pillar": "labor_income_pressure",
+      "curation_reason": "job market pressure",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 1,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 95,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-12-labor-story-capradio-layoffs",
+        "auto-2026-05-12-bls-unemployment-situation"
+      ],
+      "source_urls": [
+        "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+        "https://www.bls.gov/news.release/empsit.nr0.htm"
+      ],
+      "publisher_names": [
+        "CapRadio",
+        "U.S. Bureau of Labor Statistics"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-12-labor-story-capradio-layoffs"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-bls-unemployment-situation"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Large local layoffs show how quickly paycheck stability can weaken",
+      "human_story_summary": "A major California school district approved large layoffs and warned of deeper fiscal stress if cash-flow conditions worsen.",
+      "data_context_summary": "Data context from BLS Employment Situation helps show whether job and paycheck stability is holding.",
+      "what_happened": "The district finalized hundreds of layoffs while officials discussed insolvency risk and future payroll pressure.",
+      "potential_relevance": "This could indicate rising job and income risk for affected workers and added strain on surrounding local businesses.",
+      "who_may_feel_it": "Laid-off workers, school families, and local communities tied to district employment and services.",
+      "what_to_watch_next": "Watch for additional layoff rounds, reduced services, and spillover into other local employers.",
+      "location_scope": "Sacramento, California",
+      "affected_people": "District employees, students, and households dependent on school employment income.",
+      "pressure_area": "",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Layoff-driven income and service pressure.",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-006",
+      "title": "Weather and climate conditions can turn into cost pressure",
+      "summary": "Official monthly climate indicators.",
+      "category": "environmental-pressure",
+      "pillar": "environmental_pressure",
+      "curation_reason": "drought/disaster/local-system strain",
+      "item_type": "baseline_gauge",
+      "source_role_counts": {
+        "human_story": 0,
+        "data_anchor": 2,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "baseline_only",
+      "score": 94,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "auto-2026-05-12-noaa-ncei-monthly-climate-report",
+        "auto-2026-05-12-us-drought-monitor"
+      ],
+      "source_urls": [
+        "https://www.ncei.noaa.gov/access/monitoring/monthly-report/",
+        "https://droughtmonitor.unl.edu/"
+      ],
+      "publisher_names": [
+        "NOAA National Centers for Environmental Information",
+        "National Drought Mitigation Center and USDA and NOAA"
+      ],
+      "human_story_source_ids": [],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-noaa-ncei-monthly-climate-report",
+        "auto-2026-05-12-us-drought-monitor"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Weather and climate conditions can turn into cost pressure",
+      "human_story_summary": "",
+      "data_context_summary": "Data context from NOAA NCEI Monthly Climate Reports, U.S. Drought Monitor provides baseline evidence for this pressure area.",
+      "what_happened": "Official monthly climate indicators.",
+      "potential_relevance": "This can show up later as food, energy, insurance, and repair cost pressure.",
+      "who_may_feel_it": "Rural communities, outdoor workers, and households in climate-vulnerable regions.",
+      "what_to_watch_next": "Watch whether drought and weather pressures spill into food, housing, and health stress.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-12-007",
+      "title": "Storm recovery assessments show where local systems may face prolonged strain",
+      "summary": "State and federal teams began damage assessments for April storms and flooding across multiple counties and one tribal nation.",
+      "category": "local-system-strain",
+      "pillar": "local_system_strain",
+      "curation_reason": "drought/disaster/local-system strain",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 1,
+        "data_anchor": 2,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 93,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-12-weather-story-wi-flood-assessments",
+        "auto-2026-05-12-fema-disaster-declarations",
+        "auto-2026-05-12-noaa-ncei-monthly-climate-report"
+      ],
+      "source_urls": [
+        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+        "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
+        "https://www.ncei.noaa.gov/access/monitoring/monthly-report/"
+      ],
+      "publisher_names": [
+        "Wisconsin Emergency Management",
+        "Federal Emergency Management Agency",
+        "NOAA National Centers for Environmental Information"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-12-weather-story-wi-flood-assessments"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-12-fema-disaster-declarations",
+        "auto-2026-05-12-noaa-ncei-monthly-climate-report"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Storm recovery assessments show where local systems may face prolonged strain",
+      "human_story_summary": "Wisconsin officials reported multi-county storm and flood damage reviews as communities sought potential federal assistance.",
+      "data_context_summary": "Data context from FEMA Disaster Declarations, NOAA NCEI Monthly Climate Reports provides baseline evidence for this pressure area.",
+      "what_happened": "Joint assessments started for homes, infrastructure, and public systems affected by severe storms and flooding.",
+      "potential_relevance": "This can show up later as repair costs, service disruption, and budget stress in affected communities.",
+      "who_may_feel_it": "Households in flood-affected areas, renters, homeowners, and local public-service systems.",
+      "what_to_watch_next": "Watch declaration outcomes, repair timelines, and whether local services face prolonged disruption.",
+      "location_scope": "Multiple counties in Wisconsin",
+      "affected_people": "Residents and local agencies in storm-affected communities.",
+      "pressure_area": "",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
+      "generated_at": "2026-05-16T05:56:46.084290+00:00"
+    }
+  ],
+  "pillars_present": [
+    "food_pressure",
+    "financial_distress_pressure",
+    "housing_household_cost_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "environmental_pressure",
+    "local_system_strain"
+  ],
+  "pillars_missing": [
+    "policy_implementation"
+  ],
+  "source_count_by_pillar": {
+    "food_pressure": 4,
+    "financial_distress_pressure": 2,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 2,
+    "environmental_pressure": 2,
+    "local_system_strain": 2,
+    "policy_implementation": 0
   },
-  {
-    "story_id": "american-pressure-story-002",
-    "title": "National Temperature and Precipitation Maps",
-    "summary": "NOAA monthly conditions reporting provides source-backed environmental context relevant to heat and drought pressure on households and local systems.",
-    "category": "environmental-pressure",
-    "score": 50,
-    "scoring_reasons": [
-      "source-backed fixture record"
-    ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_ids": [
-      "american-pressure-2026-05-03-noaa-heat-001"
-    ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
-  }
-]
+  "story_count_by_pillar": {
+    "food_pressure": 1,
+    "financial_distress_pressure": 1,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 1,
+    "local_system_strain": 1,
+    "policy_implementation": 0
+  },
+  "rejected_no_public_pressure_angle": 0,
+  "rejected_investor_only": 0,
+  "rejected_duplicate_or_stale": 0,
+  "rejected_missing_required_fields": 0,
+  "item_type_counts": {
+    "baseline_gauge": 3,
+    "current_week_development": 4,
+    "watchlist_item": 0
+  },
+  "source_role_counts": {
+    "human_story": 4,
+    "data_anchor": 11,
+    "watchlist_signal": 0
+  },
+  "brief_quality_counts": {
+    "story_plus_data": 4,
+    "official_release_only": 1,
+    "baseline_only": 2,
+    "watchlist_only": 0
+  },
+  "briefs_with_human_story": 4,
+  "briefs_with_data_anchor": 7,
+  "baseline_only_briefs": 2,
+  "missing_human_story_pillars": [
+    "environmental_pressure",
+    "financial_distress_pressure",
+    "housing_household_cost_pressure"
+  ],
+  "low_quality_story_ids": []
+}

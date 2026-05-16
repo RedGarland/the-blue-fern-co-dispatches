@@ -1,0 +1,247 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-16",
+  "candidates_seen": 8,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-16-001",
+      "title": "Hamas confirms top commander killed in Israeli air strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-002",
+      "title": "Tens of thousands march in London in far-right and pro-Palestine protests",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-004",
+      "title": "From the Nakba to Gaza's ruins: One man's lifetime of displacement",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-006",
+      "title": "Israel launches deadly air strikes on Gaza City apartment building",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-007",
+      "title": "Gaza aid convoy in Libya prepares to head to Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-008",
+      "title": "Seven killed in Gaza on Nakba Day as Israel says it targets Hamas member",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-16-005",
+      "title": "Israel says it has killed Hamas commander in Gaza air strike",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-003",
+      "title": "Israeli settler blindfolds and detains Palestinian in occupied West Bank",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-15-004",
+      "prior_edition_date": "2026-05-15",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 0,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-05-16-001",
+      "merged_story_ids": [
+        "gaza-story-2026-05-16-005"
+      ],
+      "reasons": [
+        "within_edition_source_url"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-16-005",
+      "title": "Israel says it has killed Hamas commander in Gaza air strike",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-001",
+      "title": "Hamas confirms top commander killed in Israeli air strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-002",
+      "title": "Tens of thousands march in London in far-right and pro-Palestine protests",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-003",
+      "title": "Israeli settler blindfolds and detains Palestinian in occupied West Bank",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-15-004",
+      "prior_edition_date": "2026-05-15",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-004",
+      "title": "From the Nakba to Gaza's ruins: One man's lifetime of displacement",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-006",
+      "title": "Israel launches deadly air strikes on Gaza City apartment building",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-007",
+      "title": "Gaza aid convoy in Libya prepares to head to Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-16-008",
+      "title": "Seven killed in Gaza on Nakba Day as Israel says it targets Hamas member",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-03"
+  ]
+}

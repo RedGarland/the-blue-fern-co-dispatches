@@ -49,9 +49,9 @@ AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_IDENTIFIED = "Reviewed week | No qualifying source-backed regional signals identified"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying source-backed regional signals surfaced"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
-EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "all")
-ALL_EXPECT_DISPATCHES = ("gaza", "cascadia")
-DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia"}
+EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "all")
+ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure")
+DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia", "american-pressure": "American Pressure"}
 ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure")
 
 
@@ -638,6 +638,19 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
             if input_count > 0 and kept_count == 0:
                 return False
         return True
+    if slug == "american-pressure":
+        manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+        if not manifest_path.exists():
+            return False
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if not isinstance(manifest, dict):
+            return False
+        source_count = int(manifest.get("source_count", 0) or 0)
+        story_count = int(manifest.get("story_count", 0) or 0)
+        return source_count > 0 and story_count > 0
     if slug != "cascadia":
         return True
     manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
@@ -706,7 +719,7 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     )
 
 
-def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
+def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: str | None = None) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
@@ -714,7 +727,12 @@ def discover_public_edition_dates(site_root: Path, slug: str) -> list[str]:
         (
             path.name
             for path in editions_root.iterdir()
-            if path.is_dir() and len(path.name) == 10 and public_edition_is_listable(site_root, slug, path.name)
+            if (
+                path.is_dir()
+                and len(path.name) == 10
+                and (not max_edition_date or path.name <= max_edition_date)
+                and public_edition_is_listable(site_root, slug, path.name)
+            )
         ),
         reverse=True,
     )
@@ -935,6 +953,7 @@ def build_site(
     dry_run: bool = False,
     backup_root: Path = DEFAULT_BACKUP_ROOT,
     only_dispatches: tuple[str, ...] = (),
+    public_max_dates: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     site_root = root / "output" / "site"
@@ -956,7 +975,10 @@ def build_site(
 
     # Keep root landing cards stable across scoped publishes.
     write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
+    public_max_dates = public_max_dates or {}
     for dispatch in dispatches:
+        max_public_date = public_max_dates.get(dispatch.slug)
+        skip_current_edition = bool(max_public_date and dispatch.edition_date > max_public_date)
         public_urls.append(f"{BASE_URL}/{dispatch.slug}/")
         dispatch_public_root = site_root / dispatch.slug
         dispatch_public_edition = dispatch_public_root / "editions" / dispatch.edition_date
@@ -966,7 +988,11 @@ def build_site(
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
-        copied_real_edition = dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
+        copied_real_edition = (
+            (dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote))
+            if not skip_current_edition
+            else False
+        )
         if dispatch.slug == "gaza" and not copied_real_edition:
             seed_candidates = [
                 {
@@ -1009,7 +1035,9 @@ def build_site(
                 body_html=render_sources(kept_stories, kept_sources),
                 detail_artifacts=dispatch.detail_artifacts or [],
             )
-        if copied_real_edition:
+        if skip_current_edition:
+            pass
+        elif copied_real_edition:
             public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
         elif dispatch.slug != "cascadia":
             public_urls.append(f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/")
@@ -1033,12 +1061,13 @@ def build_site(
             write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
-        if dispatch.slug in {"gaza", "cascadia"}:
+        if dispatch.slug in {"gaza", "cascadia", "american-pressure"}:
             if dispatch.slug == "cascadia":
                 remove_unlistable_public_cascadia_editions(site_root, dry_run, wrote)
-            edition_dates = discover_public_edition_dates(site_root, dispatch.slug)
+            edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
-                edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
+                if not max_public_date or dispatch.edition_date <= max_public_date:
+                    edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
@@ -1065,7 +1094,9 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
-def collect_public_site_files(site_root: Path, only_dispatches: tuple[str, ...] = ()) -> list[Path]:
+def collect_public_site_files(
+    site_root: Path, only_dispatches: tuple[str, ...] = (), public_max_dates: dict[str, str] | None = None
+) -> list[Path]:
     if not site_root.exists():
         return []
     files = []
@@ -1075,9 +1106,12 @@ def collect_public_site_files(site_root: Path, only_dispatches: tuple[str, ...] 
         relative_parts = path.relative_to(site_root).parts
         if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
-        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia"} and relative_parts[1] == "editions":
+        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure"} and relative_parts[1] == "editions":
             slug = relative_parts[0]
             edition_date = relative_parts[2]
+            max_public_date = public_max_dates.get(slug)
+            if max_public_date and edition_date > max_public_date:
+                continue
             if not public_edition_is_listable(site_root, slug, edition_date):
                 continue
         files.append(path)
@@ -1112,14 +1146,32 @@ def validate_pages_publish(
         errors.append("pages repo path must not be inside output/site")
     if not (site_root / "index.html").exists():
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
-    dispatches_to_check = expect_dispatches or ALL_EXPECT_DISPATCHES
+    if expect_dispatches:
+        dispatches_to_check = expect_dispatches
+    elif expect_date and only_dispatches:
+        dispatches_to_check = tuple(
+            slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"}
+        )
+    else:
+        dispatches_to_check = ALL_EXPECT_DISPATCHES
+    if only_dispatches:
+        scoped = tuple(slug for slug in dispatches_to_check if slug in only_dispatches)
+        if scoped:
+            dispatches_to_check = scoped
     if (not only_dispatches) or ("gaza" in only_dispatches):
         if not (site_root / "gaza" / "archive.html").exists():
             errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
+    if (not only_dispatches) or ("american-pressure" in only_dispatches):
+        if not (site_root / "american-pressure" / "archive.html").exists():
+            errors.append(f"American Pressure archive does not exist: {site_root / 'american-pressure' / 'archive.html'}")
     if expect_date and "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
         archive_text = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
         if expect_date not in archive_text:
             errors.append(f"output/site/gaza/archive.html does not contain expected date {expect_date}")
+    if expect_date and "american-pressure" in dispatches_to_check and (site_root / "american-pressure" / "editions" / expect_date).exists():
+        archive_text = (site_root / "american-pressure" / "archive.html").read_text(encoding="utf-8")
+        if expect_date not in archive_text:
+            errors.append(f"output/site/american-pressure/archive.html does not contain expected date {expect_date}")
     detail_files = public_site_contains_detail_artifacts(site_root)
     if detail_files:
         errors.append(f"paid/detail artifacts are present in public output: {', '.join(detail_files)}")
@@ -1141,7 +1193,13 @@ def validate_pages_publish(
     return errors, warnings
 
 
-def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool, only_dispatches: tuple[str, ...] = ()) -> tuple[list[str], list[str]]:
+def copy_public_site_to_pages(
+    site_root: Path,
+    pages_repo: Path,
+    dry_run: bool,
+    only_dispatches: tuple[str, ...] = (),
+    public_max_dates: dict[str, str] | None = None,
+) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
         "output/paid/",
@@ -1155,7 +1213,7 @@ def copy_public_site_to_pages(site_root: Path, pages_repo: Path, dry_run: bool, 
         ".pytest_cache/",
         f"{pages_repo / '.git'}",
     ]
-    for source in collect_public_site_files(site_root, only_dispatches=only_dispatches):
+    for source in collect_public_site_files(site_root, only_dispatches=only_dispatches, public_max_dates=public_max_dates):
         target = pages_repo / source.relative_to(site_root)
         copied.append(str(target))
         if dry_run:
@@ -1178,6 +1236,26 @@ def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry
         if not edition_dir.is_dir() or len(edition_dir.name) != 10:
             continue
         if public_edition_is_listable(site_root, "cascadia", edition_dir.name):
+            continue
+        removed.append(str(edition_dir))
+        if not dry_run:
+            shutil.rmtree(edition_dir)
+    return removed
+
+
+def remove_pages_editions_above_date(
+    pages_repo: Path, slug: str, max_edition_date: str | None, dry_run: bool
+) -> list[str]:
+    if not max_edition_date:
+        return []
+    editions_root = pages_repo / slug / "editions"
+    if not editions_root.exists():
+        return []
+    removed: list[str] = []
+    for edition_dir in sorted(editions_root.iterdir()):
+        if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+            continue
+        if edition_dir.name <= max_edition_date:
             continue
         removed.append(str(edition_dir))
         if not dry_run:
@@ -1277,7 +1355,18 @@ def validate_pages_repo_after_copy(
     blocked_text = public_site_contains_blocked_public_text(pages_repo)
     if blocked_text:
         errors.append(f"blocked private artifact names are present in Pages repo: {', '.join(blocked_text)}")
-    dispatches_to_check = expect_dispatches or ALL_EXPECT_DISPATCHES
+    if expect_dispatches:
+        dispatches_to_check = expect_dispatches
+    elif expect_date and only_dispatches:
+        dispatches_to_check = tuple(
+            slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"}
+        )
+    else:
+        dispatches_to_check = ALL_EXPECT_DISPATCHES
+    if only_dispatches:
+        scoped = tuple(slug for slug in dispatches_to_check if slug in only_dispatches)
+        if scoped:
+            dispatches_to_check = scoped
     if expect_date:
         archive = pages_repo / "gaza" / "archive.html"
         if "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
@@ -1288,6 +1377,12 @@ def validate_pages_repo_after_copy(
         if "cascadia" in dispatches_to_check and (site_root / "cascadia" / "editions" / expect_date).exists():
             if not (pages_repo / "cascadia" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected Cascadia edition missing: {expect_date}")
+        if "american-pressure" in dispatches_to_check and (site_root / "american-pressure" / "editions" / expect_date).exists():
+            ap_archive = pages_repo / "american-pressure" / "archive.html"
+            if not (pages_repo / "american-pressure" / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected American Pressure edition missing: {expect_date}")
+            elif ap_archive.exists() and expect_date not in ap_archive.read_text(encoding="utf-8"):
+                errors.append(f"Pages repo American Pressure archive does not contain expected date {expect_date}")
     return errors
 
 
@@ -1332,7 +1427,16 @@ def publish_pages(
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    build = build_site(root, dry_run=dry_run, backup_root=backup_root, only_dispatches=only_dispatches)
+    public_max_dates: dict[str, str] = {}
+    if expect_date and ("american-pressure" in only_dispatches or "american-pressure" in expect_dispatches):
+        public_max_dates["american-pressure"] = expect_date
+    build = build_site(
+        root,
+        dry_run=dry_run,
+        backup_root=backup_root,
+        only_dispatches=only_dispatches,
+        public_max_dates=public_max_dates,
+    )
     root = root.resolve()
     site_root = root / "output" / "site"
     pages_repo = pages_repo.resolve()
@@ -1372,7 +1476,22 @@ def publish_pages(
     if not errors:
         if not only_dispatches or "cascadia" in only_dispatches:
             removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
-        copied, skipped = copy_public_site_to_pages(site_root, pages_repo, dry_run=dry_run, only_dispatches=only_dispatches)
+        if "american-pressure" in public_max_dates and (not only_dispatches or "american-pressure" in only_dispatches):
+            removed_non_publishable.extend(
+                remove_pages_editions_above_date(
+                    pages_repo,
+                    "american-pressure",
+                    public_max_dates.get("american-pressure"),
+                    dry_run=dry_run,
+                )
+            )
+        copied, skipped = copy_public_site_to_pages(
+            site_root,
+            pages_repo,
+            dry_run=dry_run,
+            only_dispatches=only_dispatches,
+            public_max_dates=public_max_dates,
+        )
         if not dry_run:
             errors.extend(
                 validate_pages_repo_after_copy(
@@ -1507,3 +1626,4 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
+    public_max_dates = public_max_dates or {}

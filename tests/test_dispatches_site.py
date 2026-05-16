@@ -521,6 +521,20 @@ def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
     (edition / "curation_manifest.json").write_text("[]", encoding="utf-8")
 
 
+def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> None:
+    edition = site_root / "american-pressure" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text("<html><body>American Pressure weekly</body></html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "american-pressure", "edition_date": edition_date, "source_count": 3, "story_count": 2}),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "ap-src-001"}]), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "ap-story-001"}]), encoding="utf-8")
+    archive = site_root / "american-pressure" / "archive.html"
+    archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
+
+
 def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
@@ -644,7 +658,69 @@ def test_cascadia_expect_date_reports_cascadia_missing_only(built_site):
 
 
 def test_expect_dispatch_all_expands_to_full_site_expectation():
-    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia")
+    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia", "american-pressure")
+
+
+def test_american_pressure_expect_date_does_not_require_same_date_cascadia_or_gaza(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_american_pressure_site_edition(site_root, "2026-05-09")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-09",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "american-pressure" / "editions" / "2026-05-09" / "index.html").exists()
+    assert not any("expected Gaza" in error or "expected Cascadia" in error for error in result["errors"])
+
+
+def test_american_pressure_only_dispatch_expect_date_uses_public_cutoff(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    # Seed stale future folders that should not become latest public metadata.
+    add_american_pressure_site_edition(site_root, "2026-05-09")
+    add_american_pressure_site_edition(site_root, "2026-05-16")
+    add_american_pressure_site_edition(site_root, "2026-05-19")
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-09",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    site_index = read(site_root / "american-pressure" / "index.html")
+    site_archive = read(site_root / "american-pressure" / "archive.html")
+    site_rss = read(site_root / "american-pressure" / "rss.xml")
+    pages_index = read(pages_repo / "american-pressure" / "index.html")
+    pages_archive = read(pages_repo / "american-pressure" / "archive.html")
+    pages_rss = read(pages_repo / "american-pressure" / "rss.xml")
+
+    assert "2026-05-09" in site_index and "2026-05-16" not in site_index and "2026-05-19" not in site_index
+    assert "2026-05-09" in site_archive and "2026-05-16" not in site_archive and "2026-05-19" not in site_archive
+    assert "2026-05-09" in site_rss and "2026-05-16" not in site_rss and "2026-05-19" not in site_rss
+    assert "2026-05-09" in pages_index and "2026-05-16" not in pages_index and "2026-05-19" not in pages_index
+    assert "2026-05-09" in pages_archive and "2026-05-16" not in pages_archive and "2026-05-19" not in pages_archive
+    assert "2026-05-09" in pages_rss and "2026-05-16" not in pages_rss and "2026-05-19" not in pages_rss
 
 
 def test_commit_flag_does_not_imply_push(built_site):

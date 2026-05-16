@@ -125,6 +125,69 @@
         "fema-disaster-declarations",
         "noaa-ncei-monthly-climate-report"
       ]
+    },
+    {
+      "source_record_id": "ap-2026-05-12-financial-story-fitzgibbon-bankruptcy",
+      "source_id": "ap-financial-story-fitzgibbon-bankruptcy",
+      "title": "Central Missouri’s Fitzgibbon Hospital files bankruptcy, highlighting growing strain on rural hospitals",
+      "url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
+      "publisher": "The Beacon: Missouri",
+      "published_at": "2026-05-12T00:00:00-05:00",
+      "retrieved_at": "2026-05-16T16:30:00Z",
+      "summary_or_snippet": "Fitzgibbon Hospital in Marshall, Missouri filed for Chapter 11 bankruptcy protection and planned a sale while staying open, after years of losses and service cuts.",
+      "source_type": "news_report",
+      "region_scope": "US-MO",
+      "category_hint": "financial_distress_pressure",
+      "reliability_tier": "reputable_local_news",
+      "pillar": "financial_distress_pressure",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "reader_headline": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
+      "human_story_summary": "In Marshall, Missouri, Fitzgibbon Hospital filed for Chapter 11 and planned a sale while reporting long-running financial strain and service reductions.",
+      "what_happened": "The hospital entered Chapter 11 proceedings and moved toward a sale process while saying care would continue during restructuring.",
+      "potential_relevance": "When a major local healthcare provider restructures under bankruptcy pressure, households can face added uncertainty around access, employment, and related local services.",
+      "who_may_feel_it": "Patients relying on local hospital services, hospital workers, caregivers, and nearby businesses tied to hospital operations.",
+      "what_to_watch_next": "Watch court milestones, sale outcomes, staffing changes, and whether service lines remain stable or face additional cuts.",
+      "location": "Marshall, Missouri",
+      "location_scope": "local",
+      "affected_people": "Patients, workers, and families in and around Saline County who rely on local hospital services.",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Debt distress in essential local institutions can translate into household service and income risk.",
+      "linked_data_anchor_ids": [
+        "us-courts-bankruptcy-filings-statistics",
+        "us-courts-bankruptcy-data-visualizations"
+      ]
+    },
+    {
+      "source_record_id": "ap-2026-05-12-housing-story-utility-shutoffs-wapo",
+      "source_id": "ap-housing-story-utility-shutoffs-wapo",
+      "title": "Americans’ electricity was shut off 13 million times in a year, data shows",
+      "url": "https://www.washingtonpost.com/business/2026/04/26/utility-power-electricity-shutoff-bills/",
+      "publisher": "The Washington Post",
+      "published_at": "2026-04-26T00:00:00-04:00",
+      "retrieved_at": "2026-05-16T16:30:00Z",
+      "summary_or_snippet": "A federal report found U.S. utilities disconnected electricity 13.4 million times and gas 1.7 million times in 2024, highlighting household bill stress and shutoff exposure.",
+      "source_type": "news_report",
+      "region_scope": "US",
+      "category_hint": "housing_household_cost_pressure",
+      "reliability_tier": "reputable_national_news",
+      "pillar": "housing_household_cost_pressure",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "reader_headline": "Utility shutoff data shows how housing-related monthly bills can become an immediate household risk",
+      "human_story_summary": "Across the United States, newly published federal utility data showed millions of annual power and gas disconnections, underscoring how unpaid monthly bills can escalate into household instability.",
+      "what_happened": "National reporting on newly released federal data showed very high utility disconnection counts and linked them to payment strain and uneven consumer protections.",
+      "potential_relevance": "Utility shutoffs can compound housing pressure by making it harder for families to maintain safe living conditions, keep food refrigerated, and stay current on other essentials.",
+      "who_may_feel_it": "Low-income renters and homeowners, medically vulnerable residents, and households already behind on monthly utility bills.",
+      "what_to_watch_next": "Watch regional shutoff patterns, seasonal disconnection policies, and whether bill assistance programs keep pace with household arrears.",
+      "location": "United States",
+      "location_scope": "national",
+      "affected_people": "Households with unpaid electricity or gas bills, especially those in higher-shutoff states.",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Monthly utility bill stress can quickly turn into housing instability and loss of essential services.",
+      "linked_data_anchor_ids": [
+        "bls-cpi-shelter"
+      ]
     }
   ]
 }

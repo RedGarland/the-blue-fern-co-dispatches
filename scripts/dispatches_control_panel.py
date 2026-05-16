@@ -7,7 +7,7 @@ import subprocess
 import sys
 import threading
 from dataclasses import dataclass
-from datetime import date as date_cls
+from datetime import date as date_cls, timedelta
 from pathlib import Path
 from typing import Any, Callable
 
@@ -18,6 +18,10 @@ from tkinter.scrolledtext import ScrolledText
 DISPATCHES = ("Gaza", "Cascadia", "American Pressure")
 ACTIONS = (
     "Run dispatch",
+    "Run American Pressure with approved candidates",
+    "Run weekly American Pressure",
+    "Scout American Pressure candidates",
+    "Review American Pressure candidates",
     "Run with notification",
     "Publish Pages locally, no push",
     "Run dashboard",
@@ -84,6 +88,46 @@ def _pages_publish_command(root: Path) -> list[str]:
     ]
 
 
+def _pages_publish_command_scoped(root: Path, dispatch: str | None = None, expect_date: str | None = None) -> list[str]:
+    cmd = _pages_publish_command(root)
+    slug = (dispatch or "").strip().lower().replace(" ", "-")
+    if slug in {"gaza", "cascadia", "american-pressure"}:
+        cmd.extend(["--only-dispatch", slug])
+    if expect_date and validate_date(expect_date):
+        cmd.extend(["--expect-date", expect_date])
+    return cmd
+
+
+def _candidate_path(date_text: str, root: Path) -> Path:
+    return root / "data" / "dispatches" / "american-pressure" / "candidates" / date_text / "candidate_sources.json"
+
+
+def _candidate_window_dates(end_date: str) -> list[str]:
+    end = date_cls.fromisoformat(end_date)
+    return [(end - timedelta(days=offset)).isoformat() for offset in range(6, -1, -1)]
+
+
+def _candidate_files_count(end_date: str, root: Path) -> int:
+    return sum(1 for day in _candidate_window_dates(end_date) if _candidate_path(day, root).exists())
+
+
+def _approved_candidates_count(end_date: str, root: Path) -> int:
+    total = 0
+    for day in _candidate_window_dates(end_date):
+        path = _candidate_path(day, root)
+        if not path.exists():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        rows = payload.get("sources", []) if isinstance(payload, dict) else []
+        for row in rows:
+            if isinstance(row, dict) and str(row.get("review_status") or "").strip().lower() == "approved":
+                total += 1
+    return total
+
+
 def build_command(
     dispatch: str,
     action: str,
@@ -103,7 +147,8 @@ def build_command(
     if action == "Run doctor":
         return [py, "scripts\\doctor.py"]
     if action == "Publish Pages locally, no push":
-        return _pages_publish_command(base)
+        scoped_date = date_text if validate_date(date_text) else None
+        return _pages_publish_command_scoped(base, dispatch=dispatch, expect_date=scoped_date)
 
     if not validate_date(date_text):
         raise ValueError("Date must be YYYY-MM-DD")
@@ -158,8 +203,48 @@ def build_command(
                 "scripts\\run_american_pressure_dispatch.py",
                 "--date",
                 date_text,
-                "--from-manual-sources",
+                "--source-mode",
+                "both",
+                "--include-approved-candidates",
                 "--publish",
+            ]
+        elif action == "Run American Pressure with approved candidates":
+            cmd = [
+                py,
+                "scripts\\run_american_pressure_dispatch.py",
+                "--date",
+                date_text,
+                "--source-mode",
+                "both",
+                "--include-approved-candidates",
+                "--publish",
+            ]
+        elif action == "Run weekly American Pressure":
+            cmd = [
+                py,
+                "scripts\\run_weekly_american_pressure.py",
+                "--date",
+                date_text,
+                "--source-mode",
+                "both",
+                "--include-approved-candidates",
+                "--publish",
+            ]
+        elif action == "Scout American Pressure candidates":
+            cmd = [
+                py,
+                "scripts\\scout_american_pressure_candidates.py",
+                "--date",
+                date_text,
+                "--write",
+            ]
+        elif action == "Review American Pressure candidates":
+            cmd = [
+                py,
+                "scripts\\review_american_pressure_candidates.py",
+                "--date",
+                date_text,
+                "--write",
             ]
         elif action == "Run with notification":
             cmd = [
@@ -660,6 +745,9 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "latest_pages_edition_date": american.get("latest_pages_edition_date"),
             "sources": american.get("latest_source_count"),
             "stories": american.get("latest_story_count"),
+            "story_plus_data_count": american.get("story_plus_data_count"),
+            "baseline_only_count": american.get("baseline_only_count"),
+            "missing_required_current_development_pillars": american.get("missing_required_current_development_pillars") or [],
             "archive_exists": american.get("archive_exists"),
             "rss_exists": american.get("rss_exists"),
             "visible_source_links": american.get("latest_has_visible_source_links"),
@@ -1138,10 +1226,12 @@ def open_path(path: Path) -> bool:
 
 
 def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
+    stories = card.get("stories")
+    story_text = "not reported" if stories is None else str(stories)
     lines = [
         f"{name} [{card.get('status', 'OK')}]",
         f"- Latest public edition: {card.get('latest_public_edition_date')}",
-        f"- Sources/Stories: {card.get('sources')} / {card.get('stories')}",
+        f"- Sources/Stories: {card.get('sources')} / {story_text}",
         f"- Archive/RSS: {card.get('archive_exists')} / {card.get('rss_exists')}",
         f"- Visible source links: {card.get('visible_source_links')}",
         f"- Public URL: {card.get('public_url')}",
@@ -1179,11 +1269,15 @@ def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
         )
     if name == "American Pressure":
         gaps = card.get("coverage_gaps") or []
+        missing_current = card.get("missing_required_current_development_pillars") or []
         lines.extend(
             [
                 f"- Latest manual source date: {card.get('latest_manual_source_date')}",
                 "- Manual source exists for latest public edition: "
                 f"{card.get('manual_source_present')}",
+                f"- Story plus data count: {card.get('story_plus_data_count', 'not reported')}",
+                f"- Baseline only count: {card.get('baseline_only_count', 'not reported')}",
+                f"- Missing current-development pillars: {', '.join(missing_current) if missing_current else 'none'}",
                 f"- Registry enabled/total: {card.get('registry_enabled')} / {card.get('registry_total')}",
                 f"- Enabled by pillar: {card.get('enabled_by_pillar')}",
                 f"- Source coverage gaps: {', '.join(gaps) if gaps else 'none'}",
@@ -1469,10 +1563,28 @@ class DispatchesControlPanel:
         notes: list[str] = []
         if dispatch == "Cascadia" and action in ("Run dispatch", "Run with notification"):
             notes.append("Cascadia runs weekly-public historical-search workflow for selected date.")
-        if dispatch in ("Gaza", "American Pressure") and action in ("Run dispatch", "Run with notification"):
+        if dispatch == "Gaza" and action in ("Run dispatch", "Run with notification"):
             path = manual_source_path(dispatch, date_text, root=self.root_dir)
             if path is not None and not path.exists():
                 notes.append(f"Missing manual sources: {path}")
+        if dispatch == "American Pressure" and action in (
+            "Run dispatch",
+            "Run American Pressure with approved candidates",
+            "Run weekly American Pressure",
+            "Run with notification",
+        ):
+            path = manual_source_path(dispatch, date_text, root=self.root_dir)
+            manual_exists = bool(path and path.exists())
+            candidate_files = _candidate_files_count(date_text, self.root_dir)
+            approved_count = _approved_candidates_count(date_text, self.root_dir)
+            if not manual_exists and approved_count > 0:
+                notes.append("No manual sources found, but approved daily candidates may still be used.")
+            elif not manual_exists and approved_count == 0:
+                notes.append("No manual sources or approved candidate records found for this week.")
+            if candidate_files == 0:
+                notes.append("No candidate files found in the 7-day window; run daily scouting.")
+            elif approved_count == 0:
+                notes.append("Candidate files exist, but no approved candidates are available in the 7-day window.")
         return notes
 
     def _on_command_done(self, returncode: int) -> None:
@@ -1584,6 +1696,16 @@ class DispatchesControlPanel:
         self.open_dispatch_latest(slug)
 
     def open_dispatch_latest(self, slug: str) -> None:
+        try:
+            status = load_status_json(self.root_dir)
+            key = slug.replace("-", "_")
+            dispatch = (status.get("dispatches") or {}).get(key) or {}
+            latest_public = str(dispatch.get("latest_public_edition_date") or "").strip()
+            if validate_date(latest_public):
+                self._open(self.root_dir / "output" / "site" / slug / "editions" / latest_public / "index.html")
+                return
+        except Exception:
+            pass
         editions = self.root_dir / "output" / "site" / slug / "editions"
         if not editions.exists():
             messagebox.showwarning("Missing", f"No editions folder: {editions}")

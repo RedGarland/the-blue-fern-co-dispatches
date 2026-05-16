@@ -1,5 +1,8 @@
 ﻿from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from scripts import dispatches_control_panel as cp
 
 
@@ -741,3 +744,71 @@ def test_generated_prompt_does_not_include_secrets():
     raw["warnings"] = ["SMTP_PASSWORD=secret123"]
     prompt = cp.generate_codex_prompt(raw)
     assert "secret123" not in prompt
+
+
+def test_ap_run_dispatch_uses_source_mode_both_and_include_approved(tmp_path):
+    cmd = cp.build_command("American Pressure", "Run dispatch", "2026-05-09", root=tmp_path)
+    assert "scripts\\run_american_pressure_dispatch.py" in cmd
+    assert "--source-mode" in cmd
+    assert "both" in cmd
+    assert "--include-approved-candidates" in cmd
+    assert "--from-manual-sources" not in cmd
+
+
+def test_ap_explicit_approved_candidate_run_includes_flag(tmp_path):
+    cmd = cp.build_command("American Pressure", "Run American Pressure with approved candidates", "2026-05-09", root=tmp_path)
+    assert "scripts\\run_american_pressure_dispatch.py" in cmd
+    assert "--include-approved-candidates" in cmd
+
+
+def test_ap_scout_review_weekly_commands_build(tmp_path):
+    scout = cp.build_command("American Pressure", "Scout American Pressure candidates", "2026-05-09", root=tmp_path)
+    review = cp.build_command("American Pressure", "Review American Pressure candidates", "2026-05-09", root=tmp_path)
+    weekly = cp.build_command("American Pressure", "Run weekly American Pressure", "2026-05-09", root=tmp_path)
+    assert scout[1] == "scripts\\scout_american_pressure_candidates.py"
+    assert "--write" in scout
+    assert review[1] == "scripts\\review_american_pressure_candidates.py"
+    assert "--write" in review
+    assert weekly[1] == "scripts\\run_weekly_american_pressure.py"
+    assert "--include-approved-candidates" in weekly
+
+
+def test_ap_preflight_no_manual_warning_when_approved_candidates_exist(tmp_path):
+    day = "2026-05-09"
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps({"sources": [{"source_id": "x", "url": "https://example.com/x", "review_status": "approved"}]}),
+        encoding="utf-8",
+    )
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    notes = panel._preflight_warnings("American Pressure", "Run dispatch", day)
+    assert "No manual sources found, but approved daily candidates may still be used." in notes
+    assert not any("Missing manual sources:" in note for note in notes)
+
+
+def test_open_latest_edition_uses_status_json_latest_public_date(monkeypatch, tmp_path):
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    opened: list[Path] = []
+    monkeypatch.setattr(cp, "load_status_json", lambda _root: {"dispatches": {"american_pressure": {"latest_public_edition_date": "2026-05-09"}}})
+    monkeypatch.setattr(panel, "_open", lambda path: opened.append(path))
+    panel.open_dispatch_latest("american-pressure")
+    assert opened
+    assert str(opened[0]).endswith("output\\site\\american-pressure\\editions\\2026-05-09\\index.html")
+
+
+def test_pages_publish_scoped_no_expect_dispatch_for_american_pressure(tmp_path):
+    cmd = cp.build_command("American Pressure", "Publish Pages locally, no push", "2026-05-09", root=tmp_path)
+    joined = " ".join(cmd)
+    assert "--only-dispatch american-pressure" in joined
+    assert "--expect-date 2026-05-09" in joined
+    assert "--expect-dispatch american-pressure" not in joined
+
+
+def test_ap_card_story_none_displays_not_reported():
+    summary = cp.summarize_status_for_gui(_base_status())
+    summary["dispatch_cards"]["american_pressure"]["stories"] = None
+    text = cp.format_main_summary_text(summary)
+    assert "Sources/Stories: 2 / not reported" in text

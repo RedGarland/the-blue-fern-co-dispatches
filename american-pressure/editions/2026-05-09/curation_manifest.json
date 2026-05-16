@@ -56,7 +56,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Food assistance demand and household grocery stress.",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -127,7 +127,7 @@
         "context": "",
         "source_record_id": "ap-2026-05-09-labor-story-capradio-layoffs"
       },
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -180,7 +180,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Utility cost pressure can quickly tighten household budgets and increase arrears risk.",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -233,7 +233,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Hospital financial strain can directly affect whether care remains available close to home.",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -281,7 +281,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -333,7 +333,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]
@@ -390,7 +390,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
       "key_stat": null,
-      "generated_at": "2026-05-16T20:28:50.935707+00:00",
+      "generated_at": "2026-05-16T20:34:50.921753+00:00",
       "collection_gap_pillars": [
         "labor_income_pressure"
       ]

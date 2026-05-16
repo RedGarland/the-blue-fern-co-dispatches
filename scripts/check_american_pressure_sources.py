@@ -8,6 +8,7 @@ from pathlib import Path
 from bluefern_dispatches.american_pressure_sources import (
     build_source_health_report,
     load_source_registry,
+    summarize_source_health,
     validate_registry_sources,
     write_source_health_report,
 )
@@ -33,23 +34,19 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     report = build_source_health_report(sources, fetch_check=args.fetch_check)
+    summary = summarize_source_health(report)
     output_path = None
     if args.write_report:
         output_path = write_source_health_report(root, report, args.date)
 
-    print(
-        json.dumps(
-            {
-                "ok": True,
-                "source_count": len(sources),
-                "enabled_count": sum(1 for source in sources if source.get("enabled") is True),
-                "fetch_check": args.fetch_check,
-                "report_written": bool(output_path),
-                "report_path": str(output_path) if output_path else None,
-            },
-            indent=2,
-        )
-    )
+    print(json.dumps({
+        "ok": True,
+        "summary": summary,
+        "fetch_check": args.fetch_check,
+        "report_written": bool(output_path),
+        "report_path": str(output_path) if output_path else None,
+        "sources": report,
+    }, indent=2))
     return 0
 
 

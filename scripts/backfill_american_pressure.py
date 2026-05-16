@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,15 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.run_american_pressure_dispatch import (  # noqa: E402
-    DISPATCH_SLUG,
-    manual_source_path,
-    run_american_pressure_dispatch,
-    validate_date,
-)
-
-
-DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+from scripts.run_american_pressure_dispatch import DISPATCH_SLUG, manual_source_path, run_american_pressure_dispatch, validate_date
 
 
 def _utc_stamp() -> str:
@@ -57,19 +48,25 @@ def write_template(root: Path, date_str: str) -> Path:
     return target
 
 
-def run_backfill(
-    root: Path,
-    dates: list[str],
-    *,
-    publish: bool,
-    dry_run: bool,
-    from_manual_sources: bool,
-    allow_partial: bool,
-) -> dict[str, Any]:
-    requested_dates = [validate_date(value) for value in dates]
+def _expand_range(start_date: str, end_date: str) -> list[str]:
+    start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
+    end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
+    if end < start:
+        raise ValueError("--end-date must be on or after --start-date")
+    out: list[str] = []
+    cursor = start
+    while cursor <= end:
+        out.append(cursor.isoformat())
+        cursor = cursor.fromordinal(cursor.toordinal() + 1)
+    return out
+
+
+def run_backfill(root: Path, dates: list[str], *, publish: bool, dry_run: bool, from_manual_sources: bool, source_mode: str, allow_partial: bool) -> dict[str, Any]:
+    requested_dates = sorted({validate_date(value) for value in dates})
     completed_dates: list[str] = []
     failed_dates: list[str] = []
     per_date: dict[str, dict[str, Any]] = {}
+
     for edition_date in requested_dates:
         source_path = manual_source_path(root, edition_date)
         try:
@@ -79,32 +76,35 @@ def run_backfill(
                 publish=publish,
                 dry_run=dry_run,
                 from_manual_sources=from_manual_sources,
+                source_mode=source_mode,
             )
         except Exception as exc:  # noqa: BLE001
-            result = {
-                "ok": False,
-                "source_count": 0,
-                "story_count": 0,
-                "generated": False,
-                "errors": [str(exc)],
-                "warnings": [],
-            }
+            result = {"ok": False, "source_count": 0, "story_count": 0, "generated": False, "errors": [str(exc)], "warnings": []}
+
         ok = bool(result.get("ok"))
         if ok:
             completed_dates.append(edition_date)
         else:
             failed_dates.append(edition_date)
+
         per_date[edition_date] = {
             "date": edition_date,
             "source_file": str(source_path),
             "source_count": int(result.get("source_count") or 0),
             "story_count": int(result.get("story_count") or 0),
+            "pillars_present": list(result.get("pillars_present") or []),
+            "pillars_missing": list(result.get("pillars_missing") or []),
+            "source_count_by_pillar": dict(result.get("source_count_by_pillar") or {}),
+            "story_count_by_pillar": dict(result.get("story_count_by_pillar") or {}),
             "generated": bool(result.get("generated")),
+            "public_exposed": bool(result.get("generated")),
+            "archive_linked": bool(result.get("archive_updated")),
             "errors": list(result.get("errors") or []),
             "warnings": list(result.get("warnings") or []),
             "local_edition_path": str(root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date / "index.html"),
             "public_url": f"https://dispatches.thebluefernco.com/{DISPATCH_SLUG}/editions/{edition_date}/",
         }
+
     ok = not failed_dates or allow_partial
     report = {
         "ok": ok,
@@ -115,6 +115,7 @@ def run_backfill(
         "publish": publish,
         "dry_run": dry_run,
         "from_manual_sources": from_manual_sources,
+        "source_mode": source_mode,
         "per_date": per_date,
     }
     report_path = _report_path(root)
@@ -125,12 +126,15 @@ def run_backfill(
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Backfill American Pressure editions using manual source records only.")
+    parser = argparse.ArgumentParser(description="Backfill American Pressure editions.")
     parser.add_argument("--date", action="append", default=[], help="Single edition date; repeat for multiple.")
     parser.add_argument("--dates", nargs="+", default=[], help="Multiple edition dates.")
+    parser.add_argument("--start-date", help="Inclusive range start YYYY-MM-DD")
+    parser.add_argument("--end-date", help="Inclusive range end YYYY-MM-DD")
     parser.add_argument("--publish", action="store_true", help="Update public archive/index/rss while running each date.")
     parser.add_argument("--dry-run", action="store_true", help="Run each date in dry-run mode.")
-    parser.add_argument("--from-manual-sources", action="store_true", help="Require manual source files per date.")
+    parser.add_argument("--from-manual-sources", action="store_true", help="Legacy flag; manual behavior is controlled by --source-mode.")
+    parser.add_argument("--source-mode", choices=["manual", "auto", "both"], default="both", help="Source input mode per run.")
     parser.add_argument("--allow-partial", action="store_true", help="Return success status even when some dates fail.")
     parser.add_argument("--write-template", help="Write manual_sources.example.json for a date and exit.")
     return parser.parse_args(argv)
@@ -142,16 +146,24 @@ def main(argv: list[str] | None = None) -> int:
         path = write_template(ROOT, args.write_template)
         print(json.dumps({"ok": True, "template_path": str(path)}, indent=2))
         return 0
+
     requested = [*args.date, *args.dates]
+    if args.start_date or args.end_date:
+        if not (args.start_date and args.end_date):
+            print(json.dumps({"ok": False, "errors": ["--start-date and --end-date must be provided together"]}, indent=2))
+            return 1
+        requested.extend(_expand_range(args.start_date, args.end_date))
     if not requested:
-        print(json.dumps({"ok": False, "errors": ["at least one --date or --dates value is required"]}, indent=2))
+        print(json.dumps({"ok": False, "errors": ["at least one --date/--dates or a --start-date/--end-date range is required"]}, indent=2))
         return 1
+
     report = run_backfill(
         ROOT,
         requested,
         publish=bool(args.publish),
         dry_run=bool(args.dry_run),
         from_manual_sources=bool(args.from_manual_sources),
+        source_mode=str(args.source_mode),
         allow_partial=bool(args.allow_partial),
     )
     print(json.dumps(report, indent=2))

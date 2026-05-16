@@ -23,85 +23,20 @@ sources:
     update_frequency: monthly
     enabled: true
     source_state: enabled
-    notes: Official USDA SNAP program participation and benefits data tables.
+    notes: Official USDA SNAP participation and benefits data tables.
 
-  - source_id: cms-medicaid-chip-enrollment
-    name: Medicaid and CHIP Enrollment Data
-    url: https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data
-    publisher: Centers for Medicare and Medicaid Services
-    pillar: health_access_pressure
+  - source_id: usda-ers-food-price-outlook
+    name: USDA ERS Food Price Outlook
+    url: https://www.ers.usda.gov/data-products/food-price-outlook/
+    publisher: USDA Economic Research Service
+    pillar: food_pressure
     geography: US
     source_type: official_dataset_page
     reliability_tier: official_primary
     update_frequency: monthly
     enabled: true
     source_state: enabled
-    notes: National and state Medicaid and CHIP enrollment reporting.
-
-  - source_id: noaa-ncei-monthly-climate-report
-    name: NOAA NCEI Monthly Climate Reports
-    url: https://www.ncei.noaa.gov/access/monitoring/monthly-report/
-    publisher: NOAA National Centers for Environmental Information
-    pillar: environmental_pressure
-    geography: US
-    source_type: official_climate_report
-    reliability_tier: official_primary
-    update_frequency: monthly
-    enabled: true
-    source_state: enabled
-    notes: Official monthly climate indicators and narrative summaries.
-
-  - source_id: us-drought-monitor
-    name: U.S. Drought Monitor
-    url: https://droughtmonitor.unl.edu/
-    publisher: National Drought Mitigation Center and USDA and NOAA
-    pillar: environmental_pressure
-    geography: US
-    source_type: institutional_dashboard
-    reliability_tier: institutional
-    update_frequency: weekly
-    enabled: true
-    source_state: enabled
-    notes: Institutional drought condition map and weekly status updates.
-
-  - source_id: todo-household-cost-source
-    name: TODO Household Cost Source
-    url: https://example.invalid/todo-household-cost-source
-    publisher: TODO
-    pillar: household_cost_pressure
-    geography: US
-    source_type: todo
-    reliability_tier: context_only
-    update_frequency: TBD
-    enabled: false
-    source_state: disabled
-    notes: TODO: add a stable official or institutional household cost source per project conventions.
-
-  - source_id: todo-local-system-strain-source
-    name: TODO Local System Strain Source
-    url: https://example.invalid/todo-local-system-strain-source
-    publisher: TODO
-    pillar: local_system_strain
-    geography: US
-    source_type: todo
-    reliability_tier: context_only
-    update_frequency: TBD
-    enabled: false
-    source_state: disabled
-    notes: TODO: add stable local-system strain source with clear method and national coverage relevance.
-
-  - source_id: todo-policy-implementation-source
-    name: TODO Policy Implementation Source
-    url: https://example.invalid/todo-policy-implementation-source
-    publisher: TODO
-    pillar: policy_implementation
-    geography: US
-    source_type: todo
-    reliability_tier: context_only
-    update_frequency: TBD
-    enabled: false
-    source_state: disabled
-    notes: TODO: add stable policy implementation tracker source before enabling.
+    notes: Official USDA food-at-home and food-away-from-home inflation baseline.
 
   - source_id: us-courts-bankruptcy-filings-statistics
     name: U.S. Courts Bankruptcy Filings Statistics
@@ -114,10 +49,10 @@ sources:
     update_frequency: quarterly
     enabled: true
     source_state: enabled
-    notes: Official national bankruptcy filings baseline including chapter and business/nonbusiness breakdowns.
+    notes: Official bankruptcy filings baseline including chapter and business/nonbusiness splits.
 
   - source_id: us-courts-bankruptcy-data-visualizations
-    name: U.S. Courts Bankruptcy Data Visualizations
+    name: U.S. Courts Caseload Data Tables
     url: https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables
     publisher: Administrative Office of the U.S. Courts
     pillar: financial_distress_pressure
@@ -127,17 +62,160 @@ sources:
     update_frequency: periodic
     enabled: true
     source_state: enabled
-    notes: Official judiciary reporting and visuals for bankruptcy filing trends and chapter mix.
+    notes: Official judiciary table and trend source for bankruptcy caseload diagnostics.
 
-  - source_id: reuters-business-bankruptcy-impact
-    name: Reuters Bankruptcy Public-Impact Tracker
-    url: https://www.reuters.com/world/us/
-    publisher: Reuters
-    pillar: financial_distress_pressure
+  - source_id: bls-cpi-shelter
+    name: BLS CPI Shelter Index
+    url: https://www.bls.gov/cpi/
+    publisher: U.S. Bureau of Labor Statistics
+    pillar: housing_household_cost_pressure
     geography: US
-    source_type: reputable_reporting
-    reliability_tier: reputable_reporting
-    update_frequency: daily
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    source_state: enabled
+    notes: Shelter inflation baseline for rent and housing-linked household cost pressure.
+
+  - source_id: hud-pit-homelessness
+    name: HUD Point-in-Time Homelessness Data
+    url: https://www.huduser.gov/portal/datasets/ahar.html
+    publisher: U.S. Department of Housing and Urban Development
+    pillar: housing_household_cost_pressure
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: false
+    source_state: diagnostics_only
+    notes: Stable official baseline but lower-frequency; keep for diagnostics and context.
+
+  - source_id: cms-medicaid-chip-enrollment
+    name: Medicaid and CHIP Enrollment Data
+    url: https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data
+    publisher: Centers for Medicare and Medicaid Services
+    pillar: health_access_pressure
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    source_state: enabled
+    notes: National and state Medicaid/CHIP enrollment baseline.
+
+  - source_id: hrsa-shortage-areas
+    name: HRSA Shortage Area Data
+    url: https://data.hrsa.gov/topics/health-workforce/shortage-areas
+    publisher: Health Resources and Services Administration
+    pillar: health_access_pressure
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: periodic
     enabled: false
     source_state: manual_only
-    notes: Manual-only event layer for verified US bankruptcy stories with jobs, services, healthcare, housing, food, or rural-system impact.
+    notes: Use as manual weekly supplement when updated shortage/access shifts are published.
+
+  - source_id: bls-unemployment-situation
+    name: BLS Employment Situation
+    url: https://www.bls.gov/news.release/empsit.nr0.htm
+    publisher: U.S. Bureau of Labor Statistics
+    pillar: labor_income_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    source_state: enabled
+    notes: Official labor market baseline for unemployment and job losses.
+
+  - source_id: dol-warn-guidance
+    name: WARN Act Program Guidance
+    url: https://www.dol.gov/general/topic/termination/plantclosings
+    publisher: U.S. Department of Labor
+    pillar: labor_income_pressure
+    geography: US
+    source_type: official_guidance_page
+    reliability_tier: official_primary
+    update_frequency: periodic
+    enabled: false
+    source_state: manual_only
+    notes: Manual-only layer for state WARN notices and layoffs using official state records.
+
+  - source_id: noaa-ncei-monthly-climate-report
+    name: NOAA NCEI Monthly Climate Reports
+    url: https://www.ncei.noaa.gov/access/monitoring/monthly-report/
+    publisher: NOAA National Centers for Environmental Information
+    pillar: environmental_pressure
+    geography: US
+    source_type: official_climate_report
+    reliability_tier: official_primary
+    update_frequency: monthly
+    enabled: true
+    source_state: enabled
+    notes: Official monthly climate indicators.
+
+  - source_id: us-drought-monitor
+    name: U.S. Drought Monitor
+    url: https://droughtmonitor.unl.edu/
+    publisher: National Drought Mitigation Center and USDA and NOAA
+    pillar: environmental_pressure
+    geography: US
+    source_type: institutional_dashboard
+    reliability_tier: institutional
+    update_frequency: weekly
+    enabled: true
+    source_state: enabled
+    notes: Weekly drought condition map and status updates.
+
+  - source_id: fema-disaster-declarations
+    name: FEMA Disaster Declarations
+    url: https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2
+    publisher: Federal Emergency Management Agency
+    pillar: local_system_strain
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: daily
+    enabled: true
+    source_state: enabled
+    notes: Federal declarations baseline for local system strain events.
+
+  - source_id: cdc-svi
+    name: CDC Social Vulnerability Index
+    url: https://www.atsdr.cdc.gov/placeandhealth/svi/index.html
+    publisher: Centers for Disease Control and Prevention
+    pillar: local_system_strain
+    geography: US
+    source_type: official_dataset_page
+    reliability_tier: official_primary
+    update_frequency: periodic
+    enabled: false
+    source_state: diagnostics_only
+    notes: Structural vulnerability context; not a weekly change feed.
+
+  - source_id: us-treasury-emergency-rental-assistance
+    name: Emergency Rental Assistance Program
+    url: https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/emergency-rental-assistance-program
+    publisher: U.S. Department of the Treasury
+    pillar: policy_implementation
+    geography: US
+    source_type: official_program_page
+    reliability_tier: official_primary
+    update_frequency: periodic
+    enabled: false
+    source_state: diagnostics_only
+    notes: Program implementation context; use diagnostics/manual supplements for week-to-week policy shifts.
+
+  - source_id: hhs-liheap
+    name: LIHEAP Program Data and Reports
+    url: https://www.acf.hhs.gov/ocs/programs/liheap
+    publisher: U.S. Department of Health and Human Services
+    pillar: policy_implementation
+    geography: US
+    source_type: official_program_page
+    reliability_tier: official_primary
+    update_frequency: periodic
+    enabled: false
+    source_state: manual_only
+    notes: Manual-only policy implementation signal source for household utility support programs.

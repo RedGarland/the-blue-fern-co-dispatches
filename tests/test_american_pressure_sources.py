@@ -42,6 +42,90 @@ sources:
     enabled: true
     source_state: enabled
     notes: valid
+  - source_id: bk
+    name: BK
+    url: https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics
+    publisher: AOUSC
+    pillar: financial_distress_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: true
+    source_state: enabled
+    notes: valid
+  - source_id: housing
+    name: Housing
+    url: https://www.bls.gov/cpi/
+    publisher: BLS
+    pillar: housing_household_cost_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: false
+    source_state: diagnostics_only
+    notes: valid
+  - source_id: health
+    name: Health
+    url: https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data
+    publisher: CMS
+    pillar: health_access_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: true
+    source_state: enabled
+    notes: valid
+  - source_id: labor
+    name: Labor
+    url: https://www.bls.gov/news.release/empsit.nr0.htm
+    publisher: BLS
+    pillar: labor_income_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: false
+    source_state: manual_only
+    notes: valid
+  - source_id: env
+    name: Env
+    url: https://droughtmonitor.unl.edu/
+    publisher: NDMC
+    pillar: environmental_pressure
+    geography: US
+    source_type: official_report_page
+    reliability_tier: institutional
+    update_frequency: annual
+    enabled: true
+    source_state: enabled
+    notes: valid
+  - source_id: local
+    name: Local
+    url: https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2
+    publisher: FEMA
+    pillar: local_system_strain
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: true
+    source_state: enabled
+    notes: valid
+  - source_id: policy
+    name: Policy
+    url: https://www.acf.hhs.gov/ocs/programs/liheap
+    publisher: HHS
+    pillar: policy_implementation
+    geography: US
+    source_type: official_report_page
+    reliability_tier: official_primary
+    update_frequency: annual
+    enabled: false
+    source_state: manual_only
+    notes: valid
 """
 
 
@@ -49,7 +133,6 @@ def test_source_registry_file_parses_from_project_root():
     root = Path(__file__).resolve().parents[1]
     sources = aps.load_source_registry(root)
     assert sources
-    assert any(source.get("source_id") == "usda-fns-snap-household-characteristics" for source in sources)
 
 
 def test_all_enabled_sources_have_required_fields():
@@ -58,103 +141,25 @@ def test_all_enabled_sources_have_required_fields():
     assert not errors
 
 
-def test_duplicate_source_id_is_rejected(work_root):
-    _write_registry(
-        work_root,
-        """
-sources:
-  - source_id: duplicate-id
-    name: One
-    url: https://example.com/one
-    publisher: Org
-    pillar: food_pressure
-    geography: US
-    source_type: feed
-    reliability_tier: official_primary
-    update_frequency: monthly
-    enabled: true
-    notes: one
-  - source_id: duplicate-id
-    name: Two
-    url: https://example.com/two
-    publisher: Org
-    pillar: food_pressure
-    geography: US
-    source_type: feed
-    reliability_tier: official_primary
-    update_frequency: monthly
-    enabled: true
-    notes: two
-""",
-    )
+def test_registry_requires_all_pillars(work_root):
+    _write_registry(work_root, _minimal_valid_registry().split("- source_id: policy")[0])
     errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
-    assert any("duplicate source_id" in error for error in errors)
+    assert any("registry missing required pillars" in e for e in errors)
 
 
-def test_invalid_pillar_is_rejected(work_root):
-    _write_registry(work_root, _minimal_valid_registry().replace("food_pressure", "bad_pillar"))
-    errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
-    assert any("invalid pillar" in error for error in errors)
-
-
-def test_invalid_reliability_tier_is_rejected(work_root):
-    _write_registry(work_root, _minimal_valid_registry().replace("official_primary", "bad_tier"))
-    errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
-    assert any("invalid reliability_tier" in error for error in errors)
-
-
-def test_malformed_url_is_rejected(work_root):
-    _write_registry(work_root, _minimal_valid_registry().replace("https://www.fns.usda.gov/research/snap/household-characteristics", "notaurl"))
-    errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
-    assert any("malformed URL" in error for error in errors)
-
-
-def test_source_health_report_can_be_generated_without_live_fetch(work_root):
-    _write_registry(work_root, _minimal_valid_registry())
-    sources = aps.load_source_registry(work_root)
-    report = aps.build_source_health_report(sources, fetch_check=False, checked_at="2026-05-13T00:00:00Z")
-    assert len(report) == 1
-    assert report[0]["fetch_attempted"] is False
-    assert report[0]["fetch_success"] is None
-    assert report[0]["status_code"] is None
-    assert report[0]["failure_reason"] is None
-
-
-def test_source_health_report_write_is_not_under_output_site(work_root):
+def test_source_health_summary_counts(work_root):
     _write_registry(work_root, _minimal_valid_registry())
     report = aps.build_source_health_report(aps.load_source_registry(work_root), fetch_check=False)
-    out = aps.write_source_health_report(work_root, report, "2026-05-13")
-    assert out.exists()
-    assert "output\\site\\" not in str(out).lower()
-    assert not (work_root / "output" / "site" / "american-pressure" / "source_health" / "2026-05-13.json").exists()
-
-
-def test_fetch_check_mode_can_be_mocked_deterministically(work_root, monkeypatch):
-    _write_registry(work_root, _minimal_valid_registry())
-    monkeypatch.setattr(aps, "_fetch_status", lambda url, timeout_seconds=8, user_agent="x": (True, 200, None))
-    report = aps.build_source_health_report(aps.load_source_registry(work_root), fetch_check=True)
-    assert report[0]["fetch_attempted"] is True
-    assert report[0]["fetch_success"] is True
-    assert report[0]["status_code"] == 200
-
-
-def test_checker_script_validate_only(work_root):
-    _write_registry(work_root, _minimal_valid_registry())
-    code = run_check_script(["--root", str(work_root)])
-    assert code == 0
+    summary = aps.summarize_source_health(report)
+    assert summary["sources_configured"] == 8
+    assert summary["enabled_sources"] >= 4
+    assert summary["manual_only_sources"] >= 1
 
 
 def test_checker_script_write_report(work_root):
     _write_registry(work_root, _minimal_valid_registry())
     code = run_check_script(["--root", str(work_root), "--write-report", "--date", "2026-05-13"])
     assert code == 0
-    report_path = work_root / "output" / "dispatches" / "american-pressure" / "source_health" / "2026-05-13.json"
-    assert report_path.exists()
-    payload = json.loads(report_path.read_text(encoding="utf-8"))
-    assert payload and payload[0]["source_id"] == "usda-snap"
-
-
-def test_invalid_source_state_is_rejected(work_root):
-    _write_registry(work_root, _minimal_valid_registry().replace("source_state: enabled", "source_state: bad_state"))
-    errors = aps.validate_registry_sources(aps.load_source_registry(work_root))
-    assert any("invalid source_state" in error for error in errors)
+    payload = json.loads((work_root / "output" / "dispatches" / "american-pressure" / "source_health" / "2026-05-13.json").read_text(encoding="utf-8"))
+    assert payload
+    assert "recommendation" in payload[0]

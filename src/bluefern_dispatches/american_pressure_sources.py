@@ -12,39 +12,20 @@ import urllib.request
 
 REGISTRY_PATH = Path("data/dispatches/american-pressure/source_registry.yml")
 REQUIRED_FIELDS = {
-    "source_id",
-    "name",
-    "url",
-    "publisher",
-    "pillar",
-    "geography",
-    "source_type",
-    "reliability_tier",
-    "update_frequency",
-    "enabled",
-    "notes",
+    "source_id", "name", "url", "publisher", "pillar", "geography", "source_type", "reliability_tier", "update_frequency", "enabled", "notes",
 }
-ALLOWED_SOURCE_STATES = {
-    "enabled",
-    "manual_only",
-    "diagnostics_only",
-    "disabled",
-}
+ALLOWED_SOURCE_STATES = {"enabled", "manual_only", "diagnostics_only", "disabled"}
 ALLOWED_PILLARS = {
     "food_pressure",
-    "health_access_pressure",
-    "household_cost_pressure",
-    "environmental_pressure",
-    "local_system_strain",
-    "policy_implementation",
     "financial_distress_pressure",
+    "housing_household_cost_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "local_system_strain",
+    "environmental_pressure",
+    "policy_implementation",
 }
-ALLOWED_RELIABILITY_TIERS = {
-    "official_primary",
-    "institutional",
-    "reputable_reporting",
-    "context_only",
-}
+ALLOWED_RELIABILITY_TIERS = {"official_primary", "institutional", "reputable_reporting", "context_only"}
 DEFAULT_TIMEOUT_SECONDS = 8
 DEFAULT_USER_AGENT = "BlueFernDispatches/0.1 american-pressure-source-check"
 
@@ -69,6 +50,7 @@ class SourceCheckResult:
     failure_reason: str | None
     checked_at: str
     source_state: str
+    recommendation: str
 
 
 def _utc_now() -> str:
@@ -144,6 +126,7 @@ def _is_valid_url(url: str) -> bool:
 def validate_registry_sources(sources: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     seen_ids: set[str] = set()
+    seen_pillars: set[str] = set()
     for index, source in enumerate(sources, start=1):
         source_id = str(source.get("source_id") or "").strip()
         enabled = source.get("enabled")
@@ -163,6 +146,8 @@ def validate_registry_sources(sources: list[dict[str, Any]]) -> list[str]:
         pillar = str(source.get("pillar") or "").strip()
         if pillar not in ALLOWED_PILLARS:
             errors.append(f"{prefix} has invalid pillar: {pillar!r}")
+        else:
+            seen_pillars.add(pillar)
         reliability_tier = str(source.get("reliability_tier") or "").strip()
         if reliability_tier not in ALLOWED_RELIABILITY_TIERS:
             errors.append(f"{prefix} has invalid reliability_tier: {reliability_tier!r}")
@@ -179,6 +164,9 @@ def validate_registry_sources(sources: list[dict[str, Any]]) -> list[str]:
         url = str(source.get("url") or "").strip()
         if not _is_valid_url(url):
             errors.append(f"{prefix} has malformed URL: {url!r}")
+    missing_pillars = sorted(ALLOWED_PILLARS - seen_pillars)
+    if missing_pillars:
+        errors.append(f"registry missing required pillars: {', '.join(missing_pillars)}")
     return errors
 
 
@@ -202,18 +190,25 @@ def _fetch_status(url: str, timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS, user
             return False, None, f"{type(exc).__name__}: {exc}; GET fallback {type(get_exc).__name__}: {get_exc}"
 
 
-def build_source_health_report(
-    sources: list[dict[str, Any]],
-    *,
-    fetch_check: bool = False,
-    checked_at: str | None = None,
-    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-) -> list[dict[str, Any]]:
+def _recommendation(source_state: str, enabled: bool, fetch_success: bool | None, failure_reason: str | None) -> str:
+    if source_state == "manual_only":
+        return "Add curated records to manual_sources.json for this source each week."
+    if source_state == "diagnostics_only":
+        return "Track for diagnostics only; do not use as public source input until upgraded."
+    if source_state == "disabled":
+        return "Disabled source; enable only after stability review."
+    if enabled and fetch_success is False:
+        return f"Enabled source check failed ({failure_reason or 'unknown'}); verify endpoint stability or mark manual_only."
+    return "Enabled for baseline auto collection."
+
+
+def build_source_health_report(sources: list[dict[str, Any]], *, fetch_check: bool = False, checked_at: str | None = None, timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS) -> list[dict[str, Any]]:
     checked = checked_at or _utc_now()
     report: list[dict[str, Any]] = []
     for source in sources:
         enabled = bool(source.get("enabled"))
-        fetch_attempted = bool(fetch_check and enabled)
+        source_state = str(source.get("source_state") or ("enabled" if enabled else "disabled"))
+        fetch_attempted = bool(fetch_check and enabled and source_state == "enabled")
         fetch_success: bool | None = None
         status_code: int | None = None
         failure_reason: str | None = None
@@ -233,10 +228,35 @@ def build_source_health_report(
             status_code=status_code,
             failure_reason=failure_reason,
             checked_at=checked,
-            source_state=str(source.get("source_state") or ("enabled" if enabled else "disabled")),
+            source_state=source_state,
+            recommendation=_recommendation(source_state, enabled, fetch_success, failure_reason),
         )
         report.append(row.__dict__)
     return report
+
+
+def summarize_source_health(report: list[dict[str, Any]]) -> dict[str, Any]:
+    out = {
+        "sources_configured": len(report),
+        "enabled_sources": 0,
+        "manual_only_sources": 0,
+        "diagnostics_only_sources": 0,
+        "disabled_sources": 0,
+        "checked_failures": 0,
+    }
+    for row in report:
+        state = str(row.get("source_state") or "")
+        if state == "enabled":
+            out["enabled_sources"] += 1
+        elif state == "manual_only":
+            out["manual_only_sources"] += 1
+        elif state == "diagnostics_only":
+            out["diagnostics_only_sources"] += 1
+        elif state == "disabled":
+            out["disabled_sources"] += 1
+        if row.get("fetch_attempted") and row.get("fetch_success") is False:
+            out["checked_failures"] += 1
+    return out
 
 
 def write_source_health_report(root: Path, report: list[dict[str, Any]], as_of_date: str) -> Path:

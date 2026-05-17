@@ -15,6 +15,10 @@ def work_root():
     root = repo / "output" / "test-runs" / uuid.uuid4().hex / "american-pressure-runner"
     shutil.copytree(repo / "assets", root / "assets")
     shutil.copytree(repo / "data" / "dispatches" / "american-pressure", root / "data" / "dispatches" / "american-pressure")
+    candidates_root = root / "data" / "dispatches" / "american-pressure" / "candidates"
+    if candidates_root.exists():
+        shutil.rmtree(candidates_root)
+        candidates_root.mkdir(parents=True, exist_ok=True)
     try:
         yield root
     finally:
@@ -180,6 +184,8 @@ def test_linked_data_anchor_ids_must_resolve(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is False
     assert any("unknown linked_data_anchor_id" in err for err in result["errors"])
+    assert any("available anchors:" in err for err in result["errors"])
+    assert any("food-story" in err for err in result["errors"])
 
 
 def test_human_story_without_public_pressure_angle_rejected(work_root):
@@ -246,6 +252,67 @@ def test_publish_filters_future_american_pressure_editions_from_archive(work_roo
     assert "2026-05-19" not in index_html
     assert "2026-05-19" not in archive_html
     assert "2026-05-19" not in rss_xml
+
+
+def test_publish_lists_valid_american_pressure_editions_with_latest_first(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-09", manual)
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    first = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-09", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    second = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert first["ok"] is True
+    assert second["ok"] is True
+    index_html = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    archive_html = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
+    rss_xml = (work_root / "output" / "site" / "american-pressure" / "rss.xml").read_text(encoding="utf-8")
+    assert "2026-05-16" in index_html
+    assert "2026-05-09" in index_html
+    assert index_html.index("2026-05-16") < index_html.index("2026-05-09")
+    assert "2026-05-16" in archive_html and "2026-05-09" in archive_html
+    assert "2026-05-16" in rss_xml and "2026-05-09" in rss_xml
+
+
+def test_publish_excludes_stale_thin_unlistable_edition(work_root):
+    manual = [
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-09", manual)
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    stale_dir = work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-17"
+    stale_dir.mkdir(parents=True, exist_ok=True)
+    (stale_dir / "index.html").write_text("<html><a href='https://example.com'>stale</a></html>", encoding="utf-8")
+    (stale_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "american-pressure",
+                "edition_date": "2026-05-17",
+                "week_start_date": "2026-05-11",
+                "week_end_date": "2026-05-17",
+                "display_date_range": "May 11–May 17, 2026",
+                "source_count": 1,
+                "story_count": 1,
+                "story_plus_data_count": 0,
+                "baseline_only_edition": True,
+                "public_exposed": True,
+                "is_free_public": True,
+                "errors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    first = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-09", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert first["ok"] is True
+    assert result["ok"] is True
+    index_html = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    archive_html = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
+    rss_xml = (work_root / "output" / "site" / "american-pressure" / "rss.xml").read_text(encoding="utf-8")
+    assert "2026-05-16" in index_html and "2026-05-09" in index_html
+    assert "2026-05-17" not in index_html
+    assert "2026-05-17" not in archive_html
+    assert "2026-05-17" not in rss_xml
 
 
 def test_daily_candidates_feed_weekly_edition(work_root):

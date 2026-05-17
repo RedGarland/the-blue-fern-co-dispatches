@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import html
@@ -11,13 +11,13 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+from scripts.american_pressure_anchor_ids import canonical_valid_anchor_ids_by_pillar
 
 from bluefern_dispatches.american_pressure_sources import load_source_registry  # noqa: E402
 from bluefern_dispatches.generator import (  # noqa: E402
@@ -26,6 +26,7 @@ from bluefern_dispatches.generator import (  # noqa: E402
     footer,
     header,
     page,
+    public_edition_is_listable,
     render_archive_for_dates,
     render_dispatch_index_for_dates,
     render_rss_for_dates,
@@ -804,11 +805,13 @@ def _build_data_context_summary(data_anchors: list[dict[str, Any]], pillar: str)
     return f"Data context from {labels} provides baseline evidence for this pressure area."
 
 
-def _validate_manual_human_story_records(sources: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
+def _validate_manual_human_story_records(sources: list[dict[str, Any]], root: Path) -> tuple[list[str], list[str]]:
     warnings: list[str] = []
     errors: list[str] = []
     known_record_ids = {str(source.get("source_record_id") or "").strip() for source in sources}
     known_source_ids = {str(source.get("source_id") or "").strip() for source in sources}
+    canonical_by_pillar = canonical_valid_anchor_ids_by_pillar(root, tuple(PILLAR_ORDER))
+    canonical_all = {source_id for values in canonical_by_pillar.values() for source_id in values}
     for source in sources:
         role = _classify_source_role(source)
         if role != "human_story":
@@ -826,6 +829,7 @@ def _validate_manual_human_story_records(sources: list[dict[str, Any]]) -> tuple
         if missing:
             errors.append(f"human_story record {source_id} missing required fields: {', '.join(missing)}")
         resolved_ids: list[str] = []
+        story_pillar = _normalize_pillar(_safe_text(source.get("pillar") or source.get("category_hint")))
         for linked_id in source.get("linked_data_anchor_ids", []):
             candidate = _safe_text(linked_id)
             if not candidate:
@@ -838,7 +842,14 @@ def _validate_manual_human_story_records(sources: list[dict[str, Any]]) -> tuple
                 if linked_source:
                     resolved_ids.append(_safe_text(linked_source.get("source_record_id")))
                     continue
-            errors.append(f"human_story record {source_id} has unknown linked_data_anchor_id: {candidate}")
+            available_hint_pool = list(canonical_by_pillar.get(story_pillar, []))
+            if not available_hint_pool:
+                available_hint_pool = sorted(canonical_all)
+            hint = ", ".join(available_hint_pool[:6]) if available_hint_pool else "none"
+            errors.append(
+                f"human_story record {source_id} has unknown linked_data_anchor_id: {candidate} "
+                f"(pillar={story_pillar or 'unknown'}; available anchors: {hint})"
+            )
         source["linked_data_anchor_ids"] = resolved_ids
         if not resolved_ids:
             warnings.append(f"human_story record {source_id} has no linked data anchors")
@@ -1108,7 +1119,19 @@ def discover_edition_dates(site_root: Path) -> list[str]:
     editions_root = site_root / DISPATCH_SLUG / "editions"
     if not editions_root.exists():
         return []
-    return sorted((path.name for path in editions_root.iterdir() if path.is_dir() and DATE_RE.match(path.name) and (path / "index.html").exists()), reverse=True)
+    return sorted(
+        (
+            path.name
+            for path in editions_root.iterdir()
+            if (
+                path.is_dir()
+                and DATE_RE.match(path.name)
+                and (path / "index.html").exists()
+                and public_edition_is_listable(site_root, DISPATCH_SLUG, path.name)
+            )
+        ),
+        reverse=True,
+    )
 
 
 def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> None:
@@ -1183,7 +1206,7 @@ def run_american_pressure_dispatch(
     sources, source_warnings, source_errors, diagnostics = normalize_sources(raw_records, edition_date)
     warnings.extend(source_warnings)
     errors.extend(source_errors)
-    human_story_warnings, human_story_errors = _validate_manual_human_story_records(sources)
+    human_story_warnings, human_story_errors = _validate_manual_human_story_records(sources, root)
     warnings.extend(human_story_warnings)
     errors.extend(human_story_errors)
 
@@ -1333,6 +1356,7 @@ def run_american_pressure_dispatch(
     write_json(dispatch_dir / "sources_manifest.json", sources, dry_run, wrote)
     write_json(dispatch_dir / "curation_manifest.json", curation_manifest, dry_run, wrote)
     write_text(site_dir / "index.html", html_content, dry_run, wrote)
+    write_json(site_dir / "edition_manifest.json", edition_manifest, dry_run, wrote)
     write_json(site_dir / "sources_manifest.json", sources, dry_run, wrote)
     write_json(site_dir / "curation_manifest.json", curation_manifest, dry_run, wrote)
 
@@ -1404,3 +1428,5 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+

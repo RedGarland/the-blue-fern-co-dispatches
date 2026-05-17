@@ -526,10 +526,23 @@ def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> No
     edition.mkdir(parents=True, exist_ok=True)
     (edition / "index.html").write_text("<html><body>American Pressure weekly</body></html>", encoding="utf-8")
     (edition / "edition_manifest.json").write_text(
-        json.dumps({"dispatch_slug": "american-pressure", "edition_date": edition_date, "source_count": 3, "story_count": 2}),
+        json.dumps(
+            {
+                "dispatch_slug": "american-pressure",
+                "edition_date": edition_date,
+                "source_count": 3,
+                "story_count": 2,
+                "week_start_date": "2026-05-03",
+                "week_end_date": edition_date,
+                "display_date_range": "May 3–May 9, 2026",
+            }
+        ),
         encoding="utf-8",
     )
-    (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "ap-src-001"}]), encoding="utf-8")
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "ap-src-001", "url": "https://example.com/source-1"}]),
+        encoding="utf-8",
+    )
     (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "ap-story-001"}]), encoding="utf-8")
     archive = site_root / "american-pressure" / "archive.html"
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")

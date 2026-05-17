@@ -118,3 +118,28 @@ def test_weekly_readiness_recommended_only_with_approved_candidates(tmp_path, mo
     pending_day.write_text(json.dumps({"sources": [{"source_record_id": "x", "pillar": "food_pressure", "review_status": "needs_review"}]}), encoding="utf-8")
     report_still_ok = readiness.build_readiness_report("2026-05-09")
     assert report_still_ok["weekly_publish_recommended"] is True
+
+
+def test_weekly_run_populates_week_dates_even_when_dispatch_fails(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(weekly, "ROOT", tmp_path)
+
+    def fake_run(_root, _edition_date, **_kwargs):
+        return {"ok": False, "warnings": [], "errors": ["quality gate fail"], "source_count": 0, "story_count": 0}
+
+    monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
+    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--include-approved-candidates", "--publish"])
+    assert rc == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["week_start_date"] == "2026-05-10"
+    assert payload["week_end_date"] == "2026-05-16"
+    assert payload["display_date_range"] == "May 10–May 16, 2026"
+
+
+def test_validate_pages_view_for_date_passes_with_latest_and_prior(tmp_path, monkeypatch):
+    monkeypatch.setattr(weekly, "PAGES_REPO", tmp_path / "bluefern-dispatches-pages")
+    ap = weekly.PAGES_REPO / "american-pressure"
+    ap.mkdir(parents=True, exist_ok=True)
+    (ap / "index.html").write_text("latest 2026-05-16 older 2026-05-09", encoding="utf-8")
+    (ap / "archive.html").write_text("2026-05-16 2026-05-09", encoding="utf-8")
+    (ap / "rss.xml").write_text("<item>2026-05-16</item><item>2026-05-09</item>", encoding="utf-8")
+    assert weekly._validate_pages_view_for_date("2026-05-16") == []

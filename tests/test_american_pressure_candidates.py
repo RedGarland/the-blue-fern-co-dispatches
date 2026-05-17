@@ -380,6 +380,19 @@ def test_scout_script_help_direct_and_module():
     assert "usage:" in module.stdout.lower()
 
 
+def test_invalid_suggested_anchors_excluded_and_diagnosed(monkeypatch):
+    monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())
+    monkeypatch.setattr(scout, "_load_targets", lambda: {"target_groups": {pillar: {"search_phrases": ["x"], "data_anchor_hints": ["valid-anchor", "invalid-anchor"]} for pillar in scout.PILLARS}})
+    monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["valid-anchor"] for pillar in scout.PILLARS})
+    fake = [{"title": "County layoffs affect workers", "url": "https://example.com/story", "publisher": "Local Gazette", "published_at": "2026-05-10T00:00:00Z", "summary_or_snippet": "Residents face job loss."}]
+    payload = scout.scout_day("2026-05-10", max_per_pillar=1, fetcher=lambda _query: fake)
+    assert payload["sources"]
+    for row in payload["sources"]:
+        assert "invalid-anchor" not in row.get("linked_data_anchor_ids", [])
+    diagnostics = payload.get("diagnostics", {})
+    assert "invalid-anchor" in diagnostics.get("suggested_unavailable_anchor_ids", [])
+
+
 def test_approve_helper_list_output_and_summary(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(approve_script, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
     cpath = approve_script.CANDIDATES_ROOT / "2026-05-10" / "candidate_sources.json"

@@ -12,13 +12,13 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+from scripts.american_pressure_anchor_ids import canonical_valid_anchor_ids_by_pillar
 TARGETS_PATH = ROOT / "data" / "dispatches" / "american-pressure" / "search_targets.yml"
 CANDIDATES_ROOT = ROOT / "data" / "dispatches" / "american-pressure" / "candidates"
 RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
@@ -89,19 +89,7 @@ def _load_targets() -> dict[str, Any]:
 
 
 def _load_registry_anchors() -> dict[str, list[str]]:
-    from bluefern_dispatches.american_pressure_sources import load_source_registry
-
-    rows = load_source_registry(ROOT)
-    out: dict[str, list[str]] = {pillar: [] for pillar in PILLARS}
-    for row in rows:
-        if str(row.get("source_state") or "enabled") not in {"enabled", "manual_only", "diagnostics_only"}:
-            continue
-        pillar = _safe_text(row.get("pillar"))
-        if pillar in out:
-            source_id = _safe_text(row.get("source_id"))
-            if source_id:
-                out[pillar].append(source_id)
-    return out
+    return canonical_valid_anchor_ids_by_pillar(ROOT, PILLARS)
 
 
 def _candidate_path(day: str) -> Path:
@@ -311,6 +299,7 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
     config = _load_targets()
     target_groups: dict[str, Any] = config.get("target_groups", {})
     anchor_map = _load_registry_anchors()
+    suggested_unavailable_anchor_ids: set[str] = set()
     seen_urls = _read_existing_candidate_urls()
     effective_fetcher = fetcher or _fetch_rss_items
     accepted: list[dict[str, Any]] = []
@@ -320,6 +309,14 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
     for pillar in PILLARS:
         group = target_groups.get(pillar, {})
         phrases = group.get("search_phrases", [])
+        hint_ids = [_safe_text(item) for item in group.get("data_anchor_hints", []) if _safe_text(item)]
+        available_anchor_ids = set(anchor_map.get(pillar, []))
+        selected_anchor_ids: list[str] = [anchor_id for anchor_id in hint_ids if anchor_id in available_anchor_ids]
+        for hint in hint_ids:
+            if hint not in available_anchor_ids:
+                suggested_unavailable_anchor_ids.add(hint)
+        if not selected_anchor_ids:
+            selected_anchor_ids = list(anchor_map.get(pillar, []))
         bucket: list[dict[str, Any]] = []
         for phrase in phrases:
             query = f"{phrase} when:2d"
@@ -331,11 +328,11 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
                 rejected.append({"pillar": pillar, "title": phrase, "reason": f"fetch_error:{exc}"})
                 continue
             for raw in items:
-                score, reasons, rejection_reasons = score_candidate(raw, pillar=pillar, anchor_ids=anchor_map.get(pillar, []), seen_urls=seen_urls)
+                score, reasons, rejection_reasons = score_candidate(raw, pillar=pillar, anchor_ids=selected_anchor_ids, seen_urls=seen_urls)
                 if not _safe_text(raw.get("url")):
                     rejected.append({"pillar": pillar, "title": _safe_text(raw.get("title")), "reason": "no_url"})
                     continue
-                candidate = _build_candidate(day=day, pillar=pillar, raw=raw, score=score, score_reasons=reasons, anchor_ids=anchor_map.get(pillar, []))
+                candidate = _build_candidate(day=day, pillar=pillar, raw=raw, score=score, score_reasons=reasons, anchor_ids=selected_anchor_ids)
                 candidate["candidate_bucket"] = "recommended" if score >= 45 and not rejection_reasons else ("maybe" if score >= 5 else "rejected")
                 if rejection_reasons:
                     candidate["rejection_reasons"] = rejection_reasons
@@ -349,6 +346,7 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
         "attempted_queries": attempted_queries,
         "fetch_error_count": fetch_error_count,
         "no_live_collection_backend_configured": no_live_backend,
+        "suggested_unavailable_anchor_ids": sorted(suggested_unavailable_anchor_ids),
     }
     if no_live_backend:
         diagnostics["no_live_collection_backend_message"] = (

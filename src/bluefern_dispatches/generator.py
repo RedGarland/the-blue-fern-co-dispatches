@@ -648,9 +648,43 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
             return False
         if not isinstance(manifest, dict):
             return False
+        if manifest.get("dispatch_slug") != "american-pressure":
+            return False
+        if manifest.get("edition_date") and manifest.get("edition_date") != edition_date:
+            return False
+        if manifest.get("public_exposed") is False:
+            return False
+        if manifest.get("is_free_public") is False:
+            return False
+        if manifest.get("unpublishable") is True:
+            return False
         source_count = int(manifest.get("source_count", 0) or 0)
         story_count = int(manifest.get("story_count", 0) or 0)
-        return source_count > 0 and story_count > 0
+        if source_count <= 0 or story_count <= 0:
+            return False
+        if any(str(item).strip() for item in (manifest.get("errors") or [])):
+            return False
+        has_visible_source_links = False
+        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
+        if sources_manifest_path.exists():
+            try:
+                sources_payload = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return False
+            if isinstance(sources_payload, list):
+                has_visible_source_links = any(str((row or {}).get("url") or "").strip() for row in sources_payload if isinstance(row, dict))
+        if not has_visible_source_links:
+            index_path = site_root / slug / "editions" / edition_date / "index.html"
+            if not index_path.exists():
+                return False
+            try:
+                index_html = index_path.read_text(encoding="utf-8")
+            except OSError:
+                return False
+            has_visible_source_links = "href=" in index_html
+        if not has_visible_source_links:
+            return False
+        return True
     if slug != "cascadia":
         return True
     manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"

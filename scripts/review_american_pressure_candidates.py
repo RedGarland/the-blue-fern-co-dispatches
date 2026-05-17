@@ -115,6 +115,7 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
     missing = _find_missing_pillars(rows)
     targets = _load_targets().get("target_groups", {})
     live_backend_message = str((payload.get("diagnostics") or {}).get("no_live_collection_backend_message") or "").strip()
+    suggested_unavailable = list((payload.get("diagnostics") or {}).get("suggested_unavailable_anchor_ids") or [])
     lines: list[str] = []
     lines.append(f"# American Pressure Candidate Review - {day}")
     lines.append("")
@@ -131,6 +132,8 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
     lines.append(f"- review_state: {_report_state(payload, diagnostics, recommended, maybe, rejected_scored)}")
     if live_backend_message:
         lines.append(f"- collector_notice: {live_backend_message}")
+    if suggested_unavailable:
+        lines.append(f"- suggested_unavailable_anchor_ids: {', '.join(str(item) for item in suggested_unavailable)}")
     lines.append("")
     lines.append("## Recommended candidates")
     if not recommended:

@@ -41,6 +41,19 @@ def _resolve_week_ending(raw_date: str | None, raw_week_ending: str | None) -> s
     return _completed_saturday_from(date.today()).isoformat()
 
 
+def _week_start_date(week_end: str) -> str:
+    end = datetime.strptime(week_end, "%Y-%m-%d").date()
+    return (end - timedelta(days=6)).isoformat()
+
+
+def _display_date_range(week_end: str) -> str:
+    end = datetime.strptime(week_end, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    start_month = start.strftime("%B")
+    end_month = end.strftime("%B")
+    return f"{start_month} {start.day}–{end_month} {end.day}, {end.year}"
+
+
 def _date_range(start_date: str, end_date: str) -> list[str]:
     start = datetime.strptime(start_date, "%Y-%m-%d").date()
     end = datetime.strptime(end_date, "%Y-%m-%d").date()
@@ -140,10 +153,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
         edition_date = _resolve_week_ending(args.date, args.week_ending)
+        computed_week_start = _week_start_date(edition_date)
+        computed_display_date_range = _display_date_range(edition_date)
         output: dict[str, Any] = {
-            "week_start_date": "",
+            "week_start_date": computed_week_start,
             "week_end_date": edition_date,
-            "display_date_range": "",
+            "display_date_range": computed_display_date_range,
             "source_count": 0,
             "story_count": 0,
             "story_plus_data_count": 0,
@@ -198,8 +213,8 @@ def main(argv: list[str] | None = None) -> int:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         output.update(
             {
-                "week_start_date": str(manifest.get("week_start_date") or ""),
-                "display_date_range": str(manifest.get("display_date_range") or ""),
+                "week_start_date": str(manifest.get("week_start_date") or computed_week_start),
+                "display_date_range": str(manifest.get("display_date_range") or computed_display_date_range),
                 "source_count": int(manifest.get("source_count") or run.get("source_count") or 0),
                 "story_count": int(manifest.get("story_count") or run.get("story_count") or 0),
                 "story_plus_data_count": int(manifest.get("story_plus_data_count") or 0),

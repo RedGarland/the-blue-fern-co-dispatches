@@ -42,8 +42,8 @@ def week_days(week_end_date: str) -> list[str]:
 
 def _candidate_key(day: str, row: dict[str, Any], index: int) -> str:
     source_record_id = str(row.get("source_record_id") or "").strip()
-    url = str(row.get("url") or "").strip()
-    return f"{day}::{source_record_id or url or index}"
+    source_key = source_record_id or "missing_source_record_id"
+    return f"{day}::{source_key}::{index}"
 
 
 def load_weekly_candidates(root: Path, week_end_date: str) -> list[dict[str, Any]]:
@@ -54,9 +54,13 @@ def load_weekly_candidates(root: Path, week_end_date: str) -> list[dict[str, Any
             continue
         payload = json.loads(path.read_text(encoding="utf-8"))
         sources = payload.get("sources", []) if isinstance(payload, dict) else []
+        source_ordinals: dict[str, int] = {}
         for idx, row in enumerate(sources):
             if not isinstance(row, dict):
                 continue
+            source_record_id = str(row.get("source_record_id") or "").strip()
+            ordinal = source_ordinals.get(source_record_id, 0)
+            source_ordinals[source_record_id] = ordinal + 1
             status = str(row.get("review_status") or "needs_review").strip().lower() or "needs_review"
             if status not in ALLOWED_REVIEW_STATUSES:
                 status = "needs_review"
@@ -66,6 +70,8 @@ def load_weekly_candidates(root: Path, week_end_date: str) -> list[dict[str, Any
                     "date": day,
                     "file_path": str(path),
                     "row_index": idx,
+                    "source_record_id": source_record_id,
+                    "source_record_ordinal": ordinal,
                     "review_status": status,
                     "pillar": str(row.get("pillar") or ""),
                     "publisher_quality": str(row.get("reliability_tier") or ""),
@@ -122,13 +128,35 @@ def save_review_decisions(
             key = entry["candidate_key"]
             if key not in status_updates:
                 continue
-            idx = int(entry["row_index"])
-            if idx < 0 or idx >= len(sources) or not isinstance(sources[idx], dict):
-                continue
             new_status = str(status_updates[key]).strip().lower()
             if new_status not in ALLOWED_REVIEW_STATUSES:
                 continue
-            row = sources[idx]
+            source_record_id = str(entry.get("source_record_id") or "").strip()
+            expected_ordinal = int(entry.get("source_record_ordinal") or 0)
+            idx = int(entry["row_index"])
+            selected_idx: int | None = None
+
+            # Primary: row ordinal in file, guarded by source_record_id check.
+            if 0 <= idx < len(sources) and isinstance(sources[idx], dict):
+                indexed_source_id = str(sources[idx].get("source_record_id") or "").strip()
+                if indexed_source_id == source_record_id:
+                    selected_idx = idx
+
+            # Fallback: find this source_record_id by ordinal occurrence.
+            if selected_idx is None:
+                matched_indices = [
+                    i for i, source in enumerate(sources)
+                    if isinstance(source, dict) and str(source.get("source_record_id") or "").strip() == source_record_id
+                ]
+                if expected_ordinal < len(matched_indices):
+                    selected_idx = matched_indices[expected_ordinal]
+                elif len(matched_indices) == 1:
+                    selected_idx = matched_indices[0]
+
+            if selected_idx is None:
+                continue
+
+            row = sources[selected_idx]
             if str(row.get("review_status") or "needs_review").strip().lower() != new_status:
                 row["review_status"] = new_status
                 changed += 1

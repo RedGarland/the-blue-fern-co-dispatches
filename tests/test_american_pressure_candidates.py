@@ -577,3 +577,70 @@ def test_save_review_decisions_mutates_only_review_metadata_fields(tmp_path):
     assert updated["url"] == "https://example.com/1"
     assert updated["publisher"] == "Keep publisher"
     assert "user_reviewed_at" in updated
+
+
+def test_weekly_candidate_duplicate_source_record_ids_have_unique_keys(tmp_path):
+    day = "2026-05-16"
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {"source_record_id": "dup-id", "url": "https://example.com/a", "review_status": "needs_review"},
+                    {"source_record_id": "dup-id", "url": "https://example.com/b", "review_status": "needs_review"},
+                ]
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    rows = apwf.load_weekly_candidates(tmp_path, day)
+    assert len(rows) == 2
+    assert len({row["candidate_key"] for row in rows}) == 2
+    assert rows[0]["source_record_id"] == "dup-id"
+    assert rows[1]["source_record_id"] == "dup-id"
+    assert rows[0]["source_record_ordinal"] == 0
+    assert rows[1]["source_record_ordinal"] == 1
+
+
+def test_save_review_decisions_updates_only_targeted_duplicate_row(tmp_path):
+    day = "2026-05-16"
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "sources": [
+            {"source_record_id": "dup-id", "title": "First", "url": "https://example.com/a", "review_status": "needs_review"},
+            {"source_record_id": "dup-id", "title": "Second", "url": "https://example.com/b", "review_status": "needs_review"},
+        ]
+    }
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    rows = apwf.load_weekly_candidates(tmp_path, day)
+    second = rows[1]
+    apwf.save_review_decisions(tmp_path, day, {second["candidate_key"]: "approved"})
+    updated = json.loads(path.read_text(encoding="utf-8"))["sources"]
+    assert updated[0]["review_status"] == "needs_review"
+    assert updated[1]["review_status"] == "approved"
+    assert updated[0]["source_record_id"] == "dup-id"
+    assert updated[1]["source_record_id"] == "dup-id"
+
+
+def test_weekly_candidate_load_handles_155_rows(tmp_path):
+    day = "2026-05-16"
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for i in range(155):
+        rows.append(
+            {
+                "source_record_id": f"ap-{i % 20}",
+                "url": f"https://example.com/{i}",
+                "review_status": "needs_review",
+                "public_pressure_angle": "x",
+                "us_relevance_ok": True,
+            }
+        )
+    path.write_text(json.dumps({"sources": rows}, indent=2), encoding="utf-8")
+    loaded = apwf.load_weekly_candidates(tmp_path, day)
+    assert len(loaded) == 155
+    assert len({row["candidate_key"] for row in loaded}) == 155

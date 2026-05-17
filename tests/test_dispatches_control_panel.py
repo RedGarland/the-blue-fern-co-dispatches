@@ -1,10 +1,23 @@
 ﻿from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from scripts import dispatches_control_panel as cp
 from scripts import american_pressure_review_workflow as apwf
+
+
+class _Var:
+    def __init__(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
+
+    def set(self, value):
+        self.value = value
 
 
 def _base_status() -> dict:
@@ -901,3 +914,193 @@ def test_ap_candidate_summary_includes_quarantine_and_failure_counts(tmp_path):
     assert summary["quarantine_count"] == 1
     assert summary["us_relevance_failures"] == 1
     assert summary["prose_quality_failures"] == 1
+
+
+def test_ap_refresh_summary_shows_duplicate_candidate_note(tmp_path):
+    day = "2026-05-16"
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {"source_record_id": "dup-id", "review_status": "needs_review"},
+                    {"source_record_id": "dup-id", "review_status": "approved"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = type("S", (), {"get": lambda self: day})()
+    panel.ap_candidate_path_var = type("S", (), {"set": lambda self, _v: None})()
+    panel.ap_review_report_path_var = type("S", (), {"set": lambda self, _v: None})()
+    panel.ap_summary_var = type("S", (), {"set": lambda self, _v: None})()
+    note_value = {"text": ""}
+    panel.ap_duplicate_note_var = type("S", (), {"set": lambda self, v: note_value.__setitem__("text", v)})()
+    panel.ap_candidate_rows = cp.load_weekly_candidates(tmp_path, day)
+    panel.ap_candidate_status_updates = {row["candidate_key"]: row["review_status"] for row in panel.ap_candidate_rows}
+    cp.DispatchesControlPanel.refresh_ap_review_summary(panel)
+    assert "Duplicate candidate IDs detected" in note_value["text"]
+
+
+def test_dispatches_control_panel_self_check_direct_and_module():
+    root = Path(__file__).resolve().parents[1]
+    direct = subprocess.run(
+        [sys.executable, "scripts\\dispatches_control_panel.py", "--self-check"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    module = subprocess.run(
+        [sys.executable, "-m", "scripts.dispatches_control_panel", "--self-check"],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert direct.returncode == 0
+    assert module.returncode == 0
+    assert "ok" in direct.stdout.lower()
+    assert "ok" in module.stdout.lower()
+
+
+def test_ap_triage_helpers_handle_155_candidates_and_recommended_caps():
+    rows = []
+    for i in range(155):
+        pillar = f"pillar_{i % 12}"
+        row = {
+            "candidate_key": f"k{i}",
+            "review_status": "needs_review",
+            "pillar": pillar,
+            "publisher_quality": "local_reporting" if i % 2 == 0 else "reputable_reporting",
+            "location": "Seattle, WA" if i % 3 else "",
+            "score": 80 - (i % 20),
+            "url": f"https://example.com/{i}",
+            "reader_headline": f"Row {i}",
+            "raw": {
+                "candidate_bucket": "recommended",
+                "us_relevance_ok": True,
+                "public_pressure_angle": "household pressure",
+                "linked_data_anchor_ids": ["a1"] if i % 2 == 0 else [],
+            },
+        }
+        rows.append(row)
+    status_updates = {row["candidate_key"]: row["review_status"] for row in rows}
+    queue = cp.build_recommended_review_queue(rows, status_updates, score_threshold=45, max_per_pillar=3, max_total=25)
+    assert len(queue) == 25
+    by_key = {row["candidate_key"]: row for row in rows}
+    pillar_counts: dict[str, int] = {}
+    for key in queue:
+        pillar = by_key[key]["pillar"]
+        pillar_counts[pillar] = pillar_counts.get(pillar, 0) + 1
+    assert all(count <= 3 for count in pillar_counts.values())
+
+
+def test_ap_filter_and_sort_helpers_reduce_rows_and_prioritize_strongest():
+    rows = [
+        {
+            "candidate_key": "a",
+            "review_status": "needs_review",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "location": "Portland, OR",
+            "score": 70,
+            "url": "https://example.com/a",
+            "reader_headline": "A",
+            "raw": {"candidate_bucket": "recommended", "us_relevance_ok": True, "public_pressure_angle": "x", "linked_data_anchor_ids": ["z"]},
+        },
+        {
+            "candidate_key": "b",
+            "review_status": "rejected",
+            "pillar": "food_pressure",
+            "publisher_quality": "low_confidence_aggregator",
+            "location": "",
+            "score": 90,
+            "url": "https://example.com/b",
+            "reader_headline": "B",
+            "raw": {"candidate_bucket": "recommended", "us_relevance_ok": False, "public_pressure_angle": "", "editorial_rejection_reason": "prose_quality_failed"},
+        },
+    ]
+    status_updates = {"a": "needs_review", "b": "rejected"}
+    filters = {
+        "status": "all",
+        "pillar": "all",
+        "publisher_quality": "all",
+        "min_score": 45,
+        "us_relevance": "pass",
+        "prose_quality": "pass",
+        "has_location": True,
+        "has_anchor": True,
+        "recommended_only": True,
+        "show_quarantined": False,
+        "show_rejected": False,
+    }
+    visible = [row for row in rows if cp.row_matches_ap_filters(row, status_updates, filters)]
+    assert [row["candidate_key"] for row in visible] == ["a"]
+    sorted_rows = sorted(rows, key=lambda row: cp.ap_default_sort_key(row, status_updates))
+    assert sorted_rows[0]["candidate_key"] == "b"
+
+
+def test_ap_bulk_visible_and_selected_mutate_intended_rows_only():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.ap_visible_candidate_keys = ["a", "b"]
+    panel.ap_candidate_status_updates = {"a": "needs_review", "b": "needs_review", "c": "needs_review"}
+    panel._confirm_bulk_change = lambda *_args, **_kwargs: True
+    panel.apply_ap_filters_and_render = lambda: None
+    panel.bulk_update_visible_status("rejected")
+    assert panel.ap_candidate_status_updates["a"] == "rejected"
+    assert panel.ap_candidate_status_updates["b"] == "rejected"
+    assert panel.ap_candidate_status_updates["c"] == "needs_review"
+
+    panel.ap_candidates_tree = type("T", (), {"selection": lambda self: ("c",)})()
+    panel.bulk_update_selected_status("approved")
+    assert panel.ap_candidate_status_updates["c"] == "approved"
+
+
+def test_ap_summary_counts_and_readiness_progress_update():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = Path(".")
+    panel.ap_review_date_var = _Var("2026-05-16")
+    panel.ap_candidate_path_var = _Var("")
+    panel.ap_review_report_path_var = _Var("")
+    panel.ap_summary_var = _Var("")
+    panel.ap_duplicate_note_var = _Var("")
+    panel.ap_readiness_progress_var = _Var("")
+    panel.ap_filter_min_score_var = _Var(45)
+    panel.ap_recommended_queue_active_var = _Var(True)
+    panel.ap_visible_candidate_rows = []
+    panel.ap_candidate_rows = [
+        {
+            "candidate_key": "a",
+            "source_record_id": "dup",
+            "review_status": "approved",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "location": "Seattle, WA",
+            "score": 65,
+            "url": "https://example.com/a",
+            "reader_headline": "A",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x", "linked_data_anchor_ids": ["x"]},
+        },
+        {
+            "candidate_key": "b",
+            "source_record_id": "dup",
+            "review_status": "needs_review",
+            "pillar": "health_access_pressure",
+            "publisher_quality": "reputable_reporting",
+            "location": "",
+            "score": 50,
+            "url": "https://example.com/b",
+            "reader_headline": "B",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x", "linked_data_anchor_ids": []},
+        },
+    ]
+    panel.ap_candidate_status_updates = {"a": "approved", "b": "needs_review"}
+    cp.DispatchesControlPanel.refresh_ap_review_summary(panel)
+    assert "total=2" in panel.ap_summary_var.get()
+    assert "recommended_queue=" in panel.ap_summary_var.get()
+    assert "Duplicate candidate IDs detected" in panel.ap_duplicate_note_var.get()
+    assert "Readiness progress: 1 approved / 4 minimum" in panel.ap_readiness_progress_var.get()

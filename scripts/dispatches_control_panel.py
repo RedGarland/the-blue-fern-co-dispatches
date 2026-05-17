@@ -15,6 +15,9 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from scripts.american_pressure_review_workflow import (
     ALLOWED_REVIEW_STATUSES,
     approval_validation_issues,
@@ -1540,6 +1543,178 @@ def format_raw_details_text(summary: dict[str, Any]) -> str:
     return json.dumps(raw, indent=2)
 
 
+AP_PUBLISHER_QUALITY_PRIORITY = {
+    "local_reporting": 0,
+    "reputable_reporting": 1,
+    "official_primary": 2,
+    "institutional_secondary": 3,
+    "mixed_or_uncertain": 4,
+    "low_confidence_aggregator": 5,
+    "unknown": 6,
+}
+
+
+def _publisher_quality_rank(value: str) -> int:
+    key = str(value or "").strip().lower()
+    if not key:
+        return AP_PUBLISHER_QUALITY_PRIORITY["unknown"]
+    return AP_PUBLISHER_QUALITY_PRIORITY.get(key, AP_PUBLISHER_QUALITY_PRIORITY["unknown"])
+
+
+def _row_score(row: dict[str, Any]) -> int:
+    try:
+        return int(row.get("score") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _row_raw(row: dict[str, Any]) -> dict[str, Any]:
+    raw = row.get("raw")
+    return raw if isinstance(raw, dict) else {}
+
+
+def _row_us_relevance_pass(row: dict[str, Any]) -> bool:
+    return _row_raw(row).get("us_relevance_ok") is not False
+
+
+def _row_prose_quality_pass(row: dict[str, Any]) -> bool:
+    return str(_row_raw(row).get("editorial_rejection_reason") or "").strip().lower() != "prose_quality_failed"
+
+
+def _row_has_location(row: dict[str, Any]) -> bool:
+    return bool(str(row.get("location") or "").strip())
+
+
+def _row_has_anchor(row: dict[str, Any]) -> bool:
+    anchors = _row_raw(row).get("linked_data_anchor_ids")
+    return isinstance(anchors, list) and len(anchors) > 0
+
+
+def _row_has_public_pressure_angle(row: dict[str, Any]) -> bool:
+    return bool(str(_row_raw(row).get("public_pressure_angle") or "").strip())
+
+
+def _row_has_url(row: dict[str, Any]) -> bool:
+    return bool(str(row.get("url") or "").strip())
+
+
+def _row_status(row: dict[str, Any], status_updates: dict[str, str]) -> str:
+    return str(status_updates.get(str(row.get("candidate_key") or ""), row.get("review_status") or "needs_review")).strip().lower() or "needs_review"
+
+
+def ap_default_sort_key(row: dict[str, Any], status_updates: dict[str, str]) -> tuple[Any, ...]:
+    return (
+        -_row_score(row),
+        _publisher_quality_rank(str(row.get("publisher_quality") or "")),
+        0 if _row_prose_quality_pass(row) else 1,
+        0 if _row_us_relevance_pass(row) else 1,
+        0 if _row_has_location(row) else 1,
+        str(row.get("pillar") or "").strip().lower(),
+        str(row.get("reader_headline") or "").strip().lower(),
+        str(row.get("candidate_key") or ""),
+    )
+
+
+def row_matches_ap_filters(row: dict[str, Any], status_updates: dict[str, str], filters: dict[str, Any]) -> bool:
+    status = _row_status(row, status_updates)
+    if str(filters.get("status") or "all") != "all" and status != str(filters.get("status")):
+        return False
+    if str(filters.get("pillar") or "all") != "all" and str(row.get("pillar") or "") != str(filters.get("pillar")):
+        return False
+    if str(filters.get("publisher_quality") or "all") != "all" and str(row.get("publisher_quality") or "") != str(filters.get("publisher_quality")):
+        return False
+    min_score = int(filters.get("min_score") or 0)
+    if _row_score(row) < min_score:
+        return False
+    us_filter = str(filters.get("us_relevance") or "all")
+    if us_filter == "pass" and not _row_us_relevance_pass(row):
+        return False
+    if us_filter == "fail" and _row_us_relevance_pass(row):
+        return False
+    prose_filter = str(filters.get("prose_quality") or "all")
+    if prose_filter == "pass" and not _row_prose_quality_pass(row):
+        return False
+    if prose_filter == "fail" and _row_prose_quality_pass(row):
+        return False
+    if bool(filters.get("has_location")) and not _row_has_location(row):
+        return False
+    if bool(filters.get("has_anchor")) and not _row_has_anchor(row):
+        return False
+    if bool(filters.get("recommended_only")) and str(_row_raw(row).get("candidate_bucket") or "").strip().lower() != "recommended":
+        return False
+    if not bool(filters.get("show_quarantined")) and status == "quarantine":
+        return False
+    if not bool(filters.get("show_rejected")) and status == "rejected":
+        return False
+    return True
+
+
+def build_recommended_review_queue(
+    rows: list[dict[str, Any]],
+    status_updates: dict[str, str],
+    score_threshold: int = 45,
+    max_per_pillar: int = 3,
+    max_total: int = 25,
+) -> list[str]:
+    def _priority_score(row: dict[str, Any]) -> int:
+        raw = _row_raw(row)
+        text = " ".join(
+            [
+                str(row.get("reader_headline") or ""),
+                str(raw.get("human_story_summary") or ""),
+                str(raw.get("what_happened") or ""),
+                str(raw.get("potential_relevance") or ""),
+                str(raw.get("publisher") or ""),
+            ]
+        ).lower()
+        score = _row_score(row)
+        if "local" in text or "county" in text or "city" in text:
+            score += 8
+        if any(token in text for token in ("layoff", "evict", "rent", "bill", "utility", "hospital", "clinic", "wage", "food bank", "shelter", "school")):
+            score += 7
+        if any(token in text for token in ("policy debate", "proposal", "partisan", "talking points")):
+            score -= 8
+        if _publisher_quality_rank(str(row.get("publisher_quality") or "")) >= 5:
+            score -= 10
+        if any(token in text for token in ("aggregator", "repost", "roundup")):
+            score -= 10
+        return score
+
+    eligible: list[dict[str, Any]] = []
+    for row in rows:
+        status = _row_status(row, status_updates)
+        if status in {"quarantine", "rejected"}:
+            continue
+        if not _row_us_relevance_pass(row):
+            continue
+        if not _row_prose_quality_pass(row):
+            continue
+        if not _row_has_url(row):
+            continue
+        if not _row_has_public_pressure_angle(row):
+            continue
+        if _row_score(row) < int(score_threshold):
+            continue
+        eligible.append(row)
+    eligible.sort(
+        key=lambda row: (
+            -_priority_score(row),
+            *ap_default_sort_key(row, status_updates),
+        )
+    )
+    per_pillar: dict[str, int] = {}
+    picked: list[str] = []
+    for row in eligible:
+        pillar = str(row.get("pillar") or "").strip() or "unknown"
+        if per_pillar.get(pillar, 0) >= int(max_per_pillar):
+            continue
+        picked.append(str(row.get("candidate_key") or ""))
+        per_pillar[pillar] = per_pillar.get(pillar, 0) + 1
+        if len(picked) >= int(max_total):
+            break
+    return picked
+
+
 @dataclass
 class RunState:
     process: subprocess.Popen[str] | None = None
@@ -1575,10 +1750,29 @@ class DispatchesControlPanel:
         self.ap_candidate_path_var = tk.StringVar(value="")
         self.ap_review_report_path_var = tk.StringVar(value="")
         self.ap_summary_var = tk.StringVar(value="")
+        self.ap_duplicate_note_var = tk.StringVar(value="")
         self.ap_readiness_var = tk.StringVar(value="")
+        self.ap_readiness_progress_var = tk.StringVar(value="")
+        self.ap_filter_status_var = tk.StringVar(value="all")
+        self.ap_filter_pillar_var = tk.StringVar(value="all")
+        self.ap_filter_publisher_quality_var = tk.StringVar(value="all")
+        self.ap_filter_min_score_var = tk.IntVar(value=45)
+        self.ap_filter_us_relevance_var = tk.StringVar(value="all")
+        self.ap_filter_prose_quality_var = tk.StringVar(value="all")
+        self.ap_filter_has_location_var = tk.BooleanVar(value=False)
+        self.ap_filter_has_anchor_var = tk.BooleanVar(value=False)
+        self.ap_filter_recommended_only_var = tk.BooleanVar(value=False)
+        self.ap_filter_show_quarantined_var = tk.BooleanVar(value=False)
+        self.ap_filter_show_rejected_var = tk.BooleanVar(value=False)
+        self.ap_recommended_queue_active_var = tk.BooleanVar(value=False)
         self.ap_candidate_rows: list[dict[str, Any]] = []
+        self.ap_visible_candidate_rows: list[dict[str, Any]] = []
+        self.ap_visible_candidate_keys: list[str] = []
+        self.ap_recommended_queue_keys: list[str] = []
         self.ap_candidate_status_updates: dict[str, str] = {}
         self.ap_candidate_override_keys: set[str] = set()
+        self.ap_sort_column = "default"
+        self.ap_sort_desc = False
         self._tooltips: list[Tooltip] = []
 
         self._build_ui()
@@ -1760,6 +1954,10 @@ class DispatchesControlPanel:
         load_btn.pack(side=tk.LEFT, padx=6)
         save_btn = ttk.Button(btn_row, text="Save Review Decisions", command=self.save_ap_review_decisions)
         save_btn.pack(side=tk.LEFT, padx=6)
+        queue_btn = ttk.Button(btn_row, text="Show Recommended Review Queue", command=self.show_recommended_review_queue)
+        queue_btn.pack(side=tk.LEFT, padx=6)
+        clear_queue_btn = ttk.Button(btn_row, text="Clear Queue/Filters", command=self.clear_ap_filters)
+        clear_queue_btn.pack(side=tk.LEFT, padx=6)
         readiness_btn = ttk.Button(btn_row, text="Check Weekly Readiness", command=self.check_ap_weekly_readiness)
         readiness_btn.pack(side=tk.LEFT, padx=6)
         generate_btn = ttk.Button(btn_row, text="Generate HTML", command=self.generate_ap_html)
@@ -1771,12 +1969,72 @@ class DispatchesControlPanel:
         push_btn = ttk.Button(btn_row, text="Push Pages Live", command=self.push_ap_pages_live)
         push_btn.pack(side=tk.LEFT, padx=6)
 
+        workflow_row = ttk.Frame(frame)
+        workflow_row.pack(fill=tk.X, padx=10, pady=2)
+        ttk.Label(
+            workflow_row,
+            text="Quick Editorial Pass: 1) Load week 2) Show Recommended Review Queue 3) Approve 4–8 strongest candidates 4) Bulk reject/quarantine weak items 5) Check readiness 6) Generate HTML 7) Preview 8) Publish",
+            foreground="#505050",
+        ).pack(anchor="w")
+
+        filter_row = ttk.Frame(frame)
+        filter_row.pack(fill=tk.X, padx=10, pady=4)
+        ttk.Label(filter_row, text="Status").grid(row=0, column=0, sticky="w")
+        status_filter = ttk.Combobox(filter_row, values=["all", *ALLOWED_REVIEW_STATUSES], textvariable=self.ap_filter_status_var, state="readonly", width=14)
+        status_filter.grid(row=0, column=1, padx=4, sticky="w")
+        ttk.Label(filter_row, text="Pillar").grid(row=0, column=2, sticky="w")
+        pillar_filter = ttk.Combobox(filter_row, values=["all"], textvariable=self.ap_filter_pillar_var, state="readonly", width=22)
+        pillar_filter.grid(row=0, column=3, padx=4, sticky="w")
+        self.ap_pillar_filter_combo = pillar_filter
+        ttk.Label(filter_row, text="Publisher quality").grid(row=0, column=4, sticky="w")
+        publisher_filter = ttk.Combobox(filter_row, values=["all"], textvariable=self.ap_filter_publisher_quality_var, state="readonly", width=22)
+        publisher_filter.grid(row=0, column=5, padx=4, sticky="w")
+        self.ap_publisher_filter_combo = publisher_filter
+        ttk.Label(filter_row, text="Min score").grid(row=0, column=6, sticky="w")
+        ttk.Entry(filter_row, textvariable=self.ap_filter_min_score_var, width=6).grid(row=0, column=7, padx=4, sticky="w")
+        ttk.Label(filter_row, text="U.S. relevance").grid(row=1, column=0, sticky="w")
+        us_filter = ttk.Combobox(filter_row, values=["all", "pass", "fail"], textvariable=self.ap_filter_us_relevance_var, state="readonly", width=14)
+        us_filter.grid(row=1, column=1, padx=4, sticky="w")
+        ttk.Label(filter_row, text="Prose quality").grid(row=1, column=2, sticky="w")
+        prose_filter = ttk.Combobox(filter_row, values=["all", "pass", "fail"], textvariable=self.ap_filter_prose_quality_var, state="readonly", width=14)
+        prose_filter.grid(row=1, column=3, padx=4, sticky="w")
+        has_location_ck = ttk.Checkbutton(filter_row, text="Has location", variable=self.ap_filter_has_location_var, command=self.apply_ap_filters_and_render)
+        has_location_ck.grid(row=1, column=4, sticky="w")
+        has_anchor_ck = ttk.Checkbutton(filter_row, text="Has linked data anchor", variable=self.ap_filter_has_anchor_var, command=self.apply_ap_filters_and_render)
+        has_anchor_ck.grid(row=1, column=5, sticky="w")
+        recommended_ck = ttk.Checkbutton(filter_row, text="Recommended only", variable=self.ap_filter_recommended_only_var, command=self.apply_ap_filters_and_render)
+        recommended_ck.grid(row=1, column=6, sticky="w")
+        show_quarantine_ck = ttk.Checkbutton(filter_row, text="Show quarantined", variable=self.ap_filter_show_quarantined_var, command=self.apply_ap_filters_and_render)
+        show_quarantine_ck.grid(row=1, column=7, sticky="w")
+        show_rejected_ck = ttk.Checkbutton(filter_row, text="Show rejected", variable=self.ap_filter_show_rejected_var, command=self.apply_ap_filters_and_render)
+        show_rejected_ck.grid(row=1, column=8, sticky="w")
+        for var in (
+            self.ap_filter_status_var,
+            self.ap_filter_pillar_var,
+            self.ap_filter_publisher_quality_var,
+            self.ap_filter_min_score_var,
+            self.ap_filter_us_relevance_var,
+            self.ap_filter_prose_quality_var,
+        ):
+            var.trace_add("write", lambda *_args: self.apply_ap_filters_and_render())
+
+        bulk_row = ttk.Frame(frame)
+        bulk_row.pack(fill=tk.X, padx=10, pady=4)
+        ttk.Button(bulk_row, text="Reject Visible", command=lambda: self.bulk_update_visible_status("rejected")).pack(side=tk.LEFT)
+        ttk.Button(bulk_row, text="Quarantine Visible", command=lambda: self.bulk_update_visible_status("quarantine")).pack(side=tk.LEFT, padx=6)
+        ttk.Button(bulk_row, text="Mark Visible Maybe", command=lambda: self.bulk_update_visible_status("maybe")).pack(side=tk.LEFT, padx=6)
+        ttk.Button(bulk_row, text="Approve Selected", command=lambda: self.bulk_update_selected_status("approved")).pack(side=tk.LEFT, padx=12)
+        ttk.Button(bulk_row, text="Reject Selected", command=lambda: self.bulk_update_selected_status("rejected")).pack(side=tk.LEFT, padx=6)
+        ttk.Button(bulk_row, text="Quarantine Selected", command=lambda: self.bulk_update_selected_status("quarantine")).pack(side=tk.LEFT, padx=6)
+
         ttk.Label(frame, textvariable=self.ap_summary_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=4)
+        ttk.Label(frame, textvariable=self.ap_duplicate_note_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        ttk.Label(frame, textvariable=self.ap_readiness_progress_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_readiness_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
-        columns = ("date", "status", "pillar", "publisher_quality", "source_publisher", "reader_headline", "location", "score", "reason", "url")
+        columns = ("date", "status", "pillar", "publisher_quality", "source_publisher", "reader_headline", "location", "score", "flags", "reason", "url")
         self.ap_candidates_tree = ttk.Treeview(frame, columns=columns, show="headings", height=18)
         for col in columns:
-            self.ap_candidates_tree.heading(col, text=col.replace("_", " ").title())
+            self.ap_candidates_tree.heading(col, text=col.replace("_", " ").title(), command=lambda c=col: self._set_ap_sort(c))
         self.ap_candidates_tree.column("date", width=100, stretch=False)
         self.ap_candidates_tree.column("status", width=120, stretch=False)
         self.ap_candidates_tree.column("pillar", width=170, stretch=False)
@@ -1785,10 +2043,21 @@ class DispatchesControlPanel:
         self.ap_candidates_tree.column("reader_headline", width=320)
         self.ap_candidates_tree.column("location", width=130, stretch=False)
         self.ap_candidates_tree.column("score", width=65, stretch=False)
+        self.ap_candidates_tree.column("flags", width=170, stretch=False)
         self.ap_candidates_tree.column("reason", width=180)
         self.ap_candidates_tree.column("url", width=280)
         self.ap_candidates_tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
         self.ap_candidates_tree.bind("<Double-1>", self._edit_ap_status_cell)
+        self.ap_candidates_tree.bind("<<TreeviewSelect>>", self._on_ap_candidate_select)
+        self.ap_candidates_tree.tag_configure("status-approved", background="#e8f8e8")
+        self.ap_candidates_tree.tag_configure("status-maybe", background="#fff8e1")
+        self.ap_candidates_tree.tag_configure("status-rejected", background="#fdeaea")
+        self.ap_candidates_tree.tag_configure("status-quarantine", background="#f8eafc")
+        self.ap_candidates_tree.tag_configure("recommended-row", background="#e6f3ff")
+        self.ap_candidates_tree.tag_configure("flag-risk", foreground="#aa2e25")
+
+        self.ap_details_text = ScrolledText(frame, height=8)
+        self.ap_details_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=6)
         self._tooltips.extend(
             [
                 Tooltip(year_combo, "Select the year for Sunday-Saturday weekly review."),
@@ -1797,6 +2066,7 @@ class DispatchesControlPanel:
                 Tooltip(report_btn, "Generate candidate review report(s) for the selected week."),
                 Tooltip(load_btn, "Load candidate records for all seven days in the selected week."),
                 Tooltip(save_btn, "Save only review status metadata back to candidate JSON files."),
+                Tooltip(queue_btn, "Show strongest candidates with editorial queue caps."),
                 Tooltip(readiness_btn, "Check weekly readiness based on approved candidates."),
                 Tooltip(generate_btn, "Generate weekly edition HTML without Pages publish/push."),
                 Tooltip(open_html_btn, "Open output/site american-pressure edition HTML for the selected week-ending date."),
@@ -1943,27 +2213,143 @@ class DispatchesControlPanel:
         self.ap_candidate_rows = load_weekly_candidates(self.root_dir, week_end)
         self.ap_candidate_status_updates = {row["candidate_key"]: row["review_status"] for row in self.ap_candidate_rows}
         self.ap_candidate_override_keys = set()
+        self.ap_recommended_queue_keys = []
+        self.ap_recommended_queue_active_var.set(False)
+        self._update_ap_filter_values()
+        self.apply_ap_filters_and_render()
+
+    def _update_ap_filter_values(self) -> None:
+        pillars = sorted({str(row.get("pillar") or "").strip() for row in self.ap_candidate_rows if str(row.get("pillar") or "").strip()})
+        publisher_qualities = sorted({str(row.get("publisher_quality") or "").strip() for row in self.ap_candidate_rows if str(row.get("publisher_quality") or "").strip()})
+        self.ap_pillar_filter_combo.configure(values=["all", *pillars])
+        self.ap_publisher_filter_combo.configure(values=["all", *publisher_qualities])
+        if self.ap_filter_pillar_var.get() not in ["all", *pillars]:
+            self.ap_filter_pillar_var.set("all")
+        if self.ap_filter_publisher_quality_var.get() not in ["all", *publisher_qualities]:
+            self.ap_filter_publisher_quality_var.set("all")
+
+    def _ap_sort_rows(self, rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        if self.ap_sort_column == "default":
+            return sorted(rows, key=lambda row: ap_default_sort_key(row, self.ap_candidate_status_updates), reverse=self.ap_sort_desc)
+        key_map: dict[str, Callable[[dict[str, Any]], Any]] = {
+            "date": lambda row: str(row.get("date") or ""),
+            "status": lambda row: _row_status(row, self.ap_candidate_status_updates),
+            "pillar": lambda row: str(row.get("pillar") or ""),
+            "publisher_quality": lambda row: _publisher_quality_rank(str(row.get("publisher_quality") or "")),
+            "source_publisher": lambda row: str(row.get("source_publisher") or ""),
+            "reader_headline": lambda row: str(row.get("reader_headline") or ""),
+            "location": lambda row: str(row.get("location") or ""),
+            "score": _row_score,
+            "flags": lambda row: self._ap_row_flags_text(row),
+            "reason": lambda row: str(row.get("reason") or ""),
+            "url": lambda row: str(row.get("url") or ""),
+        }
+        return sorted(rows, key=key_map.get(self.ap_sort_column, lambda row: str(row.get("candidate_key") or "")), reverse=self.ap_sort_desc)
+
+    def _set_ap_sort(self, column: str) -> None:
+        if self.ap_sort_column == column:
+            self.ap_sort_desc = not self.ap_sort_desc
+        else:
+            self.ap_sort_column = column
+            self.ap_sort_desc = column == "score"
+        self.apply_ap_filters_and_render()
+
+    def _current_ap_filters(self) -> dict[str, Any]:
+        return {
+            "status": self.ap_filter_status_var.get(),
+            "pillar": self.ap_filter_pillar_var.get(),
+            "publisher_quality": self.ap_filter_publisher_quality_var.get(),
+            "min_score": int(self.ap_filter_min_score_var.get() or 0),
+            "us_relevance": self.ap_filter_us_relevance_var.get(),
+            "prose_quality": self.ap_filter_prose_quality_var.get(),
+            "has_location": bool(self.ap_filter_has_location_var.get()),
+            "has_anchor": bool(self.ap_filter_has_anchor_var.get()),
+            "recommended_only": bool(self.ap_filter_recommended_only_var.get()),
+            "show_quarantined": bool(self.ap_filter_show_quarantined_var.get()),
+            "show_rejected": bool(self.ap_filter_show_rejected_var.get()),
+        }
+
+    def apply_ap_filters_and_render(self) -> None:
+        filters = self._current_ap_filters()
+        rows = [row for row in self.ap_candidate_rows if row_matches_ap_filters(row, self.ap_candidate_status_updates, filters)]
+        if self.ap_recommended_queue_active_var.get():
+            queue_keys = set(self.ap_recommended_queue_keys)
+            rows = [row for row in rows if str(row.get("candidate_key") or "") in queue_keys]
+        rows = self._ap_sort_rows(rows)
+        self.ap_visible_candidate_rows = rows
+        self.ap_visible_candidate_keys = [str(row.get("candidate_key") or "") for row in rows]
         for item in self.ap_candidates_tree.get_children():
             self.ap_candidates_tree.delete(item)
-        for row in self.ap_candidate_rows:
+        for row in rows:
+            key = str(row.get("candidate_key") or "")
+            tags: list[str] = []
+            status = _row_status(row, self.ap_candidate_status_updates)
+            if status in {"approved", "maybe", "rejected", "quarantine"}:
+                tags.append(f"status-{status}")
+            if key in self.ap_recommended_queue_keys:
+                tags.append("recommended-row")
+            if self._ap_row_has_risk_flag(row):
+                tags.append("flag-risk")
             self.ap_candidates_tree.insert(
                 "",
                 tk.END,
-                iid=row["candidate_key"],
+                iid=key,
                 values=(
                     row["date"],
-                    row["review_status"],
+                    status,
                     row["pillar"],
                     row["publisher_quality"],
                     row["source_publisher"],
                     row["reader_headline"],
                     row["location"],
                     row["score"],
+                    self._ap_row_flags_text(row),
                     row["reason"],
                     row["url"],
                 ),
+                tags=tuple(tags),
             )
         self.refresh_ap_review_summary()
+
+    def _ap_row_has_risk_flag(self, row: dict[str, Any]) -> bool:
+        return (not _row_us_relevance_pass(row)) or (not _row_prose_quality_pass(row)) or (not _row_has_location(row)) or (_publisher_quality_rank(str(row.get("publisher_quality") or "")) >= 5)
+
+    def _ap_row_flags_text(self, row: dict[str, Any]) -> str:
+        flags: list[str] = []
+        if not _row_us_relevance_pass(row):
+            flags.append("non_us")
+        if not _row_prose_quality_pass(row):
+            flags.append("prose_fail")
+        if not _row_has_location(row):
+            flags.append("no_location")
+        if _publisher_quality_rank(str(row.get("publisher_quality") or "")) >= 5:
+            flags.append("low_conf_pub")
+        return ",".join(flags)
+
+    def show_recommended_review_queue(self) -> None:
+        threshold = int(self.ap_filter_min_score_var.get() or 45)
+        self.ap_recommended_queue_keys = build_recommended_review_queue(self.ap_candidate_rows, self.ap_candidate_status_updates, score_threshold=threshold, max_per_pillar=3, max_total=25)
+        self.ap_recommended_queue_active_var.set(True)
+        self.ap_filter_recommended_only_var.set(False)
+        self.apply_ap_filters_and_render()
+
+    def clear_ap_filters(self) -> None:
+        self.ap_filter_status_var.set("all")
+        self.ap_filter_pillar_var.set("all")
+        self.ap_filter_publisher_quality_var.set("all")
+        self.ap_filter_min_score_var.set(45)
+        self.ap_filter_us_relevance_var.set("all")
+        self.ap_filter_prose_quality_var.set("all")
+        self.ap_filter_has_location_var.set(False)
+        self.ap_filter_has_anchor_var.set(False)
+        self.ap_filter_recommended_only_var.set(False)
+        self.ap_filter_show_quarantined_var.set(False)
+        self.ap_filter_show_rejected_var.set(False)
+        self.ap_recommended_queue_active_var.set(False)
+        self.ap_recommended_queue_keys = []
+        self.ap_sort_column = "default"
+        self.ap_sort_desc = False
+        self.apply_ap_filters_and_render()
 
     def _edit_ap_status_cell(self, event: Any) -> None:
         row_id = self.ap_candidates_tree.identify_row(event.y)
@@ -1984,10 +2370,59 @@ class DispatchesControlPanel:
             values = list(self.ap_candidates_tree.item(row_id, "values"))
             values[1] = new_status
             self.ap_candidates_tree.item(row_id, values=values)
+            self.refresh_ap_review_summary()
 
         combo.bind("<<ComboboxSelected>>", _commit)
         combo.bind("<FocusOut>", _commit)
         combo.focus_set()
+
+    def _confirm_bulk_change(self, count: int, label: str) -> bool:
+        if count <= 10:
+            return True
+        return bool(messagebox.askyesno("Confirm bulk update", f"{label} will update {count} rows. Continue?"))
+
+    def bulk_update_visible_status(self, new_status: str) -> None:
+        keys = list(self.ap_visible_candidate_keys)
+        if not keys:
+            return
+        if not self._confirm_bulk_change(len(keys), "Visible-row bulk action"):
+            return
+        for key in keys:
+            self.ap_candidate_status_updates[key] = new_status
+        self.apply_ap_filters_and_render()
+
+    def bulk_update_selected_status(self, new_status: str) -> None:
+        keys = [str(item) for item in self.ap_candidates_tree.selection()]
+        if not keys:
+            return
+        if not self._confirm_bulk_change(len(keys), "Selected-row bulk action"):
+            return
+        for key in keys:
+            self.ap_candidate_status_updates[key] = new_status
+        self.apply_ap_filters_and_render()
+
+    def _on_ap_candidate_select(self, _event: Any | None = None) -> None:
+        selected = self.ap_candidates_tree.selection()
+        if not selected:
+            self.ap_details_text.delete("1.0", tk.END)
+            return
+        key = str(selected[0])
+        by_key = {str(row.get("candidate_key") or ""): row for row in self.ap_candidate_rows}
+        row = by_key.get(key)
+        if not row:
+            return
+        raw = _row_raw(row)
+        details = [
+            f"Status: {_row_status(row, self.ap_candidate_status_updates)}",
+            f"Reader headline: {str(row.get('reader_headline') or '').strip()}",
+            f"Current development: {str(raw.get('what_happened') or raw.get('human_story_summary') or '').strip()}",
+            f"Potential relevance: {str(raw.get('potential_relevance') or '').strip()}",
+            f"URL: {str(row.get('url') or '').strip()}",
+            f"Raw source title: {str(raw.get('title') or '').strip()}",
+            f"Rejection/quarantine reason: {str(raw.get('editorial_rejection_reason') or row.get('reason') or '').strip()}",
+        ]
+        self.ap_details_text.delete("1.0", tk.END)
+        self.ap_details_text.insert(tk.END, "\n".join(details))
 
     def save_ap_review_decisions(self) -> None:
         review_notes = {}
@@ -2093,13 +2528,42 @@ class DispatchesControlPanel:
             self.ap_summary_var.set("Enter a valid week selection.")
             return
         rows = self.ap_candidate_rows or load_weekly_candidates(self.root_dir, date_text)
+        source_id_counts: dict[str, int] = {}
         counts: dict[str, int] = {status: 0 for status in ALLOWED_REVIEW_STATUSES}
         for row in rows:
-            status = str(self.ap_candidate_status_updates.get(row["candidate_key"], row["review_status"]))
+            status = _row_status(row, self.ap_candidate_status_updates)
             counts[status] = counts.get(status, 0) + 1
+            source_record_id = str(row.get("source_record_id") or "").strip()
+            if source_record_id:
+                source_id_counts[source_record_id] = source_id_counts.get(source_record_id, 0) + 1
+        duplicate_ids = sorted([source_id for source_id, count in source_id_counts.items() if count > 1])
+        if duplicate_ids:
+            self.ap_duplicate_note_var.set("Duplicate candidate IDs detected; rows were disambiguated in the review table.")
+        else:
+            self.ap_duplicate_note_var.set("")
+        min_score_var = getattr(self, "ap_filter_min_score_var", None)
+        score_threshold = int(min_score_var.get() or 45) if min_score_var is not None else 45
+        recommended_count = len(build_recommended_review_queue(rows, self.ap_candidate_status_updates, score_threshold=score_threshold, max_per_pillar=3, max_total=25))
+        visible_rows = getattr(self, "ap_visible_candidate_rows", [])
+        visible_count = len(visible_rows or rows)
         self.ap_summary_var.set(
-            f"loaded={len(rows)} | approved={counts.get('approved', 0)} | rejected={counts.get('rejected', 0)} | needs_review={counts.get('needs_review', 0)} | maybe={counts.get('maybe', 0)} | quarantine={counts.get('quarantine', 0)}"
+            f"total={len(rows)} | visible={visible_count} | recommended_queue={recommended_count} | approved={counts.get('approved', 0)} | rejected={counts.get('rejected', 0)} | quarantine={counts.get('quarantine', 0)} | maybe={counts.get('maybe', 0)} | needs_review={counts.get('needs_review', 0)}"
         )
+        queue_active_var = getattr(self, "ap_recommended_queue_active_var", None)
+        if queue_active_var is not None and queue_active_var.get():
+            approved_candidates = [row for row in rows if _row_status(row, self.ap_candidate_status_updates) == "approved"]
+            approved_current_dev = [row for row in approved_candidates if _row_us_relevance_pass(row) and _row_prose_quality_pass(row) and _row_has_url(row) and _row_has_public_pressure_angle(row)]
+            approved_pillars = sorted({str(row.get("pillar") or "").strip() for row in approved_current_dev if str(row.get("pillar") or "").strip()})
+            story_plus_data_est = sum(1 for row in approved_current_dev if _row_has_anchor(row))
+            readiness_progress_var = getattr(self, "ap_readiness_progress_var", None)
+            if readiness_progress_var is not None:
+                readiness_progress_var.set(
+                f"Readiness progress: {len(approved_current_dev)} approved / 4 minimum | approved pillars covered: {len(approved_pillars)} | estimated story_plus_data_count: {story_plus_data_est}"
+                )
+        else:
+            readiness_progress_var = getattr(self, "ap_readiness_progress_var", None)
+            if readiness_progress_var is not None:
+                readiness_progress_var.set("")
 
     def _preflight_warnings(self, dispatch: str, action: str, date_text: str) -> list[str]:
         notes: list[str] = []

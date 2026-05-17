@@ -60,7 +60,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Food support networks report rising demand",
-      "human_story_summary": "Nationally, St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal.",
+      "human_story_summary": "Nationally, Food banks and assistance providers are reporting tighter conditions for households.",
       "data_context_summary": "Data context from SNAP Household Characteristics, SNAP Data Tables, USDA ERS Food Price Outlook is a baseline for tracking whether food pressure is broadening.",
       "what_happened": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
       "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
@@ -72,7 +72,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -124,7 +124,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -189,7 +189,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -250,7 +250,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -303,7 +303,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Jobs and paychecks remain the first line of defense against household pressure",
-      "human_story_summary": "Nationally, East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline.",
+      "human_story_summary": "Nationally, Local job and paycheck developments suggest increasing household pressure.",
       "data_context_summary": "Data context from BLS Employment Situation helps show whether job and paycheck stability is holding.",
       "what_happened": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
       "potential_relevance": "This may signal weakening paycheck stability for local households.",
@@ -315,7 +315,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -380,7 +380,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -437,7 +437,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:20.503446+00:00",
+      "generated_at": "2026-05-17T20:12:52.885335+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]

@@ -1265,6 +1265,7 @@ def run_american_pressure_dispatch(
     init_daily_candidates: bool = False,
     allow_future: bool = False,
     include_approved_candidates: bool = False,
+    force_regenerate: bool = False,
 ) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     validate_not_future_date(edition_date, allow_future=allow_future)
@@ -1468,6 +1469,22 @@ def run_american_pressure_dispatch(
     write_json(site_dir / "edition_manifest.json", edition_manifest, dry_run, wrote)
     write_json(site_dir / "sources_manifest.json", sources, dry_run, wrote)
     write_json(site_dir / "curation_manifest.json", curation_manifest, dry_run, wrote)
+    if force_regenerate and not dry_run:
+        regen_targets = [
+            dispatch_dir / "index.html",
+            dispatch_dir / "edition.html",
+            dispatch_dir / "edition.md",
+            dispatch_dir / "edition_manifest.json",
+            dispatch_dir / "sources_manifest.json",
+            dispatch_dir / "curation_manifest.json",
+            site_dir / "index.html",
+            site_dir / "edition_manifest.json",
+            site_dir / "sources_manifest.json",
+            site_dir / "curation_manifest.json",
+        ]
+        for target in regen_targets:
+            if target.exists():
+                target.touch()
 
     for asset in ("site.css", "american-pressure-logo.png", "bluefern.png"):
         copy_file(root / "assets" / asset, root / "output" / "site" / DISPATCH_SLUG / "assets" / asset, dry_run, wrote, warnings)
@@ -1497,6 +1514,7 @@ def run_american_pressure_dispatch(
         "story_count_by_pillar": story_count_by_pillar,
         "source_mode": mode,
         "include_approved_candidates": include_approved_candidates,
+        "force_regenerate": force_regenerate,
     }
 
 
@@ -1511,6 +1529,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--init-daily-candidates", action="store_true", help="Create starter daily candidate file for --date when missing.")
     parser.add_argument("--allow-future", action="store_true", help="Allow future --date values (disabled by default).")
     parser.add_argument("--include-approved-candidates", action="store_true", help="Include only approved daily candidates from the 7-day window when --source-mode both.")
+    parser.add_argument("--force-regenerate", action="store_true", help="Force rewrite/timestamp refresh for edition output files.")
     return parser.parse_args(argv)
 
 
@@ -1528,6 +1547,7 @@ def main(argv: list[str] | None = None) -> int:
             init_daily_candidates=bool(args.init_daily_candidates),
             allow_future=bool(args.allow_future),
             include_approved_candidates=bool(args.include_approved_candidates),
+            force_regenerate=bool(args.force_regenerate),
         )
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}

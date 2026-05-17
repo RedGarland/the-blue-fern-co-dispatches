@@ -165,6 +165,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--end-date", help="End date for --init-candidates (YYYY-MM-DD).")
     parser.add_argument("--include-approved-candidates", action="store_true", help="Merge only approved daily candidates from the weekly window.")
     parser.add_argument("--allow-thin-edition", action="store_true", help="Override weekly quality gate and allow publish.")
+    parser.add_argument("--force-regenerate", action="store_true", help="Force rewrite/timestamp refresh for edition output files.")
     return parser.parse_args(argv)
 
 
@@ -225,6 +226,7 @@ def main(argv: list[str] | None = None) -> int:
             from_manual_sources=False,
             source_mode=args.source_mode,
             include_approved_candidates=bool(args.include_approved_candidates),
+            force_regenerate=bool(args.force_regenerate),
         )
         manifest_path = ROOT / "output" / "dispatches" / "american-pressure" / "editions" / edition_date / "edition_manifest.json"
         manifest: dict[str, Any] = {}
@@ -267,6 +269,7 @@ def main(argv: list[str] | None = None) -> int:
                 from_manual_sources=False,
                 source_mode=args.source_mode,
                 include_approved_candidates=bool(args.include_approved_candidates),
+                force_regenerate=bool(args.force_regenerate),
             )
             if rerun.get("ok") is not True:
                 output["errors"].extend(list(rerun.get("errors") or []))

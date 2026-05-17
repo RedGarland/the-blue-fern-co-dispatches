@@ -7,7 +7,7 @@ import subprocess
 import sys
 import threading
 from dataclasses import dataclass
-from datetime import date as date_cls, timedelta
+from datetime import datetime, date as date_cls, timedelta
 from pathlib import Path
 from typing import Any, Callable
 
@@ -1753,6 +1753,8 @@ class DispatchesControlPanel:
         self.ap_duplicate_note_var = tk.StringVar(value="")
         self.ap_readiness_var = tk.StringVar(value="")
         self.ap_readiness_progress_var = tk.StringVar(value="")
+        self.ap_generate_status_var = tk.StringVar(value="")
+        self.ap_last_generated_var = tk.StringVar(value="")
         self.ap_filter_status_var = tk.StringVar(value="all")
         self.ap_filter_pillar_var = tk.StringVar(value="all")
         self.ap_filter_publisher_quality_var = tk.StringVar(value="all")
@@ -2031,6 +2033,8 @@ class DispatchesControlPanel:
         ttk.Label(frame, textvariable=self.ap_duplicate_note_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_readiness_progress_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_readiness_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        ttk.Label(frame, textvariable=self.ap_generate_status_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        ttk.Label(frame, textvariable=self.ap_last_generated_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         columns = ("date", "status", "pillar", "publisher_quality", "source_publisher", "reader_headline", "location", "score", "flags", "reason", "url")
         self.ap_candidates_tree = ttk.Treeview(frame, columns=columns, show="headings", height=18)
         for col in columns:
@@ -2450,20 +2454,81 @@ class DispatchesControlPanel:
         text = completed.stdout or completed.stderr or ""
         self.ap_readiness_var.set(text.strip())
 
+    def _ap_generation_targets(self, date_text: str) -> list[Path]:
+        dispatch_dir = self.root_dir / "output" / "dispatches" / "american-pressure" / "editions" / date_text
+        site_dir = self.root_dir / "output" / "site" / "american-pressure" / "editions" / date_text
+        return [
+            dispatch_dir / "index.html",
+            dispatch_dir / "edition_manifest.json",
+            dispatch_dir / "sources_manifest.json",
+            dispatch_dir / "curation_manifest.json",
+            site_dir / "index.html",
+            site_dir / "edition_manifest.json",
+            site_dir / "sources_manifest.json",
+            site_dir / "curation_manifest.json",
+        ]
+
+    def _capture_mtimes(self, paths: list[Path]) -> dict[Path, float | None]:
+        stats: dict[Path, float | None] = {}
+        for path in paths:
+            stats[path] = path.stat().st_mtime if path.exists() else None
+        return stats
+
     def generate_ap_html(self) -> None:
         date_text = self.ap_review_date_var.get().strip()
-        self._run_async_command(
-            [
-                str(python_executable(self.root_dir)),
-                "scripts\\run_weekly_american_pressure.py",
-                "--date",
-                date_text,
-                "--source-mode",
-                "both",
-                "--include-approved-candidates",
-            ],
-            f"Generating weekly HTML for {date_text}",
-        )
+        cmd = [
+            str(python_executable(self.root_dir)),
+            "scripts\\run_weekly_american_pressure.py",
+            "--date",
+            date_text,
+            "--source-mode",
+            "both",
+            "--include-approved-candidates",
+            "--force-regenerate",
+        ]
+        targets = self._ap_generation_targets(date_text)
+        before = self._capture_mtimes(targets)
+        cmd_str = subprocess.list2cmdline(cmd)
+        self.command_var.set(f"Command: {cmd_str}")
+        self.execution_var.set(f"Generating weekly HTML for {date_text}")
+        self._append_output(f"$ {cmd_str}")
+        completed = subprocess.run(cmd, cwd=str(self.root_dir), capture_output=True, text=True, check=False)
+        if completed.stdout:
+            for line in completed.stdout.splitlines():
+                self._append_output(line)
+        if completed.stderr:
+            for line in completed.stderr.splitlines():
+                self._append_output(line)
+        payload: dict[str, Any] = {}
+        if (completed.stdout or "").strip():
+            try:
+                payload = json.loads(completed.stdout)
+            except json.JSONDecodeError:
+                payload = {}
+        after = self._capture_mtimes(targets)
+        rewritten = [path for path in targets if before.get(path) != after.get(path) and after.get(path) is not None]
+        site_index = self.root_dir / "output" / "site" / "american-pressure" / "editions" / date_text / "index.html"
+        if completed.returncode == 0 and bool(payload.get("ok", True)):
+            if site_index.exists():
+                updated_local = datetime.fromtimestamp(site_index.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+                self.ap_last_generated_var.set(f"Last generated locally: {updated_local}")
+            else:
+                self.ap_last_generated_var.set("Last generated locally: unavailable (index.html missing)")
+            rewritten_text = "yes" if rewritten else "no"
+            self.ap_generate_status_var.set(
+                f"Generated:\n{site_index}\nLast updated: {datetime.fromtimestamp(site_index.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S') if site_index.exists() else 'missing'}\nFiles rewritten: {rewritten_text}"
+            )
+            self.execution_var.set("Finished generate HTML (success)")
+        else:
+            reason_items = list(payload.get("errors") or [])
+            if not reason_items and completed.stderr.strip():
+                reason_items = [completed.stderr.strip()]
+            if not reason_items and completed.stdout.strip():
+                reason_items = [completed.stdout.strip()]
+            reason = "; ".join(str(item) for item in reason_items) if reason_items else "generation blocked or aborted"
+            self.ap_generate_status_var.set(f"Generate HTML failed/skipped for {date_text}: {reason}")
+            self.execution_var.set("Finished generate HTML (failure)")
+        self.refresh_ap_review_summary()
 
     def open_ap_generated_html(self) -> None:
         date_text = self.ap_review_date_var.get().strip()

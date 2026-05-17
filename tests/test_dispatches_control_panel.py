@@ -3,6 +3,7 @@
 import json
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 from scripts import dispatches_control_panel as cp
@@ -1104,3 +1105,95 @@ def test_ap_summary_counts_and_readiness_progress_update():
     assert "recommended_queue=" in panel.ap_summary_var.get()
     assert "Duplicate candidate IDs detected" in panel.ap_duplicate_note_var.get()
     assert "Readiness progress: 1 approved / 4 minimum" in panel.ap_readiness_progress_var.get()
+
+
+def test_generate_ap_html_rewrites_and_reports_success(monkeypatch, tmp_path):
+    day = "2026-05-16"
+    site_dir = tmp_path / "output" / "site" / "american-pressure" / "editions" / day
+    dispatch_dir = tmp_path / "output" / "dispatches" / "american-pressure" / "editions" / day
+    site_dir.mkdir(parents=True, exist_ok=True)
+    dispatch_dir.mkdir(parents=True, exist_ok=True)
+    for path in (
+        site_dir / "index.html",
+        site_dir / "edition_manifest.json",
+        site_dir / "sources_manifest.json",
+        site_dir / "curation_manifest.json",
+        dispatch_dir / "index.html",
+        dispatch_dir / "edition_manifest.json",
+        dispatch_dir / "sources_manifest.json",
+        dispatch_dir / "curation_manifest.json",
+    ):
+        path.write_text("old", encoding="utf-8")
+    old_mtime = (site_dir / "index.html").stat().st_mtime
+    time.sleep(0.02)
+
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = _Var(day)
+    panel.command_var = _Var("")
+    panel.execution_var = _Var("")
+    panel.ap_generate_status_var = _Var("")
+    panel.ap_last_generated_var = _Var("")
+    panel.refresh_ap_review_summary = lambda: None
+    panel._append_output = lambda _line: None
+
+    def fake_run(_cmd, cwd, capture_output, text, check):
+        for target in panel._ap_generation_targets(day):
+            target.write_text("new", encoding="utf-8")
+            target.touch()
+        payload = {"ok": True}
+        return type("C", (), {"stdout": json.dumps(payload), "stderr": "", "returncode": 0})()
+
+    monkeypatch.setattr(cp.subprocess, "run", fake_run)
+    panel.generate_ap_html()
+    new_mtime = (site_dir / "index.html").stat().st_mtime
+    assert new_mtime != old_mtime
+    assert "Generated:" in panel.ap_generate_status_var.get()
+    assert "Files rewritten: yes" in panel.ap_generate_status_var.get()
+    assert "Last generated locally:" in panel.ap_last_generated_var.get()
+
+
+def test_generate_ap_html_failure_shows_explicit_reason(monkeypatch, tmp_path):
+    day = "2026-05-16"
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = _Var(day)
+    panel.command_var = _Var("")
+    panel.execution_var = _Var("")
+    panel.ap_generate_status_var = _Var("")
+    panel.ap_last_generated_var = _Var("")
+    panel.refresh_ap_review_summary = lambda: None
+    panel._append_output = lambda _line: None
+
+    def fake_run(_cmd, cwd, capture_output, text, check):
+        payload = {"ok": False, "errors": ["weekly publish blocked by readiness/quality gate"]}
+        return type("C", (), {"stdout": json.dumps(payload), "stderr": "", "returncode": 1})()
+
+    monkeypatch.setattr(cp.subprocess, "run", fake_run)
+    panel.generate_ap_html()
+    assert "failed/skipped" in panel.ap_generate_status_var.get().lower()
+    assert "readiness/quality gate" in panel.ap_generate_status_var.get().lower()
+
+
+def test_generate_ap_html_mode_has_no_publish_or_push(monkeypatch, tmp_path):
+    day = "2026-05-16"
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = _Var(day)
+    panel.command_var = _Var("")
+    panel.execution_var = _Var("")
+    panel.ap_generate_status_var = _Var("")
+    panel.ap_last_generated_var = _Var("")
+    panel.refresh_ap_review_summary = lambda: None
+    panel._append_output = lambda _line: None
+    captured = {"cmd": []}
+
+    def fake_run(cmd, cwd, capture_output, text, check):
+        captured["cmd"] = cmd
+        return type("C", (), {"stdout": json.dumps({"ok": True}), "stderr": "", "returncode": 0})()
+
+    monkeypatch.setattr(cp.subprocess, "run", fake_run)
+    panel.generate_ap_html()
+    assert "--publish" not in captured["cmd"]
+    assert "--push" not in captured["cmd"]
+    assert "--force-regenerate" in captured["cmd"]

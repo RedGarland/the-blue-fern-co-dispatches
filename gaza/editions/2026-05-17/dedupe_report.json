@@ -1,0 +1,152 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-17",
+  "candidates_seen": 5,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-17-001",
+      "title": "Three community kitchen workers among five killed by Israel in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-002",
+      "title": "How will Izz al-Din al-Haddad assassination impact Hamas's Gaza operations?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-003",
+      "title": "Pro-Palestine protest held at oldest colonial building in South Africa",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-004",
+      "title": "Israel comes second at Eurovision amid boycotts and backlash",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-005",
+      "title": "Javier Bardem says condemning the Gaza genocide has led to more work",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-17-001",
+      "title": "Three community kitchen workers among five killed by Israel in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-002",
+      "title": "How will Izz al-Din al-Haddad assassination impact Hamas's Gaza operations?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-003",
+      "title": "Pro-Palestine protest held at oldest colonial building in South Africa",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-004",
+      "title": "Israel comes second at Eurovision amid boycotts and backlash",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-17-005",
+      "title": "Javier Bardem says condemning the Gaza genocide has led to more work",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-03"
+  ]
+}

@@ -1,0 +1,235 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-17-001",
+    "title": "Three community kitchen workers among five killed by Israel in Gaza",
+    "summary": "Israeli attacks on Gaza have killed at least 871 Palestinians since the so-called ceasefire started last year.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-8f02e1bbe401"
+    ],
+    "source_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-8f02e1bbe401"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/17/three-community-kitchen-workers-among-five-killed-by-israel-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-17T17:13:08.767488+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-17-002",
+    "title": "How will Izz al-Din al-Haddad assassination impact Hamas's Gaza operations?",
+    "summary": "Israel's killing of Hamas's top commander Izz al-Din al-Haddad tests the Gaza ceasefire as the group pledges to adapt.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 40,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-141f755a435c"
+    ],
+    "source_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-141f755a435c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/17/how-will-izz-al-din-al-haddads-assassination-impact-hamas-gaza-operations?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-17T17:13:08.767488+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-17-003",
+    "title": "Pro-Palestine protest held at oldest colonial building in South Africa",
+    "summary": "To commemorate the Nakba, protesters in Cape Town staged a demonstration in solidarity with Palestinians.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-ff948a25a6b6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-ff948a25a6b6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/17/pro-palestine-protest-held-at-oldest-colonial-building-in-south-africa?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-17T17:13:08.767488+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-17-004",
+    "title": "Israel comes second at Eurovision amid boycotts and backlash",
+    "summary": "Bulgaria won Eurovision, pushing Israel into second place amid boycotts and protests over Israel's war on Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-f3728435d482"
+    ],
+    "source_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-f3728435d482"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/17/israel-comes-second-at-eurovision-amid-boycotts-and-backlash?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-17T17:13:08.767488+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-17-005",
+    "title": "Javier Bardem says condemning the Gaza genocide has led to more work",
+    "summary": "Javier Bardem says condemning the Gaza genocide has led to more work",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-8e7a139e5988"
+    ],
+    "source_ids": [
+      "gaza-2026-05-17-aljazeera-middle-east-8e7a139e5988"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/17/javier-bardem-says-condemning-the-gaza-genocide-has-led-to-more-work?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-17T17:13:08.767488+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  }
+]

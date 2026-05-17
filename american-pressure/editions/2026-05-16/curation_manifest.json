@@ -2,7 +2,7 @@
   "stories": [
     {
       "story_id": "american-pressure-story-2026-05-16-001",
-      "title": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop",
+      "title": "Food support networks report rising demand",
       "summary": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
       "category": "food-pressure",
       "pillar": "food_pressure",
@@ -59,8 +59,8 @@
         "auto-2026-05-16-usda-ers-food-price-outlook"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop",
-      "human_story_summary": "In Nationally, St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal.",
+      "reader_headline": "Food support networks report rising demand",
+      "human_story_summary": "Nationally, St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal.",
       "data_context_summary": "Data context from SNAP Household Characteristics, SNAP Data Tables, USDA ERS Food Price Outlook is a baseline for tracking whether food pressure is broadening.",
       "what_happened": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
       "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
@@ -72,7 +72,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -124,7 +124,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -189,7 +189,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -238,7 +238,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Health access pressure is disrupting care",
-      "human_story_summary": "In Nationally, With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune.",
+      "human_story_summary": "Nationally, With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune.",
       "data_context_summary": "Data context from Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
       "what_happened": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
       "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
@@ -250,14 +250,14 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-005",
-      "title": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup",
+      "title": "Jobs and paychecks remain the first line of defense against household pressure",
       "summary": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
       "category": "labor-income-pressure",
       "pillar": "labor_income_pressure",
@@ -302,8 +302,8 @@
         "auto-2026-05-16-bls-unemployment-situation"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup",
-      "human_story_summary": "In Nationally, East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline.",
+      "reader_headline": "Jobs and paychecks remain the first line of defense against household pressure",
+      "human_story_summary": "Nationally, East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline.",
       "data_context_summary": "Data context from BLS Employment Situation helps show whether job and paycheck stability is holding.",
       "what_happened": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
       "potential_relevance": "This may signal weakening paycheck stability for local households.",
@@ -315,7 +315,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -368,7 +368,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Disaster assessment begins in 30 counties, 1 city after April storms",
-      "human_story_summary": "In Nationally, Disaster assessment begins in 30 counties, 1 city after April storms AOL.com.",
+      "human_story_summary": "Nationally, Disaster assessment begins in 30 counties, 1 city after April storms AOL.com.",
       "data_context_summary": "Data context from NOAA NCEI Monthly Climate Reports, U.S. Drought Monitor provides baseline evidence for this pressure area.",
       "what_happened": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
       "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
@@ -380,7 +380,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -425,7 +425,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Voters to consider $688 million in Bay Area school bonds",
-      "human_story_summary": "In Nationally, Voters to consider $688 million in Bay Area school bonds The Mercury News.",
+      "human_story_summary": "Nationally, Voters to consider $688 million in Bay Area school bonds The Mercury News.",
       "data_context_summary": "Data context from FEMA Disaster Declarations provides baseline evidence for this pressure area.",
       "what_happened": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
       "potential_relevance": "This may signal strain in local service delivery and resilience.",
@@ -437,7 +437,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:10:14.543373+00:00",
+      "generated_at": "2026-05-17T20:11:20.656080+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]

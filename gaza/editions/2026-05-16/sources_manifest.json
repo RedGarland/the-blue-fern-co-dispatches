@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-05-16T10:12:16+00:00",
-    "retrieved_at": "2026-05-17T01:00:35.796849+00:00",
+    "retrieved_at": "2026-05-16T15:08:23.903056+00:00",
     "summary_or_snippet": "Friday's strike is the latest launched by Israel on Gaza despite a ceasefire with Hamas.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -46,138 +46,6 @@
     "claim_fingerprint": "bbc|hamas confirms top commander killed in israeli air strike|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-16-aljazeera-middle-east-1f400ceeeaf1",
-    "source_id": "gaza-2026-05-16-aljazeera-middle-east-1f400ceeeaf1",
-    "title": "German police assault protesters at Nakba anniversary rally",
-    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/16/german-police-assault-protesters-at-nakba-anniversary-rally?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/16/german-police-assault-protesters-at-nakba-anniversary-rally?traffic_source=rss",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-16T22:59:59+00:00",
-    "retrieved_at": "2026-05-17T01:00:35.796849+00:00",
-    "summary_or_snippet": "German police hit and pepper-spray protesters as thousands gathered in Berlin to mark the 78th anniversary of the Nakba.",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-16",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-16-003"
-    ],
-    "claim_ids": [],
-    "candidate_score": 32,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "peripheral",
-    "dedupe_key": "al jazeera|german police assault protesters at nakba anniversary rally",
-    "title_fingerprint": "german police assault protesters at nakba anniversary rally",
-    "claim_fingerprint": "al jazeera|german police assault protesters at nakba anniversary rally|conflict"
-  },
-  {
-    "source_record_id": "gaza-2026-05-16-aljazeera-middle-east-0e8d56c18857",
-    "source_id": "gaza-2026-05-16-aljazeera-middle-east-0e8d56c18857",
-    "title": "Thousands protest at Eurovision final as five countries boycott over Israel",
-    "url": "https://www.aljazeera.com/news/2026/5/16/thousands-protest-at-eurovision-final-as-five-countries-boycott-over-israel?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/news/2026/5/16/thousands-protest-at-eurovision-final-as-five-countries-boycott-over-israel?traffic_source=rss",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-16T20:31:57+00:00",
-    "retrieved_at": "2026-05-17T01:00:35.796849+00:00",
-    "summary_or_snippet": "Spain, Ireland, Iceland, Slovenia and Netherlands all withdrew in protest against Israel's participation amid Gaza war.",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-16",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-16-004"
-    ],
-    "claim_ids": [],
-    "candidate_score": 32,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "core",
-    "dedupe_key": "al jazeera|thousands protest at eurovision final as five countries boycott over israel",
-    "title_fingerprint": "thousands protest at eurovision final as five countries boycott over israel",
-    "claim_fingerprint": "al jazeera|thousands protest at eurovision final as five countries boycott over israel|conflict"
-  },
-  {
-    "source_record_id": "gaza-2026-05-16-aljazeera-middle-east-3d373d0e23f6",
-    "source_id": "gaza-2026-05-16-aljazeera-middle-east-3d373d0e23f6",
-    "title": "Thousands march in central London to mark 78th Nakba anniversary",
-    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/16/thousands-march-in-central-london-to-mark-78th-nakba-anniversary?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/16/thousands-march-in-central-london-to-mark-78th-nakba-anniversary?traffic_source=rss",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-16T18:04:19+00:00",
-    "retrieved_at": "2026-05-17T01:00:35.796849+00:00",
-    "summary_or_snippet": "Thousands of protesters marched through central London on Saturday to mark the 78th anniversary of the Nakba",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-16",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-16-005"
-    ],
-    "claim_ids": [],
-    "candidate_score": 32,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "peripheral",
-    "dedupe_key": "al jazeera|thousands march in central london to mark 78th nakba anniversary",
-    "title_fingerprint": "thousands march in central london to mark 78th nakba anniversary",
-    "claim_fingerprint": "al jazeera|thousands march in central london to mark 78th nakba anniversary|conflict"
-  },
-  {
     "source_record_id": "gaza-2026-05-16-aljazeera-middle-east-e7e4b00fcce8",
     "source_id": "gaza-2026-05-16-aljazeera-middle-east-e7e4b00fcce8",
     "title": "Tens of thousands march in London in far-right and pro-Palestine protests",
@@ -197,7 +65,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-006"
+      "gaza-story-2026-05-16-003"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -241,7 +109,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-007"
+      "gaza-story-2026-05-16-004"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -285,7 +153,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-008"
+      "gaza-story-2026-05-16-005"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -329,7 +197,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-009"
+      "gaza-story-2026-05-16-006"
     ],
     "claim_ids": [],
     "candidate_score": 36,
@@ -374,7 +242,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-010"
+      "gaza-story-2026-05-16-007"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -419,7 +287,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-011"
+      "gaza-story-2026-05-16-008"
     ],
     "claim_ids": [],
     "candidate_score": 56,
@@ -465,7 +333,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-16",
     "used_in_story_ids": [
-      "gaza-story-2026-05-16-012"
+      "gaza-story-2026-05-16-009"
     ],
     "claim_ids": [],
     "candidate_score": 36,

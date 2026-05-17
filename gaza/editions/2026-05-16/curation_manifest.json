@@ -11,7 +11,7 @@
       "civilian_harm",
       "source_reliability",
       "date_confidence",
-      "merged_duplicate_story=gaza-story-2026-05-16-008"
+      "merged_duplicate_story=gaza-story-2026-05-16-005"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
@@ -40,7 +40,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "canonical_urls": [],
     "dedupe_classification": "new",
     "dedupe_reasons": [
@@ -53,144 +53,6 @@
   },
   {
     "story_id": "gaza-story-2026-05-16-002",
-    "title": "German police assault protesters at Nakba anniversary rally",
-    "summary": "German police hit and pepper-spray protesters as thousands gathered in Berlin to mark the 78th anniversary of the Nakba.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 32,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-1f400ceeeaf1"
-    ],
-    "source_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-1f400ceeeaf1"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/5/16/german-police-assault-protesters-at-nakba-anniversary-rally?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
-    "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
-  },
-  {
-    "story_id": "gaza-story-2026-05-16-003",
-    "title": "Thousands protest at Eurovision final as five countries boycott over Israel",
-    "summary": "Spain, Ireland, Iceland, Slovenia and Netherlands all withdrew in protest against Israel's participation amid Gaza war.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 32,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-0e8d56c18857"
-    ],
-    "source_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-0e8d56c18857"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/news/2026/5/16/thousands-protest-at-eurovision-final-as-five-countries-boycott-over-israel?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
-    "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
-  },
-  {
-    "story_id": "gaza-story-2026-05-16-004",
-    "title": "Thousands march in central London to mark 78th Nakba anniversary",
-    "summary": "Thousands of protesters marched through central London on Saturday to mark the 78th anniversary of the Nakba",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 32,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-3d373d0e23f6"
-    ],
-    "source_ids": [
-      "gaza-2026-05-16-aljazeera-middle-east-3d373d0e23f6"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/5/16/thousands-march-in-central-london-to-mark-78th-nakba-anniversary?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
-    "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
-  },
-  {
-    "story_id": "gaza-story-2026-05-16-005",
     "title": "Tens of thousands march in London in far-right and pro-Palestine protests",
     "summary": "British capital sees heightened security as right wing rally takes place at the same time as Nakba Day march.",
     "category": "palestinian_development",
@@ -225,7 +87,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
@@ -236,7 +98,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-16-007",
+    "story_id": "gaza-story-2026-05-16-004",
     "title": "From the Nakba to Gaza's ruins: One man's lifetime of displacement",
     "summary": "Nakba survivor in Gaza recounts displacement after 1948 and 2023 and his unwavering attachment to his homeland.",
     "category": "conflict",
@@ -271,7 +133,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
@@ -282,7 +144,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-16-009",
+    "story_id": "gaza-story-2026-05-16-006",
     "title": "Israel launches deadly air strikes on Gaza City apartment building",
     "summary": "At least seven Palestinians were killed when Israeli air strikes hit a residential building and a vehicle in Gaza City.",
     "category": "conflict",
@@ -318,7 +180,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
@@ -329,7 +191,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-16-010",
+    "story_id": "gaza-story-2026-05-16-007",
     "title": "Gaza aid convoy in Libya prepares to head to Gaza",
     "summary": "The \"Soumoud 2\" land convoy is preparing to leave Libya to bring aid to Gaza.",
     "category": "conflict",
@@ -366,7 +228,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"
@@ -377,7 +239,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-16-011",
+    "story_id": "gaza-story-2026-05-16-008",
     "title": "Seven killed in Gaza on Nakba Day as Israel says it targets Hamas member",
     "summary": "Three women and a child among civilians killed in Israel's latest attacks on Gaza City.",
     "category": "conflict",
@@ -413,7 +275,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-17T01:00:37.262761+00:00",
+    "generated_at": "2026-05-16T15:08:25.517637+00:00",
     "dedupe_classification": "new",
     "dedupe_reasons": [
       "different_topic_or_source"

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import json
@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.run_american_pressure_dispatch import run_american_pressure_dispatch, validate_date  # noqa: E402
+from scripts.check_american_pressure_weekly_readiness import build_readiness_report  # noqa: E402
 
 
 def _completed_saturday_from(today: date) -> date:
@@ -76,6 +77,23 @@ def _parse_json_stdout(raw: str) -> dict[str, Any]:
 
 def _extract_dates(text: str) -> list[str]:
     return re.findall(r"\b\d{4}-\d{2}-\d{2}\b", text)
+
+
+def _run_quality_gate(edition_date: str, manifest: dict[str, Any], readiness: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if readiness.get("weekly_publish_recommended") is not True:
+        errors.extend([str(item) for item in (readiness.get("reasons_if_not_recommended") or [])])
+    if int(manifest.get("story_count") or 0) < 4:
+        errors.append("story_count below minimum quality gate (need >=4).")
+    if int(manifest.get("story_plus_data_count") or 0) < 3:
+        errors.append("story_plus_data_count below minimum quality gate (need >=3).")
+    html_path = ROOT / "output" / "site" / "american-pressure" / "editions" / edition_date / "index.html"
+    if html_path.exists():
+        content = html_path.read_text(encoding="utf-8", errors="replace")
+        for bad in ("Structure, Rejecting", "In US,"):
+            if bad in content:
+                errors.append(f"public prose contains malformed phrase: {bad}")
+    return errors
 
 
 def _validate_pages_view_for_date(edition_date: str) -> list[str]:
@@ -146,6 +164,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--start-date", help="Start date for --init-candidates (YYYY-MM-DD).")
     parser.add_argument("--end-date", help="End date for --init-candidates (YYYY-MM-DD).")
     parser.add_argument("--include-approved-candidates", action="store_true", help="Merge only approved daily candidates from the weekly window.")
+    parser.add_argument("--allow-thin-edition", action="store_true", help="Override weekly quality gate and allow publish.")
     return parser.parse_args(argv)
 
 
@@ -201,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
         run = run_american_pressure_dispatch(
             ROOT,
             edition_date,
-            publish=True,
+            publish=False,
             dry_run=False,
             from_manual_sources=False,
             source_mode=args.source_mode,
@@ -231,6 +250,28 @@ def main(argv: list[str] | None = None) -> int:
             return 1
 
         if args.publish:
+            readiness = build_readiness_report(edition_date)
+            gate_errors = _run_quality_gate(edition_date, manifest, readiness)
+            if gate_errors and not args.allow_thin_edition:
+                output["errors"].extend(gate_errors)
+                output["errors"].append("weekly publish blocked by readiness/quality gate (pass --allow-thin-edition to override).")
+                print(json.dumps(output, indent=2))
+                return 1
+
+        if args.publish:
+            rerun = run_american_pressure_dispatch(
+                ROOT,
+                edition_date,
+                publish=True,
+                dry_run=False,
+                from_manual_sources=False,
+                source_mode=args.source_mode,
+                include_approved_candidates=bool(args.include_approved_candidates),
+            )
+            if rerun.get("ok") is not True:
+                output["errors"].extend(list(rerun.get("errors") or []))
+                print(json.dumps(output, indent=2))
+                return 1
             published_ok, publish_errors = _publish_pages(edition_date)
             output["pages_repo_updated"] = published_ok
             if publish_errors:
@@ -258,3 +299,4 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

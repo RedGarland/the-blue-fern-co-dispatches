@@ -1,1319 +1,137 @@
 {
   "date": "2026-05-16",
-  "sources": [
+  "sources": [],
+  "rejected_candidates": [
     {
-      "source_record_id": "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
-      "source_id": "food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
-      "title": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop",
-      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5",
-      "publisher": "Fathom Journal",
-      "published_at": "Sat, 16 May 2026 11:46:53 GMT",
-      "retrieved_at": "2026-05-17T18:58:02Z",
-      "summary_or_snippet": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "food_pressure",
       "pillar": "food_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop",
-      "human_story_summary": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
-      "what_happened": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "usda-fns-snap-household-characteristics",
-        "usda-fns-snap-data-tables",
-        "usda-ers-food-price-outlook"
-      ],
-      "candidate_score": 15,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "non_us_not_relevant"
-      ]
+      "title": "food bank demand rising",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-      "source_id": "food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-      "title": "LA food bank faces 'overhwhelming demand' as some people are turned away",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBwVWRacmI2aDJUcHh6bzU2X01SRm1EbG5JLWxBSG1HLWRvampDSXlqZ1luSVhWVm9ZYjNRQ3AzbUZfRzBoOXlLMEFjRnI4QldCa0NqQzd1Vk9YQlFiUG1BTNIBXEFVX3lxTE4xMlN5Tlkzdk5rR2tkaUExbWVsMWtRWDVZb3BmTVN0WWVvM2ZTMC1OZU12ZGZHaV8wYzFWb1BvQU5OWFRRNWpLWFQ4MGo0Uk93bm1mSVUweGFZMVZ0?oc=5",
-      "publisher": "Modern Ghana",
-      "published_at": "Fri, 15 May 2026 18:58:53 GMT",
-      "retrieved_at": "2026-05-17T18:58:02Z",
-      "summary_or_snippet": "LA food bank faces 'overhwhelming demand' as some people are turned away Modern Ghana",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "food_pressure",
       "pillar": "food_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "LA food bank faces 'overhwhelming demand' as some people are turned away",
-      "human_story_summary": "LA food bank faces 'overhwhelming demand' as some people are turned away Modern Ghana",
-      "what_happened": "LA food bank faces 'overhwhelming demand' as some people are turned away Modern Ghana",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "usda-fns-snap-household-characteristics",
-        "usda-fns-snap-data-tables",
-        "usda-ers-food-price-outlook"
-      ],
-      "candidate_score": 15,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "non_us_not_relevant"
-      ]
+      "title": "SNAP benefit delays households",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
-      "source_id": "food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
-      "title": "BC SPCA Food Bank\u2019s rising use demonstrates need for community support",
-      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmUUp5a1V3aG1hcHJOWkdPeV9sTVBGakN4ekJ4cDNpN0gxVWdGc3VQdHpGZ0hhMWQtNG54Uk14NWdOb2hLb1N0b2ZWSDJWd1hNaXZCVU4zbS1NUHp4dG1jcm9fZldxdW9HUGl4UHZBeW95MC1wY0wzWHBB?oc=5",
-      "publisher": "CityNews Vancouver",
-      "published_at": "Sat, 16 May 2026 01:02:43 GMT",
-      "retrieved_at": "2026-05-17T18:58:02Z",
-      "summary_or_snippet": "BC SPCA Food Bank\u2019s rising use demonstrates need for community support CityNews Vancouver",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "food_pressure",
       "pillar": "food_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "BC SPCA Food Bank\u2019s rising use demonstrates need for community support",
-      "human_story_summary": "BC SPCA Food Bank\u2019s rising use demonstrates need for community support CityNews Vancouver",
-      "what_happened": "BC SPCA Food Bank\u2019s rising use demonstrates need for community support CityNews Vancouver",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "usda-fns-snap-household-characteristics",
-        "usda-fns-snap-data-tables",
-        "usda-ers-food-price-outlook"
-      ],
-      "candidate_score": 15,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "non_us_not_relevant"
-      ]
+      "title": "grocery affordability pressure families",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
-      "source_id": "food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
-      "title": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children",
-      "url": "https://news.google.com/rss/articles/CBMigwNBVV95cUxOVEJLcXJkVGRsaVJOTVVNSEpNREJkeXU4YTdha05nS0szbDlkalhreVVtYlhuZUFLMzNkV3NGNTZqb0Y5bmFHYWQzazNtcDYtZDI4X1hGeWJjLW5CSHNVZndHNUZ0WUxrY2wtOWJORGQ1RHEzV1JLcFEzXzdEa1BNV2pCeGlfNDc3VF83ellVNi1qb3EtWlpXRnM1TEFPRXFXZGVHajNPOWZVVmRlLWNfdWdnQ2VkOThjNnNwN2x4cUZjejNzUklOZldDVEwzSl8zVnhoM0gwTWdqdUR2NVZQTndhMGljYXRnOWZLdzZoUEo5MHQ5VHBva0FpcjBWcWhQWjFuYS16NEdoWTNIUjR6LUQwelVSYlRWZWZ2NEx1UzBWREZFbXgtMWRFNHdRQ0ZSQlA3TXVCZUUxSzM0MHo3TVdMb095a0phWVRrVXF5dXRQSEViYjhPcVVCV2ZDdWRxSWJXOG10dV9xT0RpTUJvQWFiNVl3OXRpbEJpaF95cmRTRE0?oc=5",
-      "publisher": "MSN",
-      "published_at": "Sat, 16 May 2026 02:28:34 GMT",
-      "retrieved_at": "2026-05-17T18:58:02Z",
-      "summary_or_snippet": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children MSN",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "food_pressure",
-      "pillar": "food_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children",
-      "human_story_summary": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children MSN",
-      "what_happened": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children MSN",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "usda-fns-snap-household-characteristics",
-        "usda-fns-snap-data-tables",
-        "usda-ers-food-price-outlook"
-      ],
-      "candidate_score": 15,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "non_us_not_relevant"
-      ]
+      "pillar": "financial_distress_pressure",
+      "title": "chapter 11 bankruptcy jobs risk",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t",
-      "source_id": "food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t",
-      "title": "Growing concern over economic, environmental impact of food waste",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPRHY0aENKbFFMUXV5blA5ODZyaU5fYTVncEdNZVFDM3otVS00N2Y1amVaVkpuSUZ2VTNCeGpyal9UTVQzeHAydDNRVVhiSXJ0NnM3M20tSTk2bDVRNU5WSDZzMm8yQjA2VG9MZGEzbldINGJlQUFMZVZLSGVpQmFEYm84NWk2OU1mLUt2OE5WLUxCSWpjSjFvWnkyc0R5QlBRMW5xNGh4Z2tLYnFOdHdpWmc1M1VrZUk?oc=5",
-      "publisher": "The EastAfrican",
-      "published_at": "Sun, 17 May 2026 06:00:00 GMT",
-      "retrieved_at": "2026-05-17T18:58:02Z",
-      "summary_or_snippet": "Growing concern over economic, environmental impact of food waste The EastAfrican",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "food_pressure",
-      "pillar": "food_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Growing concern over economic, environmental impact of food waste",
-      "human_story_summary": "Growing concern over economic, environmental impact of food waste The EastAfrican",
-      "what_happened": "Growing concern over economic, environmental impact of food waste The EastAfrican",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "usda-fns-snap-household-characteristics",
-        "usda-fns-snap-data-tables",
-        "usda-ers-food-price-outlook"
-      ],
-      "candidate_score": 15,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "non_us_not_relevant"
-      ]
+      "pillar": "financial_distress_pressure",
+      "title": "business closure payroll disruption",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
-      "source_id": "housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
-      "title": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
-      "url": "https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5",
-      "publisher": "Montgomery County, MD (.gov)",
-      "published_at": "Fri, 15 May 2026 21:52:38 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "housing_household_cost_pressure",
+      "pillar": "financial_distress_pressure",
+      "title": "household debt distress local impact",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
+    },
+    {
       "pillar": "housing_household_cost_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
-      "human_story_summary": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
-      "what_happened": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location": "Structure, Rejecting",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-cpi-shelter"
-      ],
-      "candidate_score": -40,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "clear_location",
-        "affected_people_or_services",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
+      "title": "rent increase utility burden residents",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
-      "source_id": "housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
-      "title": "Rising EMIs and Bills Leave Guwahati Residents With Little Savings",
-      "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOTVhpbE5oWlpMZ3RZZmpodVZkaFVMNGNfdWc2WE1MWHE4ZTVvd1FQczdvNHl6Qnp2T3JpcTFTR3VWSVI3amg4UmZvVEgwbWI2WFNSWVFjZ1hXNHVGTDRFc21tYm5XYWEwQUlUNVBER2I1U2JxZUwyQ1hFWGxRZXhTQVVWdFhTcFpTTVJISlhoaWxzYVZyZXp2ZlB0YUtRcXZBY0M4VVBwT1hPb3ZmZUUwOFcyTE1FTnU3dkhhbWJnaTVTcm5aMVQ3YWhMZERqYXBJSy1mdFpTc01jeXZYaUd1RFY4WFo5aTQ?oc=5",
-      "publisher": "Dailyhunt",
-      "published_at": "Sat, 16 May 2026 22:57:09 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Rising EMIs and Bills Leave Guwahati Residents With Little Savings Dailyhunt",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "housing_household_cost_pressure",
       "pillar": "housing_household_cost_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Rising EMIs and Bills Leave Guwahati Residents With Little Savings",
-      "human_story_summary": "Rising EMIs and Bills Leave Guwahati Residents With Little Savings Dailyhunt",
-      "what_happened": "Rising EMIs and Bills Leave Guwahati Residents With Little Savings Dailyhunt",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-cpi-shelter"
-      ],
-      "candidate_score": -50,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
+      "title": "eviction filing surge county",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
-      "source_id": "housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
-      "title": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNRm50aTFGQzJaQXVCaVhLNDBHRDNfM2tReWVNbnNTYThNZXF4ZlZMMXlkczF6Q2c4YjZvMnhfdTJmdmpPVXdveHNBZXZibzNmeEhMNjB1clBZNl9NNEI4WWZDS0dNSEFSMDdjZVlNTjNUQXdRRkhtZU1uaXlTVDlSNHZja19IQ3VManNDYXpDeHZRWDZ5cGcwWFBvNEJtcEMxNW5iTWlyd2IzbXVZb1ZQaTV6YkdBUEhiUUJtaFlIclNqdw?oc=5",
-      "publisher": "Colorado Springs Gazette",
-      "published_at": "Sat, 16 May 2026 23:48:25 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain Colorado Springs Gazette",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "housing_household_cost_pressure",
       "pillar": "housing_household_cost_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain",
-      "human_story_summary": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain Colorado Springs Gazette",
-      "what_happened": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain Colorado Springs Gazette",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-cpi-shelter"
-      ],
-      "candidate_score": -50,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
+      "title": "housing affordability monthly bills strain",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-housing-household-cost-pressure-high-taxes-bigger-government-and-the-voter-quest",
-      "source_id": "housing-household-cost-pressure-high-taxes-bigger-government-and-the-voter-quest",
-      "title": "High Taxes, Bigger Government, and the Voter Question Facing America",
-      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5VaW04aEVTdUdzR1FWVkNFVlVmeGZudTg5VWNSeG5JbFQtSVVDdkRWMDN6Q0Vhcy1FZ2J0bTJuX1FTZzQ0VjBUM19QWF9RdjJmaWdSclhRbE5xT0Y4Z19RVFU3TmxlYWt2dURJVzc5dkh5Q1E?oc=5",
-      "publisher": "stl.news",
-      "published_at": "Sun, 17 May 2026 13:06:34 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "High Taxes, Bigger Government, and the Voter Question Facing America stl.news",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "housing_household_cost_pressure",
-      "pillar": "housing_household_cost_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "High Taxes, Bigger Government, and the Voter Question Facing America",
-      "human_story_summary": "High Taxes, Bigger Government, and the Voter Question Facing America stl.news",
-      "what_happened": "High Taxes, Bigger Government, and the Voter Question Facing America stl.news",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location": "Taxes, Bigger",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-cpi-shelter"
-      ],
-      "candidate_score": -55,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "clear_location",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
-      "source_id": "housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
-      "title": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods",
-      "url": "https://news.google.com/rss/articles/CBMirgJBVV95cUxOc254aERmVWVabkFHV1ZvTmxuelNjbTJPVGp5aVltU21HOUdwc2MzR3RoZ2M5cXlYRWVhbU1Xb3AxdzJiM0FVZDI0bWFUZVZHUXhMRWp0WUpNS1Y1ajc2ZG5FTE5RME1vYXVCNXBmX2YxSXNSd0dqRlgzd1JjUC1VSXpVVFZSMjZiZWRmeVJlLWxxb0JNUXNEbWlWVzRULUtuNEtkOGNrVkhWZGZOTkpZeUszXzZzQ1M2MVVRSTJrSmo3dy00eDU5Q3h1aHhIZnE2S3U4RXRUTG5MbUtUQlFJU09HelpWYzFsWk9pUE0wTWNIVTR6YW5jX1ZtMXoxT0xLTW1yQnJjTWRHZm5FWTZPMXZsaEx4RXVLOHU3TnIxQlNwUnlxNGlham81Q0lqZw?oc=5",
-      "publisher": "Ohio House of Representatives (.gov)",
-      "published_at": "Sat, 16 May 2026 18:35:46 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "housing_household_cost_pressure",
-      "pillar": "housing_household_cost_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods",
-      "human_story_summary": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
-      "what_happened": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location": "Healthcare, Childcare",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-cpi-shelter"
-      ],
-      "candidate_score": -55,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "clear_location",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-      "source_id": "health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-      "title": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO",
-      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5",
-      "publisher": "Star Tribune",
-      "published_at": "Sat, 16 May 2026 15:13:09 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "health_access_pressure",
       "pillar": "health_access_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO",
-      "human_story_summary": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
-      "what_happened": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "cms-medicaid-chip-enrollment"
-      ],
-      "candidate_score": 10,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "clinic closure health access residents",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
-      "source_id": "health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
-      "title": "Overburdened and Understaffed: Dogra Hospital Faces Surge in Patients After Tirah Displacement",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOamY4cnhLczdVNjY1dk4tVXVIYXhtUUU4MExQQkkyYTd2NEJMTHlxeTBlZ0gyUGI2a1hpN3NINGdVandzOW9PcXFEY0d4ZUsyWGdlMUs5NFBaZkRuVHZMRlBvaVZMaWtja2FNVXozaWtMYjZwR3FMR3l4VTNGN0dBR1daNzhhVGg3S05GanZ0RzRPUGdvOVlCUnVsMUM1VkxISUhUYmdIV1Y3aXRBc2F2aVlWdzdrU0E?oc=5",
-      "publisher": "Tribal News Network",
-      "published_at": "Sun, 17 May 2026 02:50:04 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Overburdened and Understaffed: Dogra Hospital Faces Surge in Patients After Tirah Displacement Tribal News Network",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "health_access_pressure",
       "pillar": "health_access_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Overburdened and Understaffed: Dogra Hospital Faces Surge in Patients After Tirah Displacement",
-      "human_story_summary": "Overburdened and Understaffed: Dogra Hospital Faces Surge in Patients After Tirah Displacement Tribal News Network",
-      "what_happened": "Overburdened and Understaffed: Dogra Hospital Faces Surge in Patients After Tirah Displacement Tribal News Network",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "cms-medicaid-chip-enrollment"
-      ],
-      "candidate_score": 10,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "hospital service cuts local patients",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-health-access-pressure-iowa-s-12-best-retirement-towns-ranked-worldatlas",
-      "source_id": "health-access-pressure-iowa-s-12-best-retirement-towns-ranked-worldatlas",
-      "title": "Iowa's 12 Best Retirement Towns Ranked",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPckpfVVlZLXpiR2Z3WFdiSmNGS3FzQjY3aXRRSC1qeXlmXzVleDQyc1Q3dUNMcGI0NjNTdFlMcUtVaERRcThCVm5OZXZnc2lMSjBXOHZXQlhucHdiQ0Juc3RkMENCaGtaUEZ1WDZlOXhXa0dxR21NS0FqWWRRU2JQRVRVX1pmQ09kTGplOA?oc=5",
-      "publisher": "WorldAtlas",
-      "published_at": "Sat, 16 May 2026 20:30:00 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Iowa's 12 Best Retirement Towns Ranked WorldAtlas",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "health_access_pressure",
       "pillar": "health_access_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Iowa's 12 Best Retirement Towns Ranked",
-      "human_story_summary": "Iowa's 12 Best Retirement Towns Ranked WorldAtlas",
-      "what_happened": "Iowa's 12 Best Retirement Towns Ranked WorldAtlas",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "cms-medicaid-chip-enrollment"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "no_public_impact"
-      ]
+      "title": "medicaid access delays coverage",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-health-access-pressure-thanks-republicans-nine-colorado-hospitals-at-risk-of-clo",
-      "source_id": "health-access-pressure-thanks-republicans-nine-colorado-hospitals-at-risk-of-clo",
-      "title": "Thanks, Republicans! Nine Colorado Hospitals at Risk of Closure",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNNXdYZVZHV0F1VjlRZ2dZTktqTTlGYldxRXItVzdNN0tQSVItZzFJNmJEX2ltT0pubGNHZjd3b2pFczlLREYwYWhxc0VjVHA0M0FzNUE0RHc4OUlyeUZ0aE9LcHVRQXJCNTlxOGRDY1lRQkRacm1WTGp6OU9xMHNsbHllVjFFY1J6ZXZxNVVYUjZ3bW9ZcVM5c3JaQXY4NDVrYzJuOTF3?oc=5",
-      "publisher": "Colorado Pols",
-      "published_at": "Sun, 17 May 2026 08:37:08 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Thanks, Republicans! Nine Colorado Hospitals at Risk of Closure Colorado Pols",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "health_access_pressure",
-      "pillar": "health_access_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Thanks, Republicans! Nine Colorado Hospitals at Risk of Closure",
-      "human_story_summary": "Thanks, Republicans! Nine Colorado Hospitals at Risk of Closure Colorado Pols",
-      "what_happened": "Thanks, Republicans! Nine Colorado Hospitals at Risk of Closure Colorado Pols",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
-      "location": "Thanks, Republicans",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "cms-medicaid-chip-enrollment"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "clear_location",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit",
-      "source_id": "health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit",
-      "title": "Rural Communities Anxious Over Potential Statewide Hospital Closures",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOZXhXbTc0TXpaS1FXZ0w4SjdfYmVFTldIZWVZTmZKdmJmREMwa0xORHdONW81TjFaV2huWEZXUWxRaWk0Z0lfcmMtamZzMUU3NDRGSDNhUWhpRkJMWEhPSkh1RFVZOFlWTkhnMUdxY0lRQktmOXYyRU9RSWxJVlR1ZlIydVdwQmNLUW0xNUh1NWhnY2N5U0oySk1XMXgwNWhnQTNZdjVXaw?oc=5",
-      "publisher": "The Oxford Eagle",
-      "published_at": "Sat, 16 May 2026 11:32:54 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Rural Communities Anxious Over Potential Statewide Hospital Closures The Oxford Eagle",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "health_access_pressure",
-      "pillar": "health_access_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Rural Communities Anxious Over Potential Statewide Hospital Closures",
-      "human_story_summary": "Rural Communities Anxious Over Potential Statewide Hospital Closures The Oxford Eagle",
-      "what_happened": "Rural Communities Anxious Over Potential Statewide Hospital Closures The Oxford Eagle",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "cms-medicaid-chip-enrollment"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-      "source_id": "labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-      "title": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup",
-      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5",
-      "publisher": "Hoodline",
-      "published_at": "Sat, 16 May 2026 14:20:00 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "labor_income_pressure",
       "pillar": "labor_income_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup",
-      "human_story_summary": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
-      "what_happened": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-unemployment-situation"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "layoffs announced local employer",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
-      "source_id": "labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
-      "title": "Scholars warn Samsung union: \u201cIf you want boom-time bonuses, accept bust-time pay cuts and layoffs\u201d",
-      "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxQX0p0bHgyZmhxU3JlXzE1aHNIQ1ZKVk9LUWVYRUpKYWhoOFdWc2tabkF0UWl3ZkhWZ1pWeXFJX19GWEFXYnkyc1h1b0ItQm5MT1praWRNNUt0ZkRSRkE1cmVFVk9BNXUwRXptN0RWVUZHYlBQZHpEYmpUdDNpcnRmemxNX0FGb25TdDNKUmQwRmtYNHJlQ0ZYLWIzRUhDd2toRk9jZ1dEVWFkNDZFSWtGUjljWm0wODNYcXFKZ2xnNlNZeXhlOXRuV3NPbDVwNk1DNE4tVVIzZlBOVGlQNDM4ZEozcUxIOTA?oc=5",
-      "publisher": "MSN",
-      "published_at": "Sat, 16 May 2026 00:21:51 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Scholars warn Samsung union: \u201cIf you want boom-time bonuses, accept bust-time pay cuts and layoffs\u201d MSN",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "labor_income_pressure",
       "pillar": "labor_income_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Scholars warn Samsung union: \u201cIf you want boom-time bonuses, accept bust-time pay cuts and layoffs\u201d",
-      "human_story_summary": "Scholars warn Samsung union: \u201cIf you want boom-time bonuses, accept bust-time pay cuts and layoffs\u201d MSN",
-      "what_happened": "Scholars warn Samsung union: \u201cIf you want boom-time bonuses, accept bust-time pay cuts and layoffs\u201d MSN",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-unemployment-situation"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "hours cut workers paycheck pressure",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
-      "source_id": "labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
-      "title": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal?",
-      "url": "https://news.google.com/rss/articles/CBMitwJBVV95cUxQQWdzMjRiR0hCazd2M3hlTjJpQkt0UE10VUdDS1VrclM0ekpiT0N5U3VpeEhkZHdYQTMwaVNBTUpiQUpxV3VLTVZENl9YVVlhMWd6djJEOXdTNzczTGxpN21ldjVqczR4UDJGeFN2Tm03RFhpTXdMbEVPNno5bS02QllTZkw1RFJyNzNoVW9TcmNMMmZ0bGhpazZvdnJzMWxuTmtsOFNfdXl4dzRSeHBJOW1BeHJLcVpGb2VLa2NDaVFHT1NpU09RU1JFcUNtWExSWEtBekNTb0dWVmRvb05qN2dmWm9MMHdsRnQxbGpXakdDSE1WNXJjbVlscU96QkQyTUxpQVJjQ3lpZDg3elBpdkdUTF8tYTFVeHJRaHIwYVJqck4zQUF1Y0V0Qm9xNlM0OW96MUt4VQ?oc=5",
-      "publisher": "MSN",
-      "published_at": "Fri, 15 May 2026 22:51:06 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal? MSN",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "labor_income_pressure",
       "pillar": "labor_income_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal?",
-      "human_story_summary": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal? MSN",
-      "what_happened": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal? MSN",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-unemployment-situation"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "WARN notice job losses county",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
-      "source_id": "labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
-      "title": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May",
-      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5RYWY2UkhMODdhcTdadTZoSy1LY2VjNTdielk3SlQ1VHJFS20zeGthOWVidlJ0OWtwelpmd25RbmM0WENhQ0I5V0pCZDM5ekVkUVlTeE94X3UyQ1cxUGNCaEJRQQ?oc=5",
-      "publisher": "94.5 PST",
-      "published_at": "Sun, 17 May 2026 13:40:36 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "labor_income_pressure",
-      "pillar": "labor_income_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May",
-      "human_story_summary": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "what_happened": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-unemployment-situation"
-      ],
-      "candidate_score": -20,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "non_us_not_relevant"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
-      "source_id": "labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
-      "title": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May",
-      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5RYWY2UkhMODdhcTdadTZoSy1LY2VjNTdielk3SlQ1VHJFS20zeGthOWVidlJ0OWtwelpmd25RbmM0WENhQ0I5V0pCZDM5ekVkUVlTeE94X3UyQ1cxUGNCaEJRQQ?oc=5",
-      "publisher": "94.5 PST",
-      "published_at": "Sun, 17 May 2026 13:40:36 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "labor_income_pressure",
-      "pillar": "labor_income_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May",
-      "human_story_summary": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "what_happened": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May 94.5 PST",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "bls-unemployment-situation"
-      ],
-      "candidate_score": -20,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "affected_people_or_services",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "non_us_not_relevant"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
-      "source_id": "local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
-      "title": "Voters to consider $688 million in Bay Area school bonds",
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5",
-      "publisher": "The Mercury News",
-      "published_at": "Sun, 17 May 2026 11:00:40 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "local_system_strain",
       "pillar": "local_system_strain",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Voters to consider $688 million in Bay Area school bonds",
-      "human_story_summary": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
-      "what_happened": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "fema-disaster-declarations"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "local agency strain service disruption",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-local-system-strain-deadline-to-request-curbside-pickup-for-storm-debris-is-may-",
-      "source_id": "local-system-strain-deadline-to-request-curbside-pickup-for-storm-debris-is-may-",
-      "title": "Deadline to request curbside pickup for storm debris is May 22",
-      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQVHo5eTBGNi1JZXZlU0RWOXEtOFRyZUJIcFpQb3cwM3NZTG5ieExTUmNieTRaMlhlcHl6cUx4OFl4Z2szNTRNbm5JMHlJMFRzLVc1dzgtVHNscTlTUmJQN1RhXzZwQ0FKSm5RZFB4QmhnNTZSbFY5angyTUZjMDlJUHZNVXJyNzRrMldGVGZBd3VHVnk5MWdKa3lB?oc=5",
-      "publisher": "Maui Now",
-      "published_at": "Sat, 16 May 2026 00:20:24 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "Deadline to request curbside pickup for storm debris is May 22 Maui Now",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "local_system_strain",
       "pillar": "local_system_strain",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Deadline to request curbside pickup for storm debris is May 22",
-      "human_story_summary": "Deadline to request curbside pickup for storm debris is May 22 Maui Now",
-      "what_happened": "Deadline to request curbside pickup for storm debris is May 22 Maui Now",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "fema-disaster-declarations"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "school district budget cuts services",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-local-system-strain-who-declares-ebola-outbreak-in-congo-uganda-an-emergency-of-",
-      "source_id": "local-system-strain-who-declares-ebola-outbreak-in-congo-uganda-an-emergency-of-",
-      "title": "WHO declares Ebola outbreak in Congo, Uganda an emergency of international concern",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOd2hicm5jSXFsaUlKVkdTZlFLZXZhX2hEb3MwSU9jTWdSdVkzcU9Rc1gtZXRpdGZNZk9OeFJOVlBmWGdaWXNIMW1GNUZELUZVdVgtUjdleU45ZWRtZUFTNUVvdWt0eEVwdEZ6UGxwTzk0a3lyZTFfZjBMTU5GazVQMXlULTc4eXBOREVkRTZxdzFXUC0xZU9YR2R2b1l0LURHLWwyeDhZdzhyVk1Ma3hwTUhObHRKb2FnaHMtMVJn?oc=5",
-      "publisher": "RNZ",
-      "published_at": "Sun, 17 May 2026 02:52:48 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "WHO declares Ebola outbreak in Congo, Uganda an emergency of international concern RNZ",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "local_system_strain",
       "pillar": "local_system_strain",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "WHO declares Ebola outbreak in Congo, Uganda an emergency of international concern",
-      "human_story_summary": "WHO declares Ebola outbreak in Congo, Uganda an emergency of international concern RNZ",
-      "what_happened": "WHO declares Ebola outbreak in Congo, Uganda an emergency of international concern RNZ",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
-      "location": "Congo, Uganda",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "fema-disaster-declarations"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "clear_location",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "no_public_impact"
-      ]
+      "title": "county emergency services under strain",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-local-system-strain-who-declares-congo-ebola-outbreak-a-global-health-emergency-",
-      "source_id": "local-system-strain-who-declares-congo-ebola-outbreak-a-global-health-emergency-",
-      "title": "WHO declares Congo Ebola outbreak a global health emergency after 80 die",
-      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBmSDNrMzJUekVDMkJUUDc0UmNYYkFhYVNhbDA3YlpWY1VPRWdUUENCTXNxR1FNLWFPSjBZTkI0VjNXM0NhbHhXUWFMemJUQk16WWluV2oyUFd3eUZxLTk1SUt1OEJxOVM2S2VmUGEwZnZTTlgybzFHelVOT1I?oc=5",
-      "publisher": "Wales Online",
-      "published_at": "Sun, 17 May 2026 01:01:00 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "WHO declares Congo Ebola outbreak a global health emergency after 80 die Wales Online",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "local_system_strain",
-      "pillar": "local_system_strain",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "WHO declares Congo Ebola outbreak a global health emergency after 80 die",
-      "human_story_summary": "WHO declares Congo Ebola outbreak a global health emergency after 80 die Wales Online",
-      "what_happened": "WHO declares Congo Ebola outbreak a global health emergency after 80 die Wales Online",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "fema-disaster-declarations"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "no_public_impact"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g",
-      "source_id": "local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g",
-      "title": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops",
-      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOVlc1UWUtVG5zOXdGQ1hqQmxpZ2RrdUI5WmpfUWgxZTFURUtTeFR6eHBkZHFURUtoN2FPMHRKa241bkZGd1F0N0UwVFVXVlN3dHRLOG50NEY5dkVPNHpFcUdtUlNJWE1SR25qclM0ekRIOVVGWHE0UmJsZF9XNTdhZl92enBKTU1xdjUtenVzbzlaNUJKbFVYVjBBR1ROc2VSX1Yya0QzZHVZS1g4d2xvZDQ2XzNkRXgwOWpfQUpJSlduMVZGYnlUdHlUMTJXeU5hZUtoV3N30gHbAUFVX3lxTE1UTFRDNlFvZGM0NFZweDdwY3pBS3hxdFF0NXhELWxfUHBrakRmSmtCQzM1VjRjaXF0RTVMRHFlaTAwTXAxSGFBeFVHMmpYR3g0NUkySEdfNmU3bm04SGIzTFVHdGRaSkE4UkxCY3dpUFI5RVpidi1fUW1KdWdtNmhmcjM4dWdNUHM1TzA4NmszU29EMGJEd01HVW9TeFVjZTY2c2RLZW1zQ2hOcWZ5TjVHUkhnbnpCUkRXYXdKREVjRXJWVk1xR1V5YTloNHBqMmxPdG5FSlVRX04xdw?oc=5",
-      "publisher": "ABC7 New York",
-      "published_at": "Sun, 17 May 2026 18:51:17 GMT",
-      "retrieved_at": "2026-05-17T18:58:03Z",
-      "summary_or_snippet": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops ABC7 New York",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "local_system_strain",
-      "pillar": "local_system_strain",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops",
-      "human_story_summary": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops ABC7 New York",
-      "what_happened": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops ABC7 New York",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "fema-disaster-declarations"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "no_public_impact"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
-      "source_id": "environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
-      "title": "Disaster assessment begins in 30 counties, 1 city after April storms",
-      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5",
-      "publisher": "AOL.com",
-      "published_at": "Sat, 16 May 2026 09:08:49 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "environmental_pressure",
       "pillar": "environmental_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Disaster assessment begins in 30 counties, 1 city after April storms",
-      "human_story_summary": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
-      "what_happened": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "noaa-ncei-monthly-climate-report",
-        "us-drought-monitor"
-      ],
-      "candidate_score": 5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "source_backed_key_number",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "maybe",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "storm flooding damage assessments county",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
-      "source_id": "environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
-      "title": "AGENDA: Osceola County Board to hear flooding recovery update",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQRE1WWlZXLUNoWVJmYVpFZVZhbFVDY2F2WGNjQkNsQ1BqSk10Y3RCYTJtcUZ5UTFMdFFEOFJmZ1RhQlBXcmhKWHVOYWllQU5ZYzNpSHBVa3ZvSmJKTGdwd0NTa1I4aWhncl96bFZSazVpY2pNMTZZckVRVjFacWpZQWdHdEJKd0VSU2o3Z3NsS3JIWnZ3cU1mTUNhal9ZLWdnSXRj?oc=5",
-      "publisher": "Manistee News Advocate",
-      "published_at": "Sun, 17 May 2026 15:25:32 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "AGENDA: Osceola County Board to hear flooding recovery update Manistee News Advocate",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "environmental_pressure",
       "pillar": "environmental_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "AGENDA: Osceola County Board to hear flooding recovery update",
-      "human_story_summary": "AGENDA: Osceola County Board to hear flooding recovery update Manistee News Advocate",
-      "what_happened": "AGENDA: Osceola County Board to hear flooding recovery update Manistee News Advocate",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "noaa-ncei-monthly-climate-report",
-        "us-drought-monitor"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "heat emergency utility strain households",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara",
-      "source_id": "environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara",
-      "title": "Whitmer seeks extension to request major disaster declaration following April severe weather",
-      "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOSVZLQnVnZzljN3RjX1dhZDl2ZE5xcmVMTnBmWkJ4eElXVm5mdlFaTHpjdHpZMmEySG1ER2o3OHZnMlFFa1BTRUF5VnJpRElIUWdrbHowcjZjS2ZSOFI3QktVYk42QUFtdFhCbmhCTDNPb20tN0pTNTZNbWtlZERNZ0x1eTJvT09yQmZ0ejkyYU5oazh4QWFMeUdwSXNhc2dBcEY4Ymc3cWRyTVJNbWhIbnVPU0V6TEFKRDNtS3RkcC14TjF0UWpXOC1lTGt0aGNzTEE?oc=5",
-      "publisher": "thealpenanews.com",
-      "published_at": "Sat, 16 May 2026 05:32:41 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "Whitmer seeks extension to request major disaster declaration following April severe weather thealpenanews.com",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "environmental_pressure",
       "pillar": "environmental_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Whitmer seeks extension to request major disaster declaration following April severe weather",
-      "human_story_summary": "Whitmer seeks extension to request major disaster declaration following April severe weather thealpenanews.com",
-      "what_happened": "Whitmer seeks extension to request major disaster declaration following April severe weather thealpenanews.com",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "noaa-ncei-monthly-climate-report",
-        "us-drought-monitor"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "approved",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
+      "title": "wildfire smoke disruption local services",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     },
     {
-      "source_record_id": "ap-2026-05-16-environmental-pressure-newaygo-county-emergency-services-asking-those-with-flood",
-      "source_id": "environmental-pressure-newaygo-county-emergency-services-asking-those-with-flood",
-      "title": "Newaygo County Emergency services asking those with flood damage to call",
-      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOREtMQmVzejM5aXctR2JWOTIzTlhhTWJiR3l4MUh4RkRRMGZ4X1RZTDQ4b0dVWVdILTBBSUNGbDhRUTRkQmItcEp0bGVuYXNvT2VfNzloVUtLN2o2ckdRRnhhVHlPb0ozNHpBRnY5WjczN21mZEFvcDdvSGJGd1l5b1paVGNRUGJKZHI0?oc=5",
-      "publisher": "Big Rapids Pioneer",
-      "published_at": "Fri, 15 May 2026 19:35:33 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "Newaygo County Emergency services asking those with flood damage to call Big Rapids Pioneer",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "environmental_pressure",
-      "pillar": "environmental_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Newaygo County Emergency services asking those with flood damage to call",
-      "human_story_summary": "Newaygo County Emergency services asking those with flood damage to call Big Rapids Pioneer",
-      "what_happened": "Newaygo County Emergency services asking those with flood damage to call Big Rapids Pioneer",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "noaa-ncei-monthly-climate-report",
-        "us-drought-monitor"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-environmental-pressure-whitmer-asks-for-more-time-to-request-major-disaster-decl",
-      "source_id": "environmental-pressure-whitmer-asks-for-more-time-to-request-major-disaster-decl",
-      "title": "Whitmer asks for more time to request major disaster declaration: 'Historic event'",
-      "url": "https://news.google.com/rss/articles/CBMi2AJBVV95cUxPMUJRRUUxdExkT3phbl9iQXpEV3ZZMzQzOC1Seng0VXUtcXI0LWlDOTJEM2dFX1pkQm1LZlE4b0tTSkZucmJyZjM2TUIyNUt6UzJWY3A4UlJ1ZWpGTExubFR0V2U4NUhpdkxPLWJWd1FXVGp6dGJ3X1ZHcTNTajBqcWwtMXF1WlZ4M1FSLU1EaXp3OGx2RndvLUtUYVc3OWUyTTItR19wYVo5d1l5dWZ4WVRmWEQ1XzExVmJLX0tCUjctbjE2NVV5M01TQUtBaGp3LXlXUU9YN3BjcWJfZGxhMS12NTViQlJiQ0FCSGFBcDdGZ3g0SUNxWnFoVGl6cGhEajZsVFVzMXdOaDJDNGd3b1p4c2JyTElwMUFiN3YyMm04S09iTXFvSnRhbjFSMlF6NkJoQkZBVDU1VVZVZFQ3ZGJuVHRtaWs4ZFV0bkxJUmVSb21RXzZGeg?oc=5",
-      "publisher": "MSN",
-      "published_at": "Sun, 17 May 2026 00:14:12 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "Whitmer asks for more time to request major disaster declaration: 'Historic event' MSN",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "environmental_pressure",
-      "pillar": "environmental_pressure",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "Whitmer asks for more time to request major disaster declaration: 'Historic event'",
-      "human_story_summary": "Whitmer asks for more time to request major disaster declaration: 'Historic event' MSN",
-      "what_happened": "Whitmer asks for more time to request major disaster declaration: 'Historic event' MSN",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [
-        "noaa-ncei-monthly-climate-report",
-        "us-drought-monitor"
-      ],
-      "candidate_score": -5,
-      "candidate_score_reasons": [
-        "clear_public_pressure_angle",
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale"
-      ]
-    },
-    {
-      "source_record_id": "ap-2026-05-16-policy-implementation-5-ideas-to-reduce-your-electricity-bill-this-summer-el-obs",
-      "source_id": "policy-implementation-5-ideas-to-reduce-your-electricity-bill-this-summer-el-obs",
-      "title": "5 Ideas to Reduce Your Electricity Bill This Summer",
-      "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNc2RFRkZ5X3JPX01lZDROakpzTTY5S0dYMVo5UF90LWlqQXdPOUFJSzgwMG5KbC1rSlRITGJjV1NSWDJ6clJ6NDdfcFhKQ284WWN3aGlUTk5BcnVqbHI2RlVnMEhoamhZVkxaQXgycjd2ZDdzMHp6cFlaSWRVNndKM3h3ZnFQZzMtdEFnNHRfRm5hVHc?oc=5",
-      "publisher": "el-observador.com",
-      "published_at": "Fri, 15 May 2026 18:58:18 GMT",
-      "retrieved_at": "2026-05-17T18:58:04Z",
-      "summary_or_snippet": "5 Ideas to Reduce Your Electricity Bill This Summer el-observador.com",
-      "source_type": "news_report",
-      "region_scope": "US",
-      "category_hint": "policy_implementation",
       "pillar": "policy_implementation",
-      "reliability_tier": "reputable_reporting",
-      "source_role": "human_story",
-      "item_type": "current_week_development",
-      "reader_headline": "5 Ideas to Reduce Your Electricity Bill This Summer",
-      "human_story_summary": "5 Ideas to Reduce Your Electricity Bill This Summer el-observador.com",
-      "what_happened": "5 Ideas to Reduce Your Electricity Bill This Summer el-observador.com",
-      "potential_relevance": "This may signal friction in delivering policy support to households.",
-      "who_may_feel_it": "Benefit-dependent households and frontline service providers.",
-      "what_to_watch_next": "Watch enrollment delays, eligibility barriers, and implementation backlog.",
-      "location": "",
-      "affected_people": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
-      "linked_data_anchor_ids": [],
-      "candidate_score": -65,
-      "candidate_score_reasons": [
-        "reliable_source_attribution",
-        "linkable_data_anchor"
-      ],
-      "review_status": "rejected",
-      "candidate_bucket": "rejected",
-      "rejection_reasons": [
-        "duplicate_or_stale",
-        "no_public_impact"
-      ]
+      "title": "benefit implementation delays households",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
+    },
+    {
+      "pillar": "policy_implementation",
+      "title": "program enrollment backlog local agency",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
+    },
+    {
+      "pillar": "policy_implementation",
+      "title": "utility assistance policy access problems",
+      "reason": "fetch_error:<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>"
     }
   ],
-  "rejected_candidates": [],
-  "source_count": 31,
-  "generated_at": "2026-05-17T18:58:04Z",
+  "source_count": 0,
+  "generated_at": "2026-05-17T20:49:12Z",
   "target_config": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\search_targets.yml",
   "intake_only": true,
   "diagnostics": {
     "collection_backend": "google_news_rss",
     "attempted_queries": 24,
-    "fetch_error_count": 0,
-    "no_live_collection_backend_configured": false,
+    "fetch_error_count": 24,
+    "no_live_collection_backend_configured": true,
     "suggested_unavailable_anchor_ids": [
       "cdc-svi",
       "dol-warn-guidance",
@@ -1321,6 +139,7 @@
       "hrsa-shortage-areas",
       "hud-pit-homelessness",
       "us-treasury-emergency-rental-assistance"
-    ]
+    ],
+    "no_live_collection_backend_message": "No live candidate collection backend is configured; add manual candidate records or configure source collectors."
   }
 }

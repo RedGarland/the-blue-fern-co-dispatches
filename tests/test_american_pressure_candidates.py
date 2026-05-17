@@ -90,6 +90,28 @@ def test_google_rss_html_is_stripped_from_candidate_text(monkeypatch):
     assert "news.google.com/rss/articles" not in combined
 
 
+def test_non_us_candidate_is_quarantined(monkeypatch):
+    monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["anchor-1"] for pillar in scout.PILLARS})
+    monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())
+    monkeypatch.setattr(scout, "_load_targets", lambda: {"target_groups": {pillar: {"search_phrases": ["x"], "data_anchor_hints": ["anchor-1"]} for pillar in scout.PILLARS}})
+    fake = [{"title": "BC SPCA warns of rising costs", "url": "https://example.com/nonus", "publisher": "BC SPCA", "published_at": "2026-05-10T00:00:00Z", "summary_or_snippet": "Vancouver households face pressure."}]
+    payload = scout.scout_day("2026-05-10", max_per_pillar=1, fetcher=lambda _query: fake)
+    row = payload["sources"][0]
+    assert row["review_status"] == "quarantine"
+    assert row["us_relevance_ok"] is False
+
+
+def test_malformed_title_fragment_quarantined(monkeypatch):
+    monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["anchor-1"] for pillar in scout.PILLARS})
+    monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())
+    monkeypatch.setattr(scout, "_load_targets", lambda: {"target_groups": {pillar: {"search_phrases": ["x"], "data_anchor_hints": ["anchor-1"]} for pillar in scout.PILLARS}})
+    fake = [{"title": "Housing and bill pressure in Structure, Rejecting is squeezing household budgets", "url": "https://example.com/bad", "publisher": "Some News", "published_at": "2026-05-10T00:00:00Z", "summary_or_snippet": "Local households affected."}]
+    payload = scout.scout_day("2026-05-10", max_per_pillar=1, fetcher=lambda _query: fake)
+    row = payload["sources"][0]
+    assert row["review_status"] == "quarantine"
+    assert row["editorial_rejection_reason"] == "prose_quality_failed"
+
+
 def test_investor_only_downrank_and_no_url_rejected():
     score, _, rejected = scout.score_candidate(
         {"title": "Investor call raises EPS guidance", "url": "https://example.com/investor", "publisher": "Bizwire", "summary_or_snippet": "Shareholder value focus"},

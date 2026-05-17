@@ -74,29 +74,47 @@ def _load_rows(week_end: str) -> tuple[str, list[dict[str, Any]]]:
 def build_readiness_report(week_end: str) -> dict[str, Any]:
     week_start, rows = _load_rows(week_end)
     approved = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "approved"]
+    quarantined = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "quarantine"]
+    maybe_rows = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "maybe"]
+    rejected = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "rejected"]
     approved_by_pillar: Counter[str] = Counter()
     story_plus_data = 0
+    us_relevance_failures = 0
+    prose_quality_failures = 0
     for row in approved:
         pillar = str(row.get("pillar") or "").strip() or "unknown"
         approved_by_pillar[pillar] += 1
         anchors = row.get("linked_data_anchor_ids")
         if isinstance(anchors, list) and anchors:
             story_plus_data += 1
+        if row.get("us_relevance_ok") is False:
+            us_relevance_failures += 1
+        if str(row.get("editorial_rejection_reason") or "").strip() == "prose_quality_failed":
+            prose_quality_failures += 1
     missing = [pillar for pillar in REQUIRED_CURRENT_DEVELOPMENT_PILLARS if approved_by_pillar.get(pillar, 0) <= 0]
     reasons: list[str] = []
-    if len(approved) <= 0:
-        reasons.append("No approved candidates in the weekly window.")
+    if len(approved) < 4:
+        reasons.append("Approved current-development candidates below minimum: need >=4.")
     if missing:
         reasons.append(f"Missing required current-development pillars: {', '.join(missing)}")
-    if story_plus_data <= 0:
-        reasons.append("No approved story_plus_data candidates (linked_data_anchor_ids missing).")
+    if story_plus_data < 3:
+        reasons.append("story_plus_data potential below minimum: need >=3.")
+    if us_relevance_failures > 0:
+        reasons.append(f"Approved set contains U.S.-relevance failures: {us_relevance_failures}.")
+    if prose_quality_failures > 0:
+        reasons.append(f"Approved set contains prose-quality failures: {prose_quality_failures}.")
     publish_recommended = len(reasons) == 0
     return {
         "ok": True,
         "week_start_date": week_start,
         "week_end_date": week_end,
         "approved_candidate_count": len(approved),
+        "quarantined_count": len(quarantined),
+        "rejected_count": len(rejected),
+        "maybe_count": len(maybe_rows),
         "approved_by_pillar": dict(sorted(approved_by_pillar.items())),
+        "us_relevance_failures": us_relevance_failures,
+        "prose_quality_failures": prose_quality_failures,
         "missing_required_current_development_pillars": missing,
         "estimated_story_plus_data_potential": story_plus_data,
         "weekly_publish_recommended": publish_recommended,

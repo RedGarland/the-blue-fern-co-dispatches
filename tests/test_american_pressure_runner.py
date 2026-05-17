@@ -698,6 +698,28 @@ def test_source_links_remain_visible_with_valid_urls(work_root):
     assert 'href="https://example.com/story"' in html
 
 
+def test_real_life_story_sources_capped_at_three(work_root):
+    records = []
+    for i in range(5):
+        row = _record(
+            f"food-story-{i}",
+            "food_pressure",
+            f"Food story {i}",
+            "Food demand increased for households in California.",
+            f"https://example.com/food-{i}",
+            source_type="news_report",
+            source_role="human_story",
+        )
+        row["location"] = "Sacramento, California"
+        records.append(row)
+    _write_manual_sources(work_root, "2026-05-12", records)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    story = curation["stories"][0]
+    assert len(story["human_story_source_ids"]) <= 3
+
+
 def test_baseline_only_note_appears_once_when_present(work_root):
     manual = [
         _record("cpi", "housing_household_cost_pressure", "BLS CPI Shelter Index", "Official baseline indicator source.", "https://example.com/cpi", source_role="data_anchor"),

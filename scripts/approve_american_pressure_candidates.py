@@ -10,7 +10,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CANDIDATES_ROOT = ROOT / "data" / "dispatches" / "american-pressure" / "candidates"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-ALLOWED_STATUSES = {"approved", "rejected", "maybe", "needs_review"}
+ALLOWED_STATUSES = {"approved", "rejected", "maybe", "needs_review", "quarantine"}
 
 
 def _validate_date(value: str) -> str:
@@ -67,6 +67,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--reject", dest="reject_id", help="Set review_status=rejected for source_record_id")
     parser.add_argument("--maybe", dest="maybe_id", help="Set review_status=maybe for source_record_id")
     parser.add_argument("--needs-review", dest="needs_review_id", help="Set review_status=needs_review for source_record_id")
+    parser.add_argument("--quarantine", dest="quarantine_id", help="Set review_status=quarantine for source_record_id")
     parser.add_argument("--write", action="store_true", help="Persist review_status changes to candidate JSON.")
     return parser.parse_args(argv)
 
@@ -82,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
             ("rejected", args.reject_id),
             ("maybe", args.maybe_id),
             ("needs_review", args.needs_review_id),
+            ("quarantine", args.quarantine_id),
         ]
         chosen = [(status, record_id) for status, record_id in operations if record_id]
         if len(chosen) > 1:

@@ -286,8 +286,8 @@ def summarize_dispatch(root: Path, pages_root: Path, slug: str, public_name: str
 
     source_count = count_sources(latest_sources) if latest_sources else None
     curation_payload = read_json(latest_curation) if latest_curation and latest_curation.exists() else None
-    story_count = len(curation_payload) if isinstance(curation_payload, list) else None
     manifest_payload = read_json(latest_manifest) if latest_manifest and latest_manifest.exists() else None
+    story_count = _resolve_story_count(manifest_payload, curation_payload)
 
     source_links_visible = bool(extract_links(latest_index)) if latest_index else False
 
@@ -307,6 +307,21 @@ def summarize_dispatch(root: Path, pages_root: Path, slug: str, public_name: str
         "latest_has_visible_source_links": source_links_visible,
     }
     return summary
+
+
+def _resolve_story_count(manifest_payload: Any, curation_payload: Any) -> int | None:
+    if isinstance(manifest_payload, dict):
+        for key in ("story_count", "public_story_count"):
+            value = manifest_payload.get(key)
+            if isinstance(value, int):
+                return value
+        for key in ("stories", "items", "briefs"):
+            value = manifest_payload.get(key)
+            if isinstance(value, list):
+                return len(value)
+    if isinstance(curation_payload, list):
+        return len(curation_payload)
+    return None
 
 
 def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:

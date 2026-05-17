@@ -64,6 +64,13 @@ PUBLIC_IMPACT_TERMS = (
 )
 US_RELEVANCE_TERMS = ("u.s.", "united states", "us ", " county", "california", "texas", "new york", "florida", "wisconsin")
 NON_US_TERMS = ("canada", "uk", "europe", "australia", "china", "india", "germany", "france", "japan")
+US_STATE_HINTS = (
+    "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "florida", "georgia",
+    "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts",
+    "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new hampshire", "new jersey", "new mexico",
+    "new york", "north carolina", "north dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "rhode island", "south carolina",
+    "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west virginia", "wisconsin", "wyoming",
+)
 
 
 def _safe_text(value: Any) -> str:
@@ -141,6 +148,39 @@ def _looks_non_us(text: str) -> bool:
     return any(term in lowered for term in NON_US_TERMS) and not any(term in lowered for term in US_RELEVANCE_TERMS)
 
 
+def _publisher_quality(raw: dict[str, Any]) -> str:
+    publisher = _safe_text(raw.get("publisher")).lower()
+    url = _safe_text(raw.get("url")).lower()
+    if "news.google.com" in url:
+        return "aggregator_or_repost"
+    if any(term in publisher for term in ("opinion", "editorial", "column", "advice")):
+        return "opinion_or_advice"
+    if any(term in publisher for term in ("gov", "department", "agency", "bureau", "fema", "cdc", "usda", "bls", "cms", "hrsa", "hhs", "treasury")):
+        return "official_primary"
+    if any(term in publisher for term in ("npr", "pbs", "public radio", "public media")):
+        return "public_media"
+    if any(term in publisher for term in ("reuters", "ap ", "associated press", "new york times", "washington post", "wall street journal", "usa today", "cnn", "abc", "cbs", "nbc")):
+        return "reputable_national_news"
+    if any(term in publisher for term in ("tribune", "times", "journal", "gazette", "herald", "post", "news")):
+        return "reputable_local_news"
+    if any(term in publisher for term in ("foundation", "institute", "nonprofit", "university", "research")):
+        return "nonprofit_or_research"
+    if any(term in publisher for term in ("dailyhunt", "eastafrican", "tribal news network", "bc spca")):
+        return "foreign_or_non_us"
+    return "low_confidence"
+
+
+def _us_relevance(raw: dict[str, Any], *, title: str, summary: str, location: str) -> tuple[bool, str]:
+    text = f"{title} {summary} {_safe_text(raw.get('publisher'))}".lower()
+    if location and any(state in location.lower() for state in US_STATE_HINTS):
+        return True, "us_location_resolved"
+    if any(term in text for term in US_RELEVANCE_TERMS) or any(state in text for state in US_STATE_HINTS):
+        return True, "explicit_us_relevance"
+    if _looks_non_us(text):
+        return False, "foreign_or_non_us_without_clear_us_relevance"
+    return False, "us_relevance_unclear"
+
+
 def _extract_location(text: str) -> str:
     bad_second_tokens = {"rejecting", "announces", "announce", "reports", "report", "warning", "budget", "demand", "closure"}
     patterns = (
@@ -178,6 +218,16 @@ def score_candidate(raw: dict[str, Any], *, pillar: str, anchor_ids: list[str], 
     if url in seen_urls:
         score -= 60
         rejections.append("duplicate_or_stale")
+    publisher_quality = _publisher_quality(raw)
+    if publisher_quality == "official_primary":
+        score += 15
+        reasons.append("official_primary_source")
+    elif publisher_quality in {"reputable_local_news", "reputable_national_news", "public_media"}:
+        score += 10
+        reasons.append("reputable_reporting")
+    elif publisher_quality in {"aggregator_or_repost", "foreign_or_non_us", "opinion_or_advice", "low_confidence"}:
+        score -= 25
+        rejections.append(f"publisher_quality:{publisher_quality}")
     if any(term in combined for term in INVESTOR_ONLY_TERMS):
         score -= 80
         rejections.append("investor_only")
@@ -200,6 +250,13 @@ def score_candidate(raw: dict[str, Any], *, pillar: str, anchor_ids: list[str], 
     if location:
         score += 10
         reasons.append("clear_location")
+    us_ok, us_reason = _us_relevance(raw, title=title, summary=summary, location=location)
+    if us_ok:
+        score += 15
+        reasons.append(us_reason)
+    else:
+        score -= 30
+        rejections.append(us_reason)
     if any(term in combined for term in ("families", "workers", "residents", "patients", "customers", "households")):
         score += 15
         reasons.append("affected_people_or_services")
@@ -264,6 +321,8 @@ def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, 
     url = _safe_text(raw.get("url"))
     publisher = clean_candidate_text(raw.get("publisher")) or "Unknown publisher"
     location = _extract_location(f"{title} {summary}")
+    publisher_quality = _publisher_quality(raw)
+    us_relevant, us_reason = _us_relevance(raw, title=title, summary=summary, location=location)
     potential, who, watch = _pillar_guidance(pillar)
     source_id = re.sub(r"[^a-z0-9]+", "-", f"{pillar}-{title}".lower()).strip("-")[:80] or f"{pillar}-candidate"
     source_record_id = f"ap-{day}-{source_id}"
@@ -271,7 +330,7 @@ def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, 
     reader_headline = title
     if len(reader_headline) > 95 or " - " in reader_headline or "(" in reader_headline:
         reader_headline = _candidate_reader_headline(pillar, summary, location)
-    return {
+    candidate = {
         "source_record_id": source_record_id,
         "source_id": source_id,
         "title": title,
@@ -301,7 +360,26 @@ def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, 
         "candidate_score": score,
         "candidate_score_reasons": score_reasons,
         "review_status": "needs_review",
+        "publisher_quality": publisher_quality,
+        "us_relevance_ok": us_relevant,
+        "us_relevance_reason": us_reason,
+        "location_confidence": "high" if location else "low",
+        "editorial_rejection_reason": "",
     }
+    prose_bad = (
+        (" - " in title)
+        or ("(" in title and ")" in title)
+        or ("structure, rejecting" in title.lower())
+        or ("nationally," in summary.lower() and not us_relevant)
+    )
+    if prose_bad:
+        candidate["review_status"] = "quarantine"
+        candidate["editorial_rejection_reason"] = "prose_quality_failed"
+    if not us_relevant or publisher_quality in {"foreign_or_non_us", "aggregator_or_repost", "opinion_or_advice", "low_confidence"}:
+        candidate["review_status"] = "quarantine"
+        if not candidate["editorial_rejection_reason"]:
+            candidate["editorial_rejection_reason"] = "us_relevance_or_source_quality_failed"
+    return candidate
 
 
 def _candidate_reader_headline(pillar: str, summary: str, location: str) -> str:
@@ -366,6 +444,8 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
                     continue
                 candidate = _build_candidate(day=day, pillar=pillar, raw=raw, score=score, score_reasons=reasons, anchor_ids=selected_anchor_ids)
                 candidate["candidate_bucket"] = "recommended" if score >= 45 and not rejection_reasons else ("maybe" if score >= 5 else "rejected")
+                if candidate.get("review_status") == "quarantine":
+                    candidate["candidate_bucket"] = "rejected"
                 if rejection_reasons:
                     candidate["rejection_reasons"] = rejection_reasons
                 bucket.append(candidate)

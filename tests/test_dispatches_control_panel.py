@@ -816,6 +816,17 @@ def test_ap_card_story_none_displays_not_reported():
     assert "Sources/Stories: 2 / not reported" in text
 
 
+def test_ap_card_uses_story_count_fallback_when_latest_story_count_missing():
+    raw = _base_status()
+    raw["dispatches"]["american_pressure"].pop("latest_story_count", None)
+    raw["dispatches"]["american_pressure"]["story_count"] = 7
+    summary = cp.summarize_status_for_gui(raw)
+    card = summary["dispatch_cards"]["american_pressure"]
+    assert card["stories"] == 7
+    text = cp.format_main_summary_text(summary)
+    assert "Sources/Stories: 2 / 7" in text
+
+
 def test_ap_review_tab_command_builders(tmp_path):
     scout = cp.build_ap_review_command("Scout Candidates", "2026-05-09", root=tmp_path)
     review = cp.build_ap_review_command("Generate Review Report", "2026-05-09", root=tmp_path)
@@ -837,3 +848,24 @@ def test_tooltip_instantiation_does_not_break_import():
 
     tooltip = cp.Tooltip(DummyWidget(), "x")
     assert tooltip.text == "x"
+
+
+def test_ap_candidate_summary_includes_quarantine_and_failure_counts(tmp_path):
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-16" / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {"source_record_id": "a", "pillar": "food_pressure", "title": "A", "review_status": "approved"},
+                    {"source_record_id": "b", "pillar": "food_pressure", "title": "B", "review_status": "quarantine", "us_relevance_ok": False},
+                    {"source_record_id": "c", "pillar": "food_pressure", "title": "C", "review_status": "rejected", "editorial_rejection_reason": "prose_quality_failed"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    summary = cp._candidate_summary("2026-05-16", tmp_path)
+    assert summary["quarantine_count"] == 1
+    assert summary["us_relevance_failures"] == 1
+    assert summary["prose_quality_failures"] == 1

@@ -934,6 +934,16 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
         if not bucket:
             continue
         human_story_sources = [s for s in bucket if _classify_source_role(s) == "human_story"]
+        human_story_sources = sorted(
+            human_story_sources,
+            key=lambda s: (
+                _safe_text(s.get("reliability_tier")).startswith("official"),
+                bool(_safe_text(s.get("manual_location"))),
+                bool(_safe_text(s.get("affected_people"))),
+                len(_safe_text(s.get("public_pressure_angle"))),
+            ),
+            reverse=True,
+        )[:3]
         data_anchor_sources = [s for s in bucket if _classify_source_role(s) == "data_anchor"]
         watchlist_sources = [s for s in bucket if _classify_source_role(s) == "watchlist_signal"]
 
@@ -973,7 +983,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
             human_summary = _locationized_current_development(human_story_sources[0])
 
         headline = _dedupe_headline(_reader_facing_headline(primary_source), headline_seen) if primary_source else _dedupe_headline(PILLAR_HEADINGS[pillar], headline_seen)
-        combined_sources = [*human_story_sources, *data_anchor_sources, *watchlist_sources]
+        combined_sources = [*human_story_sources, *data_anchor_sources, *watchlist_sources][:6]
         combined_ids = [str(s["source_record_id"]) for s in combined_sources]
         combined_urls = [str(s["url"]) for s in combined_sources]
         combined_publishers = [str(s["publisher"]) for s in combined_sources]
@@ -1195,10 +1205,18 @@ def _public_prose_guardrail(stories: list[dict[str, Any]]) -> list[str]:
     )
     for story in stories:
         story_id = _safe_text(story.get("story_id")) or "unknown-story"
+        item_type = _safe_text(story.get("item_type"))
+        requires_human_prose = item_type == "current_week_development"
+        if requires_human_prose:
+            for req in ("reader_headline", "human_story_summary", "potential_relevance", "who_may_feel_it"):
+                if not _safe_text(story.get(req)):
+                    errors.append(f"public prose missing required field in {story_id}.{req}")
         for field in fields:
             value = _safe_text(story.get(field))
             if value and contains_forbidden_public_markup(value):
                 errors.append(f"public prose contains forbidden markup/token in {story_id}.{field}")
+            if value and any(bad in value.lower() for bad in ("structure, rejecting", "news.google.com/rss/articles")):
+                errors.append(f"public prose quality failed in {story_id}.{field}")
     return errors
 
 

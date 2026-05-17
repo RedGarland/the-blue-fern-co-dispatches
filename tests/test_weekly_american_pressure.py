@@ -143,3 +143,33 @@ def test_validate_pages_view_for_date_passes_with_latest_and_prior(tmp_path, mon
     (ap / "archive.html").write_text("2026-05-16 2026-05-09", encoding="utf-8")
     (ap / "rss.xml").write_text("<item>2026-05-16</item><item>2026-05-09</item>", encoding="utf-8")
     assert weekly._validate_pages_view_for_date("2026-05-16") == []
+
+
+def test_publish_quality_gate_blocks_without_allow_thin(monkeypatch, tmp_path):
+    monkeypatch.setattr(weekly, "ROOT", tmp_path)
+    dispatch_dir = tmp_path / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-16"
+    dispatch_dir.mkdir(parents=True, exist_ok=True)
+    (dispatch_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "week_start_date": "2026-05-10",
+                "display_date_range": "May 10–May 16, 2026",
+                "source_count": 2,
+                "story_count": 1,
+                "story_plus_data_count": 1,
+                "baseline_only_count": 0,
+                "missing_required_current_development_pillars": ["food_pressure"],
+                "collection_gap_pillars": ["food_pressure"],
+                "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-16/",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_run(_root, _edition_date, **_kwargs):
+        return {"ok": True, "source_count": 2, "story_count": 1, "warnings": [], "errors": []}
+
+    monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
+    monkeypatch.setattr(weekly, "build_readiness_report", lambda _d: {"weekly_publish_recommended": False, "reasons_if_not_recommended": ["thin"]})
+    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--publish"])
+    assert rc == 1

@@ -193,6 +193,34 @@ def test_reports_latest_manual_source_date(tmp_path, monkeypatch):
     assert status["dispatches"]["american_pressure"]["latest_manual_source_date"] == "2026-05-17"
 
 
+def test_american_pressure_latest_story_count_uses_manifest_story_count(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "edition_manifest.json",
+        {"source_count": 32, "story_count": 7},
+    )
+    # Simulate missing/unusable curation payload; story count should still come from manifest.
+    _write(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "curation_manifest.json", "{}")
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    assert status["dispatches"]["american_pressure"]["latest_story_count"] == 7
+
+
+def test_status_text_renders_american_pressure_source_story_counts(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _json(
+        root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "edition_manifest.json",
+        {"source_count": 32, "story_count": 7},
+    )
+    _write(root / "output" / "site" / "american-pressure" / "editions" / "2026-05-10" / "curation_manifest.json", "{}")
+    _stub_git(monkeypatch, root=root, pages=pages)
+    status = dispatches_status.build_status(root, pages)
+    rendered = dispatches_status.render_text_status(status, [])
+    assert "American Pressure:" in rendered
+    assert "- latest source/story count:" in rendered
+    assert " / 7" in rendered
+
+
 def test_json_output_valid(tmp_path, monkeypatch, capsys):
     root, pages = _make_repo(tmp_path)
     _stub_git(monkeypatch, root=root, pages=pages)

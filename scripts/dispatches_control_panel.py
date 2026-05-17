@@ -122,14 +122,19 @@ def _candidate_summary(date_text: str, root: Path) -> dict[str, Any]:
             "rejected_count": 0,
             "needs_review_count": 0,
             "maybe_count": 0,
+            "quarantine_count": 0,
             "approved_by_pillar": {},
             "missing_required_pillars": list(_ap_required_pillars()),
+            "us_relevance_failures": 0,
+            "prose_quality_failures": 0,
             "preview_rows": [],
         }
     payload = json.loads(path.read_text(encoding="utf-8"))
     rows = payload.get("sources", []) if isinstance(payload, dict) else []
-    status_counts: dict[str, int] = {"approved": 0, "rejected": 0, "needs_review": 0, "maybe": 0}
+    status_counts: dict[str, int] = {"approved": 0, "rejected": 0, "needs_review": 0, "maybe": 0, "quarantine": 0}
     approved_by_pillar: dict[str, int] = {}
+    us_relevance_failures = 0
+    prose_quality_failures = 0
     preview_rows: list[dict[str, str]] = []
     for row in rows:
         if not isinstance(row, dict):
@@ -141,6 +146,10 @@ def _candidate_summary(date_text: str, root: Path) -> dict[str, Any]:
         if status == "approved":
             pillar = str(row.get("pillar") or "").strip() or "unknown"
             approved_by_pillar[pillar] = approved_by_pillar.get(pillar, 0) + 1
+        if row.get("us_relevance_ok") is False:
+            us_relevance_failures += 1
+        if str(row.get("editorial_rejection_reason") or "").strip() == "prose_quality_failed":
+            prose_quality_failures += 1
         preview_rows.append(
             {
                 "source_record_id": str(row.get("source_record_id") or ""),
@@ -155,8 +164,11 @@ def _candidate_summary(date_text: str, root: Path) -> dict[str, Any]:
         "rejected_count": int(status_counts.get("rejected", 0)),
         "needs_review_count": int(status_counts.get("needs_review", 0)),
         "maybe_count": int(status_counts.get("maybe", 0)),
+        "quarantine_count": int(status_counts.get("quarantine", 0)),
         "approved_by_pillar": dict(sorted(approved_by_pillar.items())),
         "missing_required_pillars": missing,
+        "us_relevance_failures": us_relevance_failures,
+        "prose_quality_failures": prose_quality_failures,
         "preview_rows": preview_rows,
     }
 
@@ -750,6 +762,18 @@ def _ap_required_pillars() -> tuple[str, ...]:
     )
 
 
+def _resolve_story_count(dispatch_payload: dict[str, Any]) -> int | None:
+    for key in ("latest_story_count", "story_count", "public_story_count"):
+        value = dispatch_payload.get(key)
+        if isinstance(value, int):
+            return value
+    for key in ("stories", "items", "briefs"):
+        value = dispatch_payload.get(key)
+        if isinstance(value, list):
+            return len(value)
+    return None
+
+
 def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
     dispatches = status_json.get("dispatches") or {}
     pages = status_json.get("pages_repo") or {}
@@ -843,7 +867,7 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "latest_public_edition_date": american.get("latest_public_edition_date"),
             "latest_pages_edition_date": american.get("latest_pages_edition_date"),
             "sources": american.get("latest_source_count"),
-            "stories": american.get("latest_story_count"),
+            "stories": _resolve_story_count(american),
             "story_plus_data_count": american.get("story_plus_data_count"),
             "baseline_only_count": american.get("baseline_only_count"),
             "missing_required_current_development_pillars": american.get("missing_required_current_development_pillars") or [],
@@ -1854,9 +1878,15 @@ class DispatchesControlPanel:
         self.ap_summary_var.set(
             "\n".join(
                 [
-                    f"approved={summary.get('approved_count', 0)} | rejected={summary.get('rejected_count', 0)} | needs_review={summary.get('needs_review_count', 0)} | maybe={summary.get('maybe_count', 0)}",
+                    f"approved={summary.get('approved_count', 0)} | quarantined={summary.get('quarantine_count', 0)} | rejected={summary.get('rejected_count', 0)} | needs_review={summary.get('needs_review_count', 0)} | maybe={summary.get('maybe_count', 0)}",
                     f"approved by pillar: {approved_lines}",
                     f"missing required pillars: {missing}",
+                    f"u.s. relevance failures: {summary.get('us_relevance_failures', 0)} | prose quality failures: {summary.get('prose_quality_failures', 0)}",
+                    (
+                        "publish readiness: recommended"
+                        if summary.get("approved_count", 0) >= 4 and summary.get("quarantine_count", 0) == 0
+                        else "publish readiness: not recommended"
+                    ),
                 ]
             )
         )

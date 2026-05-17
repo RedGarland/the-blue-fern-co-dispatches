@@ -112,6 +112,7 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
     recommended = sorted(_bucket(rows, "recommended"), key=lambda x: int(x.get("candidate_score") or 0), reverse=True)
     maybe = sorted(_bucket(rows, "maybe"), key=lambda x: int(x.get("candidate_score") or 0), reverse=True)
     rejected_scored = sorted(_bucket(rows, "rejected"), key=lambda x: int(x.get("candidate_score") or 0))
+    quarantined = [row for row in rows if _safe_text(row.get("review_status")).lower() == "quarantine"]
     rejected_raw = [row for row in payload.get("rejected_candidates", []) if isinstance(row, dict)]
     missing = _find_missing_pillars(rows)
     targets = _load_targets().get("target_groups", {})
@@ -149,6 +150,20 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
     for row in maybe:
         title = clean_google_rss_title(row.get("title"), row.get("publisher"))
         lines.append(f"- [{title}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
+    lines.append("")
+    lines.append("## Quarantined candidates")
+    if not quarantined:
+        lines.append("- None")
+    for row in quarantined:
+        title = clean_google_rss_title(row.get("title"), row.get("publisher"))
+        lines.append(
+            f"- [{title}]({row.get('url')}) | pillar={row.get('pillar')} | "
+            f"reason={row.get('editorial_rejection_reason') or row.get('us_relevance_reason') or 'quarantine'} | "
+            f"publisher_quality={row.get('publisher_quality') or 'unknown'} | us_relevance={row.get('us_relevance_ok')} | "
+            f"location_confidence={row.get('location_confidence') or 'unknown'} | "
+            f"reader_headline={clean_candidate_text(row.get('reader_headline'))} | "
+            f"current_dev={clean_candidate_text(row.get('what_happened') or row.get('human_story_summary'))}"
+        )
     lines.append("")
     lines.append("## Rejected candidates")
     if not rejected_scored and not rejected_raw and not invalid_rows:

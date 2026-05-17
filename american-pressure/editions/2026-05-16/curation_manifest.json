@@ -1,0 +1,558 @@
+{
+  "stories": [
+    {
+      "story_id": "american-pressure-story-2026-05-16-001",
+      "title": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (Ilja0QJ3uR) - Fathom Journal",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5\" target=\"_blank\">St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (Ilja0QJ3uR)</a>\u00a0\u00a0<font color=\"#6f6f6f\">Fathom Journal</font>",
+      "category": "food-pressure",
+      "pillar": "food_pressure",
+      "curation_reason": "food assistance dependency",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 5,
+        "data_anchor": 3,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 99,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
+        "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
+        "ap-2026-05-16-food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
+        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
+        "ap-2026-05-16-food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t",
+        "auto-2026-05-16-usda-fns-snap-household-characteristics",
+        "auto-2026-05-16-usda-fns-snap-data-tables",
+        "auto-2026-05-16-usda-ers-food-price-outlook"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5",
+        "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBwVWRacmI2aDJUcHh6bzU2X01SRm1EbG5JLWxBSG1HLWRvampDSXlqZ1luSVhWVm9ZYjNRQ3AzbUZfRzBoOXlLMEFjRnI4QldCa0NqQzd1Vk9YQlFiUG1BTNIBXEFVX3lxTE4xMlN5Tlkzdk5rR2tkaUExbWVsMWtRWDVZb3BmTVN0WWVvM2ZTMC1OZU12ZGZHaV8wYzFWb1BvQU5OWFRRNWpLWFQ4MGo0Uk93bm1mSVUweGFZMVZ0?oc=5",
+        "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmUUp5a1V3aG1hcHJOWkdPeV9sTVBGakN4ekJ4cDNpN0gxVWdGc3VQdHpGZ0hhMWQtNG54Uk14NWdOb2hLb1N0b2ZWSDJWd1hNaXZCVU4zbS1NUHp4dG1jcm9fZldxdW9HUGl4UHZBeW95MC1wY0wzWHBB?oc=5",
+        "https://news.google.com/rss/articles/CBMigwNBVV95cUxOVEJLcXJkVGRsaVJOTVVNSEpNREJkeXU4YTdha05nS0szbDlkalhreVVtYlhuZUFLMzNkV3NGNTZqb0Y5bmFHYWQzazNtcDYtZDI4X1hGeWJjLW5CSHNVZndHNUZ0WUxrY2wtOWJORGQ1RHEzV1JLcFEzXzdEa1BNV2pCeGlfNDc3VF83ellVNi1qb3EtWlpXRnM1TEFPRXFXZGVHajNPOWZVVmRlLWNfdWdnQ2VkOThjNnNwN2x4cUZjejNzUklOZldDVEwzSl8zVnhoM0gwTWdqdUR2NVZQTndhMGljYXRnOWZLdzZoUEo5MHQ5VHBva0FpcjBWcWhQWjFuYS16NEdoWTNIUjR6LUQwelVSYlRWZWZ2NEx1UzBWREZFbXgtMWRFNHdRQ0ZSQlA3TXVCZUUxSzM0MHo3TVdMb095a0phWVRrVXF5dXRQSEViYjhPcVVCV2ZDdWRxSWJXOG10dV9xT0RpTUJvQWFiNVl3OXRpbEJpaF95cmRTRE0?oc=5",
+        "https://news.google.com/rss/articles/CBMitwFBVV95cUxPRHY0aENKbFFMUXV5blA5ODZyaU5fYTVncEdNZVFDM3otVS00N2Y1amVaVkpuSUZ2VTNCeGpyal9UTVQzeHAydDNRVVhiSXJ0NnM3M20tSTk2bDVRNU5WSDZzMm8yQjA2VG9MZGEzbldINGJlQUFMZVZLSGVpQmFEYm84NWk2OU1mLUt2OE5WLUxCSWpjSjFvWnkyc0R5QlBRMW5xNGh4Z2tLYnFOdHdpWmc1M1VrZUk?oc=5",
+        "https://www.fns.usda.gov/research/snap/household-characteristics",
+        "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
+        "https://www.ers.usda.gov/data-products/food-price-outlook/"
+      ],
+      "publisher_names": [
+        "Fathom Journal",
+        "Modern Ghana",
+        "CityNews Vancouver",
+        "MSN",
+        "The EastAfrican",
+        "USDA Food and Nutrition Service",
+        "USDA Food and Nutrition Service",
+        "USDA Economic Research Service"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
+        "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
+        "ap-2026-05-16-food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
+        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
+        "ap-2026-05-16-food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-usda-fns-snap-household-characteristics",
+        "auto-2026-05-16-usda-fns-snap-data-tables",
+        "auto-2026-05-16-usda-ers-food-price-outlook"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (Ilja0QJ3uR) - Fathom Journal",
+      "human_story_summary": "In US, <a href=\"https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5\" target=\"_blank\">St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (Ilja0QJ3uR)</a> <font color=\"#6f6f6f\">Fathom Journal</font>.",
+      "data_context_summary": "Data context from SNAP Household Characteristics, SNAP Data Tables, USDA ERS Food Price Outlook is a baseline for tracking whether food pressure is broadening.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5\" target=\"_blank\">St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (Ilja0QJ3uR)</a>\u00a0\u00a0<font color=\"#6f6f6f\">Fathom Journal</font>",
+      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
+      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
+      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-002",
+      "title": "Bankruptcy filings help show where debt stress is breaking through",
+      "summary": "Official bankruptcy filings baseline including chapter and business/nonbusiness splits.",
+      "category": "financial-distress-pressure",
+      "pillar": "financial_distress_pressure",
+      "curation_reason": "bankruptcy/financial distress baseline",
+      "item_type": "baseline_gauge",
+      "source_role_counts": {
+        "human_story": 0,
+        "data_anchor": 2,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "official_release_only",
+      "score": 98,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "auto-2026-05-16-us-courts-bankruptcy-filings-statistics",
+        "auto-2026-05-16-us-courts-bankruptcy-data-visualizations"
+      ],
+      "source_urls": [
+        "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
+        "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables"
+      ],
+      "publisher_names": [
+        "Administrative Office of the U.S. Courts",
+        "Administrative Office of the U.S. Courts"
+      ],
+      "human_story_source_ids": [],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-us-courts-bankruptcy-filings-statistics",
+        "auto-2026-05-16-us-courts-bankruptcy-data-visualizations"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Bankruptcy filings help show where debt stress is breaking through",
+      "human_story_summary": "",
+      "data_context_summary": "Data context from U.S. Courts Bankruptcy Filings Statistics, U.S. Courts Caseload Data Tables helps anchor whether debt stress may be moving from warning signs to hard outcomes.",
+      "what_happened": "Bankruptcy filings are a delayed but concrete sign that households or businesses have run out of easier options.",
+      "potential_relevance": "This signal can show where debt stress could break into missed payments, service disruption, or local job risk.",
+      "who_may_feel_it": "Heavily indebted households, small businesses, and workers tied to stressed employers.",
+      "what_to_watch_next": "Watch for spillover into layoffs, service disruptions, and local business closures.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-003",
+      "title": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents | Montgomery - Montgomery County, MD (.gov)",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5\" target=\"_blank\">Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents | Montgomery</a>\u00a0\u00a0<font color=\"#6f6f6f\">Montgomery County, MD (.gov)</font>",
+      "category": "housing-household-cost-pressure",
+      "pillar": "housing_household_cost_pressure",
+      "curation_reason": "shelter cost pressure",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 4,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 97,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
+        "ap-2026-05-16-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
+        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
+        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
+        "auto-2026-05-16-bls-cpi-shelter"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5",
+        "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOTVhpbE5oWlpMZ3RZZmpodVZkaFVMNGNfdWc2WE1MWHE4ZTVvd1FQczdvNHl6Qnp2T3JpcTFTR3VWSVI3amg4UmZvVEgwbWI2WFNSWVFjZ1hXNHVGTDRFc21tYm5XYWEwQUlUNVBER2I1U2JxZUwyQ1hFWGxRZXhTQVVWdFhTcFpTTVJISlhoaWxzYVZyZXp2ZlB0YUtRcXZBY0M4VVBwT1hPb3ZmZUUwOFcyTE1FTnU3dkhhbWJnaTVTcm5aMVQ3YWhMZERqYXBJSy1mdFpTc01jeXZYaUd1RFY4WFo5aTQ?oc=5",
+        "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNRm50aTFGQzJaQXVCaVhLNDBHRDNfM2tReWVNbnNTYThNZXF4ZlZMMXlkczF6Q2c4YjZvMnhfdTJmdmpPVXdveHNBZXZibzNmeEhMNjB1clBZNl9NNEI4WWZDS0dNSEFSMDdjZVlNTjNUQXdRRkhtZU1uaXlTVDlSNHZja19IQ3VManNDYXpDeHZRWDZ5cGcwWFBvNEJtcEMxNW5iTWlyd2IzbXVZb1ZQaTV6YkdBUEhiUUJtaFlIclNqdw?oc=5",
+        "https://news.google.com/rss/articles/CBMirgJBVV95cUxOc254aERmVWVabkFHV1ZvTmxuelNjbTJPVGp5aVltU21HOUdwc2MzR3RoZ2M5cXlYRWVhbU1Xb3AxdzJiM0FVZDI0bWFUZVZHUXhMRWp0WUpNS1Y1ajc2ZG5FTE5RME1vYXVCNXBmX2YxSXNSd0dqRlgzd1JjUC1VSXpVVFZSMjZiZWRmeVJlLWxxb0JNUXNEbWlWVzRULUtuNEtkOGNrVkhWZGZOTkpZeUszXzZzQ1M2MVVRSTJrSmo3dy00eDU5Q3h1aHhIZnE2S3U4RXRUTG5MbUtUQlFJU09HelpWYzFsWk9pUE0wTWNIVTR6YW5jX1ZtMXoxT0xLTW1yQnJjTWRHZm5FWTZPMXZsaEx4RXVLOHU3TnIxQlNwUnlxNGlham81Q0lqZw?oc=5",
+        "https://www.bls.gov/cpi/"
+      ],
+      "publisher_names": [
+        "Montgomery County, MD (.gov)",
+        "Dailyhunt",
+        "Colorado Springs Gazette",
+        "Ohio House of Representatives (.gov)",
+        "U.S. Bureau of Labor Statistics"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
+        "ap-2026-05-16-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
+        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
+        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-bls-cpi-shelter"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents | Montgomery - Montgomery County, MD (.gov)",
+      "human_story_summary": "In Structure, Rejecting, <a href=\"https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5\" target=\"_blank\">Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents | Montgomery</a> <font color=\"#6f6f6f\">Montgomery County, MD (.gov)</font>.",
+      "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5\" target=\"_blank\">Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents | Montgomery</a>\u00a0\u00a0<font color=\"#6f6f6f\">Montgomery County, MD (.gov)</font>",
+      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
+      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
+      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
+      "location_scope": "Structure, Rejecting",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-004",
+      "title": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO - Star Tribune",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5\" target=\"_blank\">With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO</a>\u00a0\u00a0<font color=\"#6f6f6f\">Star Tribune</font>",
+      "category": "health-access-pressure",
+      "pillar": "health_access_pressure",
+      "curation_reason": "health coverage/access pressure",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 3,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 96,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
+        "ap-2026-05-16-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
+        "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit",
+        "auto-2026-05-16-cms-medicaid-chip-enrollment"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5",
+        "https://news.google.com/rss/articles/CBMitwFBVV95cUxOamY4cnhLczdVNjY1dk4tVXVIYXhtUUU4MExQQkkyYTd2NEJMTHlxeTBlZ0gyUGI2a1hpN3NINGdVandzOW9PcXFEY0d4ZUsyWGdlMUs5NFBaZkRuVHZMRlBvaVZMaWtja2FNVXozaWtMYjZwR3FMR3l4VTNGN0dBR1daNzhhVGg3S05GanZ0RzRPUGdvOVlCUnVsMUM1VkxISUhUYmdIV1Y3aXRBc2F2aVlWdzdrU0E?oc=5",
+        "https://news.google.com/rss/articles/CBMipwFBVV95cUxOZXhXbTc0TXpaS1FXZ0w4SjdfYmVFTldIZWVZTmZKdmJmREMwa0xORHdONW81TjFaV2huWEZXUWxRaWk0Z0lfcmMtamZzMUU3NDRGSDNhUWhpRkJMWEhPSkh1RFVZOFlWTkhnMUdxY0lRQktmOXYyRU9RSWxJVlR1ZlIydVdwQmNLUW0xNUh1NWhnY2N5U0oySk1XMXgwNWhnQTNZdjVXaw?oc=5",
+        "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data"
+      ],
+      "publisher_names": [
+        "Star Tribune",
+        "Tribal News Network",
+        "The Oxford Eagle",
+        "Centers for Medicare and Medicaid Services"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
+        "ap-2026-05-16-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
+        "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-cms-medicaid-chip-enrollment"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO - Star Tribune",
+      "human_story_summary": "In US, <a href=\"https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5\" target=\"_blank\">With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO</a> <font color=\"#6f6f6f\">Star Tribune</font>.",
+      "data_context_summary": "Data context from Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5\" target=\"_blank\">With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO</a>\u00a0\u00a0<font color=\"#6f6f6f\">Star Tribune</font>",
+      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
+      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
+      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-005",
+      "title": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup - Hoodline",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5\" target=\"_blank\">East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup</a>\u00a0\u00a0<font color=\"#6f6f6f\">Hoodline</font>",
+      "category": "labor-income-pressure",
+      "pillar": "labor_income_pressure",
+      "curation_reason": "job market pressure",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 4,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 95,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
+        "ap-2026-05-16-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
+        "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
+        "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
+        "auto-2026-05-16-bls-unemployment-situation"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5",
+        "https://news.google.com/rss/articles/CBMi5wFBVV95cUxQX0p0bHgyZmhxU3JlXzE1aHNIQ1ZKVk9LUWVYRUpKYWhoOFdWc2tabkF0UWl3ZkhWZ1pWeXFJX19GWEFXYnkyc1h1b0ItQm5MT1praWRNNUt0ZkRSRkE1cmVFVk9BNXUwRXptN0RWVUZHYlBQZHpEYmpUdDNpcnRmemxNX0FGb25TdDNKUmQwRmtYNHJlQ0ZYLWIzRUhDd2toRk9jZ1dEVWFkNDZFSWtGUjljWm0wODNYcXFKZ2xnNlNZeXhlOXRuV3NPbDVwNk1DNE4tVVIzZlBOVGlQNDM4ZEozcUxIOTA?oc=5",
+        "https://news.google.com/rss/articles/CBMitwJBVV95cUxQQWdzMjRiR0hCazd2M3hlTjJpQkt0UE10VUdDS1VrclM0ekpiT0N5U3VpeEhkZHdYQTMwaVNBTUpiQUpxV3VLTVZENl9YVVlhMWd6djJEOXdTNzczTGxpN21ldjVqczR4UDJGeFN2Tm03RFhpTXdMbEVPNno5bS02QllTZkw1RFJyNzNoVW9TcmNMMmZ0bGhpazZvdnJzMWxuTmtsOFNfdXl4dzRSeHBJOW1BeHJLcVpGb2VLa2NDaVFHT1NpU09RU1JFcUNtWExSWEtBekNTb0dWVmRvb05qN2dmWm9MMHdsRnQxbGpXakdDSE1WNXJjbVlscU96QkQyTUxpQVJjQ3lpZDg3elBpdkdUTF8tYTFVeHJRaHIwYVJqck4zQUF1Y0V0Qm9xNlM0OW96MUt4VQ?oc=5",
+        "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5RYWY2UkhMODdhcTdadTZoSy1LY2VjNTdielk3SlQ1VHJFS20zeGthOWVidlJ0OWtwelpmd25RbmM0WENhQ0I5V0pCZDM5ekVkUVlTeE94X3UyQ1cxUGNCaEJRQQ?oc=5",
+        "https://www.bls.gov/news.release/empsit.nr0.htm"
+      ],
+      "publisher_names": [
+        "Hoodline",
+        "MSN",
+        "MSN",
+        "94.5 PST",
+        "U.S. Bureau of Labor Statistics"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
+        "ap-2026-05-16-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
+        "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
+        "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-bls-unemployment-situation"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup - Hoodline",
+      "human_story_summary": "In US, <a href=\"https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5\" target=\"_blank\">East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup</a> <font color=\"#6f6f6f\">Hoodline</font>.",
+      "data_context_summary": "Data context from BLS Employment Situation helps show whether job and paycheck stability is holding.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5\" target=\"_blank\">East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup</a>\u00a0\u00a0<font color=\"#6f6f6f\">Hoodline</font>",
+      "potential_relevance": "This may signal weakening paycheck stability for local households.",
+      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
+      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-006",
+      "title": "Disaster assessment begins in 30 counties, 1 city after April storms - AOL.com",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5\" target=\"_blank\">Disaster assessment begins in 30 counties, 1 city after April storms</a>\u00a0\u00a0<font color=\"#6f6f6f\">AOL.com</font>",
+      "category": "environmental-pressure",
+      "pillar": "environmental_pressure",
+      "curation_reason": "drought/disaster/local-system strain",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 3,
+        "data_anchor": 2,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 94,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
+        "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
+        "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara",
+        "auto-2026-05-16-noaa-ncei-monthly-climate-report",
+        "auto-2026-05-16-us-drought-monitor"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5",
+        "https://news.google.com/rss/articles/CBMiowFBVV95cUxQRE1WWlZXLUNoWVJmYVpFZVZhbFVDY2F2WGNjQkNsQ1BqSk10Y3RCYTJtcUZ5UTFMdFFEOFJmZ1RhQlBXcmhKWHVOYWllQU5ZYzNpSHBVa3ZvSmJKTGdwd0NTa1I4aWhncl96bFZSazVpY2pNMTZZckVRVjFacWpZQWdHdEJKd0VSU2o3Z3NsS3JIWnZ3cU1mTUNhal9ZLWdnSXRj?oc=5",
+        "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOSVZLQnVnZzljN3RjX1dhZDl2ZE5xcmVMTnBmWkJ4eElXVm5mdlFaTHpjdHpZMmEySG1ER2o3OHZnMlFFa1BTRUF5VnJpRElIUWdrbHowcjZjS2ZSOFI3QktVYk42QUFtdFhCbmhCTDNPb20tN0pTNTZNbWtlZERNZ0x1eTJvT09yQmZ0ejkyYU5oazh4QWFMeUdwSXNhc2dBcEY4Ymc3cWRyTVJNbWhIbnVPU0V6TEFKRDNtS3RkcC14TjF0UWpXOC1lTGt0aGNzTEE?oc=5",
+        "https://www.ncei.noaa.gov/access/monitoring/monthly-report/",
+        "https://droughtmonitor.unl.edu/"
+      ],
+      "publisher_names": [
+        "AOL.com",
+        "Manistee News Advocate",
+        "thealpenanews.com",
+        "NOAA National Centers for Environmental Information",
+        "National Drought Mitigation Center and USDA and NOAA"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
+        "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
+        "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-noaa-ncei-monthly-climate-report",
+        "auto-2026-05-16-us-drought-monitor"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Disaster assessment begins in 30 counties, 1 city after April storms - AOL.com",
+      "human_story_summary": "In US, <a href=\"https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5\" target=\"_blank\">Disaster assessment begins in 30 counties, 1 city after April storms</a> <font color=\"#6f6f6f\">AOL.com</font>.",
+      "data_context_summary": "Data context from NOAA NCEI Monthly Climate Reports, U.S. Drought Monitor provides baseline evidence for this pressure area.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5\" target=\"_blank\">Disaster assessment begins in 30 counties, 1 city after April storms</a>\u00a0\u00a0<font color=\"#6f6f6f\">AOL.com</font>",
+      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
+      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
+      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-007",
+      "title": "Voters to consider $688 million in Bay Area school bonds - The Mercury News",
+      "summary": "<a href=\"https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5\" target=\"_blank\">Voters to consider $688 million in Bay Area school bonds</a>\u00a0\u00a0<font color=\"#6f6f6f\">The Mercury News</font>",
+      "category": "local-system-strain",
+      "pillar": "local_system_strain",
+      "curation_reason": "drought/disaster/local-system strain",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 2,
+        "data_anchor": 1,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "story_plus_data",
+      "score": 93,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
+        "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g",
+        "auto-2026-05-16-fema-disaster-declarations"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5",
+        "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOVlc1UWUtVG5zOXdGQ1hqQmxpZ2RrdUI5WmpfUWgxZTFURUtTeFR6eHBkZHFURUtoN2FPMHRKa241bkZGd1F0N0UwVFVXVlN3dHRLOG50NEY5dkVPNHpFcUdtUlNJWE1SR25qclM0ekRIOVVGWHE0UmJsZF9XNTdhZl92enBKTU1xdjUtenVzbzlaNUJKbFVYVjBBR1ROc2VSX1Yya0QzZHVZS1g4d2xvZDQ2XzNkRXgwOWpfQUpJSlduMVZGYnlUdHlUMTJXeU5hZUtoV3N30gHbAUFVX3lxTE1UTFRDNlFvZGM0NFZweDdwY3pBS3hxdFF0NXhELWxfUHBrakRmSmtCQzM1VjRjaXF0RTVMRHFlaTAwTXAxSGFBeFVHMmpYR3g0NUkySEdfNmU3bm04SGIzTFVHdGRaSkE4UkxCY3dpUFI5RVpidi1fUW1KdWdtNmhmcjM4dWdNUHM1TzA4NmszU29EMGJEd01HVW9TeFVjZTY2c2RLZW1zQ2hOcWZ5TjVHUkhnbnpCUkRXYXdKREVjRXJWVk1xR1V5YTloNHBqMmxPdG5FSlVRX04xdw?oc=5",
+        "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      ],
+      "publisher_names": [
+        "The Mercury News",
+        "ABC7 New York",
+        "Federal Emergency Management Agency"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
+        "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g"
+      ],
+      "data_anchor_source_ids": [
+        "auto-2026-05-16-fema-disaster-declarations"
+      ],
+      "watchlist_source_ids": [],
+      "reader_headline": "Voters to consider $688 million in Bay Area school bonds - The Mercury News",
+      "human_story_summary": "In US, <a href=\"https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5\" target=\"_blank\">Voters to consider $688 million in Bay Area school bonds</a> <font color=\"#6f6f6f\">The Mercury News</font>.",
+      "data_context_summary": "Data context from FEMA Disaster Declarations provides baseline evidence for this pressure area.",
+      "what_happened": "<a href=\"https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5\" target=\"_blank\">Voters to consider $688 million in Bay Area school bonds</a>\u00a0\u00a0<font color=\"#6f6f6f\">The Mercury News</font>",
+      "potential_relevance": "This may signal strain in local service delivery and resilience.",
+      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
+      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
+      "location_scope": "",
+      "affected_people": "",
+      "pressure_area": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "key_stat": null,
+      "generated_at": "2026-05-17T19:33:29.900163+00:00",
+      "collection_gap_pillars": [
+        "financial_distress_pressure"
+      ]
+    }
+  ],
+  "edition_date": "2026-05-16",
+  "week_start_date": "2026-05-10",
+  "week_end_date": "2026-05-16",
+  "display_date_range": "May 10\u2013May 16, 2026",
+  "pillars_present": [
+    "food_pressure",
+    "financial_distress_pressure",
+    "housing_household_cost_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "environmental_pressure",
+    "local_system_strain"
+  ],
+  "pillars_missing": [
+    "policy_implementation"
+  ],
+  "source_count_by_pillar": {
+    "food_pressure": 8,
+    "financial_distress_pressure": 2,
+    "housing_household_cost_pressure": 5,
+    "health_access_pressure": 4,
+    "labor_income_pressure": 5,
+    "environmental_pressure": 5,
+    "local_system_strain": 3,
+    "policy_implementation": 0
+  },
+  "story_count_by_pillar": {
+    "food_pressure": 1,
+    "financial_distress_pressure": 1,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 1,
+    "local_system_strain": 1,
+    "policy_implementation": 0
+  },
+  "rejected_no_public_pressure_angle": 0,
+  "rejected_investor_only": 0,
+  "rejected_duplicate_or_stale": 0,
+  "rejected_missing_required_fields": 0,
+  "item_type_counts": {
+    "baseline_gauge": 1,
+    "current_week_development": 6,
+    "watchlist_item": 0
+  },
+  "source_role_counts": {
+    "human_story": 21,
+    "data_anchor": 11,
+    "watchlist_signal": 0
+  },
+  "brief_quality_counts": {
+    "story_plus_data": 6,
+    "official_release_only": 1,
+    "baseline_only": 0,
+    "watchlist_only": 0
+  },
+  "searched_pillars": [
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain",
+    "policy_implementation"
+  ],
+  "required_current_development_search_targets": {
+    "food_pressure": "food bank demand / SNAP / grocery pressure",
+    "financial_distress_pressure": "bankruptcy / Chapter 11 / Chapter 7 / business closure / employer bankruptcy / hospital bankruptcy / nursing home bankruptcy / retail closure / debt distress / foreclosure",
+    "housing_household_cost_pressure": "eviction filings / rent increases / utility shutoffs / utility rate hikes / energy burden / homelessness shelter demand / housing authority waitlist / insurance premium increases / mobile home park rent / property tax pressure",
+    "health_access_pressure": "clinic / hospital / pharmacy / health access",
+    "labor_income_pressure": "layoffs / WARN / employer cuts",
+    "local_system_strain": "disaster / drought / flood / heat / local service strain",
+    "policy_implementation": "benefit or policy implementation problems"
+  },
+  "current_development_count_by_pillar": {
+    "food_pressure": 5,
+    "financial_distress_pressure": 1,
+    "housing_household_cost_pressure": 4,
+    "health_access_pressure": 3,
+    "labor_income_pressure": 4,
+    "environmental_pressure": 3,
+    "local_system_strain": 3,
+    "policy_implementation": 0
+  },
+  "human_story_count_by_pillar": {
+    "food_pressure": 5,
+    "financial_distress_pressure": 0,
+    "housing_household_cost_pressure": 4,
+    "health_access_pressure": 3,
+    "labor_income_pressure": 4,
+    "environmental_pressure": 3,
+    "local_system_strain": 2,
+    "policy_implementation": 0
+  },
+  "missing_required_current_development_pillars": [
+    "financial_distress_pressure"
+  ],
+  "collection_gap_pillars": [
+    "financial_distress_pressure"
+  ],
+  "story_plus_data_count": 6,
+  "baseline_only_count": 0,
+  "briefs_with_human_story": 6,
+  "briefs_with_data_anchor": 7,
+  "baseline_only_briefs": 0,
+  "missing_human_story_pillars": [
+    "financial_distress_pressure"
+  ],
+  "low_quality_story_ids": [],
+  "future_enhancements": {
+    "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+  }
+}

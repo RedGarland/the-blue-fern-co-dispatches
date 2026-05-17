@@ -108,6 +108,125 @@ def test_review_report_includes_missing_pillars(tmp_path, monkeypatch):
     report = (review_script.REVIEW_ROOT / "2026-05-10_candidate_review.md").read_text(encoding="utf-8")
     assert "Missing required pillars" in report
     assert "labor_income_pressure" in report
+    assert "candidate_file_exists: True" in report
+    assert "candidate_count_raw: 1" in report
+
+
+def test_review_report_empty_candidate_file_has_clear_diagnostic(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-11" / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(json.dumps({"sources": []}), encoding="utf-8")
+    rc = review_script.main(["--date", "2026-05-11", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-11_candidate_review.md").read_text(encoding="utf-8")
+    assert "candidate_file_exists: True" in report
+    assert "candidate_count_raw: 0" in report
+    assert "review_state: Candidate file exists but is empty." in report
+    assert "Missing required pillars" in report
+
+
+def test_review_report_invalid_candidates_counted_and_rejected(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-12" / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {"title": "Missing URL", "pillar": "food_pressure", "candidate_bucket": "recommended", "public_pressure_angle": "x"},
+                    {"title": "Missing angle", "pillar": "food_pressure", "candidate_bucket": "recommended", "url": "https://example.com/a"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = review_script.main(["--date", "2026-05-12", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-12_candidate_review.md").read_text(encoding="utf-8")
+    assert "candidate_count_raw: 2" in report
+    assert "candidate_count_valid: 0" in report
+    assert "rejected_validation_count: 2" in report
+    assert "skipped_no_url_count: 1" in report
+    assert "skipped_no_public_pressure_angle_count: 1" in report
+
+
+def test_review_report_valid_candidates_show_recommended_and_maybe(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-13" / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "title": "Recommended item",
+                        "url": "https://example.com/r",
+                        "pillar": "food_pressure",
+                        "public_pressure_angle": "x",
+                        "candidate_bucket": "recommended",
+                        "candidate_score": 50,
+                    },
+                    {
+                        "title": "Maybe item",
+                        "url": "https://example.com/m",
+                        "pillar": "labor_income_pressure",
+                        "public_pressure_angle": "x",
+                        "candidate_bucket": "maybe",
+                        "candidate_score": 10,
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = review_script.main(["--date", "2026-05-13", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-13_candidate_review.md").read_text(encoding="utf-8")
+    assert "Recommended item" in report
+    assert "Maybe item" in report
+    assert "candidate_count_valid: 2" in report
+
+
+def test_review_report_missing_path_reports_clearly(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    rc = review_script.main(["--date", "2026-05-14", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-14_candidate_review.md").read_text(encoding="utf-8")
+    assert "candidate_file_exists: False" in report
+    assert "candidate_file_path:" in report
+    assert "No candidate file was found for this date." in report
+
+
+def test_review_report_shows_no_live_backend_notice_when_present(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-15" / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps(
+            {
+                "sources": [],
+                "diagnostics": {
+                    "no_live_collection_backend_message": "No live candidate collection backend is configured; add manual candidate records or configure source collectors."
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = review_script.main(["--date", "2026-05-15", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-15_candidate_review.md").read_text(encoding="utf-8")
+    assert "collector_notice: No live candidate collection backend is configured; add manual candidate records or configure source collectors." in report
 
 
 def test_approved_candidates_feed_weekly_run(tmp_path):

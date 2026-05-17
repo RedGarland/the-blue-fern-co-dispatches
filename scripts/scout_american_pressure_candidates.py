@@ -315,15 +315,19 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
     effective_fetcher = fetcher or _fetch_rss_items
     accepted: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
+    attempted_queries = 0
+    fetch_error_count = 0
     for pillar in PILLARS:
         group = target_groups.get(pillar, {})
         phrases = group.get("search_phrases", [])
         bucket: list[dict[str, Any]] = []
         for phrase in phrases:
             query = f"{phrase} when:2d"
+            attempted_queries += 1
             try:
                 items = effective_fetcher(query)
             except Exception as exc:  # noqa: BLE001
+                fetch_error_count += 1
                 rejected.append({"pillar": pillar, "title": phrase, "reason": f"fetch_error:{exc}"})
                 continue
             for raw in items:
@@ -339,6 +343,17 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
                 seen_urls.add(candidate["url"])
         bucket.sort(key=lambda row: int(row.get("candidate_score") or 0), reverse=True)
         accepted.extend(bucket[:max_per_pillar])
+    no_live_backend = attempted_queries > 0 and fetch_error_count >= attempted_queries and len(accepted) == 0
+    diagnostics: dict[str, Any] = {
+        "collection_backend": "google_news_rss",
+        "attempted_queries": attempted_queries,
+        "fetch_error_count": fetch_error_count,
+        "no_live_collection_backend_configured": no_live_backend,
+    }
+    if no_live_backend:
+        diagnostics["no_live_collection_backend_message"] = (
+            "No live candidate collection backend is configured; add manual candidate records or configure source collectors."
+        )
     return {
         "date": day,
         "sources": accepted,
@@ -347,6 +362,7 @@ def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> d
         "generated_at": _iso_utc_now(),
         "target_config": str(TARGETS_PATH),
         "intake_only": True,
+        "diagnostics": diagnostics,
     }
 
 

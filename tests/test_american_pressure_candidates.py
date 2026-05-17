@@ -9,6 +9,7 @@ import scripts.review_american_pressure_candidates as review_script
 import scripts.scout_american_pressure_candidates as scout
 import scripts.run_american_pressure_dispatch as ap_runner
 import scripts.approve_american_pressure_candidates as approve_script
+import scripts.american_pressure_review_workflow as apwf
 
 
 def _write_min_registry(root: Path) -> None:
@@ -538,3 +539,41 @@ def test_approve_helper_missing_source_record_id_fails_cleanly(tmp_path, monkeyp
     payload = json.loads(capsys.readouterr().out)
     assert payload["ok"] is False
     assert "source_record_id not found" in payload["errors"][0]
+
+
+def test_weekly_candidate_loads_across_seven_days(tmp_path):
+    for i in range(7):
+        day = f"2026-05-{10 + i:02d}"
+        path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"sources": [{"source_record_id": f"id-{i}", "url": f"https://example.com/{i}", "review_status": "needs_review"}]}), encoding="utf-8")
+    rows = apwf.load_weekly_candidates(tmp_path, "2026-05-16")
+    assert len(rows) == 7
+
+
+def test_save_review_decisions_mutates_only_review_metadata_fields(tmp_path):
+    day = "2026-05-16"
+    path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / day / "candidate_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    original = {
+        "sources": [
+            {
+                "source_record_id": "ap-1",
+                "title": "Keep title",
+                "url": "https://example.com/1",
+                "publisher": "Keep publisher",
+                "review_status": "needs_review",
+                "public_pressure_angle": "angle",
+                "us_relevance_ok": True,
+            }
+        ]
+    }
+    path.write_text(json.dumps(original, indent=2), encoding="utf-8")
+    row = apwf.load_weekly_candidates(tmp_path, day)[0]
+    apwf.save_review_decisions(tmp_path, day, {row["candidate_key"]: "approved"})
+    updated = json.loads(path.read_text(encoding="utf-8"))["sources"][0]
+    assert updated["review_status"] == "approved"
+    assert updated["title"] == "Keep title"
+    assert updated["url"] == "https://example.com/1"
+    assert updated["publisher"] == "Keep publisher"
+    assert "user_reviewed_at" in updated

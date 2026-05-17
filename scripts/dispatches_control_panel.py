@@ -15,6 +15,15 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
+from scripts.american_pressure_review_workflow import (
+    ALLOWED_REVIEW_STATUSES,
+    approval_validation_issues,
+    load_weekly_candidates,
+    save_review_decisions,
+    week_dates_for_year_week,
+    week_label,
+)
+
 DISPATCHES = ("Gaza", "Cascadia", "American Pressure")
 ACTIONS = (
     "Run dispatch",
@@ -27,15 +36,6 @@ ACTIONS = (
     "Run dashboard",
     "Run doctor",
 )
-AP_REVIEW_ACTIONS = (
-    "Scout Candidates",
-    "Generate Review Report",
-    "Open Review Report",
-    "Open Candidate JSON",
-    "Check Weekly Readiness",
-    "Run Weekly With Approved Candidates",
-)
-
 STATUS_BANNER_OK = "OK to review"
 STATUS_BANNER_WARN = "Needs attention"
 STATUS_BANNER_STOP = "Do not publish"
@@ -1567,15 +1567,25 @@ class DispatchesControlPanel:
         self.raw_details_visible = tk.BooleanVar(value=False)
         self.execution_var = tk.StringVar(value="Ready")
         self.command_var = tk.StringVar(value="")
-        self.ap_review_date_var = tk.StringVar(value=date_cls.today().isoformat())
-        self.ap_review_action_var = tk.StringVar(value=AP_REVIEW_ACTIONS[0])
+        today = date_cls.today()
+        self.ap_review_year_var = tk.IntVar(value=today.year)
+        self.ap_review_week_var = tk.IntVar(value=max(1, int(((today - date_cls(today.year, 1, 1)).days // 7) + 1)))
+        self.ap_review_date_var = tk.StringVar(value=today.isoformat())
+        self.ap_week_range_var = tk.StringVar(value="")
         self.ap_candidate_path_var = tk.StringVar(value="")
         self.ap_review_report_path_var = tk.StringVar(value="")
         self.ap_summary_var = tk.StringVar(value="")
+        self.ap_readiness_var = tk.StringVar(value="")
+        self.ap_candidate_rows: list[dict[str, Any]] = []
+        self.ap_candidate_status_updates: dict[str, str] = {}
+        self.ap_candidate_override_keys: set[str] = set()
         self._tooltips: list[Tooltip] = []
 
         self._build_ui()
+        self.ap_review_year_var.trace_add("write", lambda *_args: self._on_ap_week_changed())
+        self.ap_review_week_var.trace_add("write", lambda *_args: self._on_ap_week_changed())
         self.ap_review_date_var.trace_add("write", lambda *_args: self.refresh_ap_review_summary())
+        self._on_ap_week_changed()
         self._poll_ui_queue()
 
     def _build_ui(self) -> None:
@@ -1722,57 +1732,79 @@ class DispatchesControlPanel:
     def _build_ap_review_tab(self, frame: ttk.Frame) -> None:
         top = ttk.Frame(frame)
         top.pack(fill=tk.X, padx=10, pady=10)
-        ttk.Label(top, text="Date (YYYY-MM-DD)").grid(row=0, column=0, sticky="w")
-        ttk.Entry(top, textvariable=self.ap_review_date_var, width=16).grid(row=0, column=1, padx=6, sticky="w")
-        ttk.Label(
-            top,
-            text="Daily scouting does not publish. Weekly publish uses only approved candidates.",
-            foreground="#505050",
-        ).grid(row=0, column=2, columnspan=4, sticky="w")
-        ttk.Label(top, text="Action").grid(row=1, column=0, sticky="w")
-        ap_action_combo = ttk.Combobox(top, values=AP_REVIEW_ACTIONS, textvariable=self.ap_review_action_var, state="readonly", width=44)
-        ap_action_combo.grid(row=1, column=1, padx=6, sticky="w")
-        run_btn = ttk.Button(top, text="Execute Review Action", command=self.execute_ap_review_action)
-        run_btn.grid(row=1, column=2, padx=8, sticky="w")
+        ttk.Label(top, text="Year").grid(row=0, column=0, sticky="w")
+        year_combo = ttk.Combobox(top, values=[str(y) for y in range(2024, 2036)], textvariable=self.ap_review_year_var, state="readonly", width=8)
+        year_combo.grid(row=0, column=1, padx=6, sticky="w")
+        ttk.Label(top, text="Week").grid(row=0, column=2, sticky="w")
+        week_combo = ttk.Combobox(top, values=[str(w) for w in range(1, 54)], textvariable=self.ap_review_week_var, state="readonly", width=6)
+        week_combo.grid(row=0, column=3, padx=6, sticky="w")
+        ttk.Label(top, textvariable=self.ap_week_range_var, foreground="#1f3f55").grid(row=0, column=4, columnspan=4, sticky="w")
+        ttk.Label(top, text="Step 1: Scout. Step 2: Review and approve. Step 3: Check readiness. Step 4: Generate and preview. Step 5: Publish.", foreground="#505050").grid(row=1, column=0, columnspan=8, sticky="w")
 
         path_frame = ttk.Frame(frame)
         path_frame.pack(fill=tk.X, padx=10, pady=4)
-        ttk.Label(path_frame, text="Candidate file path").grid(row=0, column=0, sticky="w")
-        ttk.Label(path_frame, textvariable=self.ap_candidate_path_var, foreground="#444444", wraplength=1120).grid(row=0, column=1, sticky="w", padx=6)
-        ttk.Label(path_frame, text="Review report path").grid(row=1, column=0, sticky="w")
-        ttk.Label(path_frame, textvariable=self.ap_review_report_path_var, foreground="#444444", wraplength=1120).grid(row=1, column=1, sticky="w", padx=6)
+        ttk.Label(path_frame, text="Week-ending date").grid(row=0, column=0, sticky="w")
+        ttk.Label(path_frame, textvariable=self.ap_review_date_var, foreground="#444444").grid(row=0, column=1, sticky="w", padx=6)
+        ttk.Label(path_frame, text="Candidate file path").grid(row=1, column=0, sticky="w")
+        ttk.Label(path_frame, textvariable=self.ap_candidate_path_var, foreground="#444444", wraplength=1120).grid(row=1, column=1, sticky="w", padx=6)
+        ttk.Label(path_frame, text="Review report path").grid(row=2, column=0, sticky="w")
+        ttk.Label(path_frame, textvariable=self.ap_review_report_path_var, foreground="#444444", wraplength=1120).grid(row=2, column=1, sticky="w", padx=6)
 
         btn_row = ttk.Frame(frame)
         btn_row.pack(fill=tk.X, padx=10, pady=6)
-        scout_btn = ttk.Button(btn_row, text="Scout Candidates", command=lambda: self._run_ap_review_action("Scout Candidates"))
+        scout_btn = ttk.Button(btn_row, text="Scout Week", command=self.scout_ap_week)
         scout_btn.pack(side=tk.LEFT)
-        report_btn = ttk.Button(btn_row, text="Generate Review Report", command=lambda: self._run_ap_review_action("Generate Review Report"))
+        report_btn = ttk.Button(btn_row, text="Generate Review Report", command=self.generate_ap_review_report)
         report_btn.pack(side=tk.LEFT, padx=6)
-        open_report_btn = ttk.Button(btn_row, text="Open Review Report", command=self.open_ap_review_report)
-        open_report_btn.pack(side=tk.LEFT, padx=6)
-        open_candidate_btn = ttk.Button(btn_row, text="Open Candidate JSON", command=self.open_ap_candidate_json)
-        open_candidate_btn.pack(side=tk.LEFT, padx=6)
-        readiness_btn = ttk.Button(btn_row, text="Check Weekly Readiness", command=lambda: self._run_ap_review_action("Check Weekly Readiness"))
+        load_btn = ttk.Button(btn_row, text="Load Candidates", command=self.load_ap_candidates)
+        load_btn.pack(side=tk.LEFT, padx=6)
+        save_btn = ttk.Button(btn_row, text="Save Review Decisions", command=self.save_ap_review_decisions)
+        save_btn.pack(side=tk.LEFT, padx=6)
+        readiness_btn = ttk.Button(btn_row, text="Check Weekly Readiness", command=self.check_ap_weekly_readiness)
         readiness_btn.pack(side=tk.LEFT, padx=6)
-        weekly_btn = ttk.Button(btn_row, text="Run Weekly With Approved Candidates", command=lambda: self._run_ap_review_action("Run Weekly With Approved Candidates"))
-        weekly_btn.pack(side=tk.LEFT, padx=6)
+        generate_btn = ttk.Button(btn_row, text="Generate HTML", command=self.generate_ap_html)
+        generate_btn.pack(side=tk.LEFT, padx=6)
+        open_html_btn = ttk.Button(btn_row, text="Open Generated HTML", command=self.open_ap_generated_html)
+        open_html_btn.pack(side=tk.LEFT, padx=6)
+        publish_btn = ttk.Button(btn_row, text="Publish to Pages Locally", command=self.publish_ap_pages_locally)
+        publish_btn.pack(side=tk.LEFT, padx=6)
+        push_btn = ttk.Button(btn_row, text="Push Pages Live", command=self.push_ap_pages_live)
+        push_btn.pack(side=tk.LEFT, padx=6)
 
         ttk.Label(frame, textvariable=self.ap_summary_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=4)
-        self.ap_preview_text = ScrolledText(frame, height=18)
-        self.ap_preview_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
-        self.ap_preview_text.configure(state=tk.DISABLED)
+        ttk.Label(frame, textvariable=self.ap_readiness_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        columns = ("date", "status", "pillar", "publisher_quality", "source_publisher", "reader_headline", "location", "score", "reason", "url")
+        self.ap_candidates_tree = ttk.Treeview(frame, columns=columns, show="headings", height=18)
+        for col in columns:
+            self.ap_candidates_tree.heading(col, text=col.replace("_", " ").title())
+        self.ap_candidates_tree.column("date", width=100, stretch=False)
+        self.ap_candidates_tree.column("status", width=120, stretch=False)
+        self.ap_candidates_tree.column("pillar", width=170, stretch=False)
+        self.ap_candidates_tree.column("publisher_quality", width=130, stretch=False)
+        self.ap_candidates_tree.column("source_publisher", width=170)
+        self.ap_candidates_tree.column("reader_headline", width=320)
+        self.ap_candidates_tree.column("location", width=130, stretch=False)
+        self.ap_candidates_tree.column("score", width=65, stretch=False)
+        self.ap_candidates_tree.column("reason", width=180)
+        self.ap_candidates_tree.column("url", width=280)
+        self.ap_candidates_tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
+        self.ap_candidates_tree.bind("<Double-1>", self._edit_ap_status_cell)
         self._tooltips.extend(
             [
-                Tooltip(ap_action_combo, "Select American Pressure review workflow action."),
-                Tooltip(scout_btn, "Daily intake scout only. No publish, no push."),
-                Tooltip(report_btn, "Generate markdown review report for the selected date."),
-                Tooltip(open_report_btn, "Open the review markdown file if it exists."),
-                Tooltip(open_candidate_btn, "Open candidate_sources.json for the selected date."),
+                Tooltip(year_combo, "Select the year for Sunday-Saturday weekly review."),
+                Tooltip(week_combo, "Select the week number. Edition date is that week's Saturday."),
+                Tooltip(scout_btn, "Run daily candidate scouting for each day in the selected week."),
+                Tooltip(report_btn, "Generate candidate review report(s) for the selected week."),
+                Tooltip(load_btn, "Load candidate records for all seven days in the selected week."),
+                Tooltip(save_btn, "Save only review status metadata back to candidate JSON files."),
                 Tooltip(readiness_btn, "Check weekly readiness based on approved candidates."),
-                Tooltip(weekly_btn, "Run weekly pipeline using approved candidates and local publish flow."),
+                Tooltip(generate_btn, "Generate weekly edition HTML without Pages publish/push."),
+                Tooltip(open_html_btn, "Open output/site american-pressure edition HTML for the selected week-ending date."),
+                Tooltip(publish_btn, "Publish selected edition into local Pages repo only."),
+                Tooltip(push_btn, "Push local Pages gh-pages branch live after confirmation."),
             ]
         )
-        self.refresh_ap_review_summary()
+        self.load_ap_candidates()
 
     def _poll_ui_queue(self) -> None:
         while True:
@@ -1834,22 +1866,21 @@ class DispatchesControlPanel:
             on_done=lambda rc: self.ui_queue.put(("done", rc)),
         )
 
-    def execute_ap_review_action(self) -> None:
-        self._run_ap_review_action(self.ap_review_action_var.get())
-
-    def _run_ap_review_action(self, action: str) -> None:
-        date_text = self.ap_review_date_var.get().strip()
-        if not validate_date(date_text):
-            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
-            return
+    def _on_ap_week_changed(self) -> None:
         try:
-            cmd = build_ap_review_command(action, date_text, root=self.root_dir)
-        except ValueError as exc:
-            messagebox.showerror("Unsupported selection", str(exc))
+            year = int(self.ap_review_year_var.get())
+            week = int(self.ap_review_week_var.get())
+            _, end = week_dates_for_year_week(year, week)
+        except Exception:
+            self.ap_week_range_var.set("Invalid week selection")
             return
+        self.ap_review_date_var.set(end.isoformat())
+        self.ap_week_range_var.set(week_label(year, week))
+
+    def _run_async_command(self, cmd: list[str], action_label: str) -> None:
         cmd_str = subprocess.list2cmdline(cmd)
         self.command_var.set(f"Command: {cmd_str}")
-        self.execution_var.set(f"Running American Pressure review action={action} date={date_text}")
+        self.execution_var.set(action_label)
         self._append_output(f"$ {cmd_str}")
         self.run_state.running = True
         self.execute_btn.configure(state=tk.DISABLED)
@@ -1861,55 +1892,214 @@ class DispatchesControlPanel:
             on_done=lambda rc: self.ui_queue.put(("done", rc)),
         )
 
+    def _run_sync_command(self, cmd: list[str], action_label: str) -> int:
+        cmd_str = subprocess.list2cmdline(cmd)
+        self.command_var.set(f"Command: {cmd_str}")
+        self.execution_var.set(action_label)
+        self._append_output(f"$ {cmd_str}")
+        completed = subprocess.run(cmd, cwd=str(self.root_dir), capture_output=True, text=True, check=False)
+        if completed.stdout:
+            for line in completed.stdout.splitlines():
+                self._append_output(line)
+        if completed.stderr:
+            for line in completed.stderr.splitlines():
+                self._append_output(line)
+        self.execution_var.set(f"Finished with exit code={completed.returncode} ({'success' if completed.returncode == 0 else 'failure'})")
+        return completed.returncode
+
+    def _ap_week_days(self) -> list[str]:
+        end = date_cls.fromisoformat(self.ap_review_date_var.get().strip())
+        start = end - timedelta(days=6)
+        return [(start + timedelta(days=offset)).isoformat() for offset in range(7)]
+
+    def scout_ap_week(self) -> None:
+        for day in self._ap_week_days():
+            rc = self._run_sync_command(
+                [
+                    str(python_executable(self.root_dir)),
+                    "scripts\\scout_american_pressure_candidates.py",
+                    "--date",
+                    day,
+                    "--write",
+                    "--max-per-pillar",
+                    "5",
+                ],
+                f"Running Scout Week for {day}",
+            )
+            if rc != 0:
+                break
+
+    def generate_ap_review_report(self) -> None:
+        for day in self._ap_week_days():
+            rc = self._run_sync_command(
+                [str(python_executable(self.root_dir)), "scripts\\review_american_pressure_candidates.py", "--date", day, "--write"],
+                f"Running Generate Review Report for {day}",
+            )
+            if rc != 0:
+                break
+
+    def load_ap_candidates(self) -> None:
+        week_end = self.ap_review_date_var.get().strip()
+        self.ap_candidate_rows = load_weekly_candidates(self.root_dir, week_end)
+        self.ap_candidate_status_updates = {row["candidate_key"]: row["review_status"] for row in self.ap_candidate_rows}
+        self.ap_candidate_override_keys = set()
+        for item in self.ap_candidates_tree.get_children():
+            self.ap_candidates_tree.delete(item)
+        for row in self.ap_candidate_rows:
+            self.ap_candidates_tree.insert(
+                "",
+                tk.END,
+                iid=row["candidate_key"],
+                values=(
+                    row["date"],
+                    row["review_status"],
+                    row["pillar"],
+                    row["publisher_quality"],
+                    row["source_publisher"],
+                    row["reader_headline"],
+                    row["location"],
+                    row["score"],
+                    row["reason"],
+                    row["url"],
+                ),
+            )
+        self.refresh_ap_review_summary()
+
+    def _edit_ap_status_cell(self, event: Any) -> None:
+        row_id = self.ap_candidates_tree.identify_row(event.y)
+        col = self.ap_candidates_tree.identify_column(event.x)
+        if not row_id or col != "#2":
+            return
+        x, y, w, h = self.ap_candidates_tree.bbox(row_id, col)
+        combo = ttk.Combobox(self.ap_candidates_tree, values=list(ALLOWED_REVIEW_STATUSES), state="readonly")
+        combo.place(x=x, y=y, width=w, height=h)
+        combo.set(str(self.ap_candidate_status_updates.get(row_id, "needs_review")))
+
+        def _commit(_evt: Any | None = None) -> None:
+            new_status = combo.get().strip()
+            combo.destroy()
+            if not new_status:
+                return
+            self.ap_candidate_status_updates[row_id] = new_status
+            values = list(self.ap_candidates_tree.item(row_id, "values"))
+            values[1] = new_status
+            self.ap_candidates_tree.item(row_id, values=values)
+
+        combo.bind("<<ComboboxSelected>>", _commit)
+        combo.bind("<FocusOut>", _commit)
+        combo.focus_set()
+
+    def save_ap_review_decisions(self) -> None:
+        review_notes = {}
+        overrides: set[str] = set()
+        by_key = {row["candidate_key"]: row for row in self.ap_candidate_rows}
+        for key, status in self.ap_candidate_status_updates.items():
+            row = by_key.get(key)
+            if not row:
+                continue
+            if status == "approved":
+                issues = approval_validation_issues(row.get("raw", {}))
+                if issues:
+                    msg = "This candidate failed approval checks:\n- " + "\n- ".join(issues) + "\n\nApprove anyway?"
+                    if not messagebox.askyesno("Approval override required", msg):
+                        continue
+                    overrides.add(key)
+        save_review_decisions(self.root_dir, self.ap_review_date_var.get().strip(), self.ap_candidate_status_updates, review_notes, overrides)
+        self.ap_candidate_override_keys = overrides
+        self.load_ap_candidates()
+
+    def check_ap_weekly_readiness(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        cmd = [str(python_executable(self.root_dir)), "scripts\\check_american_pressure_weekly_readiness.py", "--date", date_text]
+        completed = subprocess.run(cmd, cwd=str(self.root_dir), capture_output=True, text=True, check=False)
+        text = completed.stdout or completed.stderr or ""
+        self.ap_readiness_var.set(text.strip())
+
+    def generate_ap_html(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        self._run_async_command(
+            [
+                str(python_executable(self.root_dir)),
+                "scripts\\run_weekly_american_pressure.py",
+                "--date",
+                date_text,
+                "--source-mode",
+                "both",
+                "--include-approved-candidates",
+            ],
+            f"Generating weekly HTML for {date_text}",
+        )
+
+    def open_ap_generated_html(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        self._open(self.root_dir / "output" / "site" / "american-pressure" / "editions" / date_text / "index.html")
+
+    def publish_ap_pages_locally(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        cmd = [str(python_executable(self.root_dir)), "scripts\\check_american_pressure_weekly_readiness.py", "--date", date_text]
+        completed = subprocess.run(cmd, cwd=str(self.root_dir), capture_output=True, text=True, check=False)
+        payload = json.loads(completed.stdout or "{}") if (completed.stdout or "").strip() else {}
+        recommended = bool(payload.get("weekly_publish_recommended"))
+        allow_thin = False
+        if not recommended:
+            reasons = payload.get("reasons_if_not_recommended") or []
+            reason_text = "\n".join(str(item) for item in reasons)
+            confirm = messagebox.askyesno("Readiness failed", f"{reason_text}\n\nThis edition failed readiness checks. Publish anyway?")
+            if not confirm:
+                return
+            allow_thin = True
+        weekly_cmd = [
+            str(python_executable(self.root_dir)),
+            "scripts\\run_weekly_american_pressure.py",
+            "--date",
+            date_text,
+            "--source-mode",
+            "both",
+            "--include-approved-candidates",
+            "--publish",
+        ]
+        if allow_thin:
+            weekly_cmd.append("--allow-thin-edition")
+        self._run_async_command(weekly_cmd, f"Publishing Pages locally for {date_text}")
+
+    def push_ap_pages_live(self) -> None:
+        status = load_status_json(self.root_dir)
+        ap = ((status.get("dispatches") or {}).get("american_pressure") or {})
+        latest_public = str(ap.get("latest_public_edition_date") or "n/a")
+        latest_pages = str(ap.get("latest_pages_edition_date") or "n/a")
+        if not messagebox.askyesno("Confirm push", f"Latest American Pressure public/pages dates: {latest_public} / {latest_pages}\n\nPush Pages live now?"):
+            return
+        date_text = self.ap_review_date_var.get().strip()
+        self._run_async_command(
+            [
+                str(python_executable(self.root_dir)),
+                "scripts\\run_weekly_american_pressure.py",
+                "--date",
+                date_text,
+                "--source-mode",
+                "both",
+                "--include-approved-candidates",
+                "--publish",
+                "--push",
+            ],
+            f"Pushing Pages live for {date_text}",
+        )
+
     def refresh_ap_review_summary(self) -> None:
         date_text = self.ap_review_date_var.get().strip()
         self.ap_candidate_path_var.set(str(_candidate_path(date_text, self.root_dir)))
         self.ap_review_report_path_var.set(str(_review_report_path(date_text, self.root_dir)))
         if not validate_date(date_text):
-            self.ap_summary_var.set("Enter a valid date to load candidate summary.")
-            self.ap_preview_text.configure(state=tk.NORMAL)
-            self.ap_preview_text.delete("1.0", tk.END)
-            self.ap_preview_text.configure(state=tk.DISABLED)
+            self.ap_summary_var.set("Enter a valid week selection.")
             return
-        summary = _candidate_summary(date_text, self.root_dir)
-        approved_by_pillar = summary.get("approved_by_pillar", {})
-        approved_lines = ", ".join(f"{key}:{value}" for key, value in approved_by_pillar.items()) or "none"
-        missing = ", ".join(summary.get("missing_required_pillars", [])) or "none"
+        rows = self.ap_candidate_rows or load_weekly_candidates(self.root_dir, date_text)
+        counts: dict[str, int] = {status: 0 for status in ALLOWED_REVIEW_STATUSES}
+        for row in rows:
+            status = str(self.ap_candidate_status_updates.get(row["candidate_key"], row["review_status"]))
+            counts[status] = counts.get(status, 0) + 1
         self.ap_summary_var.set(
-            "\n".join(
-                [
-                    f"approved={summary.get('approved_count', 0)} | quarantined={summary.get('quarantine_count', 0)} | rejected={summary.get('rejected_count', 0)} | needs_review={summary.get('needs_review_count', 0)} | maybe={summary.get('maybe_count', 0)}",
-                    f"approved by pillar: {approved_lines}",
-                    f"missing required pillars: {missing}",
-                    f"u.s. relevance failures: {summary.get('us_relevance_failures', 0)} | prose quality failures: {summary.get('prose_quality_failures', 0)}",
-                    (
-                        "publish readiness: recommended"
-                        if summary.get("approved_count", 0) >= 4 and summary.get("quarantine_count", 0) == 0
-                        else "publish readiness: not recommended"
-                    ),
-                ]
-            )
+            f"loaded={len(rows)} | approved={counts.get('approved', 0)} | rejected={counts.get('rejected', 0)} | needs_review={counts.get('needs_review', 0)} | maybe={counts.get('maybe', 0)} | quarantine={counts.get('quarantine', 0)}"
         )
-        self.ap_preview_text.configure(state=tk.NORMAL)
-        self.ap_preview_text.delete("1.0", tk.END)
-        for row in summary.get("preview_rows", []):
-            self.ap_preview_text.insert(tk.END, f"[{row.get('review_status')}] {row.get('pillar')} | {row.get('source_record_id')} | {row.get('title')}\n")
-        self.ap_preview_text.see("1.0")
-        self.ap_preview_text.configure(state=tk.DISABLED)
-
-    def open_ap_review_report(self) -> None:
-        date_text = self.ap_review_date_var.get().strip()
-        if not validate_date(date_text):
-            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
-            return
-        self._open(_review_report_path(date_text, self.root_dir))
-
-    def open_ap_candidate_json(self) -> None:
-        date_text = self.ap_review_date_var.get().strip()
-        if not validate_date(date_text):
-            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
-            return
-        self._open(_candidate_path(date_text, self.root_dir))
 
     def _preflight_warnings(self, dispatch: str, action: str, date_text: str) -> list[str]:
         notes: list[str] = []

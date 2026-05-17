@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from scripts import dispatches_control_panel as cp
+from scripts import american_pressure_review_workflow as apwf
 
 
 def _base_status() -> dict:
@@ -848,6 +849,37 @@ def test_tooltip_instantiation_does_not_break_import():
 
     tooltip = cp.Tooltip(DummyWidget(), "x")
     assert tooltip.text == "x"
+
+
+def test_week_selector_uses_saturday_as_edition_date():
+    start, end = apwf.week_dates_for_year_week(2026, 20)
+    assert start.isoformat() == "2026-05-10"
+    assert end.isoformat() == "2026-05-16"
+    assert apwf.week_label(2026, 20) == "Week 20: May 10–May 16, 2026"
+
+
+def test_publish_local_readiness_block_and_override(monkeypatch, tmp_path):
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = type("S", (), {"get": lambda self: "2026-05-16"})()
+    calls: list[list[str]] = []
+    monkeypatch.setattr(cp.subprocess, "run", lambda *a, **k: type("C", (), {"stdout": '{"weekly_publish_recommended": false, "reasons_if_not_recommended": ["thin"]}', "stderr": "", "returncode": 0})())
+    monkeypatch.setattr(cp.messagebox, "askyesno", lambda *_args, **_kwargs: True)
+    panel._run_async_command = lambda cmd, _label: calls.append(cmd)
+    panel.publish_ap_pages_locally()
+    assert calls
+    assert "--publish" in calls[0]
+    assert "--allow-thin-edition" in calls[0]
+
+
+def test_push_pages_live_requires_confirmation(monkeypatch, tmp_path):
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = tmp_path
+    panel.ap_review_date_var = type("S", (), {"get": lambda self: "2026-05-16"})()
+    panel._run_async_command = lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("should not run"))
+    monkeypatch.setattr(cp, "load_status_json", lambda _root: {"dispatches": {"american_pressure": {"latest_public_edition_date": "2026-05-09", "latest_pages_edition_date": "2026-05-09"}}})
+    monkeypatch.setattr(cp.messagebox, "askyesno", lambda *_args, **_kwargs: False)
+    panel.push_ap_pages_live()
 
 
 def test_ap_candidate_summary_includes_quarantine_and_failure_counts(tmp_path):

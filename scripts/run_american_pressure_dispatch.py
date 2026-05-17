@@ -18,6 +18,11 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 from scripts.american_pressure_anchor_ids import canonical_valid_anchor_ids_by_pillar
+from scripts.american_pressure_text_cleaning import (
+    clean_candidate_text,
+    clean_google_rss_title,
+    contains_forbidden_public_markup,
+)
 
 from bluefern_dispatches.american_pressure_sources import load_source_registry  # noqa: E402
 from bluefern_dispatches.generator import (  # noqa: E402
@@ -395,8 +400,9 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
             diagnostics["rejected_missing_required_fields"] += 1
             errors.append(f"source record {index} missing region_scope/geography or category_hint/pillar")
             continue
-        title = str(record["title"]).strip()
-        summary = str(record["summary_or_snippet"]).strip()
+        title = clean_google_rss_title(record.get("title"), record.get("publisher"))
+        summary = clean_candidate_text(record.get("summary_or_snippet"))
+        publisher = clean_candidate_text(record.get("publisher"))
         combined_text = f"{title} {summary}".lower()
         host = (urlsplit(url).netloc or "").lower()
         dedupe_key = (host, title.lower())
@@ -434,7 +440,7 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "source_id": source_id,
                 "title": title,
                 "url": url,
-                "publisher": str(record["publisher"]).strip(),
+                "publisher": publisher,
                 "published_at": str(record["published_at"]).strip(),
                 "retrieved_at": str(record["retrieved_at"]).strip(),
                 "summary_or_snippet": summary,
@@ -449,17 +455,17 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "edition_date": edition_date,
                 "dispatch_slug": DISPATCH_SLUG,
                 "is_baseline_auto": bool(record.get("is_baseline_auto")),
-                "reader_headline": _safe_text(record.get("reader_headline")),
-                "manual_what_happened": _safe_text(record.get("what_happened")),
-                "manual_potential_relevance": _safe_text(record.get("potential_relevance")),
-                "manual_who_may_feel_it": _safe_text(record.get("who_may_feel_it")),
-                "manual_what_to_watch_next": _safe_text(record.get("what_to_watch_next")),
+                "reader_headline": clean_google_rss_title(record.get("reader_headline"), publisher),
+                "manual_what_happened": clean_candidate_text(record.get("what_happened")),
+                "manual_potential_relevance": clean_candidate_text(record.get("potential_relevance")),
+                "manual_who_may_feel_it": clean_candidate_text(record.get("who_may_feel_it")),
+                "manual_what_to_watch_next": clean_candidate_text(record.get("what_to_watch_next")),
                 "location_scope": _safe_text(record.get("location_scope")),
                 "affected_people": _safe_text(record.get("affected_people")),
                 "pressure_direction": _safe_text(record.get("pressure_direction")),
-                "public_pressure_angle": _safe_text(record.get("public_pressure_angle")),
-                "manual_human_story_summary": _safe_text(record.get("human_story_summary")),
-                "manual_location": _safe_text(record.get("location")),
+                "public_pressure_angle": clean_candidate_text(record.get("public_pressure_angle")),
+                "manual_human_story_summary": clean_candidate_text(record.get("human_story_summary")),
+                "manual_location": clean_candidate_text(record.get("location")),
                 "manual_pressure_area": _safe_text(record.get("pressure_area")),
                 "manual_source_role": _safe_text(record.get("source_role")).lower(),
                 "linked_data_anchor_ids": _safe_list_of_text(record.get("linked_data_anchor_ids")),
@@ -507,7 +513,29 @@ def _reader_facing_summary(source: dict[str, Any]) -> str:
             "Bankruptcy-related reporting can indicate rising financial distress for households or businesses, "
             "with spillover risk for jobs and local services."
         )
-    return summary
+    cleaned_summary = clean_candidate_text(summary)
+    if not cleaned_summary:
+        cleaned_summary = clean_candidate_text(title)
+    summary_words = [w for w in re.findall(r"[A-Za-z]+", cleaned_summary)]
+    summary_title_case_words = sum(1 for w in summary_words if len(w) > 2 and w[:1].isupper() and w[1:].islower())
+    summary_looks_source_style = len(summary_words) >= 8 and summary_title_case_words >= max(5, int(len(summary_words) * 0.6))
+    if (
+        len(cleaned_summary) > 140
+        or " - " in cleaned_summary
+        or "(" in cleaned_summary
+        or " | " in cleaned_summary
+        or summary_looks_source_style
+    ):
+        pillar = _safe_text(source.get("pillar"))
+        if pillar == "food_pressure":
+            return "Food banks and assistance providers are reporting tighter conditions for households."
+        if pillar == "housing_household_cost_pressure":
+            return "Housing and monthly bill pressures are increasing strain on household budgets."
+        if pillar == "health_access_pressure":
+            return "Local developments suggest growing pressure on care access and service continuity."
+        if pillar == "labor_income_pressure":
+            return "Local job and paycheck developments suggest increasing household pressure."
+    return cleaned_summary
 
 
 def _location_phrase(source: dict[str, Any]) -> str:
@@ -518,11 +546,15 @@ def _location_phrase(source: dict[str, Any]) -> str:
     if scope and scope not in {"local", "regional", "national"}:
         return scope
     region_scope = _safe_text(source.get("region_scope"))
+    if region_scope.lower() in {"us", "u.s.", "united states"}:
+        return "Nationally"
     return region_scope
 
 
 def _normalize_location_intro(place: str) -> tuple[str, str]:
     cleaned = place.strip()
+    if cleaned.lower() == "nationally":
+        return ("Nationally", "nationally")
     match = re.match(r"(?i)^multiple counties in ([a-z][a-z .'-]+)$", cleaned)
     if match:
         state = match.group(1).strip()
@@ -587,6 +619,11 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
     base = _safe_text(source.get("manual_human_story_summary")) or _safe_text(source.get("manual_what_happened")) or _reader_facing_summary(source)
     if not base:
         return ""
+    words = [w for w in re.findall(r"[A-Za-z]+", base)]
+    title_case_words = sum(1 for w in words if len(w) > 2 and w[:1].isupper() and w[1:].islower())
+    looks_source_style = len(words) >= 8 and title_case_words >= max(5, int(len(words) * 0.6))
+    if looks_source_style or " - " in base or "(" in base:
+        base = _reader_facing_summary(source)
     base = re.sub(r"\s+", " ", base).strip()
     place = _location_phrase(source)
     affected = _safe_text(source.get("affected_people"))
@@ -631,14 +668,23 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
             normalized = f"{actor} {normalized}"
         # Mid-sentence actor capitalization cleanup.
         normalized = re.sub(r"^State and federal teams\b", "state and federal teams", normalized)
-    sentence = f"{'In' if intro_mode == 'in' else 'Across'} {intro_place.removeprefix('Across ').removeprefix('In ')}, {normalized}" if intro_mode == "across" else f"In {intro_place}, {normalized}"
+    if intro_mode == "nationally":
+        sentence = f"Nationally, {normalized}"
+    elif intro_mode == "across":
+        sentence = f"{'In' if intro_mode == 'in' else 'Across'} {intro_place.removeprefix('Across ').removeprefix('In ')}, {normalized}"
+    else:
+        sentence = f"In {intro_place}, {normalized}"
     return _with_affected(sentence)
 
 
 def _reader_facing_headline(source: dict[str, Any]) -> str:
-    manual = _safe_text(source.get("reader_headline"))
+    manual = clean_google_rss_title(source.get("reader_headline"), source.get("publisher"))
     if manual:
-        return manual
+        words = [w for w in re.findall(r"[A-Za-z]+", manual)]
+        title_case_words = sum(1 for w in words if len(w) > 2 and w[:1].isupper() and w[1:].islower())
+        looks_source_style = len(words) >= 8 and title_case_words >= max(5, int(len(words) * 0.6))
+        if len(manual) <= 95 and " - " not in manual and "(" not in manual and not looks_source_style:
+            return manual
     text = f"{source.get('title', '')} {source.get('summary_or_snippet', '')}".lower()
     if "snap" in text or "fns" in text:
         return "Food help remains one of the clearest signs of household strain"
@@ -654,7 +700,26 @@ def _reader_facing_headline(source: dict[str, Any]) -> str:
         return "Weather and climate conditions can turn into cost pressure"
     if "fema" in text or "disaster declaration" in text:
         return "Disaster declarations show where local systems may be stretched"
-    return _safe_text(source.get("title")) or "Source-backed pressure signal"
+    pillar = _safe_text(source.get("pillar"))
+    location = _safe_text(source.get("manual_location") or source.get("location_scope"))
+    if location.lower() in {"us", "u.s.", "united states"}:
+        location = "nationally"
+    location_phrase = f" in {location}" if location and location.lower() != "nationally" else (" nationally" if location else "")
+    if pillar == "food_pressure":
+        return f"Food support networks{location_phrase} report rising demand".strip()
+    if pillar == "labor_income_pressure":
+        return f"Local job and paycheck strain{location_phrase} is affecting households".strip()
+    if pillar == "housing_household_cost_pressure":
+        return f"Housing and bill pressure{location_phrase} is squeezing household budgets".strip()
+    if pillar == "health_access_pressure":
+        return f"Health access pressure{location_phrase} is disrupting care".strip()
+    if pillar == "financial_distress_pressure":
+        return f"Financial distress signals{location_phrase} suggest higher household risk".strip()
+    if pillar == "environmental_pressure":
+        return f"Weather and environmental stress{location_phrase} is adding household pressure".strip()
+    if pillar == "local_system_strain":
+        return f"Local systems{location_phrase} are showing strain".strip()
+    return "Source-backed pressure signal"
 
 
 def _potential_relevance(source: dict[str, Any], pillar: str) -> str:
@@ -1115,6 +1180,28 @@ def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], so
     return "\n".join(lines).strip() + "\n"
 
 
+def _public_prose_guardrail(stories: list[dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    fields = (
+        "title",
+        "summary",
+        "reader_headline",
+        "human_story_summary",
+        "data_context_summary",
+        "what_happened",
+        "potential_relevance",
+        "who_may_feel_it",
+        "what_to_watch_next",
+    )
+    for story in stories:
+        story_id = _safe_text(story.get("story_id")) or "unknown-story"
+        for field in fields:
+            value = _safe_text(story.get(field))
+            if value and contains_forbidden_public_markup(value):
+                errors.append(f"public prose contains forbidden markup/token in {story_id}.{field}")
+    return errors
+
+
 def discover_edition_dates(site_root: Path) -> list[str]:
     editions_root = site_root / DISPATCH_SLUG / "editions"
     if not editions_root.exists():
@@ -1237,6 +1324,10 @@ def run_american_pressure_dispatch(
     baseline_only_count = int(brief_quality_counts.get("baseline_only", 0) or 0)
     for story in stories:
         story["collection_gap_pillars"] = collection_gap_pillars
+
+    prose_errors = _public_prose_guardrail(stories)
+    if prose_errors:
+        errors.extend(prose_errors)
 
     if not sources:
         errors.append(f"No valid source-backed American Pressure records found for {edition_date}; refusing zero-source edition.")

@@ -15,6 +15,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from scripts.scout_american_pressure_candidates import PILLARS, _load_targets, _safe_text, _validate_date
+from scripts.american_pressure_text_cleaning import clean_candidate_text, clean_google_rss_title
 
 
 REVIEW_ROOT = ROOT / "output" / "dispatches" / "american-pressure" / "review"
@@ -139,22 +140,25 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
     if not recommended:
         lines.append("- None")
     for row in recommended:
-        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
+        title = clean_google_rss_title(row.get("title"), row.get("publisher"))
+        lines.append(f"- [{title}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
     lines.append("")
     lines.append("## Maybe candidates")
     if not maybe:
         lines.append("- None")
     for row in maybe:
-        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
+        title = clean_google_rss_title(row.get("title"), row.get("publisher"))
+        lines.append(f"- [{title}]({row.get('url')}) | pillar={row.get('pillar')} | score={row.get('candidate_score')}")
     lines.append("")
     lines.append("## Rejected candidates")
     if not rejected_scored and not rejected_raw and not invalid_rows:
         lines.append("- None")
     for row in rejected_scored:
         reasons = ", ".join(row.get("rejection_reasons", []))
-        lines.append(f"- [{row.get('title')}]({row.get('url')}) | pillar={row.get('pillar')} | reasons={reasons or 'low_score'}")
+        title = clean_google_rss_title(row.get("title"), row.get("publisher"))
+        lines.append(f"- [{title}]({row.get('url')}) | pillar={row.get('pillar')} | reasons={reasons or 'low_score'}")
     for row in invalid_rows:
-        title = str(row.get("title") or "(missing title)")
+        title = clean_candidate_text(row.get("title") or "(missing title)")
         pillar = str(row.get("pillar") or "(missing pillar)")
         reasons: list[str] = []
         if not _safe_text(row.get("url")):
@@ -167,7 +171,8 @@ def build_review_markdown(day: str, payload: dict[str, Any]) -> str:
             reasons.append("no_pillar")
         lines.append(f"- {title} | pillar={pillar} | reasons={', '.join(reasons) or 'invalid_candidate'}")
     for row in rejected_raw:
-        lines.append(f"- {row.get('title')} | pillar={row.get('pillar')} | reason={row.get('reason')}")
+        title = clean_candidate_text(row.get("title"))
+        lines.append(f"- {title} | pillar={row.get('pillar')} | reason={row.get('reason')}")
     lines.append("")
     lines.append("## Missing required pillars")
     if not missing:

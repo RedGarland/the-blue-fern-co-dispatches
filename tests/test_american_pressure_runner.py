@@ -537,6 +537,26 @@ def test_location_fallback_uses_region_scope_when_location_missing(work_root):
     assert "In US-WI," in html
 
 
+def test_location_fallback_avoids_in_us_intro(work_root):
+    story = _record(
+        "us-story",
+        "food_pressure",
+        "Food bank demand rises",
+        "A local food bank reported rising demand this week.",
+        "https://example.com/us-story",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    story["region_scope"] = "US"
+    story.pop("location", None)
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "In US," not in html
+    assert "Nationally," in html
+
+
 def test_wisconsin_multiple_counties_phrase_is_normalized(work_root):
     story = _record(
         "wi-storm",
@@ -617,6 +637,65 @@ def test_story_plus_data_renders_current_development_before_data_context(work_ro
     current_idx = html.index("<strong>Current Development:</strong>")
     data_idx = html.index("<strong>Data Context:</strong>")
     assert current_idx < data_idx
+
+
+def test_public_prose_rejects_raw_html_tokens(work_root):
+    manual = [
+        _record(
+            "food-story",
+            "food_pressure",
+            "Food story",
+            'In US, <a href="https://news.google.com/rss/articles/abc">messy</a> <font color="#6f6f6f">markup</font>.',
+            "https://example.com/story",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "<font" not in html
+    assert "news.google.com/rss/articles" not in html
+
+
+def test_reader_headline_fallback_not_raw_rss_title(work_root):
+    story = _record(
+        "food-story",
+        "food_pressure",
+        "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop (IjaOQJ3uR) - Fathom Journal",
+        "Food support demand is rising in the Portland area.",
+        "https://example.com/story",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    story["reader_headline"] = story["title"]
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "curation_manifest.json").read_text(encoding="utf-8"))
+    headline = curation["stories"][0]["title"]
+    assert "IjaOQJ3uR" not in headline
+    assert " - Fathom Journal" not in headline
+    assert headline != story["title"]
+
+
+def test_source_links_remain_visible_with_valid_urls(work_root):
+    story = _record(
+        "food-story",
+        "food_pressure",
+        "Pantry demand rises",
+        "Pantry demand rose this week.",
+        "https://example.com/story",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert 'href="https://example.com/story"' in html
 
 
 def test_baseline_only_note_appears_once_when_present(work_root):

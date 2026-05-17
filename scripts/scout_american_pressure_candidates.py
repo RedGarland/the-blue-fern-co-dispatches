@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import html
 import json
 import re
 import sys
@@ -19,6 +18,7 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 from scripts.american_pressure_anchor_ids import canonical_valid_anchor_ids_by_pillar
+from scripts.american_pressure_text_cleaning import clean_candidate_text, clean_google_rss_title, safe_text
 TARGETS_PATH = ROOT / "data" / "dispatches" / "american-pressure" / "search_targets.yml"
 CANDIDATES_ROOT = ROOT / "data" / "dispatches" / "american-pressure" / "candidates"
 RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
@@ -67,7 +67,7 @@ NON_US_TERMS = ("canada", "uk", "europe", "australia", "china", "india", "german
 
 
 def _safe_text(value: Any) -> str:
-    return str(value or "").strip()
+    return safe_text(value)
 
 
 def _iso_utc_now() -> str:
@@ -126,11 +126,11 @@ def _fetch_rss_items(query: str, *, timeout: int = 15) -> list[dict[str, str]]:
     for item in root.findall(".//item"):
         out.append(
             {
-                "title": _safe_text(item.findtext("title")),
+                "title": clean_google_rss_title(item.findtext("title"), item.findtext("source")),
                 "url": _safe_text(item.findtext("link")),
-                "publisher": _safe_text(item.findtext("source")),
+                "publisher": clean_candidate_text(item.findtext("source")),
                 "published_at": _safe_text(item.findtext("pubDate")),
-                "summary_or_snippet": html.unescape(_safe_text(item.findtext("description"))),
+                "summary_or_snippet": clean_candidate_text(item.findtext("description")),
             }
         )
     return out
@@ -142,6 +142,7 @@ def _looks_non_us(text: str) -> bool:
 
 
 def _extract_location(text: str) -> str:
+    bad_second_tokens = {"rejecting", "announces", "announce", "reports", "report", "warning", "budget", "demand", "closure"}
     patterns = (
         r"\b([A-Z][a-z]+ County,\s*[A-Z][a-z]+)\b",
         r"\b([A-Z][a-z]+,\s*[A-Z][a-z]+)\b",
@@ -150,7 +151,11 @@ def _extract_location(text: str) -> str:
     for pattern in patterns:
         match = re.search(pattern, text)
         if match:
-            return match.group(1)
+            candidate = match.group(1).strip()
+            parts = [p.strip().lower() for p in candidate.split(",")]
+            if len(parts) == 2 and parts[1] in bad_second_tokens:
+                continue
+            return candidate
     return ""
 
 
@@ -254,14 +259,18 @@ def _pillar_guidance(pillar: str) -> tuple[str, str, str]:
 
 
 def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, score_reasons: list[str], anchor_ids: list[str]) -> dict[str, Any]:
-    title = _safe_text(raw.get("title"))
-    summary = _safe_text(raw.get("summary_or_snippet"))
+    title = clean_google_rss_title(raw.get("title"), raw.get("publisher"))
+    summary = clean_candidate_text(raw.get("summary_or_snippet"))
     url = _safe_text(raw.get("url"))
-    publisher = _safe_text(raw.get("publisher")) or "Unknown publisher"
+    publisher = clean_candidate_text(raw.get("publisher")) or "Unknown publisher"
     location = _extract_location(f"{title} {summary}")
     potential, who, watch = _pillar_guidance(pillar)
     source_id = re.sub(r"[^a-z0-9]+", "-", f"{pillar}-{title}".lower()).strip("-")[:80] or f"{pillar}-candidate"
     source_record_id = f"ap-{day}-{source_id}"
+    angle = "Candidate signal; review against source text before approval."
+    reader_headline = title
+    if len(reader_headline) > 95 or " - " in reader_headline or "(" in reader_headline:
+        reader_headline = _candidate_reader_headline(pillar, summary, location)
     return {
         "source_record_id": source_record_id,
         "source_id": source_id,
@@ -278,7 +287,7 @@ def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, 
         "reliability_tier": "reputable_reporting",
         "source_role": "human_story",
         "item_type": "current_week_development",
-        "reader_headline": title,
+        "reader_headline": reader_headline,
         "human_story_summary": summary,
         "what_happened": summary,
         "potential_relevance": potential,
@@ -287,12 +296,35 @@ def _build_candidate(*, day: str, pillar: str, raw: dict[str, Any], score: int, 
         "location": location,
         "affected_people": "",
         "pressure_direction": "rising",
-        "public_pressure_angle": "Candidate signal; review against source text before approval.",
+        "public_pressure_angle": angle,
         "linked_data_anchor_ids": anchor_ids,
         "candidate_score": score,
         "candidate_score_reasons": score_reasons,
         "review_status": "needs_review",
     }
+
+
+def _candidate_reader_headline(pillar: str, summary: str, location: str) -> str:
+    location_clause = ""
+    if location and location.lower() not in {"us", "u.s.", "united states"}:
+        location_clause = f" in {location}"
+    if pillar == "food_pressure":
+        return f"Food support networks{location_clause} report rising demand".strip()
+    if pillar == "labor_income_pressure":
+        return f"Paycheck pressure signals{location_clause} point to job instability".strip()
+    if pillar == "housing_household_cost_pressure":
+        return f"Housing and bill pressure{location_clause} is tightening household budgets".strip()
+    if pillar == "health_access_pressure":
+        return f"Health access strain{location_clause} is affecting care continuity".strip()
+    if pillar == "financial_distress_pressure":
+        return f"Financial distress indicators{location_clause} suggest deeper household risk".strip()
+    if pillar == "environmental_pressure":
+        return f"Weather stress{location_clause} is feeding household pressure".strip()
+    if pillar == "policy_implementation":
+        return f"Policy rollout friction{location_clause} is slowing support delivery".strip()
+    if summary:
+        return summary[:100].rstrip(".")
+    return "Source-backed household pressure signal"
 
 
 def scout_day(day: str, *, max_per_pillar: int, fetcher: Any | None = None) -> dict[str, Any]:

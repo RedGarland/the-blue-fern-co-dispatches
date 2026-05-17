@@ -66,6 +66,30 @@ def test_candidate_schema_and_scoring(monkeypatch):
     assert int(row["candidate_score"]) > 0
 
 
+def test_google_rss_html_is_stripped_from_candidate_text(monkeypatch):
+    monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["anchor-1"] for pillar in scout.PILLARS})
+    monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())
+    monkeypatch.setattr(scout, "_load_targets", lambda: {"target_groups": {pillar: {"search_phrases": ["x"], "data_anchor_hints": ["anchor-1"]} for pillar in scout.PILLARS}})
+    fake = [
+        {
+            "title": '<a href="https://news.google.com/rss/articles/abc" target="_blank">St. Johns Food Share demand rises</a> - Fathom Journal',
+            "url": "https://example.com/story",
+            "publisher": "Fathom Journal",
+            "published_at": "2026-05-10T00:00:00Z",
+            "summary_or_snippet": '<font color="#6f6f6f">Households face pressure</font> &amp; pantry demand',
+        }
+    ]
+    payload = scout.scout_day("2026-05-10", max_per_pillar=1, fetcher=lambda _query: fake)
+    row = payload["sources"][0]
+    combined = f"{row['title']} {row['summary_or_snippet']} {row['reader_headline']}".lower()
+    assert "<a " not in combined
+    assert "</a>" not in combined
+    assert "<font" not in combined
+    assert "href=" not in combined
+    assert "target=" not in combined
+    assert "news.google.com/rss/articles" not in combined
+
+
 def test_investor_only_downrank_and_no_url_rejected():
     score, _, rejected = scout.score_candidate(
         {"title": "Investor call raises EPS guidance", "url": "https://example.com/investor", "publisher": "Bizwire", "summary_or_snippet": "Shareholder value focus"},
@@ -110,6 +134,37 @@ def test_review_report_includes_missing_pillars(tmp_path, monkeypatch):
     assert "labor_income_pressure" in report
     assert "candidate_file_exists: True" in report
     assert "candidate_count_raw: 1" in report
+
+
+def test_review_report_sanitizes_candidate_title(tmp_path, monkeypatch):
+    monkeypatch.setattr(review_script, "ROOT", tmp_path)
+    monkeypatch.setattr(review_script, "REVIEW_ROOT", tmp_path / "output" / "dispatches" / "american-pressure" / "review")
+    monkeypatch.setattr(review_script, "_load_targets", lambda: {"target_groups": {pillar: {"data_anchor_hints": ["x"]} for pillar in scout.PILLARS}})
+    candidate_path = tmp_path / "data" / "dispatches" / "american-pressure" / "candidates" / "2026-05-10" / "candidate_sources.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "title": '<a href="https://news.google.com/rss/articles/abc">Messy headline</a> - Publisher',
+                        "url": "https://example.com/food",
+                        "publisher": "Publisher",
+                        "pillar": "food_pressure",
+                        "public_pressure_angle": "x",
+                        "candidate_score": 50,
+                        "candidate_bucket": "recommended",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = review_script.main(["--date", "2026-05-10", "--write"])
+    assert rc == 0
+    report = (review_script.REVIEW_ROOT / "2026-05-10_candidate_review.md").read_text(encoding="utf-8")
+    assert "Messy headline" in report
+    assert "<a " not in report
 
 
 def test_review_report_empty_candidate_file_has_clear_diagnostic(tmp_path, monkeypatch):

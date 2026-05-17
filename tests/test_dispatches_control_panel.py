@@ -767,6 +767,8 @@ def test_ap_scout_review_weekly_commands_build(tmp_path):
     weekly = cp.build_command("American Pressure", "Run weekly American Pressure", "2026-05-09", root=tmp_path)
     assert scout[1] == "scripts\\scout_american_pressure_candidates.py"
     assert "--write" in scout
+    assert "--max-per-pillar" in scout
+    assert "5" in scout
     assert review[1] == "scripts\\review_american_pressure_candidates.py"
     assert "--write" in review
     assert weekly[1] == "scripts\\run_weekly_american_pressure.py"
@@ -812,3 +814,26 @@ def test_ap_card_story_none_displays_not_reported():
     summary["dispatch_cards"]["american_pressure"]["stories"] = None
     text = cp.format_main_summary_text(summary)
     assert "Sources/Stories: 2 / not reported" in text
+
+
+def test_ap_review_tab_command_builders(tmp_path):
+    scout = cp.build_ap_review_command("Scout Candidates", "2026-05-09", root=tmp_path)
+    review = cp.build_ap_review_command("Generate Review Report", "2026-05-09", root=tmp_path)
+    readiness = cp.build_ap_review_command("Check Weekly Readiness", "2026-05-09", root=tmp_path)
+    weekly = cp.build_ap_review_command("Run Weekly With Approved Candidates", "2026-05-09", root=tmp_path)
+    assert scout[1] == "scripts\\scout_american_pressure_candidates.py"
+    assert scout[-2:] == ["--max-per-pillar", "5"]
+    assert review[1] == "scripts\\review_american_pressure_candidates.py"
+    assert readiness[1] == "scripts\\check_american_pressure_weekly_readiness.py"
+    assert weekly[1] == "scripts\\run_weekly_american_pressure.py"
+    assert "--include-approved-candidates" in weekly
+    assert "--publish" in weekly
+
+
+def test_tooltip_instantiation_does_not_break_import():
+    class DummyWidget:
+        def bind(self, *_args, **_kwargs):
+            return None
+
+    tooltip = cp.Tooltip(DummyWidget(), "x")
+    assert tooltip.text == "x"

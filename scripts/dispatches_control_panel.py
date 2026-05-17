@@ -27,6 +27,14 @@ ACTIONS = (
     "Run dashboard",
     "Run doctor",
 )
+AP_REVIEW_ACTIONS = (
+    "Scout Candidates",
+    "Generate Review Report",
+    "Open Review Report",
+    "Open Candidate JSON",
+    "Check Weekly Readiness",
+    "Run Weekly With Approved Candidates",
+)
 
 STATUS_BANNER_OK = "OK to review"
 STATUS_BANNER_WARN = "Needs attention"
@@ -100,6 +108,82 @@ def _pages_publish_command_scoped(root: Path, dispatch: str | None = None, expec
 
 def _candidate_path(date_text: str, root: Path) -> Path:
     return root / "data" / "dispatches" / "american-pressure" / "candidates" / date_text / "candidate_sources.json"
+
+
+def _review_report_path(date_text: str, root: Path) -> Path:
+    return root / "output" / "dispatches" / "american-pressure" / "review" / f"{date_text}_candidate_review.md"
+
+
+def _candidate_summary(date_text: str, root: Path) -> dict[str, Any]:
+    path = _candidate_path(date_text, root)
+    if not path.exists():
+        return {
+            "approved_count": 0,
+            "rejected_count": 0,
+            "needs_review_count": 0,
+            "maybe_count": 0,
+            "approved_by_pillar": {},
+            "missing_required_pillars": list(_ap_required_pillars()),
+            "preview_rows": [],
+        }
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rows = payload.get("sources", []) if isinstance(payload, dict) else []
+    status_counts: dict[str, int] = {"approved": 0, "rejected": 0, "needs_review": 0, "maybe": 0}
+    approved_by_pillar: dict[str, int] = {}
+    preview_rows: list[dict[str, str]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        status = str(row.get("review_status") or "needs_review").strip().lower() or "needs_review"
+        if status not in status_counts:
+            status_counts[status] = 0
+        status_counts[status] += 1
+        if status == "approved":
+            pillar = str(row.get("pillar") or "").strip() or "unknown"
+            approved_by_pillar[pillar] = approved_by_pillar.get(pillar, 0) + 1
+        preview_rows.append(
+            {
+                "source_record_id": str(row.get("source_record_id") or ""),
+                "review_status": status,
+                "pillar": str(row.get("pillar") or ""),
+                "title": str(row.get("title") or ""),
+            }
+        )
+    missing = [pillar for pillar in _ap_required_pillars() if approved_by_pillar.get(pillar, 0) <= 0]
+    return {
+        "approved_count": int(status_counts.get("approved", 0)),
+        "rejected_count": int(status_counts.get("rejected", 0)),
+        "needs_review_count": int(status_counts.get("needs_review", 0)),
+        "maybe_count": int(status_counts.get("maybe", 0)),
+        "approved_by_pillar": dict(sorted(approved_by_pillar.items())),
+        "missing_required_pillars": missing,
+        "preview_rows": preview_rows,
+    }
+
+
+def build_ap_review_command(action: str, date_text: str, root: Path | None = None) -> list[str]:
+    if not validate_date(date_text):
+        raise ValueError("Date must be YYYY-MM-DD")
+    base = root or project_root()
+    py = str(python_executable(base))
+    if action == "Scout Candidates":
+        return [py, "scripts\\scout_american_pressure_candidates.py", "--date", date_text, "--write", "--max-per-pillar", "5"]
+    if action == "Generate Review Report":
+        return [py, "scripts\\review_american_pressure_candidates.py", "--date", date_text, "--write"]
+    if action == "Check Weekly Readiness":
+        return [py, "scripts\\check_american_pressure_weekly_readiness.py", "--date", date_text]
+    if action == "Run Weekly With Approved Candidates":
+        return [
+            py,
+            "scripts\\run_weekly_american_pressure.py",
+            "--date",
+            date_text,
+            "--source-mode",
+            "both",
+            "--include-approved-candidates",
+            "--publish",
+        ]
+    raise ValueError(f"Unsupported American Pressure review action: {action}")
 
 
 def _candidate_window_dates(end_date: str) -> list[str]:
@@ -237,6 +321,8 @@ def build_command(
                 "--date",
                 date_text,
                 "--write",
+                "--max-per-pillar",
+                "5",
             ]
         elif action == "Review American Pressure candidates":
             cmd = [
@@ -649,6 +735,19 @@ def _ap_coverage_gaps(enabled_by_pillar: dict[str, Any]) -> list[str]:
         if int(enabled_by_pillar.get(pillar, 0) or 0) == 0:
             gaps.append(pillar)
     return gaps
+
+
+def _ap_required_pillars() -> tuple[str, ...]:
+    return (
+        "food_pressure",
+        "financial_distress_pressure",
+        "housing_household_cost_pressure",
+        "health_access_pressure",
+        "labor_income_pressure",
+        "local_system_strain",
+        "environmental_pressure",
+        "policy_implementation",
+    )
 
 
 def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
@@ -1225,6 +1324,59 @@ def open_path(path: Path) -> bool:
     return True
 
 
+class Tooltip:
+    def __init__(self, widget: tk.Widget, text: str, delay_ms: int = 300):
+        self.widget = widget
+        self.text = text
+        self.delay_ms = delay_ms
+        self._tip_window: tk.Toplevel | None = None
+        self._after_id: str | None = None
+        widget.bind("<Enter>", self._on_enter, add="+")
+        widget.bind("<Leave>", self._on_leave, add="+")
+
+    def _on_enter(self, _event: tk.Event[Any]) -> None:
+        self._schedule()
+
+    def _on_leave(self, _event: tk.Event[Any]) -> None:
+        self._cancel()
+        self._hide()
+
+    def _schedule(self) -> None:
+        self._cancel()
+        self._after_id = self.widget.after(self.delay_ms, self._show)
+
+    def _cancel(self) -> None:
+        if self._after_id:
+            self.widget.after_cancel(self._after_id)
+            self._after_id = None
+
+    def _show(self) -> None:
+        if self._tip_window is not None:
+            return
+        self._tip_window = tk.Toplevel(self.widget)
+        self._tip_window.wm_overrideredirect(True)
+        x = self.widget.winfo_rootx() + 10
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 4
+        self._tip_window.wm_geometry(f"+{x}+{y}")
+        label = tk.Label(
+            self._tip_window,
+            text=self.text,
+            justify=tk.LEFT,
+            background="#ffffe0",
+            relief=tk.SOLID,
+            borderwidth=1,
+            padx=6,
+            pady=4,
+            wraplength=360,
+        )
+        label.pack()
+
+    def _hide(self) -> None:
+        if self._tip_window is not None:
+            self._tip_window.destroy()
+            self._tip_window = None
+
+
 def _format_dispatch_card(name: str, card: dict[str, Any]) -> str:
     stories = card.get("stories")
     story_text = "not reported" if stories is None else str(stories)
@@ -1391,8 +1543,15 @@ class DispatchesControlPanel:
         self.raw_details_visible = tk.BooleanVar(value=False)
         self.execution_var = tk.StringVar(value="Ready")
         self.command_var = tk.StringVar(value="")
+        self.ap_review_date_var = tk.StringVar(value=date_cls.today().isoformat())
+        self.ap_review_action_var = tk.StringVar(value=AP_REVIEW_ACTIONS[0])
+        self.ap_candidate_path_var = tk.StringVar(value="")
+        self.ap_review_report_path_var = tk.StringVar(value="")
+        self.ap_summary_var = tk.StringVar(value="")
+        self._tooltips: list[Tooltip] = []
 
         self._build_ui()
+        self.ap_review_date_var.trace_add("write", lambda *_args: self.refresh_ap_review_summary())
         self._poll_ui_queue()
 
     def _build_ui(self) -> None:
@@ -1402,12 +1561,15 @@ class DispatchesControlPanel:
         run_tab = ttk.Frame(tabs)
         stats_tab = ttk.Frame(tabs)
         logs_tab = ttk.Frame(tabs)
+        ap_review_tab = ttk.Frame(tabs)
 
         tabs.add(run_tab, text="Run Dispatches")
+        tabs.add(ap_review_tab, text="American Pressure Review")
         tabs.add(stats_tab, text="Statistics / Health")
         tabs.add(logs_tab, text="Logs / Output")
 
         self._build_run_tab(run_tab)
+        self._build_ap_review_tab(ap_review_tab)
         self._build_stats_tab(stats_tab)
         self._build_logs_tab(logs_tab)
 
@@ -1416,7 +1578,8 @@ class DispatchesControlPanel:
         top.pack(fill=tk.X, padx=10, pady=10)
 
         ttk.Label(top, text="Dispatch").grid(row=0, column=0, sticky="w")
-        ttk.Combobox(top, values=DISPATCHES, textvariable=self.dispatch_var, state="readonly", width=22).grid(
+        dispatch_combo = ttk.Combobox(top, values=DISPATCHES, textvariable=self.dispatch_var, state="readonly", width=22)
+        dispatch_combo.grid(
             row=0, column=1, padx=6, sticky="w"
         )
 
@@ -1424,7 +1587,8 @@ class DispatchesControlPanel:
         ttk.Entry(top, textvariable=self.date_var, width=16).grid(row=0, column=3, padx=6, sticky="w")
 
         ttk.Label(top, text="Action").grid(row=1, column=0, sticky="w")
-        ttk.Combobox(top, values=ACTIONS, textvariable=self.action_var, state="readonly", width=30).grid(
+        action_combo = ttk.Combobox(top, values=ACTIONS, textvariable=self.action_var, state="readonly", width=30)
+        action_combo.grid(
             row=1, column=1, padx=6, sticky="w"
         )
 
@@ -1434,7 +1598,7 @@ class DispatchesControlPanel:
         ttk.Checkbutton(top, text="Dry-run if supported", variable=self.dry_run_var).grid(
             row=2, column=0, columnspan=2, sticky="w"
         )
-        ttk.Checkbutton(top, text="Publish toggle (where applicable)", variable=self.publish_toggle_var).grid(
+        ttk.Checkbutton(top, text="Publish locally when supported", variable=self.publish_toggle_var).grid(
             row=2, column=2, columnspan=2, sticky="w"
         )
 
@@ -1444,26 +1608,48 @@ class DispatchesControlPanel:
         self.execute_btn.pack(side=tk.LEFT)
         self.stop_btn = ttk.Button(btn_row, text="Stop (best effort)", command=self.stop_action, state=tk.DISABLED)
         self.stop_btn.pack(side=tk.LEFT, padx=6)
-        ttk.Button(btn_row, text="Clear Output", command=self.clear_output).pack(side=tk.LEFT, padx=6)
+        clear_button = ttk.Button(btn_row, text="Clear Output", command=self.clear_output)
+        clear_button.pack(side=tk.LEFT, padx=6)
 
         open_row = ttk.Frame(frame)
         open_row.pack(fill=tk.X, padx=10, pady=6)
-        ttk.Button(open_row, text="Open local dispatch archive", command=self.open_archive).pack(side=tk.LEFT)
-        ttk.Button(open_row, text="Open latest local edition", command=self.open_latest_edition).pack(side=tk.LEFT, padx=6)
-        ttk.Button(open_row, text="Open source folder", command=self.open_source_folder).pack(side=tk.LEFT, padx=6)
-        ttk.Button(open_row, text="Open log folder", command=lambda: self._open(self.root_dir / "logs")).pack(side=tk.LEFT, padx=6)
-        ttk.Button(open_row, text="Open output/site", command=lambda: self._open(self.root_dir / "output" / "site")).pack(side=tk.LEFT, padx=6)
-        ttk.Button(
+        archive_button = ttk.Button(open_row, text="Open local dispatch archive", command=self.open_archive)
+        archive_button.pack(side=tk.LEFT)
+        latest_button = ttk.Button(open_row, text="Open latest local edition", command=self.open_latest_edition)
+        latest_button.pack(side=tk.LEFT, padx=6)
+        source_button = ttk.Button(open_row, text="Open source folder", command=self.open_source_folder)
+        source_button.pack(side=tk.LEFT, padx=6)
+        log_button = ttk.Button(open_row, text="Open log folder", command=lambda: self._open(self.root_dir / "logs"))
+        log_button.pack(side=tk.LEFT, padx=6)
+        output_site_button = ttk.Button(open_row, text="Open output/site", command=lambda: self._open(self.root_dir / "output" / "site"))
+        output_site_button.pack(side=tk.LEFT, padx=6)
+        pages_repo_button = ttk.Button(
             open_row,
             text="Open Pages repo folder",
             command=lambda: self._open(self.root_dir / "bluefern-dispatches-pages"),
-        ).pack(side=tk.LEFT, padx=6)
+        )
+        pages_repo_button.pack(side=tk.LEFT, padx=6)
 
         ttk.Label(frame, textvariable=self.execution_var, foreground="#333366").pack(anchor="w", padx=10)
         ttk.Label(frame, textvariable=self.command_var, foreground="#444444", wraplength=1150).pack(anchor="w", padx=10)
 
         self.output_text = ScrolledText(frame, height=22)
         self.output_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self._tooltips.extend(
+            [
+                Tooltip(dispatch_combo, "Choose which dispatch pipeline to operate."),
+                Tooltip(action_combo, "Choose the command to run for the selected dispatch."),
+                Tooltip(self.execute_btn, "Run the selected command with live stdout/stderr streaming."),
+                Tooltip(self.stop_btn, "Request stop for the current process."),
+                Tooltip(clear_button, "Clear only the run-tab output panel."),
+                Tooltip(archive_button, "Open the local public archive HTML for the selected dispatch."),
+                Tooltip(latest_button, "Open the latest local edition from status or folder fallback."),
+                Tooltip(source_button, "Open source input folder for selected dispatch/date."),
+                Tooltip(log_button, "Open local logs folder."),
+                Tooltip(output_site_button, "Open generated output/site folder."),
+                Tooltip(pages_repo_button, "Open local GitHub Pages repo checkout folder."),
+            ]
+        )
 
     def _build_stats_tab(self, frame: ttk.Frame) -> None:
         top = ttk.Frame(frame)
@@ -1471,12 +1657,22 @@ class DispatchesControlPanel:
 
         self.banner_label = ttk.Label(top, textvariable=self.status_banner_var)
         self.banner_label.pack(side=tk.LEFT)
-        ttk.Button(top, text="Refresh Statistics", command=self.refresh_status).pack(side=tk.LEFT, padx=8)
+        refresh_btn = ttk.Button(top, text="Refresh Statistics", command=self.refresh_status)
+        refresh_btn.pack(side=tk.LEFT, padx=8)
         ttk.Button(top, text="Copy status summary", command=self.copy_status_summary).pack(side=tk.LEFT, padx=8)
         ttk.Button(top, text="Show Raw Details", command=self.show_raw_details).pack(side=tk.LEFT, padx=8)
         ttk.Button(top, text="Hide Raw Details", command=self.hide_raw_details).pack(side=tk.LEFT, padx=8)
-        ttk.Button(top, text="Generate Codex Prompt", command=self.generate_codex_prompt_ui).pack(side=tk.LEFT, padx=8)
-        ttk.Button(top, text="Copy Codex Prompt", command=self.copy_codex_prompt).pack(side=tk.LEFT, padx=8)
+        prompt_btn = ttk.Button(top, text="Generate Codex Prompt", command=self.generate_codex_prompt_ui)
+        prompt_btn.pack(side=tk.LEFT, padx=8)
+        copy_prompt_btn = ttk.Button(top, text="Copy Codex Prompt", command=self.copy_codex_prompt)
+        copy_prompt_btn.pack(side=tk.LEFT, padx=8)
+        self._tooltips.extend(
+            [
+                Tooltip(refresh_btn, "Refresh doctor/status health summary."),
+                Tooltip(prompt_btn, "Generate a Codex-ready prompt from current status."),
+                Tooltip(copy_prompt_btn, "Copy generated Codex prompt to clipboard."),
+            ]
+        )
 
         open_row = ttk.Frame(frame)
         open_row.pack(fill=tk.X, padx=10, pady=6)
@@ -1498,6 +1694,61 @@ class DispatchesControlPanel:
         ttk.Label(frame, text="Live command output is mirrored from Run Dispatches tab.").pack(anchor="w", padx=10, pady=10)
         self.logs_text = ScrolledText(frame, height=32)
         self.logs_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+    def _build_ap_review_tab(self, frame: ttk.Frame) -> None:
+        top = ttk.Frame(frame)
+        top.pack(fill=tk.X, padx=10, pady=10)
+        ttk.Label(top, text="Date (YYYY-MM-DD)").grid(row=0, column=0, sticky="w")
+        ttk.Entry(top, textvariable=self.ap_review_date_var, width=16).grid(row=0, column=1, padx=6, sticky="w")
+        ttk.Label(
+            top,
+            text="Daily scouting does not publish. Weekly publish uses only approved candidates.",
+            foreground="#505050",
+        ).grid(row=0, column=2, columnspan=4, sticky="w")
+        ttk.Label(top, text="Action").grid(row=1, column=0, sticky="w")
+        ap_action_combo = ttk.Combobox(top, values=AP_REVIEW_ACTIONS, textvariable=self.ap_review_action_var, state="readonly", width=44)
+        ap_action_combo.grid(row=1, column=1, padx=6, sticky="w")
+        run_btn = ttk.Button(top, text="Execute Review Action", command=self.execute_ap_review_action)
+        run_btn.grid(row=1, column=2, padx=8, sticky="w")
+
+        path_frame = ttk.Frame(frame)
+        path_frame.pack(fill=tk.X, padx=10, pady=4)
+        ttk.Label(path_frame, text="Candidate file path").grid(row=0, column=0, sticky="w")
+        ttk.Label(path_frame, textvariable=self.ap_candidate_path_var, foreground="#444444", wraplength=1120).grid(row=0, column=1, sticky="w", padx=6)
+        ttk.Label(path_frame, text="Review report path").grid(row=1, column=0, sticky="w")
+        ttk.Label(path_frame, textvariable=self.ap_review_report_path_var, foreground="#444444", wraplength=1120).grid(row=1, column=1, sticky="w", padx=6)
+
+        btn_row = ttk.Frame(frame)
+        btn_row.pack(fill=tk.X, padx=10, pady=6)
+        scout_btn = ttk.Button(btn_row, text="Scout Candidates", command=lambda: self._run_ap_review_action("Scout Candidates"))
+        scout_btn.pack(side=tk.LEFT)
+        report_btn = ttk.Button(btn_row, text="Generate Review Report", command=lambda: self._run_ap_review_action("Generate Review Report"))
+        report_btn.pack(side=tk.LEFT, padx=6)
+        open_report_btn = ttk.Button(btn_row, text="Open Review Report", command=self.open_ap_review_report)
+        open_report_btn.pack(side=tk.LEFT, padx=6)
+        open_candidate_btn = ttk.Button(btn_row, text="Open Candidate JSON", command=self.open_ap_candidate_json)
+        open_candidate_btn.pack(side=tk.LEFT, padx=6)
+        readiness_btn = ttk.Button(btn_row, text="Check Weekly Readiness", command=lambda: self._run_ap_review_action("Check Weekly Readiness"))
+        readiness_btn.pack(side=tk.LEFT, padx=6)
+        weekly_btn = ttk.Button(btn_row, text="Run Weekly With Approved Candidates", command=lambda: self._run_ap_review_action("Run Weekly With Approved Candidates"))
+        weekly_btn.pack(side=tk.LEFT, padx=6)
+
+        ttk.Label(frame, textvariable=self.ap_summary_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=4)
+        self.ap_preview_text = ScrolledText(frame, height=18)
+        self.ap_preview_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=8)
+        self.ap_preview_text.configure(state=tk.DISABLED)
+        self._tooltips.extend(
+            [
+                Tooltip(ap_action_combo, "Select American Pressure review workflow action."),
+                Tooltip(scout_btn, "Daily intake scout only. No publish, no push."),
+                Tooltip(report_btn, "Generate markdown review report for the selected date."),
+                Tooltip(open_report_btn, "Open the review markdown file if it exists."),
+                Tooltip(open_candidate_btn, "Open candidate_sources.json for the selected date."),
+                Tooltip(readiness_btn, "Check weekly readiness based on approved candidates."),
+                Tooltip(weekly_btn, "Run weekly pipeline using approved candidates and local publish flow."),
+            ]
+        )
+        self.refresh_ap_review_summary()
 
     def _poll_ui_queue(self) -> None:
         while True:
@@ -1559,6 +1810,77 @@ class DispatchesControlPanel:
             on_done=lambda rc: self.ui_queue.put(("done", rc)),
         )
 
+    def execute_ap_review_action(self) -> None:
+        self._run_ap_review_action(self.ap_review_action_var.get())
+
+    def _run_ap_review_action(self, action: str) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        if not validate_date(date_text):
+            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
+            return
+        try:
+            cmd = build_ap_review_command(action, date_text, root=self.root_dir)
+        except ValueError as exc:
+            messagebox.showerror("Unsupported selection", str(exc))
+            return
+        cmd_str = subprocess.list2cmdline(cmd)
+        self.command_var.set(f"Command: {cmd_str}")
+        self.execution_var.set(f"Running American Pressure review action={action} date={date_text}")
+        self._append_output(f"$ {cmd_str}")
+        self.run_state.running = True
+        self.execute_btn.configure(state=tk.DISABLED)
+        self.stop_btn.configure(state=tk.NORMAL)
+        self.run_state.process = run_command_streaming(
+            cmd,
+            self.root_dir,
+            on_line=lambda line: self.ui_queue.put(("line", line)),
+            on_done=lambda rc: self.ui_queue.put(("done", rc)),
+        )
+
+    def refresh_ap_review_summary(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        self.ap_candidate_path_var.set(str(_candidate_path(date_text, self.root_dir)))
+        self.ap_review_report_path_var.set(str(_review_report_path(date_text, self.root_dir)))
+        if not validate_date(date_text):
+            self.ap_summary_var.set("Enter a valid date to load candidate summary.")
+            self.ap_preview_text.configure(state=tk.NORMAL)
+            self.ap_preview_text.delete("1.0", tk.END)
+            self.ap_preview_text.configure(state=tk.DISABLED)
+            return
+        summary = _candidate_summary(date_text, self.root_dir)
+        approved_by_pillar = summary.get("approved_by_pillar", {})
+        approved_lines = ", ".join(f"{key}:{value}" for key, value in approved_by_pillar.items()) or "none"
+        missing = ", ".join(summary.get("missing_required_pillars", [])) or "none"
+        self.ap_summary_var.set(
+            "\n".join(
+                [
+                    f"approved={summary.get('approved_count', 0)} | rejected={summary.get('rejected_count', 0)} | needs_review={summary.get('needs_review_count', 0)} | maybe={summary.get('maybe_count', 0)}",
+                    f"approved by pillar: {approved_lines}",
+                    f"missing required pillars: {missing}",
+                ]
+            )
+        )
+        self.ap_preview_text.configure(state=tk.NORMAL)
+        self.ap_preview_text.delete("1.0", tk.END)
+        for row in summary.get("preview_rows", []):
+            self.ap_preview_text.insert(tk.END, f"[{row.get('review_status')}] {row.get('pillar')} | {row.get('source_record_id')} | {row.get('title')}\n")
+        self.ap_preview_text.see("1.0")
+        self.ap_preview_text.configure(state=tk.DISABLED)
+
+    def open_ap_review_report(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        if not validate_date(date_text):
+            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
+            return
+        self._open(_review_report_path(date_text, self.root_dir))
+
+    def open_ap_candidate_json(self) -> None:
+        date_text = self.ap_review_date_var.get().strip()
+        if not validate_date(date_text):
+            messagebox.showerror("Invalid date", "Date must be in YYYY-MM-DD format.")
+            return
+        self._open(_candidate_path(date_text, self.root_dir))
+
     def _preflight_warnings(self, dispatch: str, action: str, date_text: str) -> list[str]:
         notes: list[str] = []
         if dispatch == "Cascadia" and action in ("Run dispatch", "Run with notification"):
@@ -1599,6 +1921,7 @@ class DispatchesControlPanel:
             d = self.dispatch_var.get()
             dt = self.date_var.get().strip()
             self._open(self.root_dir / "output" / "site" / d.lower().replace(" ", "-") / "editions" / dt / "index.html")
+        self.refresh_ap_review_summary()
 
     def stop_action(self) -> None:
         proc = self.run_state.process

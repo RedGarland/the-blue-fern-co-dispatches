@@ -8,6 +8,7 @@ from pathlib import Path
 import scripts.review_american_pressure_candidates as review_script
 import scripts.scout_american_pressure_candidates as scout
 import scripts.run_american_pressure_dispatch as ap_runner
+import scripts.approve_american_pressure_candidates as approve_script
 
 
 def _write_min_registry(root: Path) -> None:
@@ -258,3 +259,73 @@ def test_scout_script_help_direct_and_module():
     assert module.returncode == 0
     assert "usage:" in direct.stdout.lower()
     assert "usage:" in module.stdout.lower()
+
+
+def test_approve_helper_list_output_and_summary(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(approve_script, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
+    cpath = approve_script.CANDIDATES_ROOT / "2026-05-10" / "candidate_sources.json"
+    cpath.parent.mkdir(parents=True, exist_ok=True)
+    cpath.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {"source_record_id": "ap-1", "pillar": "food_pressure", "review_status": "approved", "title": "Food"},
+                    {"source_record_id": "ap-2", "pillar": "labor_income_pressure", "review_status": "needs_review", "title": "Labor"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = approve_script.main(["--date", "2026-05-10", "--list"])
+    assert rc == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["summary"]["status_counts"]["approved"] == 1
+    assert payload["summary"]["status_counts"]["needs_review"] == 1
+    assert payload["summary"]["approved_by_pillar"]["food_pressure"] == 1
+    assert len(payload["candidates"]) == 2
+
+
+def test_approve_helper_status_changes_and_write(tmp_path, monkeypatch):
+    monkeypatch.setattr(approve_script, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
+    cpath = approve_script.CANDIDATES_ROOT / "2026-05-11" / "candidate_sources.json"
+    cpath.parent.mkdir(parents=True, exist_ok=True)
+    original = {
+        "sources": [
+            {"source_record_id": "ap-1", "title": "Title1", "url": "https://example.com/1", "source_id": "one", "review_status": "needs_review"},
+            {"source_record_id": "ap-2", "title": "Title2", "url": "https://example.com/2", "source_id": "two", "review_status": "needs_review"},
+            {"source_record_id": "ap-3", "title": "Title3", "url": "https://example.com/3", "source_id": "three", "review_status": "needs_review"},
+            {"source_record_id": "ap-4", "title": "Title4", "url": "https://example.com/4", "source_id": "four", "review_status": "needs_review"},
+        ]
+    }
+    cpath.write_text(json.dumps(original, indent=2), encoding="utf-8")
+    assert approve_script.main(["--date", "2026-05-11", "--approve", "ap-1", "--write"]) == 0
+    assert approve_script.main(["--date", "2026-05-11", "--reject", "ap-2", "--write"]) == 0
+    assert approve_script.main(["--date", "2026-05-11", "--maybe", "ap-3", "--write"]) == 0
+    assert approve_script.main(["--date", "2026-05-11", "--needs-review", "ap-4", "--write"]) == 0
+    rows = json.loads(cpath.read_text(encoding="utf-8"))["sources"]
+    by_id = {row["source_record_id"]: row for row in rows}
+    assert by_id["ap-1"]["review_status"] == "approved"
+    assert by_id["ap-2"]["review_status"] == "rejected"
+    assert by_id["ap-3"]["review_status"] == "maybe"
+    assert by_id["ap-4"]["review_status"] == "needs_review"
+    assert by_id["ap-1"]["title"] == "Title1"
+    assert by_id["ap-1"]["url"] == "https://example.com/1"
+    assert by_id["ap-1"]["source_id"] == "one"
+    original_by_id = {row["source_record_id"]: row for row in original["sources"]}
+    for key in ("ap-1", "ap-2", "ap-3", "ap-4"):
+        for field, value in original_by_id[key].items():
+            if field == "review_status":
+                continue
+            assert by_id[key][field] == value
+
+
+def test_approve_helper_missing_source_record_id_fails_cleanly(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(approve_script, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
+    cpath = approve_script.CANDIDATES_ROOT / "2026-05-12" / "candidate_sources.json"
+    cpath.parent.mkdir(parents=True, exist_ok=True)
+    cpath.write_text(json.dumps({"sources": [{"source_record_id": "ap-1", "review_status": "needs_review"}]}), encoding="utf-8")
+    rc = approve_script.main(["--date", "2026-05-12", "--approve", "missing", "--write"])
+    assert rc == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["ok"] is False
+    assert "source_record_id not found" in payload["errors"][0]

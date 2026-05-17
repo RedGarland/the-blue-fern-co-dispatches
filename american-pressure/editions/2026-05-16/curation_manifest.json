@@ -72,7 +72,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -124,7 +124,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -177,7 +177,7 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Housing and bill pressure in Structure, Rejecting is squeezing household budgets",
-      "human_story_summary": "In Structure, Rejecting, Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents.",
+      "human_story_summary": "In Structure, Rejecting, Housing and monthly bill pressures are increasing strain on household budgets.",
       "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
       "what_happened": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
       "potential_relevance": "This may signal heavier monthly housing and utility burden.",
@@ -189,7 +189,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -250,7 +250,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -315,7 +315,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -380,7 +380,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -437,7 +437,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:11:20.656080+00:00",
+      "generated_at": "2026-05-17T20:12:20.503446+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]

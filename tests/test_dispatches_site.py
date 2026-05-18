@@ -316,6 +316,12 @@ def test_public_cascadia_pages_use_current_public_name(built_site):
         assert "Cascadia Systems Dispatch" not in html
 
 
+def test_american_pressure_index_links_to_dashboard(built_site):
+    work, _, _ = built_site
+    ap_index = read(work / "output" / "site" / "american-pressure" / "index.html")
+    assert 'href="dashboard/"' in ap_index
+
+
 def test_manifests_and_source_traceability(built_site):
     work, _, _ = built_site
     edition_dir = work / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
@@ -734,6 +740,31 @@ def test_american_pressure_only_dispatch_expect_date_uses_public_cutoff(built_si
     assert "2026-05-09" in pages_index and "2026-05-16" not in pages_index and "2026-05-19" not in pages_index
     assert "2026-05-09" in pages_archive and "2026-05-16" not in pages_archive and "2026-05-19" not in pages_archive
     assert "2026-05-09" in pages_rss and "2026-05-16" not in pages_rss and "2026-05-19" not in pages_rss
+
+
+def test_publish_pages_copies_american_pressure_dashboard_file(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    dashboard = site_root / "american-pressure" / "dashboard" / "index.html"
+    dashboard.parent.mkdir(parents=True, exist_ok=True)
+    dashboard.write_text("American Pressure Dashboard / 2026-05-09", encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    copied = pages_repo / "american-pressure" / "dashboard" / "index.html"
+    assert copied.exists()
+    assert "American Pressure Dashboard" in read(copied)
 
 
 def test_commit_flag_does_not_imply_push(built_site):

@@ -102,6 +102,7 @@ def _validate_pages_view_for_date(edition_date: str) -> list[str]:
         "index": PAGES_REPO / "american-pressure" / "index.html",
         "archive": PAGES_REPO / "american-pressure" / "archive.html",
         "rss": PAGES_REPO / "american-pressure" / "rss.xml",
+        "dashboard": PAGES_REPO / "american-pressure" / "dashboard" / "index.html",
     }
     for label, path in required.items():
         if not path.exists():
@@ -109,7 +110,7 @@ def _validate_pages_view_for_date(edition_date: str) -> list[str]:
             continue
         content = path.read_text(encoding="utf-8", errors="replace")
         if edition_date not in content:
-            errors.append(f"american-pressure/{label}.html does not reference expected week-ending date {edition_date}")
+            errors.append(f"american-pressure/{label} does not reference expected week-ending date {edition_date}")
         for found in _extract_dates(content):
             if found > edition_date:
                 errors.append(f"stale future edition exposed in {path}: {found}")

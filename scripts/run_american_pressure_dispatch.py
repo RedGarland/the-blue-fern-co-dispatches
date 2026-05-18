@@ -1251,6 +1251,197 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     write_text(dispatch_root / "index.html", render_dispatch_index_for_dates(dispatch, dates), dry_run, wrote)
     write_text(dispatch_root / "archive.html", render_archive_for_dates(dispatch, dates), dry_run, wrote)
     write_text(dispatch_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
+    if dates:
+        latest = dates[0]
+        dashboard_html = render_dashboard_html(root, latest)
+        write_text(dispatch_root / "dashboard" / "index.html", dashboard_html, dry_run, wrote)
+
+
+def _slugify_heading(text: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9]+", "-", (text or "").strip().lower()).strip("-")
+    return cleaned or "section"
+
+
+def _dashboard_status_for_pillar(
+    pillar: str,
+    *,
+    source_count: int,
+    story_count: int,
+    current_development_count: int,
+    human_story_count: int,
+    collection_gap_pillars: list[str],
+) -> str:
+    if pillar in collection_gap_pillars:
+        return "Collection gap"
+    if source_count <= 0 and story_count <= 0:
+        return "No signal captured"
+    if current_development_count > 0 and story_count > 0:
+        return "Active"
+    if story_count > 0 and current_development_count <= 0 and human_story_count <= 0:
+        return "Data only"
+    return "Data only"
+
+
+def _dashboard_quality_label(status: str, brief_quality: str) -> str:
+    if status == "Active":
+        return "Story plus data"
+    if status == "Collection gap":
+        return "Needs human current development"
+    if status == "No signal captured":
+        return "No public signal captured"
+    if brief_quality == "official_release_only":
+        return "Official baseline only"
+    return "Data context only"
+
+
+def _safe_manifest_counts(payload: Any) -> dict[str, int]:
+    if not isinstance(payload, dict):
+        return {}
+    out: dict[str, int] = {}
+    for key, value in payload.items():
+        try:
+            out[str(key)] = int(value or 0)
+        except Exception:  # noqa: BLE001
+            out[str(key)] = 0
+    return out
+
+
+def render_dashboard_html(root: Path, edition_date: str) -> str:
+    site_edition = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
+    manifest_path = site_edition / "edition_manifest.json"
+    curation_path = site_edition / "curation_manifest.json"
+    sources_path = site_edition / "sources_manifest.json"
+    manifest = read_json(manifest_path) if manifest_path.exists() else {}
+    curation = read_json(curation_path) if curation_path.exists() else {}
+    sources = read_json(sources_path) if sources_path.exists() else []
+    stories = curation.get("stories") if isinstance(curation, dict) else []
+    if not isinstance(stories, list):
+        stories = []
+    if not isinstance(sources, list):
+        sources = []
+
+    week_range = _safe_text(manifest.get("display_date_range")) or _display_date_range(edition_date)
+    source_count = int(manifest.get("source_count") or len(sources) or 0)
+    story_count = int(manifest.get("story_count") or len(stories) or 0)
+    story_plus_data_count = int(manifest.get("story_plus_data_count") or 0)
+    collection_gap_pillars = [str(item) for item in (manifest.get("collection_gap_pillars") or [])]
+    current_counts = _safe_manifest_counts(manifest.get("current_development_count_by_pillar"))
+    human_counts = _safe_manifest_counts(manifest.get("human_story_count_by_pillar"))
+    source_counts = _safe_manifest_counts(manifest.get("source_count_by_pillar"))
+    story_counts = _safe_manifest_counts(manifest.get("story_count_by_pillar"))
+    data_anchor_counts: dict[str, int] = {}
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        pillar = _normalize_pillar(_safe_text(source.get("pillar")))
+        if not pillar:
+            continue
+        if _classify_source_role(source) == "data_anchor":
+            data_anchor_counts[pillar] = data_anchor_counts.get(pillar, 0) + 1
+
+    story_by_pillar: dict[str, dict[str, Any]] = {}
+    for story in stories:
+        if isinstance(story, dict):
+            pillar = _normalize_pillar(_safe_text(story.get("pillar")))
+            if pillar and pillar not in story_by_pillar:
+                story_by_pillar[pillar] = story
+
+    metric_current = sum(current_counts.get(p, 0) for p in PILLAR_ORDER)
+    metric_data_only = sum(1 for p in PILLAR_ORDER if story_counts.get(p, 0) > 0 and human_counts.get(p, 0) <= 0 and current_counts.get(p, 0) <= 0)
+    written_dispatch_href = f"/american-pressure/editions/{edition_date}/"
+    source_ledger_href = f"/american-pressure/editions/{edition_date}/sources_manifest.json"
+
+    metric_cards = f"""
+      <div class="apd-metrics">
+        <article class="apd-metric"><h3>Sources Reviewed</h3><p>{source_count}</p></article>
+        <article class="apd-metric"><h3>Public Signals</h3><p>{story_count}</p></article>
+        <article class="apd-metric"><h3>Story+Data Signals</h3><p>{story_plus_data_count}</p></article>
+        <article class="apd-metric"><h3>Collection Gaps</h3><p>{len(collection_gap_pillars)}</p></article>
+        <article class="apd-metric"><h3>Current Developments</h3><p>{metric_current}</p></article>
+        <article class="apd-metric"><h3>Data-Only Signals</h3><p>{metric_data_only}</p></article>
+      </div>
+    """
+
+    cards: list[str] = []
+    for pillar in PILLAR_ORDER:
+        heading = PILLAR_HEADINGS.get(pillar, pillar)
+        source_ct = int(source_counts.get(pillar, 0) or 0)
+        story_ct = int(story_counts.get(pillar, 0) or 0)
+        current_ct = int(current_counts.get(pillar, 0) or 0)
+        human_ct = int(human_counts.get(pillar, 0) or 0)
+        data_ct = int(data_anchor_counts.get(pillar, 0) or 0)
+        status = _dashboard_status_for_pillar(
+            pillar,
+            source_count=source_ct,
+            story_count=story_ct,
+            current_development_count=current_ct,
+            human_story_count=human_ct,
+            collection_gap_pillars=collection_gap_pillars,
+        )
+        story = story_by_pillar.get(pillar, {})
+        brief_quality = _safe_text(story.get("brief_quality"))
+        quality = _dashboard_quality_label(status, brief_quality)
+        what_this_means = _safe_text(story.get("potential_relevance")) or _safe_text(PILLAR_GUIDANCE.get(pillar, {}).get("why_it_matters")) or "No sourced reader-facing takeaway is available yet."
+        section_anchor = _slugify_heading(heading)
+        badge_class = {
+            "Active": "apd-status-active",
+            "Data only": "apd-status-data",
+            "Collection gap": "apd-status-gap",
+            "No signal captured": "apd-status-none",
+        }.get(status, "apd-status-none")
+        cards.append(
+            f"""        <article class="apd-card">
+          <h3>{html.escape(heading)} <span class="apd-status {badge_class}">{html.escape(status)}</span></h3>
+          <p class="apd-small">Sources: {source_ct} | Stories: {story_ct} | Current developments: {current_ct}</p>
+          <p class="apd-small">Human stories: {human_ct} | Data anchors: {data_ct}</p>
+          <p class="apd-small">Quality: {html.escape(quality)}</p>
+          <p>{html.escape(what_this_means)}</p>
+          <p><a href="{written_dispatch_href}#{section_anchor}">Go to section in written dispatch</a></p>
+        </article>"""
+        )
+
+    body = f"""{header(DISPATCH_NAME, "../", "../archive.html", "/american-pressure/")}
+  <main class="home apd-home">
+    <section class="hero">
+      <img class="hero-logo" src="../assets/american-pressure-logo.png" alt="{html.escape(DISPATCH_NAME)}">
+    </section>
+    <p class="eyebrow">American Pressure Dashboard</p>
+    <h1>American Pressure Dashboard</h1>
+    <p class="lede">Weekly briefing range: {html.escape(week_range)}</p>
+    <p><a href="{written_dispatch_href}">Read written dispatch</a> | <a href="{source_ledger_href}">View source ledger</a></p>
+    <p class="apd-small">Built from {source_count} source records and {story_count} public signals. Trend unavailable until prior-week comparison is added.</p>
+    {metric_cards}
+    <h2>Pressure by Pillar</h2>
+    <section class="apd-grid">
+{''.join(cards)}
+    </section>
+    <p class="apd-small">Map layer coming after location quality improves.</p>
+  </main>
+{footer("../")}"""
+    return page(
+        "American Pressure Dashboard",
+        f"{BASE_URL}/american-pressure/dashboard/",
+        "../assets/site.css",
+        body + """
+<style>
+.apd-home { width: min(1120px, calc(100% - 24px)); }
+.apd-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0 28px; }
+.apd-metric { border: 1px solid var(--border); background: var(--soft-blue); padding: 14px; }
+.apd-metric h3 { margin: 0 0 6px; border-top: 0; padding-top: 0; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); }
+.apd-metric p { margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--ink); }
+.apd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.apd-card { border: 1px solid var(--border); background: var(--panel); padding: 14px; }
+.apd-card h3 { margin: 0 0 8px; border-top: 0; padding-top: 0; font-size: 1.05rem; }
+.apd-status { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
+.apd-status-active { background: #d8efe6; color: #1f5d49; }
+.apd-status-data { background: #ddecf1; color: #0f2a33; }
+.apd-status-gap { background: #f9e5d3; color: #7a3c00; }
+.apd-status-none { background: #edf1f2; color: #4b5f64; }
+.apd-small { color: var(--muted); font-size: .88rem; margin: 0 0 8px; }
+</style>
+""",
+        DISPATCH_NAME,
+    )
 
 
 def run_american_pressure_dispatch(
@@ -1469,6 +1660,8 @@ def run_american_pressure_dispatch(
     write_json(site_dir / "edition_manifest.json", edition_manifest, dry_run, wrote)
     write_json(site_dir / "sources_manifest.json", sources, dry_run, wrote)
     write_json(site_dir / "curation_manifest.json", curation_manifest, dry_run, wrote)
+    dashboard_content = render_dashboard_html(root, edition_date)
+    write_text(site_dir / "dashboard.html", dashboard_content, dry_run, wrote)
     if force_regenerate and not dry_run:
         regen_targets = [
             dispatch_dir / "index.html",
@@ -1478,6 +1671,7 @@ def run_american_pressure_dispatch(
             dispatch_dir / "sources_manifest.json",
             dispatch_dir / "curation_manifest.json",
             site_dir / "index.html",
+            site_dir / "dashboard.html",
             site_dir / "edition_manifest.json",
             site_dir / "sources_manifest.json",
             site_dir / "curation_manifest.json",

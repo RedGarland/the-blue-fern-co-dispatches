@@ -730,3 +730,74 @@ def test_baseline_only_note_appears_once_when_present(work_root):
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
     note = "Some items are baseline data points. They help track pressure, but they do not by themselves prove what changed this week."
     assert html.count(note) == 1
+
+
+def test_dashboard_latest_page_renders_metrics_cards_and_links(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+
+    dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
+    assert "American Pressure Dashboard" in dashboard
+    assert "May 10" in dashboard and "May 16, 2026" in dashboard
+    assert "/american-pressure/editions/2026-05-16/" in dashboard
+    assert "/american-pressure/editions/2026-05-16/sources_manifest.json" in dashboard
+    assert "Built from 2 source records and 1 public signals" in dashboard
+    assert "Trend unavailable until prior-week comparison is added." in dashboard
+    assert "&#8593;" not in dashboard and "&#8595;" not in dashboard and "↑" not in dashboard and "↓" not in dashboard
+
+    for metric in (
+        "Sources Reviewed",
+        "Public Signals",
+        "Story+Data Signals",
+        "Collection Gaps",
+        "Current Developments",
+        "Data-Only Signals",
+    ):
+        assert metric in dashboard
+
+    for heading in (
+        "Food and Grocery Pressure",
+        "Debt and Bankruptcy Pressure",
+        "Housing and Monthly Bills",
+        "Health Care Access",
+        "Jobs and Paychecks",
+        "Weather, Drought, and Disaster Strain",
+        "Local Services Under Strain",
+        "Benefit and Policy Delivery",
+    ):
+        assert heading in dashboard
+
+    assert "Debt and Bankruptcy Pressure <span class=\"apd-status apd-status-gap\">Collection gap</span>" in dashboard
+
+
+def test_publish_index_links_to_dashboard(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    index = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    assert 'href="dashboard/"' in index
+
+
+def test_dashboard_uses_latest_listable_public_edition(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-09", manual)
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    first = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-09", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    second = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert first["ok"] is True
+    assert second["ok"] is True
+    dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
+    assert "/american-pressure/editions/2026-05-16/" in dashboard
+    assert "/american-pressure/editions/2026-05-09/" not in dashboard

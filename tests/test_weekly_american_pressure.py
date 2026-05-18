@@ -176,6 +176,8 @@ def test_validate_pages_view_for_date_passes_with_latest_and_prior(tmp_path, mon
     (ap / "index.html").write_text("latest 2026-05-16 older 2026-05-09", encoding="utf-8")
     (ap / "archive.html").write_text("2026-05-16 2026-05-09", encoding="utf-8")
     (ap / "rss.xml").write_text("<item>2026-05-16</item><item>2026-05-09</item>", encoding="utf-8")
+    (ap / "dashboard").mkdir(parents=True, exist_ok=True)
+    (ap / "dashboard" / "index.html").write_text("American Pressure Dashboard May 10-May 16, 2026 latest=2026-05-16", encoding="utf-8")
     assert weekly._validate_pages_view_for_date("2026-05-16") == []
 
 

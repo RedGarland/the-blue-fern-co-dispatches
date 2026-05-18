@@ -806,6 +806,11 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates[:10]
     )
+    dashboard_link = (
+        '\n    <p><a href="dashboard/">View Dashboard</a></p>'
+        if dispatch.slug == "american-pressure"
+        else ""
+    )
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -814,6 +819,7 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
     <p class="lede">{html.escape(description)}</p>
     <p><a href="editions/{latest}/">Read the latest briefing</a></p>
+    {dashboard_link}
     {signal_pack_note}
     <h2>Recent Editions</h2>
     <ul class="edition-list">

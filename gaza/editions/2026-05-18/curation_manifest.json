@@ -36,26 +36,26 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
-    "dedupe_classification": "new",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-18-006",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "duplicate_merged",
     "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
+      "same_event_flotilla_interception"
     ]
   },
   {
     "story_id": "gaza-story-2026-05-18-002",
-    "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
-    "summary": "Federal court case begins for classical pianist who alleges Melbourne Symphony Orchestra unlawfully discriminated due to his views Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast A classical pianist who alleges the Melbourne Symphony Orchestra unlawfully discriminated against him because of his views on Israeli forces killing Palestinian journalists says he did not consider apologising for making the statement at the centre of the case. Pianist Jayson Gillham is suing the MSO over a cancelled Melbourne concert he was contracted to perform on 15 August 2024, a cancellation which he claims was an attempt to silence him over his stance on the Gaza conflict.",
+    "title": "What we know about Israel's interception of Gaza aid flotilla",
+    "summary": "Israeli forces have intercepted multiple vessels from the Gaza-bound Global Sumud Flotilla in international waters.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 52,
     "scoring_reasons": [
       "humanitarian_impact",
-      "accountability_legal",
+      "health_infrastructure",
       "source_reliability",
       "date_confidence"
     ],
@@ -65,34 +65,32 @@
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
       "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+      "gaza-2026-05-18-aljazeera-middle-east-46d21b1d97d2"
     ],
     "source_ids": [
-      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+      "gaza-2026-05-18-aljazeera-middle-east-46d21b1d97d2"
     ],
     "source_urls": [
-      "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb"
+      "https://www.aljazeera.com/video/newsfeed/2026/5/18/what-we-know-about-israels-interception-of-gaza-aid-flotilla?traffic_source=rss"
     ],
     "publisher_names": [
-      "The Guardian"
+      "Al Jazeera"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
+    "dedupe_reasons": []
   },
   {
     "story_id": "gaza-story-2026-05-18-003",
@@ -131,18 +129,64 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
-    "dedupe_classification": "new",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-18-001",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "duplicate_merged",
     "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
+      "same_event_flotilla_interception"
     ]
   },
   {
     "story_id": "gaza-story-2026-05-18-004",
+    "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
+    "summary": "Federal court case begins for classical pianist who alleges Melbourne Symphony Orchestra unlawfully discriminated due to his views Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast A classical pianist who alleges the Melbourne Symphony Orchestra unlawfully discriminated against him because of his views on Israeli forces killing Palestinian journalists says he did not consider apologising for making the statement at the centre of the case. Pianist Jayson Gillham is suing the MSO over a cancelled Melbourne concert he was contracted to perform on 15 August 2024, a cancellation which he claims was an attempt to silence him over his stance on the Gaza conflict.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-005",
     "title": "Netanyahu says Israel controls 60 percent of Gaza",
     "summary": "Netanyahu says Israel controls 60 percent of Gaza",
     "category": "conflict",
@@ -177,18 +221,16 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
+    "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-18-005",
+    "story_id": "gaza-story-2026-05-18-006",
     "title": "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
     "summary": "Organisers of the flotilla say the vessels are boarded in international waters as Turkiye condemns 'piracy'.",
     "category": "conflict",
@@ -225,18 +267,16 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
+    "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-18-006",
+    "story_id": "gaza-story-2026-05-18-007",
     "title": "Growing bread queues in Gaza as Israel restricts fuel, flour imports",
     "summary": "Bread shortages deepen in Gaza as flour imports dwindle and bakeries struggle to meet rising demand amid fuel scarcity.",
     "category": "conflict",
@@ -271,14 +311,12 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "generated_at": "2026-05-18T17:24:43.650432+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": [
-      "different_topic_or_source"
-    ],
-    "material_update": true,
-    "material_update_reasons": [
-      "new_story"
-    ]
+    "dedupe_reasons": []
   }
 ]

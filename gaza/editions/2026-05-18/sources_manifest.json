@@ -9,8 +9,8 @@
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
     "publisher": "BBC News",
-    "published_at": "2026-05-18T12:27:40+00:00",
-    "retrieved_at": "2026-05-18T13:00:36.002708+00:00",
+    "published_at": "2026-05-18T15:30:30+00:00",
+    "retrieved_at": "2026-05-18T17:24:41.720068+00:00",
     "summary_or_snippet": "Live broadcasts from the Global Sumud flotilla show commandos boarding several boats trying to breach the Gaza maritime blockade.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -45,18 +45,18 @@
     "claim_fingerprint": "bbc|israeli forces board gaza bound flotilla near cyprus activists say|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-18-guardian-world-b71e0709da9a",
-    "source_id": "gaza-2026-05-18-guardian-world-b71e0709da9a",
-    "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
-    "url": "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb",
-    "canonical_url": "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb",
+    "source_record_id": "gaza-2026-05-18-aljazeera-middle-east-46d21b1d97d2",
+    "source_id": "gaza-2026-05-18-aljazeera-middle-east-46d21b1d97d2",
+    "title": "What we know about Israel's interception of Gaza aid flotilla",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/18/what-we-know-about-israels-interception-of-gaza-aid-flotilla?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/18/what-we-know-about-israels-interception-of-gaza-aid-flotilla?traffic_source=rss",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "The Guardian",
-    "published_at": "2026-05-18T06:51:07+00:00",
-    "retrieved_at": "2026-05-18T13:00:36.002708+00:00",
-    "summary_or_snippet": "Federal court case begins for classical pianist who alleges Melbourne Symphony Orchestra unlawfully discriminated due to his views Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast A classical pianist who alleges the Melbourne Symphony Orchestra unlawfully discriminated against him because of his views on Israeli forces killing Palestinian journalists says he did not consider apologising for making the statement at the centre of the case. Pianist Jayson Gillham is suing the MSO over a cancelled Melbourne concert he was contracted to perform on 15 August 2024, a cancellation which he claims was an attempt to silence him over his stance on the Gaza conflict.",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-18T16:27:35+00:00",
+    "retrieved_at": "2026-05-18T17:24:41.720068+00:00",
+    "summary_or_snippet": "Israeli forces have intercepted multiple vessels from the Gaza-bound Global Sumud Flotilla in international waters.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -74,21 +74,21 @@
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
       "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "ranking_reasons": [
       "humanitarian_impact",
-      "accountability_legal",
+      "health_infrastructure",
       "source_reliability",
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "guardian|pianist jayson gillham says he never considered apologising for gaza comments trial hears",
-    "title_fingerprint": "pianist jayson gillham says he never considered apologising for gaza comments trial hears",
-    "claim_fingerprint": "guardian|pianist jayson gillham says he never considered apologising for gaza comments trial hears|conflict"
+    "dedupe_key": "al jazeera|what we know about israel s interception of gaza aid flotilla",
+    "title_fingerprint": "what we know about israel s interception of gaza aid flotilla",
+    "claim_fingerprint": "al jazeera|what we know about israel s interception of gaza aid flotilla|conflict"
   },
   {
     "source_record_id": "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6",
@@ -101,7 +101,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-18T10:50:52+00:00",
-    "retrieved_at": "2026-05-18T13:00:36.002708+00:00",
+    "retrieved_at": "2026-05-18T17:24:41.720068+00:00",
     "summary_or_snippet": "Israeli forces have begun intercepting boats from the Gaza-bound Global Sumud Flotilla.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -136,6 +136,52 @@
     "claim_fingerprint": "al jazeera|israeli forces begin intercepting gaza bound aid flotilla near cyprus|conflict"
   },
   {
+    "source_record_id": "gaza-2026-05-18-guardian-world-b71e0709da9a",
+    "source_id": "gaza-2026-05-18-guardian-world-b71e0709da9a",
+    "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
+    "url": "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb",
+    "canonical_url": "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-18T06:51:07+00:00",
+    "retrieved_at": "2026-05-18T13:00:36.002708+00:00",
+    "summary_or_snippet": "Federal court case begins for classical pianist who alleges Melbourne Symphony Orchestra unlawfully discriminated due to his views Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast A classical pianist who alleges the Melbourne Symphony Orchestra unlawfully discriminated against him because of his views on Israeli forces killing Palestinian journalists says he did not consider apologising for making the statement at the centre of the case. Pianist Jayson Gillham is suing the MSO over a cancelled Melbourne concert he was contracted to perform on 15 August 2024, a cancellation which he claims was an attempt to silence him over his stance on the Gaza conflict.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-18",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-18-005"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|pianist jayson gillham says he never considered apologising for gaza comments trial hears",
+    "title_fingerprint": "pianist jayson gillham says he never considered apologising for gaza comments trial hears",
+    "claim_fingerprint": "guardian|pianist jayson gillham says he never considered apologising for gaza comments trial hears|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-18-aljazeera-middle-east-83174375f781",
     "source_id": "gaza-2026-05-18-aljazeera-middle-east-83174375f781",
     "title": "Netanyahu says Israel controls 60 percent of Gaza",
@@ -155,7 +201,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-18",
     "used_in_story_ids": [
-      "gaza-story-2026-05-18-005"
+      "gaza-story-2026-05-18-006"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -199,7 +245,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-18",
     "used_in_story_ids": [
-      "gaza-story-2026-05-18-006"
+      "gaza-story-2026-05-18-007"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -245,7 +291,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-18",
     "used_in_story_ids": [
-      "gaza-story-2026-05-18-007"
+      "gaza-story-2026-05-18-008"
     ],
     "claim_ids": [],
     "candidate_score": 32,

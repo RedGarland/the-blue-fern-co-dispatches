@@ -1,54 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-18",
-  "candidates_seen": 6,
+  "candidates_seen": 7,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-05-18-001",
-      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-18-002",
-      "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-18-003",
-      "title": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-18-004",
-      "title": "Netanyahu says Israel controls 60 percent of Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-18-005",
+      "story_id": "gaza-story-2026-05-18-006",
       "title": "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
       "classification": "new",
       "material_update": true,
@@ -59,7 +15,40 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-18-006",
+      "story_id": "gaza-story-2026-05-18-002",
+      "title": "What we know about Israel's interception of Gaza aid flotilla",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-004",
+      "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-005",
+      "title": "Netanyahu says Israel controls 60 percent of Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-007",
       "title": "Growing bread queues in Gaza as Israel restricts fuel, flour imports",
       "classification": "new",
       "material_update": true,
@@ -70,70 +59,101 @@
       "public_rendered": true
     }
   ],
-  "duplicate_skipped": [],
-  "continuing_developments": [],
-  "major_updates": [],
-  "merged_sources": 0,
-  "duplicate_groups": [],
-  "reasons": [
-    {
-      "story_id": "gaza-story-2026-05-18-001",
-      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-18-002",
-      "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
+  "duplicate_skipped": [
     {
       "story_id": "gaza-story-2026-05-18-003",
       "title": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_flotilla_interception"
       ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
+      "prior_story_matched": "gaza-story-2026-05-18-001",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
     },
     {
-      "story_id": "gaza-story-2026-05-18-004",
-      "title": "Netanyahu says Israel controls 60 percent of Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
+      "story_id": "gaza-story-2026-05-18-001",
+      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_flotilla_interception"
       ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
+      "prior_story_matched": "gaza-story-2026-05-18-006",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 2,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-05-18-001",
+      "merged_story_ids": [
+        "gaza-story-2026-05-18-003"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6"
+      ],
+      "duplicate_reason": "same_event_flotilla_interception",
+      "normalized_event_key": "gaza_flotilla_interception_israeli_forces_cyprus",
+      "reasons": [
+        "same_event_flotilla_interception"
+      ]
     },
     {
-      "story_id": "gaza-story-2026-05-18-005",
+      "kept_story_id": "gaza-story-2026-05-18-006",
+      "merged_story_ids": [
+        "gaza-story-2026-05-18-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-05-18-bbc-middle-east-5c5de389ca71",
+        "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6"
+      ],
+      "duplicate_reason": "same_event_flotilla_interception",
+      "normalized_event_key": "gaza_flotilla_interception_israeli_forces_cyprus",
+      "reasons": [
+        "same_event_flotilla_interception"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-18-003",
+      "title": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_flotilla_interception"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-18-001",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-001",
+      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_flotilla_interception"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-18-006",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-006",
       "title": "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
       "classification": "new",
       "material_update": true,
@@ -147,7 +167,49 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-18-006",
+      "story_id": "gaza-story-2026-05-18-002",
+      "title": "What we know about Israel's interception of Gaza aid flotilla",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-004",
+      "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-005",
+      "title": "Netanyahu says Israel controls 60 percent of Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-18-007",
       "title": "Growing bread queues in Gaza as Israel restricts fuel, flour imports",
       "classification": "new",
       "material_update": true,

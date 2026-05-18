@@ -1,0 +1,98 @@
+{
+  "extracted_candidates": [
+    {
+      "kind": "state_only",
+      "state": "WI",
+      "evidence": "WI",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "WI",
+      "evidence": "WI",
+      "confidence": "low",
+      "method": "text_story_human_story_summary_state_only",
+      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "WI",
+      "evidence": "WI",
+      "confidence": "low",
+      "method": "text_story_location_scope_state_only",
+      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ]
+    }
+  ],
+  "accepted_candidates": [
+    {
+      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
+      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-002"
+      ],
+      "location_label": "Marshall, MO",
+      "method": "source_metadata_city_state",
+      "evidence": "Marshall, MO",
+      "precision": "city_state"
+    },
+    {
+      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
+      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-001"
+      ],
+      "location_label": "San Luis Obispo County, CA",
+      "method": "source_metadata_county_state",
+      "evidence": "San Luis Obispo County, CA",
+      "precision": "county_state"
+    },
+    {
+      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
+      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-004"
+      ],
+      "location_label": "Centerville, IA",
+      "method": "source_metadata_city_state",
+      "evidence": "Centerville, IA",
+      "precision": "city_state"
+    },
+    {
+      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
+      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-005"
+      ],
+      "location_label": "Sacramento, CA",
+      "method": "source_metadata_city_state",
+      "evidence": "Sacramento, CA",
+      "precision": "city_state"
+    },
+    {
+      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ],
+      "location_label": "WI",
+      "method": "text_source_title_state_only",
+      "evidence": "WI",
+      "precision": "state_level"
+    }
+  ],
+  "rejected_candidates": []
+}

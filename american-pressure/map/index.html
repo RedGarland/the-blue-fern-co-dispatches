@@ -95,6 +95,7 @@
     .then(function (res) { return res.json(); })
     .then(function (payload) {
       var pins = Array.isArray(payload.pins) ? payload.pins : [];
+      var aggregated = Array.isArray(payload.aggregated_pins) ? payload.aggregated_pins : [];
       var needs = Array.isArray(payload.unmapped_records) ? payload.unmapped_records : [];
       var national = Array.isArray(payload.national_records) ? payload.national_records : [];
       var categories = Array.isArray(payload.categories) ? payload.categories : [];
@@ -149,17 +150,27 @@
       function renderPins(category, precision, state) {
         markers.forEach(function (m) { map.removeLayer(m); });
         markers = [];
-        var active = pins.filter(function (pin) {
-          var okCategory = category === "all" || pin.category === category;
+        var active = aggregated.filter(function (pin) {
+          var catOk = category === "all" || (Array.isArray(pin.categories) && pin.categories.indexOf(category) >= 0);
           var okPrecision = precision === "all" || pin.location_precision === precision;
           var okState = state === "all" || pin.state === state;
-          return okCategory && okPrecision && okState;
+          return catOk && okPrecision && okState;
         });
-        active.forEach(function (pin) {
-          var marker = L.circleMarker([pin.latitude, pin.longitude], markerStyle(pin)).addTo(map).bindPopup(popupHtml(pin));
+        active.forEach(function (group) {
+          var pin = (Array.isArray(group.pins) && group.pins[0]) ? group.pins[0] : group;
+          var style = markerStyle(pin);
+          if (group.record_count > 1) style.radius = 10;
+          var marker = L.circleMarker([group.latitude, group.longitude], style).addTo(map).bindPopup(
+            '<strong>' + (group.location_label || "Location") + '</strong><br>' +
+            'Grouped records: ' + (group.record_count || 0) + '<br>' +
+            popupHtml(pin)
+          );
           markers.push(marker);
         });
-        countEl.textContent = active.length + " mapped record(s)";
+        var recordCount = active.reduce(function (sum, group) {
+          return sum + (group.record_count || 0);
+        }, 0);
+        countEl.textContent = recordCount + " mapped record(s), " + active.length + " location group(s)";
       }
       if (pins.length === 0) {
         countEl.textContent = "No mapped records for this edition. See National and Unmapped panels.";

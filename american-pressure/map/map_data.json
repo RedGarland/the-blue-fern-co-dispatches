@@ -3,22 +3,27 @@
   "edition_date": "2026-05-16",
   "display_date_range": "May 10\u2013May 16, 2026",
   "total_source_backed_records": 6,
-  "pin_count": 2,
-  "needs_location_count": 3,
-  "mapped_records_count": 2,
+  "pin_count": 5,
+  "needs_location_count": 0,
+  "mapped_records_count": 5,
   "exact_or_source_provided_count": 0,
-  "city_state_count": 1,
-  "county_state_count": 0,
+  "city_state_count": 3,
+  "county_state_count": 1,
   "state_level_count": 1,
   "national_records_count": 1,
-  "unmapped_records_count": 3,
+  "unmapped_records_count": 0,
   "categories": [
+    "financial_distress_pressure",
+    "food_pressure",
     "health_access_pressure",
-    "labor_income_pressure"
+    "labor_income_pressure",
+    "local_system_strain"
   ],
   "states": [
     "CA",
-    "IA"
+    "IA",
+    "MO",
+    "WI"
   ],
   "location_precisions": [
     "exact_or_source_provided",
@@ -28,9 +33,69 @@
   ],
   "pins": [
     {
+      "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
+      "date": "2026-05-12T00:00:00-05:00",
+      "location_label": "Marshall, MO",
+      "city": "Marshall",
+      "state": "MO",
+      "category": "financial_distress_pressure",
+      "source_urls": [
+        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-002"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
+      "latitude": 39.1233,
+      "longitude": -93.196,
+      "location_precision": "city_state",
+      "location_precision_warning": "",
+      "location_extraction_method": "source_metadata_city_state",
+      "location_extraction_text": "Marshall, MO",
+      "extraction_evidence_text": "Marshall, MO",
+      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
+      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
+      "story_id": "american-pressure-story-2026-05-16-002"
+    },
+    {
+      "title": "Local food bank strain can be an early sign that household budgets are tightening",
+      "date": "2026-05-01T12:30:00-07:00",
+      "location_label": "San Luis Obispo County, CA",
+      "city": "San Luis Obispo County",
+      "state": "CA",
+      "category": "food_pressure",
+      "source_urls": [
+        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-food-story-keyt-demand"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-001"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
+      "latitude": 35.2828,
+      "longitude": -120.6596,
+      "location_precision": "county_state",
+      "location_precision_warning": "county-level location, not exact address.",
+      "location_extraction_method": "source_metadata_county_state",
+      "location_extraction_text": "San Luis Obispo County, CA",
+      "extraction_evidence_text": "San Luis Obispo County, CA",
+      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
+      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
+      "story_id": "american-pressure-story-2026-05-16-001"
+    },
+    {
       "title": "Local clinic closures can quickly turn access gaps into household health risk",
       "date": "2026-05-12T21:45:00-05:00",
-      "location_label": "IA",
+      "location_label": "Centerville, IA",
       "city": "Centerville",
       "state": "IA",
       "category": "health_access_pressure",
@@ -41,15 +106,21 @@
       "source_record_ids": [
         "ap-2026-05-16-health-story-kcrg-clinic-closure"
       ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-004"
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Local clinic closures can quickly turn access gaps into household health risk (2026-05-12T21:45:00-05:00)",
-      "latitude": 41.878003,
-      "longitude": -93.097702,
-      "location_precision": "state_level",
-      "location_precision_warning": "state-level location, not exact address.",
-      "location_extraction_method": "text_pattern_state_only",
-      "location_extraction_text": "IA",
-      "location_extraction_confidence": "low"
+      "latitude": 40.7342,
+      "longitude": -92.8744,
+      "location_precision": "city_state",
+      "location_precision_warning": "",
+      "location_extraction_method": "source_metadata_city_state",
+      "location_extraction_text": "Centerville, IA",
+      "extraction_evidence_text": "Centerville, IA",
+      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
+      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+      "story_id": "american-pressure-story-2026-05-16-004"
     },
     {
       "title": "Large local layoffs show how quickly paycheck stability can weaken",
@@ -65,12 +136,313 @@
       "source_record_ids": [
         "ap-2026-05-16-labor-story-capradio-layoffs"
       ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-005"
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Large local layoffs show how quickly paycheck stability can weaken (2026-05-08T00:00:00-07:00)",
       "latitude": 38.5816,
       "longitude": -121.4944,
       "location_precision": "city_state",
-      "location_precision_warning": ""
+      "location_precision_warning": "",
+      "location_extraction_method": "source_metadata_city_state",
+      "location_extraction_text": "Sacramento, CA",
+      "extraction_evidence_text": "Sacramento, CA",
+      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
+      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+      "story_id": "american-pressure-story-2026-05-16-005"
+    },
+    {
+      "title": "Storm recovery assessments show where local systems may face prolonged strain",
+      "date": "2026-05-04T00:00:00-05:00",
+      "location_label": "WI",
+      "city": "",
+      "state": "WI",
+      "category": "local_system_strain",
+      "source_urls": [
+        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-weather-story-wi-flood-assessments"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
+      "latitude": 43.78444,
+      "longitude": -88.787868,
+      "location_precision": "state_level",
+      "location_precision_warning": "state-level location, not exact address.",
+      "location_extraction_method": "text_source_title_state_only",
+      "location_extraction_text": "WI",
+      "extraction_evidence_text": "WI",
+      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+      "story_id": "american-pressure-story-2026-05-16-007"
+    }
+  ],
+  "aggregated_pins": [
+    {
+      "latitude": 40.7342,
+      "longitude": -92.8744,
+      "location_label": "Centerville, IA",
+      "state": "IA",
+      "location_precision": "city_state",
+      "record_count": 1,
+      "source_record_ids": [
+        "ap-2026-05-16-health-story-kcrg-clinic-closure"
+      ],
+      "source_urls": [
+        "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-004"
+      ],
+      "categories": [
+        "health_access_pressure"
+      ],
+      "pins": [
+        {
+          "title": "Local clinic closures can quickly turn access gaps into household health risk",
+          "date": "2026-05-12T21:45:00-05:00",
+          "location_label": "Centerville, IA",
+          "city": "Centerville",
+          "state": "IA",
+          "category": "health_access_pressure",
+          "source_urls": [
+            "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
+          ],
+          "edition_url": "/american-pressure/editions/2026-05-16/",
+          "source_record_ids": [
+            "ap-2026-05-16-health-story-kcrg-clinic-closure"
+          ],
+          "story_ids": [
+            "american-pressure-story-2026-05-16-004"
+          ],
+          "dispatch_url": "/american-pressure/",
+          "source_title_date": "Local clinic closures can quickly turn access gaps into household health risk (2026-05-12T21:45:00-05:00)",
+          "latitude": 40.7342,
+          "longitude": -92.8744,
+          "location_precision": "city_state",
+          "location_precision_warning": "",
+          "location_extraction_method": "source_metadata_city_state",
+          "location_extraction_text": "Centerville, IA",
+          "extraction_evidence_text": "Centerville, IA",
+          "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
+          "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+          "story_id": "american-pressure-story-2026-05-16-004"
+        }
+      ]
+    },
+    {
+      "latitude": 39.1233,
+      "longitude": -93.196,
+      "location_label": "Marshall, MO",
+      "state": "MO",
+      "location_precision": "city_state",
+      "record_count": 1,
+      "source_record_ids": [
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+      ],
+      "source_urls": [
+        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-002"
+      ],
+      "categories": [
+        "financial_distress_pressure"
+      ],
+      "pins": [
+        {
+          "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
+          "date": "2026-05-12T00:00:00-05:00",
+          "location_label": "Marshall, MO",
+          "city": "Marshall",
+          "state": "MO",
+          "category": "financial_distress_pressure",
+          "source_urls": [
+            "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
+          ],
+          "edition_url": "/american-pressure/editions/2026-05-16/",
+          "source_record_ids": [
+            "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+          ],
+          "story_ids": [
+            "american-pressure-story-2026-05-16-002"
+          ],
+          "dispatch_url": "/american-pressure/",
+          "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
+          "latitude": 39.1233,
+          "longitude": -93.196,
+          "location_precision": "city_state",
+          "location_precision_warning": "",
+          "location_extraction_method": "source_metadata_city_state",
+          "location_extraction_text": "Marshall, MO",
+          "extraction_evidence_text": "Marshall, MO",
+          "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
+          "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
+          "story_id": "american-pressure-story-2026-05-16-002"
+        }
+      ]
+    },
+    {
+      "latitude": 38.5816,
+      "longitude": -121.4944,
+      "location_label": "Sacramento, CA",
+      "state": "CA",
+      "location_precision": "city_state",
+      "record_count": 1,
+      "source_record_ids": [
+        "ap-2026-05-16-labor-story-capradio-layoffs"
+      ],
+      "source_urls": [
+        "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-005"
+      ],
+      "categories": [
+        "labor_income_pressure"
+      ],
+      "pins": [
+        {
+          "title": "Large local layoffs show how quickly paycheck stability can weaken",
+          "date": "2026-05-08T00:00:00-07:00",
+          "location_label": "Sacramento, CA",
+          "city": "Sacramento",
+          "state": "CA",
+          "category": "labor_income_pressure",
+          "source_urls": [
+            "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
+          ],
+          "edition_url": "/american-pressure/editions/2026-05-16/",
+          "source_record_ids": [
+            "ap-2026-05-16-labor-story-capradio-layoffs"
+          ],
+          "story_ids": [
+            "american-pressure-story-2026-05-16-005"
+          ],
+          "dispatch_url": "/american-pressure/",
+          "source_title_date": "Large local layoffs show how quickly paycheck stability can weaken (2026-05-08T00:00:00-07:00)",
+          "latitude": 38.5816,
+          "longitude": -121.4944,
+          "location_precision": "city_state",
+          "location_precision_warning": "",
+          "location_extraction_method": "source_metadata_city_state",
+          "location_extraction_text": "Sacramento, CA",
+          "extraction_evidence_text": "Sacramento, CA",
+          "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
+          "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+          "story_id": "american-pressure-story-2026-05-16-005"
+        }
+      ]
+    },
+    {
+      "latitude": 35.2828,
+      "longitude": -120.6596,
+      "location_label": "San Luis Obispo County, CA",
+      "state": "CA",
+      "location_precision": "county_state",
+      "record_count": 1,
+      "source_record_ids": [
+        "ap-2026-05-16-food-story-keyt-demand"
+      ],
+      "source_urls": [
+        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-001"
+      ],
+      "categories": [
+        "food_pressure"
+      ],
+      "pins": [
+        {
+          "title": "Local food bank strain can be an early sign that household budgets are tightening",
+          "date": "2026-05-01T12:30:00-07:00",
+          "location_label": "San Luis Obispo County, CA",
+          "city": "San Luis Obispo County",
+          "state": "CA",
+          "category": "food_pressure",
+          "source_urls": [
+            "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
+          ],
+          "edition_url": "/american-pressure/editions/2026-05-16/",
+          "source_record_ids": [
+            "ap-2026-05-16-food-story-keyt-demand"
+          ],
+          "story_ids": [
+            "american-pressure-story-2026-05-16-001"
+          ],
+          "dispatch_url": "/american-pressure/",
+          "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
+          "latitude": 35.2828,
+          "longitude": -120.6596,
+          "location_precision": "county_state",
+          "location_precision_warning": "county-level location, not exact address.",
+          "location_extraction_method": "source_metadata_county_state",
+          "location_extraction_text": "San Luis Obispo County, CA",
+          "extraction_evidence_text": "San Luis Obispo County, CA",
+          "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
+          "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
+          "story_id": "american-pressure-story-2026-05-16-001"
+        }
+      ]
+    },
+    {
+      "latitude": 43.78444,
+      "longitude": -88.787868,
+      "location_label": "WI",
+      "state": "WI",
+      "location_precision": "state_level",
+      "record_count": 1,
+      "source_record_ids": [
+        "ap-2026-05-16-weather-story-wi-flood-assessments"
+      ],
+      "source_urls": [
+        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
+      ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-007"
+      ],
+      "categories": [
+        "local_system_strain"
+      ],
+      "pins": [
+        {
+          "title": "Storm recovery assessments show where local systems may face prolonged strain",
+          "date": "2026-05-04T00:00:00-05:00",
+          "location_label": "WI",
+          "city": "",
+          "state": "WI",
+          "category": "local_system_strain",
+          "source_urls": [
+            "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
+          ],
+          "edition_url": "/american-pressure/editions/2026-05-16/",
+          "source_record_ids": [
+            "ap-2026-05-16-weather-story-wi-flood-assessments"
+          ],
+          "story_ids": [
+            "american-pressure-story-2026-05-16-007"
+          ],
+          "dispatch_url": "/american-pressure/",
+          "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
+          "latitude": 43.78444,
+          "longitude": -88.787868,
+          "location_precision": "state_level",
+          "location_precision_warning": "state-level location, not exact address.",
+          "location_extraction_method": "text_source_title_state_only",
+          "location_extraction_text": "WI",
+          "extraction_evidence_text": "WI",
+          "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+          "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+          "story_id": "american-pressure-story-2026-05-16-007"
+        }
+      ]
     }
   ],
   "national_records": [
@@ -88,121 +460,112 @@
       "source_record_ids": [
         "ap-2026-05-16-housing-story-utility-shutoffs-wapo"
       ],
+      "story_ids": [
+        "american-pressure-story-2026-05-16-003"
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Utility shutoff data shows how housing-related monthly bills can become an immediate household risk (2026-04-26T00:00:00-04:00)",
       "unmapped_reason": "national_scope"
     }
   ],
-  "unmapped_records": [
-    {
-      "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
-      "date": "2026-05-12T00:00:00-05:00",
-      "location_label": "Marshall, Missouri",
-      "city": "Marshall",
-      "state": "Missouri",
-      "category": "financial_distress_pressure",
-      "source_urls": [
-        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
-      "unmapped_reason": "no_lookup_match"
-    },
-    {
-      "title": "Local food bank strain can be an early sign that household budgets are tightening",
-      "date": "2026-05-01T12:30:00-07:00",
-      "location_label": "San Luis Obispo County, California",
-      "city": "San Luis Obispo County",
-      "state": "California",
-      "category": "food_pressure",
-      "source_urls": [
-        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-food-story-keyt-demand"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
-      "unmapped_reason": "no_lookup_match"
-    },
-    {
-      "title": "Storm recovery assessments show where local systems may face prolonged strain",
-      "date": "2026-05-04T00:00:00-05:00",
-      "location_label": "Multiple counties in Wisconsin",
-      "city": "",
-      "state": "",
-      "category": "local_system_strain",
-      "source_urls": [
-        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-weather-story-wi-flood-assessments"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
-      "unmapped_reason": "no_lookup_match"
-    }
-  ],
-  "needs_location": [
-    {
-      "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
-      "date": "2026-05-12T00:00:00-05:00",
-      "location_label": "Marshall, Missouri",
-      "city": "Marshall",
-      "state": "Missouri",
-      "category": "financial_distress_pressure",
-      "source_urls": [
-        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
-      "unmapped_reason": "no_lookup_match"
-    },
-    {
-      "title": "Local food bank strain can be an early sign that household budgets are tightening",
-      "date": "2026-05-01T12:30:00-07:00",
-      "location_label": "San Luis Obispo County, California",
-      "city": "San Luis Obispo County",
-      "state": "California",
-      "category": "food_pressure",
-      "source_urls": [
-        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-food-story-keyt-demand"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
-      "unmapped_reason": "no_lookup_match"
-    },
-    {
-      "title": "Storm recovery assessments show where local systems may face prolonged strain",
-      "date": "2026-05-04T00:00:00-05:00",
-      "location_label": "Multiple counties in Wisconsin",
-      "city": "",
-      "state": "",
-      "category": "local_system_strain",
-      "source_urls": [
-        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "ap-2026-05-16-weather-story-wi-flood-assessments"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
-      "unmapped_reason": "no_lookup_match"
-    }
-  ]
+  "unmapped_records": [],
+  "needs_location": [],
+  "location_extraction_diagnostics": {
+    "extracted_candidates": [
+      {
+        "kind": "state_only",
+        "state": "WI",
+        "evidence": "WI",
+        "confidence": "low",
+        "method": "text_source_title_state_only",
+        "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+        "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-007"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "WI",
+        "evidence": "WI",
+        "confidence": "low",
+        "method": "text_story_human_story_summary_state_only",
+        "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+        "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-007"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "WI",
+        "evidence": "WI",
+        "confidence": "low",
+        "method": "text_story_location_scope_state_only",
+        "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+        "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-007"
+        ]
+      }
+    ],
+    "accepted_candidates": [
+      {
+        "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
+        "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-002"
+        ],
+        "location_label": "Marshall, MO",
+        "method": "source_metadata_city_state",
+        "evidence": "Marshall, MO",
+        "precision": "city_state"
+      },
+      {
+        "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
+        "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-001"
+        ],
+        "location_label": "San Luis Obispo County, CA",
+        "method": "source_metadata_county_state",
+        "evidence": "San Luis Obispo County, CA",
+        "precision": "county_state"
+      },
+      {
+        "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
+        "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-004"
+        ],
+        "location_label": "Centerville, IA",
+        "method": "source_metadata_city_state",
+        "evidence": "Centerville, IA",
+        "precision": "city_state"
+      },
+      {
+        "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
+        "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-005"
+        ],
+        "location_label": "Sacramento, CA",
+        "method": "source_metadata_city_state",
+        "evidence": "Sacramento, CA",
+        "precision": "city_state"
+      },
+      {
+        "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
+        "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
+        "story_ids": [
+          "american-pressure-story-2026-05-16-007"
+        ],
+        "location_label": "WI",
+        "method": "text_source_title_state_only",
+        "evidence": "WI",
+        "precision": "state_level"
+      }
+    ],
+    "rejected_candidates": []
+  }
 }

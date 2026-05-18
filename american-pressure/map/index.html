@@ -28,12 +28,25 @@
     <p class="lede">Weekly briefing range: May 10–May 16, 2026</p>
     <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/">Dispatches Home</a></p>
     <div class="ap-map-controls">
+      <label for="ap-map-view-mode">View mode</label>
+      <select id="ap-map-view-mode">
+        <option value="aggregated">Show aggregated locations</option>
+        <option value="individual">Show individual source signals</option>
+      </select>
       <label for="ap-map-filter">Pressure area</label>
       <select id="ap-map-filter"><option value="all">All</option></select>
+      <label for="ap-map-window-filter">Time window</label>
+      <select id="ap-map-window-filter">
+        <option value="current_week">Current week/current edition</option>
+        <option value="last_30_days" selected>Last 30 days</option>
+        <option value="last_60_days">Last 60 days</option>
+      </select>
       <label for="ap-map-precision-filter">Location precision</label>
       <select id="ap-map-precision-filter"><option value="all">All</option></select>
       <label for="ap-map-state-filter">State</label>
       <select id="ap-map-state-filter"><option value="all">All</option></select>
+      <label for="ap-map-role-filter">Location role</label>
+      <select id="ap-map-role-filter"><option value="all">All</option></select>
       <span id="ap-map-count" class="ap-map-note"></span>
     </div>
     <section class="ap-map-legend">
@@ -43,7 +56,7 @@
     <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
     <section class="ap-map-legend">
       <h2>Legend</h2>
-      <p>Green: exact/source-provided. Blue: city/state. Orange: county/state. Gray: state-level.</p>
+      <p>Role colors: primary (blue), affected (orange), service-area (teal), state-context (gray).</p>
     </section>
     <section class="ap-map-needs">
       <h2>National records</h2>
@@ -79,13 +92,16 @@
 (function () {
   var mapEl = document.getElementById("ap-map");
   var filter = document.getElementById("ap-map-filter");
+  var viewMode = document.getElementById("ap-map-view-mode");
   var countEl = document.getElementById("ap-map-count");
+  var windowFilter = document.getElementById("ap-map-window-filter");
   var precisionFilter = document.getElementById("ap-map-precision-filter");
   var stateFilter = document.getElementById("ap-map-state-filter");
+  var roleFilter = document.getElementById("ap-map-role-filter");
   var needsList = document.getElementById("ap-map-needs-list");
   var nationalList = document.getElementById("ap-map-national-list");
   var counters = document.getElementById("ap-map-counters");
-  if (!mapEl || !filter || !precisionFilter || !stateFilter || !countEl || !needsList || !nationalList || !counters || !window.L) return;
+  if (!mapEl || !filter || !viewMode || !windowFilter || !precisionFilter || !stateFilter || !roleFilter || !countEl || !needsList || !nationalList || !counters || !window.L) return;
   var map = L.map(mapEl).setView([39.5, -98.35], 4);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 9,
@@ -100,6 +116,7 @@
       var national = Array.isArray(payload.national_records) ? payload.national_records : [];
       var categories = Array.isArray(payload.categories) ? payload.categories : [];
       var states = Array.isArray(payload.states) ? payload.states : [];
+      var roles = Array.isArray(payload.location_roles) ? payload.location_roles : [];
       var markers = [];
       categories.forEach(function (cat) {
         var opt = document.createElement("option");
@@ -107,7 +124,7 @@
         opt.textContent = cat;
         filter.appendChild(opt);
       });
-      ["exact_or_source_provided", "city_state", "county_state", "state_level"].forEach(function (p) {
+      ["exact_or_source_provided", "city_state", "county_state", "service_area", "state_level"].forEach(function (p) {
         var opt = document.createElement("option");
         opt.value = p;
         opt.textContent = p;
@@ -119,13 +136,25 @@
         opt.textContent = st;
         stateFilter.appendChild(opt);
       });
+      roles.forEach(function (role) {
+        var opt = document.createElement("option");
+        opt.value = role;
+        opt.textContent = role;
+        roleFilter.appendChild(opt);
+      });
       counters.innerHTML =
         "<li>Total source-backed records: " + (payload.total_source_backed_records || 0) + "</li>" +
-        "<li>Mapped records: " + (payload.mapped_records_count || 0) + "</li>" +
+        "<li>Mapped records (distinct public signals): " + (payload.mapped_records_count || 0) + "</li>" +
+        "<li>Mapped records (raw ingest records): " + (payload.raw_record_count || payload.mapped_records_count || 0) + "</li>" +
         "<li>Exact/source-provided pins: " + (payload.exact_or_source_provided_count || 0) + "</li>" +
         "<li>City/state pins: " + (payload.city_state_count || 0) + "</li>" +
         "<li>County/state pins: " + (payload.county_state_count || 0) + "</li>" +
+        "<li>Service-area pins: " + (payload.service_area_count || 0) + "</li>" +
         "<li>State-level pins: " + (payload.state_level_count || 0) + "</li>" +
+        "<li>Primary location signals: " + (payload.primary_location_count || 0) + "</li>" +
+        "<li>Affected location signals: " + (payload.affected_location_count || 0) + "</li>" +
+        "<li>Service-area signals: " + (payload.service_area_role_count || 0) + "</li>" +
+        "<li>State-context signals: " + (payload.state_context_count || 0) + "</li>" +
         "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
         "<li>Unmapped records: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
@@ -137,40 +166,80 @@
           (pin.location_label || "Location not labeled") + '<br>' +
           'Category: ' + (pin.category || "uncategorized") + '<br>' +
           'Precision: ' + (pin.location_precision || "unknown") + '<br>' +
+          'Role: ' + (pin.location_role || "unknown") + '<br>' +
           (pin.location_precision_warning ? ('Warning: ' + pin.location_precision_warning + '<br>') : '') +
+          'Evidence: ' + (pin.evidence_text || pin.extraction_evidence_text || "") + '<br>' +
           'Record IDs: ' + (pin.source_record_ids || []).join(", ") + '<br>' +
           '<a href="' + (pin.edition_url || "/american-pressure/") + '">Edition</a> | ' + sources;
       }
+      function popupHtmlAggregated(group) {
+        var sourceLinks = (group.source_urls || []).map(function (url) {
+          return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';
+        }).join(" | ");
+        var storyLinks = (group.written_story_links || []).map(function (row) {
+          if (!row || !row.url) return "";
+          var label = row.label || row.story_id || "Written section";
+          return '<a href="' + row.url + '">' + label + '</a>';
+        }).filter(Boolean).join(" | ");
+        return '<strong>' + (group.location_label || "Location") + '</strong><br>' +
+          'Total signals at this location: ' + (group.record_count || 0) + '<br>' +
+          'Count by role: ' + JSON.stringify(group.role_counts || {}) + '<br>' +
+          'Pressure categories represented: ' + ((group.categories || []).join(", ") || "uncategorized") + '<br>' +
+          'Source IDs: ' + ((group.source_record_ids || []).join(", ") || "none") + '<br>' +
+          'All sources: ' + (sourceLinks || "none") + '<br>' +
+          'Related written stories: ' + (storyLinks || "none") + '<br>' +
+          'Evidence snippets: ' + ((group.pins || []).map(function (p) { return p.evidence_text || p.extraction_evidence_text || ""; }).filter(Boolean).join(" | ") || "none");
+      }
       function markerStyle(pin) {
-        if (pin.location_precision === "exact_or_source_provided") return { radius: 7, fillColor: "#1f8a3b", color: "#0d5d25", weight: 1, fillOpacity: 0.9 };
-        if (pin.location_precision === "city_state") return { radius: 7, fillColor: "#2b6cb0", color: "#1a436e", weight: 1, fillOpacity: 0.9 };
-        if (pin.location_precision === "county_state") return { radius: 7, fillColor: "#c06c00", color: "#8f5100", weight: 1, fillOpacity: 0.9 };
+        if (pin.location_role === "primary_location") return { radius: 7, fillColor: "#2b6cb0", color: "#1a436e", weight: 1, fillOpacity: 0.9 };
+        if (pin.location_role === "affected_location") return { radius: 7, fillColor: "#c06c00", color: "#8f5100", weight: 1, fillOpacity: 0.9 };
+        if (pin.location_role === "service_area") return { radius: 7, fillColor: "#0f766e", color: "#115e59", weight: 1, fillOpacity: 0.9 };
         return { radius: 7, fillColor: "#616161", color: "#3b3b3b", weight: 1, fillOpacity: 0.9 };
       }
-      function renderPins(category, precision, state) {
+      function windowPass(pin, selectedWindow) {
+        var rank = {"current_week": 1, "last_30_days": 2, "last_60_days": 3};
+        var actual = rank[pin.time_window || "last_60_days"] || 3;
+        var target = rank[selectedWindow || "last_30_days"] || 2;
+        return actual <= target;
+      }
+      function renderPins(category, precision, state, role, mode, selectedWindow) {
         markers.forEach(function (m) { map.removeLayer(m); });
         markers = [];
+        if (mode === "individual") {
+          var activeIndividual = pins.filter(function (pin) {
+            var catOk = category === "all" || pin.category === category;
+            var okPrecision = precision === "all" || pin.location_precision === precision;
+            var okState = state === "all" || pin.state === state;
+            var okRole = role === "all" || pin.location_role === role;
+            return catOk && okPrecision && okState && okRole && windowPass(pin, selectedWindow);
+          });
+          activeIndividual.forEach(function (pin) {
+            var marker = L.circleMarker([pin.latitude, pin.longitude], markerStyle(pin)).addTo(map).bindPopup(popupHtml(pin));
+            markers.push(marker);
+          });
+          countEl.textContent = activeIndividual.length + " mapped source signal(s)";
+          return;
+        }
         var active = aggregated.filter(function (pin) {
           var catOk = category === "all" || (Array.isArray(pin.categories) && pin.categories.indexOf(category) >= 0);
           var okPrecision = precision === "all" || pin.location_precision === precision;
           var okState = state === "all" || pin.state === state;
-          return catOk && okPrecision && okState;
+          var okRole = role === "all" || pin.location_role === role;
+          var groupPins = Array.isArray(pin.pins) ? pin.pins : [];
+          var anyInWindow = groupPins.some(function (p) { return windowPass(p, selectedWindow); });
+          return catOk && okPrecision && okState && okRole && anyInWindow;
         });
         active.forEach(function (group) {
           var pin = (Array.isArray(group.pins) && group.pins[0]) ? group.pins[0] : group;
           var style = markerStyle(pin);
-          if (group.record_count > 1) style.radius = 10;
-          var marker = L.circleMarker([group.latitude, group.longitude], style).addTo(map).bindPopup(
-            '<strong>' + (group.location_label || "Location") + '</strong><br>' +
-            'Grouped records: ' + (group.record_count || 0) + '<br>' +
-            popupHtml(pin)
-          );
+          style.radius = Math.min(16, 6 + Math.max(1, Math.sqrt(group.record_count || 1) * 2));
+          var marker = L.circleMarker([group.latitude, group.longitude], style).addTo(map).bindPopup(popupHtmlAggregated(group));
           markers.push(marker);
         });
         var recordCount = active.reduce(function (sum, group) {
           return sum + (group.record_count || 0);
         }, 0);
-        countEl.textContent = recordCount + " mapped record(s), " + active.length + " location group(s)";
+        countEl.textContent = recordCount + " mapped source signal(s), " + active.length + " location group(s)";
       }
       if (pins.length === 0) {
         countEl.textContent = "No mapped records for this edition. See National and Unmapped panels.";
@@ -190,11 +259,14 @@
           (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "") + reason;
         needsList.appendChild(li);
       });
-      function rerender() { renderPins(filter.value, precisionFilter.value, stateFilter.value); }
+      function rerender() { renderPins(filter.value, precisionFilter.value, stateFilter.value, roleFilter.value, viewMode.value, windowFilter.value); }
       filter.addEventListener("change", rerender);
+      viewMode.addEventListener("change", rerender);
+      windowFilter.addEventListener("change", rerender);
       precisionFilter.addEventListener("change", rerender);
       stateFilter.addEventListener("change", rerender);
-      renderPins("all", "all", "all");
+      roleFilter.addEventListener("change", rerender);
+      renderPins("all", "all", "all", "all", viewMode.value, windowFilter.value);
     })
     .catch(function () {
       countEl.textContent = "Map data unavailable.";

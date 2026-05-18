@@ -2,71 +2,63 @@
   "stories": [
     {
       "story_id": "american-pressure-story-2026-05-16-001",
-      "title": "Food support networks report rising demand",
-      "summary": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
+      "title": "Food help remains one of the clearest signs of household strain",
+      "summary": "Official USDA FNS research page for SNAP household characteristic reports.",
       "category": "food-pressure",
       "pillar": "food_pressure",
       "curation_reason": "food assistance dependency",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 3,
+        "human_story": 0,
         "data_anchor": 3,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 99,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
-        "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
         "auto-2026-05-16-usda-fns-snap-household-characteristics",
         "auto-2026-05-16-usda-fns-snap-data-tables",
         "auto-2026-05-16-usda-ers-food-price-outlook"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5",
-        "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBwVWRacmI2aDJUcHh6bzU2X01SRm1EbG5JLWxBSG1HLWRvampDSXlqZ1luSVhWVm9ZYjNRQ3AzbUZfRzBoOXlLMEFjRnI4QldCa0NqQzd1Vk9YQlFiUG1BTNIBXEFVX3lxTE4xMlN5Tlkzdk5rR2tkaUExbWVsMWtRWDVZb3BmTVN0WWVvM2ZTMC1OZU12ZGZHaV8wYzFWb1BvQU5OWFRRNWpLWFQ4MGo0Uk93bm1mSVUweGFZMVZ0?oc=5",
-        "https://news.google.com/rss/articles/CBMigwNBVV95cUxOVEJLcXJkVGRsaVJOTVVNSEpNREJkeXU4YTdha05nS0szbDlkalhreVVtYlhuZUFLMzNkV3NGNTZqb0Y5bmFHYWQzazNtcDYtZDI4X1hGeWJjLW5CSHNVZndHNUZ0WUxrY2wtOWJORGQ1RHEzV1JLcFEzXzdEa1BNV2pCeGlfNDc3VF83ellVNi1qb3EtWlpXRnM1TEFPRXFXZGVHajNPOWZVVmRlLWNfdWdnQ2VkOThjNnNwN2x4cUZjejNzUklOZldDVEwzSl8zVnhoM0gwTWdqdUR2NVZQTndhMGljYXRnOWZLdzZoUEo5MHQ5VHBva0FpcjBWcWhQWjFuYS16NEdoWTNIUjR6LUQwelVSYlRWZWZ2NEx1UzBWREZFbXgtMWRFNHdRQ0ZSQlA3TXVCZUUxSzM0MHo3TVdMb095a0phWVRrVXF5dXRQSEViYjhPcVVCV2ZDdWRxSWJXOG10dV9xT0RpTUJvQWFiNVl3OXRpbEJpaF95cmRTRE0?oc=5",
         "https://www.fns.usda.gov/research/snap/household-characteristics",
         "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
         "https://www.ers.usda.gov/data-products/food-price-outlook/"
       ],
       "publisher_names": [
-        "Fathom Journal",
-        "Modern Ghana",
-        "MSN",
         "USDA Food and Nutrition Service",
         "USDA Food and Nutrition Service",
         "USDA Economic Research Service"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
-        "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-usda-fns-snap-household-characteristics",
         "auto-2026-05-16-usda-fns-snap-data-tables",
         "auto-2026-05-16-usda-ers-food-price-outlook"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Food support networks report rising demand",
-      "human_story_summary": "Nationally, Food banks and assistance providers are reporting tighter conditions for households.",
+      "reader_headline": "Food help remains one of the clearest signs of household strain",
+      "human_story_summary": "",
       "data_context_summary": "Data context from SNAP Household Characteristics, SNAP Data Tables, USDA ERS Food Price Outlook is a baseline for tracking whether food pressure is broadening.",
-      "what_happened": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop Fathom Journal",
-      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
-      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
-      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
+      "what_happened": "SNAP data helps show whether food assistance remains a major support for households under grocery pressure.",
+      "potential_relevance": "This signal may show up later as tighter grocery tradeoffs, higher pantry demand, and less room in monthly budgets.",
+      "who_may_feel_it": "Families with low or fixed incomes, households with children, and older adults.",
+      "what_to_watch_next": "Watch whether food assistance reliance and grocery cost pressure are rising or easing.",
       "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
@@ -116,306 +108,283 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-003",
       "title": "Housing costs are still the budget pressure that can crowd out everything else",
-      "summary": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
+      "summary": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
       "category": "housing-household-cost-pressure",
       "pillar": "housing_household_cost_pressure",
       "curation_reason": "shelter cost pressure",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 2,
+        "human_story": 0,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 97,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
-        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
         "auto-2026-05-16-bls-cpi-shelter"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMirgJBVV95cUxOc254aERmVWVabkFHV1ZvTmxuelNjbTJPVGp5aVltU21HOUdwc2MzR3RoZ2M5cXlYRWVhbU1Xb3AxdzJiM0FVZDI0bWFUZVZHUXhMRWp0WUpNS1Y1ajc2ZG5FTE5RME1vYXVCNXBmX2YxSXNSd0dqRlgzd1JjUC1VSXpVVFZSMjZiZWRmeVJlLWxxb0JNUXNEbWlWVzRULUtuNEtkOGNrVkhWZGZOTkpZeUszXzZzQ1M2MVVRSTJrSmo3dy00eDU5Q3h1aHhIZnE2S3U4RXRUTG5MbUtUQlFJU09HelpWYzFsWk9pUE0wTWNIVTR6YW5jX1ZtMXoxT0xLTW1yQnJjTWRHZm5FWTZPMXZsaEx4RXVLOHU3TnIxQlNwUnlxNGlham81Q0lqZw?oc=5",
-        "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNRm50aTFGQzJaQXVCaVhLNDBHRDNfM2tReWVNbnNTYThNZXF4ZlZMMXlkczF6Q2c4YjZvMnhfdTJmdmpPVXdveHNBZXZibzNmeEhMNjB1clBZNl9NNEI4WWZDS0dNSEFSMDdjZVlNTjNUQXdRRkhtZU1uaXlTVDlSNHZja19IQ3VManNDYXpDeHZRWDZ5cGcwWFBvNEJtcEMxNW5iTWlyd2IzbXVZb1ZQaTV6YkdBUEhiUUJtaFlIclNqdw?oc=5",
         "https://www.bls.gov/cpi/"
       ],
       "publisher_names": [
-        "Ohio House of Representatives (.gov)",
-        "Colorado Springs Gazette",
         "U.S. Bureau of Labor Statistics"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
-        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-bls-cpi-shelter"
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Housing costs are still the budget pressure that can crowd out everything else",
-      "human_story_summary": "In Healthcare, Childcare, Housing and monthly bill pressures are increasing strain on household budgets.",
+      "human_story_summary": "",
       "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
-      "what_happened": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
-      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
-      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
-      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location_scope": "Healthcare, Childcare",
+      "what_happened": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
+      "potential_relevance": "This is a baseline for watching whether housing and utility costs keep crowding out other essentials.",
+      "who_may_feel_it": "Renters, first-time buyers, and households already cost-burdened on monthly bills.",
+      "what_to_watch_next": "Watch whether shelter and utility pressure is broadening or stabilizing.",
+      "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-004",
-      "title": "Health access pressure is disrupting care",
-      "summary": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
+      "title": "Health coverage data helps show who may be exposed if access changes",
+      "summary": "National and state Medicaid/CHIP enrollment baseline.",
       "category": "health-access-pressure",
       "pillar": "health_access_pressure",
       "curation_reason": "health coverage/access pressure",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 2,
+        "human_story": 0,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 96,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-        "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit",
         "auto-2026-05-16-cms-medicaid-chip-enrollment"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5",
-        "https://news.google.com/rss/articles/CBMipwFBVV95cUxOZXhXbTc0TXpaS1FXZ0w4SjdfYmVFTldIZWVZTmZKdmJmREMwa0xORHdONW81TjFaV2huWEZXUWxRaWk0Z0lfcmMtamZzMUU3NDRGSDNhUWhpRkJMWEhPSkh1RFVZOFlWTkhnMUdxY0lRQktmOXYyRU9RSWxJVlR1ZlIydVdwQmNLUW0xNUh1NWhnY2N5U0oySk1XMXgwNWhnQTNZdjVXaw?oc=5",
         "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data"
       ],
       "publisher_names": [
-        "Star Tribune",
-        "The Oxford Eagle",
         "Centers for Medicare and Medicaid Services"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-        "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-cms-medicaid-chip-enrollment"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Health access pressure is disrupting care",
-      "human_story_summary": "Nationally, With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune.",
+      "reader_headline": "Health coverage data helps show who may be exposed if access changes",
+      "human_story_summary": "",
       "data_context_summary": "Data context from Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
-      "what_happened": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO Star Tribune",
-      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
-      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
-      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
+      "what_happened": "National and state Medicaid/CHIP enrollment baseline.",
+      "potential_relevance": "This signal may matter if households could face coverage gaps, delayed care, or higher out-of-pocket pressure.",
+      "who_may_feel_it": "People with chronic conditions, caregivers, and uninsured or underinsured households.",
+      "what_to_watch_next": "Watch for coverage changes, closures, and access bottlenecks.",
       "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-005",
       "title": "Jobs and paychecks remain the first line of defense against household pressure",
-      "summary": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
+      "summary": "Official labor market baseline for unemployment and job losses.",
       "category": "labor-income-pressure",
       "pillar": "labor_income_pressure",
       "curation_reason": "job market pressure",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 3,
+        "human_story": 0,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 95,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-        "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
-        "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
         "auto-2026-05-16-bls-unemployment-situation"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5",
-        "https://news.google.com/rss/articles/CBMitwJBVV95cUxQQWdzMjRiR0hCazd2M3hlTjJpQkt0UE10VUdDS1VrclM0ekpiT0N5U3VpeEhkZHdYQTMwaVNBTUpiQUpxV3VLTVZENl9YVVlhMWd6djJEOXdTNzczTGxpN21ldjVqczR4UDJGeFN2Tm03RFhpTXdMbEVPNno5bS02QllTZkw1RFJyNzNoVW9TcmNMMmZ0bGhpazZvdnJzMWxuTmtsOFNfdXl4dzRSeHBJOW1BeHJLcVpGb2VLa2NDaVFHT1NpU09RU1JFcUNtWExSWEtBekNTb0dWVmRvb05qN2dmWm9MMHdsRnQxbGpXakdDSE1WNXJjbVlscU96QkQyTUxpQVJjQ3lpZDg3elBpdkdUTF8tYTFVeHJRaHIwYVJqck4zQUF1Y0V0Qm9xNlM0OW96MUt4VQ?oc=5",
-        "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5RYWY2UkhMODdhcTdadTZoSy1LY2VjNTdielk3SlQ1VHJFS20zeGthOWVidlJ0OWtwelpmd25RbmM0WENhQ0I5V0pCZDM5ekVkUVlTeE94X3UyQ1cxUGNCaEJRQQ?oc=5",
         "https://www.bls.gov/news.release/empsit.nr0.htm"
       ],
       "publisher_names": [
-        "Hoodline",
-        "MSN",
-        "94.5 PST",
         "U.S. Bureau of Labor Statistics"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-        "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
-        "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-bls-unemployment-situation"
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Jobs and paychecks remain the first line of defense against household pressure",
-      "human_story_summary": "Nationally, Local job and paycheck developments suggest increasing household pressure.",
+      "human_story_summary": "",
       "data_context_summary": "Data context from BLS Employment Situation helps show whether job and paycheck stability is holding.",
-      "what_happened": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup Hoodline",
-      "potential_relevance": "This may signal weakening paycheck stability for local households.",
-      "who_may_feel_it": "Hourly workers, newly displaced workers, and households with low savings buffers.",
-      "what_to_watch_next": "Watch layoffs, hours cuts, and unemployment direction.",
+      "what_happened": "Official labor market baseline for unemployment and job losses.",
+      "potential_relevance": "This is a signal of whether paycheck stability can still absorb rising costs.",
+      "who_may_feel_it": "Hourly workers, workers in cyclical sectors, and households with small savings buffers.",
+      "what_to_watch_next": "Watch layoffs, unemployment direction, and paycheck resilience.",
       "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-006",
-      "title": "Disaster assessment begins in 30 counties, 1 city after April storms",
-      "summary": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
+      "title": "Weather and climate conditions can turn into cost pressure",
+      "summary": "Official monthly climate indicators.",
       "category": "environmental-pressure",
       "pillar": "environmental_pressure",
       "curation_reason": "drought/disaster/local-system strain",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 3,
+        "human_story": 0,
         "data_anchor": 2,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 94,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
-        "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
-        "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara",
         "auto-2026-05-16-noaa-ncei-monthly-climate-report",
         "auto-2026-05-16-us-drought-monitor"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWV1cUFnT3J0cEdULVhyNU00a3lLMDZzaHZJdTNvdmZIeU1FeUNHMWJkQVBZUVNzbnVXTTJYUFBVb3VLQldrZGZ0VlU2X3U0cm5XcWlueHF5VHhDVzlral96c2RWam1UWmx3Q3d6RnBhcnhRclFHSmtoalJRdmVUWGNmdlY?oc=5",
-        "https://news.google.com/rss/articles/CBMiowFBVV95cUxQRE1WWlZXLUNoWVJmYVpFZVZhbFVDY2F2WGNjQkNsQ1BqSk10Y3RCYTJtcUZ5UTFMdFFEOFJmZ1RhQlBXcmhKWHVOYWllQU5ZYzNpSHBVa3ZvSmJKTGdwd0NTa1I4aWhncl96bFZSazVpY2pNMTZZckVRVjFacWpZQWdHdEJKd0VSU2o3Z3NsS3JIWnZ3cU1mTUNhal9ZLWdnSXRj?oc=5",
-        "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOSVZLQnVnZzljN3RjX1dhZDl2ZE5xcmVMTnBmWkJ4eElXVm5mdlFaTHpjdHpZMmEySG1ER2o3OHZnMlFFa1BTRUF5VnJpRElIUWdrbHowcjZjS2ZSOFI3QktVYk42QUFtdFhCbmhCTDNPb20tN0pTNTZNbWtlZERNZ0x1eTJvT09yQmZ0ejkyYU5oazh4QWFMeUdwSXNhc2dBcEY4Ymc3cWRyTVJNbWhIbnVPU0V6TEFKRDNtS3RkcC14TjF0UWpXOC1lTGt0aGNzTEE?oc=5",
         "https://www.ncei.noaa.gov/access/monitoring/monthly-report/",
         "https://droughtmonitor.unl.edu/"
       ],
       "publisher_names": [
-        "AOL.com",
-        "Manistee News Advocate",
-        "thealpenanews.com",
         "NOAA National Centers for Environmental Information",
         "National Drought Mitigation Center and USDA and NOAA"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
-        "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
-        "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-noaa-ncei-monthly-climate-report",
         "auto-2026-05-16-us-drought-monitor"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Disaster assessment begins in 30 counties, 1 city after April storms",
-      "human_story_summary": "Nationally, Disaster assessment begins in 30 counties, 1 city after April storms AOL.com.",
+      "reader_headline": "Weather and climate conditions can turn into cost pressure",
+      "human_story_summary": "",
       "data_context_summary": "Data context from NOAA NCEI Monthly Climate Reports, U.S. Drought Monitor provides baseline evidence for this pressure area.",
-      "what_happened": "Disaster assessment begins in 30 counties, 1 city after April storms AOL.com",
-      "potential_relevance": "This may signal weather/disaster stress feeding into household cost pressure.",
-      "who_may_feel_it": "Climate-vulnerable households, rural communities, and outdoor workers.",
-      "what_to_watch_next": "Watch recovery timelines, infrastructure stress, and secondary cost impacts.",
+      "what_happened": "Official monthly climate indicators.",
+      "potential_relevance": "This can show up later as food, energy, insurance, and repair cost pressure.",
+      "who_may_feel_it": "Rural communities, outdoor workers, and households in climate-vulnerable regions.",
+      "what_to_watch_next": "Watch whether drought and weather pressures spill into food, housing, and health stress.",
       "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-007",
-      "title": "Voters to consider $688 million in Bay Area school bonds",
-      "summary": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
+      "title": "Disaster declarations show where local systems may be stretched",
+      "summary": "Federal declarations baseline for local system strain events.",
       "category": "local-system-strain",
       "pillar": "local_system_strain",
       "curation_reason": "drought/disaster/local-system strain",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 2,
+        "human_story": 0,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "official_release_only",
       "score": 93,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
-        "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g",
         "auto-2026-05-16-fema-disaster-declarations"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMioAFBVV95cUxQMTJQdkZOaUJFWWlmUUxJcG5aZnp3OU5ySXdnWFVPbU56bVBpdzYtUUY0RDUxc3NqTWJNYktiYUhwMnc4QWZIdE9nd2dlcEJWZXZuVmhOTHRtVk1UbmI3ZFVaZldRdVVESkFiOEdUbzE2aDUzV2xMdjhxWFZqNXBFWlo5UTh3Y3p6akhTVXVNMWx5MUhTMlJYemtEWEJoZ2Fw0gGgAUFVX3lxTFAxMlB2Rk5pQkVZaWZRTElwblpmenc5TnJJd2dYVU9tTnptUGl3Ni1RRjRENTFzc2pNYk1iS2JhSHAydzhBZkh0T2d3Z2VwQlZldm5WaE5MdG1WTVRuYjdkVVpmV1F1VURKQWI4R1RvMTZoNTNXbEx2OHFYVmo1cEVaWjlROHdjenpqSFNVdU0xbHkxSFMyUlh6a0RYQmhnYXA?oc=5",
-        "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOVlc1UWUtVG5zOXdGQ1hqQmxpZ2RrdUI5WmpfUWgxZTFURUtTeFR6eHBkZHFURUtoN2FPMHRKa241bkZGd1F0N0UwVFVXVlN3dHRLOG50NEY5dkVPNHpFcUdtUlNJWE1SR25qclM0ekRIOVVGWHE0UmJsZF9XNTdhZl92enBKTU1xdjUtenVzbzlaNUJKbFVYVjBBR1ROc2VSX1Yya0QzZHVZS1g4d2xvZDQ2XzNkRXgwOWpfQUpJSlduMVZGYnlUdHlUMTJXeU5hZUtoV3N30gHbAUFVX3lxTE1UTFRDNlFvZGM0NFZweDdwY3pBS3hxdFF0NXhELWxfUHBrakRmSmtCQzM1VjRjaXF0RTVMRHFlaTAwTXAxSGFBeFVHMmpYR3g0NUkySEdfNmU3bm04SGIzTFVHdGRaSkE4UkxCY3dpUFI5RVpidi1fUW1KdWdtNmhmcjM4dWdNUHM1TzA4NmszU29EMGJEd01HVW9TeFVjZTY2c2RLZW1zQ2hOcWZ5TjVHUkhnbnpCUkRXYXdKREVjRXJWVk1xR1V5YTloNHBqMmxPdG5FSlVRX04xdw?oc=5",
         "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
       ],
       "publisher_names": [
-        "The Mercury News",
-        "ABC7 New York",
         "Federal Emergency Management Agency"
       ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
-        "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g"
-      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-16-fema-disaster-declarations"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Voters to consider $688 million in Bay Area school bonds",
-      "human_story_summary": "Nationally, Voters to consider $688 million in Bay Area school bonds The Mercury News.",
+      "reader_headline": "Disaster declarations show where local systems may be stretched",
+      "human_story_summary": "",
       "data_context_summary": "Data context from FEMA Disaster Declarations provides baseline evidence for this pressure area.",
-      "what_happened": "Voters to consider $688 million in Bay Area school bonds The Mercury News",
-      "potential_relevance": "This may signal strain in local service delivery and resilience.",
-      "who_may_feel_it": "Residents relying on local agencies, schools, transit, or emergency services.",
-      "what_to_watch_next": "Watch recurring disruptions and emergency management capacity.",
+      "what_happened": "Federal declarations baseline for local system strain events.",
+      "potential_relevance": "This signal may indicate where local systems could have less buffer if conditions worsen.",
+      "who_may_feel_it": "Commuters, caregivers, students, and households relying on local services.",
+      "what_to_watch_next": "Watch for cuts, local budget strain, and recurring infrastructure disruptions.",
       "location_scope": "",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "rising",
-      "public_pressure_angle": "Candidate signal; review against source text before approval.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:49:12.185012+00:00",
+      "generated_at": "2026-05-18T16:39:19.302787+00:00",
       "collection_gap_pillars": [
-        "financial_distress_pressure"
+        "financial_distress_pressure",
+        "food_pressure",
+        "health_access_pressure",
+        "housing_household_cost_pressure",
+        "labor_income_pressure",
+        "local_system_strain"
       ]
     }
   ],
@@ -436,13 +405,13 @@
     "policy_implementation"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 6,
+    "food_pressure": 3,
     "financial_distress_pressure": 2,
-    "housing_household_cost_pressure": 3,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
-    "environmental_pressure": 5,
-    "local_system_strain": 3,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 2,
+    "local_system_strain": 1,
     "policy_implementation": 0
   },
   "story_count_by_pillar": {
@@ -460,19 +429,19 @@
   "rejected_duplicate_or_stale": 0,
   "rejected_missing_required_fields": 0,
   "item_type_counts": {
-    "baseline_gauge": 1,
-    "current_week_development": 6,
+    "baseline_gauge": 7,
+    "current_week_development": 0,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 15,
+    "human_story": 0,
     "data_anchor": 11,
     "watchlist_signal": 0
   },
   "brief_quality_counts": {
-    "story_plus_data": 6,
-    "official_release_only": 1,
-    "baseline_only": 0,
+    "story_plus_data": 0,
+    "official_release_only": 2,
+    "baseline_only": 5,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -494,38 +463,54 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 3,
+    "food_pressure": 0,
     "financial_distress_pressure": 1,
-    "housing_household_cost_pressure": 2,
-    "health_access_pressure": 2,
-    "labor_income_pressure": 3,
-    "environmental_pressure": 3,
-    "local_system_strain": 3,
+    "housing_household_cost_pressure": 0,
+    "health_access_pressure": 0,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 1,
     "policy_implementation": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 3,
+    "food_pressure": 0,
     "financial_distress_pressure": 0,
-    "housing_household_cost_pressure": 2,
-    "health_access_pressure": 2,
-    "labor_income_pressure": 3,
-    "environmental_pressure": 3,
-    "local_system_strain": 2,
+    "housing_household_cost_pressure": 0,
+    "health_access_pressure": 0,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 0,
     "policy_implementation": 0
   },
   "missing_required_current_development_pillars": [
-    "financial_distress_pressure"
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
   "collection_gap_pillars": [
-    "financial_distress_pressure"
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
-  "story_plus_data_count": 6,
-  "baseline_only_count": 0,
-  "briefs_with_human_story": 6,
+  "story_plus_data_count": 0,
+  "baseline_only_count": 5,
+  "briefs_with_human_story": 0,
   "briefs_with_data_anchor": 7,
-  "baseline_only_briefs": 0,
+  "baseline_only_briefs": 5,
   "missing_human_story_pillars": [
-    "financial_distress_pressure"
+    "environmental_pressure",
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
   "low_quality_story_ids": [],
   "future_enhancements": {

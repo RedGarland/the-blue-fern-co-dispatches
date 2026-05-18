@@ -5,9 +5,9 @@
   "week_start_date": "2026-05-10",
   "week_end_date": "2026-05-16",
   "display_date_range": "May 10\u2013May 16, 2026",
-  "generated_at": "2026-05-17T20:49:12.185012+00:00",
+  "generated_at": "2026-05-18T16:39:19.302787+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-16/",
-  "source_count": 26,
+  "source_count": 11,
   "story_count": 7,
   "pillars_present": [
     "food_pressure",
@@ -22,13 +22,13 @@
     "policy_implementation"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 6,
+    "food_pressure": 3,
     "financial_distress_pressure": 2,
-    "housing_household_cost_pressure": 3,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
-    "environmental_pressure": 5,
-    "local_system_strain": 3,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 2,
+    "local_system_strain": 1,
     "policy_implementation": 0
   },
   "story_count_by_pillar": {
@@ -48,21 +48,21 @@
   "is_free_public": true,
   "public_exposed": true,
   "has_detail_tier": false,
-  "source_mode": "both",
+  "source_mode": "auto",
   "item_type_counts": {
-    "baseline_gauge": 1,
-    "current_week_development": 6,
+    "baseline_gauge": 7,
+    "current_week_development": 0,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 15,
+    "human_story": 0,
     "data_anchor": 11,
     "watchlist_signal": 0
   },
   "brief_quality_counts": {
-    "story_plus_data": 6,
-    "official_release_only": 1,
-    "baseline_only": 0,
+    "story_plus_data": 0,
+    "official_release_only": 2,
+    "baseline_only": 5,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -84,48 +84,64 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 3,
+    "food_pressure": 0,
     "financial_distress_pressure": 1,
-    "housing_household_cost_pressure": 2,
-    "health_access_pressure": 2,
-    "labor_income_pressure": 3,
-    "environmental_pressure": 3,
-    "local_system_strain": 3,
+    "housing_household_cost_pressure": 0,
+    "health_access_pressure": 0,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 1,
     "policy_implementation": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 3,
+    "food_pressure": 0,
     "financial_distress_pressure": 0,
-    "housing_household_cost_pressure": 2,
-    "health_access_pressure": 2,
-    "labor_income_pressure": 3,
-    "environmental_pressure": 3,
-    "local_system_strain": 2,
+    "housing_household_cost_pressure": 0,
+    "health_access_pressure": 0,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 0,
     "policy_implementation": 0
   },
   "missing_required_current_development_pillars": [
-    "financial_distress_pressure"
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
   "collection_gap_pillars": [
-    "financial_distress_pressure"
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
-  "story_plus_data_count": 6,
-  "baseline_only_count": 0,
-  "briefs_with_human_story": 6,
+  "story_plus_data_count": 0,
+  "baseline_only_count": 5,
+  "briefs_with_human_story": 0,
   "briefs_with_data_anchor": 7,
-  "baseline_only_briefs": 0,
+  "baseline_only_briefs": 5,
   "missing_human_story_pillars": [
-    "financial_distress_pressure"
+    "environmental_pressure",
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain"
   ],
-  "baseline_only_edition": false,
+  "baseline_only_edition": true,
   "low_quality_story_ids": [],
   "future_enhancements": {
     "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
   },
   "warnings": [
-    "manual sources not found for 2026-05-16; continuing with auto baseline sources only",
-    "curation_diagnostics={\"candidates_accepted\": 26, \"candidates_found\": 26, \"rejected_duplicate_or_stale\": 0, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 26}",
-    "coverage_watchlist: missing important current-development pillars: financial_distress_pressure",
+    "curation_diagnostics={\"candidates_accepted\": 11, \"candidates_found\": 11, \"rejected_duplicate_or_stale\": 0, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 11}",
+    "coverage_watchlist: no current_week_development records; add manual weekly developments",
+    "coverage_watchlist: missing important current-development pillars: financial_distress_pressure,food_pressure,health_access_pressure,housing_household_cost_pressure,labor_income_pressure,local_system_strain",
     "coverage_watchlist: No current-development source was captured for this pillar."
   ],
   "errors": []

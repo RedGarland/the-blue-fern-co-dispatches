@@ -1,0 +1,84 @@
+{
+  "edition_date": "2026-05-17",
+  "note": "Map shows source-backed public signals by state/source geography; markers may represent source or regional centroids, not exact incident locations.",
+  "markers": [
+    {
+      "story_id": "story-ae991974d195",
+      "title": "Wildfire Smoke",
+      "category": "Public safety",
+      "state_or_region": "OR",
+      "publisher": "Portland Public Alerts",
+      "published_at": null,
+      "source_url": "https://www.publicalerts.org/wildfire-smoke",
+      "source_record_id": "src-7a7b82bc50600603",
+      "lat": 45.5152,
+      "lon": -122.6784,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-c432210b6ec8",
+      "title": "As property insurance crisis worsens, some lawmakers target Big Oil",
+      "category": "Environment and climate",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-16T11:00:00Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil",
+      "source_record_id": "src-05620275d9afdc97",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-fbaefe124ee5",
+      "title": "Judge rejects lawsuit against rewrite of WA parental rights law",
+      "category": "Housing and homelessness",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-15T20:04:08Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law",
+      "source_record_id": "src-53a7539686b0cb4c",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-f9fb44601eb5",
+      "title": "WA gets $538M in delayed COVID-era payments from FEMA",
+      "category": "Healthcare",
+      "state_or_region": "WA",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-14T22:52:41Z",
+      "source_url": "https://washingtonstatestandard.com/briefs/wa-gets-538m-in-delayed-covid-era-payments-from-fema",
+      "source_record_id": "src-c81f3b12aa0647ac",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-c4d48b6565b7",
+      "title": "New construction reduces housing shortage in most states",
+      "category": "Housing and homelessness",
+      "state_or_region": "ID",
+      "publisher": "Idaho Capital Sun Feed",
+      "published_at": "2026-05-14T20:04:04Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/14/repub/new-construction-reduces-housing-shortage-in-most-states",
+      "source_record_id": "src-7e9b989051207067",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "coordinate_basis": "source_default"
+    },
+    {
+      "story_id": "story-b91cfb66e4b2",
+      "title": "Idaho\u2019s rural hospitals grapple with insurance denials, employee housing shortages, Medicaid changes",
+      "category": "Healthcare",
+      "state_or_region": "ID",
+      "publisher": "Idaho Capital Sun Feed",
+      "published_at": "2026-05-13T10:30:38Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/13/idahos-rural-hospitals-grapple-with-insurance-denials-employee-housing-shortages-medicaid-changes",
+      "source_record_id": "src-4a97cc3b18485d86",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "coordinate_basis": "source_default"
+    }
+  ]
+}

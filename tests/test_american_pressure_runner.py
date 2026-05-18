@@ -660,6 +660,36 @@ def test_public_prose_rejects_raw_html_tokens(work_root):
     assert "news.google.com/rss/articles" not in html
 
 
+def test_public_prose_sanitizes_internal_rationale_and_incomplete_modal_clause(work_root):
+    story = _record(
+        "idaho-rural-hospitals",
+        "health_access_pressure",
+        "Idaho rural hospitals seek relief",
+        "Idaho’s rural hospital leaders are facing mounting financial pressures.",
+        "https://example.com/idaho-rural-hospitals",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    story["summary_or_snippet"] = (
+        "Idaho’s rural hospital leaders are facing mounting financial pressures. "
+        "In three states, Democratic lawmakers introduced bills this session that would allow. "
+        "It is included because the source metadata ties it to housing in Idaho."
+    )
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-12",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    assert "It is included because the source metadata ties it to housing in Idaho." not in html
+    assert "In three states, Democratic lawmakers introduced bills this session that would allow." not in html
+
+
 def test_reader_headline_fallback_not_raw_rss_title(work_root):
     story = _record(
         "food-story",
@@ -732,7 +762,38 @@ def test_baseline_only_note_appears_once_when_present(work_root):
     assert html.count(note) == 1
 
 
-def test_dashboard_latest_page_renders_metrics_cards_and_links(work_root):
+def test_map_latest_page_renders_and_links(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+
+    map_html = (work_root / "output" / "site" / "american-pressure" / "map" / "index.html").read_text(encoding="utf-8")
+    assert "American Pressure Map" in map_html
+    assert "May 10" in map_html and "May 16, 2026" in map_html
+    assert 'href="/american-pressure/"' in map_html
+    assert "map_data.json" in map_html
+    assert "Source</a>" in map_html
+    assert "Green: exact/source-provided. Blue: city/state. Orange: county/state. Gray: state-level." in map_html
+
+
+def test_publish_index_links_to_map_and_dashboard_when_present(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    index = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    assert 'href="map/"' in index
+    assert 'href="dashboard/"' in index
+
+
+def test_dashboard_page_contains_reference_sections_and_links(work_root):
     manual = [
         _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
         _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
@@ -743,62 +804,208 @@ def test_dashboard_latest_page_renders_metrics_cards_and_links(work_root):
 
     dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
     assert "American Pressure Dashboard" in dashboard
-    assert "May 10" in dashboard and "May 16, 2026" in dashboard
-    assert "/american-pressure/editions/2026-05-16/" in dashboard
-    assert "/american-pressure/editions/2026-05-16/sources_manifest.json" in dashboard
-    assert "Built from 2 source records and 1 public signals" in dashboard
-    assert "Trend unavailable until prior-week comparison is added." in dashboard
-    assert "&#8593;" not in dashboard and "&#8595;" not in dashboard and "↑" not in dashboard and "↓" not in dashboard
-
-    for metric in (
-        "Sources Reviewed",
-        "Public Signals",
-        "Story+Data Signals",
-        "Collection Gaps",
-        "Current Developments",
-        "Data-Only Signals",
-    ):
-        assert metric in dashboard
-
-    for heading in (
-        "Food and Grocery Pressure",
-        "Debt and Bankruptcy Pressure",
-        "Housing and Monthly Bills",
-        "Health Care Access",
-        "Jobs and Paychecks",
-        "Weather, Drought, and Disaster Strain",
-        "Local Services Under Strain",
-        "Benefit and Policy Delivery",
-    ):
-        assert heading in dashboard
-
-    assert "Debt and Bankruptcy Pressure <span class=\"apd-status apd-status-gap\">Collection gap</span>" in dashboard
-    assert "This may signal" not in dashboard
-    assert "Focus this pressure area" in dashboard
-    assert "Read written section" in dashboard
-    assert "View sources" in dashboard
-    assert "Show all pressure areas" in dashboard
-    assert 'id="apd-selected-panel"' in dashboard
-    assert 'id="apd-grid"' in dashboard
-    assert 'window.addEventListener("hashchange"' in dashboard
-    assert 'href="#food_pressure"' in dashboard
-    assert "/american-pressure/editions/2026-05-16/#food-and-grocery-pressure" in dashboard
-    assert "cdn." not in dashboard
+    assert 'class="apd-metrics"' in dashboard
+    assert 'class="apd-grid"' in dashboard
+    assert 'class="apd-detail"' in dashboard
+    assert 'href="/american-pressure/map/"' in dashboard
+    assert 'href="/american-pressure/editions/2026-05-16/"' in dashboard
+    assert 'href="/american-pressure/editions/2026-05-16/sources_manifest.json"' in dashboard
+    assert "Map currently shows" in dashboard
+    assert "Map layer coming after location quality improves." not in dashboard
 
 
-def test_publish_index_links_to_dashboard(work_root):
+def test_map_page_is_generated_and_links_back(work_root):
     manual = [
-        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
-        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+        _record("food-story", "food_pressure", "Pantry demand rises", "Pantry demand rose this week.", "https://example.com/story", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["latitude"] = 38.5816
+    manual[0]["longitude"] = -121.4944
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    map_html = (work_root / "output" / "site" / "american-pressure" / "map" / "index.html").read_text(encoding="utf-8")
+    assert "American Pressure Map" in map_html
+    assert 'href="/american-pressure/"' in map_html
+    assert 'href="/">' in map_html
+    assert "map_data.json" in map_html
+    assert "Source</a>" in map_html
+
+
+def test_map_data_city_state_lookup_maps_without_explicit_coordinates(work_root):
+    manual = [
+        _record("city-mapped", "food_pressure", "City mapped record", "City summary.", "https://example.com/city", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    manual[0]["location_scope"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] == 1
+    assert payload["pins"][0]["location_precision"] == "city_state"
+
+
+def test_map_data_state_level_fallback_is_labeled(work_root):
+    manual = [
+        _record("state-mapped", "housing_household_cost_pressure", "State mapped record", "State summary.", "https://example.com/state", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Colorado"
+    manual[0]["location_scope"] = "Colorado"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] == 1
+    assert payload["pins"][0]["location_precision"] == "state_level"
+    assert payload["pins"][0]["location_precision_warning"] == "state-level location, not exact address."
+
+
+def test_map_data_county_state_fallback_is_labeled(work_root):
+    manual = [
+        _record("county-mapped", "environmental_pressure", "County mapped record", "County summary.", "https://example.com/county", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["county"] = "Osceola County"
+    manual[0]["state"] = "FL"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] == 1
+    assert payload["pins"][0]["location_precision"] == "county_state"
+    assert payload["pins"][0]["location_precision_warning"] == "county-level location, not exact address."
+
+
+def test_map_data_pins_require_traceable_source_url_and_valid_coordinates(work_root):
+    manual = [
+        _record("mapped", "food_pressure", "Mapped record", "Mapped summary.", "https://example.com/mapped", source_type="news_report", source_role="human_story"),
+        _record("unlocated", "health_access_pressure", "No coords record", "No coords summary.", "https://example.com/unlocated", source_type="news_report", source_role="human_story"),
+        _record("bad-coords", "labor_income_pressure", "Bad coords record", "Bad coords summary.", "https://example.com/bad", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["latitude"] = 38.5816
+    manual[0]["longitude"] = -121.4944
+    manual[0]["location"] = "Sacramento, California"
+    manual[2]["latitude"] = 200.0
+    manual[2]["longitude"] = 400.0
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert len(payload["pins"]) == 1
+    assert payload["pins"][0]["title"] == "Mapped record"
+    assert payload["pins"][0]["source_urls"][0] == "https://example.com/mapped"
+    assert payload["pins"][0]["source_record_ids"][0]
+    assert payload["unmapped_records_count"] == 1
+    assert any(row["title"] == "Bad coords record" for row in payload["unmapped_records"])
+    assert any(row["title"] == "No coords record" for row in payload["national_records"])
+    assert any(row.get("unmapped_reason") for row in payload["unmapped_records"])
+
+
+def test_map_data_has_national_and_unmapped_sections(work_root):
+    manual = [
+        _record("national", "food_pressure", "National baseline", "United States food data update.", "https://example.com/national", source_type="official_source", source_role="data_anchor"),
+        _record("ambiguous", "labor_income_pressure", "Washington workers face strain", "Workers affected in Washington.", "https://example.com/ambiguous", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["region_scope"] = "US"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert isinstance(payload.get("national_records"), list)
+    assert isinstance(payload.get("unmapped_records"), list)
+    assert payload["national_records_count"] >= 1
+    assert all(pin.get("location_precision") in {"exact_or_source_provided", "city_state", "county_state", "state_level"} for pin in payload["pins"])
+
+
+def test_map_data_geography_us_alone_does_not_force_national_scope(work_root):
+    manual = [
+        _record("city-mapped", "food_pressure", "City mapped record", "City summary.", "https://example.com/city", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["geography"] = "US"
+    manual[0]["location"] = "Sacramento, California"
+    manual[0]["location_scope"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] == 1
+    assert payload["national_records_count"] == 0
+
+
+def test_map_data_ambiguous_washington_is_not_pinned(work_root):
+    manual = [
+        _record("ambiguous", "labor_income_pressure", "Washington workers face strain", "Workers affected in Washington.", "https://example.com/ambiguous", source_type="news_report", source_role="human_story"),
     ]
     _write_manual_sources(work_root, "2026-05-16", manual)
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
-    index = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
-    assert 'href="dashboard/"' in index
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] == 0
+    assert payload["national_records_count"] >= 1
 
 
-def test_dashboard_uses_latest_listable_public_edition(work_root):
+def test_map_data_extracts_source_backed_place_mentions_and_writes_diagnostics(work_root):
+    manual = [
+        _record("food", "food_pressure", "Food pressure", "Impacts San Luis Obispo County, California households.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("financial", "financial_distress_pressure", "Hospital strain", "Fitzgibbon Hospital in Marshall, Missouri filed Chapter 11.", "https://example.com/fin", source_type="news_report", source_role="human_story"),
+        _record("health", "health_access_pressure", "Clinic closure", "River Hills announced closure in Centerville, Iowa.", "https://example.com/health", source_type="news_report", source_role="human_story"),
+        _record("systems", "local_system_strain", "Storm assessments", "Assessments across multiple counties in Wisconsin.", "https://example.com/systems", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "San Luis Obispo County, California"
+    manual[1]["location"] = "Marshall, Missouri"
+    manual[2]["location"] = "Centerville, Iowa"
+    manual[3]["location"] = "Multiple counties in Wisconsin"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+
+    map_path = work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json"
+    diag_path = work_root / "output" / "site" / "american-pressure" / "map" / "location_extraction_diagnostics.json"
+    payload = json.loads(map_path.read_text(encoding="utf-8"))
+    diagnostics = json.loads(diag_path.read_text(encoding="utf-8"))
+
+    assert payload["pin_count"] >= 3
+    assert diagnostics["accepted_candidates"]
+    assert isinstance(diagnostics["rejected_candidates"], list)
+
+
+def test_map_pin_records_include_traceability_fields(work_root):
+    manual = [
+        _record("city-mapped", "food_pressure", "City mapped", "In Sacramento, California demand is up.", "https://example.com/city", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    pin = payload["pins"][0]
+    assert pin["source_url"].startswith("https://")
+    assert pin["source_record_id"]
+    assert pin["story_id"]
+    assert pin["edition_url"].startswith("/american-pressure/editions/")
+    assert pin["location_label"]
+    assert pin["location_extraction_method"]
+    assert pin["extraction_evidence_text"]
+    assert pin["location_precision"] in {"exact_or_source_provided", "city_state", "county_state", "state_level"}
+
+
+def test_map_repeated_locations_are_aggregated(work_root):
+    manual = [
+        _record("layoff-1", "labor_income_pressure", "District layoffs", "In Sacramento, California layoffs were announced.", "https://example.com/layoff-1", source_type="news_report", source_role="human_story"),
+        _record("layoff-2", "labor_income_pressure", "District layoffs continue", "Sacramento, California faces additional cuts.", "https://example.com/layoff-2", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    manual[1]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    grouped = [row for row in payload.get("aggregated_pins", []) if row.get("location_label") == "Sacramento, CA"]
+    assert grouped
+    assert grouped[0]["record_count"] == 2
+
+
+def test_map_uses_latest_listable_public_edition(work_root):
     manual = [
         _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
         _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
@@ -809,7 +1016,37 @@ def test_dashboard_uses_latest_listable_public_edition(work_root):
     second = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert first["ok"] is True
     assert second["ok"] is True
-    dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
-    assert "/american-pressure/editions/2026-05-16/" in dashboard
-    assert "/american-pressure/editions/2026-05-09/" not in dashboard
+    map_payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert map_payload["edition_date"] == "2026-05-16"
+
+
+def test_publish_excludes_invalid_later_edition_without_weekly_manifest_fields(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    invalid_dir = work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-18"
+    invalid_dir.mkdir(parents=True, exist_ok=True)
+    (invalid_dir / "index.html").write_text("<html>invalid future</html>", encoding="utf-8")
+    (invalid_dir / "sources_manifest.json").write_text(json.dumps([{"url": "https://example.com/future"}]), encoding="utf-8")
+    (invalid_dir / "curation_manifest.json").write_text(json.dumps({"stories": [{"story_id": "s1"}]}), encoding="utf-8")
+    (invalid_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "american-pressure",
+                "edition_date": "2026-05-18",
+                "source_count": 1,
+                "story_count": 1,
+                "errors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    index = (work_root / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
+    archive = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
+    assert "2026-05-18" not in index
+    assert "2026-05-18" not in archive
 

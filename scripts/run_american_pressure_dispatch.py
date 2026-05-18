@@ -25,6 +25,7 @@ from scripts.american_pressure_text_cleaning import (
 )
 
 from bluefern_dispatches.american_pressure_sources import load_source_registry  # noqa: E402
+from bluefern_dispatches.public_prose import find_public_prose_violations, sanitize_public_prose  # noqa: E402
 from bluefern_dispatches.generator import (  # noqa: E402
     BASE_URL,
     DispatchConfig,
@@ -131,6 +132,90 @@ PILLAR_DASHBOARD_SUMMARIES = {
     "environmental_pressure": "Storms, drought, or recovery delays can raise costs and strain local services.",
     "local_system_strain": "When local systems are stretched, residents may feel it through schools, transit, emergency response, or public services.",
     "policy_implementation": "This area tracks whether public support is reaching households when it is needed.",
+}
+US_STATE_CENTROIDS = {
+    "AL": (32.806671, -86.79113),
+    "AK": (64.200841, -149.493673),
+    "AZ": (34.048928, -111.093731),
+    "AR": (34.969704, -92.373123),
+    "CA": (36.778259, -119.417931),
+    "CO": (39.550051, -105.782067),
+    "CT": (41.603221, -73.087749),
+    "DE": (38.910832, -75.52767),
+    "FL": (27.664827, -81.515754),
+    "GA": (32.157435, -82.907123),
+    "HI": (19.898682, -155.665857),
+    "ID": (44.068202, -114.742041),
+    "IL": (40.633125, -89.398528),
+    "IN": (40.551217, -85.602364),
+    "IA": (41.878003, -93.097702),
+    "KS": (39.011902, -98.484246),
+    "KY": (37.839333, -84.270018),
+    "LA": (30.984298, -91.962333),
+    "ME": (45.253783, -69.445469),
+    "MD": (39.045755, -76.641271),
+    "MA": (42.407211, -71.382437),
+    "MI": (44.314844, -85.602364),
+    "MN": (46.729553, -94.6859),
+    "MS": (32.354668, -89.398528),
+    "MO": (37.964253, -91.831833),
+    "MT": (46.879682, -110.362566),
+    "NE": (41.492537, -99.901813),
+    "NV": (38.80261, -116.419389),
+    "NH": (43.193852, -71.572395),
+    "NJ": (40.058324, -74.405661),
+    "NM": (34.51994, -105.87009),
+    "NY": (43.299428, -74.217933),
+    "NC": (35.759573, -79.0193),
+    "ND": (47.551493, -101.002012),
+    "OH": (40.417287, -82.907123),
+    "OK": (35.46756, -97.516428),
+    "OR": (43.804133, -120.554201),
+    "PA": (41.203322, -77.194525),
+    "RI": (41.580095, -71.477429),
+    "SC": (33.836081, -81.163725),
+    "SD": (43.969515, -99.901813),
+    "TN": (35.517491, -86.580447),
+    "TX": (31.968599, -99.901813),
+    "UT": (39.32098, -111.093731),
+    "VT": (44.558803, -72.577841),
+    "VA": (37.431573, -78.656894),
+    "WA": (47.751074, -120.740139),
+    "WV": (38.597626, -80.454903),
+    "WI": (43.78444, -88.787868),
+    "WY": (43.075968, -107.290284),
+    "DC": (38.907192, -77.036871),
+}
+US_STATE_NAME_TO_ABBR = {
+    "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA",
+    "colorado": "CO", "connecticut": "CT", "delaware": "DE", "district of columbia": "DC",
+    "florida": "FL", "georgia": "GA", "hawaii": "HI", "idaho": "ID", "illinois": "IL",
+    "indiana": "IN", "iowa": "IA", "kansas": "KS", "kentucky": "KY", "louisiana": "LA",
+    "maine": "ME", "maryland": "MD", "massachusetts": "MA", "michigan": "MI", "minnesota": "MN",
+    "mississippi": "MS", "missouri": "MO", "montana": "MT", "nebraska": "NE", "nevada": "NV",
+    "new hampshire": "NH", "new jersey": "NJ", "new mexico": "NM", "new york": "NY",
+    "north carolina": "NC", "north dakota": "ND", "ohio": "OH", "oklahoma": "OK", "oregon": "OR",
+    "pennsylvania": "PA", "rhode island": "RI", "south carolina": "SC", "south dakota": "SD",
+    "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT", "virginia": "VA",
+    "washington": "WA", "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY",
+}
+US_CITY_STATE_LOOKUP = {
+    ("sacramento", "CA"): (38.5816, -121.4944),
+    ("los angeles", "CA"): (34.0522, -118.2437),
+    ("portland", "OR"): (45.5152, -122.6784),
+    ("new york", "NY"): (40.7128, -74.0060),
+    ("denver", "CO"): (39.7392, -104.9903),
+    ("jackson", "MS"): (32.2988, -90.1848),
+    ("detroit", "MI"): (42.3314, -83.0458),
+    ("centerville", "IA"): (40.7342, -92.8744),
+    ("marshall", "MO"): (39.1233, -93.1960),
+}
+US_COUNTY_STATE_LOOKUP = {
+    ("osceola county", "FL"): (28.1014, -81.4167),
+    ("los angeles county", "CA"): (34.0522, -118.2437),
+    ("san luis obispo county", "CA"): (35.2828, -120.6596),
+    ("saline county", "MO"): (39.1361, -93.2020),
+    ("appanoose county", "IA"): (40.7430, -92.8700),
 }
 CATEGORY_BY_PILLAR = {
     "food_pressure": "food-pressure",
@@ -282,6 +367,564 @@ def _safe_list_of_text(value: Any) -> list[str]:
     if isinstance(value, str) and value.strip():
         return [_safe_text(part) for part in value.split(",") if _safe_text(part)]
     return []
+
+
+def _safe_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    try:
+        if isinstance(value, str) and not value.strip():
+            return None
+        return float(value)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _in_us_bounds(latitude: float, longitude: float) -> bool:
+    return 18.0 <= latitude <= 72.0 and -179.9 <= longitude <= -66.0
+
+
+def _split_city_state(location_label: str) -> tuple[str, str]:
+    parts = [part.strip() for part in location_label.split(",") if part.strip()]
+    if len(parts) >= 2:
+        return parts[0], parts[1]
+    return "", ""
+
+
+def _split_county_state(location_label: str) -> tuple[str, str]:
+    city_or_county, state = _split_city_state(location_label)
+    if city_or_county.lower().endswith("county") and state:
+        return city_or_county, state
+    return "", ""
+
+
+def _normalize_state_token(value: str) -> str:
+    token = _safe_text(value).strip().lower().strip(".")
+    if not token:
+        return ""
+    if token in US_STATE_NAME_TO_ABBR:
+        return US_STATE_NAME_TO_ABBR[token]
+    candidate = token.upper()
+    if candidate in US_STATE_CENTROIDS:
+        return candidate
+    return ""
+
+
+_CITY_STATE_PATTERNS = [
+    re.compile(r"\b([A-Z][A-Za-z .'-]+?),\s*([A-Z]{2})\b"),
+    re.compile(r"\b([A-Z][A-Za-z .'-]+?),\s*(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b", re.IGNORECASE),
+]
+_COUNTY_STATE_PATTERNS = [
+    re.compile(r"\b([A-Z][A-Za-z .'-]+? County),\s*([A-Z]{2})\b"),
+    re.compile(r"\b([A-Z][A-Za-z .'-]+? County),\s*(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b", re.IGNORECASE),
+]
+
+
+def _extract_state_only(text: str) -> str | None:
+    token = _safe_text(text)
+    if not token:
+        return None
+    lower = token.lower()
+    # Only accept state-only parsing when exactly one unambiguous full state name is present.
+    matched: list[str] = []
+    for name, abbr in US_STATE_NAME_TO_ABBR.items():
+        if re.search(rf"\b{re.escape(name)}\b", lower, flags=re.IGNORECASE):
+            matched.append(abbr)
+    unique = sorted(set(matched))
+    if len(unique) != 1:
+        return None
+    # "Washington" alone is ambiguous unless explicitly "Washington state" or "state of Washington".
+    if unique[0] == "WA":
+        if not (
+            re.search(r"\bwashington state\b", lower, flags=re.IGNORECASE)
+            or re.search(r"\bstate of washington\b", lower, flags=re.IGNORECASE)
+        ):
+            return None
+    return unique[0]
+
+
+def _has_ambiguous_location_text(title: str, summary: str) -> bool:
+    text = f"{_safe_text(title)} {_safe_text(summary)}".lower()
+    if "washington" in text and "washington state" not in text and "state of washington" not in text:
+        return True
+    return False
+
+
+def _extract_location_candidates_from_text(text: str, *, method_prefix: str) -> list[dict[str, Any]]:
+    candidates: list[dict[str, Any]] = []
+    for pattern in _COUNTY_STATE_PATTERNS:
+        for m in pattern.finditer(text):
+            county = _safe_text(m.group(1)).lower()
+            state = _normalize_state_token(m.group(2))
+            if not county or not state:
+                continue
+            candidates.append(
+                {
+                    "kind": "county_state",
+                    "county": county,
+                    "state": state,
+                    "evidence": m.group(0),
+                    "confidence": "high",
+                    "method": f"{method_prefix}_county_state",
+                }
+            )
+    for pattern in _CITY_STATE_PATTERNS:
+        for m in pattern.finditer(text):
+            city = _safe_text(m.group(1)).lower()
+            state = _normalize_state_token(m.group(2))
+            if not city or not state:
+                continue
+            candidates.append(
+                {
+                    "kind": "city_state",
+                    "city": city,
+                    "state": state,
+                    "evidence": m.group(0),
+                    "confidence": "medium",
+                    "method": f"{method_prefix}_city_state",
+                }
+            )
+    state = _extract_state_only(text)
+    if state:
+        candidates.append(
+            {
+                "kind": "state_only",
+                "state": state,
+                "evidence": state,
+                "confidence": "low",
+                "method": f"{method_prefix}_state_only",
+            }
+        )
+    return candidates
+
+
+def _is_national_scope(source: dict[str, Any]) -> bool:
+    # Do not classify by generic "geography=US"; only explicit scope fields should trigger national-only handling.
+    scope = _safe_text(source.get("region_scope") or source.get("location_scope") or source.get("region")).lower()
+    return scope in {"us", "u.s.", "usa", "united states", "national", "nationwide"}
+
+
+def _build_map_data(
+    edition_date: str,
+    manifest: dict[str, Any],
+    sources: list[dict[str, Any]],
+    stories: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    mapped: list[dict[str, Any]] = []
+    national_records: list[dict[str, Any]] = []
+    unmapped_records: list[dict[str, Any]] = []
+    week_range = _safe_text(manifest.get("display_date_range")) or _display_date_range(edition_date)
+    precision_counts = {
+        "exact_or_source_provided": 0,
+        "city_state": 0,
+        "county_state": 0,
+        "state_level": 0,
+    }
+
+    diagnostics = {"extracted_candidates": [], "accepted_candidates": [], "rejected_candidates": []}
+    source_to_stories: dict[str, list[dict[str, Any]]] = {}
+    for story in stories or []:
+        for sid in _safe_list_of_text(story.get("source_record_ids")):
+            source_to_stories.setdefault(sid, []).append(story)
+
+    def reject_candidate(candidate: dict[str, Any], reason: str) -> None:
+        diagnostics["rejected_candidates"].append({**candidate, "rejection_reason": reason})
+
+    for source in sorted(sources, key=lambda row: _safe_text(row.get("source_record_id"))):
+        source_record_id = _safe_text(source.get("source_record_id"))
+        source_url = _safe_text(source.get("url"))
+        if not source_record_id or not source_url.startswith(("http://", "https://")):
+            continue
+        raw_fields = [
+            "city", "state", "state_code", "location", "manual_location", "location_scope",
+            "place_name", "county", "region", "state_hint",
+        ]
+        location_label = _safe_text(source.get("manual_location") or source.get("location") or source.get("location_scope") or source.get("place_name"))
+        city, state = _split_city_state(location_label)
+        county_from_label, county_state_from_label = _split_county_state(location_label)
+        category = _safe_text(source.get("pillar") or source.get("category_hint"))
+        title = _safe_text(source.get("reader_headline") or source.get("title"))
+        summary = _safe_text(source.get("summary_or_snippet"))
+        linked_stories = source_to_stories.get(source_record_id, [])
+        story_ids = [str(s.get("story_id") or "").strip() for s in linked_stories if str(s.get("story_id") or "").strip()]
+        latitude = _safe_float(source.get("latitude"))
+        if latitude is None:
+            latitude = _safe_float(source.get("lat"))
+        longitude = _safe_float(source.get("longitude"))
+        if longitude is None:
+            longitude = _safe_float(source.get("lon"))
+        if longitude is None:
+            longitude = _safe_float(source.get("lng"))
+        edition_url = f"/american-pressure/editions/{edition_date}/"
+        entry = {
+            "title": title,
+            "date": _safe_text(source.get("published_at")) or edition_date,
+            "location_label": location_label,
+            "city": city,
+            "state": state,
+            "category": category,
+            "source_urls": [source_url],
+            "edition_url": edition_url,
+            "source_record_ids": [source_record_id],
+            "story_ids": story_ids,
+            "dispatch_url": "/american-pressure/",
+            "source_title_date": f"{title} ({_safe_text(source.get('published_at')) or edition_date})",
+        }
+        if latitude is not None and longitude is not None and _in_us_bounds(latitude, longitude):
+            mapped.append({**entry, "latitude": latitude, "longitude": longitude, "state": state, "location_precision": "exact_or_source_provided", "location_precision_warning": "", "location_extraction_method": "source_coordinates", "location_extraction_text": "latitude/longitude", "extraction_evidence_text": "latitude/longitude", "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+            diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": location_label, "method": "source_coordinates", "evidence": "latitude/longitude", "precision": "exact_or_source_provided"})
+            precision_counts["exact_or_source_provided"] += 1
+            continue
+        if latitude is not None and longitude is not None and not _in_us_bounds(latitude, longitude):
+            unmapped_records.append({**entry, "unmapped_reason": "invalid_coordinates"})
+            continue
+
+        city_value = _safe_text(source.get("city") or city).lower()
+        state_value = _normalize_state_token(_safe_text(source.get("state_code") or source.get("state") or source.get("state_hint") or state or county_state_from_label))
+        county_value = _safe_text(source.get("county") or county_from_label).lower()
+        if city_value.endswith("county") and not county_value:
+            county_value = city_value
+            city_value = ""
+        if city_value and state_value:
+            coords = US_CITY_STATE_LOOKUP.get((city_value, state_value))
+            if coords:
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": f"{city_value.title()}, {state_value}", "state": state_value, "location_precision": "city_state", "location_precision_warning": "", "location_extraction_method": "source_metadata_city_state", "location_extraction_text": f"{city_value.title()}, {state_value}", "extraction_evidence_text": f"{city_value.title()}, {state_value}", "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": f"{city_value.title()}, {state_value}", "method": "source_metadata_city_state", "evidence": f"{city_value.title()}, {state_value}", "precision": "city_state"})
+                precision_counts["city_state"] += 1
+                continue
+        if county_value and state_value:
+            key = (county_value if county_value.endswith("county") else f"{county_value} county", state_value)
+            coords = US_COUNTY_STATE_LOOKUP.get(key)
+            if coords:
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": f"{key[0].title()}, {state_value}", "state": state_value, "location_precision": "county_state", "location_precision_warning": "county-level location, not exact address.", "location_extraction_method": "source_metadata_county_state", "location_extraction_text": f"{key[0].title()}, {state_value}", "extraction_evidence_text": f"{key[0].title()}, {state_value}", "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": f"{key[0].title()}, {state_value}", "method": "source_metadata_county_state", "evidence": f"{key[0].title()}, {state_value}", "precision": "county_state"})
+                precision_counts["county_state"] += 1
+                continue
+        state_only = _normalize_state_token(
+            _safe_text(source.get("state") or source.get("state_code") or source.get("state_hint") or state or location_label)
+        )
+        if state_only:
+            coords = US_STATE_CENTROIDS.get(state_only)
+            if coords:
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": f"{state_only}", "state": state_only, "location_precision": "state_level", "location_precision_warning": "state-level location, not exact address.", "location_extraction_method": "source_metadata_state", "location_extraction_text": state_only, "extraction_evidence_text": state_only, "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": state_only, "method": "source_metadata_state", "evidence": state_only, "precision": "state_level"})
+                precision_counts["state_level"] += 1
+                continue
+
+        candidate_texts: list[tuple[str, str]] = [("source_title", _safe_text(source.get("title"))), ("source_snippet", summary), ("reader_headline", title)]
+        for story in linked_stories:
+            for field in ("title", "summary", "human_story_summary", "what_happened", "who_may_feel_it", "location_scope"):
+                candidate_texts.append((f"story_{field}", _safe_text(story.get(field))))
+        extracted: list[dict[str, Any]] = []
+        for field_name, text_value in candidate_texts:
+            if text_value:
+                extracted.extend(_extract_location_candidates_from_text(text_value, method_prefix=f"text_{field_name}"))
+        seen_locations: set[tuple[str, str]] = set()
+        if _is_national_scope(source):
+            for candidate in extracted:
+                diagnostics["extracted_candidates"].append({**candidate, "source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids})
+                reject_candidate({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "candidate": candidate}, "national_scope")
+            national_records.append({**entry, "unmapped_reason": "national_scope"})
+            continue
+        for candidate in extracted:
+            diagnostics["extracted_candidates"].append({**candidate, "source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids})
+            if candidate["kind"] == "city_state":
+                key = (candidate["city"], candidate["state"])
+                coords = US_CITY_STATE_LOOKUP.get(key)
+                if not coords:
+                    reject_candidate({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "candidate": candidate}, "city_lookup_missing")
+                    continue
+                if key in seen_locations:
+                    continue
+                seen_locations.add(key)
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": f"{candidate['city'].title()}, {candidate['state']}", "state": candidate["state"], "location_precision": "city_state", "location_precision_warning": "", "location_extraction_method": candidate["method"], "location_extraction_text": candidate["evidence"], "extraction_evidence_text": candidate["evidence"], "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": f"{candidate['city'].title()}, {candidate['state']}", "method": candidate["method"], "evidence": candidate["evidence"], "precision": "city_state"})
+                precision_counts["city_state"] += 1
+            elif candidate["kind"] == "county_state":
+                key = (candidate["county"], candidate["state"])
+                coords = US_COUNTY_STATE_LOOKUP.get(key)
+                if not coords:
+                    reject_candidate({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "candidate": candidate}, "county_lookup_missing")
+                    continue
+                if key in seen_locations:
+                    continue
+                seen_locations.add(key)
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": f"{candidate['county'].title()}, {candidate['state']}", "state": candidate["state"], "location_precision": "county_state", "location_precision_warning": "county-level location, not exact address.", "location_extraction_method": candidate["method"], "location_extraction_text": candidate["evidence"], "extraction_evidence_text": candidate["evidence"], "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": f"{candidate['county'].title()}, {candidate['state']}", "method": candidate["method"], "evidence": candidate["evidence"], "precision": "county_state"})
+                precision_counts["county_state"] += 1
+            elif candidate["kind"] == "state_only":
+                coords = US_STATE_CENTROIDS.get(candidate["state"])
+                if not coords:
+                    reject_candidate({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "candidate": candidate}, "state_lookup_missing")
+                    continue
+                key = (candidate["state"], "state")
+                if key in seen_locations:
+                    continue
+                seen_locations.add(key)
+                mapped.append({**entry, "latitude": coords[0], "longitude": coords[1], "location_label": candidate["state"], "state": candidate["state"], "location_precision": "state_level", "location_precision_warning": "state-level location, not exact address.", "location_extraction_method": candidate["method"], "location_extraction_text": candidate["evidence"], "extraction_evidence_text": candidate["evidence"], "source_record_id": source_record_id, "source_url": source_url, "story_id": story_ids[0] if story_ids else ""})
+                diagnostics["accepted_candidates"].append({"source_record_id": source_record_id, "source_url": source_url, "story_ids": story_ids, "location_label": candidate["state"], "method": candidate["method"], "evidence": candidate["evidence"], "precision": "state_level"})
+                precision_counts["state_level"] += 1
+        if seen_locations:
+            continue
+        any_location_fields = any(_safe_text(source.get(field)) for field in raw_fields)
+        ambiguous = _has_ambiguous_location_text(title, summary)
+        if ambiguous:
+            unmapped_reason = "ambiguous_location"
+        elif any_location_fields:
+            unmapped_reason = "no_lookup_match"
+        else:
+            unmapped_reason = "missing_location"
+        unmapped_records.append({**entry, "unmapped_reason": unmapped_reason})
+
+    categories = sorted({row.get("category") for row in mapped if row.get("category")})
+    states = sorted({row.get("state") for row in mapped if row.get("state")})
+    aggregates: dict[tuple[float, float, str], dict[str, Any]] = {}
+    for pin in mapped:
+        key = (float(pin["latitude"]), float(pin["longitude"]), str(pin.get("location_precision") or ""))
+        grouped = aggregates.setdefault(
+            key,
+            {
+                "latitude": pin["latitude"],
+                "longitude": pin["longitude"],
+                "location_label": pin.get("location_label"),
+                "state": pin.get("state"),
+                "location_precision": pin.get("location_precision"),
+                "record_count": 0,
+                "source_record_ids": [],
+                "source_urls": [],
+                "story_ids": [],
+                "categories": [],
+                "pins": [],
+            },
+        )
+        grouped["record_count"] += 1
+        grouped["source_record_ids"].extend(pin.get("source_record_ids") or [])
+        grouped["source_urls"].extend(pin.get("source_urls") or [])
+        grouped["story_ids"].extend(pin.get("story_ids") or [])
+        if pin.get("category"):
+            grouped["categories"].append(pin["category"])
+        grouped["pins"].append(pin)
+    aggregated_pins = []
+    for item in aggregates.values():
+        item["source_record_ids"] = sorted(set(item["source_record_ids"]))
+        item["source_urls"] = sorted(set(item["source_urls"]))
+        item["story_ids"] = sorted(set(item["story_ids"]))
+        item["categories"] = sorted(set(item["categories"]))
+        aggregated_pins.append(item)
+
+    return {
+        "dispatch_slug": DISPATCH_SLUG,
+        "edition_date": edition_date,
+        "display_date_range": week_range,
+        "total_source_backed_records": len(mapped) + len(national_records) + len(unmapped_records),
+        "pin_count": len(mapped),
+        "needs_location_count": len(unmapped_records),
+        "mapped_records_count": len(mapped),
+        "exact_or_source_provided_count": precision_counts["exact_or_source_provided"],
+        "city_state_count": precision_counts["city_state"],
+        "county_state_count": precision_counts["county_state"],
+        "state_level_count": precision_counts["state_level"],
+        "national_records_count": len(national_records),
+        "unmapped_records_count": len(unmapped_records),
+        "categories": categories,
+        "states": states,
+        "location_precisions": ["exact_or_source_provided", "city_state", "county_state", "state_level"],
+        "pins": mapped,
+        "aggregated_pins": sorted(aggregated_pins, key=lambda row: (-int(row.get("record_count", 0)), _safe_text(row.get("location_label")))),
+        "national_records": national_records,
+        "unmapped_records": unmapped_records,
+        "needs_location": unmapped_records,
+        "location_extraction_diagnostics": diagnostics,
+    }
+
+
+def render_map_html(edition_date: str, map_data: dict[str, Any]) -> str:
+    week_range = _safe_text(map_data.get("display_date_range")) or _display_date_range(edition_date)
+    return page(
+        "American Pressure Map",
+        f"{BASE_URL}/american-pressure/map/",
+        "../assets/site.css",
+        f"""{header(DISPATCH_NAME, "../", "../archive.html", "/american-pressure/")}
+  <main class="home ap-map-home">
+    <section class="hero">
+      <img class="hero-logo" src="../assets/american-pressure-logo.png" alt="{html.escape(DISPATCH_NAME)}">
+    </section>
+    <p class="eyebrow">American Pressure Map</p>
+    <h1>American Pressure Map</h1>
+    <p class="lede">Weekly briefing range: {html.escape(week_range)}</p>
+    <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/">Dispatches Home</a></p>
+    <div class="ap-map-controls">
+      <label for="ap-map-filter">Pressure area</label>
+      <select id="ap-map-filter"><option value="all">All</option></select>
+      <label for="ap-map-precision-filter">Location precision</label>
+      <select id="ap-map-precision-filter"><option value="all">All</option></select>
+      <label for="ap-map-state-filter">State</label>
+      <select id="ap-map-state-filter"><option value="all">All</option></select>
+      <span id="ap-map-count" class="ap-map-note"></span>
+    </div>
+    <section class="ap-map-legend">
+      <h2>Counters</h2>
+      <ul id="ap-map-counters"></ul>
+    </section>
+    <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
+    <section class="ap-map-legend">
+      <h2>Legend</h2>
+      <p>Green: exact/source-provided. Blue: city/state. Orange: county/state. Gray: state-level.</p>
+    </section>
+    <section class="ap-map-needs">
+      <h2>National records</h2>
+      <ul id="ap-map-national-list"></ul>
+    </section>
+    <section class="ap-map-needs">
+      <h2>Unmapped source-backed records</h2>
+      <ul id="ap-map-needs-list"></ul>
+    </section>
+  </main>
+{footer("../")}
+<style>
+.ap-map-home {{ width: min(1120px, calc(100% - 24px)); }}
+.ap-map-controls {{ display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0 12px; }}
+.ap-map-note {{ color: var(--muted); font-size: .9rem; }}
+.ap-map-canvas {{ height: 520px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #e9eff4; }}
+.ap-map-legend, .ap-map-needs {{ margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; background: #f8fbfd; padding: 12px 14px; }}
+.ap-map-needs ul {{ margin: 0; padding-left: 18px; }}
+.ap-map-needs li {{ margin: 8px 0; }}
+@media (max-width: 760px) {{
+  .ap-map-home {{ width: calc(100% - 16px); }}
+  .ap-map-canvas {{ height: 430px; }}
+}}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {{
+  var mapEl = document.getElementById("ap-map");
+  var filter = document.getElementById("ap-map-filter");
+  var countEl = document.getElementById("ap-map-count");
+  var precisionFilter = document.getElementById("ap-map-precision-filter");
+  var stateFilter = document.getElementById("ap-map-state-filter");
+  var needsList = document.getElementById("ap-map-needs-list");
+  var nationalList = document.getElementById("ap-map-national-list");
+  var counters = document.getElementById("ap-map-counters");
+  if (!mapEl || !filter || !precisionFilter || !stateFilter || !countEl || !needsList || !nationalList || !counters || !window.L) return;
+  var map = L.map(mapEl).setView([39.5, -98.35], 4);
+  L.tileLayer("https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png", {{
+    maxZoom: 9,
+    attribution: "&copy; OpenStreetMap contributors"
+  }}).addTo(map);
+  fetch("map_data.json")
+    .then(function (res) {{ return res.json(); }})
+    .then(function (payload) {{
+      var pins = Array.isArray(payload.pins) ? payload.pins : [];
+      var aggregated = Array.isArray(payload.aggregated_pins) ? payload.aggregated_pins : [];
+      var needs = Array.isArray(payload.unmapped_records) ? payload.unmapped_records : [];
+      var national = Array.isArray(payload.national_records) ? payload.national_records : [];
+      var categories = Array.isArray(payload.categories) ? payload.categories : [];
+      var states = Array.isArray(payload.states) ? payload.states : [];
+      var markers = [];
+      categories.forEach(function (cat) {{
+        var opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        filter.appendChild(opt);
+      }});
+      ["exact_or_source_provided", "city_state", "county_state", "state_level"].forEach(function (p) {{
+        var opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        precisionFilter.appendChild(opt);
+      }});
+      states.forEach(function (st) {{
+        var opt = document.createElement("option");
+        opt.value = st;
+        opt.textContent = st;
+        stateFilter.appendChild(opt);
+      }});
+      counters.innerHTML =
+        "<li>Total source-backed records: " + (payload.total_source_backed_records || 0) + "</li>" +
+        "<li>Mapped records: " + (payload.mapped_records_count || 0) + "</li>" +
+        "<li>Exact/source-provided pins: " + (payload.exact_or_source_provided_count || 0) + "</li>" +
+        "<li>City/state pins: " + (payload.city_state_count || 0) + "</li>" +
+        "<li>County/state pins: " + (payload.county_state_count || 0) + "</li>" +
+        "<li>State-level pins: " + (payload.state_level_count || 0) + "</li>" +
+        "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
+        "<li>Unmapped records: " + (payload.unmapped_records_count || 0) + "</li>";
+      function popupHtml(pin) {{
+        var sources = (pin.source_urls || []).map(function (url) {{
+          return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';
+        }}).join(" | ");
+        return '<strong>' + (pin.title || "Untitled") + '</strong><br>' +
+          'Date: ' + (pin.date || '') + '<br>' +
+          (pin.location_label || "Location not labeled") + '<br>' +
+          'Category: ' + (pin.category || "uncategorized") + '<br>' +
+          'Precision: ' + (pin.location_precision || "unknown") + '<br>' +
+          (pin.location_precision_warning ? ('Warning: ' + pin.location_precision_warning + '<br>') : '') +
+          'Record IDs: ' + (pin.source_record_ids || []).join(", ") + '<br>' +
+          '<a href="' + (pin.edition_url || "/american-pressure/") + '">Edition</a> | ' + sources;
+      }}
+      function markerStyle(pin) {{
+        if (pin.location_precision === "exact_or_source_provided") return {{ radius: 7, fillColor: "#1f8a3b", color: "#0d5d25", weight: 1, fillOpacity: 0.9 }};
+        if (pin.location_precision === "city_state") return {{ radius: 7, fillColor: "#2b6cb0", color: "#1a436e", weight: 1, fillOpacity: 0.9 }};
+        if (pin.location_precision === "county_state") return {{ radius: 7, fillColor: "#c06c00", color: "#8f5100", weight: 1, fillOpacity: 0.9 }};
+        return {{ radius: 7, fillColor: "#616161", color: "#3b3b3b", weight: 1, fillOpacity: 0.9 }};
+      }}
+      function renderPins(category, precision, state) {{
+        markers.forEach(function (m) {{ map.removeLayer(m); }});
+        markers = [];
+        var active = aggregated.filter(function (pin) {{
+          var catOk = category === "all" || (Array.isArray(pin.categories) && pin.categories.indexOf(category) >= 0);
+          var okPrecision = precision === "all" || pin.location_precision === precision;
+          var okState = state === "all" || pin.state === state;
+          return catOk && okPrecision && okState;
+        }});
+        active.forEach(function (group) {{
+          var pin = (Array.isArray(group.pins) && group.pins[0]) ? group.pins[0] : group;
+          var style = markerStyle(pin);
+          if (group.record_count > 1) style.radius = 10;
+          var marker = L.circleMarker([group.latitude, group.longitude], style).addTo(map).bindPopup(
+            '<strong>' + (group.location_label || "Location") + '</strong><br>' +
+            'Grouped records: ' + (group.record_count || 0) + '<br>' +
+            popupHtml(pin)
+          );
+          markers.push(marker);
+        }});
+        var recordCount = active.reduce(function (sum, group) {{
+          return sum + (group.record_count || 0);
+        }}, 0);
+        countEl.textContent = recordCount + " mapped record(s), " + active.length + " location group(s)";
+      }}
+      if (pins.length === 0) {{
+        countEl.textContent = "No mapped records for this edition. See National and Unmapped panels.";
+      }}
+      national.forEach(function (row) {{
+        var li = document.createElement("li");
+        var source = (row.source_urls && row.source_urls[0]) || "";
+        li.innerHTML = '<strong>' + (row.title || "Untitled") + '</strong> (' + (row.category || "uncategorized") + ') ' +
+          (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "");
+        nationalList.appendChild(li);
+      }});
+      needs.forEach(function (row) {{
+        var li = document.createElement("li");
+        var source = (row.source_urls && row.source_urls[0]) || "";
+        var reason = row.unmapped_reason ? (' - reason: ' + row.unmapped_reason) : "";
+        li.innerHTML = '<strong>' + (row.title || "Untitled") + '</strong> (' + (row.category || "uncategorized") + ') ' +
+          (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "") + reason;
+        needsList.appendChild(li);
+      }});
+      function rerender() {{ renderPins(filter.value, precisionFilter.value, stateFilter.value); }}
+      filter.addEventListener("change", rerender);
+      precisionFilter.addEventListener("change", rerender);
+      stateFilter.addEventListener("change", rerender);
+      renderPins("all", "all", "all");
+    }})
+    .catch(function () {{
+      countEl.textContent = "Map data unavailable.";
+    }});
+}})();
+</script>
+""",
+        DISPATCH_NAME,
+    )
 
 
 def load_manual_sources(root: Path, edition_date: str) -> tuple[Path, list[dict[str, Any]]]:
@@ -471,6 +1114,12 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "manual_who_may_feel_it": clean_candidate_text(record.get("who_may_feel_it")),
                 "manual_what_to_watch_next": clean_candidate_text(record.get("what_to_watch_next")),
                 "location_scope": _safe_text(record.get("location_scope")),
+                "city": _safe_text(record.get("city")),
+                "state": _safe_text(record.get("state")),
+                "state_code": _safe_text(record.get("state_code")),
+                "county": _safe_text(record.get("county")),
+                "place_name": _safe_text(record.get("place_name")),
+                "state_hint": _safe_text(record.get("state_hint")),
                 "affected_people": _safe_text(record.get("affected_people")),
                 "pressure_direction": _safe_text(record.get("pressure_direction")),
                 "public_pressure_angle": clean_candidate_text(record.get("public_pressure_angle")),
@@ -478,6 +1127,14 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str) -> tuple
                 "manual_location": clean_candidate_text(record.get("location")),
                 "manual_pressure_area": _safe_text(record.get("pressure_area")),
                 "manual_source_role": _safe_text(record.get("source_role")).lower(),
+                "latitude": _safe_float(record.get("latitude") if record.get("latitude") is not None else record.get("lat")),
+                "longitude": _safe_float(
+                    record.get("longitude")
+                    if record.get("longitude") is not None
+                    else record.get("lon")
+                    if record.get("lon") is not None
+                    else record.get("lng")
+                ),
                 "linked_data_anchor_ids": _safe_list_of_text(record.get("linked_data_anchor_ids")),
                 "key_stat_label": _safe_text(record.get("key_stat_label")),
                 "key_stat_value": _safe_text(record.get("key_stat_value")),
@@ -912,6 +1569,9 @@ def _validate_manual_human_story_records(sources: list[dict[str, Any]], root: Pa
             if candidate in known_record_ids:
                 resolved_ids.append(candidate)
                 continue
+            if candidate in canonical_all:
+                resolved_ids.append(candidate)
+                continue
             if candidate in known_source_ids:
                 linked_source = next((item for item in sources if _safe_text(item.get('source_id')) == candidate), None)
                 if linked_source:
@@ -1223,11 +1883,35 @@ def _public_prose_guardrail(stories: list[dict[str, Any]]) -> list[str]:
                     errors.append(f"public prose missing required field in {story_id}.{req}")
         for field in fields:
             value = _safe_text(story.get(field))
+            sanitized = sanitize_public_prose(value)
+            if value and sanitized != value:
+                errors.append(f"public prose quality failed in {story_id}.{field}: requires source-backed completion or removal")
             if value and contains_forbidden_public_markup(value):
                 errors.append(f"public prose contains forbidden markup/token in {story_id}.{field}")
             if value and any(bad in value.lower() for bad in ("structure, rejecting", "news.google.com/rss/articles")):
                 errors.append(f"public prose quality failed in {story_id}.{field}")
+            for violation in find_public_prose_violations(value):
+                errors.append(f"public prose quality failed in {story_id}.{field}: {violation}")
     return errors
+
+
+def _sanitize_story_public_prose(stories: list[dict[str, Any]]) -> None:
+    fields = (
+        "summary",
+        "reader_headline",
+        "human_story_summary",
+        "data_context_summary",
+        "what_happened",
+        "potential_relevance",
+        "who_may_feel_it",
+        "what_to_watch_next",
+    )
+    for story in stories:
+        for field in fields:
+            value = _safe_text(story.get(field))
+            if not value:
+                continue
+            story[field] = sanitize_public_prose(value)
 
 
 def discover_edition_dates(site_root: Path) -> list[str]:
@@ -1263,8 +1947,24 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     write_text(dispatch_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
     if dates:
         latest = dates[0]
-        dashboard_html = render_dashboard_html(root, latest)
-        write_text(dispatch_root / "dashboard" / "index.html", dashboard_html, dry_run, wrote)
+        latest_edition = site_root / DISPATCH_SLUG / "editions" / latest
+        latest_manifest = read_json(latest_edition / "edition_manifest.json") if (latest_edition / "edition_manifest.json").exists() else {}
+        latest_sources = read_json(latest_edition / "sources_manifest.json") if (latest_edition / "sources_manifest.json").exists() else []
+        latest_curation = read_json(latest_edition / "curation_manifest.json") if (latest_edition / "curation_manifest.json").exists() else {}
+        stories = latest_curation.get("stories") if isinstance(latest_curation, dict) else []
+        if not isinstance(stories, list):
+            stories = []
+        map_data = _build_map_data(latest, latest_manifest, latest_sources, stories)
+        write_json(dispatch_root / "map" / "map_data.json", map_data, dry_run, wrote)
+        diagnostics_payload = map_data.get("location_extraction_diagnostics")
+        if isinstance(diagnostics_payload, dict):
+            write_json(dispatch_root / "map" / "location_extraction_diagnostics.json", diagnostics_payload, dry_run, wrote)
+        write_text(dispatch_root / "map" / "index.html", render_map_html(latest, map_data), dry_run, wrote)
+        write_text(dispatch_root / "dashboard" / "index.html", render_dashboard_html(root, latest), dry_run, wrote)
+        # Re-render listing pages after dashboard creation so index can include the dashboard link.
+        write_text(dispatch_root / "index.html", render_dispatch_index_for_dates(dispatch, dates, site_root), dry_run, wrote)
+        write_text(dispatch_root / "archive.html", render_archive_for_dates(dispatch, dates, site_root), dry_run, wrote)
+        write_text(dispatch_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
 
 
 def _slugify_heading(text: str) -> str:
@@ -1360,6 +2060,14 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
     metric_data_only = sum(1 for p in PILLAR_ORDER if story_counts.get(p, 0) > 0 and human_counts.get(p, 0) <= 0 and current_counts.get(p, 0) <= 0)
     written_dispatch_href = f"/american-pressure/editions/{edition_date}/"
     source_ledger_href = f"/american-pressure/editions/{edition_date}/sources_manifest.json"
+    map_href = "/american-pressure/map/"
+    archive_href = "/american-pressure/archive.html"
+    map_payload = _build_map_data(edition_date, manifest, sources, stories)
+    map_summary = (
+        f"Map currently shows {int(map_payload.get('pin_count') or 0)} pinned source-backed locations, "
+        f"{int(map_payload.get('national_records_count') or 0)} national records, and "
+        f"{int(map_payload.get('unmapped_records_count') or 0)} unmapped records."
+    )
 
     metric_cards = f"""
       <div class="apd-metrics">
@@ -1453,7 +2161,7 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
     <p class="eyebrow">American Pressure Dashboard</p>
     <h1>American Pressure Dashboard</h1>
     <p class="lede">Weekly briefing range: {html.escape(week_range)}</p>
-    <p><a href="{written_dispatch_href}">Read written dispatch</a> | <a href="{source_ledger_href}">View source ledger</a></p>
+    <p><a href="{written_dispatch_href}">Read written dispatch</a> | <a href="{source_ledger_href}">View source ledger</a> | <a href="{map_href}">Open map</a> | <a href="{archive_href}">Open archive</a></p>
     <p class="apd-small">Built from {source_count} source records and {story_count} public signals. Trend unavailable until prior-week comparison is added.</p>
     {metric_cards}
     {detail_panel}
@@ -1461,7 +2169,7 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
     <section class="apd-grid" id="apd-grid">
 {''.join(cards)}
     </section>
-    <p class="apd-small">Map layer coming after location quality improves.</p>
+    <p class="apd-small">{html.escape(map_summary)} <a href="{map_href}">View American Pressure map.</a></p>
   </main>
 {footer("../")}"""
     return page(
@@ -1585,6 +2293,8 @@ def run_american_pressure_dispatch(
     edition_date = validate_date(edition_date)
     validate_not_future_date(edition_date, allow_future=allow_future)
     mode = source_mode.strip().lower()
+    if from_manual_sources and mode == "both":
+        mode = "manual"
     if mode not in SOURCE_MODES:
         raise ValueError(f"unsupported --source-mode: {source_mode}")
 
@@ -1659,6 +2369,7 @@ def run_american_pressure_dispatch(
     for story in stories:
         story["collection_gap_pillars"] = collection_gap_pillars
 
+    _sanitize_story_public_prose(stories)
     prose_errors = _public_prose_guardrail(stories)
     if prose_errors:
         errors.extend(prose_errors)

@@ -1,7 +1,8 @@
-import json
+﻿import json
 import shutil
 import subprocess
 import uuid
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -316,10 +317,11 @@ def test_public_cascadia_pages_use_current_public_name(built_site):
         assert "Cascadia Systems Dispatch" not in html
 
 
-def test_american_pressure_index_links_to_dashboard(built_site):
+def test_american_pressure_index_links_to_map_only(built_site):
     work, _, _ = built_site
     ap_index = read(work / "output" / "site" / "american-pressure" / "index.html")
-    assert 'href="dashboard/"' in ap_index
+    assert 'href="map/"' in ap_index
+    assert 'href="dashboard/"' not in ap_index
 
 
 def test_manifests_and_source_traceability(built_site):
@@ -528,6 +530,9 @@ def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
 
 
 def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> None:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    display = f"{start.strftime('%B')} {start.day}–{end.strftime('%B')} {end.day}, {end.year}"
     edition = site_root / "american-pressure" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
     (edition / "index.html").write_text("<html><body>American Pressure weekly</body></html>", encoding="utf-8")
@@ -538,9 +543,9 @@ def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> No
                 "edition_date": edition_date,
                 "source_count": 3,
                 "story_count": 2,
-                "week_start_date": "2026-05-03",
+                "week_start_date": start.isoformat(),
                 "week_end_date": edition_date,
-                "display_date_range": "May 3–May 9, 2026",
+                "display_date_range": display,
             }
         ),
         encoding="utf-8",
@@ -552,6 +557,29 @@ def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> No
     (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "ap-story-001"}]), encoding="utf-8")
     archive = site_root / "american-pressure" / "archive.html"
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
+
+
+def add_invalid_american_pressure_site_edition(site_root: Path, edition_date: str) -> None:
+    edition = site_root / "american-pressure" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text("<html><body>Invalid American Pressure weekly</body></html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "american-pressure",
+                "edition_date": edition_date,
+                "source_count": 2,
+                "story_count": 2,
+                "errors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "ap-src-invalid", "url": "https://example.com/source-invalid"}]),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(json.dumps({"stories": [{"story_id": "ap-story-invalid"}]}), encoding="utf-8")
 
 
 def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
@@ -742,6 +770,31 @@ def test_american_pressure_only_dispatch_expect_date_uses_public_cutoff(built_si
     assert "2026-05-09" in pages_rss and "2026-05-16" not in pages_rss and "2026-05-19" not in pages_rss
 
 
+def test_american_pressure_index_excludes_invalid_later_edition(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    add_american_pressure_site_edition(site_root, "2026-05-16")
+    add_invalid_american_pressure_site_edition(site_root, "2026-05-18")
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    index = read(site_root / "american-pressure" / "index.html")
+    archive = read(site_root / "american-pressure" / "archive.html")
+    assert "2026-05-16" in index and "2026-05-18" not in index
+    assert "2026-05-16" in archive and "2026-05-18" not in archive
+
+
 def test_publish_pages_copies_american_pressure_dashboard_file(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
@@ -762,9 +815,46 @@ def test_publish_pages_copies_american_pressure_dashboard_file(built_site):
     )
 
     assert result["ok"] is True
-    copied = pages_repo / "american-pressure" / "dashboard" / "index.html"
-    assert copied.exists()
-    assert "American Pressure Dashboard" in read(copied)
+    assert (pages_repo / "american-pressure" / "dashboard" / "index.html").exists()
+
+
+def test_publish_pages_copies_american_pressure_map_files(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    map_dir = site_root / "american-pressure" / "map"
+    map_dir.mkdir(parents=True, exist_ok=True)
+    (map_dir / "index.html").write_text("American Pressure Map", encoding="utf-8")
+    (map_dir / "map_data.json").write_text(json.dumps({"pins": [], "needs_location": []}), encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "american-pressure" / "map" / "index.html").exists()
+    assert (pages_repo / "american-pressure" / "map" / "map_data.json").exists()
+
+
+def test_attached_landing_index_contains_american_pressure_map_button():
+    repo = Path(__file__).resolve().parents[1]
+    html = (repo / "bluefern-dispatches-pages" / "assets" / "index_updated_logo.html").read_text(encoding="utf-8")
+    assert "The American Pressure Map" in html
+    assert "https://dispatches.thebluefernco.com/american-pressure/map/" in html
+
+
+def test_bluehost_root_upload_index_contains_american_pressure_map_button():
+    repo = Path(__file__).resolve().parents[1]
+    html = (repo / "output" / "site_bluefern_root" / "index.html").read_text(encoding="utf-8")
+    assert "The American Pressure Map" in html
+    assert "https://dispatches.thebluefernco.com/american-pressure/map/" in html
 
 
 def test_commit_flag_does_not_imply_push(built_site):

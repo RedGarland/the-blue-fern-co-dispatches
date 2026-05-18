@@ -640,6 +640,15 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
         return True
     if slug == "american-pressure":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+        index_path = site_root / slug / "editions" / edition_date / "index.html"
+        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
+        curation_manifest_path = site_root / slug / "editions" / edition_date / "curation_manifest.json"
+        if not index_path.exists() or not sources_manifest_path.exists() or not curation_manifest_path.exists():
+            return False
+        failed_markers = ["failed_run.json", "run_failed.json", ".failed"]
+        for marker in failed_markers:
+            if (site_root / slug / "editions" / edition_date / marker).exists():
+                return False
         if not manifest_path.exists():
             return False
         try:
@@ -658,30 +667,47 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
             return False
         if manifest.get("unpublishable") is True:
             return False
+        week_start_date = str(manifest.get("week_start_date") or "").strip()
+        week_end_date = str(manifest.get("week_end_date") or "").strip()
+        display_date_range = str(manifest.get("display_date_range") or "").strip()
+        if not week_start_date or not week_end_date or not display_date_range:
+            return False
+        if week_end_date != edition_date:
+            return False
+        try:
+            if datetime.strptime(week_end_date, "%Y-%m-%d").weekday() != 5:
+                return False
+        except ValueError:
+            return False
         source_count = int(manifest.get("source_count", 0) or 0)
         story_count = int(manifest.get("story_count", 0) or 0)
         if source_count <= 0 or story_count <= 0:
             return False
         if any(str(item).strip() for item in (manifest.get("errors") or [])):
             return False
-        has_visible_source_links = False
-        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
-        if sources_manifest_path.exists():
-            try:
-                sources_payload = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            if isinstance(sources_payload, list):
-                has_visible_source_links = any(str((row or {}).get("url") or "").strip() for row in sources_payload if isinstance(row, dict))
-        if not has_visible_source_links:
-            index_path = site_root / slug / "editions" / edition_date / "index.html"
-            if not index_path.exists():
-                return False
-            try:
-                index_html = index_path.read_text(encoding="utf-8")
-            except OSError:
-                return False
-            has_visible_source_links = "href=" in index_html
+        try:
+            sources_payload = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if not isinstance(sources_payload, list):
+            return False
+        try:
+            curation_payload = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        stories_payload: list[dict[str, Any]] = []
+        if isinstance(curation_payload, dict):
+            raw_stories = curation_payload.get("stories")
+            if isinstance(raw_stories, list):
+                stories_payload = [row for row in raw_stories if isinstance(row, dict)]
+        elif isinstance(curation_payload, list):
+            stories_payload = [row for row in curation_payload if isinstance(row, dict)]
+        if len(sources_payload) <= 0 or len(stories_payload) <= 0:
+            return False
+        has_visible_source_links = any(
+            str((row or {}).get("url") or "").strip().startswith(("http://", "https://"))
+            for row in sources_payload if isinstance(row, dict)
+        )
         if not has_visible_source_links:
             return False
         return True
@@ -790,7 +816,7 @@ def remove_unlistable_public_cascadia_editions(site_root: Path, dry_run: bool, w
 
 
 def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
-    latest = edition_dates[0] if edition_dates else dispatch.edition_date
+    latest = edition_dates[0] if edition_dates else ""
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
         signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
@@ -806,11 +832,13 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates[:10]
     )
-    dashboard_link = (
-        '\n    <p><a href="dashboard/">View Dashboard</a></p>'
-        if dispatch.slug == "american-pressure"
-        else ""
-    )
+    map_link = ""
+    dashboard_link = ""
+    if dispatch.slug == "american-pressure":
+        map_link = '\n    <p><a href="map/">View American Pressure Map</a></p>'
+        if (site_root / "american-pressure" / "dashboard" / "index.html").exists():
+            dashboard_link = '\n    <p><a href="dashboard/">View American Pressure Dashboard</a></p>'
+    latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -818,7 +846,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     </section>
     <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
     <p class="lede">{html.escape(description)}</p>
-    <p><a href="editions/{latest}/">Read the latest briefing</a></p>
+    {latest_link}
+    {map_link}
     {dashboard_link}
     {signal_pack_note}
     <h2>Recent Editions</h2>
@@ -1300,6 +1329,18 @@ def remove_pages_editions_above_date(
         removed.append(str(edition_dir))
         if not dry_run:
             shutil.rmtree(edition_dir)
+    return removed
+
+
+def remove_pages_path(path: Path, dry_run: bool) -> list[str]:
+    if not path.exists():
+        return []
+    removed = [str(path)]
+    if not dry_run:
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
     return removed
 
 

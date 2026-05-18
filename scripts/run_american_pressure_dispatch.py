@@ -122,6 +122,16 @@ PILLAR_GUIDANCE = {
         "watch_next": "Watch for enrollment delays, eligibility changes, and access friction.",
     },
 }
+PILLAR_DASHBOARD_SUMMARIES = {
+    "food_pressure": "More households may be stretching grocery budgets or turning to food support.",
+    "financial_distress_pressure": "Bankruptcy data can show where financial stress has moved from warning signs to hard outcomes.",
+    "housing_household_cost_pressure": "Monthly bills may be taking a larger bite out of household income.",
+    "health_access_pressure": "People may face longer delays, fewer nearby options, or harder choices about care.",
+    "labor_income_pressure": "Paycheck disruption can quickly turn into missed bills for households with little cushion.",
+    "environmental_pressure": "Storms, drought, or recovery delays can raise costs and strain local services.",
+    "local_system_strain": "When local systems are stretched, residents may feel it through schools, transit, emergency response, or public services.",
+    "policy_implementation": "This area tracks whether public support is reaching households when it is needed.",
+}
 CATEGORY_BY_PILLAR = {
     "food_pressure": "food-pressure",
     "financial_distress_pressure": "financial-distress-pressure",
@@ -1363,6 +1373,7 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
     """
 
     cards: list[str] = []
+    card_payloads: list[dict[str, str]] = []
     for pillar in PILLAR_ORDER:
         heading = PILLAR_HEADINGS.get(pillar, pillar)
         source_ct = int(source_counts.get(pillar, 0) or 0)
@@ -1381,7 +1392,7 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
         story = story_by_pillar.get(pillar, {})
         brief_quality = _safe_text(story.get("brief_quality"))
         quality = _dashboard_quality_label(status, brief_quality)
-        what_this_means = _safe_text(story.get("potential_relevance")) or _safe_text(PILLAR_GUIDANCE.get(pillar, {}).get("why_it_matters")) or "No sourced reader-facing takeaway is available yet."
+        what_this_means = _safe_text(PILLAR_DASHBOARD_SUMMARIES.get(pillar)) or _safe_text(PILLAR_GUIDANCE.get(pillar, {}).get("why_it_matters")) or "No reader-facing takeaway is available yet."
         section_anchor = _slugify_heading(heading)
         badge_class = {
             "Active": "apd-status-active",
@@ -1389,16 +1400,50 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
             "Collection gap": "apd-status-gap",
             "No signal captured": "apd-status-none",
         }.get(status, "apd-status-none")
+        written_section_href = f"{written_dispatch_href}#{section_anchor}"
+        card_payload = {
+            "pillar": pillar,
+            "heading": heading,
+            "status": status,
+            "status_class": badge_class,
+            "counts": f"Sources: {source_ct} | Stories: {story_ct} | Current developments: {current_ct}",
+            "supporting_counts": f"Human stories: {human_ct} | Data anchors: {data_ct}",
+            "quality": f"Quality: {quality}",
+            "what_this_means": what_this_means,
+            "written_href": written_section_href,
+            "ledger_href": source_ledger_href,
+            "gap_note": "Collection gap: no current-development source was captured for this pillar this week." if status == "Collection gap" else "",
+        }
+        card_payloads.append(card_payload)
         cards.append(
-            f"""        <article class="apd-card">
+            f"""        <article class="apd-card {badge_class}" id="{html.escape(pillar)}" data-pillar="{html.escape(pillar)}" data-heading="{html.escape(heading)}" data-status="{html.escape(status)}" data-status-class="{html.escape(badge_class)}" data-counts="{html.escape(card_payload['counts'])}" data-supporting-counts="{html.escape(card_payload['supporting_counts'])}" data-quality="{html.escape(card_payload['quality'])}" data-what="{html.escape(what_this_means)}" data-written-href="{html.escape(written_section_href)}" data-ledger-href="{html.escape(source_ledger_href)}" data-gap-note="{html.escape(card_payload['gap_note'])}">
           <h3>{html.escape(heading)} <span class="apd-status {badge_class}">{html.escape(status)}</span></h3>
-          <p class="apd-small">Sources: {source_ct} | Stories: {story_ct} | Current developments: {current_ct}</p>
-          <p class="apd-small">Human stories: {human_ct} | Data anchors: {data_ct}</p>
-          <p class="apd-small">Quality: {html.escape(quality)}</p>
+          <p class="apd-big">{current_ct}</p>
+          <p class="apd-small">Current developments</p>
+          <p class="apd-small">{html.escape(card_payload['counts'])}</p>
+          <p class="apd-small">{html.escape(card_payload['supporting_counts'])}</p>
+          <p class="apd-small">{html.escape(card_payload['quality'])}</p>
           <p>{html.escape(what_this_means)}</p>
-          <p><a href="{written_dispatch_href}#{section_anchor}">Go to section in written dispatch</a></p>
+          <p class="apd-links"><a href="#{html.escape(pillar)}" data-focus-pillar="{html.escape(pillar)}">Focus this pressure area</a> | <a href="{written_section_href}">Read written section</a> | <a href="{source_ledger_href}">View sources</a></p>
         </article>"""
         )
+
+    default_pillar = card_payloads[0] if card_payloads else None
+    detail_panel = ""
+    if default_pillar:
+        detail_panel = f"""
+    <section class="apd-detail" id="apd-selected-panel" aria-live="polite">
+      <p class="eyebrow">Selected Pressure Area</p>
+      <h2 id="apd-selected-heading">{html.escape(default_pillar['heading'])}</h2>
+      <p><span id="apd-selected-status" class="apd-status {html.escape(default_pillar['status_class'])}">{html.escape(default_pillar['status'])}</span></p>
+      <p id="apd-selected-counts" class="apd-small">{html.escape(default_pillar['counts'])}</p>
+      <p id="apd-selected-supporting-counts" class="apd-small">{html.escape(default_pillar['supporting_counts'])}</p>
+      <p id="apd-selected-what">{html.escape(default_pillar['what_this_means'])}</p>
+      <p id="apd-selected-gap" class="apd-small">{html.escape(default_pillar['gap_note'])}</p>
+      <p class="apd-links"><a id="apd-selected-written" href="{html.escape(default_pillar['written_href'])}">Read written section</a> | <a id="apd-selected-ledger" href="{html.escape(default_pillar['ledger_href'])}">View sources</a></p>
+      <p><a href="#all" id="apd-show-all">Show all pressure areas</a></p>
+    </section>
+"""
 
     body = f"""{header(DISPATCH_NAME, "../", "../archive.html", "/american-pressure/")}
   <main class="home apd-home">
@@ -1411,8 +1456,9 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
     <p><a href="{written_dispatch_href}">Read written dispatch</a> | <a href="{source_ledger_href}">View source ledger</a></p>
     <p class="apd-small">Built from {source_count} source records and {story_count} public signals. Trend unavailable until prior-week comparison is added.</p>
     {metric_cards}
+    {detail_panel}
     <h2>Pressure by Pillar</h2>
-    <section class="apd-grid">
+    <section class="apd-grid" id="apd-grid">
 {''.join(cards)}
     </section>
     <p class="apd-small">Map layer coming after location quality improves.</p>
@@ -1425,20 +1471,98 @@ def render_dashboard_html(root: Path, edition_date: str) -> str:
         body + """
 <style>
 .apd-home { width: min(1120px, calc(100% - 24px)); }
-.apd-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0 28px; }
-.apd-metric { border: 1px solid var(--border); background: var(--soft-blue); padding: 14px; }
+.apd-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0 20px; }
+.apd-metric { border: 1px solid var(--border); border-radius: 12px; background: #f4f8fb; padding: 14px; box-shadow: 0 6px 16px rgba(14, 30, 37, .06); }
 .apd-metric h3 { margin: 0 0 6px; border-top: 0; padding-top: 0; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; color: var(--navy); }
-.apd-metric p { margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--ink); }
+.apd-metric p { margin: 0; font-size: 2rem; line-height: 1; font-weight: 800; color: var(--ink); }
+.apd-detail { border: 1px solid var(--border); border-left: 6px solid var(--navy); border-radius: 12px; background: #f8fbfd; padding: 14px 16px; margin-bottom: 18px; }
 .apd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.apd-card { border: 1px solid var(--border); background: var(--panel); padding: 14px; }
+.apd-card { border: 1px solid var(--border); border-left: 6px solid #4b5f64; border-radius: 12px; background: var(--panel); padding: 14px; transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease; }
+.apd-card:hover, .apd-card:focus-within { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14, 30, 37, .1); }
 .apd-card h3 { margin: 0 0 8px; border-top: 0; padding-top: 0; font-size: 1.05rem; }
+.apd-big { margin: 0; font-size: 2.1rem; line-height: 1; font-weight: 800; color: #102a43; }
 .apd-status { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
-.apd-status-active { background: #d8efe6; color: #1f5d49; }
-.apd-status-data { background: #ddecf1; color: #0f2a33; }
-.apd-status-gap { background: #f9e5d3; color: #7a3c00; }
+.apd-status-active { background: #d8efe6; color: #1f5d49; border-left-color: #1f5d49; }
+.apd-status-data { background: #ddecf1; color: #0f2a33; border-left-color: #0f2a33; }
+.apd-status-gap { background: #f9e5d3; color: #7a3c00; border-left-color: #7a3c00; }
 .apd-status-none { background: #edf1f2; color: #4b5f64; }
+.apd-card.apd-status-active { background: #f4fbf7; }
+.apd-card.apd-status-data { background: #f2f8fb; }
+.apd-card.apd-status-gap { background: #fff7f1; }
 .apd-small { color: var(--muted); font-size: .88rem; margin: 0 0 8px; }
+.apd-links { margin: 12px 0 0; }
+.apd-grid.is-filtered .apd-card { opacity: .28; }
+.apd-grid.is-filtered .apd-card.is-selected { opacity: 1; box-shadow: 0 12px 26px rgba(14, 30, 37, .16); transform: translateY(-3px); }
+@media (max-width: 760px) {
+  .apd-home { width: calc(100% - 16px); }
+  .apd-grid { grid-template-columns: 1fr; }
+}
 </style>
+<script>
+(function () {
+  var grid = document.getElementById("apd-grid");
+  var panel = document.getElementById("apd-selected-panel");
+  if (!grid || !panel) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll(".apd-card[data-pillar]"));
+  var heading = document.getElementById("apd-selected-heading");
+  var status = document.getElementById("apd-selected-status");
+  var counts = document.getElementById("apd-selected-counts");
+  var supportingCounts = document.getElementById("apd-selected-supporting-counts");
+  var what = document.getElementById("apd-selected-what");
+  var gap = document.getElementById("apd-selected-gap");
+  var written = document.getElementById("apd-selected-written");
+  var ledger = document.getElementById("apd-selected-ledger");
+  var showAll = document.getElementById("apd-show-all");
+
+  function getFromHash() {
+    var value = window.location.hash.replace(/^#/, "");
+    return value === "all" ? "" : value;
+  }
+  function updateHash(pillar) {
+    var target = pillar ? "#" + pillar : "#all";
+    if (window.location.hash !== target) window.location.hash = target;
+  }
+  function selectCard(pillar) {
+    var selected = null;
+    cards.forEach(function (card) {
+      var match = pillar && card.getAttribute("data-pillar") === pillar;
+      card.classList.toggle("is-selected", !!match);
+      if (match) selected = card;
+    });
+    if (!selected) {
+      grid.classList.remove("is-filtered");
+      return;
+    }
+    grid.classList.add("is-filtered");
+    heading.textContent = selected.getAttribute("data-heading") || "";
+    status.className = "apd-status " + (selected.getAttribute("data-status-class") || "apd-status-none");
+    status.textContent = selected.getAttribute("data-status") || "";
+    counts.textContent = selected.getAttribute("data-counts") || "";
+    supportingCounts.textContent = selected.getAttribute("data-supporting-counts") || "";
+    what.textContent = selected.getAttribute("data-what") || "";
+    gap.textContent = selected.getAttribute("data-gap-note") || "";
+    written.setAttribute("href", selected.getAttribute("data-written-href") || "#");
+    ledger.setAttribute("href", selected.getAttribute("data-ledger-href") || "#");
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  grid.addEventListener("click", function (event) {
+    var focusLink = event.target.closest("[data-focus-pillar]");
+    if (!focusLink) return;
+    event.preventDefault();
+    updateHash(focusLink.getAttribute("data-focus-pillar") || "");
+  });
+  if (showAll) {
+    showAll.addEventListener("click", function (event) {
+      event.preventDefault();
+      updateHash("");
+    });
+  }
+  window.addEventListener("hashchange", function () {
+    selectCard(getFromHash());
+  });
+  selectCard(getFromHash());
+})();
+</script>
 """,
         DISPATCH_NAME,
     )

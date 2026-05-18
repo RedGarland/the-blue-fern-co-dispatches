@@ -1,4 +1,4 @@
-import json
+﻿import json
 import shutil
 import uuid
 from datetime import datetime, timedelta
@@ -773,6 +773,17 @@ def test_dashboard_latest_page_renders_metrics_cards_and_links(work_root):
         assert heading in dashboard
 
     assert "Debt and Bankruptcy Pressure <span class=\"apd-status apd-status-gap\">Collection gap</span>" in dashboard
+    assert "This may signal" not in dashboard
+    assert "Focus this pressure area" in dashboard
+    assert "Read written section" in dashboard
+    assert "View sources" in dashboard
+    assert "Show all pressure areas" in dashboard
+    assert 'id="apd-selected-panel"' in dashboard
+    assert 'id="apd-grid"' in dashboard
+    assert 'window.addEventListener("hashchange"' in dashboard
+    assert 'href="#food_pressure"' in dashboard
+    assert "/american-pressure/editions/2026-05-16/#food-and-grocery-pressure" in dashboard
+    assert "cdn." not in dashboard
 
 
 def test_publish_index_links_to_dashboard(work_root):
@@ -801,3 +812,4 @@ def test_dashboard_uses_latest_listable_public_edition(work_root):
     dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
     assert "/american-pressure/editions/2026-05-16/" in dashboard
     assert "/american-pressure/editions/2026-05-09/" not in dashboard
+

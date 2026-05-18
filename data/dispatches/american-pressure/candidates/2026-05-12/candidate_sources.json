@@ -39,8 +39,9 @@
         "source_backed_key_number",
         "linkable_data_anchor"
       ],
-      "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "review_status": "rejected",
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-food-pressure-second-harvest-food-bank-feels-growing-demand-amid-snap-cuts-wfmj",
@@ -80,7 +81,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-food-pressure-branch-county-food-pantry-awarded-75k-grant-as-food-insecurity-gro",
@@ -120,7 +122,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-food-pressure-six-months-in-san-diego-food-bank-s-north-county-facility-sees-gro",
@@ -159,8 +162,9 @@
         "reliable_source_attribution",
         "linkable_data_anchor"
       ],
-      "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "review_status": "approved",
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-food-pressure-snap-benefits-changes-in-tx-2026-what-families-need-to-know-undisc",
@@ -204,7 +208,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-housing-household-cost-pressure-just-say-no-bayonne-city-council-hears-more-prot",
@@ -245,7 +250,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-housing-household-cost-pressure-bsr-real-estate-investment-trust-q1-earnings-cal",
@@ -286,7 +292,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-housing-household-cost-pressure-u-s-foreclosure-rates-by-state-april-2026-attom",
@@ -327,7 +334,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-housing-household-cost-pressure-here-s-how-much-money-you-need-to-retire-in-ever",
@@ -368,7 +376,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-housing-household-cost-pressure-ofgem-shares-three-ways-brits-can-lower-their-en",
@@ -409,7 +418,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-health-access-pressure-locke-wants-to-expedite-permits-for-medical-clinics-in-su",
@@ -448,7 +458,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-health-access-pressure-federal-program-offers-a-lifeline-to-rural-oklahoma-hospi",
@@ -487,7 +498,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-health-access-pressure-fitzgibbon-hospital-bankruptcy-spotlights-growing-strain-",
@@ -525,8 +537,9 @@
         "reliable_source_attribution",
         "linkable_data_anchor"
       ],
-      "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "review_status": "approved",
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-health-access-pressure-dewine-imposing-medicaid-changes-to-address-possible-frau",
@@ -564,8 +577,9 @@
         "reliable_source_attribution",
         "linkable_data_anchor"
       ],
-      "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "review_status": "approved",
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-health-access-pressure-south-dakota-revisits-family-benefit-cuts-and-hospital-pa",
@@ -604,7 +618,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-labor-income-pressure-dozens-more-new-jersey-school-districts-slash-jobs-and-pro",
@@ -646,7 +661,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-labor-income-pressure-warn-notice-gold-spectrum-cbd-to-lay-off-121-employees-acr",
@@ -688,7 +704,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
@@ -731,7 +748,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
@@ -773,7 +791,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
@@ -815,7 +834,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-local-system-strain-pg-e-public-safety-power-shutoff-bay-area-weather-conditions",
@@ -854,7 +874,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-local-system-strain-wrightstown-fire-department-unveils-blue-fire-truck-for-100t",
@@ -893,7 +914,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-local-system-strain-penn-station-fire-damaged-tunnel-repaired-lirr-service-shoul",
@@ -935,7 +957,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-local-system-strain-vegetation-management-weed-abatement-fire-safety-starts-with",
@@ -977,7 +1000,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
@@ -1020,7 +1044,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-environmental-pressure-partnerships-improve-wildfire-preparedness-in-washington-",
@@ -1058,8 +1083,9 @@
         "reliable_source_attribution",
         "linkable_data_anchor"
       ],
-      "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "review_status": "approved",
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-environmental-pressure-whitmer-seeks-extension-for-michigan-major-disaster-decla",
@@ -1101,7 +1127,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
@@ -1144,7 +1171,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-environmental-pressure-consolidated-roofing-contractors-inc-announces-new-educat",
@@ -1186,7 +1214,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
@@ -1228,7 +1257,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-12-policy-implementation-5-ideas-to-reduce-your-electricity-bill-this-summer-el-obs",
@@ -1270,7 +1300,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     }
   ],
   "rejected_candidates": [],

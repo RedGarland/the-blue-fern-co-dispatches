@@ -39,7 +39,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-food-pressure-best-before-date-labels-behind-12b-in-waste-as-food-bank-demand-sp",
@@ -79,7 +80,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-food-pressure-7-states-expanding-senior-food-assistance-programs-to-cover-gaps-i",
@@ -119,7 +121,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-food-pressure-rising-food-inflation-drives-grocery-outlet-demand-traders-union",
@@ -159,7 +162,8 @@
         "linkable_data_anchor"
       ],
       "review_status": "needs_review",
-      "candidate_bucket": "recommended"
+      "candidate_bucket": "recommended",
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-food-pressure-snap-benefits-changes-in-tx-2026-what-families-need-to-know-undisc",
@@ -203,7 +207,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
@@ -247,7 +252,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
@@ -290,7 +296,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
@@ -333,7 +340,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-housing-household-cost-pressure-high-taxes-bigger-government-and-the-voter-quest",
@@ -376,7 +384,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
@@ -419,7 +428,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
@@ -462,7 +472,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
@@ -505,7 +516,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-health-access-pressure-uc-strike-could-disrupt-medical-appointments-and-services",
@@ -547,7 +559,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-health-access-pressure-lambeth-council-workers-fight-cuts-to-vital-health-servic",
@@ -589,7 +602,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-health-access-pressure-missouri-s-11-best-retirement-towns-ranked-worldatlas",
@@ -631,7 +645,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
@@ -674,7 +689,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
@@ -716,7 +732,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
@@ -758,7 +775,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
@@ -803,7 +821,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
@@ -848,7 +867,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "non_us_not_relevant"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-",
@@ -891,7 +911,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-local-system-strain-morristown-intros-2026-budget-see-tax-hike-patch",
@@ -933,7 +954,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-local-system-strain-ebola-virus-outbreak-who-declares-international-health-emerg",
@@ -975,7 +997,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-local-system-strain-deadline-to-request-curbside-pickup-for-storm-debris-is-may-",
@@ -1018,7 +1041,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-local-system-strain-chaos-at-penn-station-as-fire-breaks-out-upending-lirr-and-n",
@@ -1060,7 +1084,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap",
@@ -1103,7 +1128,8 @@
       "candidate_bucket": "maybe",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd",
@@ -1145,7 +1171,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara",
@@ -1187,7 +1214,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-environmental-pressure-newaygo-county-emergency-services-asking-those-with-flood",
@@ -1229,7 +1257,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-environmental-pressure-whitmer-asks-for-more-time-to-request-major-disaster-decl",
@@ -1271,7 +1300,8 @@
       "candidate_bucket": "rejected",
       "rejection_reasons": [
         "duplicate_or_stale"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     },
     {
       "source_record_id": "ap-2026-05-15-policy-implementation-5-ideas-to-reduce-your-electricity-bill-this-summer-el-obs",
@@ -1313,7 +1343,8 @@
       "rejection_reasons": [
         "duplicate_or_stale",
         "no_public_impact"
-      ]
+      ],
+      "user_reviewed_at": "2026-05-17T23:05:06Z"
     }
   ],
   "rejected_candidates": [],

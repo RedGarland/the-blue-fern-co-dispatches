@@ -44,27 +44,28 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Local food bank strain can be an early sign that household budgets are tightening",
-      "human_story_summary": "In San Luis Obispo County, California, the SLO Food Bank reported rising demand while warning that funding pressure could make it harder to meet local need. This may affect households using food bank support and nearby food-system partners.",
+      "human_story_summary": "In US-CA, SLO Food Bank said demand is rising while a major funding source faces cuts, raising concern about service capacity. This may affect households using food bank support and nearby food-system partners.",
       "data_context_summary": "Data context from SNAP Data Tables, USDA ERS Food Price Outlook, SNAP Household Characteristics is a baseline for tracking whether food pressure is broadening.",
-      "what_happened": "The SLO Food Bank said demand is increasing and that expected funding cuts may reduce purchasing power.",
-      "potential_relevance": "This may signal that more households are relying on food assistance as grocery and living costs stay difficult to absorb.",
-      "who_may_feel_it": "Lower-income households, families with children, seniors, and local producers tied to food-bank purchasing.",
-      "what_to_watch_next": "Watch whether pantry lines, emergency distribution, and local food-support wait times continue to rise.",
-      "location_scope": "San Luis Obispo County, California",
+      "what_happened": "SLO Food Bank said demand is rising while a major funding source faces cuts, raising concern about service capacity.",
+      "potential_relevance": "This signal may show up later as tighter grocery tradeoffs, higher pantry demand, and less room in monthly budgets.",
+      "who_may_feel_it": "Families with low or fixed incomes, households with children, and older adults.",
+      "what_to_watch_next": "Watch whether food assistance reliance and grocery cost pressure are rising or easing.",
+      "location_scope": "local",
       "affected_people": "Households using food bank support and nearby food-system partners.",
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Food assistance demand and household grocery stress.",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-09-002",
-      "title": "Large local layoffs show how quickly paycheck stability can weaken",
-      "summary": "Sacramento City Unified finalized layoffs of 503 positions amid a major budget shortfall and insolvency concerns.",
+      "title": "Hospital Chapter 11 filings can signal debt stress with local jobs and service risk",
+      "summary": "Mizell Memorial Hospital in Opp, Alabama filed for Chapter 11 and said services would remain open during restructuring; the hospital reported more than 200 on-site employees and significant local economic impact.",
       "category": "financial-distress-pressure",
       "pillar": "financial_distress_pressure",
       "curation_reason": "bankruptcy/financial distress baseline",
@@ -78,48 +79,48 @@
       "score": 98,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-09-labor-story-capradio-layoffs",
         "ap-2026-05-09-financial-story-mizell-ch11",
-        "auto-2026-05-09-bls-unemployment-situation",
+        "ap-2026-05-09-labor-story-capradio-layoffs",
         "auto-2026-05-09-us-courts-bankruptcy-filings-statistics",
-        "auto-2026-05-09-us-courts-bankruptcy-data-visualizations"
+        "auto-2026-05-09-us-courts-bankruptcy-data-visualizations",
+        "auto-2026-05-09-bls-unemployment-situation"
       ],
       "source_urls": [
-        "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "https://www.waka.com/2026/05/08/mizell-memorial-hospital-in-opp-files-for-chapter-11-bankruptcy-protection/",
-        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
-        "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables"
+        "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables",
+        "https://www.bls.gov/news.release/empsit.nr0.htm"
       ],
       "publisher_names": [
-        "CapRadio",
         "WAKA Action 8 News",
-        "U.S. Bureau of Labor Statistics",
+        "CapRadio",
         "Administrative Office of the U.S. Courts",
-        "Administrative Office of the U.S. Courts"
+        "Administrative Office of the U.S. Courts",
+        "U.S. Bureau of Labor Statistics"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-09-labor-story-capradio-layoffs",
-        "ap-2026-05-09-financial-story-mizell-ch11"
+        "ap-2026-05-09-financial-story-mizell-ch11",
+        "ap-2026-05-09-labor-story-capradio-layoffs"
       ],
       "data_anchor_source_ids": [
-        "auto-2026-05-09-bls-unemployment-situation",
         "auto-2026-05-09-us-courts-bankruptcy-filings-statistics",
-        "auto-2026-05-09-us-courts-bankruptcy-data-visualizations"
+        "auto-2026-05-09-us-courts-bankruptcy-data-visualizations",
+        "auto-2026-05-09-bls-unemployment-situation"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Large local layoffs show how quickly paycheck stability can weaken",
-      "human_story_summary": "In Sacramento, California, Sacramento City Unified finalized layoffs affecting 503 positions amid continuing fiscal crisis. This may affect district employees, students, and households dependent on school employment income.",
-      "data_context_summary": "Data context from BLS Employment Situation, U.S. Courts Bankruptcy Filings Statistics, U.S. Courts Caseload Data Tables helps anchor whether debt stress may be moving from warning signs to hard outcomes.",
-      "what_happened": "The school board approved layoffs while district leadership discussed insolvency risk and future payroll pressure.",
-      "potential_relevance": "Large local layoffs can weaken household income stability and add spillover risk for nearby businesses and services.",
-      "who_may_feel_it": "Laid-off workers, school families, and communities tied to district employment.",
-      "what_to_watch_next": "Watch for additional layoff rounds, service changes, and receivership decisions.",
-      "location_scope": "Sacramento, California",
-      "affected_people": "District employees, students, and households dependent on school employment income.",
+      "reader_headline": "Hospital Chapter 11 filings can signal debt stress with local jobs and service risk",
+      "human_story_summary": "In US-AL, Bankruptcy-related reporting can indicate rising financial distress for households or businesses, with spillover risk for jobs and local services. This may affect patients and workers connected to the hospital and its affiliated local services.",
+      "data_context_summary": "Data context from U.S. Courts Bankruptcy Filings Statistics, U.S. Courts Caseload Data Tables, BLS Employment Situation helps anchor whether debt stress may be moving from warning signs to hard outcomes.",
+      "what_happened": "Bankruptcy-related reporting can indicate rising financial distress for households or businesses, with spillover risk for jobs and local services.",
+      "potential_relevance": "This signal can show where debt stress could break into missed payments, service disruption, or local job risk.",
+      "who_may_feel_it": "Heavily indebted households, small businesses, and workers tied to stressed employers.",
+      "what_to_watch_next": "Watch for spillover into layoffs, service disruptions, and local business closures.",
+      "location_scope": "local",
+      "affected_people": "Patients and workers connected to the hospital and its affiliated local services.",
       "pressure_area": "",
       "pressure_direction": "upward",
-      "public_pressure_angle": "Layoff-driven income and service pressure.",
+      "public_pressure_angle": "Debt distress in essential local institutions can spill into household service and job insecurity.",
       "key_stat": {
         "label": "Reported layoffs",
         "value": "503",
@@ -127,61 +128,63 @@
         "context": "",
         "source_record_id": "ap-2026-05-09-labor-story-capradio-layoffs"
       },
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-09-003",
-      "title": "Utility rate fights can signal mounting monthly-bill pressure for households",
-      "summary": "Illinois advocates and the attorney general urged regulators to cut or reject a major gas rate request that could raise typical residential monthly bills in Chicago.",
+      "title": "Housing costs are still the budget pressure that can crowd out everything else",
+      "summary": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
       "category": "housing-household-cost-pressure",
       "pillar": "housing_household_cost_pressure",
       "curation_reason": "shelter cost pressure",
-      "item_type": "current_week_development",
+      "item_type": "baseline_gauge",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 0,
         "data_anchor": 1,
-        "watchlist_signal": 0
+        "watchlist_signal": 1
       },
-      "brief_quality": "story_plus_data",
+      "brief_quality": "baseline_only",
       "score": 97,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-09-housing-story-peoples-gas-rate-request",
-        "auto-2026-05-09-bls-cpi-shelter"
-      ],
-      "source_urls": [
-        "https://www.wvik.org/illinois/2026-05-06/cut-with-an-axe-watchdogs-ag-call-for-massive-cuts-to-peoples-gas-rate-request",
-        "https://www.bls.gov/cpi/"
-      ],
-      "publisher_names": [
-        "WVIK / Capitol News Illinois",
-        "U.S. Bureau of Labor Statistics"
-      ],
-      "human_story_source_ids": [
+        "auto-2026-05-09-bls-cpi-shelter",
         "ap-2026-05-09-housing-story-peoples-gas-rate-request"
       ],
+      "source_urls": [
+        "https://www.bls.gov/cpi/",
+        "https://www.wvik.org/illinois/2026-05-06/cut-with-an-axe-watchdogs-ag-call-for-massive-cuts-to-peoples-gas-rate-request"
+      ],
+      "publisher_names": [
+        "U.S. Bureau of Labor Statistics",
+        "WVIK / Capitol News Illinois"
+      ],
+      "human_story_source_ids": [],
       "data_anchor_source_ids": [
         "auto-2026-05-09-bls-cpi-shelter"
       ],
-      "watchlist_source_ids": [],
-      "reader_headline": "Utility rate fights can signal mounting monthly-bill pressure for households",
-      "human_story_summary": "In Chicago, consumer groups and the state attorney general challenged a large gas rate request that could raise residential monthly bills. This may affect residential utility customers, especially lower-income households with high heating burdens.",
+      "watchlist_source_ids": [
+        "ap-2026-05-09-housing-story-peoples-gas-rate-request"
+      ],
+      "reader_headline": "Housing costs are still the budget pressure that can crowd out everything else",
+      "human_story_summary": "",
       "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
-      "what_happened": "Watchdogs and state officials filed testimony asking regulators to sharply reduce or reject a major utility rate hike request.",
-      "potential_relevance": "Higher gas bills can compound housing and monthly-cost pressure, especially for households already balancing rent, groceries, and debt.",
-      "who_may_feel_it": "Renters, homeowners on fixed incomes, and households with limited savings buffers.",
-      "what_to_watch_next": "Watch regulator decisions, final approved bill changes, and whether protections for high-arrears customers are strengthened.",
-      "location_scope": "Chicago, Illinois",
-      "affected_people": "Residential utility customers, especially lower-income households with high heating burdens.",
+      "what_happened": "Shelter inflation baseline for rent and housing-linked household cost pressure.",
+      "potential_relevance": "This is a baseline for watching whether housing and utility costs keep crowding out other essentials.",
+      "who_may_feel_it": "Renters, first-time buyers, and households already cost-burdened on monthly bills.",
+      "what_to_watch_next": "Watch whether shelter and utility pressure is broadening or stabilizing.",
+      "location_scope": "",
+      "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "upward",
-      "public_pressure_angle": "Utility cost pressure can quickly tighten household budgets and increase arrears risk.",
+      "pressure_direction": "",
+      "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
@@ -221,20 +224,21 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Hospital funding stress can become a household health-access problem",
-      "human_story_summary": "Across the United States, new reporting warned that funding pressure could raise risks of hospital service cuts and closures in vulnerable communities. This may affect patients and families in communities with limited alternative hospital access.",
+      "human_story_summary": "Nationally, Local developments suggest growing pressure on care access and service continuity. This may affect patients and families in communities with limited alternative hospital access.",
       "data_context_summary": "Data context from Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
-      "what_happened": "Reporting highlighted a new analysis that linked federal Medicaid/CHIP cuts to elevated closure and service-cut risk at many hospitals.",
-      "potential_relevance": "If hospital services are reduced, households may face longer travel, delayed treatment, and reduced local emergency-care capacity.",
-      "who_may_feel_it": "Patients with chronic conditions, caregivers, rural communities, and uninsured or underinsured households.",
-      "what_to_watch_next": "Watch state-level funding responses, announced service-line changes, and local staffing or closure notices.",
-      "location_scope": "United States",
+      "what_happened": "Local developments suggest growing pressure on care access and service continuity.",
+      "potential_relevance": "This signal may matter if households could face coverage gaps, delayed care, or higher out-of-pocket pressure.",
+      "who_may_feel_it": "People with chronic conditions, caregivers, and uninsured or underinsured households.",
+      "what_to_watch_next": "Watch for coverage changes, closures, and access bottlenecks.",
+      "location_scope": "national",
       "affected_people": "Patients and families in communities with limited alternative hospital access.",
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Hospital financial strain can directly affect whether care remains available close to home.",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
@@ -281,8 +285,9 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
@@ -333,8 +338,9 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     },
@@ -378,20 +384,21 @@
       ],
       "watchlist_source_ids": [],
       "reader_headline": "Storm recovery assessments show where local systems may face prolonged strain",
-      "human_story_summary": "Across multiple Wisconsin counties, state and federal teams began damage assessments after severe storms and flooding. This may affect residents and local agencies in storm-affected communities.",
+      "human_story_summary": "In US-WI, state officials Federal, state and local officials began joint preliminary damage assessments after severe storms and flooding in April across Wisconsin communities. This may affect residents and local agencies in storm-affected communities.",
       "data_context_summary": "Data context from FEMA Disaster Declarations, NOAA NCEI Monthly Climate Reports provides baseline evidence for this pressure area.",
-      "what_happened": "Joint assessments began to verify damage to homes, public infrastructure, and local systems following April storms and floods.",
-      "potential_relevance": "This can translate into repair costs, service disruption, and local budget stress that reaches households.",
-      "who_may_feel_it": "Households in flood-affected areas, renters, homeowners, and local public-service systems.",
-      "what_to_watch_next": "Watch declaration outcomes, infrastructure repair timelines, and whether disruptions persist into summer.",
-      "location_scope": "Multiple counties in Wisconsin",
+      "what_happened": "Federal, state and local officials began joint preliminary damage assessments after severe storms and flooding in April across Wisconsin communities.",
+      "potential_relevance": "This signal may indicate where local systems could have less buffer if conditions worsen.",
+      "who_may_feel_it": "Commuters, caregivers, students, and households relying on local services.",
+      "what_to_watch_next": "Watch for cuts, local budget strain, and recurring infrastructure disruptions.",
+      "location_scope": "regional",
       "affected_people": "Residents and local agencies in storm-affected communities.",
       "pressure_area": "",
       "pressure_direction": "upward",
       "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
       "key_stat": null,
-      "generated_at": "2026-05-17T18:29:31.310041+00:00",
+      "generated_at": "2026-05-18T18:16:36.358720+00:00",
       "collection_gap_pillars": [
+        "housing_household_cost_pressure",
         "labor_income_pressure"
       ]
     }
@@ -434,22 +441,22 @@
   },
   "rejected_no_public_pressure_angle": 0,
   "rejected_investor_only": 0,
-  "rejected_duplicate_or_stale": 0,
+  "rejected_duplicate_or_stale": 6,
   "rejected_missing_required_fields": 0,
   "item_type_counts": {
-    "baseline_gauge": 2,
-    "current_week_development": 5,
+    "baseline_gauge": 3,
+    "current_week_development": 4,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 6,
+    "human_story": 5,
     "data_anchor": 11,
-    "watchlist_signal": 0
+    "watchlist_signal": 1
   },
   "brief_quality_counts": {
-    "story_plus_data": 5,
+    "story_plus_data": 4,
     "official_release_only": 0,
-    "baseline_only": 2,
+    "baseline_only": 3,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -483,7 +490,7 @@
   "human_story_count_by_pillar": {
     "food_pressure": 1,
     "financial_distress_pressure": 2,
-    "housing_household_cost_pressure": 1,
+    "housing_household_cost_pressure": 0,
     "health_access_pressure": 1,
     "labor_income_pressure": 0,
     "environmental_pressure": 0,
@@ -491,18 +498,21 @@
     "policy_implementation": 0
   },
   "missing_required_current_development_pillars": [
+    "housing_household_cost_pressure",
     "labor_income_pressure"
   ],
   "collection_gap_pillars": [
+    "housing_household_cost_pressure",
     "labor_income_pressure"
   ],
-  "story_plus_data_count": 5,
-  "baseline_only_count": 2,
-  "briefs_with_human_story": 5,
+  "story_plus_data_count": 4,
+  "baseline_only_count": 3,
+  "briefs_with_human_story": 4,
   "briefs_with_data_anchor": 7,
-  "baseline_only_briefs": 2,
+  "baseline_only_briefs": 3,
   "missing_human_story_pillars": [
     "environmental_pressure",
+    "housing_household_cost_pressure",
     "labor_income_pressure"
   ],
   "low_quality_story_ids": [],

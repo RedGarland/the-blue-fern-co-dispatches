@@ -2,36 +2,134 @@
   "dispatch_name": "The American Pressure Dispatch",
   "dispatch_slug": "american-pressure",
   "edition_date": "2026-05-09",
-  "generated_at": "2026-05-13T23:59:32.418513+00:00",
+  "week_start_date": "2026-05-03",
+  "week_end_date": "2026-05-09",
+  "display_date_range": "May 3\u2013May 9, 2026",
+  "generated_at": "2026-05-18T18:16:36.358720+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-09/",
-  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09",
-  "local_backup_path": "output\\tmp-backups-pages\\american-pressure\\2026-05-09",
-  "template_version": "dispatches-static-v1",
-  "source_count": 2,
-  "story_count": 2,
-  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09\\sources_manifest.json",
-  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09\\curation_manifest.json",
-  "free_public_artifacts": [
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09\\index.html",
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09\\sources_manifest.json",
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-05-09\\curation_manifest.json"
+  "source_count": 17,
+  "story_count": 7,
+  "pillars_present": [
+    "food_pressure",
+    "financial_distress_pressure",
+    "housing_household_cost_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "environmental_pressure",
+    "local_system_strain"
   ],
-  "paid_or_detail_artifacts": [],
-  "future_paid_fields_todo": [
-    "county_fips",
-    "state",
-    "county",
-    "food_pressure_score",
-    "health_access_pressure_score",
-    "household_cost_pressure_score",
-    "environmental_pressure_score",
-    "local_system_strain_score",
-    "source_count",
-    "confidence_label",
-    "latest_update_date",
-    "movement_since_last_period"
+  "pillars_missing": [
+    "policy_implementation"
   ],
-  "detail_artifacts_publicly_exposed": false,
-  "warnings": [],
+  "source_count_by_pillar": {
+    "food_pressure": 4,
+    "financial_distress_pressure": 4,
+    "housing_household_cost_pressure": 2,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 2,
+    "local_system_strain": 2,
+    "policy_implementation": 0
+  },
+  "story_count_by_pillar": {
+    "food_pressure": 1,
+    "financial_distress_pressure": 1,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "environmental_pressure": 1,
+    "local_system_strain": 1,
+    "policy_implementation": 0
+  },
+  "rejected_no_public_pressure_angle": 0,
+  "rejected_investor_only": 0,
+  "rejected_duplicate_or_stale": 6,
+  "rejected_missing_required_fields": 0,
+  "is_free_public": true,
+  "public_exposed": true,
+  "has_detail_tier": false,
+  "source_mode": "both",
+  "item_type_counts": {
+    "baseline_gauge": 3,
+    "current_week_development": 4,
+    "watchlist_item": 0
+  },
+  "source_role_counts": {
+    "human_story": 5,
+    "data_anchor": 11,
+    "watchlist_signal": 1
+  },
+  "brief_quality_counts": {
+    "story_plus_data": 4,
+    "official_release_only": 0,
+    "baseline_only": 3,
+    "watchlist_only": 0
+  },
+  "searched_pillars": [
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain",
+    "policy_implementation"
+  ],
+  "required_current_development_search_targets": {
+    "food_pressure": "food bank demand / SNAP / grocery pressure",
+    "financial_distress_pressure": "bankruptcy / Chapter 11 / Chapter 7 / business closure / employer bankruptcy / hospital bankruptcy / nursing home bankruptcy / retail closure / debt distress / foreclosure",
+    "housing_household_cost_pressure": "eviction filings / rent increases / utility shutoffs / utility rate hikes / energy burden / homelessness shelter demand / housing authority waitlist / insurance premium increases / mobile home park rent / property tax pressure",
+    "health_access_pressure": "clinic / hospital / pharmacy / health access",
+    "labor_income_pressure": "layoffs / WARN / employer cuts",
+    "local_system_strain": "disaster / drought / flood / heat / local service strain",
+    "policy_implementation": "benefit or policy implementation problems"
+  },
+  "current_development_count_by_pillar": {
+    "food_pressure": 1,
+    "financial_distress_pressure": 3,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 2,
+    "policy_implementation": 0
+  },
+  "human_story_count_by_pillar": {
+    "food_pressure": 1,
+    "financial_distress_pressure": 2,
+    "housing_household_cost_pressure": 0,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 0,
+    "environmental_pressure": 0,
+    "local_system_strain": 1,
+    "policy_implementation": 0
+  },
+  "missing_required_current_development_pillars": [
+    "housing_household_cost_pressure",
+    "labor_income_pressure"
+  ],
+  "collection_gap_pillars": [
+    "housing_household_cost_pressure",
+    "labor_income_pressure"
+  ],
+  "story_plus_data_count": 4,
+  "baseline_only_count": 3,
+  "briefs_with_human_story": 4,
+  "briefs_with_data_anchor": 7,
+  "baseline_only_briefs": 3,
+  "missing_human_story_pillars": [
+    "environmental_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure"
+  ],
+  "baseline_only_edition": false,
+  "low_quality_story_ids": [],
+  "future_enhancements": {
+    "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+  },
+  "warnings": [
+    "curation_diagnostics={\"candidates_accepted\": 17, \"candidates_found\": 23, \"rejected_duplicate_or_stale\": 6, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 23}",
+    "coverage_watchlist: missing important current-development pillars: housing_household_cost_pressure,labor_income_pressure",
+    "coverage_watchlist: No current-development source was captured for this pillar."
+  ],
   "errors": []
 }

@@ -2,225 +2,207 @@
   "dispatch_slug": "american-pressure",
   "edition_date": "2026-05-16",
   "display_date_range": "May 10\u2013May 16, 2026",
-  "total_source_backed_records": 11,
-  "pin_count": 0,
-  "needs_location_count": 0,
-  "mapped_records_count": 0,
+  "total_source_backed_records": 6,
+  "pin_count": 2,
+  "needs_location_count": 3,
+  "mapped_records_count": 2,
   "exact_or_source_provided_count": 0,
-  "city_state_count": 0,
+  "city_state_count": 1,
   "county_state_count": 0,
-  "state_level_count": 0,
-  "national_records_count": 11,
-  "unmapped_records_count": 0,
-  "categories": [],
-  "states": [],
+  "state_level_count": 1,
+  "national_records_count": 1,
+  "unmapped_records_count": 3,
+  "categories": [
+    "health_access_pressure",
+    "labor_income_pressure"
+  ],
+  "states": [
+    "CA",
+    "IA"
+  ],
   "location_precisions": [
     "exact_or_source_provided",
     "city_state",
     "county_state",
     "state_level"
   ],
-  "pins": [],
+  "pins": [
+    {
+      "title": "Local clinic closures can quickly turn access gaps into household health risk",
+      "date": "2026-05-12T21:45:00-05:00",
+      "location_label": "IA",
+      "city": "Centerville",
+      "state": "IA",
+      "category": "health_access_pressure",
+      "source_urls": [
+        "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-health-story-kcrg-clinic-closure"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Local clinic closures can quickly turn access gaps into household health risk (2026-05-12T21:45:00-05:00)",
+      "latitude": 41.878003,
+      "longitude": -93.097702,
+      "location_precision": "state_level",
+      "location_precision_warning": "state-level location, not exact address.",
+      "location_extraction_method": "text_pattern_state_only",
+      "location_extraction_text": "IA",
+      "location_extraction_confidence": "low"
+    },
+    {
+      "title": "Large local layoffs show how quickly paycheck stability can weaken",
+      "date": "2026-05-08T00:00:00-07:00",
+      "location_label": "Sacramento, CA",
+      "city": "Sacramento",
+      "state": "CA",
+      "category": "labor_income_pressure",
+      "source_urls": [
+        "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-labor-story-capradio-layoffs"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Large local layoffs show how quickly paycheck stability can weaken (2026-05-08T00:00:00-07:00)",
+      "latitude": 38.5816,
+      "longitude": -121.4944,
+      "location_precision": "city_state",
+      "location_precision_warning": ""
+    }
+  ],
   "national_records": [
     {
-      "title": "BLS CPI Shelter Index",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
+      "title": "Utility shutoff data shows how housing-related monthly bills can become an immediate household risk",
+      "date": "2026-04-26T00:00:00-04:00",
+      "location_label": "United States",
       "city": "",
       "state": "",
       "category": "housing_household_cost_pressure",
       "source_urls": [
-        "https://www.bls.gov/cpi/"
+        "https://www.washingtonpost.com/business/2026/04/26/utility-power-electricity-shutoff-bills/"
       ],
       "edition_url": "/american-pressure/editions/2026-05-16/",
       "source_record_ids": [
-        "auto-2026-05-16-bls-cpi-shelter"
+        "ap-2026-05-16-housing-story-utility-shutoffs-wapo"
       ],
       "dispatch_url": "/american-pressure/",
-      "source_title_date": "BLS CPI Shelter Index (2026-05-16T00:00:00Z)",
+      "source_title_date": "Utility shutoff data shows how housing-related monthly bills can become an immediate household risk (2026-04-26T00:00:00-04:00)",
       "unmapped_reason": "national_scope"
-    },
+    }
+  ],
+  "unmapped_records": [
     {
-      "title": "BLS Employment Situation",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "labor_income_pressure",
+      "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
+      "date": "2026-05-12T00:00:00-05:00",
+      "location_label": "Marshall, Missouri",
+      "city": "Marshall",
+      "state": "Missouri",
+      "category": "financial_distress_pressure",
       "source_urls": [
-        "https://www.bls.gov/news.release/empsit.nr0.htm"
+        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
       ],
       "edition_url": "/american-pressure/editions/2026-05-16/",
       "source_record_ids": [
-        "auto-2026-05-16-bls-unemployment-situation"
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
       ],
       "dispatch_url": "/american-pressure/",
-      "source_title_date": "BLS Employment Situation (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
+      "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
+      "unmapped_reason": "no_lookup_match"
     },
     {
-      "title": "Medicaid and CHIP Enrollment Data",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "health_access_pressure",
+      "title": "Local food bank strain can be an early sign that household budgets are tightening",
+      "date": "2026-05-01T12:30:00-07:00",
+      "location_label": "San Luis Obispo County, California",
+      "city": "San Luis Obispo County",
+      "state": "California",
+      "category": "food_pressure",
       "source_urls": [
-        "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data"
+        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
       ],
       "edition_url": "/american-pressure/editions/2026-05-16/",
       "source_record_ids": [
-        "auto-2026-05-16-cms-medicaid-chip-enrollment"
+        "ap-2026-05-16-food-story-keyt-demand"
       ],
       "dispatch_url": "/american-pressure/",
-      "source_title_date": "Medicaid and CHIP Enrollment Data (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
+      "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
+      "unmapped_reason": "no_lookup_match"
     },
     {
-      "title": "FEMA Disaster Declarations",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
+      "title": "Storm recovery assessments show where local systems may face prolonged strain",
+      "date": "2026-05-04T00:00:00-05:00",
+      "location_label": "Multiple counties in Wisconsin",
       "city": "",
       "state": "",
       "category": "local_system_strain",
       "source_urls": [
-        "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
       ],
       "edition_url": "/american-pressure/editions/2026-05-16/",
       "source_record_ids": [
-        "auto-2026-05-16-fema-disaster-declarations"
+        "ap-2026-05-16-weather-story-wi-flood-assessments"
       ],
       "dispatch_url": "/american-pressure/",
-      "source_title_date": "FEMA Disaster Declarations (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "NOAA NCEI Monthly Climate Reports",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "environmental_pressure",
-      "source_urls": [
-        "https://www.ncei.noaa.gov/access/monitoring/monthly-report/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-noaa-ncei-monthly-climate-report"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "NOAA NCEI Monthly Climate Reports (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "U.S. Courts Caseload Data Tables",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "financial_distress_pressure",
-      "source_urls": [
-        "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-us-courts-bankruptcy-data-visualizations"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "U.S. Courts Caseload Data Tables (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "U.S. Courts Bankruptcy Filings Statistics",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "financial_distress_pressure",
-      "source_urls": [
-        "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-us-courts-bankruptcy-filings-statistics"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "U.S. Courts Bankruptcy Filings Statistics (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "U.S. Drought Monitor",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "environmental_pressure",
-      "source_urls": [
-        "https://droughtmonitor.unl.edu/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-us-drought-monitor"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "U.S. Drought Monitor (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "USDA ERS Food Price Outlook",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "food_pressure",
-      "source_urls": [
-        "https://www.ers.usda.gov/data-products/food-price-outlook/"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-usda-ers-food-price-outlook"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "USDA ERS Food Price Outlook (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "SNAP Data Tables",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "food_pressure",
-      "source_urls": [
-        "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-usda-fns-snap-data-tables"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "SNAP Data Tables (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
-    },
-    {
-      "title": "SNAP Household Characteristics",
-      "date": "2026-05-16T00:00:00Z",
-      "location_label": "",
-      "city": "",
-      "state": "",
-      "category": "food_pressure",
-      "source_urls": [
-        "https://www.fns.usda.gov/research/snap/household-characteristics"
-      ],
-      "edition_url": "/american-pressure/editions/2026-05-16/",
-      "source_record_ids": [
-        "auto-2026-05-16-usda-fns-snap-household-characteristics"
-      ],
-      "dispatch_url": "/american-pressure/",
-      "source_title_date": "SNAP Household Characteristics (2026-05-16T00:00:00Z)",
-      "unmapped_reason": "national_scope"
+      "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
+      "unmapped_reason": "no_lookup_match"
     }
   ],
-  "unmapped_records": [],
-  "needs_location": []
+  "needs_location": [
+    {
+      "title": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability",
+      "date": "2026-05-12T00:00:00-05:00",
+      "location_label": "Marshall, Missouri",
+      "city": "Marshall",
+      "state": "Missouri",
+      "category": "financial_distress_pressure",
+      "source_urls": [
+        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Rural hospital bankruptcy can signal debt stress that reaches jobs, services, and household stability (2026-05-12T00:00:00-05:00)",
+      "unmapped_reason": "no_lookup_match"
+    },
+    {
+      "title": "Local food bank strain can be an early sign that household budgets are tightening",
+      "date": "2026-05-01T12:30:00-07:00",
+      "location_label": "San Luis Obispo County, California",
+      "city": "San Luis Obispo County",
+      "state": "California",
+      "category": "food_pressure",
+      "source_urls": [
+        "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-food-story-keyt-demand"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Local food bank strain can be an early sign that household budgets are tightening (2026-05-01T12:30:00-07:00)",
+      "unmapped_reason": "no_lookup_match"
+    },
+    {
+      "title": "Storm recovery assessments show where local systems may face prolonged strain",
+      "date": "2026-05-04T00:00:00-05:00",
+      "location_label": "Multiple counties in Wisconsin",
+      "city": "",
+      "state": "",
+      "category": "local_system_strain",
+      "source_urls": [
+        "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
+      ],
+      "edition_url": "/american-pressure/editions/2026-05-16/",
+      "source_record_ids": [
+        "ap-2026-05-16-weather-story-wi-flood-assessments"
+      ],
+      "dispatch_url": "/american-pressure/",
+      "source_title_date": "Storm recovery assessments show where local systems may face prolonged strain (2026-05-04T00:00:00-05:00)",
+      "unmapped_reason": "no_lookup_match"
+    }
+  ]
 }

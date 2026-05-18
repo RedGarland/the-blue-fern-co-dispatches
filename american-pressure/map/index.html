@@ -38,7 +38,7 @@
       <p>Pins only include records with traceable source IDs, valid source URLs, and valid U.S. coordinates.</p>
     </section>
     <section class="ap-map-needs">
-      <h2>Needs location</h2>
+      <h2>Unmapped source-backed records</h2>
       <ul id="ap-map-needs-list"></ul>
     </section>
   </main>
@@ -112,8 +112,9 @@
       needs.forEach(function (row) {
         var li = document.createElement("li");
         var source = (row.source_urls && row.source_urls[0]) || "";
+        var reason = row.unmapped_reason ? (' - reason: ' + row.unmapped_reason) : "";
         li.innerHTML = '<strong>' + (row.title || "Untitled") + '</strong> (' + (row.category || "uncategorized") + ') ' +
-          (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "");
+          (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "") + reason;
         needsList.appendChild(li);
       });
       filter.addEventListener("change", function () { renderPins(filter.value); });

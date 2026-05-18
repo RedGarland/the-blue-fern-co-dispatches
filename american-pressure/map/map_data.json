@@ -21,7 +21,8 @@
       "source_record_ids": [
         "ap-2026-05-16-environmental-pressure-agenda-osceola-county-board-to-hear-flooding-recovery-upd"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Disaster assessment begins in 30 counties, 1 city after April storms",
@@ -37,7 +38,8 @@
       "source_record_ids": [
         "ap-2026-05-16-environmental-pressure-disaster-assessment-begins-in-30-counties-1-city-after-ap"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Whitmer seeks extension to request major disaster declaration following April severe weather",
@@ -53,7 +55,8 @@
       "source_record_ids": [
         "ap-2026-05-16-environmental-pressure-whitmer-seeks-extension-to-request-major-disaster-declara"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Federal judges block Trump\u2019s attempt to halt SNAP, protecting food assistance for millions of school children",
@@ -69,7 +72,8 @@
       "source_record_ids": [
         "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "LA food bank faces 'overhwhelming demand' as some people are turned away",
@@ -85,7 +89,8 @@
       "source_record_ids": [
         "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "St. Johns Food Share Sees Community Demand Surge As Donations To Portland Food Bank Drop",
@@ -101,7 +106,8 @@
       "source_record_ids": [
         "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Rural Communities Anxious Over Potential Statewide Hospital Closures",
@@ -117,7 +123,8 @@
       "source_record_ids": [
         "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "With dwindling health care options, rural residents wonder what\u2019s next from a new Mayo Clinic CEO",
@@ -133,7 +140,8 @@
       "source_record_ids": [
         "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Colorado Cost of Living: State is now 3rd most expensive in U.S., and residents feel the strain",
@@ -149,7 +157,8 @@
       "source_record_ids": [
         "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods",
@@ -165,7 +174,8 @@
       "source_record_ids": [
         "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "location_label_not_parseable"
     },
     {
       "title": "East Tennessee Hemp Hub Axes 121 Jobs In Carolina Shakeup",
@@ -181,7 +191,8 @@
       "source_record_ids": [
         "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "My boss reduced my pay but increased my responsibilities. He just said, \"We all have to make sacrifices right now.\" Is what he's doing even legal?",
@@ -197,7 +208,8 @@
       "source_record_ids": [
         "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "NJ workers blindsided as factories, hotels, cargo giant slash over 600 jobs in May",
@@ -213,7 +225,8 @@
       "source_record_ids": [
         "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "LIRR strike updates: MTA shuttle buses, contingency plans to get around as Long Island Rail Road service stops",
@@ -229,7 +242,8 @@
       "source_record_ids": [
         "ap-2026-05-16-local-system-strain-lirr-strike-updates-mta-shuttle-buses-contingency-plans-to-g"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Voters to consider $688 million in Bay Area school bonds",
@@ -245,7 +259,8 @@
       "source_record_ids": [
         "ap-2026-05-16-local-system-strain-voters-to-consider-688-million-in-bay-area-school-bonds-the-"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "BLS CPI Shelter Index",
@@ -261,7 +276,8 @@
       "source_record_ids": [
         "auto-2026-05-16-bls-cpi-shelter"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "BLS Employment Situation",
@@ -277,7 +293,8 @@
       "source_record_ids": [
         "auto-2026-05-16-bls-unemployment-situation"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "Medicaid and CHIP Enrollment Data",
@@ -293,7 +310,8 @@
       "source_record_ids": [
         "auto-2026-05-16-cms-medicaid-chip-enrollment"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "FEMA Disaster Declarations",
@@ -309,7 +327,8 @@
       "source_record_ids": [
         "auto-2026-05-16-fema-disaster-declarations"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "NOAA NCEI Monthly Climate Reports",
@@ -325,7 +344,8 @@
       "source_record_ids": [
         "auto-2026-05-16-noaa-ncei-monthly-climate-report"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "U.S. Courts Caseload Data Tables",
@@ -341,7 +361,8 @@
       "source_record_ids": [
         "auto-2026-05-16-us-courts-bankruptcy-data-visualizations"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "U.S. Courts Bankruptcy Filings Statistics",
@@ -357,7 +378,8 @@
       "source_record_ids": [
         "auto-2026-05-16-us-courts-bankruptcy-filings-statistics"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "U.S. Drought Monitor",
@@ -373,7 +395,8 @@
       "source_record_ids": [
         "auto-2026-05-16-us-drought-monitor"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "USDA ERS Food Price Outlook",
@@ -389,7 +412,8 @@
       "source_record_ids": [
         "auto-2026-05-16-usda-ers-food-price-outlook"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "SNAP Data Tables",
@@ -405,7 +429,8 @@
       "source_record_ids": [
         "auto-2026-05-16-usda-fns-snap-data-tables"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     },
     {
       "title": "SNAP Household Characteristics",
@@ -421,7 +446,8 @@
       "source_record_ids": [
         "auto-2026-05-16-usda-fns-snap-household-characteristics"
       ],
-      "dispatch_url": "/american-pressure/"
+      "dispatch_url": "/american-pressure/",
+      "unmapped_reason": "missing_location_label"
     }
   ]
 }

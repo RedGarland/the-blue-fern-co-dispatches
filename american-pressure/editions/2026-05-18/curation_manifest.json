@@ -1,0 +1,36 @@
+[
+  {
+    "story_id": "american-pressure-story-001",
+    "title": "Characteristics of Supplemental Nutrition Assistance Program Households: Fiscal Year 2024",
+    "summary": "USDA reports monthly SNAP participation and household characteristics for fiscal year 2024, providing a source-backed signal on food pressure indicators.",
+    "category": "food-pressure",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "american-pressure-2026-05-03-usda-snap-001"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-002",
+    "title": "National Temperature and Precipitation Maps",
+    "summary": "NOAA monthly conditions reporting provides source-backed environmental context relevant to heat and drought pressure on households and local systems.",
+    "category": "environmental-pressure",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "american-pressure-2026-05-03-noaa-heat-001"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

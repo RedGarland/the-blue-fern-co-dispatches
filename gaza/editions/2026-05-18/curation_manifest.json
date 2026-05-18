@@ -1,0 +1,284 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-18-001",
+    "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+    "summary": "Live broadcasts from the Global Sumud flotilla show commandos boarding several boats trying to breach the Gaza maritime blockade.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-bbc-middle-east-5c5de389ca71"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-bbc-middle-east-5c5de389ca71"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c142vz80553o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-002",
+    "title": "Pianist Jayson Gillham says he never considered apologising for Gaza comments, trial hears",
+    "summary": "Federal court case begins for classical pianist who alleges Melbourne Symphony Orchestra unlawfully discriminated due to his views Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast A classical pianist who alleges the Melbourne Symphony Orchestra unlawfully discriminated against him because of his views on Israeli forces killing Palestinian journalists says he did not consider apologising for making the statement at the centre of the case. Pianist Jayson Gillham is suing the MSO over a cancelled Melbourne concert he was contracted to perform on 15 August 2024, a cancellation which he claims was an attempt to silence him over his stance on the Gaza conflict.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-guardian-world-b71e0709da9a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/australia-news/2026/may/18/pianist-jayson-gillham-cancellation-case-mso-melbourne-symphony-orchestra-court-palestianian-journalists-gaza-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-003",
+    "title": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
+    "summary": "Israeli forces have begun intercepting boats from the Gaza-bound Global Sumud Flotilla.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/18/israeli-forces-begin-intercepting-gaza-bound-aid-flotilla-near-cyprus?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-004",
+    "title": "Netanyahu says Israel controls 60 percent of Gaza",
+    "summary": "Netanyahu says Israel controls 60 percent of Gaza",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-83174375f781"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-83174375f781"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/18/netanyahu-says-israel-controls-60-percent-of-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-005",
+    "title": "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
+    "summary": "Organisers of the flotilla say the vessels are boarded in international waters as Turkiye condemns 'piracy'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-e3f36973737f"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-e3f36973737f"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/18/israeli-forces-intercept-gaza-bound-aid-flotilla?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-18-006",
+    "title": "Growing bread queues in Gaza as Israel restricts fuel, flour imports",
+    "summary": "Bread shortages deepen in Gaza as flour imports dwindle and bakeries struggle to meet rising demand amid fuel scarcity.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-1b0ac705c87f"
+    ],
+    "source_ids": [
+      "gaza-2026-05-18-aljazeera-middle-east-1b0ac705c87f"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/18/growing-bread-lines-gaza-israel-restricts-fuel-flour?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-18T13:00:37.277801+00:00",
+    "dedupe_classification": "new",
+    "dedupe_reasons": [
+      "different_topic_or_source"
+    ],
+    "material_update": true,
+    "material_update_reasons": [
+      "new_story"
+    ]
+  }
+]

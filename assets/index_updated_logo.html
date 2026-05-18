@@ -80,6 +80,13 @@
       align-items: center;
     }
 
+    .primary-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
     .dispatch-link {
       display: inline-flex;
       align-items: center;
@@ -144,6 +151,14 @@
       .tagline {
         letter-spacing: 0.12em;
       }
+
+      .primary-links {
+        width: 100%;
+      }
+
+      .primary-links .dispatch-link {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -154,8 +169,10 @@
       <p class="tagline">Real sources. Clear signals. Better decisions.</p>
       <div class="divider" aria-hidden="true"></div>
       <div class="link-row">
-        <a class="dispatch-link" href="https://dispatches.thebluefernco.com/">View Dispatches</a>
-        <br>
+        <div class="primary-links">
+          <a class="dispatch-link" href="https://dispatches.thebluefernco.com/">View Dispatches</a>
+          <a class="dispatch-link" href="https://dispatches.thebluefernco.com/american-pressure/map/">The American Pressure Map</a>
+        </div>
         <a class="dispatch-link contact-link" href="mailto:bluefernco@thebluefernco.com">Contact The Blue Fern Co.</a>
       </div>
     </section>

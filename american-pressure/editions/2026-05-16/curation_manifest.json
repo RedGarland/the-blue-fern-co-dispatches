@@ -9,7 +9,7 @@
       "curation_reason": "food assistance dependency",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 5,
+        "human_story": 3,
         "data_anchor": 3,
         "watchlist_signal": 0
       },
@@ -19,9 +19,7 @@
       "source_record_ids": [
         "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
         "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-        "ap-2026-05-16-food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
         "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
-        "ap-2026-05-16-food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t",
         "auto-2026-05-16-usda-fns-snap-household-characteristics",
         "auto-2026-05-16-usda-fns-snap-data-tables",
         "auto-2026-05-16-usda-ers-food-price-outlook"
@@ -29,9 +27,7 @@
       "source_urls": [
         "https://news.google.com/rss/articles/CBMicEFVX3lxTE1sTURvX3hRNXhBWGI5RVQ4OU03eVdXY1FsSjN5MzRGODNUa3BlZGJVNjViSjZUZjIxemxHRmdETnBjTXk3WmJ3UHdrNUktSE9BM2c5TU5nM0FNRFNOZmVkY2I1ZDNURFpOTXVWVk5PMVE?oc=5",
         "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBwVWRacmI2aDJUcHh6bzU2X01SRm1EbG5JLWxBSG1HLWRvampDSXlqZ1luSVhWVm9ZYjNRQ3AzbUZfRzBoOXlLMEFjRnI4QldCa0NqQzd1Vk9YQlFiUG1BTNIBXEFVX3lxTE4xMlN5Tlkzdk5rR2tkaUExbWVsMWtRWDVZb3BmTVN0WWVvM2ZTMC1OZU12ZGZHaV8wYzFWb1BvQU5OWFRRNWpLWFQ4MGo0Uk93bm1mSVUweGFZMVZ0?oc=5",
-        "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmUUp5a1V3aG1hcHJOWkdPeV9sTVBGakN4ekJ4cDNpN0gxVWdGc3VQdHpGZ0hhMWQtNG54Uk14NWdOb2hLb1N0b2ZWSDJWd1hNaXZCVU4zbS1NUHp4dG1jcm9fZldxdW9HUGl4UHZBeW95MC1wY0wzWHBB?oc=5",
         "https://news.google.com/rss/articles/CBMigwNBVV95cUxOVEJLcXJkVGRsaVJOTVVNSEpNREJkeXU4YTdha05nS0szbDlkalhreVVtYlhuZUFLMzNkV3NGNTZqb0Y5bmFHYWQzazNtcDYtZDI4X1hGeWJjLW5CSHNVZndHNUZ0WUxrY2wtOWJORGQ1RHEzV1JLcFEzXzdEa1BNV2pCeGlfNDc3VF83ellVNi1qb3EtWlpXRnM1TEFPRXFXZGVHajNPOWZVVmRlLWNfdWdnQ2VkOThjNnNwN2x4cUZjejNzUklOZldDVEwzSl8zVnhoM0gwTWdqdUR2NVZQTndhMGljYXRnOWZLdzZoUEo5MHQ5VHBva0FpcjBWcWhQWjFuYS16NEdoWTNIUjR6LUQwelVSYlRWZWZ2NEx1UzBWREZFbXgtMWRFNHdRQ0ZSQlA3TXVCZUUxSzM0MHo3TVdMb095a0phWVRrVXF5dXRQSEViYjhPcVVCV2ZDdWRxSWJXOG10dV9xT0RpTUJvQWFiNVl3OXRpbEJpaF95cmRTRE0?oc=5",
-        "https://news.google.com/rss/articles/CBMitwFBVV95cUxPRHY0aENKbFFMUXV5blA5ODZyaU5fYTVncEdNZVFDM3otVS00N2Y1amVaVkpuSUZ2VTNCeGpyal9UTVQzeHAydDNRVVhiSXJ0NnM3M20tSTk2bDVRNU5WSDZzMm8yQjA2VG9MZGEzbldINGJlQUFMZVZLSGVpQmFEYm84NWk2OU1mLUt2OE5WLUxCSWpjSjFvWnkyc0R5QlBRMW5xNGh4Z2tLYnFOdHdpWmc1M1VrZUk?oc=5",
         "https://www.fns.usda.gov/research/snap/household-characteristics",
         "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
         "https://www.ers.usda.gov/data-products/food-price-outlook/"
@@ -39,9 +35,7 @@
       "publisher_names": [
         "Fathom Journal",
         "Modern Ghana",
-        "CityNews Vancouver",
         "MSN",
-        "The EastAfrican",
         "USDA Food and Nutrition Service",
         "USDA Food and Nutrition Service",
         "USDA Economic Research Service"
@@ -49,9 +43,7 @@
       "human_story_source_ids": [
         "ap-2026-05-16-food-pressure-st-johns-food-share-sees-community-demand-surge-as-donations-to-po",
         "ap-2026-05-16-food-pressure-la-food-bank-faces-overhwhelming-demand-as-some-people-are-turned-",
-        "ap-2026-05-16-food-pressure-bc-spca-food-bank-s-rising-use-demonstrates-need-for-community-sup",
-        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-",
-        "ap-2026-05-16-food-pressure-growing-concern-over-economic-environmental-impact-of-food-waste-t"
+        "ap-2026-05-16-food-pressure-federal-judges-block-trump-s-attempt-to-halt-snap-protecting-food-"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-16-usda-fns-snap-household-characteristics",
@@ -72,7 +64,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -124,21 +116,21 @@
       "pressure_direction": "",
       "public_pressure_angle": "",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
     },
     {
       "story_id": "american-pressure-story-2026-05-16-003",
-      "title": "Housing and bill pressure in Structure, Rejecting is squeezing household budgets",
-      "summary": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
+      "title": "Housing costs are still the budget pressure that can crowd out everything else",
+      "summary": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
       "category": "housing-household-cost-pressure",
       "pillar": "housing_household_cost_pressure",
       "curation_reason": "shelter cost pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 4,
+        "human_story": 2,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
@@ -146,50 +138,42 @@
       "score": 97,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-16-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
-        "ap-2026-05-16-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
-        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
         "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
+        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
         "auto-2026-05-16-bls-cpi-shelter"
       ],
       "source_urls": [
-        "https://news.google.com/rss/articles/CBMiggNBVV95cUxOZVRlaXNxdk5WNlJqVFc5bF92bDdCVG9FNTAzQnBicXFBUEdzYVBzSDh0bDNYbUJpUURhY3M0X0ZNMlY5bW9NR2dfOHk2Yk9mTGRJNlpmek9ZeHljNTMxa0lyUUhFY05jOE83RUpEMkhkdWF4ZHpfRG1DWlpablpUSmRidWNUcjAxaFpEbUxFcUxlLWpNQVhVOF9ZaHo1VURxM2RmaUZaTUFieThmQjhuRUUyaTdGZXo2UHl6a3lfdzdKR1FUcldSVUtIUlZYZEFMWjlpNVF6WnltNGlDZlR6djR5M2pfbjlLeEx4b3gxeDBTNnVVU1N0ODhyRzA1Q1h0d2FOeTk0aTN3cmJQN2g1QlZHTmJSUnQyMzFnTmlJYzlQRHJhVG9xa2RVeEp0WVhkYnB2ZkV3MFhwcmFuNnplMTdWSDlseS00WV9WTkgwcXAzMWlDV1lYUExCcGNqUnYtLTdOZUk3ZXpuZV94TmdIT2lKazhaNGxSMTJqczN3SV85dw?oc=5",
-        "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOTVhpbE5oWlpMZ3RZZmpodVZkaFVMNGNfdWc2WE1MWHE4ZTVvd1FQczdvNHl6Qnp2T3JpcTFTR3VWSVI3amg4UmZvVEgwbWI2WFNSWVFjZ1hXNHVGTDRFc21tYm5XYWEwQUlUNVBER2I1U2JxZUwyQ1hFWGxRZXhTQVVWdFhTcFpTTVJISlhoaWxzYVZyZXp2ZlB0YUtRcXZBY0M4VVBwT1hPb3ZmZUUwOFcyTE1FTnU3dkhhbWJnaTVTcm5aMVQ3YWhMZERqYXBJSy1mdFpTc01jeXZYaUd1RFY4WFo5aTQ?oc=5",
-        "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNRm50aTFGQzJaQXVCaVhLNDBHRDNfM2tReWVNbnNTYThNZXF4ZlZMMXlkczF6Q2c4YjZvMnhfdTJmdmpPVXdveHNBZXZibzNmeEhMNjB1clBZNl9NNEI4WWZDS0dNSEFSMDdjZVlNTjNUQXdRRkhtZU1uaXlTVDlSNHZja19IQ3VManNDYXpDeHZRWDZ5cGcwWFBvNEJtcEMxNW5iTWlyd2IzbXVZb1ZQaTV6YkdBUEhiUUJtaFlIclNqdw?oc=5",
         "https://news.google.com/rss/articles/CBMirgJBVV95cUxOc254aERmVWVabkFHV1ZvTmxuelNjbTJPVGp5aVltU21HOUdwc2MzR3RoZ2M5cXlYRWVhbU1Xb3AxdzJiM0FVZDI0bWFUZVZHUXhMRWp0WUpNS1Y1ajc2ZG5FTE5RME1vYXVCNXBmX2YxSXNSd0dqRlgzd1JjUC1VSXpVVFZSMjZiZWRmeVJlLWxxb0JNUXNEbWlWVzRULUtuNEtkOGNrVkhWZGZOTkpZeUszXzZzQ1M2MVVRSTJrSmo3dy00eDU5Q3h1aHhIZnE2S3U4RXRUTG5MbUtUQlFJU09HelpWYzFsWk9pUE0wTWNIVTR6YW5jX1ZtMXoxT0xLTW1yQnJjTWRHZm5FWTZPMXZsaEx4RXVLOHU3TnIxQlNwUnlxNGlham81Q0lqZw?oc=5",
+        "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNRm50aTFGQzJaQXVCaVhLNDBHRDNfM2tReWVNbnNTYThNZXF4ZlZMMXlkczF6Q2c4YjZvMnhfdTJmdmpPVXdveHNBZXZibzNmeEhMNjB1clBZNl9NNEI4WWZDS0dNSEFSMDdjZVlNTjNUQXdRRkhtZU1uaXlTVDlSNHZja19IQ3VManNDYXpDeHZRWDZ5cGcwWFBvNEJtcEMxNW5iTWlyd2IzbXVZb1ZQaTV6YkdBUEhiUUJtaFlIclNqdw?oc=5",
         "https://www.bls.gov/cpi/"
       ],
       "publisher_names": [
-        "Montgomery County, MD (.gov)",
-        "Dailyhunt",
-        "Colorado Springs Gazette",
         "Ohio House of Representatives (.gov)",
+        "Colorado Springs Gazette",
         "U.S. Bureau of Labor Statistics"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-16-housing-household-cost-pressure-council-reaches-agreement-on-7-9-billion-fiscal-",
-        "ap-2026-05-16-housing-household-cost-pressure-rising-emis-and-bills-leave-guwahati-residents-w",
-        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex",
-        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo"
+        "ap-2026-05-16-housing-household-cost-pressure-ohio-house-democrats-unveil-an-ohio-you-can-affo",
+        "ap-2026-05-16-housing-household-cost-pressure-colorado-cost-of-living-state-is-now-3rd-most-ex"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-16-bls-cpi-shelter"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Housing and bill pressure in Structure, Rejecting is squeezing household budgets",
-      "human_story_summary": "In Structure, Rejecting, Housing and monthly bill pressures are increasing strain on household budgets.",
+      "reader_headline": "Housing costs are still the budget pressure that can crowd out everything else",
+      "human_story_summary": "In Healthcare, Childcare, Housing and monthly bill pressures are increasing strain on household budgets.",
       "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
-      "what_happened": "Council Reaches Agreement on $7.9 Billion Fiscal Year 2027 Operating Budget Focused on Implementing a Progressive Income Tax Structure, Rejecting the Proposed Property Tax Rate Increase and Supporting Essential Services for Residents",
+      "what_happened": "Ohio House Democrats Unveil \"An Ohio You Can Afford\" Legislative Package to Drive Down Costs in Healthcare, Childcare, Housing, Energy and Consumer Goods Ohio House of Representatives (.gov)",
       "potential_relevance": "This may signal heavier monthly housing and utility burden.",
       "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
       "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
-      "location_scope": "Structure, Rejecting",
+      "location_scope": "Healthcare, Childcare",
       "affected_people": "",
       "pressure_area": "",
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -203,7 +187,7 @@
       "curation_reason": "health coverage/access pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 3,
+        "human_story": 2,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
@@ -212,25 +196,21 @@
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-        "ap-2026-05-16-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
         "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit",
         "auto-2026-05-16-cms-medicaid-chip-enrollment"
       ],
       "source_urls": [
         "https://news.google.com/rss/articles/CBMizgFBVV95cUxNQklsNi1nR0FJb0lHa2pKX2taNkpKRGNQSm1uai0xdmlfc21aY1d0dkdZaEw5R1lPb0tsc3h1SnBpSlpFNU9ybVU2a21KV3hhRTd3NTI3Ujl0bnRJUXZWdWFkRzJVNld3bVZuQWU5cVI5eTE5MGxpSlZTMjBxWV94RGx6YkhSSnlQNG1HT2hKcmVzYW96TTVJbTJEb3duZEFpbm40SEVDN21Ba1hoSUx1X2dEUExzd0d3YjN4cXBvUGZVV2wtMGFJWjlYTGFiQQ?oc=5",
-        "https://news.google.com/rss/articles/CBMitwFBVV95cUxOamY4cnhLczdVNjY1dk4tVXVIYXhtUUU4MExQQkkyYTd2NEJMTHlxeTBlZ0gyUGI2a1hpN3NINGdVandzOW9PcXFEY0d4ZUsyWGdlMUs5NFBaZkRuVHZMRlBvaVZMaWtja2FNVXozaWtMYjZwR3FMR3l4VTNGN0dBR1daNzhhVGg3S05GanZ0RzRPUGdvOVlCUnVsMUM1VkxISUhUYmdIV1Y3aXRBc2F2aVlWdzdrU0E?oc=5",
         "https://news.google.com/rss/articles/CBMipwFBVV95cUxOZXhXbTc0TXpaS1FXZ0w4SjdfYmVFTldIZWVZTmZKdmJmREMwa0xORHdONW81TjFaV2huWEZXUWxRaWk0Z0lfcmMtamZzMUU3NDRGSDNhUWhpRkJMWEhPSkh1RFVZOFlWTkhnMUdxY0lRQktmOXYyRU9RSWxJVlR1ZlIydVdwQmNLUW0xNUh1NWhnY2N5U0oySk1XMXgwNWhnQTNZdjVXaw?oc=5",
         "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data"
       ],
       "publisher_names": [
         "Star Tribune",
-        "Tribal News Network",
         "The Oxford Eagle",
         "Centers for Medicare and Medicaid Services"
       ],
       "human_story_source_ids": [
         "ap-2026-05-16-health-access-pressure-with-dwindling-health-care-options-rural-residents-wonder",
-        "ap-2026-05-16-health-access-pressure-overburdened-and-understaffed-dogra-hospital-faces-surge-",
         "ap-2026-05-16-health-access-pressure-rural-communities-anxious-over-potential-statewide-hospit"
       ],
       "data_anchor_source_ids": [
@@ -250,7 +230,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -264,7 +244,7 @@
       "curation_reason": "job market pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 4,
+        "human_story": 3,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
@@ -273,14 +253,12 @@
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-        "ap-2026-05-16-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
         "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
         "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas",
         "auto-2026-05-16-bls-unemployment-situation"
       ],
       "source_urls": [
         "https://news.google.com/rss/articles/CBMikAFBVV95cUxPcVpIQmxWaGNEa2xWamZpdHVwdVBjTWFqcE5MeTNWYmZzQm1iVy14NXN3QW1NeFliaDZ0SXNxUXc0emFPTTFjRG1CTDBaeUtaWVZPeFRJa0hnUHU5NW1yVmRtUjJoblRBbV9POFNVTHFSTU9aLWs3QkZCSHNkQXd2VlBYM09wSDNTOFQ0N2tHYk8?oc=5",
-        "https://news.google.com/rss/articles/CBMi5wFBVV95cUxQX0p0bHgyZmhxU3JlXzE1aHNIQ1ZKVk9LUWVYRUpKYWhoOFdWc2tabkF0UWl3ZkhWZ1pWeXFJX19GWEFXYnkyc1h1b0ItQm5MT1praWRNNUt0ZkRSRkE1cmVFVk9BNXUwRXptN0RWVUZHYlBQZHpEYmpUdDNpcnRmemxNX0FGb25TdDNKUmQwRmtYNHJlQ0ZYLWIzRUhDd2toRk9jZ1dEVWFkNDZFSWtGUjljWm0wODNYcXFKZ2xnNlNZeXhlOXRuV3NPbDVwNk1DNE4tVVIzZlBOVGlQNDM4ZEozcUxIOTA?oc=5",
         "https://news.google.com/rss/articles/CBMitwJBVV95cUxQQWdzMjRiR0hCazd2M3hlTjJpQkt0UE10VUdDS1VrclM0ekpiT0N5U3VpeEhkZHdYQTMwaVNBTUpiQUpxV3VLTVZENl9YVVlhMWd6djJEOXdTNzczTGxpN21ldjVqczR4UDJGeFN2Tm03RFhpTXdMbEVPNno5bS02QllTZkw1RFJyNzNoVW9TcmNMMmZ0bGhpazZvdnJzMWxuTmtsOFNfdXl4dzRSeHBJOW1BeHJLcVpGb2VLa2NDaVFHT1NpU09RU1JFcUNtWExSWEtBekNTb0dWVmRvb05qN2dmWm9MMHdsRnQxbGpXakdDSE1WNXJjbVlscU96QkQyTUxpQVJjQ3lpZDg3elBpdkdUTF8tYTFVeHJRaHIwYVJqck4zQUF1Y0V0Qm9xNlM0OW96MUt4VQ?oc=5",
         "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5RYWY2UkhMODdhcTdadTZoSy1LY2VjNTdielk3SlQ1VHJFS20zeGthOWVidlJ0OWtwelpmd25RbmM0WENhQ0I5V0pCZDM5ekVkUVlTeE94X3UyQ1cxUGNCaEJRQQ?oc=5",
         "https://www.bls.gov/news.release/empsit.nr0.htm"
@@ -288,13 +266,11 @@
       "publisher_names": [
         "Hoodline",
         "MSN",
-        "MSN",
         "94.5 PST",
         "U.S. Bureau of Labor Statistics"
       ],
       "human_story_source_ids": [
         "ap-2026-05-16-labor-income-pressure-east-tennessee-hemp-hub-axes-121-jobs-in-carolina-shakeup-",
-        "ap-2026-05-16-labor-income-pressure-scholars-warn-samsung-union-if-you-want-boom-time-bonuses-",
         "ap-2026-05-16-labor-income-pressure-my-boss-reduced-my-pay-but-increased-my-responsibilities-h",
         "ap-2026-05-16-labor-income-pressure-nj-workers-blindsided-as-factories-hotels-cargo-giant-slas"
       ],
@@ -315,7 +291,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -380,7 +356,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -437,7 +413,7 @@
       "pressure_direction": "rising",
       "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-17T20:12:52.885335+00:00",
+      "generated_at": "2026-05-17T20:49:12.185012+00:00",
       "collection_gap_pillars": [
         "financial_distress_pressure"
       ]
@@ -460,11 +436,11 @@
     "policy_implementation"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 8,
+    "food_pressure": 6,
     "financial_distress_pressure": 2,
-    "housing_household_cost_pressure": 5,
-    "health_access_pressure": 4,
-    "labor_income_pressure": 5,
+    "housing_household_cost_pressure": 3,
+    "health_access_pressure": 3,
+    "labor_income_pressure": 4,
     "environmental_pressure": 5,
     "local_system_strain": 3,
     "policy_implementation": 0
@@ -489,7 +465,7 @@
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 21,
+    "human_story": 15,
     "data_anchor": 11,
     "watchlist_signal": 0
   },
@@ -518,21 +494,21 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 5,
+    "food_pressure": 3,
     "financial_distress_pressure": 1,
-    "housing_household_cost_pressure": 4,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
+    "housing_household_cost_pressure": 2,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 3,
     "environmental_pressure": 3,
     "local_system_strain": 3,
     "policy_implementation": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 5,
+    "food_pressure": 3,
     "financial_distress_pressure": 0,
-    "housing_household_cost_pressure": 4,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
+    "housing_household_cost_pressure": 2,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 3,
     "environmental_pressure": 3,
     "local_system_strain": 2,
     "policy_implementation": 0

@@ -5,9 +5,9 @@
   "week_start_date": "2026-05-10",
   "week_end_date": "2026-05-16",
   "display_date_range": "May 10\u2013May 16, 2026",
-  "generated_at": "2026-05-17T20:12:52.885335+00:00",
+  "generated_at": "2026-05-17T20:49:12.185012+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-16/",
-  "source_count": 32,
+  "source_count": 26,
   "story_count": 7,
   "pillars_present": [
     "food_pressure",
@@ -22,11 +22,11 @@
     "policy_implementation"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 8,
+    "food_pressure": 6,
     "financial_distress_pressure": 2,
-    "housing_household_cost_pressure": 5,
-    "health_access_pressure": 4,
-    "labor_income_pressure": 5,
+    "housing_household_cost_pressure": 3,
+    "health_access_pressure": 3,
+    "labor_income_pressure": 4,
     "environmental_pressure": 5,
     "local_system_strain": 3,
     "policy_implementation": 0
@@ -55,7 +55,7 @@
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 21,
+    "human_story": 15,
     "data_anchor": 11,
     "watchlist_signal": 0
   },
@@ -84,21 +84,21 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 5,
+    "food_pressure": 3,
     "financial_distress_pressure": 1,
-    "housing_household_cost_pressure": 4,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
+    "housing_household_cost_pressure": 2,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 3,
     "environmental_pressure": 3,
     "local_system_strain": 3,
     "policy_implementation": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 5,
+    "food_pressure": 3,
     "financial_distress_pressure": 0,
-    "housing_household_cost_pressure": 4,
-    "health_access_pressure": 3,
-    "labor_income_pressure": 4,
+    "housing_household_cost_pressure": 2,
+    "health_access_pressure": 2,
+    "labor_income_pressure": 3,
     "environmental_pressure": 3,
     "local_system_strain": 2,
     "policy_implementation": 0
@@ -124,7 +124,7 @@
   },
   "warnings": [
     "manual sources not found for 2026-05-16; continuing with auto baseline sources only",
-    "curation_diagnostics={\"candidates_accepted\": 32, \"candidates_found\": 32, \"rejected_duplicate_or_stale\": 0, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 32}",
+    "curation_diagnostics={\"candidates_accepted\": 26, \"candidates_found\": 26, \"rejected_duplicate_or_stale\": 0, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 26}",
     "coverage_watchlist: missing important current-development pillars: financial_distress_pressure",
     "coverage_watchlist: No current-development source was captured for this pillar."
   ],

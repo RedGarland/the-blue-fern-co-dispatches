@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>American Pressure Map</title>
+  <link rel="canonical" href="https://dispatches.thebluefernco.com/american-pressure/map/">
+  <meta property="og:url" content="https://dispatches.thebluefernco.com/american-pressure/map/">
+  <meta property="og:site_name" content="The American Pressure Dispatch">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html">The American Pressure Dispatch</a>
+    <nav><a href="/">Dispatches Home</a><a href="/american-pressure/">The American Pressure Dispatch</a><a href="../archive.html">Archive</a><a href="../rss.xml">RSS</a></nav>
+  </header>
+  <main class="home ap-map-home">
+    <section class="hero">
+      <img class="hero-logo" src="../assets/american-pressure-logo.png" alt="The American Pressure Dispatch">
+    </section>
+    <p class="eyebrow">American Pressure Map</p>
+    <h1>American Pressure Map</h1>
+    <p class="lede">Weekly briefing range: May 10–May 16, 2026</p>
+    <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/">Dispatches Home</a></p>
+    <div class="ap-map-controls">
+      <label for="ap-map-filter">Filter by pressure area</label>
+      <select id="ap-map-filter"><option value="all">All</option></select>
+      <span id="ap-map-count" class="ap-map-note"></span>
+    </div>
+    <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
+    <section class="ap-map-legend">
+      <h2>Legend</h2>
+      <p>Pins only include records with traceable source IDs, valid source URLs, and valid U.S. coordinates.</p>
+    </section>
+    <section class="ap-map-needs">
+      <h2>Needs location</h2>
+      <ul id="ap-map-needs-list"></ul>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="publisher">
+      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="../assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <p class="publisher-label">Published by <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
+    </div>
+  </footer>
+<style>
+.ap-map-home { width: min(1120px, calc(100% - 24px)); }
+.ap-map-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0 12px; }
+.ap-map-note { color: var(--muted); font-size: .9rem; }
+.ap-map-canvas { height: 520px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #e9eff4; }
+.ap-map-legend, .ap-map-needs { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; background: #f8fbfd; padding: 12px 14px; }
+.ap-map-needs ul { margin: 0; padding-left: 18px; }
+.ap-map-needs li { margin: 8px 0; }
+@media (max-width: 760px) {
+  .ap-map-home { width: calc(100% - 16px); }
+  .ap-map-canvas { height: 430px; }
+}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {
+  var mapEl = document.getElementById("ap-map");
+  var filter = document.getElementById("ap-map-filter");
+  var countEl = document.getElementById("ap-map-count");
+  var needsList = document.getElementById("ap-map-needs-list");
+  if (!mapEl || !filter || !countEl || !needsList || !window.L) return;
+  var map = L.map(mapEl).setView([39.5, -98.35], 4);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 9,
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+  fetch("map_data.json")
+    .then(function (res) { return res.json(); })
+    .then(function (payload) {
+      var pins = Array.isArray(payload.pins) ? payload.pins : [];
+      var needs = Array.isArray(payload.needs_location) ? payload.needs_location : [];
+      var categories = Array.isArray(payload.categories) ? payload.categories : [];
+      var markers = [];
+      categories.forEach(function (cat) {
+        var opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        filter.appendChild(opt);
+      });
+      function popupHtml(pin) {
+        var sources = (pin.source_urls || []).map(function (url) {
+          return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';
+        }).join(" | ");
+        return '<strong>' + (pin.title || "Untitled") + '</strong><br>' +
+          (pin.location_label || "Location not labeled") + '<br>' +
+          'Category: ' + (pin.category || "uncategorized") + '<br>' +
+          '<a href="' + (pin.edition_url || "/american-pressure/") + '">Edition</a> | ' + sources;
+      }
+      function renderPins(category) {
+        markers.forEach(function (m) { map.removeLayer(m); });
+        markers = [];
+        var active = pins.filter(function (pin) {
+          return category === "all" || pin.category === category;
+        });
+        active.forEach(function (pin) {
+          var marker = L.marker([pin.latitude, pin.longitude]).addTo(map).bindPopup(popupHtml(pin));
+          markers.push(marker);
+        });
+        countEl.textContent = active.length + " mapped record(s)";
+      }
+      needs.forEach(function (row) {
+        var li = document.createElement("li");
+        var source = (row.source_urls && row.source_urls[0]) || "";
+        li.innerHTML = '<strong>' + (row.title || "Untitled") + '</strong> (' + (row.category || "uncategorized") + ') ' +
+          (source ? '<a href="' + source + '" target="_blank" rel="noopener noreferrer">source</a>' : "");
+        needsList.appendChild(li);
+      });
+      filter.addEventListener("change", function () { renderPins(filter.value); });
+      renderPins("all");
+    })
+    .catch(function () {
+      countEl.textContent = "Map data unavailable.";
+    });
+})();
+</script>
+
+</body>
+</html>

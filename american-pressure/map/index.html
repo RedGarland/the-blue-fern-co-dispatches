@@ -50,10 +50,12 @@
       <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
     </section>
     <section class="ap-map-legend ap-map-compact-legend">
-      <h2>Legend</h2>
-      <p><strong>Location type:</strong> Circle = local report | Square = county or service-area report | Diamond = statewide report.</p>
-      <p><strong>Pressure color:</strong> Food and grocery | Housing and utility | Health care access | Jobs and paycheck | Debt and bankruptcy | Public services | Disaster/recovery | Benefits/policy | Transportation | Childcare/schools.</p>
-      <p>Larger marks mean more source-backed reports are grouped at that place.</p>
+      <details>
+        <summary>Legend</summary>
+        <p><strong>Location type:</strong> Circle = Local report | Square = County/service-area report | Diamond = Statewide report.</p>
+        <p><strong>Pressure area colors:</strong> Food and grocery | Housing and utility | Health care access | Jobs and paycheck | Debt and bankruptcy | Public services | Disaster/recovery | Benefits/policy | Transportation | Childcare/schools.</p>
+        <p>Larger marks mean more source-backed reports are grouped at that place.</p>
+      </details>
     </section>
     <dialog id="ap-map-about">
       <h2>About this map</h2>
@@ -95,6 +97,7 @@
 .ap-map-canvas { height: min(80vh, 860px); min-height: 720px; border: 1px solid #c2d2d8; border-radius: 14px; overflow: hidden; background: #e8eff2; }
 .ap-map-compact-legend { margin-top: 10px; border: 1px solid #d5e1e5; border-radius: 12px; background: #f5fafc; padding: 10px 12px; }
 .ap-map-compact-legend p { margin: 6px 0; font-size: .9rem; }
+.ap-map-compact-legend summary { cursor: pointer; font-weight: 700; color: #133642; }
 .ap-map-about::backdrop { background: rgba(9, 27, 37, .45); }
 #ap-map-about { width: min(760px, calc(100% - 26px)); border: 1px solid #aac0c9; border-radius: 12px; padding: 14px 16px; background: #f7fcfd; color: #173843; }
 #ap-map-about ul { margin: 8px 0; padding-left: 18px; }
@@ -102,10 +105,26 @@
 .ap-map-marker {
   border: 1px solid rgba(15, 23, 42, .8);
   box-shadow: 0 1px 5px rgba(15, 23, 42, .35);
+  position: relative;
 }
 .ap-map-marker-circle { border-radius: 50%; }
 .ap-map-marker-square { border-radius: 2px; }
 .ap-map-marker-diamond { transform: rotate(45deg); border-radius: 2px; }
+.ap-map-marker-count {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f8fdff;
+  font-weight: 700;
+  font-size: .72rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+.ap-map-popup-title { font-size: 1.05rem; font-weight: 800; color: #12303d; margin-bottom: 8px; line-height: 1.2; }
+.ap-map-popup-label { font-weight: 700; color: #173843; }
+.ap-map-popup-block { margin: 0 0 7px; line-height: 1.35; color: #223f48; }
+.ap-map-hover-tooltip { font-size: .82rem; line-height: 1.25; color: #173843; }
 @media (max-width: 760px) {
   .ap-map-home { width: calc(100% - 16px); }
   .ap-map-controls { position: static; margin-bottom: 8px; }
@@ -221,15 +240,22 @@
         "<li>Records still missing location: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
         var sourceUrl = (pin.source_urls && pin.source_urls[0]) || pin.source_url || "";
-        var sourceName = pin.source_name || "Source";
-        var readMore = pin.edition_url || "/american-pressure/";
-        return '<strong>' + (pin.location_label || "Place not labeled") + '</strong><br><br>' +
-          'Pressure type:<br>' + categoryLabel(pin.category) + '<br><br>' +
-          'What we found:<br>' + (pin.title || "Source-backed local pressure report") + '<br><br>' +
-          'Why it matters:<br>' + whyItMatters(pin.category) + '<br><br>' +
-          'Source:<br>' + (sourceUrl ? '<a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer">' + sourceName + '</a>' : sourceName) + '<br><br>' +
-          'Read more:<br><a href="' + readMore + '">Related dispatch section</a><br><br>' +
-          'Precision:<br>' + precisionNote(pin.location_precision || "");
+        var sourceName = pin.source_name || "";
+        var readMore = pin.edition_url || "";
+        var readMoreLabel = pin.story_heading || pin.story_title || "";
+        var sourceLabel = sourceName;
+        if (!sourceLabel && sourceUrl) {
+          try { sourceLabel = new URL(sourceUrl).hostname.replace(/^www\./, ""); } catch (e) { sourceLabel = "Source link"; }
+        }
+        if (!sourceLabel) sourceLabel = "Source link";
+        var readMoreHtml = readMore ? ('<a href="' + readMore + '">' + (readMoreLabel || "Written dispatch section") + "</a>") : "No written section yet";
+        return '<div class="ap-map-popup-title">' + (pin.location_label || "Place not labeled") + '</div>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Pressure type:</span> ' + categoryLabel(pin.category) + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">What we found:</span><br>' + (pin.title || "Source-backed local pressure report") + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Why it matters:</span><br>' + whyItMatters(pin.category) + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Source:</span><br>' + (sourceUrl ? '<a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer">' + sourceLabel + '</a>' : sourceLabel) + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Read more:</span><br>' + readMoreHtml + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Precision:</span><br>' + precisionNote(pin.location_precision || "") + '</p>';
       }
       function popupHtmlAggregated(group) {
         var topPins = (group.pins || []).slice(0, 3);
@@ -237,17 +263,21 @@
         var titleList = topPins.map(function (p) { return '<li>' + (p.title || "Source-backed report") + '</li>'; }).join("");
         var sourceLinks = topPins.map(function (p) {
           var sourceUrl = (p.source_urls && p.source_urls[0]) || p.source_url || "";
-          var sourceName = p.source_name || "Source";
+          var sourceName = p.source_name || "";
+          if (!sourceName && sourceUrl) {
+            try { sourceName = new URL(sourceUrl).hostname.replace(/^www\./, ""); } catch (e) { sourceName = "Source link"; }
+          }
+          if (!sourceName) sourceName = "Source link";
           return sourceUrl ? '<li><a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer">' + sourceName + "</a></li>" : "<li>" + sourceName + "</li>";
         }).join("");
         var readMore = (group.written_story_links || []).find(function (row) { return row && row.url; });
         var extraNote = (group.record_count || 0) > 3 ? "More reports are grouped here." : "";
-        return '<strong>' + (group.location_label || "Place") + '</strong><br><br>' +
-          'Source-backed reports:<br>' + (group.record_count || 0) + '<br><br>' +
-          'Pressure types represented:<br>' + (pressureTypes || "Public pressure signal") + '<br><br>' +
-          'What we found:<ul>' + titleList + "</ul>" +
-          'Source:<ul>' + sourceLinks + "</ul>" +
-          'Read more:<br>' + (readMore ? '<a href="' + readMore.url + '">' + (readMore.label || "Related dispatch section") + "</a>" : "Related dispatch section") + '<br>' +
+        return '<div class="ap-map-popup-title">' + (group.location_label || "Place") + '</div>' +
+          '<p class="ap-map-popup-block"><strong>' + (group.record_count || 0) + "</strong> source-backed reports</p>" +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Pressure types:</span> ' + (pressureTypes || "Public pressure signal") + '</p>' +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Reports:</span></p><ul>' + titleList + "</ul>" +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Sources:</span></p><ul>' + sourceLinks + "</ul>" +
+          '<p class="ap-map-popup-block"><span class="ap-map-popup-label">Read more:</span><br>' + (readMore ? '<a href="' + readMore.url + '">' + (readMore.label || "Written dispatch section") + "</a>" : "No written section yet") + '</p>' +
           (extraNote ? ("<br>" + extraNote) : "");
       }
       function colorForCategory(category) {
@@ -279,7 +309,8 @@
       }
       function buildMarker(pin, groupedCount) {
         var size = Math.min(26, Math.max(12, 10 + Math.round(Math.sqrt(groupedCount || 1) * 2)));
-        var markerHtml = '<div class="ap-map-marker ' + markerShapeClass(pin) + '" style="width:' + size + "px;height:" + size + "px;background:" + colorForCategory(pin.category) + ';"></div>';
+        var countHtml = groupedCount > 1 ? '<span class="ap-map-marker-count">' + Math.min(groupedCount, 99) + "</span>" : "";
+        var markerHtml = '<div class="ap-map-marker ' + markerShapeClass(pin) + '" style="width:' + size + "px;height:" + size + "px;background:" + colorForCategory(pin.category) + ';">' + countHtml + "</div>";
         return L.marker([pin.latitude, pin.longitude], {
           icon: L.divIcon({
             className: "",
@@ -305,7 +336,10 @@
             return catOk && okState && windowPass(pin, selectedWindow);
           });
           activeIndividual.forEach(function (pin) {
-            var marker = buildMarker(pin, 1).addTo(map).bindPopup(popupHtml(pin));
+            var marker = buildMarker(pin, 1).addTo(map).bindPopup(popupHtml(pin)).bindTooltip(
+              '<div class="ap-map-hover-tooltip"><strong>' + (pin.location_label || "Place") + '</strong><br>' + (pin.title || "Source-backed pressure report") + '</div>',
+              {direction: "top", sticky: true, opacity: 0.95}
+            );
             markers.push(marker);
           });
           countEl.textContent = activeIndividual.length + " mapped source signal(s)";
@@ -320,7 +354,10 @@
         });
         active.forEach(function (group) {
           var pin = (Array.isArray(group.pins) && group.pins[0]) ? group.pins[0] : group;
-          var marker = buildMarker(pin, group.record_count || 1).addTo(map).bindPopup(popupHtmlAggregated(group));
+          var marker = buildMarker(pin, group.record_count || 1).addTo(map).bindPopup(popupHtmlAggregated(group)).bindTooltip(
+            '<div class="ap-map-hover-tooltip"><strong>' + (group.location_label || "Place") + '</strong><br>' + ((group.pins && group.pins[0] && group.pins[0].title) || "Grouped source-backed pressure reports") + '</div>',
+            {direction: "top", sticky: true, opacity: 0.95}
+          );
           markers.push(marker);
         });
         var recordCount = active.reduce(function (sum, group) {

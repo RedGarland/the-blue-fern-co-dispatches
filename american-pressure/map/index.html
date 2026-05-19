@@ -27,13 +27,14 @@
     <h1>American Pressure Map</h1>
     <p class="lede">Weekly briefing range: May 10–May 16, 2026</p>
     <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/american-pressure/dashboard/">View Dashboard</a> | <a href="/american-pressure/archive.html">View Archive</a> | <a href="/">Dispatches Home</a></p>
+    <p class="apd-small">Start here: the map shows where we found source-backed signs of household or community strain.</p>
     <p class="apd-small">This map shows source-backed pressure signals collected so far. It is not a complete census.</p>
-    <p class="apd-small">Map summary: places shown <strong>8</strong>; states with signals <strong>6</strong>; source-backed reports <strong>8</strong>; known blind spots <strong>0</strong>.</p>
+    <p class="apd-small">Places shown on the map: <strong>8</strong> | States with collected reports: <strong>6</strong> | Source-backed reports: <strong>8</strong> | Areas we may be missing: <strong>0</strong></p>
     <div class="ap-map-controls">
-      <label for="ap-map-view-mode">Show grouped places / show individual source reports</label>
+      <label for="ap-map-view-mode">Show grouped places / show individual reports</label>
       <select id="ap-map-view-mode">
         <option value="aggregated" selected>Show grouped places</option>
-        <option value="individual">Show individual source reports</option>
+        <option value="individual">Show individual reports</option>
       </select>
       <label for="ap-map-filter">Pressure area</label>
       <select id="ap-map-filter"><option value="all">All</option></select>
@@ -47,18 +48,21 @@
       <select id="ap-map-precision-filter"><option value="all">All</option></select>
       <label for="ap-map-state-filter">State</label>
       <select id="ap-map-state-filter"><option value="all">All</option></select>
-      <label for="ap-map-role-filter">Location type role</label>
+      <label for="ap-map-role-filter">Report scope</label>
       <select id="ap-map-role-filter"><option value="all">All</option></select>
       <span id="ap-map-count" class="ap-map-note"></span>
     </div>
     <section class="ap-map-legend">
-      <h2>Counters</h2>
-      <ul id="ap-map-counters"></ul>
+      <h2>How this map was built</h2>
+      <details>
+        <summary>Open technical methodology details</summary>
+        <ul id="ap-map-counters"></ul>
+      </details>
     </section>
     <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
     <section class="ap-map-legend">
       <h2>Legend</h2>
-      <p>Role colors: local report (blue), affected place (orange), service area (teal), statewide signal (gray).</p>
+      <p>Role colors: local report (blue), affected place (orange), service area (teal), statewide report (gray).</p>
     </section>
     <section class="ap-map-needs">
       <h2>National records</h2>
@@ -140,24 +144,23 @@
       });
       roles.forEach(function (role) {
         var opt = document.createElement("option");
-        opt.value = role;
-        opt.textContent = role === "primary_location" ? "Local report" : role === "affected_location" ? "Affected place" : role === "service_area" ? "Service area" : "Statewide signal";
+        opt.value = role === "primary_location" ? "local_report" : role === "affected_location" ? "affected_place" : role === "service_area" ? "service_area" : "statewide_report";
+        opt.textContent = role === "primary_location" ? "Local report" : role === "affected_location" ? "Affected place" : role === "service_area" ? "Service area" : "Statewide report";
         roleFilter.appendChild(opt);
       });
       counters.innerHTML =
         "<li>Total source-backed records: " + (payload.total_source_backed_records || 0) + "</li>" +
-        "<li>Mapped records (distinct public signals): " + (payload.mapped_records_count || 0) + "</li>" +
-        "<li>Distinct source-backed map signals: " + (payload.mapped_records_count || 0) + "</li>" +
-        "<li>Source records collected for map processing: " + (payload.raw_record_count || payload.mapped_records_count || 0) + "</li>" +
+        "<li>Map-ready reports: " + (payload.mapped_records_count || 0) + "</li>" +
+        "<li>Raw reports reviewed for mapping: " + (payload.raw_record_count || payload.mapped_records_count || 0) + "</li>" +
         "<li>Exact/source-provided pins: " + (payload.exact_or_source_provided_count || 0) + "</li>" +
         "<li>City/state pins: " + (payload.city_state_count || 0) + "</li>" +
         "<li>County/state pins: " + (payload.county_state_count || 0) + "</li>" +
         "<li>Service-area pins: " + (payload.service_area_count || 0) + "</li>" +
         "<li>State-level pins: " + (payload.state_level_count || 0) + "</li>" +
-        "<li>Primary location signals: " + (payload.primary_location_count || 0) + "</li>" +
-        "<li>Affected location signals: " + (payload.affected_location_count || 0) + "</li>" +
-        "<li>Service-area signals: " + (payload.service_area_role_count || 0) + "</li>" +
-        "<li>Statewide signals: " + (payload.statewide_signal_count || 0) + "</li>" +
+        "<li>Local reports: " + (payload.primary_location_count || 0) + "</li>" +
+        "<li>Affected-place reports: " + (payload.affected_location_count || 0) + "</li>" +
+        "<li>Service-area reports: " + (payload.service_area_role_count || 0) + "</li>" +
+        "<li>Statewide reports: " + (payload.statewide_signal_count || 0) + "</li>" +
         "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
         "<li>Unmapped records: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
@@ -169,7 +172,7 @@
           (pin.location_label || "Location not labeled") + '<br>' +
           'Pressure type: ' + (pin.category || "uncategorized") + '<br>' +
           'Precision note: ' + (pin.location_precision_warning || pin.precision_warning || pin.location_precision || "unknown") + '<br>' +
-          'Location type: ' + (pin.location_role === "primary_location" ? "Local report" : pin.location_role === "affected_location" ? "Affected place" : pin.location_role === "service_area" ? "Service area" : "Statewide signal") + '<br>' +
+          'Location type: ' + (pin.location_role === "primary_location" ? "Local report" : pin.location_role === "affected_location" ? "Affected place" : pin.location_role === "service_area" ? "Service area" : "Statewide report") + '<br>' +
           (pin.location_precision_warning ? ('Warning: ' + pin.location_precision_warning + '<br>') : '') +
           'Evidence: ' + (pin.evidence_text || pin.extraction_evidence_text || "") + '<br>' +
           'Record IDs: ' + (pin.source_record_ids || []).join(", ") + '<br>' +
@@ -186,7 +189,7 @@
         }).filter(Boolean).join(" | ");
         return '<strong>' + (group.location_label || "Location") + '</strong><br>' +
           'Total signals at this location: ' + (group.record_count || 0) + '<br>' +
-          'Count by role: ' + JSON.stringify(group.role_counts || {}) + '<br>' +
+          'Count by location type: ' + JSON.stringify(group.role_counts || {}) + '<br>' +
           'Pressure categories represented: ' + ((group.categories || []).join(", ") || "uncategorized") + '<br>' +
           'Source IDs: ' + ((group.source_record_ids || []).join(", ") || "none") + '<br>' +
           'All sources: ' + (sourceLinks || "none") + '<br>' +
@@ -205,6 +208,14 @@
         var target = rank[selectedWindow || "last_30_days"] || 2;
         return actual <= target;
       }
+      function roleMatches(pinRole, selectedRole) {
+        if (selectedRole === "all") return true;
+        if (selectedRole === "local_report") return pinRole === "primary_location";
+        if (selectedRole === "affected_place") return pinRole === "affected_location";
+        if (selectedRole === "service_area") return pinRole === "service_area";
+        if (selectedRole === "statewide_report") return pinRole !== "primary_location" && pinRole !== "affected_location" && pinRole !== "service_area";
+        return true;
+      }
       function renderPins(category, precision, state, role, mode, selectedWindow) {
         markers.forEach(function (m) { map.removeLayer(m); });
         markers = [];
@@ -213,7 +224,7 @@
             var catOk = category === "all" || pin.category === category;
             var okPrecision = precision === "all" || pin.location_precision === precision;
             var okState = state === "all" || pin.state === state;
-            var okRole = role === "all" || pin.location_role === role;
+            var okRole = roleMatches(pin.location_role, role);
             return catOk && okPrecision && okState && okRole && windowPass(pin, selectedWindow);
           });
           activeIndividual.forEach(function (pin) {
@@ -227,7 +238,7 @@
           var catOk = category === "all" || (Array.isArray(pin.categories) && pin.categories.indexOf(category) >= 0);
           var okPrecision = precision === "all" || pin.location_precision === precision;
           var okState = state === "all" || pin.state === state;
-          var okRole = role === "all" || pin.location_role === role;
+          var okRole = roleMatches(pin.location_role, role);
           var groupPins = Array.isArray(pin.pins) ? pin.pins : [];
           var anyInWindow = groupPins.some(function (p) { return windowPass(p, selectedWindow); });
           return catOk && okPrecision && okState && okRole && anyInWindow;
@@ -245,7 +256,7 @@
         countEl.textContent = recordCount + " mapped source signal(s), " + active.length + " location group(s)";
       }
       if (pins.length === 0) {
-        countEl.textContent = "No mapped records for this edition. See National and Unmapped panels.";
+        countEl.textContent = "No map-ready reports for this edition. See National and Unmapped panels.";
       }
       national.forEach(function (row) {
         var li = document.createElement("li");

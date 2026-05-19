@@ -26,26 +26,28 @@
     <p class="eyebrow">American Pressure Map</p>
     <h1>American Pressure Map</h1>
     <p class="lede">Weekly briefing range: May 10–May 16, 2026</p>
-    <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/">Dispatches Home</a></p>
+    <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/american-pressure/dashboard/">View Dashboard</a> | <a href="/american-pressure/archive.html">View Archive</a> | <a href="/">Dispatches Home</a></p>
+    <p class="apd-small">This map shows source-backed pressure signals collected so far. It is not a complete census.</p>
+    <p class="apd-small">Map summary: places shown <strong>8</strong>; states with signals <strong>6</strong>; source-backed reports <strong>8</strong>; known blind spots <strong>0</strong>.</p>
     <div class="ap-map-controls">
-      <label for="ap-map-view-mode">View mode</label>
+      <label for="ap-map-view-mode">Show grouped places / show individual source reports</label>
       <select id="ap-map-view-mode">
-        <option value="aggregated">Show aggregated locations</option>
-        <option value="individual">Show individual source signals</option>
+        <option value="aggregated" selected>Show grouped places</option>
+        <option value="individual">Show individual source reports</option>
       </select>
       <label for="ap-map-filter">Pressure area</label>
       <select id="ap-map-filter"><option value="all">All</option></select>
-      <label for="ap-map-window-filter">Time window</label>
+      <label for="ap-map-window-filter">Time period</label>
       <select id="ap-map-window-filter">
         <option value="current_week">Current week/current edition</option>
         <option value="last_30_days" selected>Last 30 days</option>
         <option value="last_60_days">Last 60 days</option>
       </select>
-      <label for="ap-map-precision-filter">Location precision</label>
+      <label for="ap-map-precision-filter">Location type</label>
       <select id="ap-map-precision-filter"><option value="all">All</option></select>
       <label for="ap-map-state-filter">State</label>
       <select id="ap-map-state-filter"><option value="all">All</option></select>
-      <label for="ap-map-role-filter">Location role</label>
+      <label for="ap-map-role-filter">Location type role</label>
       <select id="ap-map-role-filter"><option value="all">All</option></select>
       <span id="ap-map-count" class="ap-map-note"></span>
     </div>
@@ -56,7 +58,7 @@
     <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
     <section class="ap-map-legend">
       <h2>Legend</h2>
-      <p>Role colors: primary (blue), affected (orange), service-area (teal), state-context (gray).</p>
+      <p>Role colors: local report (blue), affected place (orange), service area (teal), statewide signal (gray).</p>
     </section>
     <section class="ap-map-needs">
       <h2>National records</h2>
@@ -139,13 +141,14 @@
       roles.forEach(function (role) {
         var opt = document.createElement("option");
         opt.value = role;
-        opt.textContent = role;
+        opt.textContent = role === "primary_location" ? "Local report" : role === "affected_location" ? "Affected place" : role === "service_area" ? "Service area" : "Statewide signal";
         roleFilter.appendChild(opt);
       });
       counters.innerHTML =
         "<li>Total source-backed records: " + (payload.total_source_backed_records || 0) + "</li>" +
         "<li>Mapped records (distinct public signals): " + (payload.mapped_records_count || 0) + "</li>" +
-        "<li>Mapped records (raw ingest records): " + (payload.raw_record_count || payload.mapped_records_count || 0) + "</li>" +
+        "<li>Distinct source-backed map signals: " + (payload.mapped_records_count || 0) + "</li>" +
+        "<li>Source records collected for map processing: " + (payload.raw_record_count || payload.mapped_records_count || 0) + "</li>" +
         "<li>Exact/source-provided pins: " + (payload.exact_or_source_provided_count || 0) + "</li>" +
         "<li>City/state pins: " + (payload.city_state_count || 0) + "</li>" +
         "<li>County/state pins: " + (payload.county_state_count || 0) + "</li>" +
@@ -154,7 +157,7 @@
         "<li>Primary location signals: " + (payload.primary_location_count || 0) + "</li>" +
         "<li>Affected location signals: " + (payload.affected_location_count || 0) + "</li>" +
         "<li>Service-area signals: " + (payload.service_area_role_count || 0) + "</li>" +
-        "<li>State-context signals: " + (payload.state_context_count || 0) + "</li>" +
+        "<li>Statewide signals: " + (payload.statewide_signal_count || 0) + "</li>" +
         "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
         "<li>Unmapped records: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
@@ -164,13 +167,13 @@
         return '<strong>' + (pin.title || "Untitled") + '</strong><br>' +
           'Date: ' + (pin.date || '') + '<br>' +
           (pin.location_label || "Location not labeled") + '<br>' +
-          'Category: ' + (pin.category || "uncategorized") + '<br>' +
-          'Precision: ' + (pin.location_precision || "unknown") + '<br>' +
-          'Role: ' + (pin.location_role || "unknown") + '<br>' +
+          'Pressure type: ' + (pin.category || "uncategorized") + '<br>' +
+          'Precision note: ' + (pin.location_precision_warning || pin.precision_warning || pin.location_precision || "unknown") + '<br>' +
+          'Location type: ' + (pin.location_role === "primary_location" ? "Local report" : pin.location_role === "affected_location" ? "Affected place" : pin.location_role === "service_area" ? "Service area" : "Statewide signal") + '<br>' +
           (pin.location_precision_warning ? ('Warning: ' + pin.location_precision_warning + '<br>') : '') +
           'Evidence: ' + (pin.evidence_text || pin.extraction_evidence_text || "") + '<br>' +
           'Record IDs: ' + (pin.source_record_ids || []).join(", ") + '<br>' +
-          '<a href="' + (pin.edition_url || "/american-pressure/") + '">Edition</a> | ' + sources;
+          '<a href="' + (pin.edition_url || "/american-pressure/") + '">Written dispatch</a> | ' + sources;
       }
       function popupHtmlAggregated(group) {
         var sourceLinks = (group.source_urls || []).map(function (url) {

@@ -43,57 +43,11 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Food assistance demand and household grocery stress.",
       "key_stat": null,
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
       "collection_gap_pillars": []
     },
     {
       "story_id": "american-pressure-story-2026-05-16-002",
-      "title": "Bankruptcy filings help show where debt stress is breaking through",
-      "summary": "Fitzgibbon Hospital in Marshall, Missouri filed for Chapter 11 bankruptcy protection and planned a sale while staying open, after years of losses and service cuts.",
-      "category": "financial-distress-pressure",
-      "pillar": "financial_distress_pressure",
-      "curation_reason": "bankruptcy/financial distress baseline",
-      "item_type": "current_week_development",
-      "source_role_counts": {
-        "human_story": 1,
-        "data_anchor": 0,
-        "watchlist_signal": 0
-      },
-      "brief_quality": "watchlist_only",
-      "score": 98,
-      "included_in_public_summary": true,
-      "source_record_ids": [
-        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
-      ],
-      "source_urls": [
-        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
-      ],
-      "publisher_names": [
-        "The Beacon: Missouri"
-      ],
-      "human_story_source_ids": [
-        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
-      ],
-      "data_anchor_source_ids": [],
-      "watchlist_source_ids": [],
-      "reader_headline": "Bankruptcy filings help show where debt stress is breaking through",
-      "human_story_summary": "In Marshall, Missouri, Fitzgibbon Hospital filed for Chapter 11 and planned a sale while reporting long-running financial strain and service reductions. This may affect patients, workers, and families in and around Saline County who rely on local hospital services.",
-      "data_context_summary": "No data anchor was available for this item this week.",
-      "what_happened": "The hospital entered Chapter 11 proceedings and moved toward a sale process while saying care would continue during restructuring.",
-      "potential_relevance": "When a major local healthcare provider restructures under bankruptcy pressure, households can face added uncertainty around access, employment, and related local services.",
-      "who_may_feel_it": "Patients relying on local hospital services, hospital workers, caregivers, and nearby businesses tied to hospital operations.",
-      "what_to_watch_next": "Watch court milestones, sale outcomes, staffing changes, and whether service lines remain stable or face additional cuts.",
-      "location_scope": "Marshall, Missouri",
-      "affected_people": "Patients, workers, and families in and around Saline County who rely on local hospital services.",
-      "pressure_area": "",
-      "pressure_direction": "upward",
-      "public_pressure_angle": "Debt distress in essential local institutions can translate into household service and income risk.",
-      "key_stat": null,
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
-      "collection_gap_pillars": []
-    },
-    {
-      "story_id": "american-pressure-story-2026-05-16-003",
       "title": "Housing and bill pressure nationally is squeezing household budgets",
       "summary": "A federal report found U.S. utilities disconnected electricity 13.4 million times and gas 1.7 million times in 2024, highlighting household bill stress and shutoff exposure.",
       "category": "housing-household-cost-pressure",
@@ -106,7 +60,7 @@
         "watchlist_signal": 0
       },
       "brief_quality": "watchlist_only",
-      "score": 97,
+      "score": 98,
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-housing-story-utility-shutoffs-wapo"
@@ -135,11 +89,11 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Monthly utility bill stress can quickly turn into housing instability and loss of essential services.",
       "key_stat": null,
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
       "collection_gap_pillars": []
     },
     {
-      "story_id": "american-pressure-story-2026-05-16-004",
+      "story_id": "american-pressure-story-2026-05-16-003",
       "title": "Local clinic closures can quickly turn access gaps into household health risk",
       "summary": "A rural Iowa clinic closure was announced, with the provider acknowledging likely impact on patients and community access.",
       "category": "health-access-pressure",
@@ -152,7 +106,7 @@
         "watchlist_signal": 0
       },
       "brief_quality": "watchlist_only",
-      "score": 96,
+      "score": 97,
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-health-story-kcrg-clinic-closure"
@@ -181,11 +135,11 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Care-access pressure from local service contraction.",
       "key_stat": null,
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
       "collection_gap_pillars": []
     },
     {
-      "story_id": "american-pressure-story-2026-05-16-005",
+      "story_id": "american-pressure-story-2026-05-16-004",
       "title": "Large local layoffs show how quickly paycheck stability can weaken",
       "summary": "Sacramento City Unified approved hundreds of layoffs amid a major budget shortfall, with district leaders warning about payroll risk.",
       "category": "labor-income-pressure",
@@ -198,7 +152,7 @@
         "watchlist_signal": 0
       },
       "brief_quality": "watchlist_only",
-      "score": 95,
+      "score": 96,
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-labor-story-capradio-layoffs"
@@ -233,11 +187,57 @@
         "context": "",
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs"
       },
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
       "collection_gap_pillars": []
     },
     {
-      "story_id": "american-pressure-story-2026-05-16-007",
+      "story_id": "american-pressure-story-2026-05-16-005",
+      "title": "Bankruptcy filings help show where debt stress is breaking through",
+      "summary": "Fitzgibbon Hospital in Marshall, Missouri filed for Chapter 11 bankruptcy protection and planned a sale while staying open, after years of losses and service cuts.",
+      "category": "financial-distress-pressure",
+      "pillar": "financial_distress_pressure",
+      "curation_reason": "bankruptcy/financial distress baseline",
+      "item_type": "current_week_development",
+      "source_role_counts": {
+        "human_story": 1,
+        "data_anchor": 0,
+        "watchlist_signal": 0
+      },
+      "brief_quality": "watchlist_only",
+      "score": 95,
+      "included_in_public_summary": true,
+      "source_record_ids": [
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+      ],
+      "source_urls": [
+        "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
+      ],
+      "publisher_names": [
+        "The Beacon: Missouri"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
+      ],
+      "data_anchor_source_ids": [],
+      "watchlist_source_ids": [],
+      "reader_headline": "Bankruptcy filings help show where debt stress is breaking through",
+      "human_story_summary": "In Marshall, Missouri, Fitzgibbon Hospital filed for Chapter 11 and planned a sale while reporting long-running financial strain and service reductions. This may affect patients, workers, and families in and around Saline County who rely on local hospital services.",
+      "data_context_summary": "No data anchor was available for this item this week.",
+      "what_happened": "The hospital entered Chapter 11 proceedings and moved toward a sale process while saying care would continue during restructuring.",
+      "potential_relevance": "When a major local healthcare provider restructures under bankruptcy pressure, households can face added uncertainty around access, employment, and related local services.",
+      "who_may_feel_it": "Patients relying on local hospital services, hospital workers, caregivers, and nearby businesses tied to hospital operations.",
+      "what_to_watch_next": "Watch court milestones, sale outcomes, staffing changes, and whether service lines remain stable or face additional cuts.",
+      "location_scope": "Marshall, Missouri",
+      "affected_people": "Patients, workers, and families in and around Saline County who rely on local hospital services.",
+      "pressure_area": "",
+      "pressure_direction": "upward",
+      "public_pressure_angle": "Debt distress in essential local institutions can translate into household service and income risk.",
+      "key_stat": null,
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
+      "collection_gap_pillars": []
+    },
+    {
+      "story_id": "american-pressure-story-2026-05-16-006",
       "title": "Storm recovery assessments show where local systems may face prolonged strain",
       "summary": "State and federal teams began damage assessments for April storms and flooding across multiple counties and one tribal nation.",
       "category": "local-system-strain",
@@ -250,7 +250,7 @@
         "watchlist_signal": 0
       },
       "brief_quality": "watchlist_only",
-      "score": 93,
+      "score": 94,
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-16-weather-story-wi-flood-assessments"
@@ -279,7 +279,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
       "key_stat": null,
-      "generated_at": "2026-05-19T02:27:05.730640+00:00",
+      "generated_at": "2026-05-19T03:14:51.747764+00:00",
       "collection_gap_pillars": []
     }
   ],
@@ -289,35 +289,41 @@
   "display_date_range": "May 10\u2013May 16, 2026",
   "pillars_present": [
     "food_pressure",
-    "financial_distress_pressure",
     "housing_household_cost_pressure",
     "health_access_pressure",
     "labor_income_pressure",
+    "financial_distress_pressure",
     "local_system_strain"
   ],
   "pillars_missing": [
     "environmental_pressure",
-    "policy_implementation"
+    "policy_implementation",
+    "transportation_daily_access_pressure",
+    "childcare_school_family_pressure"
   ],
   "source_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "story_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "rejected_no_public_pressure_angle": 0,
   "rejected_investor_only": 0,
@@ -359,23 +365,27 @@
   },
   "current_development_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "human_story_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "missing_required_current_development_pillars": [],
   "collection_gap_pillars": [],

@@ -5,41 +5,47 @@
   "week_start_date": "2026-05-10",
   "week_end_date": "2026-05-16",
   "display_date_range": "May 10\u2013May 16, 2026",
-  "generated_at": "2026-05-19T02:27:05.730640+00:00",
+  "generated_at": "2026-05-19T03:14:51.747764+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-16/",
   "source_count": 6,
   "story_count": 6,
   "pillars_present": [
     "food_pressure",
-    "financial_distress_pressure",
     "housing_household_cost_pressure",
     "health_access_pressure",
     "labor_income_pressure",
+    "financial_distress_pressure",
     "local_system_strain"
   ],
   "pillars_missing": [
     "environmental_pressure",
-    "policy_implementation"
+    "policy_implementation",
+    "transportation_daily_access_pressure",
+    "childcare_school_family_pressure"
   ],
   "source_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "story_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "rejected_no_public_pressure_angle": 0,
   "rejected_investor_only": 0,
@@ -85,23 +91,27 @@
   },
   "current_development_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "human_story_count_by_pillar": {
     "food_pressure": 1,
-    "financial_distress_pressure": 1,
     "housing_household_cost_pressure": 1,
     "health_access_pressure": 1,
     "labor_income_pressure": 1,
-    "environmental_pressure": 0,
+    "financial_distress_pressure": 1,
     "local_system_strain": 1,
-    "policy_implementation": 0
+    "environmental_pressure": 0,
+    "policy_implementation": 0,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
   },
   "missing_required_current_development_pillars": [],
   "collection_gap_pillars": [],

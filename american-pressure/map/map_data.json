@@ -16,6 +16,7 @@
   "affected_location_count": 0,
   "service_area_role_count": 0,
   "state_context_count": 5,
+  "statewide_signal_count": 5,
   "national_records_count": 5,
   "unmapped_records_count": 0,
   "categories": [
@@ -267,12 +268,12 @@
         "ap-2026-05-16-weather-story-wi-flood-assessments"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-007"
+        "american-pressure-story-2026-05-16-006"
       ],
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-007",
-          "url": "/american-pressure/editions/2026-05-16/#local-services-under-strain",
+          "story_id": "american-pressure-story-2026-05-16-006",
+          "url": "/american-pressure/editions/2026-05-16/#public-services-under-strain",
           "label": "Storm recovery assessments show where local systems may face prolonged strain"
         }
       ],
@@ -308,7 +309,7 @@
         "ap-2026-05-16-weather-story-wi-flood-assessments"
       ],
       "audit_story_ids": [
-        "american-pressure-story-2026-05-16-007"
+        "american-pressure-story-2026-05-16-006"
       ],
       "time_window": "last_30_days"
     },
@@ -328,11 +329,11 @@
         "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-002"
+        "american-pressure-story-2026-05-16-005"
       ],
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-002",
+          "story_id": "american-pressure-story-2026-05-16-005",
           "url": "/american-pressure/editions/2026-05-16/#debt-and-bankruptcy-pressure",
           "label": "Bankruptcy filings help show where debt stress is breaking through"
         }
@@ -367,7 +368,7 @@
         "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
       ],
       "audit_story_ids": [
-        "american-pressure-story-2026-05-16-002"
+        "american-pressure-story-2026-05-16-005"
       ],
       "time_window": "current_week"
     },
@@ -387,12 +388,12 @@
         "ap-2026-05-16-health-story-kcrg-clinic-closure"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-004"
+        "american-pressure-story-2026-05-16-003"
       ],
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-004",
-          "url": "/american-pressure/editions/2026-05-16/#health-care-access",
+          "story_id": "american-pressure-story-2026-05-16-003",
+          "url": "/american-pressure/editions/2026-05-16/#health-care-access-pressure",
           "label": "Local clinic closures can quickly turn access gaps into household health risk"
         }
       ],
@@ -426,7 +427,7 @@
         "ap-2026-05-16-health-story-kcrg-clinic-closure"
       ],
       "audit_story_ids": [
-        "american-pressure-story-2026-05-16-004"
+        "american-pressure-story-2026-05-16-003"
       ],
       "time_window": "current_week"
     },
@@ -446,12 +447,12 @@
         "ap-2026-05-16-labor-story-capradio-layoffs"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-005"
+        "american-pressure-story-2026-05-16-004"
       ],
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-005",
-          "url": "/american-pressure/editions/2026-05-16/#jobs-and-paychecks",
+          "story_id": "american-pressure-story-2026-05-16-004",
+          "url": "/american-pressure/editions/2026-05-16/#jobs-and-paycheck-pressure",
           "label": "Large local layoffs show how quickly paycheck stability can weaken"
         }
       ],
@@ -485,7 +486,7 @@
         "ap-2026-05-16-labor-story-capradio-layoffs"
       ],
       "audit_story_ids": [
-        "american-pressure-story-2026-05-16-005"
+        "american-pressure-story-2026-05-16-004"
       ],
       "time_window": "last_30_days"
     }
@@ -578,7 +579,7 @@
         "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-004"
+        "american-pressure-story-2026-05-16-003"
       ],
       "categories": [
         "health_access_pressure"
@@ -588,8 +589,8 @@
       },
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-004",
-          "url": "/american-pressure/editions/2026-05-16/#health-care-access",
+          "story_id": "american-pressure-story-2026-05-16-003",
+          "url": "/american-pressure/editions/2026-05-16/#health-care-access-pressure",
           "label": "Local clinic closures can quickly turn access gaps into household health risk"
         }
       ],
@@ -610,12 +611,12 @@
             "ap-2026-05-16-health-story-kcrg-clinic-closure"
           ],
           "story_ids": [
-            "american-pressure-story-2026-05-16-004"
+            "american-pressure-story-2026-05-16-003"
           ],
           "written_story_links": [
             {
-              "story_id": "american-pressure-story-2026-05-16-004",
-              "url": "/american-pressure/editions/2026-05-16/#health-care-access",
+              "story_id": "american-pressure-story-2026-05-16-003",
+              "url": "/american-pressure/editions/2026-05-16/#health-care-access-pressure",
               "label": "Local clinic closures can quickly turn access gaps into household health risk"
             }
           ],
@@ -649,7 +650,7 @@
             "ap-2026-05-16-health-story-kcrg-clinic-closure"
           ],
           "audit_story_ids": [
-            "american-pressure-story-2026-05-16-004"
+            "american-pressure-story-2026-05-16-003"
           ],
           "time_window": "current_week"
         }
@@ -743,7 +744,7 @@
         "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-002"
+        "american-pressure-story-2026-05-16-005"
       ],
       "categories": [
         "financial_distress_pressure"
@@ -753,7 +754,7 @@
       },
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-002",
+          "story_id": "american-pressure-story-2026-05-16-005",
           "url": "/american-pressure/editions/2026-05-16/#debt-and-bankruptcy-pressure",
           "label": "Bankruptcy filings help show where debt stress is breaking through"
         }
@@ -775,11 +776,11 @@
             "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
           ],
           "story_ids": [
-            "american-pressure-story-2026-05-16-002"
+            "american-pressure-story-2026-05-16-005"
           ],
           "written_story_links": [
             {
-              "story_id": "american-pressure-story-2026-05-16-002",
+              "story_id": "american-pressure-story-2026-05-16-005",
               "url": "/american-pressure/editions/2026-05-16/#debt-and-bankruptcy-pressure",
               "label": "Bankruptcy filings help show where debt stress is breaking through"
             }
@@ -814,7 +815,7 @@
             "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
           ],
           "audit_story_ids": [
-            "american-pressure-story-2026-05-16-002"
+            "american-pressure-story-2026-05-16-005"
           ],
           "time_window": "current_week"
         }
@@ -908,7 +909,7 @@
         "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-005"
+        "american-pressure-story-2026-05-16-004"
       ],
       "categories": [
         "labor_income_pressure"
@@ -918,8 +919,8 @@
       },
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-005",
-          "url": "/american-pressure/editions/2026-05-16/#jobs-and-paychecks",
+          "story_id": "american-pressure-story-2026-05-16-004",
+          "url": "/american-pressure/editions/2026-05-16/#jobs-and-paycheck-pressure",
           "label": "Large local layoffs show how quickly paycheck stability can weaken"
         }
       ],
@@ -940,12 +941,12 @@
             "ap-2026-05-16-labor-story-capradio-layoffs"
           ],
           "story_ids": [
-            "american-pressure-story-2026-05-16-005"
+            "american-pressure-story-2026-05-16-004"
           ],
           "written_story_links": [
             {
-              "story_id": "american-pressure-story-2026-05-16-005",
-              "url": "/american-pressure/editions/2026-05-16/#jobs-and-paychecks",
+              "story_id": "american-pressure-story-2026-05-16-004",
+              "url": "/american-pressure/editions/2026-05-16/#jobs-and-paycheck-pressure",
               "label": "Large local layoffs show how quickly paycheck stability can weaken"
             }
           ],
@@ -979,7 +980,7 @@
             "ap-2026-05-16-labor-story-capradio-layoffs"
           ],
           "audit_story_ids": [
-            "american-pressure-story-2026-05-16-005"
+            "american-pressure-story-2026-05-16-004"
           ],
           "time_window": "last_30_days"
         }
@@ -1101,7 +1102,7 @@
         "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-007"
+        "american-pressure-story-2026-05-16-006"
       ],
       "categories": [
         "local_system_strain"
@@ -1111,8 +1112,8 @@
       },
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-007",
-          "url": "/american-pressure/editions/2026-05-16/#local-services-under-strain",
+          "story_id": "american-pressure-story-2026-05-16-006",
+          "url": "/american-pressure/editions/2026-05-16/#public-services-under-strain",
           "label": "Storm recovery assessments show where local systems may face prolonged strain"
         }
       ],
@@ -1134,12 +1135,12 @@
             "ap-2026-05-16-weather-story-wi-flood-assessments"
           ],
           "story_ids": [
-            "american-pressure-story-2026-05-16-007"
+            "american-pressure-story-2026-05-16-006"
           ],
           "written_story_links": [
             {
-              "story_id": "american-pressure-story-2026-05-16-007",
-              "url": "/american-pressure/editions/2026-05-16/#local-services-under-strain",
+              "story_id": "american-pressure-story-2026-05-16-006",
+              "url": "/american-pressure/editions/2026-05-16/#public-services-under-strain",
               "label": "Storm recovery assessments show where local systems may face prolonged strain"
             }
           ],
@@ -1175,7 +1176,7 @@
             "ap-2026-05-16-weather-story-wi-flood-assessments"
           ],
           "audit_story_ids": [
-            "american-pressure-story-2026-05-16-007"
+            "american-pressure-story-2026-05-16-006"
           ],
           "time_window": "last_30_days"
         }
@@ -1279,12 +1280,12 @@
         "ap-2026-05-16-housing-story-utility-shutoffs-wapo"
       ],
       "story_ids": [
-        "american-pressure-story-2026-05-16-003"
+        "american-pressure-story-2026-05-16-002"
       ],
       "written_story_links": [
         {
-          "story_id": "american-pressure-story-2026-05-16-003",
-          "url": "/american-pressure/editions/2026-05-16/#housing-and-monthly-bills",
+          "story_id": "american-pressure-story-2026-05-16-002",
+          "url": "/american-pressure/editions/2026-05-16/#housing-and-utility-pressure",
           "label": "Housing and bill pressure nationally is squeezing household budgets"
         }
       ],
@@ -1698,7 +1699,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1714,7 +1715,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1727,7 +1728,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1743,7 +1744,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1756,7 +1757,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1772,7 +1773,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1785,7 +1786,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1801,7 +1802,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1814,7 +1815,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1830,7 +1831,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1843,7 +1844,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1859,7 +1860,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1872,7 +1873,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ]
       },
       {
@@ -1984,7 +1985,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -1997,7 +1998,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2013,7 +2014,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2026,7 +2027,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2042,7 +2043,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2055,7 +2056,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2068,7 +2069,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ]
       },
       {
@@ -2084,7 +2085,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ]
       },
       {
@@ -2097,7 +2098,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ]
       },
       {
@@ -2113,7 +2114,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ]
       },
       {
@@ -2126,7 +2127,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ]
       },
       {
@@ -2139,7 +2140,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ]
       },
       {
@@ -2152,7 +2153,7 @@
         "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
         "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-007"
+          "american-pressure-story-2026-05-16-006"
         ]
       },
       {
@@ -2165,7 +2166,7 @@
         "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
         "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-007"
+          "american-pressure-story-2026-05-16-006"
         ]
       },
       {
@@ -2178,7 +2179,7 @@
         "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
         "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-007"
+          "american-pressure-story-2026-05-16-006"
         ]
       },
       {
@@ -2191,7 +2192,7 @@
         "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
         "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-007"
+          "american-pressure-story-2026-05-16-006"
         ]
       }
     ],
@@ -2310,7 +2311,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "location_label": "Marshall, MO",
         "method": "source_metadata_city_state",
@@ -2336,7 +2337,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ],
         "location_label": "Centerville, IA",
         "method": "source_metadata_city_state",
@@ -2349,7 +2350,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ],
         "location_label": "Sacramento, CA",
         "method": "source_metadata_city_state",
@@ -2362,7 +2363,7 @@
         "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
         "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-007"
+          "american-pressure-story-2026-05-16-006"
         ],
         "location_label": "WI",
         "method": "text_source_title_state_only",
@@ -2545,7 +2546,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2564,7 +2565,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2583,7 +2584,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2602,7 +2603,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2621,7 +2622,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2640,7 +2641,7 @@
         "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
         "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-002"
+          "american-pressure-story-2026-05-16-005"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2731,7 +2732,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2750,7 +2751,7 @@
         "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
         "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-004"
+          "american-pressure-story-2026-05-16-003"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2769,7 +2770,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ],
         "candidate": {
           "kind": "city_state",
@@ -2788,7 +2789,7 @@
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
         "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
         "story_ids": [
-          "american-pressure-story-2026-05-16-005"
+          "american-pressure-story-2026-05-16-004"
         ],
         "candidate": {
           "kind": "city_state",

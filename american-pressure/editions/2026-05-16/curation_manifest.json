@@ -43,7 +43,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Food assistance demand and household grocery stress.",
       "key_stat": null,
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -89,7 +89,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Debt distress in essential local institutions can translate into household service and income risk.",
       "key_stat": null,
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -135,7 +135,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Monthly utility bill stress can quickly turn into housing instability and loss of essential services.",
       "key_stat": null,
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -181,7 +181,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Care-access pressure from local service contraction.",
       "key_stat": null,
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -233,7 +233,7 @@
         "context": "",
         "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs"
       },
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -279,7 +279,7 @@
       "pressure_direction": "upward",
       "public_pressure_angle": "Disaster recovery pressure on households and local infrastructure.",
       "key_stat": null,
-      "generated_at": "2026-05-18T22:10:31.369848+00:00",
+      "generated_at": "2026-05-19T02:27:05.730640+00:00",
       "collection_gap_pillars": []
     }
   ],

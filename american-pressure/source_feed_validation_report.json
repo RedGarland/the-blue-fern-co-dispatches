@@ -1,0 +1,5887 @@
+{
+  "generated_at": "2026-05-18T23:29:26.188493Z",
+  "max_checks": 200,
+  "checks_attempted": 156,
+  "live_validated_count": 67,
+  "live_failed_count": 89,
+  "pending_count": 156,
+  "results_count": 156,
+  "results": [
+    {
+      "source_id": "al-public-media-npr-network",
+      "source_name": "NPR Network (Alabama)",
+      "state": "AL",
+      "feed_url": "https://feeds.npr.org/1001/rss.xml",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:29.253407Z"
+    },
+    {
+      "source_id": "al-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Alabama)",
+      "state": "AL",
+      "feed_url": "https://alabamareflector.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:29.679462Z"
+    },
+    {
+      "source_id": "al-local-urban-news",
+      "source_name": "Local/Regional News (Alabama)",
+      "state": "AL",
+      "feed_url": "https://www.al.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:30.468762Z"
+    },
+    {
+      "source_id": "al-local-rural-news",
+      "source_name": "Rural/Regional News (Alabama)",
+      "state": "AL",
+      "feed_url": "https://www.annistonstar.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:30.666466Z"
+    },
+    {
+      "source_id": "al-fema-disaster-declarations",
+      "source_name": "FEMA Disaster Declarations (Alabama)",
+      "state": "AL",
+      "feed_url": "https://www.fema.gov/about/news-multimedia/mobile-products/rss",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:30.781311Z"
+    },
+    {
+      "source_id": "al-hrsa-shortage-areas",
+      "source_name": "HRSA Shortage Areas (Alabama)",
+      "state": "AL",
+      "feed_url": "https://data.hrsa.gov/sitemap.xml",
+      "feed_type": "sitemap",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:31.225822Z"
+    },
+    {
+      "source_id": "ak-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Alaska)",
+      "state": "AK",
+      "feed_url": "https://alaskabeacon.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:31.661504Z"
+    },
+    {
+      "source_id": "ak-local-urban-news",
+      "source_name": "Local/Regional News (Alaska)",
+      "state": "AK",
+      "feed_url": "https://www.adn.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:32.765181Z"
+    },
+    {
+      "source_id": "ak-local-rural-news",
+      "source_name": "Rural/Regional News (Alaska)",
+      "state": "AK",
+      "feed_url": "https://www.frontiersman.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:32.969804Z"
+    },
+    {
+      "source_id": "az-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Arizona)",
+      "state": "AZ",
+      "feed_url": "https://azmirror.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:33.404574Z"
+    },
+    {
+      "source_id": "az-local-urban-news",
+      "source_name": "Local/Regional News (Arizona)",
+      "state": "AZ",
+      "feed_url": "https://www.azcentral.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:33.596456Z"
+    },
+    {
+      "source_id": "az-local-rural-news",
+      "source_name": "Rural/Regional News (Arizona)",
+      "state": "AZ",
+      "feed_url": "https://www.yumasun.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:33.910956Z"
+    },
+    {
+      "source_id": "ar-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Arkansas)",
+      "state": "AR",
+      "feed_url": "https://arkansasadvocate.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:34.106145Z"
+    },
+    {
+      "source_id": "ar-local-urban-news",
+      "source_name": "Local/Regional News (Arkansas)",
+      "state": "AR",
+      "feed_url": "https://www.arkansasonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:34.464089Z"
+    },
+    {
+      "source_id": "ar-local-rural-news",
+      "source_name": "Rural/Regional News (Arkansas)",
+      "state": "AR",
+      "feed_url": "https://www.nwaonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:35.027216Z"
+    },
+    {
+      "source_id": "ca-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (California)",
+      "state": "CA",
+      "feed_url": "https://calmatters.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:35.146338Z"
+    },
+    {
+      "source_id": "ca-local-urban-news",
+      "source_name": "Local/Regional News (California)",
+      "state": "CA",
+      "feed_url": "https://www.latimes.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:35.665732Z"
+    },
+    {
+      "source_id": "ca-local-rural-news",
+      "source_name": "Rural/Regional News (California)",
+      "state": "CA",
+      "feed_url": "https://www.fresnobee.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:26:51.931433Z"
+    },
+    {
+      "source_id": "co-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Colorado)",
+      "state": "CO",
+      "feed_url": "https://coloradonewsline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:52.161294Z"
+    },
+    {
+      "source_id": "co-local-urban-news",
+      "source_name": "Local/Regional News (Colorado)",
+      "state": "CO",
+      "feed_url": "https://www.denverpost.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:52.658524Z"
+    },
+    {
+      "source_id": "co-local-rural-news",
+      "source_name": "Rural/Regional News (Colorado)",
+      "state": "CO",
+      "feed_url": "https://www.gjsentinel.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:53.019864Z"
+    },
+    {
+      "source_id": "ct-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Connecticut)",
+      "state": "CT",
+      "feed_url": "https://ctmirror.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:53.127924Z"
+    },
+    {
+      "source_id": "ct-local-urban-news",
+      "source_name": "Local/Regional News (Connecticut)",
+      "state": "CT",
+      "feed_url": "https://www.courant.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:53.293138Z"
+    },
+    {
+      "source_id": "ct-local-rural-news",
+      "source_name": "Rural/Regional News (Connecticut)",
+      "state": "CT",
+      "feed_url": "https://www.theday.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:53.822813Z"
+    },
+    {
+      "source_id": "de-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Delaware)",
+      "state": "DE",
+      "feed_url": "https://spotlightdelaware.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:53.919023Z"
+    },
+    {
+      "source_id": "de-local-urban-news",
+      "source_name": "Local/Regional News (Delaware)",
+      "state": "DE",
+      "feed_url": "https://www.delawareonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:54.049824Z"
+    },
+    {
+      "source_id": "de-local-rural-news",
+      "source_name": "Rural/Regional News (Delaware)",
+      "state": "DE",
+      "feed_url": "https://www.capegazette.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:55.530144Z"
+    },
+    {
+      "source_id": "fl-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Florida)",
+      "state": "FL",
+      "feed_url": "https://floridaphoenix.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:55.955153Z"
+    },
+    {
+      "source_id": "fl-local-urban-news",
+      "source_name": "Local/Regional News (Florida)",
+      "state": "FL",
+      "feed_url": "https://www.tampabay.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:56.444673Z"
+    },
+    {
+      "source_id": "fl-local-rural-news",
+      "source_name": "Rural/Regional News (Florida)",
+      "state": "FL",
+      "feed_url": "https://www.news-journalonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:26:56.557746Z"
+    },
+    {
+      "source_id": "ga-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Georgia)",
+      "state": "GA",
+      "feed_url": "https://georgiarecorder.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:56.750341Z"
+    },
+    {
+      "source_id": "ga-local-urban-news",
+      "source_name": "Local/Regional News (Georgia)",
+      "state": "GA",
+      "feed_url": "https://www.ajc.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:57.038889Z"
+    },
+    {
+      "source_id": "ga-local-rural-news",
+      "source_name": "Rural/Regional News (Georgia)",
+      "state": "GA",
+      "feed_url": "https://www.ajc.com/news/georgia-news/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:26:57.233499Z"
+    },
+    {
+      "source_id": "hi-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Hawaii)",
+      "state": "HI",
+      "feed_url": "https://www.civilbeat.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:57.485024Z"
+    },
+    {
+      "source_id": "hi-local-urban-news",
+      "source_name": "Local/Regional News (Hawaii)",
+      "state": "HI",
+      "feed_url": "https://www.staradvertiser.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:57.647529Z"
+    },
+    {
+      "source_id": "hi-local-rural-news",
+      "source_name": "Rural/Regional News (Hawaii)",
+      "state": "HI",
+      "feed_url": "https://www.hawaiitribune-herald.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:57.928916Z"
+    },
+    {
+      "source_id": "id-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Idaho)",
+      "state": "ID",
+      "feed_url": "https://idahocapitalsun.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:26:58.102724Z"
+    },
+    {
+      "source_id": "id-local-urban-news",
+      "source_name": "Local/Regional News (Idaho)",
+      "state": "ID",
+      "feed_url": "https://www.idahostatesman.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:27:14.341736Z"
+    },
+    {
+      "source_id": "id-local-rural-news",
+      "source_name": "Rural/Regional News (Idaho)",
+      "state": "ID",
+      "feed_url": "https://www.idahopress.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 429,
+      "error": "HTTPError: 429",
+      "checked_at_utc": "2026-05-18T23:27:14.618803Z"
+    },
+    {
+      "source_id": "il-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Illinois)",
+      "state": "IL",
+      "feed_url": "https://capitolnewsillinois.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:14.710143Z"
+    },
+    {
+      "source_id": "il-local-urban-news",
+      "source_name": "Local/Regional News (Illinois)",
+      "state": "IL",
+      "feed_url": "https://www.chicagotribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:14.826927Z"
+    },
+    {
+      "source_id": "il-local-rural-news",
+      "source_name": "Rural/Regional News (Illinois)",
+      "state": "IL",
+      "feed_url": "https://thesouthern.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:15.076486Z"
+    },
+    {
+      "source_id": "in-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Indiana)",
+      "state": "IN",
+      "feed_url": "https://indianacapitalchronicle.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:15.574365Z"
+    },
+    {
+      "source_id": "in-local-urban-news",
+      "source_name": "Local/Regional News (Indiana)",
+      "state": "IN",
+      "feed_url": "https://www.indystar.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:15.683553Z"
+    },
+    {
+      "source_id": "in-local-rural-news",
+      "source_name": "Rural/Regional News (Indiana)",
+      "state": "IN",
+      "feed_url": "https://www.kokomotribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:15.970810Z"
+    },
+    {
+      "source_id": "ia-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Iowa)",
+      "state": "IA",
+      "feed_url": "https://iowacapitaldispatch.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:16.175641Z"
+    },
+    {
+      "source_id": "ia-local-urban-news",
+      "source_name": "Local/Regional News (Iowa)",
+      "state": "IA",
+      "feed_url": "https://www.desmoinesregister.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:16.311853Z"
+    },
+    {
+      "source_id": "ia-local-rural-news",
+      "source_name": "Rural/Regional News (Iowa)",
+      "state": "IA",
+      "feed_url": "https://www.thegazette.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:16.898267Z"
+    },
+    {
+      "source_id": "ks-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Kansas)",
+      "state": "KS",
+      "feed_url": "https://kansasreflector.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:17.065131Z"
+    },
+    {
+      "source_id": "ks-local-urban-news",
+      "source_name": "Local/Regional News (Kansas)",
+      "state": "KS",
+      "feed_url": "https://www.kansas.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:27:33.445235Z"
+    },
+    {
+      "source_id": "ks-local-rural-news",
+      "source_name": "Rural/Regional News (Kansas)",
+      "state": "KS",
+      "feed_url": "https://www.hutchnews.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:33.553168Z"
+    },
+    {
+      "source_id": "ky-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Kentucky)",
+      "state": "KY",
+      "feed_url": "https://kentuckylantern.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:34.065424Z"
+    },
+    {
+      "source_id": "ky-local-urban-news",
+      "source_name": "Local/Regional News (Kentucky)",
+      "state": "KY",
+      "feed_url": "https://www.courier-journal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:34.176166Z"
+    },
+    {
+      "source_id": "ky-local-rural-news",
+      "source_name": "Rural/Regional News (Kentucky)",
+      "state": "KY",
+      "feed_url": "https://www.kentucky.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:27:50.480768Z"
+    },
+    {
+      "source_id": "la-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Louisiana)",
+      "state": "LA",
+      "feed_url": "https://lailluminator.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:50.907557Z"
+    },
+    {
+      "source_id": "la-local-urban-news",
+      "source_name": "Local/Regional News (Louisiana)",
+      "state": "LA",
+      "feed_url": "https://www.nola.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:51.179064Z"
+    },
+    {
+      "source_id": "la-local-rural-news",
+      "source_name": "Rural/Regional News (Louisiana)",
+      "state": "LA",
+      "feed_url": "https://www.theadvocate.com/acadiana/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:51.469770Z"
+    },
+    {
+      "source_id": "me-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Maine)",
+      "state": "ME",
+      "feed_url": "https://mainemorningstar.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:52.025858Z"
+    },
+    {
+      "source_id": "me-local-urban-news",
+      "source_name": "Local/Regional News (Maine)",
+      "state": "ME",
+      "feed_url": "https://www.pressherald.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:52.802697Z"
+    },
+    {
+      "source_id": "me-local-rural-news",
+      "source_name": "Rural/Regional News (Maine)",
+      "state": "ME",
+      "feed_url": "https://www.bangordailynews.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:52.976831Z"
+    },
+    {
+      "source_id": "md-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Maryland)",
+      "state": "MD",
+      "feed_url": "https://marylandmatters.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:54.929454Z"
+    },
+    {
+      "source_id": "md-local-urban-news",
+      "source_name": "Local/Regional News (Maryland)",
+      "state": "MD",
+      "feed_url": "https://www.baltimoresun.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:55.027883Z"
+    },
+    {
+      "source_id": "md-local-rural-news",
+      "source_name": "Rural/Regional News (Maryland)",
+      "state": "MD",
+      "feed_url": "https://www.somdnews.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:55.779511Z"
+    },
+    {
+      "source_id": "ma-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Massachusetts)",
+      "state": "MA",
+      "feed_url": "https://commonwealthbeacon.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:55.876957Z"
+    },
+    {
+      "source_id": "ma-local-urban-news",
+      "source_name": "Local/Regional News (Massachusetts)",
+      "state": "MA",
+      "feed_url": "https://www.bostonglobe.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:56.937637Z"
+    },
+    {
+      "source_id": "ma-local-rural-news",
+      "source_name": "Rural/Regional News (Massachusetts)",
+      "state": "MA",
+      "feed_url": "https://www.telegram.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:57.075272Z"
+    },
+    {
+      "source_id": "mi-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Michigan)",
+      "state": "MI",
+      "feed_url": "https://michiganadvance.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:57.278017Z"
+    },
+    {
+      "source_id": "mi-local-urban-news",
+      "source_name": "Local/Regional News (Michigan)",
+      "state": "MI",
+      "feed_url": "https://www.freep.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:27:57.374207Z"
+    },
+    {
+      "source_id": "mi-local-rural-news",
+      "source_name": "Rural/Regional News (Michigan)",
+      "state": "MI",
+      "feed_url": "https://www.mlive.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:59.091849Z"
+    },
+    {
+      "source_id": "mn-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Minnesota)",
+      "state": "MN",
+      "feed_url": "https://minnesotareformer.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:27:59.371436Z"
+    },
+    {
+      "source_id": "mn-local-urban-news",
+      "source_name": "Local/Regional News (Minnesota)",
+      "state": "MN",
+      "feed_url": "https://www.startribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:27:59.754769Z"
+    },
+    {
+      "source_id": "mn-local-rural-news",
+      "source_name": "Rural/Regional News (Minnesota)",
+      "state": "MN",
+      "feed_url": "https://www.duluthnewstribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:00.074547Z"
+    },
+    {
+      "source_id": "ms-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Mississippi)",
+      "state": "MS",
+      "feed_url": "https://mississippitoday.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:00.389496Z"
+    },
+    {
+      "source_id": "ms-local-urban-news",
+      "source_name": "Local/Regional News (Mississippi)",
+      "state": "MS",
+      "feed_url": "https://www.clarionledger.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:00.507903Z"
+    },
+    {
+      "source_id": "ms-local-rural-news",
+      "source_name": "Rural/Regional News (Mississippi)",
+      "state": "MS",
+      "feed_url": "https://www.djournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:00.792418Z"
+    },
+    {
+      "source_id": "mo-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Missouri)",
+      "state": "MO",
+      "feed_url": "https://missouriindependent.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:01.001349Z"
+    },
+    {
+      "source_id": "mo-local-urban-news",
+      "source_name": "Local/Regional News (Missouri)",
+      "state": "MO",
+      "feed_url": "https://www.stltoday.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:01.407103Z"
+    },
+    {
+      "source_id": "mo-local-rural-news",
+      "source_name": "Rural/Regional News (Missouri)",
+      "state": "MO",
+      "feed_url": "https://www.news-leader.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:01.500389Z"
+    },
+    {
+      "source_id": "mt-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Montana)",
+      "state": "MT",
+      "feed_url": "https://dailymontanan.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:01.721948Z"
+    },
+    {
+      "source_id": "mt-local-urban-news",
+      "source_name": "Local/Regional News (Montana)",
+      "state": "MT",
+      "feed_url": "https://missoulian.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:02.018074Z"
+    },
+    {
+      "source_id": "mt-local-rural-news",
+      "source_name": "Rural/Regional News (Montana)",
+      "state": "MT",
+      "feed_url": "https://billingsgazette.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:02.375513Z"
+    },
+    {
+      "source_id": "ne-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Nebraska)",
+      "state": "NE",
+      "feed_url": "https://nebraskaexaminer.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:02.791993Z"
+    },
+    {
+      "source_id": "ne-local-urban-news",
+      "source_name": "Local/Regional News (Nebraska)",
+      "state": "NE",
+      "feed_url": "https://omaha.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:03.135338Z"
+    },
+    {
+      "source_id": "ne-local-rural-news",
+      "source_name": "Rural/Regional News (Nebraska)",
+      "state": "NE",
+      "feed_url": "https://norfolkdailynews.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:03.440614Z"
+    },
+    {
+      "source_id": "nv-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Nevada)",
+      "state": "NV",
+      "feed_url": "https://nevadacurrent.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:03.809273Z"
+    },
+    {
+      "source_id": "nv-local-urban-news",
+      "source_name": "Local/Regional News (Nevada)",
+      "state": "NV",
+      "feed_url": "https://www.reviewjournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:04.174469Z"
+    },
+    {
+      "source_id": "nv-local-rural-news",
+      "source_name": "Rural/Regional News (Nevada)",
+      "state": "NV",
+      "feed_url": "https://elkodaily.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:04.416381Z"
+    },
+    {
+      "source_id": "nh-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (New Hampshire)",
+      "state": "NH",
+      "feed_url": "https://newhampshirebulletin.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:04.852103Z"
+    },
+    {
+      "source_id": "nh-local-urban-news",
+      "source_name": "Local/Regional News (New Hampshire)",
+      "state": "NH",
+      "feed_url": "https://www.concordmonitor.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:04.973807Z"
+    },
+    {
+      "source_id": "nh-local-rural-news",
+      "source_name": "Rural/Regional News (New Hampshire)",
+      "state": "NH",
+      "feed_url": "https://www.unionleader.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:05.246446Z"
+    },
+    {
+      "source_id": "nj-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (New Jersey)",
+      "state": "NJ",
+      "feed_url": "https://newjerseymonitor.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:05.747584Z"
+    },
+    {
+      "source_id": "nj-local-urban-news",
+      "source_name": "Local/Regional News (New Jersey)",
+      "state": "NJ",
+      "feed_url": "https://www.nj.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:06.561221Z"
+    },
+    {
+      "source_id": "nj-local-rural-news",
+      "source_name": "Rural/Regional News (New Jersey)",
+      "state": "NJ",
+      "feed_url": "https://pressofatlanticcity.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:06.819357Z"
+    },
+    {
+      "source_id": "nm-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (New Mexico)",
+      "state": "NM",
+      "feed_url": "https://sourcenm.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:07.422269Z"
+    },
+    {
+      "source_id": "nm-local-urban-news",
+      "source_name": "Local/Regional News (New Mexico)",
+      "state": "NM",
+      "feed_url": "https://www.abqjournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:07.678802Z"
+    },
+    {
+      "source_id": "nm-local-rural-news",
+      "source_name": "Rural/Regional News (New Mexico)",
+      "state": "NM",
+      "feed_url": "https://www.santafenewmexican.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:07.961799Z"
+    },
+    {
+      "source_id": "ny-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (New York)",
+      "state": "NY",
+      "feed_url": "https://www.nysfocus.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:11.243153Z"
+    },
+    {
+      "source_id": "ny-local-urban-news",
+      "source_name": "Local/Regional News (New York)",
+      "state": "NY",
+      "feed_url": "https://www.timesunion.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:11.491635Z"
+    },
+    {
+      "source_id": "ny-local-rural-news",
+      "source_name": "Rural/Regional News (New York)",
+      "state": "NY",
+      "feed_url": "https://www.watertowndailytimes.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:12.000112Z"
+    },
+    {
+      "source_id": "nc-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (North Carolina)",
+      "state": "NC",
+      "feed_url": "https://ncnewsline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:12.203536Z"
+    },
+    {
+      "source_id": "nc-local-urban-news",
+      "source_name": "Local/Regional News (North Carolina)",
+      "state": "NC",
+      "feed_url": "https://www.newsobserver.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:28:28.418291Z"
+    },
+    {
+      "source_id": "nc-local-rural-news",
+      "source_name": "Rural/Regional News (North Carolina)",
+      "state": "NC",
+      "feed_url": "https://carolinapublicpress.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:28.543609Z"
+    },
+    {
+      "source_id": "nd-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (North Dakota)",
+      "state": "ND",
+      "feed_url": "https://northdakotamonitor.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:28.715456Z"
+    },
+    {
+      "source_id": "nd-local-urban-news",
+      "source_name": "Local/Regional News (North Dakota)",
+      "state": "ND",
+      "feed_url": "https://www.inforum.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:29.035640Z"
+    },
+    {
+      "source_id": "nd-local-rural-news",
+      "source_name": "Rural/Regional News (North Dakota)",
+      "state": "ND",
+      "feed_url": "https://bismarcktribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:29.732588Z"
+    },
+    {
+      "source_id": "oh-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Ohio)",
+      "state": "OH",
+      "feed_url": "https://ohiocapitaljournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:30.128677Z"
+    },
+    {
+      "source_id": "oh-local-urban-news",
+      "source_name": "Local/Regional News (Ohio)",
+      "state": "OH",
+      "feed_url": "https://www.cleveland.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:30.853579Z"
+    },
+    {
+      "source_id": "oh-local-rural-news",
+      "source_name": "Rural/Regional News (Ohio)",
+      "state": "OH",
+      "feed_url": "https://www.toledoblade.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:31.386039Z"
+    },
+    {
+      "source_id": "ok-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Oklahoma)",
+      "state": "OK",
+      "feed_url": "https://oklahomavoice.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:31.849380Z"
+    },
+    {
+      "source_id": "ok-local-urban-news",
+      "source_name": "Local/Regional News (Oklahoma)",
+      "state": "OK",
+      "feed_url": "https://tulsaworld.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:32.710712Z"
+    },
+    {
+      "source_id": "ok-local-rural-news",
+      "source_name": "Rural/Regional News (Oklahoma)",
+      "state": "OK",
+      "feed_url": "https://www.oklahoman.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:32.798506Z"
+    },
+    {
+      "source_id": "or-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Oregon)",
+      "state": "OR",
+      "feed_url": "https://oregoncapitalchronicle.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:33.007066Z"
+    },
+    {
+      "source_id": "or-local-urban-news",
+      "source_name": "Local/Regional News (Oregon)",
+      "state": "OR",
+      "feed_url": "https://www.oregonlive.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:33.854449Z"
+    },
+    {
+      "source_id": "or-local-rural-news",
+      "source_name": "Rural/Regional News (Oregon)",
+      "state": "OR",
+      "feed_url": "https://www.bendbulletin.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:34.001981Z"
+    },
+    {
+      "source_id": "pa-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Pennsylvania)",
+      "state": "PA",
+      "feed_url": "https://penncapital-star.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:34.222771Z"
+    },
+    {
+      "source_id": "pa-local-urban-news",
+      "source_name": "Local/Regional News (Pennsylvania)",
+      "state": "PA",
+      "feed_url": "https://www.inquirer.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:34.674627Z"
+    },
+    {
+      "source_id": "pa-local-rural-news",
+      "source_name": "Rural/Regional News (Pennsylvania)",
+      "state": "PA",
+      "feed_url": "https://www.timesleader.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:38.917268Z"
+    },
+    {
+      "source_id": "ri-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Rhode Island)",
+      "state": "RI",
+      "feed_url": "https://rhodeislandcurrent.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:39.097813Z"
+    },
+    {
+      "source_id": "ri-local-urban-news",
+      "source_name": "Local/Regional News (Rhode Island)",
+      "state": "RI",
+      "feed_url": "https://www.providencejournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:39.217567Z"
+    },
+    {
+      "source_id": "ri-local-rural-news",
+      "source_name": "Rural/Regional News (Rhode Island)",
+      "state": "RI",
+      "feed_url": "https://www.newportri.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:39.359203Z"
+    },
+    {
+      "source_id": "sc-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (South Carolina)",
+      "state": "SC",
+      "feed_url": "https://scdailygazette.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:39.921875Z"
+    },
+    {
+      "source_id": "sc-local-urban-news",
+      "source_name": "Local/Regional News (South Carolina)",
+      "state": "SC",
+      "feed_url": "https://www.postandcourier.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:40.253761Z"
+    },
+    {
+      "source_id": "sc-local-rural-news",
+      "source_name": "Rural/Regional News (South Carolina)",
+      "state": "SC",
+      "feed_url": "https://www.islandpacket.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:28:56.484160Z"
+    },
+    {
+      "source_id": "sd-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (South Dakota)",
+      "state": "SD",
+      "feed_url": "https://southdakotasearchlight.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:57.016570Z"
+    },
+    {
+      "source_id": "sd-local-urban-news",
+      "source_name": "Local/Regional News (South Dakota)",
+      "state": "SD",
+      "feed_url": "https://www.argusleader.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:57.166262Z"
+    },
+    {
+      "source_id": "sd-local-rural-news",
+      "source_name": "Rural/Regional News (South Dakota)",
+      "state": "SD",
+      "feed_url": "https://rapidcityjournal.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:57.414246Z"
+    },
+    {
+      "source_id": "tn-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Tennessee)",
+      "state": "TN",
+      "feed_url": "https://tennesseelookout.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:57.662367Z"
+    },
+    {
+      "source_id": "tn-local-urban-news",
+      "source_name": "Local/Regional News (Tennessee)",
+      "state": "TN",
+      "feed_url": "https://www.tennessean.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:57.754130Z"
+    },
+    {
+      "source_id": "tn-local-rural-news",
+      "source_name": "Rural/Regional News (Tennessee)",
+      "state": "TN",
+      "feed_url": "https://www.timesfreepress.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:58.161989Z"
+    },
+    {
+      "source_id": "tx-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Texas)",
+      "state": "TX",
+      "feed_url": "https://www.texastribune.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:58.911120Z"
+    },
+    {
+      "source_id": "tx-local-urban-news",
+      "source_name": "Local/Regional News (Texas)",
+      "state": "TX",
+      "feed_url": "https://www.houstonchronicle.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:28:59.248405Z"
+    },
+    {
+      "source_id": "tx-local-rural-news",
+      "source_name": "Rural/Regional News (Texas)",
+      "state": "TX",
+      "feed_url": "https://www.lubbockonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:28:59.342555Z"
+    },
+    {
+      "source_id": "ut-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Utah)",
+      "state": "UT",
+      "feed_url": "https://utahnewsdispatch.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:28:59.519299Z"
+    },
+    {
+      "source_id": "ut-local-urban-news",
+      "source_name": "Local/Regional News (Utah)",
+      "state": "UT",
+      "feed_url": "https://www.sltrib.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:00.215870Z"
+    },
+    {
+      "source_id": "ut-local-rural-news",
+      "source_name": "Rural/Regional News (Utah)",
+      "state": "UT",
+      "feed_url": "https://www.heraldextra.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:03.978192Z"
+    },
+    {
+      "source_id": "vt-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Vermont)",
+      "state": "VT",
+      "feed_url": "https://vtdigger.org/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:04.101774Z"
+    },
+    {
+      "source_id": "vt-local-urban-news",
+      "source_name": "Local/Regional News (Vermont)",
+      "state": "VT",
+      "feed_url": "https://www.burlingtonfreepress.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:29:04.196315Z"
+    },
+    {
+      "source_id": "vt-local-rural-news",
+      "source_name": "Rural/Regional News (Vermont)",
+      "state": "VT",
+      "feed_url": "https://www.rutlandherald.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:04.439551Z"
+    },
+    {
+      "source_id": "va-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Virginia)",
+      "state": "VA",
+      "feed_url": "https://virginiamercury.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:04.617313Z"
+    },
+    {
+      "source_id": "va-local-urban-news",
+      "source_name": "Local/Regional News (Virginia)",
+      "state": "VA",
+      "feed_url": "https://www.richmond.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:06.098336Z"
+    },
+    {
+      "source_id": "va-local-rural-news",
+      "source_name": "Rural/Regional News (Virginia)",
+      "state": "VA",
+      "feed_url": "https://roanoke.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:06.405861Z"
+    },
+    {
+      "source_id": "wa-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Washington)",
+      "state": "WA",
+      "feed_url": "https://washingtonstatestandard.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:06.579243Z"
+    },
+    {
+      "source_id": "wa-local-urban-news",
+      "source_name": "Local/Regional News (Washington)",
+      "state": "WA",
+      "feed_url": "https://www.seattletimes.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:06.717299Z"
+    },
+    {
+      "source_id": "wa-local-rural-news",
+      "source_name": "Rural/Regional News (Washington)",
+      "state": "WA",
+      "feed_url": "https://www.yakimaherald.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:07.050084Z"
+    },
+    {
+      "source_id": "wv-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (West Virginia)",
+      "state": "WV",
+      "feed_url": "https://westvirginiawatch.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:07.522926Z"
+    },
+    {
+      "source_id": "wv-local-urban-news",
+      "source_name": "Local/Regional News (West Virginia)",
+      "state": "WV",
+      "feed_url": "https://www.wvgazettemail.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:07.975665Z"
+    },
+    {
+      "source_id": "wv-local-rural-news",
+      "source_name": "Rural/Regional News (West Virginia)",
+      "state": "WV",
+      "feed_url": "https://www.register-herald.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:08.266508Z"
+    },
+    {
+      "source_id": "wi-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Wisconsin)",
+      "state": "WI",
+      "feed_url": "https://wisconsinexaminer.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:08.495784Z"
+    },
+    {
+      "source_id": "wi-local-urban-news",
+      "source_name": "Local/Regional News (Wisconsin)",
+      "state": "WI",
+      "feed_url": "https://www.jsonline.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 403,
+      "error": "HTTPError: 403",
+      "checked_at_utc": "2026-05-18T23:29:08.622675Z"
+    },
+    {
+      "source_id": "wi-local-rural-news",
+      "source_name": "Rural/Regional News (Wisconsin)",
+      "state": "WI",
+      "feed_url": "https://lacrossetribune.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:08.910909Z"
+    },
+    {
+      "source_id": "wy-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (Wyoming)",
+      "state": "WY",
+      "feed_url": "https://wyofile.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:09.041893Z"
+    },
+    {
+      "source_id": "wy-local-urban-news",
+      "source_name": "Local/Regional News (Wyoming)",
+      "state": "WY",
+      "feed_url": "https://cowboystatedaily.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:09.252722Z"
+    },
+    {
+      "source_id": "wy-local-rural-news",
+      "source_name": "Rural/Regional News (Wyoming)",
+      "state": "WY",
+      "feed_url": "https://trib.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:09.505061Z"
+    },
+    {
+      "source_id": "dc-nonprofit-policy-news",
+      "source_name": "Nonprofit Policy Reporting (District of Columbia)",
+      "state": "DC",
+      "feed_url": "https://dcist.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": 404,
+      "error": "HTTPError: 404",
+      "checked_at_utc": "2026-05-18T23:29:09.871986Z"
+    },
+    {
+      "source_id": "dc-local-urban-news",
+      "source_name": "Local/Regional News (District of Columbia)",
+      "state": "DC",
+      "feed_url": "https://www.washingtonpost.com/feed/",
+      "feed_type": "rss",
+      "status": "live_failed",
+      "validation_status": "live_failed",
+      "http_status": null,
+      "error": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out",
+      "checked_at_utc": "2026-05-18T23:29:25.995332Z"
+    },
+    {
+      "source_id": "dc-local-rural-news",
+      "source_name": "Rural/Regional News (District of Columbia)",
+      "state": "DC",
+      "feed_url": "https://www.washingtoncitypaper.com/feed/",
+      "feed_type": "rss",
+      "status": "live_validated",
+      "validation_status": "live_validated",
+      "http_status": 200,
+      "error": null,
+      "checked_at_utc": "2026-05-18T23:29:26.188000Z"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "al-public-media-npr-network",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://feeds.npr.org/1001/rss.xml",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "al-nonprofit-policy-news",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://alabamareflector.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "al-local-urban-news",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.al.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "al-local-rural-news",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.annistonstar.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "al-fema-disaster-declarations",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.fema.gov/about/news-multimedia/mobile-products/rss",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "al-hrsa-shortage-areas",
+      "state": "AL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "sitemap_url",
+          "url": "https://data.hrsa.gov/sitemap.xml",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ak-public-media-npr-network",
+      "state": "AK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ak-nonprofit-policy-news",
+      "state": "AK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://alaskabeacon.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ak-local-urban-news",
+      "state": "AK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.adn.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ak-local-rural-news",
+      "state": "AK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.frontiersman.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ak-fema-disaster-declarations",
+      "state": "AK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ak-hrsa-shortage-areas",
+      "state": "AK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "az-public-media-npr-network",
+      "state": "AZ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "az-nonprofit-policy-news",
+      "state": "AZ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://azmirror.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "az-local-urban-news",
+      "state": "AZ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.azcentral.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "az-local-rural-news",
+      "state": "AZ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.yumasun.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "az-fema-disaster-declarations",
+      "state": "AZ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "az-hrsa-shortage-areas",
+      "state": "AZ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ar-public-media-npr-network",
+      "state": "AR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ar-nonprofit-policy-news",
+      "state": "AR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://arkansasadvocate.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ar-local-urban-news",
+      "state": "AR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.arkansasonline.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ar-local-rural-news",
+      "state": "AR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.nwaonline.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ar-fema-disaster-declarations",
+      "state": "AR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ar-hrsa-shortage-areas",
+      "state": "AR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ca-public-media-npr-network",
+      "state": "CA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ca-nonprofit-policy-news",
+      "state": "CA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://calmatters.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ca-local-urban-news",
+      "state": "CA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.latimes.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ca-local-rural-news",
+      "state": "CA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.fresnobee.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "ca-fema-disaster-declarations",
+      "state": "CA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ca-hrsa-shortage-areas",
+      "state": "CA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "co-public-media-npr-network",
+      "state": "CO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "co-nonprofit-policy-news",
+      "state": "CO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://coloradonewsline.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "co-local-urban-news",
+      "state": "CO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.denverpost.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "co-local-rural-news",
+      "state": "CO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.gjsentinel.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "co-fema-disaster-declarations",
+      "state": "CO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "co-hrsa-shortage-areas",
+      "state": "CO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ct-public-media-npr-network",
+      "state": "CT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ct-nonprofit-policy-news",
+      "state": "CT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://ctmirror.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ct-local-urban-news",
+      "state": "CT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.courant.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ct-local-rural-news",
+      "state": "CT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.theday.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ct-fema-disaster-declarations",
+      "state": "CT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ct-hrsa-shortage-areas",
+      "state": "CT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "de-public-media-npr-network",
+      "state": "DE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "de-nonprofit-policy-news",
+      "state": "DE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://spotlightdelaware.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "de-local-urban-news",
+      "state": "DE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.delawareonline.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "de-local-rural-news",
+      "state": "DE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.capegazette.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "de-fema-disaster-declarations",
+      "state": "DE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "de-hrsa-shortage-areas",
+      "state": "DE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "fl-public-media-npr-network",
+      "state": "FL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "fl-nonprofit-policy-news",
+      "state": "FL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://floridaphoenix.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "fl-local-urban-news",
+      "state": "FL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.tampabay.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "fl-local-rural-news",
+      "state": "FL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.news-journalonline.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "fl-fema-disaster-declarations",
+      "state": "FL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "fl-hrsa-shortage-areas",
+      "state": "FL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ga-public-media-npr-network",
+      "state": "GA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ga-nonprofit-policy-news",
+      "state": "GA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://georgiarecorder.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ga-local-urban-news",
+      "state": "GA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.ajc.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ga-local-rural-news",
+      "state": "GA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.ajc.com/news/georgia-news/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ga-fema-disaster-declarations",
+      "state": "GA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ga-hrsa-shortage-areas",
+      "state": "GA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "hi-public-media-npr-network",
+      "state": "HI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "hi-nonprofit-policy-news",
+      "state": "HI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.civilbeat.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "hi-local-urban-news",
+      "state": "HI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.staradvertiser.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "hi-local-rural-news",
+      "state": "HI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.hawaiitribune-herald.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "hi-fema-disaster-declarations",
+      "state": "HI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "hi-hrsa-shortage-areas",
+      "state": "HI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "id-public-media-npr-network",
+      "state": "ID",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "id-nonprofit-policy-news",
+      "state": "ID",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://idahocapitalsun.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "id-local-urban-news",
+      "state": "ID",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.idahostatesman.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "id-local-rural-news",
+      "state": "ID",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.idahopress.com/feed/",
+          "ok": false,
+          "status_code": 429,
+          "reason": "HTTPError: 429"
+        }
+      ]
+    },
+    {
+      "source_id": "id-fema-disaster-declarations",
+      "state": "ID",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "id-hrsa-shortage-areas",
+      "state": "ID",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "il-public-media-npr-network",
+      "state": "IL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "il-nonprofit-policy-news",
+      "state": "IL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://capitolnewsillinois.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "il-local-urban-news",
+      "state": "IL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.chicagotribune.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "il-local-rural-news",
+      "state": "IL",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://thesouthern.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "il-fema-disaster-declarations",
+      "state": "IL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "il-hrsa-shortage-areas",
+      "state": "IL",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "in-public-media-npr-network",
+      "state": "IN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "in-nonprofit-policy-news",
+      "state": "IN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://indianacapitalchronicle.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "in-local-urban-news",
+      "state": "IN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.indystar.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "in-local-rural-news",
+      "state": "IN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.kokomotribune.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "in-fema-disaster-declarations",
+      "state": "IN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "in-hrsa-shortage-areas",
+      "state": "IN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ia-public-media-npr-network",
+      "state": "IA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ia-nonprofit-policy-news",
+      "state": "IA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://iowacapitaldispatch.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ia-local-urban-news",
+      "state": "IA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.desmoinesregister.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ia-local-rural-news",
+      "state": "IA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.thegazette.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ia-fema-disaster-declarations",
+      "state": "IA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ia-hrsa-shortage-areas",
+      "state": "IA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ks-public-media-npr-network",
+      "state": "KS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ks-nonprofit-policy-news",
+      "state": "KS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://kansasreflector.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ks-local-urban-news",
+      "state": "KS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.kansas.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "ks-local-rural-news",
+      "state": "KS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.hutchnews.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ks-fema-disaster-declarations",
+      "state": "KS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ks-hrsa-shortage-areas",
+      "state": "KS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ky-public-media-npr-network",
+      "state": "KY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ky-nonprofit-policy-news",
+      "state": "KY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://kentuckylantern.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ky-local-urban-news",
+      "state": "KY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.courier-journal.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ky-local-rural-news",
+      "state": "KY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.kentucky.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "ky-fema-disaster-declarations",
+      "state": "KY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ky-hrsa-shortage-areas",
+      "state": "KY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "la-public-media-npr-network",
+      "state": "LA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "la-nonprofit-policy-news",
+      "state": "LA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://lailluminator.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "la-local-urban-news",
+      "state": "LA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.nola.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "la-local-rural-news",
+      "state": "LA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.theadvocate.com/acadiana/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "la-fema-disaster-declarations",
+      "state": "LA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "la-hrsa-shortage-areas",
+      "state": "LA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "me-public-media-npr-network",
+      "state": "ME",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "me-nonprofit-policy-news",
+      "state": "ME",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://mainemorningstar.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "me-local-urban-news",
+      "state": "ME",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.pressherald.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "me-local-rural-news",
+      "state": "ME",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.bangordailynews.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "me-fema-disaster-declarations",
+      "state": "ME",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "me-hrsa-shortage-areas",
+      "state": "ME",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "md-public-media-npr-network",
+      "state": "MD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "md-nonprofit-policy-news",
+      "state": "MD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://marylandmatters.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "md-local-urban-news",
+      "state": "MD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.baltimoresun.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "md-local-rural-news",
+      "state": "MD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.somdnews.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "md-fema-disaster-declarations",
+      "state": "MD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "md-hrsa-shortage-areas",
+      "state": "MD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ma-public-media-npr-network",
+      "state": "MA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ma-nonprofit-policy-news",
+      "state": "MA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://commonwealthbeacon.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ma-local-urban-news",
+      "state": "MA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.bostonglobe.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ma-local-rural-news",
+      "state": "MA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.telegram.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ma-fema-disaster-declarations",
+      "state": "MA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ma-hrsa-shortage-areas",
+      "state": "MA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mi-public-media-npr-network",
+      "state": "MI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mi-nonprofit-policy-news",
+      "state": "MI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://michiganadvance.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "mi-local-urban-news",
+      "state": "MI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.freep.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "mi-local-rural-news",
+      "state": "MI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.mlive.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mi-fema-disaster-declarations",
+      "state": "MI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mi-hrsa-shortage-areas",
+      "state": "MI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mn-public-media-npr-network",
+      "state": "MN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mn-nonprofit-policy-news",
+      "state": "MN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://minnesotareformer.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "mn-local-urban-news",
+      "state": "MN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.startribune.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mn-local-rural-news",
+      "state": "MN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.duluthnewstribune.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mn-fema-disaster-declarations",
+      "state": "MN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mn-hrsa-shortage-areas",
+      "state": "MN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ms-public-media-npr-network",
+      "state": "MS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ms-nonprofit-policy-news",
+      "state": "MS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://mississippitoday.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ms-local-urban-news",
+      "state": "MS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.clarionledger.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ms-local-rural-news",
+      "state": "MS",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.djournal.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ms-fema-disaster-declarations",
+      "state": "MS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ms-hrsa-shortage-areas",
+      "state": "MS",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mo-public-media-npr-network",
+      "state": "MO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mo-nonprofit-policy-news",
+      "state": "MO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://missouriindependent.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "mo-local-urban-news",
+      "state": "MO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.stltoday.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mo-local-rural-news",
+      "state": "MO",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.news-leader.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "mo-fema-disaster-declarations",
+      "state": "MO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mo-hrsa-shortage-areas",
+      "state": "MO",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mt-public-media-npr-network",
+      "state": "MT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mt-nonprofit-policy-news",
+      "state": "MT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://dailymontanan.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "mt-local-urban-news",
+      "state": "MT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://missoulian.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mt-local-rural-news",
+      "state": "MT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://billingsgazette.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "mt-fema-disaster-declarations",
+      "state": "MT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "mt-hrsa-shortage-areas",
+      "state": "MT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ne-public-media-npr-network",
+      "state": "NE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ne-nonprofit-policy-news",
+      "state": "NE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://nebraskaexaminer.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ne-local-urban-news",
+      "state": "NE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://omaha.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ne-local-rural-news",
+      "state": "NE",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://norfolkdailynews.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ne-fema-disaster-declarations",
+      "state": "NE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ne-hrsa-shortage-areas",
+      "state": "NE",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nv-public-media-npr-network",
+      "state": "NV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nv-nonprofit-policy-news",
+      "state": "NV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://nevadacurrent.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nv-local-urban-news",
+      "state": "NV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.reviewjournal.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nv-local-rural-news",
+      "state": "NV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://elkodaily.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nv-fema-disaster-declarations",
+      "state": "NV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nv-hrsa-shortage-areas",
+      "state": "NV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nh-public-media-npr-network",
+      "state": "NH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nh-nonprofit-policy-news",
+      "state": "NH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://newhampshirebulletin.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nh-local-urban-news",
+      "state": "NH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.concordmonitor.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nh-local-rural-news",
+      "state": "NH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.unionleader.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nh-fema-disaster-declarations",
+      "state": "NH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nh-hrsa-shortage-areas",
+      "state": "NH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nj-public-media-npr-network",
+      "state": "NJ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nj-nonprofit-policy-news",
+      "state": "NJ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://newjerseymonitor.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nj-local-urban-news",
+      "state": "NJ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.nj.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nj-local-rural-news",
+      "state": "NJ",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://pressofatlanticcity.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nj-fema-disaster-declarations",
+      "state": "NJ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nj-hrsa-shortage-areas",
+      "state": "NJ",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nm-public-media-npr-network",
+      "state": "NM",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nm-nonprofit-policy-news",
+      "state": "NM",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://sourcenm.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nm-local-urban-news",
+      "state": "NM",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.abqjournal.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nm-local-rural-news",
+      "state": "NM",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.santafenewmexican.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nm-fema-disaster-declarations",
+      "state": "NM",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nm-hrsa-shortage-areas",
+      "state": "NM",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ny-public-media-npr-network",
+      "state": "NY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ny-nonprofit-policy-news",
+      "state": "NY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.nysfocus.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ny-local-urban-news",
+      "state": "NY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.timesunion.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ny-local-rural-news",
+      "state": "NY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.watertowndailytimes.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ny-fema-disaster-declarations",
+      "state": "NY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ny-hrsa-shortage-areas",
+      "state": "NY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nc-public-media-npr-network",
+      "state": "NC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nc-nonprofit-policy-news",
+      "state": "NC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://ncnewsline.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nc-local-urban-news",
+      "state": "NC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.newsobserver.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "nc-local-rural-news",
+      "state": "NC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://carolinapublicpress.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nc-fema-disaster-declarations",
+      "state": "NC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nc-hrsa-shortage-areas",
+      "state": "NC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nd-public-media-npr-network",
+      "state": "ND",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nd-nonprofit-policy-news",
+      "state": "ND",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://northdakotamonitor.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "nd-local-urban-news",
+      "state": "ND",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.inforum.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nd-local-rural-news",
+      "state": "ND",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://bismarcktribune.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "nd-fema-disaster-declarations",
+      "state": "ND",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "nd-hrsa-shortage-areas",
+      "state": "ND",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "oh-public-media-npr-network",
+      "state": "OH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "oh-nonprofit-policy-news",
+      "state": "OH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://ohiocapitaljournal.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "oh-local-urban-news",
+      "state": "OH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.cleveland.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "oh-local-rural-news",
+      "state": "OH",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.toledoblade.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "oh-fema-disaster-declarations",
+      "state": "OH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "oh-hrsa-shortage-areas",
+      "state": "OH",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ok-public-media-npr-network",
+      "state": "OK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ok-nonprofit-policy-news",
+      "state": "OK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://oklahomavoice.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ok-local-urban-news",
+      "state": "OK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://tulsaworld.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ok-local-rural-news",
+      "state": "OK",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.oklahoman.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ok-fema-disaster-declarations",
+      "state": "OK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ok-hrsa-shortage-areas",
+      "state": "OK",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "or-public-media-npr-network",
+      "state": "OR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "or-nonprofit-policy-news",
+      "state": "OR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://oregoncapitalchronicle.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "or-local-urban-news",
+      "state": "OR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.oregonlive.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "or-local-rural-news",
+      "state": "OR",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.bendbulletin.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "or-fema-disaster-declarations",
+      "state": "OR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "or-hrsa-shortage-areas",
+      "state": "OR",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "pa-public-media-npr-network",
+      "state": "PA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "pa-nonprofit-policy-news",
+      "state": "PA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://penncapital-star.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "pa-local-urban-news",
+      "state": "PA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.inquirer.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "pa-local-rural-news",
+      "state": "PA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.timesleader.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "pa-fema-disaster-declarations",
+      "state": "PA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "pa-hrsa-shortage-areas",
+      "state": "PA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ri-public-media-npr-network",
+      "state": "RI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ri-nonprofit-policy-news",
+      "state": "RI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://rhodeislandcurrent.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ri-local-urban-news",
+      "state": "RI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.providencejournal.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ri-local-rural-news",
+      "state": "RI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.newportri.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "ri-fema-disaster-declarations",
+      "state": "RI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ri-hrsa-shortage-areas",
+      "state": "RI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sc-public-media-npr-network",
+      "state": "SC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sc-nonprofit-policy-news",
+      "state": "SC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://scdailygazette.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "sc-local-urban-news",
+      "state": "SC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.postandcourier.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "sc-local-rural-news",
+      "state": "SC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.islandpacket.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "sc-fema-disaster-declarations",
+      "state": "SC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sc-hrsa-shortage-areas",
+      "state": "SC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sd-public-media-npr-network",
+      "state": "SD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sd-nonprofit-policy-news",
+      "state": "SD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://southdakotasearchlight.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "sd-local-urban-news",
+      "state": "SD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.argusleader.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "sd-local-rural-news",
+      "state": "SD",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://rapidcityjournal.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "sd-fema-disaster-declarations",
+      "state": "SD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "sd-hrsa-shortage-areas",
+      "state": "SD",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tn-public-media-npr-network",
+      "state": "TN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tn-nonprofit-policy-news",
+      "state": "TN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://tennesseelookout.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "tn-local-urban-news",
+      "state": "TN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.tennessean.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "tn-local-rural-news",
+      "state": "TN",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.timesfreepress.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "tn-fema-disaster-declarations",
+      "state": "TN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tn-hrsa-shortage-areas",
+      "state": "TN",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tx-public-media-npr-network",
+      "state": "TX",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tx-nonprofit-policy-news",
+      "state": "TX",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.texastribune.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "tx-local-urban-news",
+      "state": "TX",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.houstonchronicle.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "tx-local-rural-news",
+      "state": "TX",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.lubbockonline.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "tx-fema-disaster-declarations",
+      "state": "TX",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "tx-hrsa-shortage-areas",
+      "state": "TX",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ut-public-media-npr-network",
+      "state": "UT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ut-nonprofit-policy-news",
+      "state": "UT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://utahnewsdispatch.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ut-local-urban-news",
+      "state": "UT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.sltrib.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "ut-local-rural-news",
+      "state": "UT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.heraldextra.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "ut-fema-disaster-declarations",
+      "state": "UT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "ut-hrsa-shortage-areas",
+      "state": "UT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "vt-public-media-npr-network",
+      "state": "VT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "vt-nonprofit-policy-news",
+      "state": "VT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://vtdigger.org/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "vt-local-urban-news",
+      "state": "VT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.burlingtonfreepress.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "vt-local-rural-news",
+      "state": "VT",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.rutlandherald.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "vt-fema-disaster-declarations",
+      "state": "VT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "vt-hrsa-shortage-areas",
+      "state": "VT",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "va-public-media-npr-network",
+      "state": "VA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "va-nonprofit-policy-news",
+      "state": "VA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://virginiamercury.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "va-local-urban-news",
+      "state": "VA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.richmond.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "va-local-rural-news",
+      "state": "VA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://roanoke.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "va-fema-disaster-declarations",
+      "state": "VA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "va-hrsa-shortage-areas",
+      "state": "VA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wa-public-media-npr-network",
+      "state": "WA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wa-nonprofit-policy-news",
+      "state": "WA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://washingtonstatestandard.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "wa-local-urban-news",
+      "state": "WA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.seattletimes.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "wa-local-rural-news",
+      "state": "WA",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.yakimaherald.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wa-fema-disaster-declarations",
+      "state": "WA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wa-hrsa-shortage-areas",
+      "state": "WA",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wv-public-media-npr-network",
+      "state": "WV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wv-nonprofit-policy-news",
+      "state": "WV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://westvirginiawatch.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "wv-local-urban-news",
+      "state": "WV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.wvgazettemail.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wv-local-rural-news",
+      "state": "WV",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.register-herald.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wv-fema-disaster-declarations",
+      "state": "WV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wv-hrsa-shortage-areas",
+      "state": "WV",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wi-public-media-npr-network",
+      "state": "WI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wi-nonprofit-policy-news",
+      "state": "WI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://wisconsinexaminer.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "wi-local-urban-news",
+      "state": "WI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.jsonline.com/feed/",
+          "ok": false,
+          "status_code": 403,
+          "reason": "HTTPError: 403"
+        }
+      ]
+    },
+    {
+      "source_id": "wi-local-rural-news",
+      "state": "WI",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://lacrossetribune.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wi-fema-disaster-declarations",
+      "state": "WI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wi-hrsa-shortage-areas",
+      "state": "WI",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wy-public-media-npr-network",
+      "state": "WY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wy-nonprofit-policy-news",
+      "state": "WY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://wyofile.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "wy-local-urban-news",
+      "state": "WY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://cowboystatedaily.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wy-local-rural-news",
+      "state": "WY",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://trib.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "wy-fema-disaster-declarations",
+      "state": "WY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "wy-hrsa-shortage-areas",
+      "state": "WY",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "dc-public-media-npr-network",
+      "state": "DC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "dc-nonprofit-policy-news",
+      "state": "DC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://dcist.com/feed/",
+          "ok": false,
+          "status_code": 404,
+          "reason": "HTTPError: 404"
+        }
+      ]
+    },
+    {
+      "source_id": "dc-local-urban-news",
+      "state": "DC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.washingtonpost.com/feed/",
+          "ok": false,
+          "status_code": null,
+          "reason": "TimeoutError: The read operation timed out; GET fallback TimeoutError: The read operation timed out"
+        }
+      ]
+    },
+    {
+      "source_id": "dc-local-rural-news",
+      "state": "DC",
+      "feed_url_known": true,
+      "validation_status": "pending_live_validation",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": [
+        {
+          "field": "rss_url",
+          "url": "https://www.washingtoncitypaper.com/feed/",
+          "ok": true,
+          "status_code": 200,
+          "reason": null
+        }
+      ]
+    },
+    {
+      "source_id": "dc-fema-disaster-declarations",
+      "state": "DC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    },
+    {
+      "source_id": "dc-hrsa-shortage-areas",
+      "state": "DC",
+      "feed_url_known": false,
+      "validation_status": "not_applicable",
+      "feed_validated_live": false,
+      "ingest_ready": false,
+      "checks": []
+    }
+  ]
+}

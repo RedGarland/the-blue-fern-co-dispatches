@@ -3,32 +3,6 @@
   "note": "Map shows source-backed public signals by state/source geography; markers may represent source or regional centroids, not exact incident locations.",
   "markers": [
     {
-      "story_id": "story-7dfd23c0456d",
-      "title": "Wildfire",
-      "category": "Public safety",
-      "state_or_region": "OR",
-      "publisher": "Portland Public Alerts",
-      "published_at": null,
-      "source_url": "https://www.publicalerts.org/wildfire",
-      "source_record_id": "src-bf028459a1c8c5e4",
-      "lat": 45.5152,
-      "lon": -122.6784,
-      "coordinate_basis": "source_default"
-    },
-    {
-      "story_id": "story-ae991974d195",
-      "title": "Wildfire Smoke",
-      "category": "Public safety",
-      "state_or_region": "OR",
-      "publisher": "Portland Public Alerts",
-      "published_at": null,
-      "source_url": "https://www.publicalerts.org/wildfire-smoke",
-      "source_record_id": "src-7a7b82bc50600603",
-      "lat": 45.5152,
-      "lon": -122.6784,
-      "coordinate_basis": "source_default"
-    },
-    {
       "story_id": "story-c70b57fe375d",
       "title": "As drought worsens, Western states brace for wildfires, water shortages",
       "category": "Infrastructure",

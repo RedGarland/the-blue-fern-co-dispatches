@@ -3,7 +3,7 @@
   "dispatch_slug": "cascadia",
   "public_name": "The Cascadia Briefing",
   "briefing_type": "weekly",
-  "run_date": "2026-05-13",
+  "run_date": "2026-05-17",
   "edition_date": "2026-05-10",
   "coverage_start": "2026-05-04",
   "coverage_end": "2026-05-10",
@@ -12,10 +12,8 @@
   "source_record_ids": [
     "src-1ca157b28d74c471",
     "src-6fc820d2a01ab288",
-    "src-7a7b82bc50600603",
     "src-a52f3d778e723089",
     "src-b7877bc94362a40f",
-    "src-bf028459a1c8c5e4",
     "src-e7a30c95563071c6"
   ],
   "source_urls": [
@@ -23,42 +21,37 @@
     "https://idahocapitalsun.com/2026/05/08/repub/company-withdraws-its-bid-for-data-center-water-but-not-because-its-backing-down",
     "https://washingtonstatestandard.com/2026/05/08/a-dozen-legislative-races-to-watch-as-washingtons-election-season-revs-up",
     "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
-    "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
-    "https://www.publicalerts.org/wildfire",
-    "https://www.publicalerts.org/wildfire-smoke"
+    "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages"
   ],
-  "generated_at": "2026-05-13T20:29:42.829687+00:00",
+  "generated_at": "2026-05-18T17:45:36.068605+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 7,
-  "included_source_count": 7,
+  "source_count": 5,
+  "included_source_count": 5,
   "excluded_source_count": 0,
-  "story_count": 164,
-  "public_story_count": 7,
+  "story_count": 33,
+  "public_story_count": 5,
   "public_categories": [
-    "Public safety",
     "Infrastructure",
     "Government and public services",
     "Housing and homelessness"
   ],
   "public_state_hints": [
-    "OR",
     "WA",
     "ID"
   ],
   "public_source_publishers": [
-    "Portland Public Alerts",
     "Washington State Standard Feed",
     "Idaho Capital Sun Feed"
   ],
   "weekly_summary_bullets": [
-    "Public safety, Infrastructure, and Government and public services appeared in OR, WA, and ID source records.",
-    "This edition includes source-backed items from Portland Public Alerts, Washington State Standard Feed, and Idaho Capital Sun Feed.",
-    "7 public source-backed stories met the current public-systems criteria."
+    "Infrastructure, Government and public services, and Housing and homelessness appeared in WA and ID source records.",
+    "This edition includes source-backed items from Washington State Standard Feed and Idaho Capital Sun Feed.",
+    "5 public source-backed stories met the current public-systems criteria."
   ],
-  "public_archive_subtitle": "7 stories | OR, WA, ID | Public safety, Infrastructure, Government and public services, Housing and homelessness",
+  "public_archive_subtitle": "5 stories | WA, ID | Infrastructure, Government and public services, Housing and homelessness",
   "historical_search": true,
   "providers_used": [
     "gdelt",

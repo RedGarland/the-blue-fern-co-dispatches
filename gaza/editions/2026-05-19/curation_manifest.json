@@ -1,0 +1,187 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-19-001",
+    "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+    "summary": "The Global Sumud Flotilla says commandos have intercepted more than 40 boats trying to breach the Gaza maritime blockade since Tuesday.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-19-bbc-middle-east-5c5de389ca71"
+    ],
+    "source_ids": [
+      "gaza-2026-05-19-bbc-middle-east-5c5de389ca71"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c142vz80553o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-19T13:00:36.893964+00:00",
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-18-001",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "source_url_seen_before",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-19-002",
+    "title": "Israeli far-right minister Smotrich says ICC seeks his arrest",
+    "summary": "Smotrich is the third Israeli official targeted by the ICC, after Netanyahu and Gallant, for war crimes in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-2f8a3dae6096"
+    ],
+    "source_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-2f8a3dae6096"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/19/israeli-far-right-minister-smotrich-says-icc-seeks-his-arrest?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-19T13:00:36.893964+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-19-003",
+    "title": "Gaza aid flotilla organisers say 41 boats intercepted, 10 still sailing",
+    "summary": "Foreign ministers of 10 countries say Israel's storming of the aid flotilla is a blatant violation of international law.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-3c17d4e3cbc9"
+    ],
+    "source_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-3c17d4e3cbc9"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/19/gaza-aid-flotilla-organisers-say-41-boats-intercepted-10-still-sailing?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-19T13:00:36.893964+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-19-004",
+    "title": "Palestine weekly wrap: Jerusalem Day, Nakba mark week of surging attacks",
+    "summary": "Far-right marchers in the Old City chant \"death to Arabs\" while Israel kills Hamas military chief in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-d6c139fbeee8"
+    ],
+    "source_ids": [
+      "gaza-2026-05-19-aljazeera-middle-east-d6c139fbeee8"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/19/palestine-weekly-wrap-jerusalem-day-nakba-surging-attacks?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-19T13:00:36.893964+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

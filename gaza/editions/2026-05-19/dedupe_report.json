@@ -1,0 +1,140 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-19",
+  "candidates_seen": 4,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-19-002",
+      "title": "Israeli far-right minister Smotrich says ICC seeks his arrest",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-19-003",
+      "title": "Gaza aid flotilla organisers say 41 boats intercepted, 10 still sailing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-19-004",
+      "title": "Palestine weekly wrap: Jerusalem Day, Nakba mark week of surging attacks",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-19-001",
+      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "source_url_seen_before",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-18-001",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-19-001",
+      "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "source_url_seen_before",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-18-001",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-19-002",
+      "title": "Israeli far-right minister Smotrich says ICC seeks his arrest",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-19-003",
+      "title": "Gaza aid flotilla organisers say 41 boats intercepted, 10 still sailing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-19-004",
+      "title": "Palestine weekly wrap: Jerusalem Day, Nakba mark week of surging attacks",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

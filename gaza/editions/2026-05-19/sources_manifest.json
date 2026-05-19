@@ -1,0 +1,182 @@
+[
+  {
+    "source_record_id": "gaza-2026-05-19-bbc-middle-east-5c5de389ca71",
+    "source_id": "gaza-2026-05-19-bbc-middle-east-5c5de389ca71",
+    "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+    "url": "https://www.bbc.com/news/articles/c142vz80553o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/c142vz80553o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-19T09:38:27+00:00",
+    "retrieved_at": "2026-05-19T13:00:35.245893+00:00",
+    "summary_or_snippet": "The Global Sumud Flotilla says commandos have intercepted more than 40 boats trying to breach the Gaza maritime blockade since Tuesday.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-19",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-19-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "bbc|israeli forces board gaza bound flotilla near cyprus activists say",
+    "title_fingerprint": "israeli forces board gaza bound flotilla near cyprus activists say",
+    "claim_fingerprint": "bbc|israeli forces board gaza bound flotilla near cyprus activists say|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-19-aljazeera-middle-east-2f8a3dae6096",
+    "source_id": "gaza-2026-05-19-aljazeera-middle-east-2f8a3dae6096",
+    "title": "Israeli far-right minister Smotrich says ICC seeks his arrest",
+    "url": "https://www.aljazeera.com/news/2026/5/19/israeli-far-right-minister-smotrich-says-icc-seeks-his-arrest?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/19/israeli-far-right-minister-smotrich-says-icc-seeks-his-arrest?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-19T12:26:06+00:00",
+    "retrieved_at": "2026-05-19T13:00:35.245893+00:00",
+    "summary_or_snippet": "Smotrich is the third Israeli official targeted by the ICC, after Netanyahu and Gallant, for war crimes in Gaza.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-19",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-19-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israeli far right minister smotrich says icc seeks his arrest",
+    "title_fingerprint": "israeli far right minister smotrich says icc seeks his arrest",
+    "claim_fingerprint": "al jazeera|israeli far right minister smotrich says icc seeks his arrest|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-19-aljazeera-middle-east-3c17d4e3cbc9",
+    "source_id": "gaza-2026-05-19-aljazeera-middle-east-3c17d4e3cbc9",
+    "title": "Gaza aid flotilla organisers say 41 boats intercepted, 10 still sailing",
+    "url": "https://www.aljazeera.com/news/2026/5/19/gaza-aid-flotilla-organisers-say-41-boats-intercepted-10-still-sailing?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/19/gaza-aid-flotilla-organisers-say-41-boats-intercepted-10-still-sailing?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-19T11:24:19+00:00",
+    "retrieved_at": "2026-05-19T13:00:35.245893+00:00",
+    "summary_or_snippet": "Foreign ministers of 10 countries say Israel's storming of the aid flotilla is a blatant violation of international law.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-19",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-19-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|gaza aid flotilla organisers say 41 boats intercepted 10 still sailing",
+    "title_fingerprint": "gaza aid flotilla organisers say 41 boats intercepted 10 still sailing",
+    "claim_fingerprint": "al jazeera|gaza aid flotilla organisers say 41 boats intercepted 10 still sailing|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-19-aljazeera-middle-east-d6c139fbeee8",
+    "source_id": "gaza-2026-05-19-aljazeera-middle-east-d6c139fbeee8",
+    "title": "Palestine weekly wrap: Jerusalem Day, Nakba mark week of surging attacks",
+    "url": "https://www.aljazeera.com/news/2026/5/19/palestine-weekly-wrap-jerusalem-day-nakba-surging-attacks?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/19/palestine-weekly-wrap-jerusalem-day-nakba-surging-attacks?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-19T07:36:17+00:00",
+    "retrieved_at": "2026-05-19T13:00:35.245893+00:00",
+    "summary_or_snippet": "Far-right marchers in the Old City chant \"death to Arabs\" while Israel kills Hamas military chief in Gaza.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-19",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-19-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|palestine weekly wrap jerusalem day nakba mark week of surging attacks",
+    "title_fingerprint": "palestine weekly wrap jerusalem day nakba mark week of surging attacks",
+    "claim_fingerprint": "al jazeera|palestine weekly wrap jerusalem day nakba mark week of surging attacks|conflict"
+  }
+]

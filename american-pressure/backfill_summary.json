@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-05-19T19:00:59.080650+00:00",
+  "start_date": "2026-05-10",
+  "end_date": "2026-05-16",
+  "sources_scanned": 67,
+  "feed_entries_scanned": 605,
+  "accepted_ap_records": 56,
+  "rejected_entries": 549,
+  "accepted_by_state": {
+    "AZ": 2,
+    "DC": 1,
+    "DE": 2,
+    "GA": 2,
+    "ID": 4,
+    "IN": 1,
+    "KY": 1,
+    "MA": 4,
+    "MN": 1,
+    "MT": 1,
+    "NC": 4,
+    "ND": 1,
+    "NH": 3,
+    "NJ": 3,
+    "NV": 1,
+    "NY": 7,
+    "SC": 4,
+    "SD": 2,
+    "TX": 1,
+    "UT": 2,
+    "VA": 2,
+    "WA": 2,
+    "WV": 1,
+    "WY": 4
+  },
+  "accepted_by_pillar": {
+    "environmental_pressure": 4,
+    "food_pressure": 6,
+    "health_access_pressure": 1,
+    "housing_household_cost_pressure": 3,
+    "local_system_strain": 2,
+    "policy_implementation": 40
+  },
+  "mappable_count": 56,
+  "unmapped_count": 0,
+  "duplicate_count": 0,
+  "ssl_mode": "certifi",
+  "insecure_ssl_used": false,
+  "top_rejection_reasons": {
+    "outside_date_window": 533,
+    "feed_ok_no_entries_in_window": 34,
+    "national_politics_without_local_impact": 14,
+    "feed_fetch_or_parse_failed": 5,
+    "non_pressure_topic": 2
+  },
+  "written_files": [
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-11\\feed_backfill_sources.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-12\\feed_backfill_sources.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-13\\feed_backfill_sources.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-14\\feed_backfill_sources.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-15\\feed_backfill_sources.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\american-pressure\\sources\\2026-05-16\\feed_backfill_sources.json"
+  ]
+}

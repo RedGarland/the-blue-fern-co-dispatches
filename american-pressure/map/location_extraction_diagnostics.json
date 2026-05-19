@@ -1,14 +1,14 @@
 {
-  "candidates_seen": 68,
-  "raw_extracted_candidate_count": 68,
-  "accepted_count": 15,
-  "accepted_before_dedupe_count": 15,
-  "accepted_after_dedupe_count": 8,
+  "candidates_seen": 156,
+  "raw_extracted_candidate_count": 156,
+  "accepted_count": 72,
+  "accepted_before_dedupe_count": 72,
+  "accepted_after_dedupe_count": 65,
   "rejected_count": 24,
   "primary_count": 10,
   "affected_count": 0,
   "service_area_count": 0,
-  "state_context_count": 5,
+  "state_context_count": 62,
   "duplicates_collapsed_count": 7,
   "extracted_candidates": [
     {
@@ -896,6 +896,974 @@
       "story_ids": [
         "american-pressure-story-2026-05-16-006"
       ]
+    },
+    {
+      "kind": "state_only",
+      "state": "MA",
+      "evidence": "MA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-002",
+      "source_url": "https://commonwealthbeacon.org/education/as-school-districts-cut-budgets-dei-work-may-be-first-to-go",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "MA",
+      "evidence": "MA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-002",
+      "source_url": "https://commonwealthbeacon.org/education/as-school-districts-cut-budgets-dei-work-may-be-first-to-go",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-nc-local-rural-news-005",
+      "source_url": "https://carolinapublicpress.org/75590/shunning-the-sunshine-nc-order-for-duke-energy-to-hit-brakes-on-solar-raises-policy-legal-questions",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-nc-local-rural-news-005",
+      "source_url": "https://carolinapublicpress.org/75590/shunning-the-sunshine-nc-order-for-duke-energy-to-hit-brakes-on-solar-raises-policy-legal-questions",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/12/mamdani-hochul-nyc-budget-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/12/mamdani-hochul-nyc-budget-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-004",
+      "source_url": "https://nysfocus.com/2026/05/12/new-york-universal-child-care-staffing-ratios-day-care-hochul-ocfs",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-004",
+      "source_url": "https://nysfocus.com/2026/05/12/new-york-universal-child-care-staffing-ratios-day-care-hochul-ocfs",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-13-nc-local-rural-news-002",
+      "source_url": "https://carolinapublicpress.org/75599/troubled-work-history-for-former-vance-co-jail-officer-charged-with-sex-crimes",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-13-nc-local-rural-news-002",
+      "source_url": "https://carolinapublicpress.org/75599/troubled-work-history-for-former-vance-co-jail-officer-charged-with-sex-crimes",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "MA",
+      "evidence": "MA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-14-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/middle-class/i-want-a-legacy-for-my-family",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "MA",
+      "evidence": "MA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-14-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/middle-class/i-want-a-legacy-for-my-family",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-14-nc-local-rural-news-004",
+      "source_url": "https://carolinapublicpress.org/75609/cooking-up-nc-budget-deal-some-ingredients-still-in-dispute",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-14-nc-local-rural-news-004",
+      "source_url": "https://carolinapublicpress.org/75609/cooking-up-nc-budget-deal-some-ingredients-still-in-dispute",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-prison-transfers-proximity-law-delay",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-prison-transfers-proximity-law-delay",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "TX",
+      "evidence": "TX",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-14-tx-nonprofit-policy-news-005",
+      "source_url": "https://feeds.texastribune.org/link/16799/17341571/texas-immigration-law-state-police-arrests-sb4-halt",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "TX",
+      "evidence": "TX",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-14-tx-nonprofit-policy-news-005",
+      "source_url": "https://feeds.texastribune.org/link/16799/17341571/texas-immigration-law-state-police-arrests-sb4-halt",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "DE",
+      "evidence": "DE",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-001",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/crisis-at-the-pal-deepens-as-the-state-demands-it-repay-nearly-900k",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "DE",
+      "evidence": "DE",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-001",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/crisis-at-the-pal-deepens-as-the-state-demands-it-repay-nearly-900k",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "DE",
+      "evidence": "DE",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-002",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/caesar-rodney-board-votes-to-increase-teachers-pay-following-referendum",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "DE",
+      "evidence": "DE",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-002",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/caesar-rodney-board-votes-to-increase-teachers-pay-following-referendum",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idahoans-honor-late-us-interior-secretary-and-gov-dirk-kempthorne",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idahoans-honor-late-us-interior-secretary-and-gov-dirk-kempthorne",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "ID",
+      "evidence": "ID",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nc-local-rural-news-019",
+      "source_url": "https://carolinapublicpress.org/75620/school-in-the-cloud-nc-rules-changes-lead-to-more-online-charter-schools",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NC",
+      "evidence": "NC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nc-local-rural-news-019",
+      "source_url": "https://carolinapublicpress.org/75620/school-in-the-cloud-nc-rules-changes-lead-to-more-online-charter-schools",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-014",
+      "source_url": "https://newhampshirebulletin.com/briefs/lawmakers-approve-bill-to-punish-false-reports-of-child-abuse",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NH",
+      "evidence": "NH",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-014",
+      "source_url": "https://newhampshirebulletin.com/briefs/lawmakers-approve-bill-to-punish-false-reports-of-child-abuse",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NJ",
+      "evidence": "NJ",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-015",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/judicial-vacancies-nj-chief-justice",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NJ",
+      "evidence": "NJ",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-015",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/judicial-vacancies-nj-chief-justice",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NV",
+      "evidence": "NV",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nv-nonprofit-policy-news-011",
+      "source_url": "https://nevadacurrent.com/2026/05/15/backed-by-pro-film-subsidy-groups-carpenter-challenges-progressive-assembly-democratic-incumbent",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NV",
+      "evidence": "NV",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-nv-nonprofit-policy-news-011",
+      "source_url": "https://nevadacurrent.com/2026/05/15/backed-by-pro-film-subsidy-groups-carpenter-challenges-progressive-assembly-democratic-incumbent",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ny-nonprofit-policy-news-018",
+      "source_url": "https://nysfocus.com/2026/05/15/bronx-community-foundation-fire-relief-funds",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "NY",
+      "evidence": "NY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ny-nonprofit-policy-news-018",
+      "source_url": "https://nysfocus.com/2026/05/15/bronx-community-foundation-fire-relief-funds",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SC",
+      "evidence": "SC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-021",
+      "source_url": "https://scdailygazette.com/2026/05/15/utility-regulators-permit-5b-natural-gas-plant-proposed-in-sc-lowcountry",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SC",
+      "evidence": "SC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-021",
+      "source_url": "https://scdailygazette.com/2026/05/15/utility-regulators-permit-5b-natural-gas-plant-proposed-in-sc-lowcountry",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SC",
+      "evidence": "SC",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-023",
+      "source_url": "https://scdailygazette.com/2026/05/15/scs-2026-legislative-session-closes-with-heritage-act-expansion-other-compromises-remain",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SC",
+      "evidence": "SC",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-023",
+      "source_url": "https://scdailygazette.com/2026/05/15/scs-2026-legislative-session-closes-with-heritage-act-expansion-other-compromises-remain",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "UT",
+      "evidence": "UT",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ut-nonprofit-policy-news-024",
+      "source_url": "https://utahnewsdispatch.com/briefs/spencer-cox-issues-emergency-declaration-crops-lost-unseasonal-weather",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "UT",
+      "evidence": "UT",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-ut-nonprofit-policy-news-024",
+      "source_url": "https://utahnewsdispatch.com/briefs/spencer-cox-issues-emergency-declaration-crops-lost-unseasonal-weather",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-029",
+      "source_url": "https://wyofile.com/judges-toss-charges-against-9-over-u-s-attorney-darin-smiths-deeply-concerning-misconduct",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-029",
+      "source_url": "https://wyofile.com/judges-toss-charges-against-9-over-u-s-attorney-darin-smiths-deeply-concerning-misconduct",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "WY",
+      "evidence": "WY",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-001",
+      "source_url": "https://azmirror.com/briefs/stanton-ansari-and-grijalva-demand-ice-answer-for-pepper-spraying-47-overcrowded-detainees",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-001",
+      "source_url": "https://azmirror.com/briefs/stanton-ansari-and-grijalva-demand-ice-answer-for-pepper-spraying-47-overcrowded-detainees",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "GA",
+      "evidence": "GA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "MN",
+      "evidence": "MN",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-mn-nonprofit-policy-news-006",
+      "source_url": "https://minnesotareformer.com/2026/05/16/house-speaker-lisa-demuth-protected-by-red-flag-law-she-voted-against",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "MN",
+      "evidence": "MN",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-mn-nonprofit-policy-news-006",
+      "source_url": "https://minnesotareformer.com/2026/05/16/house-speaker-lisa-demuth-protected-by-red-flag-law-she-voted-against",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-009",
+      "source_url": "https://southdakotasearchlight.com/2026/05/16/the-principled-stand-that-almost-cost-taxpayers-an-87-million-return-on-their-investment",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "SD",
+      "evidence": "SD",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-009",
+      "source_url": "https://southdakotasearchlight.com/2026/05/16/the-principled-stand-that-almost-cost-taxpayers-an-87-million-return-on-their-investment",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "VA",
+      "evidence": "VA",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "LA",
+      "evidence": "LA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "VA",
+      "evidence": "VA",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "LA",
+      "evidence": "LA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": []
     }
   ],
   "accepted_candidates": [
@@ -1071,6 +2039,633 @@
       "method": "text_source_title_state_only",
       "evidence_text": "WI",
       "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-11-ny-nonprofit-policy-news-001",
+      "source_url": "https://nysfocus.com/2026/05/11/bedford-hills-womens-prison-deaths-transfer",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "source_metadata_state",
+      "evidence_text": "NY",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/opinion/hampshire-college-as-we-know-it-is-closing-we-still-think-it-has-a-future",
+      "story_ids": [],
+      "location_label": "MA",
+      "method": "source_metadata_state",
+      "evidence_text": "MA",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-002",
+      "source_url": "https://commonwealthbeacon.org/education/as-school-districts-cut-budgets-dei-work-may-be-first-to-go",
+      "story_ids": [],
+      "location_label": "MA",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "MA",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-nc-local-rural-news-005",
+      "source_url": "https://carolinapublicpress.org/75590/shunning-the-sunshine-nc-order-for-duke-energy-to-hit-brakes-on-solar-raises-policy-legal-questions",
+      "story_ids": [],
+      "location_label": "NC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/12/mamdani-hochul-nyc-budget-deal",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NY",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-004",
+      "source_url": "https://nysfocus.com/2026/05/12/new-york-universal-child-care-staffing-ratios-day-care-hochul-ocfs",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NY",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-13-nc-local-rural-news-002",
+      "source_url": "https://carolinapublicpress.org/75599/troubled-work-history-for-former-vance-co-jail-officer-charged-with-sex-crimes",
+      "story_ids": [],
+      "location_label": "NC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-13-ny-nonprofit-policy-news-001",
+      "source_url": "https://nysfocus.com/2026/05/13/unaccompanied-kids-immigrant-habeas-orr-detained-parents",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "source_metadata_state",
+      "evidence_text": "NY",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/middle-class/i-want-a-legacy-for-my-family",
+      "story_ids": [],
+      "location_label": "MA",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "MA",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-nc-local-rural-news-004",
+      "source_url": "https://carolinapublicpress.org/75609/cooking-up-nc-budget-deal-some-ingredients-still-in-dispute",
+      "story_ids": [],
+      "location_label": "NC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-002",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-doordash-bloomberg-super-pac",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "source_metadata_state",
+      "evidence_text": "NY",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-prison-transfers-proximity-law-delay",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "text_source_title_state_only",
+      "evidence_text": "NY",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-tx-nonprofit-policy-news-005",
+      "source_url": "https://feeds.texastribune.org/link/16799/17341571/texas-immigration-law-state-police-arrests-sb4-halt",
+      "story_ids": [],
+      "location_label": "TX",
+      "method": "text_source_title_state_only",
+      "evidence_text": "TX",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-dc-local-rural-news-031",
+      "source_url": "https://washingtoncitypaper.com/article/785994/editors-note-after-eight-years-mitch-ryals-signs-off",
+      "story_ids": [],
+      "location_label": "DC",
+      "method": "source_metadata_state",
+      "evidence_text": "DC",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-001",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/crisis-at-the-pal-deepens-as-the-state-demands-it-repay-nearly-900k",
+      "story_ids": [],
+      "location_label": "DE",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "DE",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-002",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/caesar-rodney-board-votes-to-increase-teachers-pay-following-referendum",
+      "story_ids": [],
+      "location_label": "DE",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "DE",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "story_ids": [],
+      "location_label": "GA",
+      "method": "text_source_title_state_only",
+      "evidence_text": "GA",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idahoans-honor-late-us-interior-secretary-and-gov-dirk-kempthorne",
+      "story_ids": [],
+      "location_label": "ID",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "ID",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "story_ids": [],
+      "location_label": "WY",
+      "method": "text_source_title_state_only",
+      "evidence_text": "WY",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "story_ids": [],
+      "location_label": "ID",
+      "method": "text_source_title_state_only",
+      "evidence_text": "ID",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "story_ids": [],
+      "location_label": "ID",
+      "method": "text_source_title_state_only",
+      "evidence_text": "ID",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-in-nonprofit-policy-news-008",
+      "source_url": "https://indianacapitalchronicle.com/2026/05/15/possible-recounts-of-tight-state-senate-races-could-extend-into-july",
+      "story_ids": [],
+      "location_label": "IN",
+      "method": "source_metadata_state",
+      "evidence_text": "IN",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ky-nonprofit-policy-news-009",
+      "source_url": "https://kentuckylantern.com/2026/05/15/repub/us-house-members-scrutinize-big-beautiful-laws-loan-limits-for-nursing-degrees",
+      "story_ids": [],
+      "location_label": "KY",
+      "method": "source_metadata_state",
+      "evidence_text": "KY",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-mt-nonprofit-policy-news-010",
+      "source_url": "https://dailymontanan.com/2026/05/15/dphhs-hosts-disability-employment-summit",
+      "story_ids": [],
+      "location_label": "MT",
+      "method": "source_metadata_state",
+      "evidence_text": "MT",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nc-local-rural-news-019",
+      "source_url": "https://carolinapublicpress.org/75620/school-in-the-cloud-nc-rules-changes-lead-to-more-online-charter-schools",
+      "story_ids": [],
+      "location_label": "NC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills",
+      "story_ids": [],
+      "location_label": "NH",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NH",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive",
+      "story_ids": [],
+      "location_label": "NH",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NH",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-014",
+      "source_url": "https://newhampshirebulletin.com/briefs/lawmakers-approve-bill-to-punish-false-reports-of-child-abuse",
+      "story_ids": [],
+      "location_label": "NH",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NH",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-015",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/judicial-vacancies-nj-chief-justice",
+      "story_ids": [],
+      "location_label": "NJ",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NJ",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-016",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/court-ruling-shocking-judge-remarks",
+      "story_ids": [],
+      "location_label": "NJ",
+      "method": "source_metadata_state",
+      "evidence_text": "NJ",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-017",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/repub/menopause-protections-lawmakers",
+      "story_ids": [],
+      "location_label": "NJ",
+      "method": "source_metadata_state",
+      "evidence_text": "NJ",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nv-nonprofit-policy-news-011",
+      "source_url": "https://nevadacurrent.com/2026/05/15/backed-by-pro-film-subsidy-groups-carpenter-challenges-progressive-assembly-democratic-incumbent",
+      "story_ids": [],
+      "location_label": "NV",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NV",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ny-nonprofit-policy-news-018",
+      "source_url": "https://nysfocus.com/2026/05/15/bronx-community-foundation-fire-relief-funds",
+      "story_ids": [],
+      "location_label": "NY",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "NY",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-020",
+      "source_url": "https://scdailygazette.com/2026/05/15/sc-ports-to-address-flooding-expand-cargo-opportunities-with-vehicle-export-move-to-north-charleton",
+      "story_ids": [],
+      "location_label": "SC",
+      "method": "source_metadata_state",
+      "evidence_text": "SC",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-021",
+      "source_url": "https://scdailygazette.com/2026/05/15/utility-regulators-permit-5b-natural-gas-plant-proposed-in-sc-lowcountry",
+      "story_ids": [],
+      "location_label": "SC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "SC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-022",
+      "source_url": "https://scdailygazette.com/2026/05/15/sc-health-director-out-of-the-job-after-failing-to-receive-senate-approval",
+      "story_ids": [],
+      "location_label": "SC",
+      "method": "source_metadata_state",
+      "evidence_text": "SC",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-023",
+      "source_url": "https://scdailygazette.com/2026/05/15/scs-2026-legislative-session-closes-with-heritage-act-expansion-other-compromises-remain",
+      "story_ids": [],
+      "location_label": "SC",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "SC",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ut-nonprofit-policy-news-024",
+      "source_url": "https://utahnewsdispatch.com/briefs/spencer-cox-issues-emergency-declaration-crops-lost-unseasonal-weather",
+      "story_ids": [],
+      "location_label": "UT",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "UT",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-va-nonprofit-policy-news-025",
+      "source_url": "https://virginiamercury.com/2026/05/15/spanberger-signs-assault-weapons-ban-package-of-criminal-justice-and-energy-bills",
+      "story_ids": [],
+      "location_label": "VA",
+      "method": "source_metadata_state",
+      "evidence_text": "VA",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wa-nonprofit-policy-news-026",
+      "source_url": "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law",
+      "story_ids": [],
+      "location_label": "WA",
+      "method": "source_metadata_state",
+      "evidence_text": "WA",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wv-nonprofit-policy-news-027",
+      "source_url": "https://westvirginiawatch.com/2026/05/15/conservative-organizations-file-briefs-in-support-of-wv-families-challenging-school-vaccine-mandates",
+      "story_ids": [],
+      "location_label": "WV",
+      "method": "source_metadata_state",
+      "evidence_text": "WV",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "story_ids": [],
+      "location_label": "WY",
+      "method": "text_source_title_state_only",
+      "evidence_text": "WY",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-029",
+      "source_url": "https://wyofile.com/judges-toss-charges-against-9-over-u-s-attorney-darin-smiths-deeply-concerning-misconduct",
+      "story_ids": [],
+      "location_label": "WY",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "WY",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "story_ids": [],
+      "location_label": "WY",
+      "method": "text_source_title_state_only",
+      "evidence_text": "WY",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-001",
+      "source_url": "https://azmirror.com/briefs/stanton-ansari-and-grijalva-demand-ice-answer-for-pepper-spraying-47-overcrowded-detainees",
+      "story_ids": [],
+      "location_label": "AZ",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "AZ",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-002",
+      "source_url": "https://azmirror.com/2026/05/15/judge-blocks-pinal-county-attorneys-rogue-ice-deal-says-he-exceeded-his-authority",
+      "story_ids": [],
+      "location_label": "AZ",
+      "method": "source_metadata_state",
+      "evidence_text": "AZ",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "story_ids": [],
+      "location_label": "GA",
+      "method": "text_source_title_state_only",
+      "evidence_text": "GA",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/16/repub/conservation-group-sues-over-esa-protections-for-pygmy-rabbit",
+      "story_ids": [],
+      "location_label": "ID",
+      "method": "source_metadata_state",
+      "evidence_text": "ID",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ma-nonprofit-policy-news-005",
+      "source_url": "https://commonwealthbeacon.org/opinion/what-does-1-7-billion-get-you-in-the-boston-public-schools-abysmal-performance-and-declining-results",
+      "story_ids": [],
+      "location_label": "MA",
+      "method": "source_metadata_state",
+      "evidence_text": "MA",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-mn-nonprofit-policy-news-006",
+      "source_url": "https://minnesotareformer.com/2026/05/16/house-speaker-lisa-demuth-protected-by-red-flag-law-she-voted-against",
+      "story_ids": [],
+      "location_label": "MN",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "MN",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-nd-nonprofit-policy-news-007",
+      "source_url": "https://northdakotamonitor.com/2026/05/16/statewide-candidates-voters-hold-bipartisan-forum-discussing-energy-agriculture-issues",
+      "story_ids": [],
+      "location_label": "ND",
+      "method": "source_metadata_state",
+      "evidence_text": "ND",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "story_ids": [],
+      "location_label": "SD",
+      "method": "text_source_title_state_only",
+      "evidence_text": "SD",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-009",
+      "source_url": "https://southdakotasearchlight.com/2026/05/16/the-principled-stand-that-almost-cost-taxpayers-an-87-million-return-on-their-investment",
+      "story_ids": [],
+      "location_label": "SD",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "SD",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ut-nonprofit-policy-news-010",
+      "source_url": "https://utahnewsdispatch.com/2026/05/16/repub/conservation-group-sues-over-esa-protections-for-pygmy-rabbit",
+      "story_ids": [],
+      "location_label": "UT",
+      "method": "source_metadata_state",
+      "evidence_text": "UT",
+      "evidence_field": "source_metadata",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": [],
+      "location_label": "VA",
+      "method": "text_source_title_state_only",
+      "evidence_text": "VA",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "story_ids": [],
+      "location_label": "LA",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "LA",
+      "evidence_field": "source_snippet",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-wa-nonprofit-policy-news-012",
+      "source_url": "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil",
+      "story_ids": [],
+      "location_label": "WA",
+      "method": "source_metadata_state",
+      "evidence_text": "WA",
+      "evidence_field": "source_metadata",
       "precision": "state_level",
       "location_role": "state_context"
     }
@@ -1597,6 +3192,348 @@
       "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
       "date": "2026-05-04",
       "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-11-ny-nonprofit-policy-news-001",
+      "source_url": "https://nysfocus.com/2026/05/11/bedford-hills-womens-prison-deaths-transfer",
+      "date": "2026-05-11",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/opinion/hampshire-college-as-we-know-it-is-closing-we-still-think-it-has-a-future",
+      "date": "2026-05-12",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-002",
+      "source_url": "https://commonwealthbeacon.org/education/as-school-districts-cut-budgets-dei-work-may-be-first-to-go",
+      "date": "2026-05-12",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-nc-local-rural-news-005",
+      "source_url": "https://carolinapublicpress.org/75590/shunning-the-sunshine-nc-order-for-duke-energy-to-hit-brakes-on-solar-raises-policy-legal-questions",
+      "date": "2026-05-12",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/12/mamdani-hochul-nyc-budget-deal",
+      "date": "2026-05-12",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-004",
+      "source_url": "https://nysfocus.com/2026/05/12/new-york-universal-child-care-staffing-ratios-day-care-hochul-ocfs",
+      "date": "2026-05-12",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-13-nc-local-rural-news-002",
+      "source_url": "https://carolinapublicpress.org/75599/troubled-work-history-for-former-vance-co-jail-officer-charged-with-sex-crimes",
+      "date": "2026-05-13",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-13-ny-nonprofit-policy-news-001",
+      "source_url": "https://nysfocus.com/2026/05/13/unaccompanied-kids-immigrant-habeas-orr-detained-parents",
+      "date": "2026-05-13",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/middle-class/i-want-a-legacy-for-my-family",
+      "date": "2026-05-14",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-nc-local-rural-news-004",
+      "source_url": "https://carolinapublicpress.org/75609/cooking-up-nc-budget-deal-some-ingredients-still-in-dispute",
+      "date": "2026-05-14",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-002",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-doordash-bloomberg-super-pac",
+      "date": "2026-05-14",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-prison-transfers-proximity-law-delay",
+      "date": "2026-05-14",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-tx-nonprofit-policy-news-005",
+      "source_url": "https://feeds.texastribune.org/link/16799/17341571/texas-immigration-law-state-police-arrests-sb4-halt",
+      "date": "2026-05-14",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-dc-local-rural-news-031",
+      "source_url": "https://washingtoncitypaper.com/article/785994/editors-note-after-eight-years-mitch-ryals-signs-off",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-001",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/crisis-at-the-pal-deepens-as-the-state-demands-it-repay-nearly-900k",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-002",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/caesar-rodney-board-votes-to-increase-teachers-pay-following-referendum",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idahoans-honor-late-us-interior-secretary-and-gov-dirk-kempthorne",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-in-nonprofit-policy-news-008",
+      "source_url": "https://indianacapitalchronicle.com/2026/05/15/possible-recounts-of-tight-state-senate-races-could-extend-into-july",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ky-nonprofit-policy-news-009",
+      "source_url": "https://kentuckylantern.com/2026/05/15/repub/us-house-members-scrutinize-big-beautiful-laws-loan-limits-for-nursing-degrees",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-mt-nonprofit-policy-news-010",
+      "source_url": "https://dailymontanan.com/2026/05/15/dphhs-hosts-disability-employment-summit",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nc-local-rural-news-019",
+      "source_url": "https://carolinapublicpress.org/75620/school-in-the-cloud-nc-rules-changes-lead-to-more-online-charter-schools",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-014",
+      "source_url": "https://newhampshirebulletin.com/briefs/lawmakers-approve-bill-to-punish-false-reports-of-child-abuse",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-015",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/judicial-vacancies-nj-chief-justice",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-016",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/court-ruling-shocking-judge-remarks",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-017",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/repub/menopause-protections-lawmakers",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nv-nonprofit-policy-news-011",
+      "source_url": "https://nevadacurrent.com/2026/05/15/backed-by-pro-film-subsidy-groups-carpenter-challenges-progressive-assembly-democratic-incumbent",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ny-nonprofit-policy-news-018",
+      "source_url": "https://nysfocus.com/2026/05/15/bronx-community-foundation-fire-relief-funds",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-020",
+      "source_url": "https://scdailygazette.com/2026/05/15/sc-ports-to-address-flooding-expand-cargo-opportunities-with-vehicle-export-move-to-north-charleton",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-021",
+      "source_url": "https://scdailygazette.com/2026/05/15/utility-regulators-permit-5b-natural-gas-plant-proposed-in-sc-lowcountry",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-022",
+      "source_url": "https://scdailygazette.com/2026/05/15/sc-health-director-out-of-the-job-after-failing-to-receive-senate-approval",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-023",
+      "source_url": "https://scdailygazette.com/2026/05/15/scs-2026-legislative-session-closes-with-heritage-act-expansion-other-compromises-remain",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ut-nonprofit-policy-news-024",
+      "source_url": "https://utahnewsdispatch.com/briefs/spencer-cox-issues-emergency-declaration-crops-lost-unseasonal-weather",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-va-nonprofit-policy-news-025",
+      "source_url": "https://virginiamercury.com/2026/05/15/spanberger-signs-assault-weapons-ban-package-of-criminal-justice-and-energy-bills",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wa-nonprofit-policy-news-026",
+      "source_url": "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wv-nonprofit-policy-news-027",
+      "source_url": "https://westvirginiawatch.com/2026/05/15/conservative-organizations-file-briefs-in-support-of-wv-families-challenging-school-vaccine-mandates",
+      "date": "2026-05-15",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-029",
+      "source_url": "https://wyofile.com/judges-toss-charges-against-9-over-u-s-attorney-darin-smiths-deeply-concerning-misconduct",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "date": "2026-05-15",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-001",
+      "source_url": "https://azmirror.com/briefs/stanton-ansari-and-grijalva-demand-ice-answer-for-pepper-spraying-47-overcrowded-detainees",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-002",
+      "source_url": "https://azmirror.com/2026/05/15/judge-blocks-pinal-county-attorneys-rogue-ice-deal-says-he-exceeded-his-authority",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/16/repub/conservation-group-sues-over-esa-protections-for-pygmy-rabbit",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ma-nonprofit-policy-news-005",
+      "source_url": "https://commonwealthbeacon.org/opinion/what-does-1-7-billion-get-you-in-the-boston-public-schools-abysmal-performance-and-declining-results",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-mn-nonprofit-policy-news-006",
+      "source_url": "https://minnesotareformer.com/2026/05/16/house-speaker-lisa-demuth-protected-by-red-flag-law-she-voted-against",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-nd-nonprofit-policy-news-007",
+      "source_url": "https://northdakotamonitor.com/2026/05/16/statewide-candidates-voters-hold-bipartisan-forum-discussing-energy-agriculture-issues",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-009",
+      "source_url": "https://southdakotasearchlight.com/2026/05/16/the-principled-stand-that-almost-cost-taxpayers-an-87-million-return-on-their-investment",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ut-nonprofit-policy-news-010",
+      "source_url": "https://utahnewsdispatch.com/2026/05/16/repub/conservation-group-sues-over-esa-protections-for-pygmy-rabbit",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "date": "2026-05-16",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-wa-nonprofit-policy-news-012",
+      "source_url": "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil",
+      "date": "2026-05-16",
+      "reason": "mapped_from_source_state"
     }
   ],
   "rejected_records": [
@@ -1740,6 +3677,258 @@
       "category": "local_system_strain",
       "selected_kind": "state_only",
       "location_label": "WI"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ma-nonprofit-policy-news-002",
+      "source_url": "https://commonwealthbeacon.org/education/as-school-districts-cut-budgets-dei-work-may-be-first-to-go",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "MA"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-nc-local-rural-news-005",
+      "source_url": "https://carolinapublicpress.org/75590/shunning-the-sunshine-nc-order-for-duke-energy-to-hit-brakes-on-solar-raises-policy-legal-questions",
+      "category": "food_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/12/mamdani-hochul-nyc-budget-deal",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-12-ny-nonprofit-policy-news-004",
+      "source_url": "https://nysfocus.com/2026/05/12/new-york-universal-child-care-staffing-ratios-day-care-hochul-ocfs",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-13-nc-local-rural-news-002",
+      "source_url": "https://carolinapublicpress.org/75599/troubled-work-history-for-former-vance-co-jail-officer-charged-with-sex-crimes",
+      "category": "food_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ma-nonprofit-policy-news-001",
+      "source_url": "https://commonwealthbeacon.org/middle-class/i-want-a-legacy-for-my-family",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "MA"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-nc-local-rural-news-004",
+      "source_url": "https://carolinapublicpress.org/75609/cooking-up-nc-budget-deal-some-ingredients-still-in-dispute",
+      "category": "food_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-ny-nonprofit-policy-news-003",
+      "source_url": "https://nysfocus.com/2026/05/14/new-york-prison-transfers-proximity-law-delay",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-14-tx-nonprofit-policy-news-005",
+      "source_url": "https://feeds.texastribune.org/link/16799/17341571/texas-immigration-law-state-police-arrests-sb4-halt",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "TX"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-001",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/crisis-at-the-pal-deepens-as-the-state-demands-it-repay-nearly-900k",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "DE"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-de-nonprofit-policy-news-002",
+      "source_url": "https://spotlightdelaware.org/2026/05/15/caesar-rodney-board-votes-to-increase-teachers-pay-following-referendum",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "DE"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/15/ten-candidates-compete-for-two-seats-on-georgias-powerful-utility-commission",
+      "category": "local_system_strain",
+      "selected_kind": "state_only",
+      "location_label": "GA"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-004",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idahoans-honor-late-us-interior-secretary-and-gov-dirk-kempthorne",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "ID"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-005",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/wyoming-cuts-wolf-hunt-in-half-to-buoy-yellowstone-regions-disease-depleted-population",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "WY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-006",
+      "source_url": "https://idahocapitalsun.com/briefs/university-of-idaho-names-former-deputy-attorney-general-as-dean-of-college-of-law",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "ID"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
+      "source_url": "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal",
+      "category": "environmental_pressure",
+      "selected_kind": "state_only",
+      "location_label": "ID"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nc-local-rural-news-019",
+      "source_url": "https://carolinapublicpress.org/75620/school-in-the-cloud-nc-rules-changes-lead-to-more-online-charter-schools",
+      "category": "food_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills",
+      "category": "food_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NH"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013",
+      "source_url": "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive",
+      "category": "environmental_pressure",
+      "selected_kind": "state_only",
+      "location_label": "NH"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nh-nonprofit-policy-news-014",
+      "source_url": "https://newhampshirebulletin.com/briefs/lawmakers-approve-bill-to-punish-false-reports-of-child-abuse",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NH"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nj-nonprofit-policy-news-015",
+      "source_url": "https://newjerseymonitor.com/2026/05/15/judicial-vacancies-nj-chief-justice",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NJ"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-nv-nonprofit-policy-news-011",
+      "source_url": "https://nevadacurrent.com/2026/05/15/backed-by-pro-film-subsidy-groups-carpenter-challenges-progressive-assembly-democratic-incumbent",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NV"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ny-nonprofit-policy-news-018",
+      "source_url": "https://nysfocus.com/2026/05/15/bronx-community-foundation-fire-relief-funds",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "NY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-021",
+      "source_url": "https://scdailygazette.com/2026/05/15/utility-regulators-permit-5b-natural-gas-plant-proposed-in-sc-lowcountry",
+      "category": "local_system_strain",
+      "selected_kind": "state_only",
+      "location_label": "SC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-sc-nonprofit-policy-news-023",
+      "source_url": "https://scdailygazette.com/2026/05/15/scs-2026-legislative-session-closes-with-heritage-act-expansion-other-compromises-remain",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "SC"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-ut-nonprofit-policy-news-024",
+      "source_url": "https://utahnewsdispatch.com/briefs/spencer-cox-issues-emergency-declaration-crops-lost-unseasonal-weather",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "UT"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-028",
+      "source_url": "https://wyofile.com/wyoming-boys-school-state-claim-restraint-methods-confinement-use-of-force-dont-violate-law",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "WY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-029",
+      "source_url": "https://wyofile.com/judges-toss-charges-against-9-over-u-s-attorney-darin-smiths-deeply-concerning-misconduct",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "WY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030",
+      "source_url": "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board",
+      "category": "health_access_pressure",
+      "selected_kind": "state_only",
+      "location_label": "WY"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-az-nonprofit-policy-news-001",
+      "source_url": "https://azmirror.com/briefs/stanton-ansari-and-grijalva-demand-ice-answer-for-pepper-spraying-47-overcrowded-detainees",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "AZ"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003",
+      "source_url": "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable",
+      "category": "environmental_pressure",
+      "selected_kind": "state_only",
+      "location_label": "GA"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-mn-nonprofit-policy-news-006",
+      "source_url": "https://minnesotareformer.com/2026/05/16/house-speaker-lisa-demuth-protected-by-red-flag-law-she-voted-against",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "MN"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-008",
+      "source_url": "https://southdakotasearchlight.com/briefs/biden-announced-as-keynote-speaker-for-south-dakota-democratic-event",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "SD"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-sd-nonprofit-policy-news-009",
+      "source_url": "https://southdakotasearchlight.com/2026/05/16/the-principled-stand-that-almost-cost-taxpayers-an-87-million-return-on-their-investment",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "SD"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "VA"
+    },
+    {
+      "source_record_id": "feed-backfill-2026-05-16-va-nonprofit-policy-news-011",
+      "source_url": "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia",
+      "category": "policy_implementation",
+      "selected_kind": "state_only",
+      "location_label": "LA"
     }
   ],
   "rejected_lower_priority_candidates": [],

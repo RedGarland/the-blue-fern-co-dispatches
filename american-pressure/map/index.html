@@ -29,7 +29,7 @@
     <p><a href="/american-pressure/">Back to American Pressure Dispatch</a> | <a href="/american-pressure/dashboard/">View Dashboard</a> | <a href="/american-pressure/archive.html">View Archive</a> | <a href="/">Dispatches Home</a></p>
     <p class="apd-small">Start here: the map shows where we found source-backed signs of household or community strain.</p>
     <p class="apd-small">This map shows source-backed pressure signals collected so far. It is not a complete census.</p>
-    <p class="apd-small">Places shown on the map: <strong>8</strong> | States with collected reports: <strong>6</strong> | Source-backed reports: <strong>8</strong> | Areas we may be missing: <strong>0</strong></p>
+    <p class="apd-small">Places shown on the map: <strong>65</strong> | States with collected reports: <strong>31</strong> | Source-backed reports: <strong>65</strong> | Areas we may be missing: <strong>0</strong></p>
     <div class="ap-map-controls">
       <label for="ap-map-view-mode">Show grouped places / show individual reports</label>
       <select id="ap-map-view-mode">
@@ -69,7 +69,7 @@
       <ul id="ap-map-national-list"></ul>
     </section>
     <section class="ap-map-needs">
-      <h2>Unmapped source-backed records</h2>
+      <h2>Source-backed records still missing location</h2>
       <ul id="ap-map-needs-list"></ul>
     </section>
   </main>
@@ -162,7 +162,7 @@
         "<li>Service-area reports: " + (payload.service_area_role_count || 0) + "</li>" +
         "<li>Statewide reports: " + (payload.statewide_signal_count || 0) + "</li>" +
         "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
-        "<li>Unmapped records: " + (payload.unmapped_records_count || 0) + "</li>";
+        "<li>Records still missing location: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
         var sources = (pin.source_urls || []).map(function (url) {
           return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';

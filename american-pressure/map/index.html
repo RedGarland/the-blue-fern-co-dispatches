@@ -62,7 +62,9 @@
     <div id="ap-map" class="ap-map-canvas" role="region" aria-label="United States map of source-backed American Pressure locations"></div>
     <section class="ap-map-legend">
       <h2>Legend</h2>
-      <p>Role colors: local report (blue), affected place (orange), service area (teal), statewide report (gray).</p>
+      <p><strong>Location type:</strong> Circle = local report | Square = county or service-area report | Diamond = statewide report.</p>
+      <p><strong>Pressure color:</strong> Food and grocery | Housing and utility | Health care access | Jobs and paycheck | Debt and bankruptcy | Public services | Disaster/recovery | Benefits/policy | Transportation | Childcare/schools.</p>
+      <p>Larger marks mean more source-backed reports are grouped at that place.</p>
     </section>
     <section class="ap-map-needs">
       <h2>National records</h2>
@@ -80,16 +82,23 @@
     </div>
   </footer>
 <style>
-.ap-map-home { width: min(1120px, calc(100% - 24px)); }
+.ap-map-home { width: min(1320px, calc(100% - 24px)); }
 .ap-map-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0 12px; }
 .ap-map-note { color: var(--muted); font-size: .9rem; }
-.ap-map-canvas { height: 520px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #e9eff4; }
+.ap-map-canvas { height: 720px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #e9eff4; }
 .ap-map-legend, .ap-map-needs { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; background: #f8fbfd; padding: 12px 14px; }
 .ap-map-needs ul { margin: 0; padding-left: 18px; }
 .ap-map-needs li { margin: 8px 0; }
+.ap-map-marker {
+  border: 1px solid rgba(15, 23, 42, .8);
+  box-shadow: 0 1px 5px rgba(15, 23, 42, .35);
+}
+.ap-map-marker-circle { border-radius: 50%; }
+.ap-map-marker-square { border-radius: 2px; }
+.ap-map-marker-diamond { transform: rotate(45deg); border-radius: 2px; }
 @media (max-width: 760px) {
   .ap-map-home { width: calc(100% - 16px); }
-  .ap-map-canvas { height: 430px; }
+  .ap-map-canvas { height: 520px; }
 }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
@@ -122,7 +131,6 @@
       var national = Array.isArray(payload.national_records) ? payload.national_records : [];
       var categories = Array.isArray(payload.categories) ? payload.categories : [];
       var states = Array.isArray(payload.states) ? payload.states : [];
-      var roles = Array.isArray(payload.location_roles) ? payload.location_roles : [];
       var markers = [];
       categories.forEach(function (cat) {
         var opt = document.createElement("option");
@@ -130,10 +138,50 @@
         opt.textContent = cat;
         filter.appendChild(opt);
       });
+      function categoryLabel(cat) {
+        var labels = {
+          food_pressure: "Food and grocery pressure",
+          housing_pressure: "Housing and utility pressure",
+          health_access_pressure: "Health care access pressure",
+          jobs_pressure: "Jobs and paycheck pressure",
+          debt_pressure: "Debt and bankruptcy pressure",
+          local_system_strain: "Public services under strain",
+          disaster_pressure: "Disaster, insurance, and recovery pressure",
+          policy_delivery_pressure: "Benefits and policy delivery pressure",
+          transportation_pressure: "Transportation and daily access pressure",
+          childcare_pressure: "Childcare, schools, and family pressure"
+        };
+        return labels[cat] || "Public pressure signal";
+      }
+      function precisionLabel(precision) {
+        if (precision === "county_state" || precision === "service_area") return "County/service area";
+        if (precision === "state_level") return "Statewide";
+        return "City/local";
+      }
+      function precisionNote(precision) {
+        if (precision === "county_state" || precision === "service_area") return "Mapped to county level.";
+        if (precision === "state_level") return "Statewide report.";
+        return "Mapped to city level, not an exact address.";
+      }
+      function whyItMatters(cat) {
+        var notes = {
+          food_pressure: "Food costs and food access strain family budgets and local support systems.",
+          housing_pressure: "Housing and utility strain can destabilize households and increase displacement risk.",
+          health_access_pressure: "Health access strain can delay care and increase preventable hardship.",
+          jobs_pressure: "Income shocks can ripple through household budgets and local services.",
+          debt_pressure: "Debt stress can reduce household options and strain local economies.",
+          local_system_strain: "Service strain can limit the support communities rely on day to day.",
+          disaster_pressure: "Disaster and insurance strain can slow recovery and raise household costs.",
+          policy_delivery_pressure: "Benefit delivery gaps can leave families waiting on essential support.",
+          transportation_pressure: "Transportation strain can cut access to work, school, and care.",
+          childcare_pressure: "Childcare and school strain can disrupt work and family stability."
+        };
+        return notes[cat] || "This pressure can make daily life less stable for households and communities.";
+      }
       ["exact_or_source_provided", "city_state", "county_state", "service_area", "state_level"].forEach(function (p) {
         var opt = document.createElement("option");
         opt.value = p;
-        opt.textContent = p;
+        opt.textContent = precisionLabel(p);
         precisionFilter.appendChild(opt);
       });
       states.forEach(function (st) {
@@ -142,10 +190,14 @@
         opt.textContent = st;
         stateFilter.appendChild(opt);
       });
-      roles.forEach(function (role) {
+      [
+        { value: "city_or_local", label: "City/local" },
+        { value: "county_or_service_area", label: "County/service area" },
+        { value: "statewide_report", label: "Statewide" }
+      ].forEach(function (row) {
         var opt = document.createElement("option");
-        opt.value = role === "primary_location" ? "local_report" : role === "affected_location" ? "affected_place" : role === "service_area" ? "service_area" : "statewide_report";
-        opt.textContent = role === "primary_location" ? "Local report" : role === "affected_location" ? "Affected place" : role === "service_area" ? "Service area" : "Statewide report";
+        opt.value = row.value;
+        opt.textContent = row.label;
         roleFilter.appendChild(opt);
       });
       counters.innerHTML =
@@ -157,50 +209,70 @@
         "<li>County/state pins: " + (payload.county_state_count || 0) + "</li>" +
         "<li>Service-area pins: " + (payload.service_area_count || 0) + "</li>" +
         "<li>State-level pins: " + (payload.state_level_count || 0) + "</li>" +
-        "<li>Local reports: " + (payload.primary_location_count || 0) + "</li>" +
-        "<li>Affected-place reports: " + (payload.affected_location_count || 0) + "</li>" +
-        "<li>Service-area reports: " + (payload.service_area_role_count || 0) + "</li>" +
-        "<li>Statewide reports: " + (payload.statewide_signal_count || 0) + "</li>" +
         "<li>National records: " + (payload.national_records_count || 0) + "</li>" +
         "<li>Records still missing location: " + (payload.unmapped_records_count || 0) + "</li>";
       function popupHtml(pin) {
-        var sources = (pin.source_urls || []).map(function (url) {
-          return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';
-        }).join(" | ");
-        return '<strong>' + (pin.title || "Untitled") + '</strong><br>' +
-          'Date: ' + (pin.date || '') + '<br>' +
-          (pin.location_label || "Location not labeled") + '<br>' +
-          'Pressure type: ' + (pin.category || "uncategorized") + '<br>' +
-          'Precision note: ' + (pin.location_precision_warning || pin.precision_warning || pin.location_precision || "unknown") + '<br>' +
-          'Location type: ' + (pin.location_role === "primary_location" ? "Local report" : pin.location_role === "affected_location" ? "Affected place" : pin.location_role === "service_area" ? "Service area" : "Statewide report") + '<br>' +
-          (pin.location_precision_warning ? ('Warning: ' + pin.location_precision_warning + '<br>') : '') +
-          'Evidence: ' + (pin.evidence_text || pin.extraction_evidence_text || "") + '<br>' +
-          'Record IDs: ' + (pin.source_record_ids || []).join(", ") + '<br>' +
-          '<a href="' + (pin.edition_url || "/american-pressure/") + '">Written dispatch</a> | ' + sources;
+        var sourceUrl = (pin.source_urls && pin.source_urls[0]) || pin.source_url || "";
+        var sourceName = pin.source_name || "Source";
+        var readMore = pin.edition_url || "/american-pressure/";
+        return '<strong>' + (pin.location_label || "Place not labeled") + '</strong><br><br>' +
+          'Pressure type:<br>' + categoryLabel(pin.category) + '<br><br>' +
+          'What we found:<br>' + (pin.title || "Source-backed local pressure report") + '<br><br>' +
+          'Why it matters:<br>' + whyItMatters(pin.category) + '<br><br>' +
+          'Source:<br>' + (sourceUrl ? '<a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer">' + sourceName + '</a>' : sourceName) + '<br><br>' +
+          'Read more:<br><a href="' + readMore + '">Related dispatch section</a><br><br>' +
+          'Precision:<br>' + precisionNote(pin.location_precision || "");
       }
       function popupHtmlAggregated(group) {
-        var sourceLinks = (group.source_urls || []).map(function (url) {
-          return '<a href="' + url + '" target="_blank" rel="noopener noreferrer">Source</a>';
-        }).join(" | ");
-        var storyLinks = (group.written_story_links || []).map(function (row) {
-          if (!row || !row.url) return "";
-          var label = row.label || row.story_id || "Written section";
-          return '<a href="' + row.url + '">' + label + '</a>';
-        }).filter(Boolean).join(" | ");
-        return '<strong>' + (group.location_label || "Location") + '</strong><br>' +
-          'Total signals at this location: ' + (group.record_count || 0) + '<br>' +
-          'Count by location type: ' + JSON.stringify(group.role_counts || {}) + '<br>' +
-          'Pressure categories represented: ' + ((group.categories || []).join(", ") || "uncategorized") + '<br>' +
-          'Source IDs: ' + ((group.source_record_ids || []).join(", ") || "none") + '<br>' +
-          'All sources: ' + (sourceLinks || "none") + '<br>' +
-          'Related written stories: ' + (storyLinks || "none") + '<br>' +
-          'Evidence snippets: ' + ((group.pins || []).map(function (p) { return p.evidence_text || p.extraction_evidence_text || ""; }).filter(Boolean).join(" | ") || "none");
+        var topPins = (group.pins || []).slice(0, 3);
+        var pressureTypes = Array.from(new Set((group.categories || []).map(categoryLabel))).join(", ");
+        var titleList = topPins.map(function (p) { return '<li>' + (p.title || "Source-backed report") + '</li>'; }).join("");
+        var sourceLinks = topPins.map(function (p) {
+          var sourceUrl = (p.source_urls && p.source_urls[0]) || p.source_url || "";
+          var sourceName = p.source_name || "Source";
+          return sourceUrl ? '<li><a href="' + sourceUrl + '" target="_blank" rel="noopener noreferrer">' + sourceName + "</a></li>" : "<li>" + sourceName + "</li>";
+        }).join("");
+        var readMore = (group.written_story_links || []).find(function (row) { return row && row.url; });
+        var extraNote = (group.record_count || 0) > 3 ? "More reports are grouped here." : "";
+        return '<strong>' + (group.location_label || "Place") + '</strong><br><br>' +
+          'Source-backed reports:<br>' + (group.record_count || 0) + '<br><br>' +
+          'Pressure types represented:<br>' + (pressureTypes || "Public pressure signal") + '<br><br>' +
+          'What we found:<ul>' + titleList + "</ul>" +
+          'Source:<ul>' + sourceLinks + "</ul>" +
+          'Read more:<br>' + (readMore ? '<a href="' + readMore.url + '">' + (readMore.label || "Related dispatch section") + "</a>" : "Related dispatch section") + '<br>' +
+          (extraNote ? ("<br>" + extraNote) : "");
       }
-      function markerStyle(pin) {
-        if (pin.location_role === "primary_location") return { radius: 7, fillColor: "#2b6cb0", color: "#1a436e", weight: 1, fillOpacity: 0.9 };
-        if (pin.location_role === "affected_location") return { radius: 7, fillColor: "#c06c00", color: "#8f5100", weight: 1, fillOpacity: 0.9 };
-        if (pin.location_role === "service_area") return { radius: 7, fillColor: "#0f766e", color: "#115e59", weight: 1, fillOpacity: 0.9 };
-        return { radius: 7, fillColor: "#616161", color: "#3b3b3b", weight: 1, fillOpacity: 0.9 };
+      function colorForCategory(category) {
+        var colors = {
+          food_pressure: "#2f855a",
+          housing_pressure: "#8b5a2b",
+          health_access_pressure: "#005f73",
+          jobs_pressure: "#264653",
+          debt_pressure: "#7f5539",
+          local_system_strain: "#3d405b",
+          disaster_pressure: "#c1121f",
+          policy_delivery_pressure: "#4a4e69",
+          transportation_pressure: "#1d3557",
+          childcare_pressure: "#6d597a"
+        };
+        return colors[category] || "#475569";
+      }
+      function markerShapeClass(pin) {
+        if (pin.location_precision === "state_level") return "ap-map-marker-diamond";
+        if (pin.location_precision === "county_state" || pin.location_precision === "service_area") return "ap-map-marker-square";
+        return "ap-map-marker-circle";
+      }
+      function buildMarker(pin, groupedCount) {
+        var size = Math.min(26, Math.max(12, 10 + Math.round(Math.sqrt(groupedCount || 1) * 2)));
+        var markerHtml = '<div class="ap-map-marker ' + markerShapeClass(pin) + '" style="width:' + size + "px;height:" + size + "px;background:" + colorForCategory(pin.category) + ';"></div>';
+        return L.marker([pin.latitude, pin.longitude], {
+          icon: L.divIcon({
+            className: "",
+            html: markerHtml,
+            iconSize: [size, size],
+            iconAnchor: [Math.floor(size / 2), Math.floor(size / 2)]
+          })
+        });
       }
       function windowPass(pin, selectedWindow) {
         var rank = {"current_week": 1, "last_30_days": 2, "last_60_days": 3};
@@ -208,13 +280,14 @@
         var target = rank[selectedWindow || "last_30_days"] || 2;
         return actual <= target;
       }
-      function roleMatches(pinRole, selectedRole) {
+      function roleFromPin(pin) {
+        if ((pin.location_precision || "") === "state_level") return "statewide_report";
+        if ((pin.location_precision || "") === "county_state" || (pin.location_precision || "") === "service_area") return "county_or_service_area";
+        return "city_or_local";
+      }
+      function roleMatches(pin, selectedRole) {
         if (selectedRole === "all") return true;
-        if (selectedRole === "local_report") return pinRole === "primary_location";
-        if (selectedRole === "affected_place") return pinRole === "affected_location";
-        if (selectedRole === "service_area") return pinRole === "service_area";
-        if (selectedRole === "statewide_report") return pinRole !== "primary_location" && pinRole !== "affected_location" && pinRole !== "service_area";
-        return true;
+        return roleFromPin(pin) === selectedRole;
       }
       function renderPins(category, precision, state, role, mode, selectedWindow) {
         markers.forEach(function (m) { map.removeLayer(m); });
@@ -224,11 +297,11 @@
             var catOk = category === "all" || pin.category === category;
             var okPrecision = precision === "all" || pin.location_precision === precision;
             var okState = state === "all" || pin.state === state;
-            var okRole = roleMatches(pin.location_role, role);
+            var okRole = roleMatches(pin, role);
             return catOk && okPrecision && okState && okRole && windowPass(pin, selectedWindow);
           });
           activeIndividual.forEach(function (pin) {
-            var marker = L.circleMarker([pin.latitude, pin.longitude], markerStyle(pin)).addTo(map).bindPopup(popupHtml(pin));
+            var marker = buildMarker(pin, 1).addTo(map).bindPopup(popupHtml(pin));
             markers.push(marker);
           });
           countEl.textContent = activeIndividual.length + " mapped source signal(s)";
@@ -238,16 +311,14 @@
           var catOk = category === "all" || (Array.isArray(pin.categories) && pin.categories.indexOf(category) >= 0);
           var okPrecision = precision === "all" || pin.location_precision === precision;
           var okState = state === "all" || pin.state === state;
-          var okRole = roleMatches(pin.location_role, role);
+          var okRole = roleMatches(pin, role);
           var groupPins = Array.isArray(pin.pins) ? pin.pins : [];
           var anyInWindow = groupPins.some(function (p) { return windowPass(p, selectedWindow); });
           return catOk && okPrecision && okState && okRole && anyInWindow;
         });
         active.forEach(function (group) {
           var pin = (Array.isArray(group.pins) && group.pins[0]) ? group.pins[0] : group;
-          var style = markerStyle(pin);
-          style.radius = Math.min(16, 6 + Math.max(1, Math.sqrt(group.record_count || 1) * 2));
-          var marker = L.circleMarker([group.latitude, group.longitude], style).addTo(map).bindPopup(popupHtmlAggregated(group));
+          var marker = buildMarker(pin, group.record_count || 1).addTo(map).bindPopup(popupHtmlAggregated(group));
           markers.push(marker);
         });
         var recordCount = active.reduce(function (sum, group) {

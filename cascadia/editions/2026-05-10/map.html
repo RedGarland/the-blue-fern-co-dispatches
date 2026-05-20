@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cascadia Weekly Signal Map - 2026-05-10</title>
+  <title>Cascadia Pressure Map - 2026-05-10</title>
   <link rel="icon" href="/assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -14,21 +14,40 @@
     html, body { height: 100%; margin: 0; font: 15px/1.45 "Segoe UI", Tahoma, sans-serif; background: linear-gradient(180deg,#f7fbfc,#eaf1f2); color:#13252f; }
     .shell { position: relative; height: 100%; }
     #map { height: 100%; width: 100%; }
-    .map-note { position:absolute; left:14px; top:14px; z-index:900; background:rgba(255,255,255,.9); padding:8px 10px; border-radius:10px; max-width:380px; border:1px solid #c8d7db; }
-    .controls { position:absolute; right:14px; top:14px; z-index:900; display:flex; gap:8px; }
-    .btn { border:1px solid #b6c9cf; background:#fff; color:#12364a; border-radius:999px; padding:6px 10px; cursor:pointer; font-size:13px; }
+    .minimal-header { position:absolute; left:14px; top:14px; z-index:920; background:rgba(255,255,255,.95); padding:10px 12px; border-radius:10px; max-width:420px; border:1px solid #c8d7db; }
+    .minimal-header h1 { margin:0; font-size:1rem; color:#12364a; }
+    .minimal-header p { margin:.35rem 0 0; color:#244451; font-size:.88rem; }
+    .controls { position:absolute; right:14px; top:14px; z-index:930; display:grid; gap:6px; background:rgba(255,255,255,.96); padding:10px; border-radius:10px; border:1px solid #c8d7db; min-width:250px; }
+    .controls label { font-size:.75rem; color:#2a4c59; font-weight:600; }
+    .controls select, .controls button { width:100%; border:1px solid #b6c9cf; background:#fff; color:#12364a; border-radius:8px; padding:6px 8px; cursor:pointer; font-size:13px; }
     details.legend { position:absolute; right:14px; bottom:14px; z-index:900; background:#fff; border:1px solid #c8d7db; border-radius:10px; padding:8px 10px; width:250px; }
     details.legend summary { cursor:pointer; font-weight:600; color:var(--deep-blue); }
+    details.about { position:absolute; left:14px; bottom:14px; z-index:900; background:#fff; border:1px solid #c8d7db; border-radius:10px; padding:8px 10px; width:320px; }
+    details.about summary { cursor:pointer; font-weight:600; color:var(--deep-blue); }
     .tip { font-size:12px; color:#35515f; }
     .scope-local{color:var(--evergreen);} .scope-county{color:var(--muted-teal);} .scope-state{color:var(--deep-blue);}
     .leaflet-tooltip { background:#103545; color:#f2f8f9; border:0; box-shadow:none; }
+    .group-count { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:999px; color:#fff; font-weight:700; background:#2f6f88; border:2px solid #e8eeef; }
+    @media (max-width: 900px) {
+      .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; }
+      details.legend { right:14px; bottom:210px; }
+      details.about { left:14px; bottom:210px; width:calc(100% - 28px); max-width:none; }
+    }
   </style>
 </head>
 <body>
   <div class="shell">
-    <div class="map-note">Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</div>
-    <div class="controls"><button id="showGrouped" class="btn">Grouped</button><button id="showSingle" class="btn">Individual</button></div>
-    <details class="legend"><summary>Legend</summary><p class="tip"><span class="scope-local">Circle</span>: Local<br><span class="scope-county">Square</span>: County/area<br><span class="scope-state">Diamond</span>: Statewide</p></details>
+    <div class="minimal-header"><h1>Cascadia Pressure Map</h1><p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p></div>
+    <div class="controls">
+      <label for="pressureFilter">Pressure area</label><select id="pressureFilter"><option value="">All pressure areas</option></select>
+      <label for="stateFilter">State</label><select id="stateFilter"><option value="">All states</option></select>
+      <label for="regionFilter">Region</label><select id="regionFilter"><option value="">All regions</option></select>
+      <label for="timeFilter">Time period</label><select id="timeFilter"><option value="all">All</option><option value="7">Current completed week</option><option value="14">Previous week</option><option value="30">Last 30 days</option></select>
+      <label for="viewMode">View</label><select id="viewMode"><option value="grouped">Grouped places</option><option value="individual">Individual reports</option></select>
+      <button id="resetMap">Reset map</button>
+    </div>
+    <details class="legend"><summary>Legend</summary><p class="tip"><span class="scope-local">Circle</span>: Local<br><span class="scope-county">Square</span>: County/area<br><span class="scope-state">Diamond</span>: Statewide<br>Grouped bubbles scale by report count.</p></details>
+    <details class="about"><summary>About this map</summary><p class="tip">This map highlights source-backed pressure signals from Washington, Oregon, and Idaho. It is designed as a quick public view of local and regional conditions.</p></details>
     <div id="map"></div>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -43,35 +62,92 @@
       const grouped = payload.grouped_markers || [];
       let active = [];
       function clear() { active.forEach((m) => map.removeLayer(m)); active = []; }
-      function shape(scope) {
+      function markerHtml(scope, count) {
+        if (count && count > 1) {
+          const size = Math.min(46, 26 + (count * 2));
+          return `<div class="group-count" style="width:${size}px;height:${size}px;">${count}</div>`;
+        }
         if (scope === "statewide") return '<div style="width:20px;height:20px;background:#12364a;transform:rotate(45deg);border-radius:3px;"></div>';
         if (scope === "county") return '<div style="width:18px;height:18px;background:#2f7d7b;border-radius:4px;"></div>';
         return '<div style="width:16px;height:16px;background:#1f5a4c;border-radius:50%;"></div>';
       }
       function popup(item) {
-        return `<strong>${item.regional_area || item.state_or_region || 'Place'}</strong><br>` +
-          `Pressure type: ${item.pressure_type}<br>` +
-          `What we found: ${item.what_we_found}<br>` +
-          `Why it matters: ${item.why_it_matters}<br>` +
-          `Source: <a href="${item.source_url}" target="_blank" rel="noopener noreferrer">${item.publisher || 'Source'}</a><br>` +
-          `Read more: <a href="${item.read_more || '/cascadia/'}">Edition</a>`;
+        return `<div style="font-size:14px;line-height:1.45">` +
+          `<div style="font-size:1.05rem;font-weight:700;margin-bottom:4px">${item.place || item.regional_area || item.state || 'Place'}</div>` +
+          `<div><strong>Pressure type:</strong><br>${item.pressure_type || 'Local pressure signal'}</div>` +
+          `<div style="margin-top:6px"><strong>What we found:</strong><br>${item.what_we_found || 'Source-backed report.'}</div>` +
+          `<div style="margin-top:6px"><strong>Why it matters:</strong><br>${item.why_it_matters || 'This affects local households and services.'}</div>` +
+          `<div style="margin-top:6px"><strong>Source:</strong><br><a href="${item.source_url}" target="_blank" rel="noopener noreferrer">${item.publisher || 'Source'}</a></div>` +
+          `<div style="margin-top:6px"><strong>Read more:</strong><br><a href="${item.read_more || '/cascadia/'}">Related Cascadia section</a></div>` +
+          `<div style="margin-top:6px"><strong>Precision:</strong><br>${item.precision_note || 'Mapped to city/county/state level.'}</div>` +
+          `</div>`;
       }
       function draw(rows) {
         clear();
         const bounds = [];
         for (const item of rows) {
-          const icon = L.divIcon({className:'', html:shape(item.marker_scope || 'local'), iconSize:[20,20]});
+          const html = markerHtml(item.marker_scope || 'local', item.group_count || 0);
+          const icon = L.divIcon({className:'', html, iconSize:[24,24]});
           const marker = L.marker([item.lat, item.lon], {icon}).addTo(map).bindPopup(popup(item)).bindTooltip(
-            `<strong>${item.regional_area || item.state_or_region || 'Place'}</strong><br>${item.what_we_found || 'Source-backed report'}`
+            `<strong>${item.place || item.regional_area || item.state || 'Place'}</strong><br>${item.what_we_found || 'Source-backed report'}`
           );
           active.push(marker);
           bounds.push([item.lat, item.lon]);
         }
         if (bounds.length) map.fitBounds(bounds, {padding:[36,36], maxZoom:7});
       }
+      const publishedDate = (item) => {
+        const raw = String(item.published_at || "");
+        const value = new Date(raw);
+        return Number.isNaN(value.getTime()) ? null : value;
+      };
+      function optionize(id, values) {
+        const el = document.getElementById(id);
+        for (const value of values) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          el.appendChild(option);
+        }
+      }
+      optionize('pressureFilter', [...new Set(markers.map((m) => m.pressure_type).filter(Boolean))].sort());
+      optionize('stateFilter', [...new Set(markers.map((m) => m.state).filter(Boolean))].sort());
+      optionize('regionFilter', [...new Set(markers.map((m) => m.region_label).filter(Boolean))].sort());
+      function applyFilters() {
+        const pressure = document.getElementById('pressureFilter').value;
+        const state = document.getElementById('stateFilter').value;
+        const region = document.getElementById('regionFilter').value;
+        const time = document.getElementById('timeFilter').value;
+        const mode = document.getElementById('viewMode').value;
+        const base = mode === 'grouped' && grouped.length ? grouped : markers;
+        const now = new Date();
+        const filtered = base.filter((item) => {
+          if (pressure && item.pressure_type !== pressure) return false;
+          if (state && item.state !== state) return false;
+          if (region && item.region_label !== region) return false;
+          if (time !== 'all') {
+            const days = Number(time);
+            const dt = publishedDate(item);
+            if (!dt) return false;
+            const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24);
+            if (diff > days) return false;
+          }
+          return true;
+        });
+        draw(filtered);
+      }
       draw(grouped.length ? grouped : markers);
-      document.getElementById('showGrouped').addEventListener('click', () => draw(grouped.length ? grouped : markers));
-      document.getElementById('showSingle').addEventListener('click', () => draw(markers));
+      ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode'].forEach((id) => {
+        document.getElementById(id).addEventListener('change', applyFilters);
+      });
+      document.getElementById('resetMap').addEventListener('click', () => {
+        document.getElementById('pressureFilter').value = '';
+        document.getElementById('stateFilter').value = '';
+        document.getElementById('regionFilter').value = '';
+        document.getElementById('timeFilter').value = 'all';
+        document.getElementById('viewMode').value = 'grouped';
+        draw(grouped.length ? grouped : markers);
+      });
     });
   </script>
 </body>

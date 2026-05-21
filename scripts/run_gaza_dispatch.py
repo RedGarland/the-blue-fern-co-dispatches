@@ -20,6 +20,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.generator import (
     BASE_URL,
     DispatchConfig,
+    discover_public_edition_dates,
     footer,
     header,
     page,
@@ -258,10 +259,15 @@ def _assert_gaza_artifact_consistency(
     errors: list[str] = []
     source_count = int(edition_manifest.get("source_count") or 0)
     story_count = int(edition_manifest.get("story_count") or 0)
+    rendered_story_count = sum(
+        1
+        for story in curation_manifest
+        if not isinstance(story, dict) or bool(story.get("public_rendered", True))
+    )
     public_exposed = bool(edition_manifest.get("public_exposed"))
     if source_count != len(sources_manifest):
         errors.append("sources_manifest count does not match edition_manifest.source_count")
-    if story_count != len(curation_manifest):
+    if story_count != rendered_story_count:
         errors.append("curation_manifest count does not match edition_manifest.story_count")
     if html_rendered and not public_exposed:
         errors.append("public HTML exists for non-public edition")
@@ -333,38 +339,7 @@ def render_gaza_edition(edition_date: str, stories: list[dict[str, Any]], source
 
 
 def discover_edition_dates(site_root: Path) -> list[str]:
-    editions_root = site_root / DISPATCH_SLUG / "editions"
-    if not editions_root.exists():
-        return []
-    def _is_listable(path: Path) -> bool:
-        manifest_path = path / "edition_manifest.json"
-        sources_path = path / "sources_manifest.json"
-        curation_path = path / "curation_manifest.json"
-        if not manifest_path.exists() or not sources_path.exists() or not curation_path.exists():
-            return False
-        try:
-            manifest = read_json(manifest_path)
-            sources = read_json(sources_path)
-            stories = read_json(curation_path)
-        except Exception:
-            return False
-        if not isinstance(manifest, dict) or not isinstance(sources, list) or not isinstance(stories, list):
-            return False
-        if len(sources) <= 0 or len(stories) <= 0:
-            return False
-        return not any(
-            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
-            for item in (manifest.get("errors") or [])
-        )
-
-    return sorted(
-        (
-            path.name
-            for path in editions_root.iterdir()
-            if path.is_dir() and DATE_RE.match(path.name) and (path / "index.html").exists() and _is_listable(path)
-        ),
-        reverse=True,
-    )
+    return discover_public_edition_dates(site_root, DISPATCH_SLUG)
 
 
 def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str], include_current: bool = True) -> None:
@@ -383,9 +358,9 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     gaza_root = site_root / DISPATCH_SLUG
-    write_text(gaza_root / "index.html", render_dispatch_index_for_dates(dispatch, dates), dry_run, wrote)
-    write_text(gaza_root / "archive.html", render_archive_for_dates(dispatch, dates), dry_run, wrote)
-    write_text(gaza_root / "rss.xml", render_rss_for_dates(dispatch, dates), dry_run, wrote)
+    write_text(gaza_root / "index.html", render_dispatch_index_for_dates(dispatch, dates, site_root), dry_run, wrote)
+    write_text(gaza_root / "archive.html", render_archive_for_dates(dispatch, dates, site_root), dry_run, wrote)
+    write_text(gaza_root / "rss.xml", render_rss_for_dates(dispatch, dates, site_root), dry_run, wrote)
 
 
 def build_manifests(
@@ -400,6 +375,9 @@ def build_manifests(
     site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
     dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
     backup_dir = BACKUP_ROOT / edition_date
+    rendered_story_count = sum(
+        1 for story in stories if not isinstance(story, dict) or bool(story.get("public_rendered", True))
+    )
     edition_manifest = {
         "dispatch_name": DISPATCH_NAME,
         "dispatch_slug": DISPATCH_SLUG,
@@ -411,7 +389,7 @@ def build_manifests(
         "local_backup_path": str(backup_dir),
         "template_version": "gaza-source-record-v1",
         "source_count": len(sources),
-        "story_count": len(stories),
+        "story_count": rendered_story_count,
         "source_manifest_path": str(site_dir / "sources_manifest.json"),
         "curation_manifest_path": str(site_dir / "curation_manifest.json"),
         "free_public_artifacts": [
@@ -688,6 +666,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
     }
     stories = curate_stories(normalized, edition_date, generated_at)
+    original_story_rows = [dict(story) for story in stories]
     collection_report["final_story_count"] = len(stories)
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
     collection_report["palestinian_development_count"] = sum(
@@ -705,16 +684,30 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    decision_by_story = {str(item.get("story_id")): item for item in dedupe_result.decisions if isinstance(item, dict)}
+    curation_manifest_full: list[dict[str, Any]] = []
+    for story in original_story_rows:
+        story_id = str(story.get("story_id") or "")
+        decision = decision_by_story.get(story_id) or {}
+        include_decision = str(decision.get("include_decision") or "include")
+        row = dict(story)
+        row["include_decision"] = include_decision
+        row["public_rendered"] = include_decision == "include"
+        row["prior_story_matched"] = decision.get("prior_story_matched")
+        row["prior_edition_date"] = decision.get("prior_edition_date")
+        row["dedupe_classification"] = decision.get("classification") or row.get("dedupe_classification")
+        row["dedupe_reasons"] = decision.get("duplicate_reasons") or row.get("dedupe_reasons") or []
+        curation_manifest_full.append(row)
     if len(normalized) == 0:
         errors.append("No valid traceable Gaza sources survived normalization and dedupe; refusing public edition generation.")
     if len(stories) == 0:
         errors.append("No source-backed Gaza stories survived curation/dedupe; refusing public edition generation.")
-    write_json(curated_dir / "curation_manifest.json", stories, dry_run, wrote)
+    write_json(curated_dir / "curation_manifest.json", curation_manifest_full, dry_run, wrote)
     should_render = render or all_steps
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
-            root, edition_date, normalized, stories, generated_at, warnings, errors
+            root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors
         )
         consistency_errors = _assert_gaza_artifact_consistency(edition_manifest, sources_manifest, curation_manifest, html_rendered=True)
         if consistency_errors:
@@ -725,7 +718,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
-            root, edition_date, normalized, stories, generated_at, warnings, errors
+            root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors
         )
         for base in (
             root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date,
@@ -773,7 +766,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
         write_json(dispatch_dir / "edition_manifest.json", failed_manifest, dry_run, wrote)
         write_json(dispatch_dir / "sources_manifest.json", normalized, dry_run, wrote)
-        write_json(dispatch_dir / "curation_manifest.json", stories, dry_run, wrote)
+        write_json(dispatch_dir / "curation_manifest.json", curation_manifest_full, dry_run, wrote)
         site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
         if site_dir.exists():
             wrote.append(str(site_dir))

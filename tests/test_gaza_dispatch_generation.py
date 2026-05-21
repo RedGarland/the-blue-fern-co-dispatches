@@ -704,9 +704,11 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
     result = run_gaza_dispatch(work, "2026-05-15", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
     assert result["ok"] is True
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-15" / "index.html")
+    assert "<h2>At A Glance</h2>" in html
     assert "<h2>Top Story</h2>" in html
     assert "<h2>Other Gaza Developments</h2>" in html
     assert "<h2>Palestinian Developments</h2>" in html
+    assert "<h2>Source Note</h2>" in html
     assert "Gaza hospitals face acute aid shortages after airstrikes" in html
     assert "Settler violence rises in West Bank communities" in html
     assert "East Jerusalem hospital access restrictions affect Palestinian patients" in html

@@ -51,8 +51,18 @@ CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying so
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure")
-DISPATCH_LABELS = {"gaza": "Gaza", "cascadia": "Cascadia", "american-pressure": "American Pressure"}
+DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
+    "gaza": {"label": "Gaza", "public_visible": True},
+    "cascadia": {"label": "Cascadia", "public_visible": True},
+    "american-pressure": {"label": "American Pressure", "public_visible": False},
+}
+DISPATCH_LABELS = {slug: str(meta.get("label") or slug) for slug, meta in DISPATCH_CATALOG.items()}
 ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure")
+
+
+def dispatch_public_visible(slug: str) -> bool:
+    meta = DISPATCH_CATALOG.get(slug, {})
+    return bool(meta.get("public_visible", True))
 
 
 @dataclass(frozen=True)
@@ -505,7 +515,12 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
 
 
 def header(brand: str, root_prefix: str, archive_href: str | None = None, section_href: str | None = None) -> str:
-    nav = '<a href="/gaza/">Gaza</a><a href="/american-pressure/">American Pressure</a><a href="/cascadia/">Cascadia</a>'
+    root_links = []
+    for slug in ("gaza", "cascadia", "american-pressure"):
+        if not dispatch_public_visible(slug):
+            continue
+        root_links.append(f'<a href="/{slug}/">{html.escape(DISPATCH_LABELS.get(slug, slug.title()))}</a>')
+    nav = "".join(root_links)
     if archive_href:
         section_link = f'<a href="{section_href}">{html.escape(brand)}</a>' if section_href else ""
         nav = f'<a href="/">Dispatches Home</a>{section_link}<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
@@ -533,6 +548,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
         </a>
       </li>"""
         for dispatch in dispatches
+        if dispatch_public_visible(dispatch.slug)
     )
     body = f"""{header("Dispatches From The Blue Fern Co.", "")}
   <main class="home">
@@ -582,9 +598,23 @@ def is_weekly_cascadia_manifest(manifest: dict[str, Any], edition_date: str) -> 
         return False
     if manifest.get("edition_date") and manifest.get("edition_date") != edition_date:
         return False
-    if manifest.get("briefing_type") == "weekly":
-        return True
-    return all(manifest.get(field) for field in ("coverage_start", "coverage_end", "week_label"))
+    weekly_markers = {
+        str(manifest.get("briefing_type") or "").strip().lower(),
+        str(manifest.get("cadence") or "").strip().lower(),
+        str(manifest.get("edition_type") or "").strip().lower(),
+    }
+    if "weekly" not in weekly_markers:
+        return False
+    coverage_start = str(manifest.get("coverage_start") or "").strip()
+    coverage_end = str(manifest.get("coverage_end") or "").strip()
+    if not coverage_start or not coverage_end:
+        return False
+    if coverage_end != edition_date:
+        return False
+    coverage_label = str(manifest.get("coverage_label") or manifest.get("public_coverage_label") or "").strip()
+    if not coverage_label:
+        return False
+    return True
 
 
 def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) -> bool:
@@ -773,9 +803,16 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     label = public_edition_label(site_root, dispatch, date)
     subtitle = public_edition_subtitle(site_root, dispatch, date)
     subtitle_html = f'<br><small>{html.escape(subtitle)}</small>' if subtitle else ""
+    actions = ""
+    if dispatch.slug == "cascadia":
+        map_path = site_root / "cascadia" / "editions" / date / "map.html"
+        actions = ' <span class="edition-actions"><a href="editions/{0}/">Read briefing</a>'.format(date)
+        if map_path.exists():
+            actions += ' | <a href="editions/{0}/map.html">View map</a>'.format(date)
+        actions += "</span>"
     return (
         f'      <li><span class="edition-date">{html.escape(label)}</span>'
-        f'<a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(label)}</a>{subtitle_html}</li>'
+        f'<a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(label)}</a>{actions}{subtitle_html}</li>'
     )
 
 
@@ -838,6 +875,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         map_link = '\n    <p><a href="map/">View American Pressure Map</a></p>'
         if (site_root / "american-pressure" / "dashboard" / "index.html").exists():
             dashboard_link = '\n    <p><a href="dashboard/">View American Pressure Dashboard</a></p>'
+    elif dispatch.slug == "cascadia":
+        map_link = '\n    <p><a href="map/">Open latest Cascadia pressure map</a></p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
@@ -913,6 +952,56 @@ def render_sources(stories: list[StoryRecord], sources: list[SourceRecord]) -> s
     return "\n".join(chunks)
 
 
+def render_gaza_structured_sections(edition_date: str, stories: list[StoryRecord], sources: list[SourceRecord]) -> str:
+    source_by_id = {source.source_id: source for source in sources}
+    top_story = stories[0] if stories else None
+    other_stories = stories[1:] if len(stories) > 1 else []
+    chunks: list[str] = []
+    chunks.append("<h1>Dispatches From Gaza</h1>")
+    if stories:
+        chunks.append("<h2>At A Glance</h2>")
+        chunks.append("<ul>")
+        for story in stories:
+            chunks.append(f"<li>{html.escape(story.title)}</li>")
+        chunks.append("</ul>")
+        chunks.append("<h2>Top Story</h2>")
+        if top_story:
+            chunks.append(f"<article><h3>{html.escape(top_story.title)}</h3>")
+            chunks.append(f"<p>{html.escape(top_story.summary)}</p>")
+            chunks.append("<p><strong>Sources</strong></p><ul>")
+            for source_id in top_story.source_ids:
+                source = source_by_id.get(source_id)
+                if source is None:
+                    continue
+                chunks.append(
+                    f'<li><a href="{html.escape(source.url)}" target="_blank" rel="noopener noreferrer">{html.escape(source.title)}</a> - {html.escape(source.publisher)}</li>'
+                )
+            chunks.append("</ul></article>")
+        chunks.append("<h2>Other Gaza Developments</h2>")
+        if other_stories:
+            for story in other_stories:
+                chunks.append(f"<article><h3>{html.escape(story.title)}</h3>")
+                chunks.append(f"<p>{html.escape(story.summary)}</p>")
+                chunks.append("<p><strong>Sources</strong></p><ul>")
+                for source_id in story.source_ids:
+                    source = source_by_id.get(source_id)
+                    if source is None:
+                        continue
+                    chunks.append(
+                        f'<li><a href="{html.escape(source.url)}" target="_blank" rel="noopener noreferrer">{html.escape(source.title)}</a> - {html.escape(source.publisher)}</li>'
+                    )
+                chunks.append("</ul></article>")
+        else:
+            chunks.append("<p>No additional core Gaza developments cleared the public threshold for this edition.</p>")
+        chunks.append("<h2>Palestinian Developments</h2>")
+        chunks.append("<p>No additional source-backed Palestinian developments cleared the public threshold for this edition.</p>")
+    else:
+        chunks.append("<p>No source-backed Gaza stories were generated for this date. Add project-local source records before publishing factual coverage.</p>")
+    chunks.append("<h2>Source Note</h2>")
+    chunks.append("<p>This briefing is based only on saved source records. Each story includes source links so readers can verify where the information came from.</p>")
+    return "\n".join(chunks)
+
+
 def render_edition(dispatch: DispatchConfig) -> str:
     body_html = dispatch.body_html or render_sources(dispatch.stories, dispatch.sources)
     if dispatch.slug == "gaza":
@@ -978,6 +1067,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     edition_manifest = {
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
+        "public_visible": dispatch_public_visible(dispatch.slug),
         "edition_date": dispatch.edition_date,
         "generated_at": generated_at,
         "public_url": f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/",
@@ -1101,7 +1191,7 @@ def build_site(
                 logo=dispatch.logo,
                 sources=kept_sources,
                 stories=kept_stories,
-                body_html=render_sources(kept_stories, kept_sources),
+                body_html=render_gaza_structured_sections(dispatch.edition_date, kept_stories, kept_sources),
                 detail_artifacts=dispatch.detail_artifacts or [],
             )
         if skip_current_edition:
@@ -1706,5 +1796,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-    public_max_dates = public_max_dates or {}

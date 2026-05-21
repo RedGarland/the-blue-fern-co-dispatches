@@ -4,10 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cascadia Pressure Map - 2026-05-10</title>
-  <link rel="icon" href="/assets/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.awesome-markers/2.0.4/leaflet.awesome-markers.css" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -102,8 +98,10 @@
       const regional = payload.regional_reports || [];
       const fallbackNote = "No local reports met the mapping rules for this week. Showing regional/statewide reports instead.";
       const sparseNote = "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context.";
+      const noResultsNote = "No reports match the current map filters. Reset Map to restore the default view.";
       const showRegionalDefault = Boolean(payload.show_regional_default);
       const defaultViewMode = String(payload.default_view_mode || 'local');
+      const localMarkerCount = Number((payload.diagnostics && payload.diagnostics.local_marker_count) || (markers || []).length || 0);
       let active = [];
       function clear() { active.forEach((m) => map.removeLayer(m)); active = []; }
       function categoryIcon(category) { const c = String(category || '').toLowerCase(); if (c.includes('housing') || c.includes('utility')) return 'home'; if (c.includes('health')) return 'plus-square'; if (c.includes('jobs') || c.includes('economy') || c.includes('labor')) return 'briefcase'; if (c.includes('food')) return 'cutlery'; if (c.includes('transport')) return 'road'; if (c.includes('safety') || c.includes('emergency')) return 'exclamation-triangle'; if (c.includes('wildfire') || c.includes('flood') || c.includes('recovery')) return 'fire'; if (c.includes('school') || c.includes('government') || c.includes('policy')) return 'building'; return 'map-marker'; }
@@ -137,7 +135,7 @@
       const dateRange = document.getElementById('dateRange');
       const formatDate = (value) => { const dt = new Date(String(value || '')); if (Number.isNaN(dt.getTime())) return null; return dt.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}); };
       if (payload.coverage_start && payload.coverage_end) { const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) dateRange.textContent = `Reports shown: ${start}-${end}`; }
-      function applyFilters() { if (!controlsReady()) return; const pressure = getEl('pressureFilter').value; const state = getEl('stateFilter').value; const region = getEl('regionFilter').value; const time = getEl('timeFilter').value; const mode = getEl('viewMode').value; const includeRegional = getEl('showRegional').checked; const note = getEl('emptyState'); if (note) note.textContent = defaultViewMode === 'regional_fallback' && includeRegional ? fallbackNote : (defaultViewMode === 'sparse_local_plus_regional' && includeRegional ? sparseNote : 'No local reports met the mapping rules for this week. Regional reports may still be available.'); const baseLocal = mode === 'grouped' && grouped.length ? grouped : markers; const base = includeRegional ? baseLocal.concat(regional) : baseLocal; const now = new Date(); const filtered = base.filter((item) => { if (pressure && item.pressure_type !== pressure) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') { const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; } return true; }); draw(filtered); }
+      function applyFilters() { if (!controlsReady()) return; const pressure = getEl('pressureFilter').value; const state = getEl('stateFilter').value; const region = getEl('regionFilter').value; const time = getEl('timeFilter').value; const mode = getEl('viewMode').value; const includeRegional = getEl('showRegional').checked; const note = getEl('emptyState'); if (note) note.textContent = defaultViewMode === 'regional_fallback' ? fallbackNote : (defaultViewMode === 'sparse_local_plus_regional' ? sparseNote : (localMarkerCount > 0 ? noResultsNote : fallbackNote)); const baseLocal = mode === 'grouped' && grouped.length ? grouped : markers; const base = includeRegional ? baseLocal.concat(regional) : baseLocal; const now = new Date(); const filtered = base.filter((item) => { if (pressure && item.pressure_type !== pressure) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') { const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; } return true; }); draw(filtered); }
       function resetToDefaultView() { if (!controlsReady()) return; getEl('pressureFilter').value = ''; getEl('stateFilter').value = ''; getEl('regionFilter').value = ''; getEl('timeFilter').value = 'all'; getEl('viewMode').value = 'grouped'; getEl('showRegional').checked = showRegionalDefault; applyFilters(); }
       if (controlsReady()) { getEl('showRegional').checked = showRegionalDefault; }
       resetToDefaultView();

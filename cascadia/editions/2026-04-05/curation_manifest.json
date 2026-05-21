@@ -1,0 +1,303 @@
+[
+  {
+    "story_id": "derived-2026-04-05-story-b6d0d3caa370",
+    "title": "Health & Medical",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Healthcare",
+    "why_it_matters": "In Washington, Health system signals can affect access to care, public services, and community resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Healthcare",
+      "region_scope=WA",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-46683107dd034d9d"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/category/health-medical"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-fb7596ce9bb8",
+    "title": "Public Safety",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=WA",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-73e63f4d92cc2b46"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/category/public-safety"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-3d6f218c2dba",
+    "title": "Transportation",
+    "summary": "This source was flagged as a transportation signal for Washington based on its title and source metadata.",
+    "category": "Transportation",
+    "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=WA",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-a8f96fe18f5f792f"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/category/transportation"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-2532a0f5638a",
+    "title": "Water Outage in Seattle Crown Hill Neighborhood",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Infrastructure",
+    "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Infrastructure",
+      "region_scope=WA",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-815f5014c8271cdc"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2025/04/03/water-outage-in-seattle-crown-hill-neighborhood"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-7dfd23c0456d",
+    "title": "Wildfire",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-bf028459a1c8c5e4"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/wildfire"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-15f927fd0944",
+    "title": "Flooding and Land Movement",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Oregon, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=OR",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-a2da713a427edc0a"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/flooding-and-land-movement"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  },
+  {
+    "story_id": "derived-2026-04-05-story-cec48f004ac2",
+    "title": "Power Outage",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Energy and utilities",
+    "why_it_matters": "In Oregon, Public systems signals can affect public services, local planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Energy and utilities",
+      "region_scope=OR",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-05-src-c5f7bd021747eda6"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/power-outage"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-05",
+    "coverage_start": "2026-03-30",
+    "coverage_end": "2026-04-05",
+    "coverage_label": "Mar 30\u2013Apr 5, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-05",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-05\\curation_manifest.json"
+  }
+]

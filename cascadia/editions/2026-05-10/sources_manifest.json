@@ -1,18 +1,18 @@
 [
   {
-    "source_record_id": "src-6ce9ae3c2111bec5",
-    "source_id": "idaho-capital-sun-feed",
+    "source_record_id": "derived-2026-05-10-src-6ce9ae3c2111bec5",
+    "source_id": "existing-cascadia-manifest",
     "title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
     "url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
     "publisher": "Idaho Capital Sun Feed",
     "published_at": "2026-05-07T23:57:47Z",
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-a956b28e801a"
+      "derived-2026-05-10-story-a956b28e801a"
     ],
     "claim_ids": [
-      "story-a956b28e801a"
+      "derived-2026-05-10-story-a956b28e801a"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -24,7 +24,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "ID",
     "category_hint": "government",
-    "source_type": "rss",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://idahocapitalsun.com/feed/",
@@ -36,22 +36,29 @@
     ],
     "state_hint": "ID",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-6ce9ae3c2111bec5",
+    "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
+    "source_title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+    "weekly_date_basis": "published_at",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-a2da713a427edc0a",
-    "source_id": "portland-public-alerts",
+    "source_record_id": "derived-2026-05-10-src-a2da713a427edc0a",
+    "source_id": "existing-cascadia-manifest",
     "title": "Flooding and Land Movement",
     "url": "https://www.publicalerts.org/flooding-and-land-movement",
     "publisher": "Portland Public Alerts",
     "published_at": null,
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-15f927fd0944"
+      "derived-2026-05-10-story-15f927fd0944"
     ],
     "claim_ids": [
-      "story-15f927fd0944"
+      "derived-2026-05-10-story-15f927fd0944"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -63,7 +70,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "OR",
     "category_hint": "public_safety",
-    "source_type": "official_page",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://www.publicalerts.org/",
@@ -74,22 +81,29 @@
     ],
     "state_hint": "OR",
     "reliability_tier": "official-public",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-a2da713a427edc0a",
+    "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
+    "source_title": "Flooding and Land Movement",
+    "weekly_date_basis": "derived_from_edition_date",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-a52f3d778e723089",
-    "source_id": "washington-state-standard-feed",
+    "source_record_id": "derived-2026-05-10-src-a52f3d778e723089",
+    "source_id": "existing-cascadia-manifest",
     "title": "As drought worsens, Western states brace for wildfires, water shortages",
     "url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-10T11:00:20Z",
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-c70b57fe375d"
+      "derived-2026-05-10-story-c70b57fe375d"
     ],
     "claim_ids": [
-      "story-c70b57fe375d"
+      "derived-2026-05-10-story-c70b57fe375d"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -101,7 +115,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "WA",
     "category_hint": "government",
-    "source_type": "rss",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://washingtonstatestandard.com/feed/",
@@ -112,22 +126,29 @@
     ],
     "state_hint": "WA",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-a52f3d778e723089",
+    "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
+    "source_title": "As drought worsens, Western states brace for wildfires, water shortages",
+    "weekly_date_basis": "published_at",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-b25c5eb7bc729d93",
-    "source_id": "washington-state-standard-feed",
+    "source_record_id": "derived-2026-05-10-src-b25c5eb7bc729d93",
+    "source_id": "existing-cascadia-manifest",
     "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
     "url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-08T11:00:11Z",
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-3cee13dfda4c"
+      "derived-2026-05-10-story-3cee13dfda4c"
     ],
     "claim_ids": [
-      "story-3cee13dfda4c"
+      "derived-2026-05-10-story-3cee13dfda4c"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -139,7 +160,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "WA",
     "category_hint": "health",
-    "source_type": "rss",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://washingtonstatestandard.com/feed/",
@@ -151,22 +172,29 @@
     ],
     "state_hint": "WA",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-b25c5eb7bc729d93",
+    "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
+    "source_title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+    "weekly_date_basis": "published_at",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-bf028459a1c8c5e4",
-    "source_id": "portland-public-alerts",
+    "source_record_id": "derived-2026-05-10-src-bf028459a1c8c5e4",
+    "source_id": "existing-cascadia-manifest",
     "title": "Wildfire",
     "url": "https://www.publicalerts.org/wildfire",
     "publisher": "Portland Public Alerts",
     "published_at": null,
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-7dfd23c0456d"
+      "derived-2026-05-10-story-7dfd23c0456d"
     ],
     "claim_ids": [
-      "story-7dfd23c0456d"
+      "derived-2026-05-10-story-7dfd23c0456d"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -178,7 +206,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "OR",
     "category_hint": "public_safety",
-    "source_type": "official_page",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://www.publicalerts.org/",
@@ -189,22 +217,29 @@
     ],
     "state_hint": "OR",
     "reliability_tier": "official-public",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-bf028459a1c8c5e4",
+    "source_url": "https://www.publicalerts.org/wildfire",
+    "source_title": "Wildfire",
+    "weekly_date_basis": "derived_from_edition_date",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-e7a30c95563071c6",
-    "source_id": "washington-state-standard-feed",
+    "source_record_id": "derived-2026-05-10-src-e7a30c95563071c6",
+    "source_id": "existing-cascadia-manifest",
     "title": "Housing advocates expect homelessness numbers to fall slightly",
     "url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-08T11:01:57Z",
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-258aa925cb62"
+      "derived-2026-05-10-story-258aa925cb62"
     ],
     "claim_ids": [
-      "story-258aa925cb62"
+      "derived-2026-05-10-story-258aa925cb62"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -216,7 +251,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "WA",
     "category_hint": "housing",
-    "source_type": "rss",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://washingtonstatestandard.com/feed/",
@@ -227,22 +262,29 @@
     ],
     "state_hint": "WA",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-e7a30c95563071c6",
+    "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
+    "source_title": "Housing advocates expect homelessness numbers to fall slightly",
+    "weekly_date_basis": "published_at",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   },
   {
-    "source_record_id": "src-fc54caaa8129afde",
-    "source_id": "idaho-capital-sun-feed",
+    "source_record_id": "derived-2026-05-10-src-fc54caaa8129afde",
+    "source_id": "existing-cascadia-manifest",
     "title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
     "url": "https://idahocapitalsun.com/2026/05/07/repub/oregons-congressional-democrats-raise-concerns-about-federal-wildfire-response-in-the-northwest",
     "publisher": "Idaho Capital Sun Feed",
     "published_at": "2026-05-08T00:38:36Z",
-    "retrieved_at": "2026-05-20T19:44:53.596791+00:00",
+    "retrieved_at": "2026-05-20T22:43:15.559038+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-a578f9e251fb"
+      "derived-2026-05-10-story-a578f9e251fb"
     ],
     "claim_ids": [
-      "story-a578f9e251fb"
+      "derived-2026-05-10-story-a578f9e251fb"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -254,7 +296,7 @@
     "coverage_label": "May 4\u201310, 2026",
     "region_scope": "ID",
     "category_hint": "government",
-    "source_type": "rss",
+    "source_type": "existing_cascadia_manifest",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
     "query_used": "https://idahocapitalsun.com/feed/",
@@ -268,6 +310,13 @@
     ],
     "state_hint": "ID",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+    "derived_from_edition_date": "2026-05-10",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
+    "original_source_record_id": "src-fc54caaa8129afde",
+    "source_url": "https://idahocapitalsun.com/2026/05/07/repub/oregons-congressional-democrats-raise-concerns-about-federal-wildfire-response-in-the-northwest",
+    "source_title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
+    "weekly_date_basis": "published_at",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved."
   }
 ]

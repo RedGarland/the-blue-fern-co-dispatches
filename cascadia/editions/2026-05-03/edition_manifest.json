@@ -6,81 +6,64 @@
   "cadence": "weekly",
   "edition_type": "weekly",
   "run_date": "2026-05-11",
-  "edition_date": "2026-05-10",
-  "coverage_start": "2026-05-04",
-  "coverage_end": "2026-05-10",
-  "coverage_label": "May 4\u201310, 2026",
-  "public_coverage_label": "May 4\u201310, 2026",
+  "edition_date": "2026-05-03",
+  "coverage_start": "2026-04-27",
+  "coverage_end": "2026-05-03",
+  "coverage_label": "Apr 27\u2013May 3, 2026",
+  "public_coverage_label": "Apr 27\u2013May 3, 2026",
   "public_coverage_range": {
-    "coverage_start": "2026-05-04",
-    "coverage_end": "2026-05-10"
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03"
   },
-  "week_label": "2026-W19",
+  "week_label": "2026-W18",
   "source_record_ids": [
-    "derived-2026-05-10-src-6ce9ae3c2111bec5",
-    "derived-2026-05-10-src-a2da713a427edc0a",
-    "derived-2026-05-10-src-a52f3d778e723089",
-    "derived-2026-05-10-src-b25c5eb7bc729d93",
-    "derived-2026-05-10-src-bf028459a1c8c5e4",
-    "derived-2026-05-10-src-e7a30c95563071c6",
-    "derived-2026-05-10-src-fc54caaa8129afde"
+    "derived-2026-05-03-src-63ceb40d9957a9da",
+    "derived-2026-05-03-src-f6381af1da25bfb2"
   ],
   "source_urls": [
-    "https://idahocapitalsun.com/2026/05/07/repub/oregons-congressional-democrats-raise-concerns-about-federal-wildfire-response-in-the-northwest",
-    "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
-    "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
-    "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
-    "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
-    "https://www.publicalerts.org/flooding-and-land-movement",
-    "https://www.publicalerts.org/wildfire"
+    "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+    "https://www.oregon.gov/oem"
   ],
-  "generated_at": "2026-05-20T22:53:10.617146+00:00",
-  "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/",
-  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10",
+  "generated_at": "2026-05-20T22:53:10.666177+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-03/",
+  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 7,
-  "included_source_count": 7,
+  "source_count": 2,
+  "included_source_count": 2,
   "excluded_source_count": 0,
-  "story_count": 7,
-  "public_story_count": 7,
+  "story_count": 3,
+  "public_story_count": 2,
   "public_categories": [
-    "Infrastructure",
-    "Housing and homelessness",
-    "Healthcare",
-    "Public safety",
-    "Government and public services",
-    "Environment and climate"
+    "Transportation",
+    "Public safety"
   ],
   "public_state_hints": [
     "WA",
-    "ID",
     "OR"
   ],
   "public_source_publishers": [
-    "Washington State Standard Feed",
-    "Idaho Capital Sun Feed",
-    "Portland Public Alerts"
+    "Blue Fern Cascadia Manual Source File"
   ],
   "weekly_summary_bullets": [
-    "Infrastructure, Housing and homelessness, and Healthcare appeared in WA, ID, and OR source records.",
-    "This edition includes source-backed items from Washington State Standard Feed, Idaho Capital Sun Feed, and Portland Public Alerts.",
-    "7 public source-backed stories met the current public-systems criteria."
+    "Transportation and Public safety appeared in WA and OR source records.",
+    "This edition includes source-backed items from Blue Fern Cascadia Manual Source File.",
+    "2 public source-backed stories met the current public-systems criteria."
   ],
-  "public_archive_subtitle": "7 stories | WA, ID, OR | Infrastructure, Housing and homelessness, Healthcare, Public safety",
+  "public_archive_subtitle": "2 stories | WA, OR | Transportation, Public safety",
   "historical_search": true,
   "providers_used": [
     "gdelt",
     "registry"
   ],
-  "query_count": 8,
-  "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-04_2026-05-10\\historical_search_report.json",
-  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
-  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\curation_manifest.json",
+  "query_count": 14,
+  "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-04-27_2026-05-03\\historical_search_report.json",
+  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\sources_manifest.json",
+  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
   "free_public_artifacts": [
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\index.html",
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\sources_manifest.json",
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-10\\curation_manifest.json"
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\sources_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-03\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
@@ -159,9 +142,6 @@
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
@@ -255,9 +235,6 @@
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
-    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
-    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
-    "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
     "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
     "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
     "registry source fetch error: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)>",
@@ -291,11 +268,17 @@
     "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR utility OR utilities OR \"power outage\" OR outage OR power OR \"water system\" OR water OR bridge OR \"road closure\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
     "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): <urlopen error timed out>",
     "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (wildfire OR fire OR smoke OR \"air quality\" OR drought OR flood OR landslide OR earthquake OR climate): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (housing OR homelessness OR shelter OR rent OR eviction): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (layoffs OR unemployment OR \"budget cuts\" OR \"school closure\" OR \"public services\" OR workforce): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (wildfire OR fire OR smoke OR \"air quality\" OR drought OR flood OR landslide OR earthquake OR climate): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (housing OR homelessness OR shelter OR rent OR eviction): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (layoffs OR unemployment OR \"budget cuts\" OR \"school closure\" OR \"public services\" OR workforce): <urlopen error timed out>",
     "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (crime OR \"public safety\" OR \"emergency declaration\" OR evacuation OR \"emergency management\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (agriculture OR \"food assistance\" OR SNAP OR \"food bank\" OR \"food insecurity\"): <urlopen error timed out>"
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (agriculture OR \"food assistance\" OR SNAP OR \"food bank\" OR \"food insecurity\"): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR \"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic OR school OR \"school closure\"): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (housing OR homelessness OR shelter OR rent OR eviction OR wildfire OR fire OR smoke OR \"air quality\" OR drought): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (flood OR landslide OR earthquake OR \"power outage\" OR outage OR utility OR water OR \"water system\" OR transportation OR ferry): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (transit OR bridge OR \"road closure\" OR rail OR freight OR port OR \"supply chain\" OR \"public safety\" OR emergency OR \"emergency declaration\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (economy OR labor OR layoffs OR unemployment OR \"budget cuts\" OR workforce OR agriculture OR \"food assistance\" OR SNAP OR \"food bank\"): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"food insecurity\" OR \"environmental cleanup\" OR climate OR resilience): <urlopen error timed out>"
   ],
   "errors": []
 }

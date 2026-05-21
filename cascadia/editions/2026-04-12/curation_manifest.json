@@ -1,0 +1,45 @@
+[
+  {
+    "story_id": "derived-2026-04-12-story-fb7596ce9bb8",
+    "title": "Public Safety",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=WA",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "derived-2026-04-12-src-73e63f4d92cc2b46"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/category/public-safety"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-04-12",
+    "coverage_start": "2026-04-06",
+    "coverage_end": "2026-04-12",
+    "coverage_label": "Apr 6\u201312, 2026",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-04-12",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-12",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-04-12\\curation_manifest.json"
+  }
+]

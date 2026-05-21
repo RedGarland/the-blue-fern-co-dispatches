@@ -1508,6 +1508,71 @@
     "regional_report_count": 9,
     "default_show_regional": false,
     "initial_render_layer": "local_only",
-    "initial_visible_count": 7
+    "initial_visible_count": 7,
+    "top_sources_local_markers": [
+      {
+        "source": "Idaho Capital Sun",
+        "local_markers": 3
+      },
+      {
+        "source": "Washington State Standard",
+        "local_markers": 2
+      },
+      {
+        "source": "Washington State Standard Feed",
+        "local_markers": 1
+      },
+      {
+        "source": "Idaho Capital Sun Feed",
+        "local_markers": 1
+      }
+    ],
+    "sources_only_regional_reports": [],
+    "sources_with_no_local_mappable_reports": [
+      {
+        "source": "City of Seattle",
+        "non_local_reports": 6
+      },
+      {
+        "source": "Portland PublicAlerts",
+        "non_local_reports": 4
+      },
+      {
+        "source": "Idaho Capital Sun",
+        "non_local_reports": 4
+      },
+      {
+        "source": "Portland Public Alerts",
+        "non_local_reports": 2
+      },
+      {
+        "source": "Washington State Standard Feed",
+        "non_local_reports": 2
+      },
+      {
+        "source": "Marion County",
+        "non_local_reports": 2
+      },
+      {
+        "source": "Washington State Standard",
+        "non_local_reports": 2
+      },
+      {
+        "source": "Idaho Capital Sun Feed",
+        "non_local_reports": 1
+      }
+    ],
+    "top_missing_place_reasons": [
+      {
+        "reason": "statewide_not_default_layer",
+        "count": 9
+      }
+    ],
+    "recommended_source_additions": [
+      "County emergency-management pages with dated updates",
+      "Transit and ferry alert/news feeds with service-area detail",
+      "Local public radio and metro newsroom operations updates",
+      "Utility outage and public health update pages with dated posts"
+    ]
   }
 }

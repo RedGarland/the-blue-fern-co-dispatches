@@ -26,7 +26,9 @@
     .controls label { font-size:.72rem; color:#2a4c59; font-weight:700; }
     .controls select { width:100%; border:1px solid #b6c9cf; background:#fff; color:#12364a; border-radius:8px; padding:6px 8px; cursor:pointer; font-size:13px; }
     details.legend { position:absolute; right:14px; bottom:14px; z-index:900; background:var(--panel); border:1px solid #c8d7db; border-radius:10px; padding:8px 10px; width:260px; box-shadow:0 6px 24px rgba(16,36,44,.08); }
+    details.howto { position:absolute; left:14px; top:14px; z-index:900; background:var(--panel); border:1px solid #c8d7db; border-radius:10px; padding:8px 10px; width:300px; box-shadow:0 6px 24px rgba(16,36,44,.08); }
     details.legend summary { cursor:pointer; font-weight:600; color:var(--deep-blue); }
+    details.howto summary { cursor:pointer; font-weight:600; color:var(--deep-blue); }
     .tip { font-size:12px; color:#35515f; }
     .legend-list { list-style:none; padding:0; margin:8px 0 0; display:grid; gap:6px; }
     .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:#24424f; }
@@ -56,7 +58,7 @@
     .regional-pill { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:999px; color:#1b2f3a; font-weight:800; background:#f7efe3; border:2px solid #6f4f2c; box-shadow:0 2px 8px rgba(25,32,40,.2); font-size:11px; letter-spacing:.4px; }
     .local-pill { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:999px; color:#f4fbfd; font-weight:800; border:2px solid #ecf5f8; box-shadow:0 2px 8px rgba(25,32,40,.2); font-size:15px; }
     .empty-state { position:absolute; left:14px; bottom:14px; z-index:905; background:rgba(248,252,252,.96); color:#2a4c59; border:1px solid #c8d7db; border-radius:10px; padding:10px 12px; font-size:12px; max-width:330px; box-shadow:0 6px 24px rgba(16,36,44,.08); display:none; }
-    @media (max-width: 900px) { .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; } details.legend { right:14px; bottom:210px; } .empty-state { bottom:210px; right:14px; max-width:none; } }
+    @media (max-width: 900px) { .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; } details.legend { right:14px; bottom:210px; } details.howto { left:14px; top:92px; right:14px; width:auto; } .empty-state { bottom:210px; right:14px; max-width:none; } }
   </style>
 </head>
 <body>
@@ -80,6 +82,7 @@
         <label for="viewMode">Map view</label><select id="viewMode"><option value="grouped">Grouped places</option><option value="individual">Individual reports</option></select>
         <label for="showRegional"><input type="checkbox" id="showRegional"> Show regional/statewide reports</label>
       </div>
+      <details class="howto"><summary>How to read this map</summary><p class="tip">This is a regional systems weather map. Markers are source-backed public reports, not predictions.</p><p class="tip">Color and letter show pressure category. Grouped circles show multiple reports in one place.</p><p class="tip">Local markers are place-specific reports. Regional/statewide reports are a separate context layer.</p><p class="tip">This map is not a complete census or disaster map. It shows traceable weekly signals.</p></details>
       <details class="legend"><summary>Legend</summary><p class="tip">Icon markers show pressure categories. Grouped circles show multiple reports in one place.</p><ul class="legend-list"><li class="legend-item"><span class="legend-dot" style="background:#B08A57;"></span>Housing and utility pressure</li><li class="legend-item"><span class="legend-dot" style="background:#5D8793;"></span>Health care access</li><li class="legend-item"><span class="legend-dot" style="background:#3F5878;"></span>Jobs and local economy</li><li class="legend-item"><span class="legend-dot" style="background:#5D7F62;"></span>Food and household support</li><li class="legend-item"><span class="legend-dot" style="background:#5B6F8A;"></span>Transportation and access</li><li class="legend-item"><span class="legend-dot" style="background:#9A5A4A;"></span>Public safety and emergency services</li><li class="legend-item"><span class="legend-dot" style="background:#B6784F;"></span>Wildfire, drought, flood, and recovery</li><li class="legend-item"><span class="legend-dot" style="background:#6D6287;"></span>Schools and local government services</li></ul></details>
       <div id="emptyState" class="empty-state">No reports match the current map filters. Reset Map to restore the default view.</div>
       <div id="renderWarning" class="empty-state">Some map markers could not be displayed.</div>

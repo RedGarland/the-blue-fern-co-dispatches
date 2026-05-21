@@ -6,6 +6,33 @@
   "note": "Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.",
   "markers": [
     {
+      "story_id": "story-3cee13dfda4c",
+      "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+      "category": "Healthcare",
+      "pressure_type": "Health care access",
+      "place": "Tacoma",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-08T11:00:11Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
+      "source_record_id": "src-b25c5eb7bc729d93",
+      "what_we_found": "Starting in June, Washingtonians on Premera Blue Cross insurance may no longer pay in-network rates at MultiCare hospitals and clinics, if the insurer and healthcare organization can\u2019t agree on reimbursements. The situation is the latest symptom of fragility in the healthcare system, as hospitals grapple with federal.",
+      "why_it_matters": "In Washington, Health system signals can affect access to care, public services, and community resilience.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+      "location_label": "MultiCare",
+      "address": null,
+      "location_precision": "facility",
+      "precision_note": "Mapped to reported address/facility.",
+      "marker_scope": "county",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default"
+    },
+    {
       "story_id": "story-a578f9e251fb",
       "title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
       "category": "Public safety",
@@ -76,31 +103,6 @@
       "why_it_matters": "In Washington, Housing signals can affect household stability, local services, and public-sector capacity.",
       "read_more": "/cascadia/editions/2026-05-10/",
       "read_more_label": "Housing advocates expect homelessness numbers to fall slightly",
-      "location_label": "WA",
-      "address": null,
-      "location_precision": "statewide",
-      "precision_note": "Statewide report.",
-      "lat": 47.0379,
-      "lon": -122.9007,
-      "coordinate_basis": "source_default"
-    },
-    {
-      "story_id": "story-3cee13dfda4c",
-      "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
-      "category": "Healthcare",
-      "pressure_type": "Health care access",
-      "place": "WA",
-      "state": "WA",
-      "state_or_region": "WA",
-      "region_label": "Puget Sound",
-      "regional_area": "Puget Sound",
-      "publisher": "Washington State Standard Feed",
-      "published_at": "2026-05-08T11:00:11Z",
-      "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
-      "what_we_found": "Starting in June, Washingtonians on Premera Blue Cross insurance may no longer pay in-network rates at MultiCare hospitals and clinics, if the insurer and healthcare organization can\u2019t agree on reimbursements. The situation is the latest symptom of fragility in the healthcare system, as hospitals grapple with federal.",
-      "why_it_matters": "In Washington, Health system signals can affect access to care, public services, and community resilience.",
-      "read_more": "/cascadia/editions/2026-05-10/",
-      "read_more_label": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
       "location_label": "WA",
       "address": null,
       "location_precision": "statewide",
@@ -199,7 +201,7 @@
       "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
       "category": "health",
       "pressure_type": "Health care access",
-      "place": "WA",
+      "place": "Tacoma",
       "state": "WA",
       "state_or_region": "WA",
       "region_label": "Puget Sound",
@@ -212,7 +214,7 @@
       "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
       "read_more": "/cascadia/editions/2026-05-10/",
       "read_more_label": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
-      "location_label": "WA",
+      "location_label": "MultiCare",
       "address": null,
       "location_precision": "statewide",
       "precision_note": "Statewide report.",
@@ -452,7 +454,7 @@
       "why_it_matters": "In ID, this report signals pressure on local services, household stability, or public infrastructure.",
       "read_more": "/cascadia/editions/2026-05-10/",
       "read_more_label": "In depth: A flood of rural healthcare money could reshape Idaho, and seep into higher ed",
-      "location_label": "Pocatello",
+      "location_label": "Idaho State University",
       "address": null,
       "location_precision": "statewide",
       "precision_note": "Statewide report.",
@@ -468,6 +470,49 @@
   "show_regional_default": true,
   "default_view_mode": "sparse_local_plus_regional",
   "grouped_markers": [
+    {
+      "story_id": "story-3cee13dfda4c",
+      "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+      "category": "Healthcare",
+      "pressure_type": "Health care access",
+      "place": "Tacoma",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-08T11:00:11Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
+      "source_record_id": "src-b25c5eb7bc729d93",
+      "what_we_found": "Starting in June, Washingtonians on Premera Blue Cross insurance may no longer pay in-network rates at MultiCare hospitals and clinics, if the insurer and healthcare organization can\u2019t agree on reimbursements. The situation is the latest symptom of fragility in the healthcare system, as hospitals grapple with federal.",
+      "why_it_matters": "In Washington, Health system signals can affect access to care, public services, and community resilience.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+      "location_label": "MultiCare",
+      "address": null,
+      "location_precision": "facility",
+      "precision_note": "Mapped to reported address/facility.",
+      "marker_scope": "county",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default",
+      "group_count": 1,
+      "group_id": "puget-sound-470--1229",
+      "reports": [
+        {
+          "headline": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+          "summary": "Starting in June, Washingtonians on Premera Blue Cross insurance may no longer pay in-network rates at MultiCare hospitals and clinics, if the insurer and healthcare organization can\u2019t agree on reimbursements. The situation is the latest symptom of fragility in the healthcare system, as hospitals grapple with federal.",
+          "pressure_type": "Health care access",
+          "publisher": "Washington State Standard Feed",
+          "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA"
+        }
+      ],
+      "pressure_areas": [
+        "Health care access"
+      ]
+    },
     {
       "story_id": "story-a578f9e251fb",
       "title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
@@ -514,37 +559,498 @@
   ],
   "diagnostics": {
     "raw_candidate_count": 30,
-    "accepted_local_marker_count": 1,
-    "regional_statewide_report_count": 15,
-    "excluded_count": 29,
+    "accepted_local_marker_count": 2,
+    "regional_statewide_report_count": 14,
+    "excluded_count": 28,
     "excluded_reasons": {
       "no_source_date": 14,
-      "statewide_not_default_layer": 15
+      "statewide_not_default_layer": 14
     },
     "category_corrections_applied": 17,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
-    "local_extraction_success_count": 19,
-    "local_extraction_failure_count": 11,
-    "local_extraction_success_rate": 0.6333,
+    "local_extraction_success_count": 21,
+    "local_extraction_failure_count": 9,
+    "local_extraction_success_rate": 0.7,
     "unresolved_category_count": 0,
     "category_resolution_success_count": 7,
     "extraction_fields_success": {
-      "city_hint": 17,
+      "city_hint": 16,
+      "entity_hint": 3,
       "pattern": 2
     },
     "extraction_fields_failed": {
-      "none": 11
+      "none": 9
     },
-    "curated_story_marker_candidates": 1,
+    "place_extraction_attempted": 30,
+    "place_extraction_succeeded": 21,
+    "place_match_by_type": {
+      "city_hint": 16,
+      "none": 9,
+      "entity_hint": 3,
+      "pattern": 2
+    },
+    "candidate_diagnostics_rows": [
+      {
+        "title": "Wildfire",
+        "source_url": "https://www.publicalerts.org/wildfire",
+        "publisher": "Portland Public Alerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Flooding and Land Movement",
+        "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
+        "publisher": "Portland Public Alerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "As drought worsens, Western states brace for wildfires, water shortages",
+        "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
+        "publisher": "Washington State Standard Feed",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Housing advocates expect homelessness numbers to fall slightly",
+        "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
+        "publisher": "Washington State Standard Feed",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+        "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa",
+        "publisher": "Washington State Standard Feed",
+        "detected_pressure_category": "Health care access",
+        "detected_place_candidates": [
+          "Tacoma",
+          ""
+        ],
+        "selected_place": "Tacoma",
+        "selected_precision": "facility",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "local_marker",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
+        "source_url": "https://idahocapitalsun.com/2026/05/07/repub/oregons-congressional-democrats-raise-concerns-about-federal-wildfire-response-in-the-northwest",
+        "publisher": "Idaho Capital Sun Feed",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "local_marker",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+        "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
+        "publisher": "Idaho Capital Sun Feed",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Public Safety",
+        "source_url": "https://alert.seattle.gov/category/public-safety/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "OEM \u2013 Wildfire Smoke and Air Quality Guidance",
+        "source_url": "https://alert.seattle.gov/2023/08/19/oem-wildfire-smoke-and-air-quality-guidance-2/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Seattle City Light providing assistance as Sourdough wildfire continues to grow",
+        "source_url": "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Winter Storm: High Winds and Flooding due to King Tides and Rainfall",
+        "source_url": "https://alert.seattle.gov/2022/12/27/storms/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke Alert: Unhealthy Air Quality",
+        "source_url": "https://alert.seattle.gov/2022/10/18/wildfire-smoke-10-18-22/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke is Impacting Air Quality",
+        "source_url": "https://alert.seattle.gov/2022/09/09/wildfire-smoke-09-09-22/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire",
+        "source_url": "https://www.publicalerts.org/wildfire",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke",
+        "source_url": "https://www.publicalerts.org/wildfire-smoke",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Flooding and Land Movement",
+        "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Recovery",
+        "source_url": "https://www.publicalerts.org/wildfire-recovery",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Affordable Housing Information",
+        "source_url": "https://www.co.marion.or.us/HA/Pages/default.aspx",
+        "publisher": "Marion County",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "Affordable Housing Information Marion County",
+          ""
+        ],
+        "selected_place": "Affordable Housing Information Marion County",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Alerts & Emergencies Currently selected",
+        "source_url": "https://www.co.marion.or.us/PW/EmergencyManagement/Pages/alerts.aspx",
+        "publisher": "Marion County",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "Marion County",
+          ""
+        ],
+        "selected_place": "Marion County",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "As drought worsens, Western states brace for wildfires, water shortages",
+        "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Housing advocates expect homelessness numbers to fall slightly",
+        "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Negotiations threaten Premera coverage for over 100K MultiCare patients in WA",
+        "source_url": "https://washingtonstatestandard.com/2026/05/08/negotiations-threaten-premera-coverage-for-over-100k-multicare-patients-in-wa/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Health care access",
+        "detected_place_candidates": [
+          "Tacoma",
+          ""
+        ],
+        "selected_place": "Tacoma",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Washington looking for solutions to looming water challenges",
+        "source_url": "https://washingtonstatestandard.com/2026/05/06/washington-looking-for-solutions-to-looming-water-challenges/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "Woodinville",
+          ""
+        ],
+        "selected_place": "Woodinville",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Oregon\u2019s congressional Democrats raise concerns about federal wildfire response in the Northwest",
+        "source_url": "https://idahocapitalsun.com/2026/05/07/repub/oregons-congressional-democrats-raise-concerns-about-federal-wildfire-response-in-the-northwest/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+        "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Oregon faces longer fire season due to historic heat, drought, fire experts warn",
+        "source_url": "https://idahocapitalsun.com/2026/05/06/repub/oregon-faces-longer-fire-season-due-to-historic-heat-drought-fire-experts-warn/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "Salem",
+          ""
+        ],
+        "selected_place": "Salem",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Bear injures hikers in Yellowstone National Park",
+        "source_url": "https://idahocapitalsun.com/briefs/bear-injures-hikers-in-yellowstone-national-park/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Idahoans may submit ideas on how to use state opioid settlement money",
+        "source_url": "https://idahocapitalsun.com/briefs/idahoans-may-submit-ideas-on-how-to-use-state-opioid-settlement-money/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Health care access",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Americans\u2019 air conditioning costs expected to rise again this summer",
+        "source_url": "https://idahocapitalsun.com/2026/05/04/repub/americans-air-conditioning-costs-expected-to-rise-again-this-summer/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "In depth: A flood of rural healthcare money could reshape Idaho, and seep into higher ed",
+        "source_url": "https://idahocapitalsun.com/2026/05/04/in-depth-a-flood-of-rural-healthcare-money-could-reshape-idaho-and-seep-into-higher-ed/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Health care access",
+        "detected_place_candidates": [
+          "Pocatello",
+          ""
+        ],
+        "selected_place": "Pocatello",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      }
+    ],
+    "curated_story_marker_candidates": 2,
     "backfill_record_candidates": 23,
     "backfill_marker_candidates": 0,
     "duplicates_removed": 0,
-    "included_markers": 1,
+    "included_markers": 2,
     "regional_duplicates_removed": 0,
     "excluded_backfill_records": 23,
     "default_view_mode": "sparse_local_plus_regional",
-    "local_marker_count": 1,
-    "regional_report_count": 15
+    "local_marker_count": 2,
+    "regional_report_count": 14
   }
 }

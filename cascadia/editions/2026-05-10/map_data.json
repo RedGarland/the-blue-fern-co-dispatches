@@ -467,6 +467,230 @@
       "coverage_end": "2026-05-10"
     }
   ],
+  "grouped_regional_reports": [
+    {
+      "story_id": "story-c70b57fe375d",
+      "title": "As drought worsens, Western states brace for wildfires, water shortages",
+      "category": "Infrastructure",
+      "pressure_type": "Wildfire, drought, flood, and recovery",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard Feed",
+      "published_at": "2026-05-10T11:00:20Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
+      "what_we_found": "From the Rockies to the Cascades to the Sierra Nevada, mountainsides across the West are sparsely covered by the snow that usually blankets the high country well into the summer. That snowpack is like a savings account that the West draws on when the hot, dry months arrive.",
+      "why_it_matters": "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "As drought worsens, Western states brace for wildfires, water shortages",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "source_default",
+      "group_count": 2,
+      "group_id": "puget-sound-470--1229",
+      "reports": [
+        {
+          "headline": "As drought worsens, Western states brace for wildfires, water shortages",
+          "summary": "From the Rockies to the Cascades to the Sierra Nevada, mountainsides across the West are sparsely covered by the snow that usually blankets the high country well into the summer. That snowpack is like a savings account that the West draws on when the hot, dry months arrive.",
+          "pressure_type": "Wildfire, drought, flood, and recovery",
+          "publisher": "Washington State Standard Feed",
+          "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "As drought worsens, Western states brace for wildfires, water shortages"
+        },
+        {
+          "headline": "Housing advocates expect homelessness numbers to fall slightly",
+          "summary": "The U.S. Housing and Urban Development\u2019s annual one-night count of those experiencing sheltered and unsheltered homelessness is projected to show a decline after a record-high surge in 2024, according to a new report.",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard Feed",
+          "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Housing advocates expect homelessness numbers to fall slightly"
+        }
+      ],
+      "pressure_areas": [
+        "Wildfire, drought, flood, and recovery",
+        "Housing and utility pressure"
+      ]
+    },
+    {
+      "story_id": "story-a956b28e801a",
+      "title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+      "category": "Government and public services",
+      "pressure_type": "Wildfire, drought, flood, and recovery",
+      "place": "ID",
+      "state": "ID",
+      "state_or_region": "ID",
+      "region_label": "Idaho rural communities",
+      "regional_area": "Idaho rural communities",
+      "publisher": "Idaho Capital Sun Feed",
+      "published_at": "2026-05-07T23:57:47Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
+      "what_we_found": "WASHINGTON \u2014 State governments should shoulder more of the cost and responsibility for natural disaster recovery, according to a report released Thursday by the Federal Emergency Management Agency review council. The board, created by President Donald Trump last year, called on Congress and the administration to make.",
+      "why_it_matters": "In Idaho, Public systems signals can affect public services, local planning, and regional resilience.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+      "location_label": "ID",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "lat": 43.615,
+      "lon": -116.2023,
+      "coordinate_basis": "source_default",
+      "group_count": 1,
+      "group_id": "idaho-rural-communities-436--1162",
+      "reports": [
+        {
+          "headline": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+          "summary": "WASHINGTON \u2014 State governments should shoulder more of the cost and responsibility for natural disaster recovery, according to a report released Thursday by the Federal Emergency Management Agency review council. The board, created by President Donald Trump last year, called on Congress and the administration to make.",
+          "pressure_type": "Wildfire, drought, flood, and recovery",
+          "publisher": "Idaho Capital Sun Feed",
+          "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery"
+        }
+      ],
+      "pressure_areas": [
+        "Wildfire, drought, flood, and recovery"
+      ]
+    },
+    {
+      "story_id": "map-registry-14686a5f82137061",
+      "title": "As drought worsens, Western states brace for wildfires, water shortages",
+      "category": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-10T11:00:20Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages/",
+      "source_record_id": "registry-14686a5f82137061",
+      "what_we_found": "From the Rockies to the Cascades to the Sierra Nevada, mountainsides across the West are sparsely covered by the snow that usually blankets the high country well into the summer. That snowpack is like a savings account that the West draws on when the hot, dry months arrive. It moistens the landscape as it melts, [\u2026]",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "As drought worsens, Western states brace for wildfires, water shortages",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-05-04",
+      "coverage_end": "2026-05-10",
+      "group_count": 2,
+      "group_id": "puget-sound-474--1205",
+      "reports": [
+        {
+          "headline": "As drought worsens, Western states brace for wildfires, water shortages",
+          "summary": "From the Rockies to the Cascades to the Sierra Nevada, mountainsides across the West are sparsely covered by the snow that usually blankets the high country well into the summer. That snowpack is like a savings account that the West draws on when the hot, dry months arrive. It moistens the landscape as it melts, [\u2026]",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/10/repub/as-drought-worsens-western-states-brace-for-wildfires-water-shortages/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "As drought worsens, Western states brace for wildfires, water shortages"
+        },
+        {
+          "headline": "Housing advocates expect homelessness numbers to fall slightly",
+          "summary": "The U.S. Housing and Urban Development\u2019s annual one-night count of those experiencing sheltered and unsheltered homelessness is projected to show a decline after a record-high surge in 2024, according to a new report. Conducted during January, the Point-in-Time count is HUD\u2019s annual one-night census of people staying in shelters and unsheltered locations; the latest official [\u2026]",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/08/repub/housing-advocates-expect-homelessness-numbers-to-fall-slightly/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Housing advocates expect homelessness numbers to fall slightly"
+        }
+      ],
+      "pressure_areas": [
+        "Schools and local government services",
+        "Housing and utility pressure"
+      ]
+    },
+    {
+      "story_id": "map-registry-35d8096f3f4f0aca",
+      "title": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+      "category": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "ID",
+      "state": "ID",
+      "state_or_region": "ID",
+      "region_label": "Idaho rural communities",
+      "regional_area": "Idaho rural communities",
+      "publisher": "Idaho Capital Sun",
+      "published_at": "2026-05-07T23:57:47Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery/",
+      "source_record_id": "registry-35d8096f3f4f0aca",
+      "what_we_found": "WASHINGTON \u2014 State governments should shoulder more of the cost and responsibility for natural disaster recovery, according to a report released Thursday by the Federal Emergency Management Agency review council. The board, created by President Donald Trump last year, called on Congress and the administration to make several major changes, including offloading the National Flood [\u2026]",
+      "why_it_matters": "In ID, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-10/",
+      "read_more_label": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+      "location_label": "ID",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 44.2405,
+      "lon": -114.4788,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-05-04",
+      "coverage_end": "2026-05-10",
+      "group_count": 4,
+      "group_id": "idaho-rural-communities-442--1145",
+      "reports": [
+        {
+          "headline": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery",
+          "summary": "WASHINGTON \u2014 State governments should shoulder more of the cost and responsibility for natural disaster recovery, according to a report released Thursday by the Federal Emergency Management Agency review council. The board, created by President Donald Trump last year, called on Congress and the administration to make several major changes, including offloading the National Flood [\u2026]",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Idaho Capital Sun",
+          "source_url": "https://idahocapitalsun.com/2026/05/07/repub/trump-appointed-fema-panel-urges-states-should-take-the-lead-in-disaster-recovery/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Trump-appointed FEMA panel urges states should take the lead in disaster recovery"
+        },
+        {
+          "headline": "Bear injures hikers in Yellowstone National Park",
+          "summary": "Two hikers on the Mystic Falls Trail near Old Faithful in Yellowstone National Park sustained injuries by one or more bears on Monday, according to the National Park Service. The status of the hikers, and the number and type of bears involved were not included in information released about the incident. Emergency services personnel with [\u2026]",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Idaho Capital Sun",
+          "source_url": "https://idahocapitalsun.com/briefs/bear-injures-hikers-in-yellowstone-national-park/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Bear injures hikers in Yellowstone National Park"
+        },
+        {
+          "headline": "Idahoans may submit ideas on how to use state opioid settlement money",
+          "summary": "The Idaho Behavioral Health Council is seeking public input on how to prioritize spending from the state\u2019s opioid settlement fund. The fund, created from a nationwide settlement with opioid manufacturers, may be used for certain, approved mitigation for opioids, such as improving access to medication-assisted treatment, providing support for those in treatment and recovery, helping [\u2026]",
+          "pressure_type": "Health care access",
+          "publisher": "Idaho Capital Sun",
+          "source_url": "https://idahocapitalsun.com/briefs/idahoans-may-submit-ideas-on-how-to-use-state-opioid-settlement-money/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Idahoans may submit ideas on how to use state opioid settlement money"
+        },
+        {
+          "headline": "Americans\u2019 air conditioning costs expected to rise again this summer",
+          "summary": "After facing costly heating bills this winter, consumers shouldn\u2019t expect relief for the summer months, according to new projections for household utility costs. The National Energy Assistance Directors Association projects the average electricity cost to cool homes between June and September will reach $778 this summer. That\u2019s a $61 \u2014 or 8.5% \u2014 increase from [\u2026]",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Idaho Capital Sun",
+          "source_url": "https://idahocapitalsun.com/2026/05/04/repub/americans-air-conditioning-costs-expected-to-rise-again-this-summer/",
+          "read_more": "/cascadia/editions/2026-05-10/",
+          "read_more_label": "Americans\u2019 air conditioning costs expected to rise again this summer"
+        }
+      ],
+      "pressure_areas": [
+        "Schools and local government services",
+        "Health care access"
+      ]
+    }
+  ],
   "show_regional_default": false,
   "default_view_mode": "local",
   "grouped_markers": [
@@ -1281,6 +1505,9 @@
     "excluded_backfill_records": 18,
     "default_view_mode": "local",
     "local_marker_count": 7,
-    "regional_report_count": 9
+    "regional_report_count": 9,
+    "default_show_regional": false,
+    "initial_render_layer": "local_only",
+    "initial_visible_count": 7
   }
 }

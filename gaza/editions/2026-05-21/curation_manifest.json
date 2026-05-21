@@ -1,0 +1,276 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-21-001",
+    "title": "Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists",
+    "summary": "France and Italy are among the countries that have criticised a video showing Itamar Ben-Gvir taunting dozens of activists detained at an Israeli port.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-bbc-middle-east-ecbf7a9eb64a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-bbc-middle-east-ecbf7a9eb64a"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/clyp32weyn8o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-20-001",
+    "prior_edition_date": "2026-05-20",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "exact_or_normalized_source_url",
+      "no_new_summary_detail"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-21-002",
+    "title": "UK summons Israel's charg\u00e9 d'affaires over video of minister taunting activists",
+    "summary": "Foreign Office denounces treatment of Gaza flotilla activists as outcry over Itamar Ben-Gvir's video escalates The UK has summoned Israel's charg\u00e9 d'affaires as international outrage escalates over a video posted by the national security minister, Itamar Ben-Gvir, in which he is seen taunting activists detained after a Gaza-bound flotilla was intercepted . The global outcry continued as Israel began releasing hundreds of the activists who attempted to breach Israel's naval blockade of Gaza and are in the process of deporting them, according to a legal organisation working with the flotilla.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-guardian-world-48858bbe7613"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-guardian-world-48858bbe7613"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/21/uk-israel-video-itama-ben-gvir"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-21-003",
+    "title": "Student sues University of Michigan over alleged surveillance tied to Gaza protests",
+    "summary": "Lawsuit says university and private investigators conspired to intimidate, terrorize and retaliate against Josiah Walker A University of Michigan student is suing the school, accusing it of violating his constitutional rights when it waged a vast undercover surveillance operation against him in response to his protest of Israel's war in Gaza. The lawsuit, which will be filed on Thursday in federal court by Cair-MI and U-M student Josiah Walker, claims the university and individual private investigators conspired to intimidate, terrorize and retaliate against Walker in 2024 and 2025.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-guardian-world-f6834b3dc7f4"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-guardian-world-f6834b3dc7f4"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/may/21/university-michigan-student-lawsuit-surveillance-palestine-protests"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-21-004",
+    "title": "Israel begins deporting Gaza aid flotilla activists amid global outcry",
+    "summary": "Israel's treatment of the detainees has been condemned by several countries, including key allies.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-e5505ede4f36"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-e5505ede4f36"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/21/israel-begins-deporting-gaza-aid-flotilla-activists-amid-global-outcry?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-21-005",
+    "title": "Gaza sisters win Earth Prize for turning war rubble into bricks",
+    "summary": "Palestinian sisters Tala and Farah Mousa turned the rubble of their bombed Gaza home into reusable bricks.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-4068d8994825"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-4068d8994825"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/21/gaza-sisters-win-earth-prize-for-turning-war-rubble-into-bricks?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-13-001",
+    "prior_edition_date": "2026-05-13",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-21-006",
+    "title": "Walid Daqqa: A Parallel Life",
+    "summary": "Walid Daqqa, the Palestinian prisoner who turned decades in Israeli jails into moments of thought, creativity and love.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-5fc6ddbfca58"
+    ],
+    "source_ids": [
+      "gaza-2026-05-21-aljazeera-middle-east-5fc6ddbfca58"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/al-jazeera-world/2026/5/21/walid-daqqa-a-parallel-life?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-21T13:00:37.971814+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

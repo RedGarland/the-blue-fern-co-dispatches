@@ -1,0 +1,203 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-21",
+  "candidates_seen": 6,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-21-002",
+      "title": "UK summons Israel's charg\u00e9 d'affaires over video of minister taunting activists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-003",
+      "title": "Student sues University of Michigan over alleged surveillance tied to Gaza protests",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-004",
+      "title": "Israel begins deporting Gaza aid flotilla activists amid global outcry",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-005",
+      "title": "Gaza sisters win Earth Prize for turning war rubble into bricks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-006",
+      "title": "Walid Daqqa: A Parallel Life",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-21-001",
+      "title": "Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "exact_or_normalized_source_url",
+        "no_new_summary_detail"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-20-001",
+      "prior_edition_date": "2026-05-20",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-05-21-005",
+      "title": "Gaza sisters win Earth Prize for turning war rubble into bricks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-13-001",
+      "prior_edition_date": "2026-05-13",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-21-001",
+      "title": "Far-right Israeli minister condemned for taunting handcuffed Gaza flotilla activists",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "exact_or_normalized_source_url",
+        "no_new_summary_detail"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-20-001",
+      "prior_edition_date": "2026-05-20",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-002",
+      "title": "UK summons Israel's charg\u00e9 d'affaires over video of minister taunting activists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-003",
+      "title": "Student sues University of Michigan over alleged surveillance tied to Gaza protests",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-004",
+      "title": "Israel begins deporting Gaza aid flotilla activists amid global outcry",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-005",
+      "title": "Gaza sisters win Earth Prize for turning war rubble into bricks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-13-001",
+      "prior_edition_date": "2026-05-13",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-21-006",
+      "title": "Walid Daqqa: A Parallel Life",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

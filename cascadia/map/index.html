@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cascadia Pressure Map - 2026-04-05</title>
+  <title>Cascadia Pressure Map - 2026-05-10</title>
   <link rel="icon" href="/assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -15,19 +15,15 @@
     :root { --deep-blue:#15384a; --panel:#f8fcfc; --card:#ffffff; --card-edge:#d9e6ea; --header-bg:#1E3F4F; --header-primary:#EFE7DA; --header-secondary:#9BAEB5; }
     html, body { height: 100%; margin: 0; font: 15px/1.45 "Segoe UI", Tahoma, sans-serif; background: #e8eff1; color:#13252f; }
     .shell { height: 100%; display: flex; flex-direction: column; }
-    .resource-header { background:var(--header-bg); color:var(--header-secondary); padding:10px 14px 12px; border-bottom:1px solid #355564; text-align:center; position:relative; }
-    .resource-header-top { position:relative; min-height:34px; display:flex; justify-content:flex-start; align-items:center; }
-    .resource-home { color:var(--header-secondary); text-decoration:none; font-weight:700; font-size:.85rem; }
-    .resource-home:hover { text-decoration:underline; }
-    .resource-branding { margin-top:4px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .resource-header { background:var(--header-bg); color:var(--header-secondary); padding:8px 12px 10px; border-bottom:1px solid #355564; text-align:center; }
+    .resource-branding { margin-top:2px; display:flex; flex-direction:column; align-items:center; gap:4px; }
     .bluefern-icon-link img { width:30px; height:30px; border-radius:6px; display:block; }
-    .dispatches-wordmark-link img { max-width:min(360px, 82vw); width:100%; height:auto; display:block; }
-    .resource-header h1 { margin:2px 0 0; font-size:1.04rem; }
+    .resource-header h1 { margin:2px 0 0; font-size:1rem; }
     .map-title-accent { color:var(--header-primary); }
-    .resource-header p { margin:.22rem 0 0; color:var(--header-secondary); font-size:.83rem; }
-    .resource-header .date-range { margin-top:.28rem; font-size:.84rem; font-weight:700; color:var(--header-primary); }
+    .resource-header p { margin:.16rem 0 0; color:var(--header-secondary); font-size:.8rem; }
+    .resource-header .date-range { margin-top:.2rem; font-size:.82rem; font-weight:700; color:var(--header-primary); }
     .resource-header .source-note { color:var(--header-secondary); }
-    .header-actions { margin-top:8px; display:flex; justify-content:center; }
+    .header-actions { margin-top:6px; display:flex; justify-content:center; }
     #resetMap { border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:13px; font-weight:700; }
     #mapWrap { position: relative; flex: 1; min-height: 0; }
     #map { height: 100%; width: 100%; }
@@ -63,22 +59,18 @@
     .map-popup .report-link { margin-top:.34rem; display:inline-block; font-size:.8rem; color:#1d5a73; text-decoration:none; font-weight:600; }
     .group-count { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:999px; color:#f4fbfd; font-weight:800; background:#4f829b; border:2px solid #ecf5f8; }
     .empty-state { position:absolute; left:14px; bottom:14px; z-index:905; background:rgba(248,252,252,.96); color:#2a4c59; border:1px solid #c8d7db; border-radius:10px; padding:10px 12px; font-size:12px; max-width:330px; box-shadow:0 6px 24px rgba(16,36,44,.08); display:none; }
-    @media (max-width: 900px) { .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; } details.legend { right:14px; bottom:210px; } .resource-header-top { justify-content:flex-start; } .dispatches-wordmark-link img { max-width:74vw; } .empty-state { bottom:210px; right:14px; max-width:none; } }
+    @media (max-width: 900px) { .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; } details.legend { right:14px; bottom:210px; } .empty-state { bottom:210px; right:14px; max-width:none; } }
   </style>
 </head>
 <body>
   <div class="shell">
     <header class="resource-header">
-      <div class="resource-header-top">
-        <a class="resource-home" href="/cascadia/">The Cascadia Briefing</a>
-      </div>
       <div class="resource-branding">
         <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
-        <a class="dispatches-wordmark-link" href="https://dispatches.thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/dispatches-from-blue-fern-co.png" alt="Dispatches From The Blue Fern Co."></a>
       </div>
       <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
       <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
-      <p class="date-range" id="dateRange">Reports shown: 2026-04-05</p>
+      <p class="date-range" id="dateRange">Reports shown: 2026-05-10</p>
       <p class="source-note">Sources: public regional reporting and official/public sources</p>
       <div class="header-actions"><button id="resetMap">Reset Map</button></div>
     </header>

@@ -465,7 +465,8 @@
       "coverage_end": "2026-05-10"
     }
   ],
-  "show_regional_default": false,
+  "show_regional_default": true,
+  "default_view_mode": "sparse_local_plus_regional",
   "grouped_markers": [
     {
       "story_id": "story-a578f9e251fb",
@@ -541,6 +542,9 @@
     "duplicates_removed": 0,
     "included_markers": 1,
     "regional_duplicates_removed": 0,
-    "excluded_backfill_records": 23
+    "excluded_backfill_records": 23,
+    "default_view_mode": "sparse_local_plus_regional",
+    "local_marker_count": 1,
+    "regional_report_count": 15
   }
 }

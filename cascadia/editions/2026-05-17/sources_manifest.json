@@ -1,0 +1,271 @@
+[
+  {
+    "source_record_id": "src-05620275d9afdc97",
+    "source_id": "washington-state-standard-feed",
+    "title": "As property insurance crisis worsens, some lawmakers target Big Oil",
+    "url": "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-16T11:00:00Z",
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-c432210b6ec8"
+    ],
+    "claim_ids": [
+      "story-c432210b6ec8"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "or",
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-4a97cc3b18485d86",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "Idaho\u2019s rural hospitals grapple with insurance denials, employee housing shortages, Medicaid changes",
+    "url": "https://idahocapitalsun.com/2026/05/13/idahos-rural-hospitals-grapple-with-insurance-denials-employee-housing-shortages-medicaid-changes",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-05-13T10:30:38Z",
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-b91cfb66e4b2"
+    ],
+    "claim_ids": [
+      "story-b91cfb66e4b2"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "ID",
+    "category_hint": "housing",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://idahocapitalsun.com/feed/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-53a7539686b0cb4c",
+    "source_id": "washington-state-standard-feed",
+    "title": "Judge rejects lawsuit against rewrite of WA parental rights law",
+    "url": "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-15T20:04:08Z",
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-fbaefe124ee5"
+    ],
+    "claim_ids": [
+      "story-fbaefe124ee5"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "wa",
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-7a7b82bc50600603",
+    "source_id": "portland-public-alerts",
+    "title": "Wildfire Smoke",
+    "url": "https://www.publicalerts.org/wildfire-smoke",
+    "publisher": "Portland Public Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-ae991974d195"
+    ],
+    "claim_ids": [
+      "story-ae991974d195"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "OR",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://www.publicalerts.org/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "portland"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-7e9b989051207067",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "New construction reduces housing shortage in most states",
+    "url": "https://idahocapitalsun.com/2026/05/14/repub/new-construction-reduces-housing-shortage-in-most-states",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-05-14T20:04:04Z",
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-c4d48b6565b7"
+    ],
+    "claim_ids": [
+      "story-c4d48b6565b7"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "ID",
+    "category_hint": "housing",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://idahocapitalsun.com/feed/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-bf028459a1c8c5e4",
+    "source_id": "portland-public-alerts",
+    "title": "Wildfire",
+    "url": "https://www.publicalerts.org/wildfire",
+    "publisher": "Portland Public Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-7dfd23c0456d"
+    ],
+    "claim_ids": [
+      "story-7dfd23c0456d"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "OR",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://www.publicalerts.org/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "portland"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-c81f3b12aa0647ac",
+    "source_id": "washington-state-standard-feed",
+    "title": "WA gets $538M in delayed COVID-era payments from FEMA",
+    "url": "https://washingtonstatestandard.com/briefs/wa-gets-538m-in-delayed-covid-era-payments-from-fema",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-14T22:52:41Z",
+    "retrieved_at": "2026-05-22T17:27:56.967176+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-f9fb44601eb5"
+    ],
+    "claim_ids": [
+      "story-f9fb44601eb5"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-22",
+    "edition_date": "2026-05-17",
+    "coverage_start": "2026-05-11",
+    "coverage_end": "2026-05-17",
+    "coverage_label": "May 11\u201317, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-11",
+    "search_end_date": "2026-05-17",
+    "region_terms_matched": [
+      "wa",
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  }
+]

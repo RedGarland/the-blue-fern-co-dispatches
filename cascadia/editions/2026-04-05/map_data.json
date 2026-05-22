@@ -6,26 +6,173 @@
   "note": "Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.",
   "markers": [],
   "regional_reports": [],
+  "grouped_regional_reports": [],
   "show_regional_default": false,
+  "default_view_mode": "local",
   "grouped_markers": [],
   "diagnostics": {
-    "raw_candidate_count": 138,
+    "raw_candidate_count": 7,
     "accepted_local_marker_count": 0,
     "regional_statewide_report_count": 0,
-    "excluded_count": 138,
+    "excluded_count": 7,
     "excluded_reasons": {
-      "no_source_date": 40,
-      "unresolved_pressure_category": 98
+      "no_source_date": 7
     },
-    "category_corrections_applied": 35,
+    "category_corrections_applied": 4,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
+    "local_extraction_success_count": 7,
+    "local_extraction_failure_count": 0,
+    "local_extraction_success_rate": 1.0,
+    "unresolved_category_count": 0,
+    "category_resolution_success_count": 7,
+    "extraction_fields_success": {
+      "city_hint": 7
+    },
+    "extraction_fields_failed": {},
+    "place_extraction_attempted": 7,
+    "place_extraction_succeeded": 7,
+    "place_match_by_type": {
+      "city_hint": 7
+    },
+    "candidate_diagnostics_rows": [
+      {
+        "title": "Health & Medical",
+        "source_url": "https://alert.seattle.gov/category/health-medical",
+        "publisher": "City of Seattle Alerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "city",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Public Safety",
+        "source_url": "https://alert.seattle.gov/category/public-safety",
+        "publisher": "City of Seattle Alerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "city",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Transportation",
+        "source_url": "https://alert.seattle.gov/category/transportation",
+        "publisher": "City of Seattle Alerts",
+        "detected_pressure_category": "Transportation and access",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "city",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Water Outage in Seattle Crown Hill Neighborhood",
+        "source_url": "https://alert.seattle.gov/2025/04/03/water-outage-in-seattle-crown-hill-neighborhood",
+        "publisher": "City of Seattle Alerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "city",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire",
+        "source_url": "https://www.publicalerts.org/wildfire",
+        "publisher": "Portland Public Alerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Flooding and Land Movement",
+        "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
+        "publisher": "Portland Public Alerts",
+        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Power Outage",
+        "source_url": "https://www.publicalerts.org/power-outage",
+        "publisher": "Portland Public Alerts",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "city",
+        "coordinate_basis": "source_default",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      }
+    ],
     "curated_story_marker_candidates": 0,
-    "backfill_record_candidates": 131,
+    "backfill_record_candidates": 0,
     "backfill_marker_candidates": 0,
     "duplicates_removed": 0,
     "included_markers": 0,
     "regional_duplicates_removed": 0,
-    "excluded_backfill_records": 131
+    "excluded_backfill_records": 0,
+    "default_view_mode": "local",
+    "local_marker_count": 0,
+    "regional_report_count": 0,
+    "default_show_regional": false,
+    "initial_render_layer": "local_only",
+    "initial_visible_count": 0,
+    "top_sources_local_markers": [],
+    "sources_only_regional_reports": [],
+    "sources_with_no_local_mappable_reports": [
+      {
+        "source": "City of Seattle Alerts",
+        "non_local_reports": 4
+      },
+      {
+        "source": "Portland Public Alerts",
+        "non_local_reports": 3
+      }
+    ],
+    "top_missing_place_reasons": [],
+    "recommended_source_additions": [
+      "County emergency-management pages with dated updates",
+      "Transit and ferry alert/news feeds with service-area detail",
+      "Local public radio and metro newsroom operations updates",
+      "Utility outage and public health update pages with dated posts"
+    ]
   }
 }

@@ -17,7 +17,7 @@
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
-    "run_date": "2026-05-11",
+    "run_date": "2026-05-21",
     "edition_date": "2026-05-10",
     "coverage_start": "2026-05-04",
     "coverage_end": "2026-05-10",
@@ -39,44 +39,6 @@
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-a2da713a427edc0a",
-    "source_id": "portland-public-alerts",
-    "title": "Flooding and Land Movement",
-    "url": "https://www.publicalerts.org/flooding-and-land-movement",
-    "publisher": "Portland Public Alerts",
-    "published_at": null,
-    "retrieved_at": "2026-05-21T22:06:17.290041+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-15f927fd0944"
-    ],
-    "claim_ids": [
-      "story-15f927fd0944"
-    ],
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-11",
-    "edition_date": "2026-05-10",
-    "coverage_start": "2026-05-04",
-    "coverage_end": "2026-05-10",
-    "coverage_label": "May 4\u201310, 2026",
-    "region_scope": "OR",
-    "category_hint": "public_safety",
-    "source_type": "official_page",
-    "provider_id": "registry",
-    "provider_name": "Cascadia source registry",
-    "query_used": "https://www.publicalerts.org/",
-    "search_start_date": "2026-05-04",
-    "search_end_date": "2026-05-10",
-    "region_terms_matched": [
-      "portland"
-    ],
-    "state_hint": "OR",
-    "reliability_tier": "official-public",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
-  },
-  {
     "source_record_id": "src-a52f3d778e723089",
     "source_id": "washington-state-standard-feed",
     "title": "As drought worsens, Western states brace for wildfires, water shortages",
@@ -94,7 +56,7 @@
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
-    "run_date": "2026-05-11",
+    "run_date": "2026-05-21",
     "edition_date": "2026-05-10",
     "coverage_start": "2026-05-04",
     "coverage_end": "2026-05-10",
@@ -132,7 +94,7 @@
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
-    "run_date": "2026-05-11",
+    "run_date": "2026-05-21",
     "edition_date": "2026-05-10",
     "coverage_start": "2026-05-04",
     "coverage_end": "2026-05-10",
@@ -154,44 +116,6 @@
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-bf028459a1c8c5e4",
-    "source_id": "portland-public-alerts",
-    "title": "Wildfire",
-    "url": "https://www.publicalerts.org/wildfire",
-    "publisher": "Portland Public Alerts",
-    "published_at": null,
-    "retrieved_at": "2026-05-21T22:06:17.290041+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-7dfd23c0456d"
-    ],
-    "claim_ids": [
-      "story-7dfd23c0456d"
-    ],
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-11",
-    "edition_date": "2026-05-10",
-    "coverage_start": "2026-05-04",
-    "coverage_end": "2026-05-10",
-    "coverage_label": "May 4\u201310, 2026",
-    "region_scope": "OR",
-    "category_hint": "public_safety",
-    "source_type": "official_page",
-    "provider_id": "registry",
-    "provider_name": "Cascadia source registry",
-    "query_used": "https://www.publicalerts.org/",
-    "search_start_date": "2026-05-04",
-    "search_end_date": "2026-05-10",
-    "region_terms_matched": [
-      "portland"
-    ],
-    "state_hint": "OR",
-    "reliability_tier": "official-public",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
-  },
-  {
     "source_record_id": "src-e7a30c95563071c6",
     "source_id": "washington-state-standard-feed",
     "title": "Housing advocates expect homelessness numbers to fall slightly",
@@ -209,7 +133,7 @@
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
-    "run_date": "2026-05-11",
+    "run_date": "2026-05-21",
     "edition_date": "2026-05-10",
     "coverage_start": "2026-05-04",
     "coverage_end": "2026-05-10",
@@ -247,7 +171,7 @@
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
-    "run_date": "2026-05-11",
+    "run_date": "2026-05-21",
     "edition_date": "2026-05-10",
     "coverage_start": "2026-05-04",
     "coverage_end": "2026-05-10",

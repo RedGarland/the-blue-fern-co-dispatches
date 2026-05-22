@@ -6,7 +6,7 @@
     "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
     "publisher": "Oregon Governor's Office",
     "published_at": "2026-04-23T12:00:00Z",
-    "retrieved_at": "2026-05-22T00:13:41.744980+00:00",
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-cfce0314e8d1"
@@ -38,13 +38,89 @@
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
+    "source_record_id": "src-46683107dd034d9d",
+    "source_id": "seattle-alerts",
+    "title": "Health & Medical",
+    "url": "https://alert.seattle.gov/category/health-medical",
+    "publisher": "City of Seattle Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-b6d0d3caa370"
+    ],
+    "claim_ids": [
+      "story-b6d0d3caa370"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-21",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "WA",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://alert.seattle.gov/",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-73e63f4d92cc2b46",
+    "source_id": "seattle-alerts",
+    "title": "Public Safety",
+    "url": "https://alert.seattle.gov/category/public-safety",
+    "publisher": "City of Seattle Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-fb7596ce9bb8"
+    ],
+    "claim_ids": [
+      "story-fb7596ce9bb8"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-21",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "WA",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://alert.seattle.gov/",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
     "source_record_id": "src-791417feacab1c63",
     "source_id": "manual",
     "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
     "url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id",
     "publisher": "Idaho State Police",
     "published_at": "2026-04-20T18:21:00Z",
-    "retrieved_at": "2026-05-22T00:13:41.744980+00:00",
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-251fc3655a23"
@@ -82,7 +158,7 @@
     "url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan",
     "publisher": "Office of the Governor of Idaho",
     "published_at": "2026-04-22T12:00:00Z",
-    "retrieved_at": "2026-05-22T00:13:41.744980+00:00",
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-e09c313d7d11"
@@ -114,13 +190,51 @@
     "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
   },
   {
+    "source_record_id": "src-a8f96fe18f5f792f",
+    "source_id": "seattle-alerts",
+    "title": "Transportation",
+    "url": "https://alert.seattle.gov/category/transportation",
+    "publisher": "City of Seattle Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-3d6f218c2dba"
+    ],
+    "claim_ids": [
+      "story-3d6f218c2dba"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-21",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "WA",
+    "category_hint": "transportation",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://alert.seattle.gov/",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
     "source_record_id": "src-b3b5f5d3afc03e4a",
     "source_id": "manual",
     "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
     "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
     "publisher": "Oregon Governor's Office",
     "published_at": "2026-04-22T12:00:00Z",
-    "retrieved_at": "2026-05-22T00:13:41.744980+00:00",
+    "retrieved_at": "2026-05-22T03:33:13.144245+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-831c726be8d2"

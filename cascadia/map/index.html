@@ -32,6 +32,21 @@
     .legend-dot { width:11px; height:11px; border-radius:999px; display:inline-block; border:1px solid rgba(20,38,49,.15); }
     .regional-list { position:absolute; left:14px; bottom:14px; z-index:905; background:rgba(248,252,252,.96); color:#2a4c59; border:1px solid #c8d7db; border-radius:10px; padding:10px 12px; font-size:12px; max-width:340px; box-shadow:0 6px 24px rgba(16,36,44,.08); display:none; max-height:220px; overflow:auto; }
     .regional-list.visible { display:block; }
+    .map-nav { margin-top:8px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+    .map-nav a { border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:6px 10px; text-decoration:none; font-size:13px; font-weight:700; }
+    .map-popup { max-width:320px; color:#162b36; line-height:1.4; }
+    .map-popup h3 { margin:0 0 .45rem; font-size:1rem; color:#15384a; }
+    .popup-meta { margin:0 0 .55rem; display:grid; gap:.35rem; }
+    .popup-meta div { display:grid; grid-template-columns:70px 1fr; gap:.45rem; }
+    .popup-meta dt { font-weight:700; color:#2b4b5a; font-size:.8rem; margin:0; }
+    .popup-meta dd { margin:0; font-size:.86rem; }
+    .popup-section { margin:.55rem 0 0; }
+    .popup-section h4 { margin:0 0 .22rem; font-size:.82rem; color:#2b4b5a; text-transform:uppercase; letter-spacing:.02em; }
+    .popup-section p { margin:0; font-size:.88rem; }
+    .popup-source { margin:.65rem 0 0; font-size:.86rem; }
+    .popup-actions { margin-top:.65rem; display:flex; flex-wrap:wrap; gap:.45rem; }
+    .popup-actions a { display:inline-flex; align-items:center; justify-content:center; border-radius:7px; border:1px solid #214356; background:#214356; color:#fff; text-decoration:none; font-size:.8rem; font-weight:600; padding:.36rem .62rem; }
+    .popup-actions a.secondary { background:#fff; color:#214356; border-color:#b7c8d1; }
     @media (max-width: 900px) { .controls { left:14px; right:14px; top:auto; bottom:14px; min-width:0; grid-template-columns:1fr 1fr; } details.legend { right:14px; bottom:210px; } details.howto { left:14px; top:92px; right:14px; width:auto; } .regional-list { bottom:210px; right:14px; max-width:none; } }
   </style>
 </head>
@@ -45,8 +60,12 @@
       <p>This map reflects source-backed reports from the May 11–17, 2026 Cascadia briefing.</p>
       <p class="date-range">Reports shown: 2026-05-17</p>
       <p class="source-note">Sources: public regional reporting and official/public sources</p>
-      <p class="source-note"><a href="./source_table.html" style="color:inherit;">Open Source Table</a></p>
+      <p class="source-note"><a href="/cascadia/editions/2026-05-17/source_table.html" style="color:inherit;">Open Source Table</a></p>
       <div class="header-actions"><button id="resetMap">Reset Map</button></div>
+      <div class="map-nav">
+        <a href="/cascadia/editions/2026-05-17/">Back to briefing</a>
+        <a href="/cascadia/map/">Latest Cascadia map</a>
+      </div>
     </header>
     <div id="mapWrap">
       <div class="controls">
@@ -110,19 +129,57 @@
       }
       let active = [];
       function clearMap() { active.forEach((m) => map.removeLayer(m)); active = []; }
+      function safe(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+      function conciseArea(category) {
+        return String(category || '').replace(/^\[[A-Z]\]\s*/, '').trim();
+      }
+      function precisionLabel(precision) {
+        const p = String(precision || '').toLowerCase();
+        if (p.includes('statewide') || p.includes('regional')) return 'Statewide';
+        if (p.includes('city')) return 'City-level';
+        if (p.includes('county')) return 'County-level';
+        if (p.includes('approx')) return 'Approximate';
+        return String(precision || 'Approximate');
+      }
+      function popupHtml(item) {
+        const title = safe(item.title);
+        const place = safe(item.place || item.state_or_region || 'Cascadia');
+        const area = safe(conciseArea(item.category || 'Public systems pressure'));
+        const mappedAs = safe(precisionLabel(item.precision));
+        const whatHappened = safe(item.what_happened || '');
+        const whyItMatters = safe(item.why_it_matters || '');
+        const publisher = safe(item.publisher || 'Source record');
+        const sourceUrl = safe(item.source_url || '#');
+        const briefingLink = safe(item.briefing_link || '#');
+        return `<div class="map-popup">` +
+          `<h3>${title}</h3>` +
+          `<dl class="popup-meta">` +
+          `<div><dt>Place</dt><dd>${place}</dd></div>` +
+          `<div><dt>Area</dt><dd>${area}</dd></div>` +
+          `<div><dt>Mapped as</dt><dd>${mappedAs}</dd></div>` +
+          `</dl>` +
+          `<div class="popup-section"><h4>What happened</h4><p>${whatHappened}</p></div>` +
+          `<div class="popup-section"><h4>Why it matters</h4><p>${whyItMatters}</p></div>` +
+          `<div class="popup-source"><strong>Source:</strong> ${publisher}</div>` +
+          `<div class="popup-actions">` +
+          `<a href="${sourceUrl}" target="_blank" rel="noopener noreferrer">Open source</a>` +
+          `<a class="secondary" href="${briefingLink}">Jump to briefing story</a>` +
+          `</div>` +
+          `</div>`;
+      }
       function drawRows(rows) {
         clearMap();
         const bounds = [];
         for (const item of rows) {
           if (!Number.isFinite(Number(item.lat)) || !Number.isFinite(Number(item.lon))) continue;
-          const popup = `<strong>${item.title}</strong><br>` +
-            `Category: [${item.category_letter}] ${item.category}<br>` +
-            `Place: ${item.place}<br>` +
-            `Precision: ${item.precision}<br>` +
-            `What happened: ${item.what_happened}<br>` +
-            `Why it matters: ${item.why_it_matters}<br>` +
-            `Source: ${item.publisher || 'Unknown'} - ${item.published_at || 'Unknown'} - <a href="${item.source_url}" target="_blank" rel="noopener noreferrer">link</a><br>` +
-            `<a href="${item.briefing_link}">Jump to briefing story</a>`;
+          const popup = popupHtml(item);
           const icon = L.divIcon({ className:'', html: markerHtml(item.category), iconSize:[34,34], iconAnchor:[17,17] });
           const marker = L.marker([Number(item.lat), Number(item.lon)], { icon }).addTo(map).bindPopup(popup);
           active.push(marker);
@@ -137,7 +194,7 @@
         if (!showRegional.checked) return;
         let html = '<h2>Regional/statewide reports</h2><ul>';
         for (const item of regional) {
-          html += `<li><strong>${item.title}</strong> - [${item.category_letter}] ${item.category} - ${item.place}. ${item.regional_note} <a href="${item.source_url}" target="_blank" rel="noopener noreferrer">Source</a></li>`;
+          html += `<li><strong>${safe(item.title)}</strong> - ${safe(conciseArea(item.category))} - ${safe(item.place)}. ${safe(item.regional_note)} <a href="${safe(item.source_url)}" target="_blank" rel="noopener noreferrer">Open source</a></li>`;
         }
         html += '</ul>';
         regionalList.innerHTML = html;

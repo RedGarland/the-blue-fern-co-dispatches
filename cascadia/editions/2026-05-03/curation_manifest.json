@@ -1,1 +1,128 @@
-[]
+[
+  {
+    "story_id": "derived-2026-05-03-story-c7a4b5528a8c",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+    "category": "Transportation",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Transportation",
+      "region_scope=WA",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "derived-2026-05-03-src-63ceb40d9957a9da"
+    ],
+    "source_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  },
+  {
+    "story_id": "derived-2026-05-03-story-b5a2f0ce428f",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal.",
+    "category": "Public safety",
+    "score": 76,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "derived-2026-05-03-src-f6381af1da25bfb2"
+    ],
+    "source_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  },
+  {
+    "story_id": "derived-2026-05-03-story-d53365c68a09",
+    "title": "Local college team wins postseason game",
+    "summary": "Sports-only placeholder item used to verify curation exclusion.",
+    "category": "Government and public services",
+    "score": 46,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 5,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 16,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 15,
+    "scoring_reasons": [
+      "category=Government and public services",
+      "region_scope=regional",
+      "source_reliability=editorial-record"
+    ],
+    "source_record_ids": [
+      "derived-2026-05-03-src-b9754106373f837f"
+    ],
+    "source_urls": [
+      "https://example.com/cascadia-sports-placeholder"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "sports",
+    "source_type": "existing_cascadia_manifest",
+    "derived_from_edition_date": "2026-05-03",
+    "derived_from_edition_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03",
+    "derived_from_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\cascadia\\editions\\2026-05-03\\curation_manifest.json",
+    "traceability_note": "Derived from prior Cascadia edition manifest; original source URL preserved.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-11",
+    "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026"
+  }
+]

@@ -1,0 +1,457 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-22-001",
+    "title": "Gaza flotilla activists allege abuse by Israeli forces while detained",
+    "summary": "The detainees say they were slapped, hit, humiliated and even subjected to sexual violence, but Israel's prison service says the allegations are false.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-bbc-middle-east-0b8d8d88716d"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-bbc-middle-east-0b8d8d88716d"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/cglp5z63k9no?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-002",
+    "title": "Gaza flotilla activists deported from Israel as backlash over treatment grows",
+    "summary": "A video showing a far-right Israeli minister taunting activists who were kneeling with their hands tied behind their backs has been widely condemned.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-bbc-middle-east-eed2da9ceb61"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-bbc-middle-east-eed2da9ceb61"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c9d3v2d6p1eo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-003",
+    "title": "Gaza flotilla activists allege sexual assault and rape in Israeli detention",
+    "summary": "Israeli prison service denies claims of abuse during detention of 430 people trying to take aid to Palestinians Activists released from Israeli custody after being detained on a flotilla trying to take aid to Gaza were subjected to abuse, organisers have alleged, with several hospitalised with injuries and at least 15 reporting sexual assaults, including rape. Israel's prison service denied the allegations, and Reuters was not able to verify them independently.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-guardian-world-61a482890405"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-guardian-world-61a482890405"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/22/gaza-flotilla-activists-allege-sexual-assault-and-in-israeli-detention"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-004",
+    "title": "Mahmoud Khalil to appeal US deportation case to Supreme Court",
+    "summary": "Pro-Palestine advocate takes claim that Trump administration targeted him for protected free speech to top US court.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-fec424861d9f"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-fec424861d9f"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/22/mahmoud-khalil-to-appeal-us-deportation-case-to-supreme-court?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-005",
+    "title": "Decades-old photos show 'joyful' Gaza in happier times.",
+    "summary": "An exhibition in Marseille is showcasing 300 photos taken in Gaza between the 1940s and the 1970s.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-e6f9735e03d1"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-e6f9735e03d1"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/22/decades-old-photos-show-joyful-gaza-in-happier-times?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-006",
+    "title": "Israel's October 7 tribunal: Show trial of Palestinians or justice?",
+    "summary": "Observers describe a climate in which the chances of justice in the military tribunals are slim.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-3ac2de047f09"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-3ac2de047f09"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/22/israel-october-7-tribunal-show-trial-palestinians?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-007",
+    "title": "Gaza flotilla activists allege abuse, sexual assault in Israeli detention",
+    "summary": "Organisers of Global Sumud Flotilla say foreign activists report at least 15 cases of \u200csexual assaults, including rape.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-3b8381aa0d4a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-3b8381aa0d4a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/22/gaza-flotilla-activists-allege-abuse-sexual-assault-in-israeli-detention?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-22-003",
+    "prior_edition_date": "2026-05-22",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_same_topic"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-008",
+    "title": "Western nations warn Israel to end illegal settlement expansion, violence",
+    "summary": "Nine countries including UK, Germany and France warn settlements in occupied West Bank a 'breach of international law'.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-f1579370b116"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-f1579370b116"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/22/western-nations-warn-israel-to-end-illegal-settlement-expansion-violence?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-009",
+    "title": "Israel deports foreign Gaza-bound flotilla activists after global outcry",
+    "summary": "Move comes amid condemnation of Itamar Ben-Gvir after video posted showing detained protesters being taunted Israel has said it has deported all the foreign activists it seized from a Gaza-bound flotilla, after a global outcry over their treatment in custody that led the UK to join other countries in summoning Israeli diplomats for a formal dressing down. More than 430 activists from countries around the world had been placed in detention in Israel after they were intercepted at sea on Monday while making the latest in a string of attempts to break the blockade of the Palestinian territory.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-guardian-world-558913d393d6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-guardian-world-558913d393d6"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/21/uk-israel-video-itama-ben-gvir"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-21-002",
+    "prior_edition_date": "2026-05-21",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "source_url_seen_before",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-010",
+    "title": "Progressive Democrats criticize 2024 election autopsy for silence on Gaza | First Thing",
+    "summary": "The 192-page report does not mention Gaza or Joe Biden's age. Plus, is the world heading for another Ebola crisis? Don't already get First Thing in your inbox? Sign up here Good morning. On Thursday, the Democratic party published a postmortem - spanning 192 pages - of its 2024 election defeat, after an initial decision to withhold the document prompted an angry backlash. What's in the postmortem? It focuses on key demographics that Kamala Harris lost, including Latinos, men and rural voters in many states. \"Harris wrote off rural America, assuming urban/suburban margins would compensate,\" the report says. \"The math doesn't work.\" The autopsy says that Democrats must focus less on \"abstract issues and identity politics\". What does the move tell us? The cancellation, which avoided political embarrassment for Donald Trump, is the latest signal that congressional support for the US president's war is diminishing. What happens next? The vote has been postponed until lawmakers return from a recess in June, when it appears likely that the resolution could pass.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-guardian-world-cb8e928ffe2b"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-guardian-world-cb8e928ffe2b"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/may/22/first-thing-progressive-democrats-2024-election-autopsy-silence-gaza"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

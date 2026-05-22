@@ -1,0 +1,311 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-22",
+  "candidates_seen": 10,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-22-001",
+      "title": "Gaza flotilla activists allege abuse by Israeli forces while detained",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-002",
+      "title": "Gaza flotilla activists deported from Israel as backlash over treatment grows",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-003",
+      "title": "Gaza flotilla activists allege sexual assault and rape in Israeli detention",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-004",
+      "title": "Mahmoud Khalil to appeal US deportation case to Supreme Court",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-005",
+      "title": "Decades-old photos show 'joyful' Gaza in happier times.",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-006",
+      "title": "Israel's October 7 tribunal: Show trial of Palestinians or justice?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-008",
+      "title": "Western nations warn Israel to end illegal settlement expansion, violence",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-010",
+      "title": "Progressive Democrats criticize 2024 election autopsy for silence on Gaza | First Thing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-22-007",
+      "title": "Gaza flotilla activists allege abuse, sexual assault in Israeli detention",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-22-003",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-009",
+      "title": "Israel deports foreign Gaza-bound flotilla activists after global outcry",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "source_url_seen_before",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-21-002",
+      "prior_edition_date": "2026-05-21",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [],
+  "merged_sources": 1,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-05-22-003",
+      "merged_story_ids": [
+        "gaza-story-2026-05-22-007"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-05-22-aljazeera-middle-east-3b8381aa0d4a"
+      ],
+      "duplicate_reason": "within_edition_duplicate",
+      "normalized_event_key": "",
+      "reasons": [
+        "within_edition_same_topic"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-22-007",
+      "title": "Gaza flotilla activists allege abuse, sexual assault in Israeli detention",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_same_topic"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-22-003",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-001",
+      "title": "Gaza flotilla activists allege abuse by Israeli forces while detained",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-002",
+      "title": "Gaza flotilla activists deported from Israel as backlash over treatment grows",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-003",
+      "title": "Gaza flotilla activists allege sexual assault and rape in Israeli detention",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-004",
+      "title": "Mahmoud Khalil to appeal US deportation case to Supreme Court",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-005",
+      "title": "Decades-old photos show 'joyful' Gaza in happier times.",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-006",
+      "title": "Israel's October 7 tribunal: Show trial of Palestinians or justice?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-008",
+      "title": "Western nations warn Israel to end illegal settlement expansion, violence",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-009",
+      "title": "Israel deports foreign Gaza-bound flotilla activists after global outcry",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "source_url_seen_before",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-21-002",
+      "prior_edition_date": "2026-05-21",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-22-010",
+      "title": "Progressive Democrats criticize 2024 election autopsy for silence on Gaza | First Thing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

@@ -1,7 +1,31 @@
 {
   "edition_date": "2026-04-05",
-  "note": "This map shows source-backed reports that met Cascadia Briefing criteria for the week; it does not claim to show every local problem in the region.",
+  "coverage_start": "2026-03-30",
+  "coverage_end": "2026-04-05",
+  "coverage_label": "Mar 30\u2013Apr 5, 2026",
+  "note": "Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.",
   "markers": [],
-  "regional_or_unmapped": [],
-  "source_table_rows": []
+  "regional_reports": [],
+  "show_regional_default": false,
+  "grouped_markers": [],
+  "diagnostics": {
+    "raw_candidate_count": 138,
+    "accepted_local_marker_count": 0,
+    "regional_statewide_report_count": 0,
+    "excluded_count": 138,
+    "excluded_reasons": {
+      "no_source_date": 40,
+      "unresolved_pressure_category": 98
+    },
+    "category_corrections_applied": 35,
+    "stale_records_removed": 0,
+    "state_only_place_excluded": 0,
+    "curated_story_marker_candidates": 0,
+    "backfill_record_candidates": 131,
+    "backfill_marker_candidates": 0,
+    "duplicates_removed": 0,
+    "included_markers": 0,
+    "regional_duplicates_removed": 0,
+    "excluded_backfill_records": 131
+  }
 }

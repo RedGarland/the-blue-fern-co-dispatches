@@ -269,6 +269,22 @@ def test_doctor_flags_bad_json_and_smtp_password_log_marker():
         _cleanup_contract_root(root)
 
 
+def test_doctor_flags_public_html_mechanical_or_incomplete_prose():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html",
+            "<p>It is included because the source metadata ties it to housing in Idaho.</p>"
+            "<p>In three states, Democratic lawmakers introduced bills this session that would allow.</p>",
+        )
+        result = _result_map(root)["public HTML prose quality"]
+        assert not result.ok
+        assert "contains banned phrase: it is included because" in result.message
+        assert "contains incomplete modal ending: would allow." in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_passes_after_smtp_password_log_marker_is_sanitized():
     root = _make_contract_root()
     try:

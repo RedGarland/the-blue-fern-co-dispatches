@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from bluefern_dispatches.public_prose import html_contains_public_prose_violations, summarize_violations
 
 EXPECTED_CNAME = "dispatches.thebluefernco.com"
 EXPECTED_PAGES_BRANCH = "gh-pages"
@@ -270,6 +271,25 @@ def check_json_files_parse(root: Path, glob_pattern: str, name: str) -> CheckRes
     return _result(name, not problems, f"{len(files)} file(s) parse" if not problems else "; ".join(problems))
 
 
+def check_public_html_prose_quality(root: Path) -> CheckResult:
+    site_root = root / "output" / "site"
+    html_files = sorted(site_root.rglob("*.html")) if site_root.exists() else []
+    if not html_files:
+        return _result("public HTML prose quality", True, "no public HTML files found; prose check skipped")
+    offenders: list[str] = []
+    for path in html_files:
+        violations = html_contains_public_prose_violations(_read_text(path))
+        if violations:
+            offenders.append(f"{path.relative_to(root)}: {summarize_violations(violations)}")
+    return _result(
+        "public HTML prose quality",
+        not offenders,
+        "public HTML contains no banned rationale or incomplete modal prose"
+        if not offenders
+        else "; ".join(offenders),
+    )
+
+
 def run_checks(root: Path) -> list[CheckResult]:
     root = root.resolve()
     return [
@@ -286,6 +306,7 @@ def run_checks(root: Path) -> list[CheckResult]:
         check_smtp_password_not_logged(root),
         check_json_files_parse(root, "data/dispatches/**/manual_sources.json", "manual source JSON"),
         check_json_files_parse(root, "data/dispatches/cascadia/sources/**/historical_search_report.json", "historical search reports"),
+        check_public_html_prose_quality(root),
     ]
 
 

@@ -237,6 +237,31 @@ Exit codes: `0` means the pipeline succeeded and email was sent, or email was no
 
 The Cascadia pipeline is standalone inside this repository. It is separate from the older FDA/Cascadia media pipeline and must not depend on that project structure.
 
+## American Pressure Data Retention
+
+Retention policy for American Pressure collection artifacts:
+
+- Durable source data (commit when reviewed):
+  - `data/source_registry/american_pressure_sources.json`
+  - `data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json`
+
+- Local intake/backfill artifacts (do not track by default):
+  - `data/dispatches/american-pressure/candidates/YYYY-MM-DD/candidate_sources.json`
+  - `data/dispatches/american-pressure/sources/YYYY-MM-DD/feed_backfill_sources.json`
+
+Decision rule:
+
+- If a record is needed for public claims, move it into reviewed manual source packs before committing.
+- If a file is intake-only/quarantine or feed supplement output, keep local for workflow/audit and exclude from git by default.
+
+Deterministic guard:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\doctor.py
+```
+
+`doctor.py` checks that deferred candidate/backfill files are not tracked while durable manual/registry files remain commit-eligible.
+
 Region scope:
 
 - Washington

@@ -73,3 +73,12 @@ If a pillar has no human story, report it as a collection gap. Do not imply that
 - No invented summaries or generated prose as source material.
 - Reject or downrank investor-only, opinion-only, duplicate/stale, and no-public-impact items.
 - Approved-candidate merge is opt-in (`--include-approved-candidates`) and must exclude unapproved/rejected candidates.
+
+10. American Pressure artifact retention:
+- Durable records (commit-eligible):
+  - `data/source_registry/american_pressure_sources.json`
+  - `data/dispatches/american-pressure/sources/YYYY-MM-DD/manual_sources.json` after editorial review.
+- Deferred local intake/backfill artifacts (local-only by default, not tracked):
+  - `data/dispatches/american-pressure/candidates/YYYY-MM-DD/candidate_sources.json`
+  - `data/dispatches/american-pressure/sources/YYYY-MM-DD/feed_backfill_sources.json`
+- Intake/backfill artifacts may be escalated into durable records only by explicit review workflow and a scoped commit.

@@ -20,6 +20,10 @@ data/dispatches/cascadia/normalized/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 data/dispatches/cascadia/curated/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 data/dispatches/cascadia/sources/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 !data/dispatches/cascadia/source_registry.yml
+# American Pressure generated intake/backfill artifacts
+data/dispatches/american-pressure/candidates/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/candidate_sources.json
+data/dispatches/american-pressure/sources/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/feed_backfill_sources.json
+!data/source_registry/american_pressure_sources.json
 repair-and-reclone*.log
 reclone*.log
 

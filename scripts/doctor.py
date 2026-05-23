@@ -29,6 +29,12 @@ OLD_PROJECT_NEEDLES = (
 )
 RUNTIME_PATTERNS = ("*.py", "*.ps1")
 LINKED_EDITION_RE = re.compile(r"editions/(\d{4}-\d{2}-\d{2})/")
+AP_CANDIDATE_FILE_RE = re.compile(
+    r"^data/dispatches/american-pressure/candidates/\d{4}-\d{2}-\d{2}/candidate_sources\.json$"
+)
+AP_FEED_BACKFILL_FILE_RE = re.compile(
+    r"^data/dispatches/american-pressure/sources/\d{4}-\d{2}-\d{2}/feed_backfill_sources\.json$"
+)
 
 
 @dataclass(frozen=True)
@@ -290,6 +296,61 @@ def check_public_html_prose_quality(root: Path) -> CheckResult:
     )
 
 
+def classify_ap_artifact_path(path: str) -> str | None:
+    normalized = path.replace("\\", "/")
+    if normalized == "data/source_registry/american_pressure_sources.json":
+        return "durable_source_registry"
+    if normalized.startswith("data/dispatches/american-pressure/sources/") and normalized.endswith("/manual_sources.json"):
+        return "durable_manual_sources"
+    if AP_CANDIDATE_FILE_RE.match(normalized):
+        return "deferred_intake_candidates"
+    if AP_FEED_BACKFILL_FILE_RE.match(normalized):
+        return "deferred_feed_backfill"
+    return None
+
+
+def _git_tracked_files(root: Path) -> list[str]:
+    root = root.resolve()
+    try:
+        completed = subprocess.run(
+            ["git", "-c", f"safe.directory={root}", "-C", str(root), "ls-files"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return []
+    if completed.returncode != 0:
+        return []
+    return [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+
+
+def check_american_pressure_artifact_retention(root: Path) -> CheckResult:
+    tracked = _git_tracked_files(root)
+    if not tracked:
+        return _result(
+            "American Pressure artifact retention",
+            True,
+            "git tracked-file inventory unavailable; retention check skipped",
+        )
+    violations = [
+        path
+        for path in tracked
+        if classify_ap_artifact_path(path) in {"deferred_intake_candidates", "deferred_feed_backfill"}
+    ]
+    if violations:
+        return _result(
+            "American Pressure artifact retention",
+            False,
+            "tracked deferred artifacts must be local-only: " + ", ".join(sorted(violations)),
+        )
+    return _result(
+        "American Pressure artifact retention",
+        True,
+        "deferred intake/backfill artifacts are not tracked; durable manual/registry sources remain commit-eligible",
+    )
+
+
 def run_checks(root: Path) -> list[CheckResult]:
     root = root.resolve()
     return [
@@ -304,6 +365,7 @@ def run_checks(root: Path) -> list[CheckResult]:
         check_pages_repo(root),
         check_cname(root),
         check_smtp_password_not_logged(root),
+        check_american_pressure_artifact_retention(root),
         check_json_files_parse(root, "data/dispatches/**/manual_sources.json", "manual source JSON"),
         check_json_files_parse(root, "data/dispatches/cascadia/sources/**/historical_search_report.json", "historical search reports"),
         check_public_html_prose_quality(root),

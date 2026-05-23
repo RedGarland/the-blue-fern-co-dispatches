@@ -312,3 +312,69 @@ def test_doctor_checks_pages_repo_branch_and_cname(monkeypatch):
         assert "wrong.example" in results["Pages CNAME"].message
     finally:
         _cleanup_contract_root(root)
+
+
+def test_classify_ap_artifact_path_groups_paths():
+    assert doctor.classify_ap_artifact_path("data/source_registry/american_pressure_sources.json") == "durable_source_registry"
+    assert (
+        doctor.classify_ap_artifact_path(
+            "data/dispatches/american-pressure/sources/2026-05-16/manual_sources.json"
+        )
+        == "durable_manual_sources"
+    )
+    assert (
+        doctor.classify_ap_artifact_path(
+            "data/dispatches/american-pressure/candidates/2026-05-22/candidate_sources.json"
+        )
+        == "deferred_intake_candidates"
+    )
+    assert (
+        doctor.classify_ap_artifact_path(
+            "data/dispatches/american-pressure/sources/2026-05-16/feed_backfill_sources.json"
+        )
+        == "deferred_feed_backfill"
+    )
+    assert doctor.classify_ap_artifact_path("data/dispatches/american-pressure/sources/2026-05-16/unknown.json") is None
+
+
+def test_doctor_flags_tracked_deferred_ap_artifacts(monkeypatch):
+    root = _make_contract_root()
+    try:
+        monkeypatch.setattr(
+            doctor,
+            "_git_tracked_files",
+            lambda _: [
+                "data/source_registry/american_pressure_sources.json",
+                "data/dispatches/american-pressure/sources/2026-05-16/manual_sources.json",
+                "data/dispatches/american-pressure/candidates/2026-05-22/candidate_sources.json",
+                "data/dispatches/american-pressure/sources/2026-05-16/feed_backfill_sources.json",
+            ],
+        )
+
+        result = _result_map(root)["American Pressure artifact retention"]
+
+        assert not result.ok
+        assert "candidate_sources.json" in result.message
+        assert "feed_backfill_sources.json" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_passes_when_only_durable_ap_sources_are_tracked(monkeypatch):
+    root = _make_contract_root()
+    try:
+        monkeypatch.setattr(
+            doctor,
+            "_git_tracked_files",
+            lambda _: [
+                "data/source_registry/american_pressure_sources.json",
+                "data/dispatches/american-pressure/sources/2026-05-16/manual_sources.json",
+            ],
+        )
+
+        result = _result_map(root)["American Pressure artifact retention"]
+
+        assert result.ok
+        assert "not tracked" in result.message
+    finally:
+        _cleanup_contract_root(root)

@@ -36,6 +36,10 @@ EXCLUDED_CONTEXT_TERMS = {
     "sports": ["sports", "game", "coach", "tournament", "playoff", "score"],
     "entertainment": ["movie", "concert", "album", "celebrity", "festival"],
     "opinion": ["opinion", "editorial", "letter to the editor"],
+    "generic_politics": ["campaign", "election poll", "endorsement", "fundraising", "debate"],
+    "routine_event": ["festival", "parade", "community event", "grand opening", "ribbon cutting"],
+    "newsroom_update": ["newsroom", "staff update", "new hire", "promotion announcement"],
+    "business_promo": ["sponsored", "promoted", "product launch", "investor relations", "earnings call", "shareholder"],
 }
 CATEGORY_HINTS = {
     "Infrastructure": ["infrastructure", "bridge", "road closure", "water"],
@@ -48,6 +52,18 @@ CATEGORY_HINTS = {
     "Economy and labor": ["economy", "labor", "layoffs"],
     "Food and agriculture": ["agriculture", "food insecurity"],
 }
+PRESSURE_EVIDENCE_TERMS = [
+    "infrastructure", "bridge", "water system", "public health", "emergency management",
+    "housing", "rent", "eviction", "utility", "utility shutoff", "power shutoff",
+    "hospital", "clinic", "health access", "healthcare access", "health care access",
+    "wildfire", "smoke", "drought", "flood", "recovery",
+    "transit", "ferry", "road closure", "bridge closure", "service disruption",
+    "food bank", "snap", "food support", "food insecurity", "food assistance",
+    "layoff", "layoffs", "wages", "job cuts", "unemployment",
+    "school closure", "school closures", "budget cuts", "school budget cuts",
+    "emergency services", "public safety", "staffing shortage", "service strain",
+    "government services", "government service", "access to services",
+]
 KNOWN_REGIONAL_DOMAINS = [
     "seattletimes.com",
     "spokesman.com",
@@ -62,6 +78,11 @@ KNOWN_REGIONAL_DOMAINS = [
 ]
 PROVIDER_BACKOFF_UNTIL: dict[str, float] = {}
 TRUTHY = {"1", "true", "yes", "on"}
+
+
+def provider_backoff_key(provider_id: Any) -> str:
+    text = str(provider_id or "").strip().lower()
+    return text or "unknown"
 
 
 def utc_now() -> str:
@@ -459,7 +480,18 @@ class GDELTProvider(HistoricalSearchProvider):
             self.throttle()
             result = fetch_public_url(url, self.timeout_seconds, self.user_agent)
             fetch_diag = result.diagnostics
-            for key in ["fetch_backend", "fallback_used", "python_fetch_error", "curl_exit_code", "curl_stderr_tail", "tls_or_revocation_hint", "recommendation", "bytes_read"]:
+            for key in [
+                "fetch_backend",
+                "fallback_used",
+                "python_fetch_error",
+                "curl_exit_code",
+                "curl_stderr_tail",
+                "tls_or_revocation_hint",
+                "recommendation",
+                "bytes_read",
+                "ssl_mode",
+                "insecure_ssl_used",
+            ]:
                 diagnostics[key] = fetch_diag.get(key)
             self.last_request_at = time.monotonic()
             if not result.ok and result.status_code:
@@ -631,10 +663,13 @@ def exclusion_reason(record: dict[str, Any], system_terms: list[str]) -> str | N
     domain = urllib.parse.urlsplit(url).netloc.lower().removeprefix("www.")
     has_regional_domain = any(domain.endswith(known) for known in KNOWN_REGIONAL_DOMAINS)
     has_system = any(term.lower() in text for term in system_terms)
+    has_pressure_evidence = any(term in text for term in PRESSURE_EVIDENCE_TERMS)
     if not has_region and not (has_regional_domain and has_system):
         return "no_wa_or_id_connection"
     if not has_system:
         return "no_public_systems_term"
+    if not has_pressure_evidence:
+        return "no_explicit_pressure_evidence"
     return None
 
 
@@ -1004,6 +1039,12 @@ def retrieve_historical_sources(
             continue
         if provider_id not in provider_order:
             continue
+        backoff_key = provider_backoff_key(provider_id)
+        backoff_seconds = float(provider_config.get("backoff_max_seconds") or provider_config.get("rate_limit_backoff_seconds") or 180)
+        backoff_until = PROVIDER_BACKOFF_UNTIL.get(backoff_key, 0)
+        if time.monotonic() < backoff_until:
+            warnings.append(f"historical provider {provider_id} skipped because a recent rate limit is still cooling down")
+            continue
         if historical_delay_seconds is not None and str(provider_config.get("provider_id")) == "gdelt":
             provider_config = {**provider_config, "delay_seconds": historical_delay_seconds}
         provider = provider_from_config(provider_config, root=root, refresh_cache=refresh_cache)
@@ -1012,11 +1053,6 @@ def retrieve_historical_sources(
             continue
         providers_used.append(provider.provider_id)
         max_results = int(provider_config.get("max_results_per_query", 20))
-        backoff_seconds = float(provider_config.get("backoff_max_seconds") or provider_config.get("rate_limit_backoff_seconds") or 180)
-        backoff_until = PROVIDER_BACKOFF_UNTIL.get(provider.provider_id, 0)
-        if time.monotonic() < backoff_until:
-            warnings.append(f"historical provider {provider.provider_id} skipped because a recent rate limit is still cooling down")
-            continue
         for query in limited_queries:
             try:
                 results = provider.search(week_start, week_end, query, max_results)
@@ -1042,10 +1078,13 @@ def retrieve_historical_sources(
                         "cache_miss": bool(diagnostics.get("cache_miss")),
                         "fetch_backend": diagnostics.get("fetch_backend"),
                         "fallback_used": bool(diagnostics.get("fallback_used")),
+                        "ssl_mode": diagnostics.get("ssl_mode"),
+                        "insecure_ssl_used": bool(diagnostics.get("insecure_ssl_used")),
+                        "bytes_read": diagnostics.get("bytes_read"),
                     }
                 )
             except HistoricalProviderRateLimited as exc:  # pragma: no cover - network behavior is environment-dependent
-                PROVIDER_BACKOFF_UNTIL[provider.provider_id] = time.monotonic() + backoff_seconds
+                PROVIDER_BACKOFF_UNTIL[backoff_key] = time.monotonic() + backoff_seconds
                 diagnostics = getattr(provider, "last_diagnostics", {}) or {}
                 provider_request_diagnostics.append(diagnostics)
                 cache_hits += int(bool(diagnostics.get("cache_hit")))
@@ -1067,6 +1106,9 @@ def retrieve_historical_sources(
                         "cache_miss": bool(diagnostics.get("cache_miss")),
                         "fetch_backend": diagnostics.get("fetch_backend"),
                         "fallback_used": bool(diagnostics.get("fallback_used")),
+                        "ssl_mode": diagnostics.get("ssl_mode"),
+                        "insecure_ssl_used": bool(diagnostics.get("insecure_ssl_used")),
+                        "bytes_read": diagnostics.get("bytes_read"),
                     }
                 )
                 break
@@ -1092,6 +1134,9 @@ def retrieve_historical_sources(
                         "cache_miss": bool(diagnostics.get("cache_miss")),
                         "fetch_backend": diagnostics.get("fetch_backend"),
                         "fallback_used": bool(diagnostics.get("fallback_used")),
+                        "ssl_mode": diagnostics.get("ssl_mode"),
+                        "insecure_ssl_used": bool(diagnostics.get("insecure_ssl_used")),
+                        "bytes_read": diagnostics.get("bytes_read"),
                     }
                 )
                 continue

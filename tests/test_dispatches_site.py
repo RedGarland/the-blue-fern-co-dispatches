@@ -167,7 +167,37 @@ def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
                 "coverage_end": "2026-04-26",
                 "coverage_label": "Apr 20-26, 2026",
                 "week_label": "2026-W17",
+                "public_story_count": 1,
+                "source_count": 1,
+                "story_count": 1,
             },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (old_edition / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "old-src-1",
+                    "url": "https://example.com/source",
+                    "title": "Source-backed report",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (old_edition / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "old-story-1",
+                    "title": "Old weekly page",
+                    "included_in_public_summary": True,
+                    "source_urls": ["https://example.com/source"],
+                }
+            ],
             indent=2,
         ),
         encoding="utf-8",

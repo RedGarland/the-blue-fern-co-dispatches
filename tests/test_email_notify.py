@@ -16,6 +16,8 @@ spec.loader.exec_module(run_and_notify)
 @pytest.fixture(autouse=True)
 def _disable_env_file_loading(monkeypatch):
     monkeypatch.setattr(run_and_notify, "load_env_file", lambda path=None: None)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
+    monkeypatch.delenv("SMTP_FROM", raising=False)
 
 
 async def _smtp_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, out_list: list):
@@ -100,6 +102,7 @@ def test_send_email_integration(monkeypatch):
     monkeypatch.setenv("SMTP_PORT", str(port))
     monkeypatch.setenv("EMAIL_TO", "recipient@example.com")
     monkeypatch.delenv("SMTP_USER", raising=False)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)
 
     monkeypatch.setattr(run_and_notify, "run_command", lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")))
@@ -239,8 +242,10 @@ def test_send_email_uses_stable_local_hostname_when_machine_name_is_short(monkey
     _set_email_env(monkeypatch)
     monkeypatch.delenv("SMTP_LOCAL_HOSTNAME", raising=False)
     monkeypatch.delenv("SMTP_USER", raising=False)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)
     monkeypatch.delenv("EMAIL_FROM", raising=False)
+    monkeypatch.delenv("SMTP_FROM", raising=False)
     monkeypatch.setattr(run_and_notify.socket, "getfqdn", lambda: "DESKTOP-U5S5ND1")
     monkeypatch.setattr(run_and_notify.socket, "gethostname", lambda: "DESKTOP-U5S5ND1")
     monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)

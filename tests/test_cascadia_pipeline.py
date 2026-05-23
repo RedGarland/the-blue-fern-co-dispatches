@@ -1387,7 +1387,7 @@ def test_historical_weekly_cli_renders_traceable_story_and_manifests(cascadia_wo
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
     rss = (cascadia_work_root / "output" / "site" / "cascadia" / "rss.xml").read_text(encoding="utf-8")
     assert "The Cascadia Briefing - May 4\u201310, 2026" in archive
-    assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" in rss
+    assert "The Cascadia Briefing - Apr 27\u2013May 3, 2026" not in rss
     assert "2026-05-07" not in archive
 
 
@@ -1785,10 +1785,10 @@ def test_cascadia_archive_recent_and_rss_list_weekly_editions_only(cascadia_work
         for day in ["2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07"]:
             assert day not in text
         for weekly_date in weekly_dates:
-            assert weekly_date in text
+            assert weekly_date not in text
         for _, _, _, label in weekly_dates.values():
-            assert f"The Cascadia Briefing - {label}" in text
-        assert "Reviewed week | No qualifying source-backed regional signals surfaced" in text
+            assert f"The Cascadia Briefing - {label}" not in text
+        assert "Reviewed week | No qualifying source-backed regional signals surfaced" not in text
         assert "0 stories | No qualifying public signals identified" not in text
     assert "Weekly source-backed regional briefings for Washington, Oregon, and Idaho." not in archive
 
@@ -1976,7 +1976,7 @@ def test_backfill_weeks_cli_generates_completed_weekly_editions_without_sources(
         assert manifest["weekly_summary_bullets"] == []
         assert manifest["public_archive_subtitle"] == "Reviewed week | No qualifying source-backed regional signals surfaced"
     archive = (cascadia_work_root / "output" / "site" / "cascadia" / "archive.html").read_text(encoding="utf-8")
-    assert all(edition_date in archive for edition_date in expected)
+    assert all(edition_date not in archive for edition_date in expected)
 
 
 def test_backfill_weeks_from_existing_editions_preserves_traceability(cascadia_work_root, monkeypatch):
@@ -2044,7 +2044,7 @@ def test_backfill_weeks_from_existing_editions_preserves_traceability(cascadia_w
     assert "2026-04-28" not in archive
 
 
-def test_weekly_render_generates_public_map_files_and_embed(cascadia_work_root):
+def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")
     curate_sources(cascadia_work_root, "2026-05-03")
@@ -2062,9 +2062,12 @@ def test_weekly_render_generates_public_map_files_and_embed(cascadia_work_root):
     site_edition = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
     assert (site_edition / "map_data.json").exists()
     assert (site_edition / "map.html").exists()
+    assert (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "index.html").exists()
+    assert (cascadia_work_root / "output" / "site" / "cascadia" / "dashboard" / "index.html").exists()
     html = (site_edition / "index.html").read_text(encoding="utf-8")
-    assert 'src="map.html"' in html
-    assert "markers may represent source or regional centroids, not exact incident locations" in html
+    assert 'src="/cascadia/map/"' not in html
+    assert "Open this week's interactive map" in html
+    assert "Open latest Cascadia map" in html
 
     map_data = read_json(site_edition / "map_data.json")
     assert map_data["markers"]

@@ -6,6 +6,8 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
+import time
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -299,7 +301,14 @@ def generation_command(edition_date: str) -> list[str]:
     ]
 
 
-def run_tests() -> subprocess.CompletedProcess[str]:
+def make_pytest_basetemp() -> Path:
+    unique = f"bluefern-pytest-gaza-{os.getpid()}-{int(time.time() * 1000)}"
+    path = Path(tempfile.gettempdir()) / unique
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def run_tests(pytest_basetemp: Path) -> subprocess.CompletedProcess[str]:
     smtp_env_names = (
         "SMTP_HOST",
         "SMTP_PORT",
@@ -319,7 +328,19 @@ def run_tests() -> subprocess.CompletedProcess[str]:
     )
     saved = {name: os.environ.pop(name) for name in smtp_env_names if name in os.environ}
     try:
-        return run_command([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"])
+        return run_command(
+            [
+                sys.executable,
+                "-B",
+                "-m",
+                "pytest",
+                "-q",
+                "-p",
+                "no:cacheprovider",
+                "--basetemp",
+                str(pytest_basetemp),
+            ]
+        )
     finally:
         os.environ.update(saved)
 
@@ -542,8 +563,23 @@ def main(argv: list[str] | None = None) -> int:
         command_text(generation_command(args.date)),
         command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
     ]
+    pytest_basetemp = make_pytest_basetemp()
     if not args.skip_tests:
-        summary["planned_actions"].append(command_text([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"]))
+        summary["planned_actions"].append(
+            command_text(
+                [
+                    sys.executable,
+                    "-B",
+                    "-m",
+                    "pytest",
+                    "-q",
+                    "-p",
+                    "no:cacheprovider",
+                    "--basetemp",
+                    str(pytest_basetemp),
+                ]
+            )
+        )
     if not args.dry_run:
         summary["planned_actions"].append(command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=False)))
     if args.push:
@@ -575,7 +611,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.skip_tests:
         summary["tests_run"] = True
-        tests = run_tests()
+        tests = run_tests(pytest_basetemp)
         summary["tests_ok"] = tests.returncode == 0
         log_line(log_path, f"Tests return code: {tests.returncode}")
         if tests.returncode != 0:

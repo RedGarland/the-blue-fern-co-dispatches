@@ -20,5 +20,9 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [],
-  "errors": []
+  "errors": [],
+  "briefing_type": "weekly",
+  "coverage_start": "2026-04-27",
+  "coverage_end": "2026-05-03",
+  "coverage_label": "Apr 27-May 3, 2026"
 }

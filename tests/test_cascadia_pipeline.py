@@ -2219,6 +2219,41 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "coordinate_basis" not in map_html
 
 
+def test_cascadia_mapping_philosophy_doc_exists_and_has_required_sections():
+    root = Path(__file__).resolve().parents[1]
+    doc_path = root / "docs" / "cascadia-mapping-philosophy.md"
+    assert doc_path.exists()
+    text = doc_path.read_text(encoding="utf-8")
+
+    required_sections = [
+        "## 1. Product definition",
+        "## 2. What counts as pressure",
+        "## 3. Secondary indicators",
+        "## 4. What is excluded",
+        "## 5. Geographic philosophy",
+        "## 6. Source philosophy",
+        "## 7. Visual philosophy",
+        "## 8. User experience philosophy",
+        "## 9. Time philosophy",
+        "## 10. Overlap philosophy",
+        "## 11. Honest incompleteness",
+        "## 12. Implementation rules",
+    ]
+    for section in required_sections:
+        assert section in text
+
+    required_rules = [
+        'no generic "Regional systems pressure"',
+        "no stale reference pages",
+        "no state-only local markers",
+        "regional/statewide reports should live in a separate layer",
+        "no local reports qualified",
+    ]
+    for rule in required_rules:
+        assert rule in text
+
+
+
 def test_map_dedupes_duplicate_url_place_category(cascadia_work_root):
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")

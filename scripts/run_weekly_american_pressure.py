@@ -102,7 +102,8 @@ def _validate_pages_view_for_date(edition_date: str) -> list[str]:
         "index": PAGES_REPO / "american-pressure" / "index.html",
         "archive": PAGES_REPO / "american-pressure" / "archive.html",
         "rss": PAGES_REPO / "american-pressure" / "rss.xml",
-        "dashboard": PAGES_REPO / "american-pressure" / "dashboard" / "index.html",
+        "map_index": PAGES_REPO / "american-pressure" / "map" / "index.html",
+        "map_data": PAGES_REPO / "american-pressure" / "map" / "map_data.json",
     }
     for label, path in required.items():
         if not path.exists():

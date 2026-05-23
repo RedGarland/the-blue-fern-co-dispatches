@@ -12,10 +12,8 @@ def canonical_valid_anchor_ids_by_pillar(root: Path, pillars: tuple[str, ...]) -
         pillar = str(row.get("pillar") or "").strip()
         if not source_id or pillar not in out:
             continue
-        if row.get("enabled") is not True:
-            continue
-        if str(row.get("source_state") or "enabled").strip() != "enabled":
+        source_state = str(row.get("source_state") or ("enabled" if row.get("enabled") else "disabled")).strip()
+        if source_state == "disabled":
             continue
         out[pillar].append(source_id)
     return out
-

@@ -776,8 +776,11 @@ def test_map_latest_page_renders_and_links(work_root):
     assert "May 10" in map_html and "May 16, 2026" in map_html
     assert 'href="/american-pressure/"' in map_html
     assert "map_data.json" in map_html
-    assert "Source</a>" in map_html
-    assert "Green: exact/source-provided. Blue: city/state. Orange: county/state. Gray: state-level." in map_html
+    assert "Source:" in map_html
+    assert "ap-map-popup-title" in map_html
+    assert "ap-map-popup-label" in map_html
+    assert "bindTooltip" in map_html
+    assert "Circle = Local report" in map_html
 
 
 def test_publish_index_links_to_map_and_dashboard_when_present(work_root):
@@ -799,19 +802,87 @@ def test_dashboard_page_contains_reference_sections_and_links(work_root):
         _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
     ]
     _write_manual_sources(work_root, "2026-05-16", manual)
+    coverage_summary_path = work_root / "output" / "site" / "american-pressure" / "source_coverage_summary.json"
+    feed_health_path = work_root / "output" / "site" / "american-pressure" / "source_feed_health.json"
+    coverage_summary_path.parent.mkdir(parents=True, exist_ok=True)
+    coverage_summary_path.write_text(
+        json.dumps(
+            {
+                "total_sources": 306,
+                "states_covered": ["AL", "AK", "AZ"],
+                "states_lacking_rural_coverage": ["DC"],
+                "states_lacking_urban_coverage": [],
+                "weakly_covered_states": ["DC"],
+                "weakly_covered_pillars": ["transportation_daily_access_pressure"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    feed_health_path.write_text(
+        json.dumps(
+            {
+                "total_ingest_ready_sources": 0,
+                "known_feed_url_count": 22,
+                "live_validated_feed_count": 0,
+                "pending_validation_count": 22,
+                "failed_validation_count": 0,
+                "identified_but_failed_or_pending_count": 22,
+                "rss_capable_count": 9,
+                "atom_count": 2,
+                "json_feed_count": 1,
+                "manual_only_count": 280,
+                "ingest_ready_by_state": {},
+            }
+        ),
+        encoding="utf-8",
+    )
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
 
     dashboard = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
     assert "American Pressure Dashboard" in dashboard
-    assert 'class="apd-metrics"' in dashboard
+    assert 'class="apd-support-metrics"' in dashboard
     assert 'class="apd-grid"' in dashboard
     assert 'class="apd-detail"' in dashboard
+    assert 'class="apd-map-frame"' in dashboard
+    assert '<iframe title="American Pressure national map" src="/american-pressure/map/"' in dashboard
     assert 'href="/american-pressure/map/"' in dashboard
     assert 'href="/american-pressure/editions/2026-05-16/"' in dashboard
     assert 'href="/american-pressure/editions/2026-05-16/sources_manifest.json"' in dashboard
-    assert "Map currently shows" in dashboard
+    assert "What changed this week" in dashboard
+    assert "Map" in dashboard
+    assert "Top visible pressure areas" in dashboard
+    assert "What this means for daily life" in dashboard
+    assert "Where our view is limited" in dashboard
+    assert "Sources and methods" in dashboard
+    assert "States with collected reporting" in dashboard
+    assert "Areas with weaker visibility" in dashboard
+    assert "Validated automated feeds:" in dashboard
+    assert "Manual-only sources:" in dashboard
+    assert "Places shown on the map" in dashboard
+    assert "States with collected reports" in dashboard
+    assert "Source-backed reports" in dashboard
+    assert "Areas we may be missing" in dashboard
+    assert "Start here: the map shows where we found source-backed signs of household or community strain." in dashboard
     assert "Map layer coming after location quality improves." not in dashboard
+    assert dashboard.index("What changed this week") < dashboard.index('class="apd-map-frame"')
+    assert dashboard.index('class="apd-map-frame"') < dashboard.index("Sources and methods")
+    assert dashboard.index('class="apd-map-frame"') < dashboard.index('class="apd-support-metrics"')
+    for banned in (
+        "ingest-ready",
+        "semantic dedupe",
+        "signal layer",
+        "validation topology",
+        "state_context",
+        "raw ingestion",
+        "source topology",
+    ):
+        assert banned not in dashboard.lower()
+    assert "/source_coverage_summary.json" in dashboard
+    assert "/source_feed_health.json" in dashboard
+    assert "/sources_manifest.json" in dashboard
+    assert "/output/paid" not in dashboard.lower()
+    assert "/output/detail" not in dashboard.lower()
 
 
 def test_map_page_is_generated_and_links_back(work_root):
@@ -829,7 +900,8 @@ def test_map_page_is_generated_and_links_back(work_root):
     assert 'href="/american-pressure/"' in map_html
     assert 'href="/">' in map_html
     assert "map_data.json" in map_html
-    assert "Source</a>" in map_html
+    assert "Source:" in map_html
+    assert "No written section yet" in map_html
 
 
 def test_map_data_city_state_lookup_maps_without_explicit_coordinates(work_root):
@@ -842,8 +914,9 @@ def test_map_data_city_state_lookup_maps_without_explicit_coordinates(work_root)
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert payload["pin_count"] == 1
-    assert payload["pins"][0]["location_precision"] == "city_state"
+    pin = next((p for p in payload["pins"] if "https://example.com/city" in (p.get("source_urls") or [])), None)
+    assert pin is not None
+    assert pin["location_precision"] == "city_state"
 
 
 def test_map_data_state_level_fallback_is_labeled(work_root):
@@ -856,9 +929,10 @@ def test_map_data_state_level_fallback_is_labeled(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert payload["pin_count"] == 1
-    assert payload["pins"][0]["location_precision"] == "state_level"
-    assert payload["pins"][0]["location_precision_warning"] == "state-level location, not exact address."
+    pin = next((p for p in payload["pins"] if "https://example.com/state" in (p.get("source_urls") or [])), None)
+    assert pin is not None
+    assert pin["location_precision"] == "state_level"
+    assert pin["location_precision_warning"] == "state-level location, not exact address."
 
 
 def test_map_data_county_state_fallback_is_labeled(work_root):
@@ -871,9 +945,10 @@ def test_map_data_county_state_fallback_is_labeled(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert payload["pin_count"] == 1
-    assert payload["pins"][0]["location_precision"] == "county_state"
-    assert payload["pins"][0]["location_precision_warning"] == "county-level location, not exact address."
+    pin = next((p for p in payload["pins"] if "https://example.com/county" in (p.get("source_urls") or [])), None)
+    assert pin is not None
+    assert pin["location_precision"] == "county_state"
+    assert pin["location_precision_warning"] == "county-level location, not exact address."
 
 
 def test_map_data_pins_require_traceable_source_url_and_valid_coordinates(work_root):
@@ -891,13 +966,12 @@ def test_map_data_pins_require_traceable_source_url_and_valid_coordinates(work_r
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert len(payload["pins"]) == 1
-    assert payload["pins"][0]["title"] == "Mapped record"
-    assert payload["pins"][0]["source_urls"][0] == "https://example.com/mapped"
-    assert payload["pins"][0]["source_record_ids"][0]
-    assert payload["unmapped_records_count"] == 1
+    mapped_pin = next((p for p in payload["pins"] if "https://example.com/mapped" in (p.get("source_urls") or [])), None)
+    assert mapped_pin is not None
+    assert mapped_pin["title"] == "Mapped record"
+    assert mapped_pin["source_record_ids"][0]
     assert any(row["title"] == "Bad coords record" for row in payload["unmapped_records"])
-    assert any(row["title"] == "No coords record" for row in payload["national_records"])
+    assert any(row["title"] == "No coords record" for row in payload["unmapped_records"] + payload["national_records"])
     assert any(row.get("unmapped_reason") for row in payload["unmapped_records"])
 
 
@@ -914,7 +988,7 @@ def test_map_data_has_national_and_unmapped_sections(work_root):
     assert isinstance(payload.get("national_records"), list)
     assert isinstance(payload.get("unmapped_records"), list)
     assert payload["national_records_count"] >= 1
-    assert all(pin.get("location_precision") in {"exact_or_source_provided", "city_state", "county_state", "state_level"} for pin in payload["pins"])
+    assert all(pin.get("location_precision") in {"exact_or_source_provided", "city_state", "county_state", "service_area", "state_level"} for pin in payload["pins"])
 
 
 def test_map_data_geography_us_alone_does_not_force_national_scope(work_root):
@@ -928,8 +1002,9 @@ def test_map_data_geography_us_alone_does_not_force_national_scope(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert payload["pin_count"] == 1
-    assert payload["national_records_count"] == 0
+    pin = next((p for p in payload["pins"] if "https://example.com/city" in (p.get("source_urls") or [])), None)
+    assert pin is not None
+    assert not any(row for row in payload["national_records"] if "https://example.com/city" in (row.get("source_urls") or []))
 
 
 def test_map_data_ambiguous_washington_is_not_pinned(work_root):
@@ -940,8 +1015,8 @@ def test_map_data_ambiguous_washington_is_not_pinned(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert payload["pin_count"] == 0
-    assert payload["national_records_count"] >= 1
+    assert not any(pin for pin in payload["pins"] if "https://example.com/ambiguous" in (pin.get("source_urls") or []))
+    assert any(row for row in (payload["national_records"] + payload["unmapped_records"]) if "https://example.com/ambiguous" in (row.get("source_urls") or []))
 
 
 def test_map_data_extracts_source_backed_place_mentions_and_writes_diagnostics(work_root):
@@ -978,15 +1053,22 @@ def test_map_pin_records_include_traceability_fields(work_root):
     result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
     assert result["ok"] is True
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    pin = payload["pins"][0]
+    pin = next((p for p in payload["pins"] if "https://example.com/city" in (p.get("source_urls") or [])), None)
+    assert pin is not None
     assert pin["source_url"].startswith("https://")
     assert pin["source_record_id"]
-    assert pin["story_id"]
+    assert "story_id" in pin
     assert pin["edition_url"].startswith("/american-pressure/editions/")
     assert pin["location_label"]
+    assert pin["location_role"] in {"primary_location", "affected_location", "service_area", "state_context"}
     assert pin["location_extraction_method"]
+    assert pin["extraction_method"]
     assert pin["extraction_evidence_text"]
-    assert pin["location_precision"] in {"exact_or_source_provided", "city_state", "county_state", "state_level"}
+    assert pin["evidence_text"]
+    assert pin["evidence_field"]
+    assert pin["confidence"]
+    assert isinstance(pin["is_exact_location"], bool)
+    assert pin["location_precision"] in {"exact_or_source_provided", "city_state", "county_state", "service_area", "state_level"}
 
 
 def test_map_repeated_locations_are_aggregated(work_root):
@@ -1002,7 +1084,245 @@ def test_map_repeated_locations_are_aggregated(work_root):
     payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
     grouped = [row for row in payload.get("aggregated_pins", []) if row.get("location_label") == "Sacramento, CA"]
     assert grouped
+    assert grouped[0]["record_count"] >= 2
+    assert grouped[0]["raw_record_count"] >= grouped[0]["record_count"]
+
+
+def test_map_can_include_records_outside_written_weekly_selection(work_root):
+    prior_week = [
+        _record("older-map-only", "food_pressure", "Older local signal", "In Sacramento, California pantry demand rose.", "https://example.com/older", source_type="news_report", source_role="human_story"),
+    ]
+    prior_week[0]["published_at"] = "2026-05-01T00:00:00Z"
+    prior_week[0]["location"] = "Sacramento, California"
+    current_week = [
+        _record("current-story", "food_pressure", "Current weekly signal", "In Marshall, Missouri pressure rose.", "https://example.com/current", source_type="news_report", source_role="human_story"),
+    ]
+    current_week[0]["published_at"] = "2026-05-16T00:00:00Z"
+    current_week[0]["location"] = "Marshall, Missouri"
+    _write_manual_sources(work_root, "2026-05-09", prior_week)
+    _write_manual_sources(work_root, "2026-05-16", current_week)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    older_pin = next((p for p in payload["pins"] if "https://example.com/older" in (p.get("source_urls") or [])), None)
+    current_pin = next((p for p in payload["pins"] if "https://example.com/current" in (p.get("source_urls") or [])), None)
+    assert older_pin is not None
+    assert current_pin is not None
+    assert older_pin["time_window"] in {"last_30_days", "last_60_days"}
+    assert current_pin["time_window"] == "current_week"
+
+
+def test_deduped_written_signal_still_contributes_to_map_counts(work_root):
+    manual = [
+        _record("food-1", "food_pressure", "Same headline duplicate", "In Sacramento, California pantry strain increased.", "https://example.com/a", source_type="news_report", source_role="human_story"),
+        _record("food-2", "food_pressure", "Same headline duplicate", "In Sacramento, California pantry strain increased again.", "https://example.com/b", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    manual[1]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+
+    edition_root = work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-16"
+    sources_manifest = json.loads((edition_root / "sources_manifest.json").read_text(encoding="utf-8"))
+    map_source_records = json.loads((edition_root / "map_source_records.json").read_text(encoding="utf-8"))
+    map_payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+
+    assert len(sources_manifest) == 1
+    assert len(map_source_records) == 2
+    grouped = [row for row in map_payload.get("aggregated_pins", []) if row.get("location_label") == "Sacramento, CA"]
+    assert grouped
     assert grouped[0]["record_count"] == 2
+    assert map_payload["raw_record_count"] >= map_payload["mapped_records_count"]
+
+
+def test_map_page_has_aggregated_and_individual_view_toggle(work_root):
+    manual = [
+        _record("mapped", "food_pressure", "Mapped", "In Sacramento, California households face strain.", "https://example.com/m", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    map_html = (work_root / "output" / "site" / "american-pressure" / "map" / "index.html").read_text(encoding="utf-8")
+    assert "Show grouped places" in map_html
+    assert "Show individual reports" in map_html
+    assert "Current week/current edition" in map_html
+    assert '<option value="last_30_days" selected>Last 30 days</option>' in map_html
+    assert "Source-backed reports:" in map_html
+    assert "Reset map" in map_html
+    assert "About this map" in map_html
+
+
+def test_map_semantic_dedupe_collapses_same_source_url_location_category(work_root):
+    manual = [
+        _record("dup-1", "labor_income_pressure", "Layoffs in Sacramento", "In Sacramento, California layoffs were announced.", "https://example.com/same", source_type="news_report", source_role="human_story"),
+        _record("dup-2", "labor_income_pressure", "Layoffs in Sacramento updated", "In Sacramento, California layoffs were announced.", "https://example.com/same", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    manual[1]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    diag = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "location_extraction_diagnostics.json").read_text(encoding="utf-8"))
+    same = [
+        p
+        for p in payload["pins"]
+        if "https://example.com/same" in (p.get("source_urls") or []) and p.get("location_role") == "primary_location"
+    ]
+    assert len(same) == 1
+    assert same[0]["raw_record_count"] == 2
+    assert same[0]["duplicate_count"] == 1
+    assert len(same[0].get("duplicate_record_ids") or []) == 1
+    assert payload["raw_record_count"] >= payload["mapped_records_count"]
+    assert diag.get("duplicates_collapsed_count", 0) >= 1
+    assert diag.get("duplicate_groups")
+
+
+def test_local_city_suppresses_state_fallback_for_same_source(work_root):
+    manual = [
+        _record(
+            "city-over-state",
+            "labor_income_pressure",
+            "Sacramento layoffs",
+            "In Sacramento, California layoffs were announced, with additional mentions of California in state filings.",
+            "https://example.com/sac-over-state",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    diag = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "location_extraction_diagnostics.json").read_text(encoding="utf-8"))
+    assert any(pin.get("location_label") == "Sacramento, CA" for pin in payload["pins"])
+    assert not any(pin.get("location_role") == "state_context" and pin.get("source_url") == "https://example.com/sac-over-state" for pin in payload["pins"])
+    assert diag.get("state_fallback_suppressed_records")
+
+
+def test_malformed_facility_city_candidate_is_cleaned_or_rejected(work_root):
+    manual = [
+        _record(
+            "facility-city",
+            "financial_distress_pressure",
+            "Hospital filing",
+            "Fitzgibbon Hospital in Marshall, Missouri filed Chapter 11 bankruptcy.",
+            "https://example.com/marshall",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert any(pin.get("location_label") == "Marshall, MO" for pin in payload["pins"])
+    assert not any("fitzgibbon hospital in marshall" in str(pin.get("location_label") or "").lower() for pin in payload["pins"])
+
+
+def test_map_one_story_can_produce_multiple_signals(work_root):
+    manual = [
+        _record(
+            "systems",
+            "local_system_strain",
+            "Wisconsin recovery update",
+            "Flood impacts in Vernon County, Wisconsin and Crawford County, Wisconsin with support from the Ho-Chunk Nation.",
+            "https://example.com/systems",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    manual[0]["location"] = "Vernon County, Wisconsin"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert payload["pin_count"] >= 2
+    assert any(pin.get("location_role") == "primary_location" for pin in payload["pins"])
+    assert any(pin.get("location_role") in {"affected_location", "service_area"} for pin in payload["pins"])
+
+
+def test_affected_locations_require_explicit_evidence_text(work_root):
+    manual = [
+        _record(
+            "ambiguous-affected",
+            "labor_income_pressure",
+            "Payroll concerns",
+            "Sacramento, California.",
+            "https://example.com/ambiguous-affected",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    diag = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "location_extraction_diagnostics.json").read_text(encoding="utf-8"))
+    assert any(row.get("rejection_reason") == "no_explicit_pressure_link" for row in diag.get("rejected_candidates", []))
+
+
+def test_service_area_locations_require_explicit_evidence_and_lookup(work_root):
+    manual = [
+        _record(
+            "district-lookup",
+            "labor_income_pressure",
+            "District pressure",
+            "Sacramento City Unified School District faced budget and layoff pressure.",
+            "https://example.com/district",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert any(pin.get("location_role") == "service_area" for pin in payload.get("pins", []))
+    assert any(pin.get("location_precision") == "service_area" for pin in payload.get("pins", []))
+
+
+def test_diagnostics_include_summary_counts(work_root):
+    manual = [
+        _record("city-mapped", "food_pressure", "City mapped", "In Sacramento, California demand is up.", "https://example.com/city", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    diag = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "location_extraction_diagnostics.json").read_text(encoding="utf-8"))
+    for key in (
+        "candidates_seen",
+        "raw_extracted_candidate_count",
+        "accepted_count",
+        "accepted_before_dedupe_count",
+        "accepted_after_dedupe_count",
+        "duplicates_collapsed_count",
+        "rejected_count",
+        "primary_count",
+        "affected_count",
+        "service_area_count",
+        "state_context_count",
+    ):
+        assert key in diag
+    assert isinstance(diag.get("accepted_records"), list)
+    assert isinstance(diag.get("rejected_records"), list)
+
+
+def test_aggregated_map_records_include_written_story_links_when_available(work_root):
+    manual = [
+        _record("mapped", "labor_income_pressure", "Layoffs reported", "In Sacramento, California layoffs were reported.", "https://example.com/layoff", source_type="news_report", source_role="human_story"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    grouped = [row for row in payload.get("aggregated_pins", []) if row.get("location_label") == "Sacramento, CA"]
+    assert grouped
+    assert grouped[0]["written_story_links"]
 
 
 def test_map_uses_latest_listable_public_edition(work_root):
@@ -1049,4 +1369,129 @@ def test_publish_excludes_invalid_later_edition_without_weekly_manifest_fields(w
     archive = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
     assert "2026-05-18" not in index
     assert "2026-05-18" not in archive
+
+
+def test_map_includes_feed_backfill_records_but_written_dispatch_remains_curated(work_root):
+    manual = [
+        _record("manual-story", "food_pressure", "Manual pantry story", "Pantry demand rose this week.", "https://example.com/manual-story", source_type="news_report", source_role="human_story"),
+    ]
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    backfill_dir = work_root / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-16"
+    backfill_dir.mkdir(parents=True, exist_ok=True)
+    backfill_rows = [
+        {
+            "source_record_id": "feed-backfill-2026-05-16-ca-001",
+            "source_id": "ca-nonprofit-policy-news",
+            "title": "Food bank demand rises in Sacramento, CA",
+            "url": "https://example.com/backfill-1",
+            "publisher": "CA Nonprofit",
+            "published_at": "2026-05-16T08:00:00Z",
+            "retrieved_at": "2026-05-16T09:00:00Z",
+            "summary_or_snippet": "SNAP delays and pantry strain were reported.",
+            "source_type": "news_report",
+            "region_scope": "statewide",
+            "category_hint": "food_pressure",
+            "pillar": "food_pressure",
+            "reliability_tier": "reputable_reporting",
+            "source_state": "feed_backfill",
+            "state": "CA",
+            "location": "Sacramento, CA",
+            "location_precision": "city_state",
+            "manual_source_role": "human_story",
+            "map_collection_source": "feed_backfill",
+        }
+    ]
+    (backfill_dir / "feed_backfill_sources.json").write_text(json.dumps(backfill_rows, indent=2), encoding="utf-8")
+
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    assert result["story_count"] == 1
+
+    map_payload = json.loads((work_root / "output" / "site" / "american-pressure" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    assert any("https://example.com/backfill-1" in (pin.get("source_urls") or []) for pin in map_payload.get("pins", []))
+
+
+def test_reader_first_public_pages_and_banned_terms(work_root):
+    manual = [
+        _record("food-story", "food_pressure", "Pantry demand rises", "Food bank demand rose this week in Sacramento, California.", "https://example.com/food", source_type="news_report", source_role="human_story"),
+        _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),
+    ]
+    manual[0]["location"] = "Sacramento, California"
+    _write_manual_sources(work_root, "2026-05-16", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-16", publish=True, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+
+    dispatch_html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-16" / "index.html").read_text(encoding="utf-8")
+    dashboard_html = (work_root / "output" / "site" / "american-pressure" / "dashboard" / "index.html").read_text(encoding="utf-8")
+    map_html = (work_root / "output" / "site" / "american-pressure" / "map" / "index.html").read_text(encoding="utf-8")
+
+    assert "View Dashboard" in dispatch_html and "View Map" in dispatch_html and "View Source Ledger" in dispatch_html
+    assert "This week’s dispatch is based on source-backed reporting collected so far. It is not a complete census of American hardship." in dispatch_html
+    assert "What changed this week" in dispatch_html
+    assert "Where our view is limited" in dispatch_html
+    assert "Food and grocery pressure" in dispatch_html
+    assert "Housing and utility pressure" in dispatch_html
+
+    assert "What changed this week" in dashboard_html
+    assert "Map" in dashboard_html
+    assert "Top visible pressure areas" in dashboard_html
+    assert "What this means for daily life" in dashboard_html
+    assert "Where our view is limited" in dashboard_html
+    assert "Sources reviewed" in dashboard_html
+    assert "Sources monitored automatically" in dashboard_html
+
+    assert "Source-backed signs of household or community strain across the U.S." in map_html
+    assert "About this map" in map_html
+    assert "Reset map" in map_html
+    assert "Places shown on the map" in map_html
+    assert "States with collected reports" in map_html
+    assert "Source-backed reports" in map_html
+    assert "Areas we may be missing" in map_html
+    assert "How this map was built" in map_html
+    assert '<option value="last_30_days" selected>Last 30 days</option>' in map_html
+    assert "Show grouped places" in map_html
+    assert "Show individual reports" in map_html
+    assert "What we found" in map_html
+    assert "Why it matters" in map_html
+    assert "Source:" in map_html
+    assert "Read more:" in map_html
+    assert ">Source</a>" not in map_html
+    assert "Mapped to city level, not an exact address." in map_html
+    assert "Mapped to county level." in map_html
+    assert "Statewide report." in map_html
+    assert "Circle = Local report" in map_html
+    assert "Square = County/service-area report" in map_html
+    assert "Diamond = Statewide report" in map_html
+    assert "Larger marks mean more source-backed reports are grouped at that place." in map_html
+    assert "<summary>Legend</summary>" in map_html
+    assert "ap-map-marker-count" in map_html
+    assert "ap-map-hover-tooltip" in map_html
+    assert "min-height: 720px" in map_html
+    assert "height: 520px" in map_html
+    assert "height: 680px" in dashboard_html
+    assert "height: 480px" in dashboard_html
+    assert map_html.index('class="ap-map-canvas"') < map_html.index("How this map was built")
+
+    banned = (
+        "primary location signals",
+        "affected location signals",
+        "service-area signals",
+        "source records collected for map processing",
+        "mapped records",
+        "ingest-ready",
+        "semantic dedupe",
+        "source topology",
+        "validation topology",
+        "state_context",
+        "signal layer",
+        "raw ingestion",
+        "primary_location",
+        "source_record_ids",
+        "evidence snippets",
+        "count by location type",
+        "related dispatch section",
+    )
+    combined = (dispatch_html + dashboard_html + map_html).lower()
+    for token in banned:
+        assert token not in combined
 

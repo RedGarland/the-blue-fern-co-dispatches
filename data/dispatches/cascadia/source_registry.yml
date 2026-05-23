@@ -419,6 +419,34 @@ sources:
     refresh_mode: archive_limited
     notes: Public county news page for Seattle-area regional systems.
 
+  - source_id: or-marion-county-news
+    name: Marion County Oregon News
+    tier: 2
+    source_type: official_page
+    url: https://www.co.marion.or.us/Pages/news.aspx
+    enabled: true
+    state_scope: OR
+    geographic_scope: Marion County
+    category_hints: [public_safety, emergency_management, government, health]
+    reliability_tier: official-public
+    publisher: Marion County Oregon
+    refresh_mode: archive_limited
+    notes: Public county news and emergency updates.
+
+  - source_id: id-ada-county-emergency
+    name: Ada County Emergency Management
+    tier: 2
+    source_type: official_page
+    url: https://adacounty.id.gov/emergency-management/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Ada County
+    category_hints: [public_safety, emergency_management]
+    reliability_tier: official-public
+    publisher: Ada County Emergency Management
+    refresh_mode: archive_limited
+    notes: Public emergency-management notices for Boise-area communities.
+
   - source_id: spokane-county-news
     name: Spokane County News
     tier: 1
@@ -670,6 +698,90 @@ sources:
     publisher: GDELT Project
     refresh_mode: historical_if_available
     notes: Free no-key public structured search provider used as broad fallback.
+
+  - source_id: wa-wsf-service-alerts
+    name: Washington State Ferries Service Alerts
+    tier: 1
+    source_type: rss
+    url: https://wsdot.wa.gov/ferries/schedule/bulletin/rss.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Puget Sound ferry routes
+    category_hints: [transportation, ferry_disruption, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Washington State Ferries
+    refresh_mode: current
+    notes: Real-time ferry disruption and service bulletin feed.
+
+  - source_id: wa-sound-transit-news
+    name: Sound Transit News and Alerts
+    tier: 1
+    source_type: official_page
+    url: https://www.soundtransit.org/get-to-know-us/news-events
+    enabled: true
+    state_scope: WA
+    geographic_scope: Puget Sound
+    category_hints: [transit_cuts, transportation, infrastructure, public_safety]
+    reliability_tier: official-public
+    publisher: Sound Transit
+    refresh_mode: archive_limited
+    notes: Transit disruptions, reductions, and project updates for regional access.
+
+  - source_id: wa-king-county-metro-alerts
+    name: King County Metro Service Alerts
+    tier: 1
+    source_type: rss
+    url: https://kingcounty.gov/en/dept/metro/rider-tools/alerts-updates/service-advisories/rss
+    enabled: true
+    state_scope: WA
+    geographic_scope: Seattle and King County
+    category_hints: [transit_cuts, transportation, public_safety]
+    reliability_tier: official-public
+    publisher: King County Metro
+    refresh_mode: current
+    notes: Local transit service interruptions and route-level disruptions.
+
+  - source_id: or-trimet-alerts
+    name: TriMet Service Alerts
+    tier: 1
+    source_type: rss
+    url: https://trimet.org/alerts/rss.xml
+    enabled: true
+    state_scope: OR
+    geographic_scope: Portland metro
+    category_hints: [transit_cuts, transportation, infrastructure, rural_access]
+    reliability_tier: official-public
+    publisher: TriMet
+    refresh_mode: current
+    notes: Transit delays and service disruptions affecting regional access.
+
+  - source_id: or-lane-transit-alerts
+    name: Lane Transit District Service Alerts
+    tier: 1
+    source_type: rss
+    url: https://www.ltd.org/service-alerts/rss/
+    enabled: true
+    state_scope: OR
+    geographic_scope: Eugene and Lane County
+    category_hints: [transit_cuts, transportation, rural_access]
+    reliability_tier: official-public
+    publisher: Lane Transit District
+    refresh_mode: current
+    notes: Local route and operations disruptions in Eugene and Lane County.
+
+  - source_id: id-valley-regional-transit-alerts
+    name: Valley Regional Transit Service Alerts
+    tier: 1
+    source_type: official_page
+    url: https://www.valleyregionaltransit.org/rider-alerts/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Boise and Ada County
+    category_hints: [transit_cuts, transportation, rural_access]
+    reliability_tier: official-public
+    publisher: Valley Regional Transit
+    refresh_mode: current
+    notes: Regional transit cuts and disruptions affecting local access.
 
   - source_id: opb-rss
     name: Oregon Public Broadcasting RSS

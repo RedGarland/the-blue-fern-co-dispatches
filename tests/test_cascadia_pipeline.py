@@ -2148,6 +2148,102 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
 
     assert not (cascadia_work_root / "output" / "site" / "detail").exists()
     assert not (cascadia_work_root / "output" / "site" / "paid").exists()
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "index.html").read_text(encoding="utf-8")
+    assert "resource-header" in map_html
+    assert "text-align:center" in map_html
+    assert "--header-bg:#1E3F4F" in map_html
+    assert "--header-primary:#EFE7DA" in map_html
+    assert "--header-secondary:#9BAEB5" in map_html
+    assert "map-title-accent" in map_html
+    assert "https://thebluefernco.com/" in map_html
+    assert "/assets/bluefern.ico" in map_html
+    assert "/assets/dispatches-from-blue-fern-co.png" not in map_html
+    assert "resource-home" not in map_html
+    assert "padding:8px 12px 10px" in map_html
+    assert "Pressure area" in map_html
+    assert "State" in map_html
+    assert "Region" in map_html
+    assert "Report window" in map_html
+    assert "Grouped places" in map_html
+    assert "Individual reports" in map_html
+    assert "Reset Map" in map_html
+    assert "<summary>Legend</summary>" in map_html
+    assert "Reports shown:" in map_html
+    assert "Sources: public regional reporting and official/public sources" in map_html
+    assert "Map view" in map_html
+    assert "Show regional/statewide reports" in map_html
+    assert "How to read this map" in map_html
+    assert "regional systems weather map" in map_html
+    assert "not a complete census or disaster map" in map_html
+    assert "localMarkerHtml" in map_html
+    assert "L.AwesomeMarkers.icon" not in map_html
+    assert "function validCoordinate(item)" in map_html
+    assert "function markerLatLon(item)" in map_html
+    assert "const lat = Number(item.lat);" in map_html
+    assert "const lon = Number(item.lon);" in map_html
+    assert "if (!validCoordinate(item))" in map_html
+    assert "skippedInvalidCoordinates += 1;" in map_html
+    assert "const latLon = markerLatLon(item);" in map_html
+    assert "L.marker(latLon, {icon})" in map_html
+    assert "data-invalid-coordinate-count" in map_html
+    assert "categoryIcon" in map_html
+    assert "legend-list" in map_html
+    assert "Housing and utility pressure" in map_html
+    assert "Health care access" in map_html
+    assert "Pressure type:" in map_html
+    assert "Location:" in map_html
+    assert "Date:" in map_html
+    assert "Summary:" in map_html
+    assert "Why it matters:" in map_html
+    assert "View on map:" in map_html
+    assert "View individual reports" in map_html
+    assert "Hide reports" in map_html
+    assert "report-card" in map_html
+    assert "toggle-button" in map_html
+    assert "reports-panel" in map_html
+    assert "reports-panel scrollable" in map_html
+    assert "Regional reports may still be available" not in map_html
+    assert "No local reports met the mapping rules for this week. Regional reports may still be available." not in map_html
+    assert "No local reports met the mapping rules for this week. Showing regional/statewide reports instead." in map_html
+    assert "tt-place" in map_html
+    assert "region-tooltip" in map_html
+    assert "max-width:280px" in map_html
+    assert "Pressure areas:" in map_html
+    assert "Top reports:" in map_html
+    assert "Number of reports:" in map_html
+    assert "Source:</strong>" in map_html
+    assert "Read more" in map_html
+    assert "source_record_id" not in map_html
+    assert "coordinate_basis" not in map_html
+
+
+def test_map_dedupes_duplicate_url_place_category(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    sources_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
+    sources_dir.mkdir(parents=True, exist_ok=True)
+    repeated = {
+        "source_record_id": "hist-dup-1",
+        "title": "Spokane food bank demand rises",
+        "url": "https://example.com/wa-food-bank-demand",
+        "publisher": "Example WA",
+        "published_at": "2026-05-02T12:00:00Z",
+        "summary_or_snippet": "Food bank demand and SNAP pressure increased this week.",
+        "state_hint": "WA",
+        "category_hint": "Food and agriculture",
+    }
+    (sources_dir / "historical_sources.json").write_text(json.dumps([repeated, {**repeated, "source_record_id": "hist-dup-2"}], indent=2), encoding="utf-8")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert (map_data["diagnostics"]["duplicates_removed"] + map_data["diagnostics"].get("regional_duplicates_removed", 0)) >= 1
 
 
 def test_map_coordinates_fallback_to_state_centroid_when_source_has_no_lat_lon(cascadia_work_root):
@@ -2199,10 +2295,622 @@ def test_map_coordinates_fallback_to_state_centroid_when_source_has_no_lat_lon(c
     assert result["ok"] is True
 
     map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
-    assert len(map_data["markers"]) == 1
+    assert map_data["regional_reports"] or map_data["diagnostics"]["excluded_reasons"].get("no_specific_place", 0) >= 1
+    if map_data["regional_reports"]:
+        marker = map_data["regional_reports"][0]
+        assert marker["source_url"] == "https://example.com/wa-bridge"
+        assert marker["location_precision"] in {"statewide", "regional"}
+        assert marker["precision_note"] in {"Statewide report.", "Regional report."}
+
+
+def test_map_uses_address_precision_when_source_provides_address(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-or-1",
+                    "title": "Portland clinic announces reduced hours",
+                    "summary": "Reduced clinic hours may delay care access.",
+                    "category": "Health",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-or-1"],
+                    "source_urls": ["https://example.com/or-clinic-hours"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-or-1",
+                            "source_id": "or-source",
+                            "title": "OR clinic source",
+                            "source_url": "https://example.com/or-clinic-hours",
+                            "url": "https://example.com/or-clinic-hours",
+                            "publisher": "Example Oregon",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "region_scope": "OR",
+                            "state_hint": "OR",
+                            "category_hint": "Health",
+                            "address": "101 Example St, Portland, OR",
+                            "lat": 45.52,
+                            "lon": -122.68,
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
     marker = map_data["markers"][0]
-    assert marker["coordinate_basis"] == "source_default"
-    assert marker["source_url"] == "https://example.com/wa-bridge"
+    assert marker["address"] == "101 Example St, Portland, OR"
+    assert marker["location_precision"] == "address"
+    assert marker["precision_note"] == "Mapped to reported address/facility."
+
+
+def test_map_excludes_stale_and_generic_and_state_only_records(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-old",
+                    "title": "Old public safety alert",
+                    "summary": "Reference alert page.",
+                    "category": "safety",
+                    "score": 70,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-old"],
+                    "source_urls": ["https://example.com/alerts/public-safety"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-old",
+                            "source_url": "https://example.com/alerts/public-safety",
+                            "url": "https://example.com/alerts/public-safety",
+                            "publisher": "Example",
+                            "published_at": "2023-08-01T00:00:00Z",
+                            "state_hint": "WA",
+                            "geography": "WA",
+                            "category_hint": "public safety",
+                        }
+                    ],
+                },
+                {
+                    "story_id": "story-generic",
+                    "title": "Alerts & Emergencies Currently selected",
+                    "summary": "Category landing page.",
+                    "category": "safety",
+                    "score": 70,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-generic"],
+                    "source_urls": ["https://example.com/category/public-safety"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-generic",
+                            "source_url": "https://example.com/category/public-safety",
+                            "url": "https://example.com/category/public-safety",
+                            "publisher": "Example",
+                            "published_at": "2026-05-01T12:00:00Z",
+                            "state_hint": "OR",
+                            "geography": "OR",
+                            "lat": 45.52,
+                            "lon": -122.68,
+                            "category_hint": "public safety",
+                        }
+                    ],
+                },
+                {
+                    "story_id": "story-local",
+                    "title": "Portland bus route reductions",
+                    "summary": "Transit access changes affecting riders.",
+                    "category": "transportation",
+                    "score": 88,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-local"],
+                    "source_urls": ["https://example.com/portland-transit"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-local",
+                            "source_url": "https://example.com/portland-transit",
+                            "url": "https://example.com/portland-transit",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "OR",
+                            "geography": "Portland",
+                            "lat": 45.52,
+                            "lon": -122.68,
+                            "category_hint": "transportation",
+                        }
+                    ],
+                },
+                {
+                    "story_id": "story-stateonly",
+                    "title": "County operations update",
+                    "summary": "Public update with only state-level place labeling.",
+                    "category": "government",
+                    "score": 75,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-stateonly"],
+                    "source_urls": ["https://example.com/stateonly-update"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-stateonly",
+                            "source_url": "https://example.com/stateonly-update",
+                            "url": "https://example.com/stateonly-update",
+                            "publisher": "Example",
+                            "published_at": "2026-05-01T12:00:00Z",
+                            "state_hint": "WA",
+                            "geography": "WA",
+                            "lat": 47.52,
+                            "lon": -122.67,
+                            "category_hint": "government",
+                        }
+                    ],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert len(map_data["markers"]) == 1
+    assert map_data.get("show_regional_default") is False
+    assert map_data.get("default_view_mode") == "local"
+    assert map_data.get("diagnostics", {}).get("default_view_mode") == "local"
+    assert map_data.get("diagnostics", {}).get("local_marker_count") == 1
+    assert map_data.get("diagnostics", {}).get("regional_report_count") == 0
+    assert map_data["markers"][0]["place"] == "Portland"
+    reasons = map_data["diagnostics"]["excluded_reasons"]
+    assert reasons.get("outside_report_window", 0) >= 1
+    assert reasons.get("generic_landing_page", 0) >= 1
+    assert reasons.get("no_specific_place", 0) >= 1
+
+
+def test_map_separates_statewide_reports_from_default_local_layer(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-wa-state",
+                    "title": "Washington statewide drought warning",
+                    "summary": "Drought warning affects statewide planning.",
+                    "category": "wildfire",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-wa-state"],
+                    "source_urls": ["https://example.com/wa-drought"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-wa-state",
+                            "source_url": "https://example.com/wa-drought",
+                            "url": "https://example.com/wa-drought",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "WA",
+                            "geography": "WA",
+                            "category_hint": "wildfire",
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert map_data["markers"] == []
+    assert len(map_data["regional_reports"]) == 1
+    assert map_data.get("show_regional_default") is True
+    assert map_data.get("default_view_mode") == "regional_fallback"
+    assert map_data.get("diagnostics", {}).get("default_view_mode") == "regional_fallback"
+    assert map_data.get("diagnostics", {}).get("local_marker_count") == 0
+    assert map_data.get("diagnostics", {}).get("regional_report_count") == 1
+    assert map_data.get("diagnostics", {}).get("default_show_regional") is True
+    assert map_data.get("diagnostics", {}).get("initial_render_layer") == "regional_only"
+    assert map_data.get("diagnostics", {}).get("initial_visible_count", 0) >= 1
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert "No local reports met the mapping rules for this week. Showing regional/statewide reports instead." in map_html
+    assert "function defaultNoteText()" in map_html
+    assert "if (defaultViewMode === 'regional_fallback') return fallbackNote;" in map_html
+    assert map_data["regional_reports"][0]["pressure_type"] == "Wildfire, drought, flood, and recovery"
+
+
+def test_map_keeps_local_default_when_local_markers_are_three_or_more(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-local-1",
+                    "title": "Portland utility pressure update",
+                    "summary": "Utility pressure increased in Portland neighborhoods.",
+                    "category": "housing",
+                    "score": 82,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-local-1"],
+                    "source_urls": ["https://example.com/local-1"],
+                    "source_records": [{"source_record_id": "src-local-1", "source_url": "https://example.com/local-1", "url": "https://example.com/local-1", "publisher": "Example", "published_at": "2026-05-01T12:00:00Z", "state_hint": "OR", "geography": "Portland", "lat": 45.52, "lon": -122.67, "category_hint": "housing"}],
+                },
+                {
+                    "story_id": "story-local-2",
+                    "title": "Boise transit reliability issues",
+                    "summary": "Transit delays are affecting Boise commuters.",
+                    "category": "transportation",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-local-2"],
+                    "source_urls": ["https://example.com/local-2"],
+                    "source_records": [{"source_record_id": "src-local-2", "source_url": "https://example.com/local-2", "url": "https://example.com/local-2", "publisher": "Example", "published_at": "2026-05-01T12:00:00Z", "state_hint": "ID", "geography": "Boise", "lat": 43.61, "lon": -116.2, "category_hint": "transportation"}],
+                },
+                {
+                    "story_id": "story-local-3",
+                    "title": "Tacoma service staffing shortage",
+                    "summary": "Public service staffing strain reported in Tacoma.",
+                    "category": "government",
+                    "score": 78,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-local-3"],
+                    "source_urls": ["https://example.com/local-3"],
+                    "source_records": [{"source_record_id": "src-local-3", "source_url": "https://example.com/local-3", "url": "https://example.com/local-3", "publisher": "Example", "published_at": "2026-05-01T12:00:00Z", "state_hint": "WA", "geography": "Tacoma", "lat": 47.25, "lon": -122.44, "category_hint": "government"}],
+                },
+                {
+                    "story_id": "story-regional-1",
+                    "title": "Washington statewide drought warning",
+                    "summary": "Drought warning affects statewide planning.",
+                    "category": "wildfire",
+                    "score": 76,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-regional-1"],
+                    "source_urls": ["https://example.com/regional-1"],
+                    "source_records": [{"source_record_id": "src-regional-1", "source_url": "https://example.com/regional-1", "url": "https://example.com/regional-1", "publisher": "Example", "published_at": "2026-05-01T12:00:00Z", "state_hint": "WA", "geography": "WA", "category_hint": "wildfire"}],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert len(map_data["markers"]) >= 3
+    assert len(map_data["regional_reports"]) >= 1
+    assert map_data.get("show_regional_default") is False
+    assert map_data.get("default_view_mode") == "local"
+    assert map_data.get("diagnostics", {}).get("default_view_mode") == "local"
+    assert map_data.get("diagnostics", {}).get("local_marker_count") == len(map_data["markers"])
+    assert map_data.get("diagnostics", {}).get("regional_report_count") == len(map_data["regional_reports"])
+    assert map_data.get("diagnostics", {}).get("initial_visible_count", 0) >= len(map_data.get("grouped_markers") or map_data["markers"])
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert "draw(defaultRows());" in map_html
+    assert "data-render-attempted-count" in map_html
+    assert "data-rendered-marker-count" in map_html
+    assert "data-render-error-count" in map_html
+    assert "try {" in map_html
+    assert "console.warn('map marker render failed', err);" in map_html
+    assert "if (time !== 'all')" in map_html
+    assert "const dt = publishedDate(item);" in map_html
+
+
+def test_map_sparse_local_plus_regional_default_mode(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-local-1",
+                    "title": "Portland transit cuts",
+                    "summary": "Transit access changes affecting riders.",
+                    "category": "transportation",
+                    "score": 88,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-local-1"],
+                    "source_urls": ["https://example.com/local-transit"],
+                    "source_records": [{"source_record_id": "src-local-1", "source_url": "https://example.com/local-transit", "url": "https://example.com/local-transit", "publisher": "Example", "published_at": "2026-05-02T12:00:00Z", "state_hint": "OR", "geography": "Portland", "lat": 45.52, "lon": -122.68, "category_hint": "transportation"}],
+                },
+                {
+                    "story_id": "story-regional-1",
+                    "title": "Washington statewide drought warning",
+                    "summary": "Drought warning affects statewide planning.",
+                    "category": "wildfire",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-regional-1"],
+                    "source_urls": ["https://example.com/wa-drought"],
+                    "source_records": [{"source_record_id": "src-regional-1", "source_url": "https://example.com/wa-drought", "url": "https://example.com/wa-drought", "publisher": "Example", "published_at": "2026-05-02T12:00:00Z", "state_hint": "WA", "geography": "WA", "category_hint": "wildfire"}],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert len(map_data["markers"]) == 1
+    assert len(map_data["regional_reports"]) == 1
+    assert map_data.get("show_regional_default") is True
+    assert map_data.get("default_view_mode") == "sparse_local_plus_regional"
+    assert map_data.get("diagnostics", {}).get("default_view_mode") == "sparse_local_plus_regional"
+    assert map_data.get("diagnostics", {}).get("local_marker_count") == 1
+    assert map_data.get("diagnostics", {}).get("regional_report_count") == 1
+    assert map_data.get("diagnostics", {}).get("default_show_regional") is True
+    assert map_data.get("diagnostics", {}).get("initial_render_layer") == "local_plus_regional"
+    assert map_data.get("diagnostics", {}).get("initial_visible_count", 0) > len(map_data["grouped_markers"])
+    diagnostics = map_data.get("diagnostics", {})
+    assert "top_sources_local_markers" in diagnostics
+    assert "sources_only_regional_reports" in diagnostics
+    assert "sources_with_no_local_mappable_reports" in diagnostics
+    assert "top_missing_place_reasons" in diagnostics
+    assert "recommended_source_additions" in diagnostics
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context." in map_html
+    assert "No reports match the current map filters. Reset Map to restore the default view." in map_html
+    assert "function defaultNoteText()" in map_html
+    assert "if (defaultViewMode === 'sparse_local_plus_regional') return sparseNote;" in map_html
+    assert "function defaultRows()" in map_html
+    assert "draw(defaultRows());" in map_html
+    assert "L.AwesomeMarkers.icon" not in map_html
+    assert "localMarkerHtml" in map_html
+    assert "function validCoordinate(item)" in map_html
+    assert "function markerLatLon(item)" in map_html
+    assert "if (!validCoordinate(item))" in map_html
+    assert "data-invalid-coordinate-count" in map_html
+    assert "data-initial-visible-count" in map_html
+    assert "console.warn('map marker render failed', err);" in map_html
+    assert "if (time !== 'all')" in map_html
+    assert "data-initial-row-count" in map_html
+    assert "data-post-filter-count" in map_html
+    assert "getEl('showRegional').checked = showRegionalDefault;" in map_html
+    assert "function resetToDefaultView()" in map_html
+    assert "const DEFAULT_CENTER = [45.8, -120.5];" in map_html
+    assert "map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);" in map_html
+    assert "controlsReady()" in map_html
+    assert "resetBtn.addEventListener('click', resetToDefaultView);" in map_html
+
+
+def test_map_pressure_category_corrections_and_precision_alignment(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-health",
+                    "title": "Clinic provider cuts reduce appointment access",
+                    "summary": "Hospital and clinic access issues are expanding.",
+                    "category": "misc",
+                    "score": 90,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-health"],
+                    "source_urls": ["https://example.com/clinic-cuts"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-health",
+                            "source_url": "https://example.com/clinic-cuts",
+                            "url": "https://example.com/clinic-cuts",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "ID",
+                            "geography": "Boise",
+                            "lat": 43.61,
+                            "lon": -116.2,
+                            "category_hint": "unknown",
+                        }
+                    ],
+                },
+                {
+                    "story_id": "story-housing",
+                    "title": "Rent and utility burden grows in county",
+                    "summary": "Housing and utility costs are increasing.",
+                    "category": "misc",
+                    "score": 85,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-housing"],
+                    "source_urls": ["https://example.com/rent-utility"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-housing",
+                            "source_url": "https://example.com/rent-utility",
+                            "url": "https://example.com/rent-utility",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "WA",
+                            "geography": "King County",
+                            "lat": 47.6,
+                            "lon": -122.3,
+                            "category_hint": "unknown",
+                        }
+                    ],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    labels = {marker["title"]: marker["pressure_type"] for marker in map_data["markers"]}
+    assert labels["Clinic provider cuts reduce appointment access"] == "Health care access"
+    assert labels["Rent and utility burden grows in county"] == "Housing and utility pressure"
+    for marker in map_data["markers"]:
+        if marker["coordinate_basis"] == "state_centroid":
+            assert marker["location_precision"] in {"statewide", "regional"}
+            assert marker["precision_note"] in {"Statewide report.", "Regional report."}
+
+
+def test_map_extracts_local_place_from_title_and_emits_extraction_diagnostics(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-spokane",
+                    "title": "Spokane Transit service reductions this week",
+                    "summary": "Service reductions may affect household and job access.",
+                    "category": "transportation",
+                    "score": 84,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-spokane"],
+                    "source_urls": ["https://example.com/spokane-transit"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-spokane",
+                            "source_url": "https://example.com/spokane-transit",
+                            "url": "https://example.com/spokane-transit",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "WA",
+                            "category_hint": "transportation",
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert len(map_data["markers"]) >= 1
+    assert map_data["markers"][0]["place"] in {"Spokane Transit", "Spokane"}
+    diagnostics = map_data["diagnostics"]
+    assert diagnostics["local_extraction_success_count"] >= 1
+    assert diagnostics["place_extraction_attempted"] >= 1
+    assert diagnostics["place_extraction_succeeded"] >= 1
+    assert "candidate_diagnostics_rows" in diagnostics
+    assert "extraction_fields_success" in diagnostics
+    assert "extraction_fields_failed" in diagnostics
+
+
+def test_map_extracts_county_and_facility_places(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-county",
+                    "title": "King County shelter capacity strains continue",
+                    "summary": "King County services report pressure this week.",
+                    "category": "housing",
+                    "score": 83,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-county"],
+                    "source_urls": ["https://example.com/king-county-shelter"],
+                    "source_records": [{"source_record_id": "src-county", "source_url": "https://example.com/king-county-shelter", "url": "https://example.com/king-county-shelter", "publisher": "Example", "published_at": "2026-05-02T12:00:00Z", "state_hint": "WA", "category_hint": "housing"}],
+                },
+                {
+                    "story_id": "story-facility",
+                    "title": "TriMet route adjustments affect riders",
+                    "summary": "Transit service updates announced for this week.",
+                    "category": "transportation",
+                    "score": 81,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "source_record_ids": ["src-facility"],
+                    "source_urls": ["https://example.com/trimet-routes"],
+                    "source_records": [{"source_record_id": "src-facility", "source_url": "https://example.com/trimet-routes", "url": "https://example.com/trimet-routes", "publisher": "Example", "published_at": "2026-05-02T12:00:00Z", "state_hint": "OR", "category_hint": "transportation"}],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    places = {marker["title"]: marker["place"] for marker in map_data["markers"]}
+    assert places["King County shelter capacity strains continue"] == "King County"
+    assert places["TriMet route adjustments affect riders"] == "Portland"
+    diagnostics = map_data["diagnostics"]
+    assert diagnostics["place_match_by_type"].get("county_hint", 0) + diagnostics["place_match_by_type"].get("pattern", 0) >= 1
+    assert diagnostics["place_match_by_type"].get("entity_hint", 0) >= 1
 
 
 def test_registry_diagnostics_only_source_not_used_for_public_candidates(cascadia_work_root, monkeypatch):

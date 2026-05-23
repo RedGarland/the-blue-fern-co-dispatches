@@ -1,21 +1,189 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-05-23",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-05-23-001",
+    "title": "Gaza flotilla activists allege abuse by Israeli forces while detained",
+    "summary": "The detainees say they were slapped, hit, humiliated and even subjected to sexual violence, but Israel's prison service says the allegations are false.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-05-23-bbc-middle-east-0b8d8d88716d"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-05-23-bbc-middle-east-0b8d8d88716d"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/cglp5z63k9no?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-23T13:00:37.292483+00:00",
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-22-001",
+    "prior_edition_date": "2026-05-22",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "exact_or_normalized_source_url",
+      "no_new_summary_detail"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-23-002",
+    "title": "Board of Peace focus on Hamas risks return to war in Gaza, critics say",
+    "summary": "US-backed board has put sole blame for stalled ceasefire on militant group despite Israel not fulfilling its obligations, analysts say The top diplomat from the Board of Peace has blamed Hamas for the stalled ceasefire , but critics have said the US-backed board's lack of even-handedness in implementing the truce risks a return to war. The \"high representative for Gaza\", Nickolay Mladenov, told the UN security council on Thursday that Hamas was the \"principal obstacle\" to the ceasefire's continued implementation because \"it refused to accept verified decommissioning, relinquish coercive control and allow a genuine civilian transition\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 72,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-23-guardian-world-730da8858b85"
+    ],
+    "source_ids": [
+      "gaza-2026-05-23-guardian-world-730da8858b85"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/23/board-of-peace-focus-on-hamas-risks-return-to-war-in-gaza-critics-say"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-23T13:00:37.292483+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-23-003",
+    "title": "Not just the US: India to Brazil, 51 nations armed Israel amid Gaza war",
+    "summary": "Despite ICJ genocide warnings, 51 nations kept arming Israel, even after pledging to halt support.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-23-aljazeera-middle-east-de5b73786a78"
+    ],
+    "source_ids": [
+      "gaza-2026-05-23-aljazeera-middle-east-de5b73786a78"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/longform/2026/5/23/not-just-the-us-india-to-brazil-51-nations-armed-israel-amid-gaza-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-23T13:00:37.292483+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-23-004",
+    "title": "Israeli forces attack central Gaza despite ceasefire agreement",
+    "summary": "Video shows the moment Israeli forces struck Nuseirat and Bureij refugee camps in central Gaza, injuring dozens.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 60,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-23-aljazeera-middle-east-02d968333ce6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-23-aljazeera-middle-east-02d968333ce6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/23/israeli-forces-attack-central-gaza-despite-ceasefire-agreement?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-23T13:00:37.292483+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

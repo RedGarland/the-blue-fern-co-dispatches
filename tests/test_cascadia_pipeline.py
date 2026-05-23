@@ -10,7 +10,7 @@ import pytest
 
 from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary, why_it_matters
 from bluefern_dispatches.cascadia_fetch import curl_command, fetch_public_url
-from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, load_historical_config, retrieve_historical_sources, validate_manual_sources
+from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, exclusion_reason, load_historical_config, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages
@@ -2369,6 +2369,81 @@ def test_fetch_uses_certifi_ssl_mode_when_available(monkeypatch):
     assert result.diagnostics["ssl_mode"] == "certifi"
     assert result.diagnostics["insecure_ssl_used"] is False
     assert calls
+
+
+
+def test_backfill_filter_rejects_non_pressure_record():
+    system_terms = ["housing", "hospital", "wildfire", "transit", "food bank", "layoffs", "school closure", "public safety"]
+    reason = exclusion_reason(
+        {
+            "url": "https://example.com/news/campaign-event",
+            "title": "Portland campaign event draws large crowd",
+            "publisher": "Example News",
+            "summary_or_snippet": "Candidate speech focused on fundraising and endorsements.",
+        },
+        system_terms,
+    )
+    assert reason in {"generic_politics", "no_explicit_pressure_evidence", "no_public_systems_term"}
+
+
+def test_backfill_filter_accepts_explicit_pressure_record():
+    system_terms = ["housing", "hospital", "wildfire", "transit", "food bank", "layoffs", "school closure", "public safety"]
+    reason = exclusion_reason(
+        {
+            "url": "https://example.com/news/wa-transit-cuts",
+            "title": "Seattle transit cuts reduce late-night routes",
+            "publisher": "Example News",
+            "summary_or_snippet": "Agency cites staffing shortage and service disruption across county lines.",
+        },
+        system_terms,
+    )
+    assert reason is None
+
+
+def test_cascadia_backfill_summary_writes_source_backed_counts(tmp_path, monkeypatch):
+    def fake_retrieve(*args, **kwargs):
+        return {
+            "ok": True,
+            "source_count": 3,
+            "excluded_source_count": 2,
+            "historical_sources_path": str(tmp_path / "historical_sources.json"),
+            "historical_search_report_path": str(tmp_path / "historical_search_report.json"),
+            "warnings": [],
+            "errors": [],
+            "report": {
+                "records_saved": 3,
+                "records_excluded": 2,
+                "providers_used": ["registry", "gdelt"],
+                "records_by_state_hint": {"WA": 1, "OR": 1, "ID": 1},
+                "exclusion_reasons": {"sports": 1, "opinion": 1},
+            },
+        }
+
+    monkeypatch.setattr(backfill_cascadia_pressure, "retrieve_historical_sources", fake_retrieve)
+
+    result = backfill_cascadia_pressure.run_backfill(
+        tmp_path,
+        "2026-04-21",
+        "2026-05-10",
+        max_per_source=10,
+        weekly=True,
+        write=True,
+    )
+
+    assert result["ok"] is True
+    assert result["total_records_saved"] == 6
+    assert result["total_records_excluded"] == 4
+    assert result["states_seen"] == ["ID", "OR", "WA"]
+    assert "gdelt" in result["providers_seen"]
+    assert "registry" in result["providers_seen"]
+    assert result["accepted_by_state"] == {"ID": 2, "OR": 2, "WA": 2}
+    assert result["rejected_reasons"] == {"opinion": 2, "sports": 2}
+    assert result["mapped_count"] == 6
+    assert result["unmapped_count"] == 4
+    assert Path(result["summary_path"]).exists()
+    assert Path(result["diagnostics_path"]).exists()
+    diagnostics = json.loads(Path(result["diagnostics_path"]).read_text(encoding="utf-8"))
+    assert "rows" in diagnostics
 
 
 

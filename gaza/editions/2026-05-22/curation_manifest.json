@@ -35,7 +35,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -80,7 +80,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -126,7 +126,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -136,6 +136,51 @@
   },
   {
     "story_id": "gaza-story-2026-05-22-004",
+    "title": "Israeli blockade traps would-be Hajj pilgrim in Gaza",
+    "summary": "For years, 64-year-old Najia Abu Lehia dreamed of performing Hajj with her husband.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-2f2414feebf7"
+    ],
+    "source_ids": [
+      "gaza-2026-05-22-aljazeera-middle-east-2f2414feebf7"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/22/israeli-blockade-traps-would-be-hajj-pilgrim-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-22-005",
     "title": "Mahmoud Khalil to appeal US deportation case to Supreme Court",
     "summary": "Pro-Palestine advocate takes claim that Trump administration targeted him for protected free speech to top US court.",
     "category": "palestinian_development",
@@ -171,7 +216,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -180,7 +225,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-22-005",
+    "story_id": "gaza-story-2026-05-22-006",
     "title": "Decades-old photos show 'joyful' Gaza in happier times.",
     "summary": "An exhibition in Marseille is showcasing 300 photos taken in Gaza between the 1940s and the 1970s.",
     "category": "conflict",
@@ -215,7 +260,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -224,7 +269,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-22-006",
+    "story_id": "gaza-story-2026-05-22-007",
     "title": "Israel's October 7 tribunal: Show trial of Palestinians or justice?",
     "summary": "Observers describe a climate in which the chances of justice in the military tribunals are slim.",
     "category": "conflict",
@@ -259,7 +304,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -268,7 +313,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-22-007",
+    "story_id": "gaza-story-2026-05-22-008",
     "title": "Gaza flotilla activists allege abuse, sexual assault in Israeli detention",
     "summary": "Organisers of Global Sumud Flotilla say foreign activists report at least 15 cases of \u200csexual assaults, including rape.",
     "category": "conflict",
@@ -303,7 +348,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "merge_into_existing",
     "public_rendered": false,
     "prior_story_matched": "gaza-story-2026-05-22-003",
@@ -314,7 +359,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-22-008",
+    "story_id": "gaza-story-2026-05-22-009",
     "title": "Western nations warn Israel to end illegal settlement expansion, violence",
     "summary": "Nine countries including UK, Germany and France warn settlements in occupied West Bank a 'breach of international law'.",
     "category": "palestinian_development",
@@ -350,7 +395,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -359,7 +404,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-22-009",
+    "story_id": "gaza-story-2026-05-22-010",
     "title": "Israel deports foreign Gaza-bound flotilla activists after global outcry",
     "summary": "Move comes amid condemnation of Itamar Ben-Gvir after video posted showing detained protesters being taunted Israel has said it has deported all the foreign activists it seized from a Gaza-bound flotilla, after a global outcry over their treatment in custody that led the UK to join other countries in summoning Israeli diplomats for a formal dressing down. More than 430 activists from countries around the world had been placed in detention in Israel after they were intercepted at sea on Monday while making the latest in a string of attempts to break the blockade of the Palestinian territory.",
     "category": "conflict",
@@ -397,7 +442,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "skip",
     "public_rendered": false,
     "prior_story_matched": "gaza-story-2026-05-21-002",
@@ -411,7 +456,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-05-22-010",
+    "story_id": "gaza-story-2026-05-22-011",
     "title": "Progressive Democrats criticize 2024 election autopsy for silence on Gaza | First Thing",
     "summary": "The 192-page report does not mention Gaza or Joe Biden's age. Plus, is the world heading for another Ebola crisis? Don't already get First Thing in your inbox? Sign up here Good morning. On Thursday, the Democratic party published a postmortem - spanning 192 pages - of its 2024 election defeat, after an initial decision to withhold the document prompted an angry backlash. What's in the postmortem? It focuses on key demographics that Kamala Harris lost, including Latinos, men and rural voters in many states. \"Harris wrote off rural America, assuming urban/suburban margins would compensate,\" the report says. \"The math doesn't work.\" The autopsy says that Democrats must focus less on \"abstract issues and identity politics\". What does the move tell us? The cancellation, which avoided political embarrassment for Donald Trump, is the latest signal that congressional support for the US president's war is diminishing. What happens next? The vote has been postponed until lawmakers return from a recess in June, when it appears likely that the resolution could pass.",
     "category": "conflict",
@@ -446,7 +491,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-22T23:26:24.301196+00:00",
+    "generated_at": "2026-05-23T02:31:03.612311+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,

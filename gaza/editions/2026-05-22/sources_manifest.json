@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-05-22T20:52:35+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "The detainees say they were slapped, hit, humiliated and even subjected to sexual violence, but Israel's prison service says the allegations are false.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -54,7 +54,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-05-22T00:21:24+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "A video showing a far-right Israeli minister taunting activists who were kneeling with their hands tied behind their backs has been widely condemned.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -99,7 +99,7 @@
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-05-22T15:36:16+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "Israeli prison service denies claims of abuse during detention of 430 people trying to take aid to Palestinians Activists released from Israeli custody after being detained on a flotilla trying to take aid to Gaza were subjected to abuse, organisers have alleged, with several hospitalised with injuries and at least 15 reporting sexual assaults, including rape. Israel's prison service denied the allegations, and Reuters was not able to verify them independently.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -135,6 +135,51 @@
     "claim_fingerprint": "guardian|gaza flotilla activists allege sexual assault and rape in israeli detention|conflict"
   },
   {
+    "source_record_id": "gaza-2026-05-22-aljazeera-middle-east-2f2414feebf7",
+    "source_id": "gaza-2026-05-22-aljazeera-middle-east-2f2414feebf7",
+    "title": "Israeli blockade traps would-be Hajj pilgrim in Gaza",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/22/israeli-blockade-traps-would-be-hajj-pilgrim-in-gaza?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/22/israeli-blockade-traps-would-be-hajj-pilgrim-in-gaza?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-22T22:23:44+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
+    "summary_or_snippet": "For years, 64-year-old Najia Abu Lehia dreamed of performing Hajj with her husband.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-22",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-22-005"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israeli blockade traps would be hajj pilgrim in gaza",
+    "title_fingerprint": "israeli blockade traps would be hajj pilgrim in gaza",
+    "claim_fingerprint": "al jazeera|israeli blockade traps would be hajj pilgrim in gaza|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-22-aljazeera-middle-east-fec424861d9f",
     "source_id": "gaza-2026-05-22-aljazeera-middle-east-fec424861d9f",
     "title": "Mahmoud Khalil to appeal US deportation case to Supreme Court",
@@ -145,7 +190,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-22T21:08:03+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "Pro-Palestine advocate takes claim that Trump administration targeted him for protected free speech to top US court.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -154,7 +199,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-005"
+      "gaza-story-2026-05-22-006"
     ],
     "claim_ids": [],
     "candidate_score": 40,
@@ -190,7 +235,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-22T19:10:02+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "An exhibition in Marseille is showcasing 300 photos taken in Gaza between the 1940s and the 1970s.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -199,7 +244,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-006"
+      "gaza-story-2026-05-22-007"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -234,7 +279,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-22T18:04:47+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "Observers describe a climate in which the chances of justice in the military tribunals are slim.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -243,7 +288,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-007"
+      "gaza-story-2026-05-22-008"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -278,7 +323,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-22T17:12:49+00:00",
-    "retrieved_at": "2026-05-22T22:39:47.764552+00:00",
+    "retrieved_at": "2026-05-23T02:31:02.511400+00:00",
     "summary_or_snippet": "Organisers of Global Sumud Flotilla say foreign activists report at least 15 cases of \u200csexual assaults, including rape.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -287,7 +332,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-008"
+      "gaza-story-2026-05-22-009"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -331,7 +376,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-009"
+      "gaza-story-2026-05-22-010"
     ],
     "claim_ids": [],
     "candidate_score": 40,
@@ -376,7 +421,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-010"
+      "gaza-story-2026-05-22-011"
     ],
     "claim_ids": [],
     "candidate_score": 56,
@@ -423,7 +468,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-22",
     "used_in_story_ids": [
-      "gaza-story-2026-05-22-011"
+      "gaza-story-2026-05-22-012"
     ],
     "claim_ids": [],
     "candidate_score": 32,

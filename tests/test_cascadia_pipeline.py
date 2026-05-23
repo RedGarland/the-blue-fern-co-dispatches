@@ -24,6 +24,8 @@ SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))
 from run_cascadia_dispatch import completed_week_windows, run_pipeline, run_source_gap_report, write_zero_week_gap_report
+import backfill_cascadia_pressure
+from bluefern_dispatches import cascadia_fetch
 
 
 @pytest.fixture()
@@ -2244,6 +2246,130 @@ def test_map_dedupes_duplicate_url_place_category(cascadia_work_root):
     )
     map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
     assert (map_data["diagnostics"]["duplicates_removed"] + map_data["diagnostics"].get("regional_duplicates_removed", 0)) >= 1
+
+
+def test_backfill_refuses_publish_with_insecure_ssl(tmp_path):
+    with pytest.raises(ValueError):
+        backfill_cascadia_pressure.run_backfill(
+            tmp_path,
+            "2026-04-21",
+            "2026-05-10",
+            max_per_source=10,
+            write=True,
+            allow_insecure_ssl=True,
+        )
+
+
+def test_backfill_diagnostics_rows_capture_ssl_fields(tmp_path, monkeypatch):
+    def fake_retrieve(*args, **kwargs):
+        return {
+            "ok": False,
+            "source_count": 0,
+            "excluded_source_count": 1,
+            "historical_sources_path": str(tmp_path / "historical_sources.json"),
+            "historical_search_report_path": str(tmp_path / "historical_search_report.json"),
+            "warnings": ["w"],
+            "errors": ["e"],
+            "report": {
+                "records_saved": 0,
+                "records_excluded": 1,
+                "providers_used": ["gdelt"],
+                "records_by_state_hint": {},
+                "registry_records_raw": 2,
+                "queries_run": [
+                    {
+                        "provider_id": "gdelt",
+                        "query": "q",
+                        "request_url": "https://example.com/q",
+                        "result_count": 0,
+                        "status_code": 500,
+                        "bytes_read": 0,
+                        "ssl_mode": "certifi",
+                        "insecure_ssl_used": False,
+                        "error": "timeout",
+                    }
+                ],
+                "registry_source_diagnostics": [
+                    {
+                        "source_id": "s1",
+                        "source_name": "S1",
+                        "url": "https://example.com/feed",
+                        "status_code": 200,
+                        "bytes_read": 1200,
+                        "records_raw": 2,
+                        "fetch_successful": True,
+                        "ssl_mode": "certifi",
+                        "insecure_ssl_used": False,
+                        "errors": [],
+                    }
+                ],
+                "exclusion_reasons": {"opinion": 1},
+            },
+        }
+
+    monkeypatch.setattr(backfill_cascadia_pressure, "retrieve_historical_sources", fake_retrieve)
+    result = backfill_cascadia_pressure.run_backfill(
+        tmp_path,
+        "2026-04-21",
+        "2026-05-10",
+        max_per_source=10,
+        weekly=True,
+        write=False,
+    )
+    diagnostics = json.loads(Path(result["diagnostics_path"]).read_text(encoding="utf-8"))
+    assert diagnostics["ssl_mode"] == "certifi"
+    assert diagnostics["insecure_ssl_used"] is False
+    assert len(diagnostics["rows"]) >= 2
+    assert all("ssl_mode" in row and "insecure_ssl_used" in row for row in diagnostics["rows"])
+
+
+def test_fetch_uses_certifi_ssl_mode_when_available(monkeypatch):
+    import tempfile
+    import types
+
+    with tempfile.NamedTemporaryFile(delete=False) as handle:
+        cert_path = handle.name
+
+    class DummyCertifi:
+        @staticmethod
+        def where():
+            return cert_path
+
+    dummy_module = types.ModuleType("certifi")
+    dummy_module.where = DummyCertifi.where
+    monkeypatch.setitem(sys.modules, "certifi", dummy_module)
+    monkeypatch.setattr(
+        "bluefern_dispatches.cascadia_fetch.ssl.create_default_context",
+        lambda cafile=None: object(),
+    )
+    monkeypatch.setenv("CASCADIA_SSL_MODE", "certifi")
+    monkeypatch.setenv("CASCADIA_ALLOW_INSECURE_SSL", "0")
+    calls = []
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/json"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return b'{"ok": true}'
+
+    def fake_urlopen(request, timeout, context):
+        calls.append(context)
+        return FakeResponse()
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", fake_urlopen)
+    result = cascadia_fetch.fetch_public_url("https://example.com", 5, "Agent")
+    assert result.ok is True
+    assert result.diagnostics["ssl_mode"] == "certifi"
+    assert result.diagnostics["insecure_ssl_used"] is False
+    assert calls
+
 
 
 def test_map_coordinates_fallback_to_state_centroid_when_source_has_no_lat_lon(cascadia_work_root):

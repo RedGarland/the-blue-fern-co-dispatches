@@ -98,8 +98,7 @@ def test_food_bank_story_links_to_snap_anchor(work_root):
     html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
     assert "<strong>Current Development:</strong>" in html
     assert "<strong>Data Context:</strong>" in html
-    assert "Real-life story sources:" in html
-    assert "Data/context sources:" in html
+    assert "<strong>Sources:</strong>" in html
     assert "USDA SNAP Household Characteristics" in html
 
 
@@ -1396,6 +1395,127 @@ def test_publish_excludes_invalid_later_edition_without_weekly_manifest_fields(w
     archive = (work_root / "output" / "site" / "american-pressure" / "archive.html").read_text(encoding="utf-8")
     assert "2026-05-18" not in index
     assert "2026-05-18" not in archive
+
+
+def test_public_source_list_is_concise_and_excludes_generic_registry_watchlist(work_root):
+    manual = [
+        _record(
+            "local-system-story",
+            "local_system_strain",
+            "Iowa disaster proclamation issued",
+            "Iowa activated disaster programs after severe weather impacts.",
+            "https://example.com/iowa-disaster",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    manual[0]["public_pressure_angle"] = "Local systems and households are under recovery strain."
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="both",
+    )
+    assert result["ok"] is True
+    md = (work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23" / "edition.md").read_text(encoding="utf-8")
+    assert "NPR Network (Alabama)" not in md
+    assert "Nonprofit Policy Reporting (Alabama)" not in md
+    parts = md.split("\n## ")
+    first_block = parts[1] if len(parts) > 1 else md
+    if len(parts) > 2:
+        first_block = first_block.split("\n## ", 1)[0]
+    source_lines = [line for line in first_block.splitlines() if line.startswith("Source: ")]
+    assert len(source_lines) <= 5
+
+
+def test_baseline_only_items_are_labeled_in_public_outputs(work_root):
+    manual = [
+        _record(
+            "uscourts-anchor",
+            "financial_distress_pressure",
+            "U.S. Courts Bankruptcy Filings Statistics",
+            "Official baseline indicator source.",
+            "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
+            source_role="data_anchor",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-23" / "index.html").read_text(encoding="utf-8")
+    md = (work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23" / "edition.md").read_text(encoding="utf-8")
+    assert "Baseline/context item:" in html
+    assert "Baseline/context item:" in md
+
+
+def test_local_system_story_uses_local_system_headline_not_housing_headline(work_root):
+    manual = [
+        _record(
+            "iowa-disaster",
+            "local_system_strain",
+            "Iowa severe weather response",
+            "Iowa activated housing and recovery support after severe weather disruptions.",
+            "https://example.com/iowa-response",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    manual[0]["public_pressure_angle"] = "Local service response and household recovery pressure."
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-23" / "curation_manifest.json").read_text(encoding="utf-8"))
+    story = next(item for item in curation["stories"] if item.get("pillar") == "local_system_strain")
+    assert "Housing costs are still the budget pressure that can crowd out everything else" not in story["title"]
+    assert "Local systems" in story["title"]
+
+
+def test_public_source_display_is_capped_while_full_ledger_is_preserved(work_root):
+    manual = [
+        _record(
+            "food-story",
+            "food_pressure",
+            "Food pressure story",
+            "Food bank demand rose this week.",
+            "https://example.com/food-story",
+            source_type="news_report",
+            source_role="human_story",
+            linked_data_anchor_ids=["usda-fns-snap-data-tables"],
+        ),
+    ]
+    manual[0]["public_pressure_angle"] = "Food affordability stress is rising for households."
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="both",
+    )
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-23" / "curation_manifest.json").read_text(encoding="utf-8"))
+    sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-23" / "sources_manifest.json").read_text(encoding="utf-8"))
+    story = next(item for item in curation["stories"] if item.get("pillar") == "food_pressure")
+    assert len(story.get("public_source_record_ids", [])) <= 5
+    assert len(sources) > len(story.get("public_source_record_ids", []))
 
 
 def test_map_includes_feed_backfill_records_but_written_dispatch_remains_curated(work_root):

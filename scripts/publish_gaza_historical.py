@@ -105,6 +105,7 @@ def run_command(args: list[str], cwd: Path = ROOT) -> subprocess.CompletedProces
         capture_output=True,
         text=True,
         encoding="utf-8",
+        errors="replace",
     )
 
 

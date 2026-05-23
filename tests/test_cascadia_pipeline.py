@@ -886,6 +886,11 @@ def test_historical_provider_failure_fails_safely(cascadia_work_root, monkeypatc
 
 
 def test_historical_provider_rate_limit_enters_cooldown(cascadia_work_root, monkeypatch):
+    PROVIDER_BACKOFF_UNTIL.clear()
+    historical_cfg = cascadia_work_root / "data" / "dispatches" / "cascadia" / "historical_sources.yml"
+    historical_text = historical_cfg.read_text(encoding="utf-8")
+    historical_cfg.write_text(historical_text.replace("backoff_max_seconds: 60", "backoff_max_seconds: 3600"), encoding="utf-8")
+
     class RateLimitedGDELT(GDELTProvider):
         calls = 0
 

@@ -1755,6 +1755,7 @@ def load_auto_sources(root: Path, edition_date: str) -> list[dict[str, Any]]:
                 "pillar": pillar,
                 "reliability_tier": str(row.get("reliability_tier") or "official_primary"),
                 "source_state": "enabled",
+                "source_role": "data_anchor",
                 "is_baseline_auto": True,
             }
         )
@@ -1807,6 +1808,7 @@ def load_auto_sources(root: Path, edition_date: str) -> list[dict[str, Any]]:
                 "source_state": "manual_only",
                 "state": str(row.get("state") or ""),
                 "urban_rural_focus": str(row.get("urban_rural_focus") or ""),
+                "source_role": "data_anchor",
                 "is_baseline_auto": True,
                 "watchlist_signal": True,
             }

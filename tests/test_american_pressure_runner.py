@@ -212,6 +212,33 @@ def test_both_mode_with_manual_human_stories_produces_story_plus_data(work_root)
     assert manifest["brief_quality_counts"]["story_plus_data"] > 0
 
 
+def test_both_mode_auto_baselines_do_not_fail_human_story_validation(work_root):
+    manual = [
+        _record(
+            "food-story",
+            "food_pressure",
+            "Pantry demand story",
+            "Pantry demand rose this week.",
+            "https://example.com/story",
+            source_type="news_report",
+            source_role="human_story",
+            linked_data_anchor_ids=["usda-fns-snap-data-tables"],
+        ),
+    ]
+    manual[0]["public_pressure_angle"] = "Food assistance demand pressure."
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="both",
+    )
+    assert result["ok"] is True
+    assert not any("missing required fields: public_pressure_angle" in err for err in result["errors"])
+
+
 def test_weekly_cadence_label_remains_public(work_root):
     manual = [
         _record("snap", "food_pressure", "SNAP Household Characteristics", "Official baseline indicator source.", "https://example.com/snap", source_role="data_anchor"),

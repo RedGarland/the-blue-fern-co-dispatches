@@ -14,6 +14,12 @@ data/dispatches/gaza/curated/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 data/dispatches/gaza/editions/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 data/dispatches/gaza/sources/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 !data/dispatches/gaza/sources.yml
+# Cascadia generated per-run artifacts
+data/dispatches/cascadia/raw/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/cascadia/normalized/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/cascadia/curated/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+data/dispatches/cascadia/sources/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+!data/dispatches/cascadia/source_registry.yml
 repair-and-reclone*.log
 reclone*.log
 

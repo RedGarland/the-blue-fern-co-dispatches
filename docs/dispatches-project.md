@@ -8,9 +8,11 @@ Current dispatch slugs:
 - `american-pressure`
 - `cascadia`
 
-Current generated edition date:
+Current generated edition dates:
 
-- `2026-05-03`
+- `gaza`: `2026-05-19`
+- `american-pressure`: `2026-05-19`
+- `cascadia`: `2026-05-10`
 
 Safety defaults:
 
@@ -252,7 +254,7 @@ data/dispatches/cascadia/source_registry.yml
 Full run:
 
 ```powershell
-python scripts\run_cascadia_dispatch.py --date 2026-05-03 --all
+python scripts\run_cascadia_dispatch.py --date YYYY-MM-DD --all
 ```
 
 Operational cadence:

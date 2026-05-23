@@ -11,6 +11,7 @@ These are the current non-negotiable operating rules for this project.
 - `output/detail` and `output/paid` must never appear under `output/site`.
 - The GitHub Pages deploy branch is `gh-pages`.
 - The Pages repo is publish output only.
+  - Publishing behavior: the publisher copies `output/site` into the `bluefern-dispatches-pages` repository and creates a local commit by default; pushing those commits to the remote is an explicit, separate step (use the dispatch runner `--push` or push from the Pages repo).
 - No old project runtime dependencies.
 - Scheduled tasks use the project `.venv`.
 - `SMTP_PASSWORD` is never logged.

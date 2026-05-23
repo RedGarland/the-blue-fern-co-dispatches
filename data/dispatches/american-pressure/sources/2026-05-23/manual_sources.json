@@ -1,0 +1,63 @@
+{
+  "sources": [],
+  "_scaffold": {
+    "dispatch": "american-pressure",
+    "week_end_date": "2026-05-23",
+    "week_start_date": "2026-05-17",
+    "display_date_range": "May 17-May 23, 2026",
+    "status": "manual_review_required_before_weekly_run",
+    "created_by": "codex-scaffold",
+    "created_at_utc": "2026-05-23T00:00:00Z",
+    "rules": [
+      "No fact without a traceable source URL.",
+      "Do not use aggregator/repost links as final source URLs.",
+      "Only add records with verifiable publisher, date, and source-backed summary_or_snippet.",
+      "Keep review_status logic in candidate files separate from this manual source pack."
+    ],
+    "required_current_development_pillars": [
+      "food_pressure",
+      "financial_distress_pressure",
+      "housing_household_cost_pressure",
+      "health_access_pressure",
+      "labor_income_pressure",
+      "local_system_strain",
+      "environmental_pressure",
+      "policy_implementation"
+    ],
+    "minimum_readiness_targets": {
+      "approved_candidate_count": 4,
+      "story_plus_data_count": 3
+    },
+    "candidate_window_files": [
+      "data/dispatches/american-pressure/candidates/2026-05-17/candidate_sources.json",
+      "data/dispatches/american-pressure/candidates/2026-05-18/candidate_sources.json",
+      "data/dispatches/american-pressure/candidates/2026-05-19/candidate_sources.json",
+      "data/dispatches/american-pressure/candidates/2026-05-20/candidate_sources.json",
+      "data/dispatches/american-pressure/candidates/2026-05-21/candidate_sources.json",
+      "data/dispatches/american-pressure/candidates/2026-05-22/candidate_sources.json"
+    ],
+    "manual_record_required_fields": [
+      "source_record_id",
+      "title",
+      "url",
+      "publisher",
+      "published_at",
+      "retrieved_at",
+      "summary_or_snippet",
+      "source_type",
+      "region_scope",
+      "category_hint",
+      "reliability_tier"
+    ],
+    "review_outcome": {
+      "review_window_start": "2026-05-17",
+      "review_window_end": "2026-05-23",
+      "candidate_count_reviewed": 215,
+      "recommended_for_manual_sources": 0,
+      "needs_human_review": 21,
+      "decision": "no_clear_pass_records",
+      "reason": "All window candidates are quarantined aggregator/repost records and require direct source verification.",
+      "review_report_path": "data/dispatches/american-pressure/sources/2026-05-23/source_review_report.md"
+    }
+  }
+}

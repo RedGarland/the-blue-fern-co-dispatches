@@ -32,6 +32,9 @@ from bluefern_dispatches.generator import (
 
 
 def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    coverage_label = f"{start.strftime('%b')} {start.day}–{end.strftime('%b')} {end.day}, {end.year}"
     edition = work / "output" / "dispatches" / "cascadia" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
     (edition / "index.html").write_text(
@@ -53,10 +56,17 @@ def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
                 "dispatch_slug": "cascadia",
                 "edition_date": edition_date,
                 "briefing_type": "weekly",
-                "coverage_start": "2026-04-27",
+                "cadence": "weekly",
+                "edition_type": "weekly",
+                "coverage_start": start.isoformat(),
                 "coverage_end": edition_date,
-                "coverage_label": "Apr 27-May 3, 2026",
-                "week_label": "2026-W18",
+                "coverage_label": coverage_label,
+                "public_coverage_label": coverage_label,
+                "public_coverage_range": {
+                    "coverage_start": start.isoformat(),
+                    "coverage_end": edition_date,
+                },
+                "week_label": f"{end.isocalendar().year}-W{end.isocalendar().week:02d}",
                 "source_count": 1,
                 "story_count": 1,
                 "source_manifest_path": str(edition / "sources_manifest.json"),
@@ -116,6 +126,7 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     html = read(index)
     assert 'href="/gaza/"' in html
     assert 'href="/cascadia/"' in html
+    assert 'href="/american-pressure/"' not in html
     assert "The Cascadia Briefing" in html
     assert "Cascadia Systems Dispatch" not in html
     assert "--blue-fern: #2F6F88" in read(css)
@@ -265,6 +276,11 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     assert "The Cascadia Briefing" in cascadia_index
     assert CASCADIA_PUBLIC_DESCRIPTION in cascadia_index
     assert "Cascadia Signal Pack" in cascadia_index
+    assert "Open latest Cascadia pressure map" in cascadia_index
+    assert "Read briefing" in cascadia_index
+    map_path = work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html"
+    if map_path.exists():
+        assert "View map" in cascadia_index
     assert 'href="/cascadia/"' not in cascadia_index
     assert f"assets/{CASCADIA_LOGO_ASSET}" in cascadia_index
     assert cascadia_edition.exists()
@@ -538,6 +554,9 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
 
 
 def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    coverage_label = f"{start.strftime('%b')} {start.day}–{end.strftime('%b')} {end.day}, {end.year}"
     edition = site_root / "cascadia" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
     (edition / "index.html").write_text("<html><body>Cascadia weekly</body></html>", encoding="utf-8")
@@ -547,9 +566,17 @@ def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
                 "dispatch_slug": "cascadia",
                 "edition_date": edition_date,
                 "briefing_type": "weekly",
-                "coverage_start": "2026-05-04",
+                "cadence": "weekly",
+                "edition_type": "weekly",
+                "coverage_start": start.isoformat(),
                 "coverage_end": edition_date,
-                "week_label": "2026-W19",
+                "coverage_label": coverage_label,
+                "public_coverage_label": coverage_label,
+                "public_coverage_range": {
+                    "coverage_start": start.isoformat(),
+                    "coverage_end": edition_date,
+                },
+                "week_label": f"{end.isocalendar().year}-W{end.isocalendar().week:02d}",
             },
             indent=2,
         ),
@@ -942,7 +969,7 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     assert (work / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html").exists()
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
-    assert "The American Pressure Dispatch" in root_index
+    assert "The American Pressure Dispatch" not in root_index
     assert "The Cascadia Briefing" in root_index
 
 

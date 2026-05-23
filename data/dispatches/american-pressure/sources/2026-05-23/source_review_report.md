@@ -258,8 +258,50 @@
 16. Small New Mexico community evacuated as wildfire races across 10,000 acres and threatens buildings: direct primary/local reporting not confirmed in this pass.
 17. Hartford Hospital?s $1B campus overhaul targets emergency department overcrowding: direct durable article URL not confirmed in this pass.
 
+## Missing-Pillar Durable Acquisition Pass (2026-05-23)
+### Sources added to cover previously missing pillars
+- `food_pressure`
+  - Food bank demand surges in Santa Cruz County as costs strain families
+  - URL: https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879
+  - Publisher/date: KSBW, updated May 13, 2026
+  - Inclusion rationale: Direct local reporting with concrete food-bank demand signal; used as near-window evidence.
+
+- `financial_distress_pressure`
+  - Business and Nonbusiness Cases Filed, by Chapter of the Bankruptcy Code, District, and County (F-5A)
+  - URL: https://www.uscourts.gov/data-table-numbers/f-5a
+  - Publisher/date: United States Courts, reporting period March 31, 2026
+  - Inclusion rationale: Official national bankruptcy filing table used as durable distress data anchor.
+
+- `health_access_pressure`
+  - Map Element - Medicaid & CHIP Enrollment
+  - URL: https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment
+  - Publisher/date: Medicaid.gov, January 2026 data last updated March 27, 2026
+  - Inclusion rationale: Official coverage/access baseline used as durable health-access data anchor.
+
+- `local_system_strain`
+  - Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather
+  - URL: https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather
+  - Publisher/date: Office of the Governor of Iowa, May 22, 2026
+  - Inclusion rationale: Official state emergency action with direct household and service-system recovery implications.
+
+### Remaining unresolved/weak items after this pass
+- Direct durable URL not confirmed in this pass:
+  - Last Needy Family Fund donation aids Delaware families statewide
+  - Hospital CEO warns Arkansas? hospital system is unsustainable, rural medical centers at risk
+  - Hartford Hospital?s $1B campus overhaul targets emergency department overcrowding
+  - Global Auto Parts Manufacturer Announces 127 Layoffs at Two Georgia Facilities
+
+- Not promoted due relevance/quality constraints:
+  - Non-U.S. locality or public-impact mismatch for AP scope
+  - Investor/legal-analysis framing without clear household-impact reporting
+  - Outlet reliability concerns for durable manual-source use
+
 ## Updated Pillar Coverage From Promoted Sources
+- `food_pressure`: 1
 - `housing_household_cost_pressure`: 1
-- `environmental_pressure`: 2
+- `financial_distress_pressure`: 1
+- `health_access_pressure`: 1
 - `labor_income_pressure`: 1
-- Missing promoted pillars in this pass: `food_pressure`, `financial_distress_pressure`, `health_access_pressure`, `local_system_strain`
+- `environmental_pressure`: 2
+- `local_system_strain`: 1
+- Missing promoted pillars in this pass: none

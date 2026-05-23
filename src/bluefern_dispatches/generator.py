@@ -744,13 +744,44 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     if slug != "cascadia":
         return True
     manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
+    index_path = site_root / slug / "editions" / edition_date / "index.html"
+    sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
+    curation_manifest_path = site_root / slug / "editions" / edition_date / "curation_manifest.json"
+    if not index_path.exists() or not sources_manifest_path.exists() or not curation_manifest_path.exists():
+        return False
     if not manifest_path.exists():
         return False
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return False
-    return is_weekly_cascadia_manifest(manifest, edition_date)
+    weekly_manifest = is_weekly_cascadia_manifest(manifest, edition_date)
+    if not weekly_manifest:
+        weekly_markers = {
+            str(manifest.get("briefing_type") or "").strip().lower(),
+            str(manifest.get("cadence") or "").strip().lower(),
+            str(manifest.get("edition_type") or "").strip().lower(),
+        }
+        source_count = int(manifest.get("source_count", 0) or 0)
+        story_count = int(manifest.get("story_count", 0) or 0)
+        if "weekly" not in weekly_markers or source_count <= 0 or story_count <= 0:
+            return False
+    if "public_story_count" not in manifest:
+        # Backward-compatible weekly manifests created before this field existed.
+        return True
+    public_story_count = int(manifest.get("public_story_count", 0) or 0)
+    if public_story_count > 0:
+        return True
+    source_count = int(manifest.get("source_count", 0) or 0)
+    story_count = int(manifest.get("story_count", 0) or 0)
+    if source_count > 0 and story_count > 0:
+        return True
+    # Zero-story weeks are listable only when explicitly marked as review-credible.
+    if manifest.get("minimum_review_threshold_met") is True:
+        return True
+    if str(manifest.get("zero_story_review_status") or "").strip().lower() == "credible":
+        return True
+    return False
 
 
 def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> dict[str, Any]:

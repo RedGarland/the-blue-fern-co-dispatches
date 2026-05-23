@@ -9,6 +9,7 @@ from typing import Any
 from collections import Counter
 
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT, DEFAULT_SOURCES_PATH, load_sources
+from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.cascadia_score import exclusion_reason, score_record
 
 
@@ -32,10 +33,7 @@ def deterministic_summary(record: dict[str, Any]) -> str:
     else:
         source_text = f" from {publisher}" if publisher else ""
         summary = f"This source{source_text} was flagged as a public-systems signal based on source metadata."
-    rationale = supported_rationale(category, region)
-    if rationale and rationale.lower() not in summary.lower():
-        return f"{summary} {rationale}"
-    return summary
+    return sanitize_public_prose(summary)
 
 
 def why_it_matters(record: dict[str, Any], category: str | None = None) -> str:

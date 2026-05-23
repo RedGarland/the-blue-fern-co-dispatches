@@ -4,6 +4,7 @@ import os
 import platform
 import re
 import socket
+import ssl
 import subprocess
 import time
 import urllib.error
@@ -83,7 +84,32 @@ def base_diagnostics(backend: str) -> dict[str, Any]:
         "exception_class": None,
         "elapsed_ms": 0,
         "retry_count": 0,
+        "ssl_mode": "default",
+        "insecure_ssl_used": False,
     }
+
+
+def _ssl_mode() -> str:
+    return os.environ.get("CASCADIA_SSL_MODE", "").strip().lower()
+
+
+def _allow_insecure_ssl() -> bool:
+    return os.environ.get("CASCADIA_ALLOW_INSECURE_SSL", "0").strip() == "1"
+
+
+def build_ssl_context() -> tuple[ssl.SSLContext, str, bool]:
+    insecure = _allow_insecure_ssl()
+    if insecure:
+        return ssl._create_unverified_context(), "insecure", True  # noqa: SLF001
+    mode = _ssl_mode()
+    if mode in {"certifi", "auto", ""}:
+        try:
+            import certifi  # type: ignore
+
+            return ssl.create_default_context(cafile=certifi.where()), "certifi", False
+        except Exception:
+            pass
+    return ssl.create_default_context(), "default", False
 
 
 def curl_command(url: str, timeout_seconds: int, user_agent: str, allow_no_revoke: bool) -> list[str]:
@@ -184,8 +210,16 @@ def categorize_failure(message: str, status_code: int | None) -> str:
 def _single_python_request(url: str, timeout_seconds: int, user_agent: str, method: str) -> FetchResult:
     request = urllib.request.Request(url, headers={"User-Agent": user_agent}, method=method)  # noqa: S310 - curated public URLs only
     diagnostics = base_diagnostics("python")
+    ssl_context, ssl_mode, insecure = build_ssl_context()
+    diagnostics["ssl_mode"] = ssl_mode
+    diagnostics["insecure_ssl_used"] = insecure
     try:
-        with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+        try:
+            response_ctx = urllib.request.urlopen(request, timeout=timeout_seconds, context=ssl_context)
+        except TypeError:
+            # Test doubles may not accept the `context` kwarg.
+            response_ctx = urllib.request.urlopen(request, timeout=timeout_seconds)
+        with response_ctx as response:
             body = response.read().decode("utf-8", errors="replace") if method != "HEAD" else ""
             diagnostics["bytes_read"] = len(body.encode("utf-8"))
             diagnostics["status_code"] = getattr(response, "status", 200)
@@ -230,6 +264,8 @@ def fetch_public_url(url: str, timeout_seconds: int, user_agent: str) -> FetchRe
         diagnostics["exception_class"] = get.diagnostics.get("exception_class")
         diagnostics["failure_reason"] = get.diagnostics.get("failure_reason")
         diagnostics["retry_after"] = get.diagnostics.get("retry_after")
+        diagnostics["ssl_mode"] = get.diagnostics.get("ssl_mode", diagnostics.get("ssl_mode"))
+        diagnostics["insecure_ssl_used"] = bool(get.diagnostics.get("insecure_ssl_used", diagnostics.get("insecure_ssl_used")))
         if get.ok and (get.body or get.content_type):
             diagnostics["selected_backend"] = "python"
             diagnostics["elapsed_ms"] = int((time.monotonic() - started) * 1000)

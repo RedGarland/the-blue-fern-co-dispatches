@@ -81,6 +81,19 @@ def normalize_sources(root: Path, edition_date: str, dry_run: bool = False) -> d
             "source_title",
             "weekly_date_basis",
             "traceability_note",
+            "summary",
+            "summary_or_snippet",
+            "article_text",
+            "body_text",
+            "content",
+            "geography",
+            "place",
+            "address",
+            "address_line",
+            "facility_name",
+            "location_name",
+            "location_precision",
+            "precision",
         ]:
             if field in record:
                 normalized[-1][field] = record.get(field)

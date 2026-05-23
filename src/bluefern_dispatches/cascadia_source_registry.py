@@ -48,15 +48,56 @@ SYSTEM_TERMS = [
     "port",
     "public safety",
     "emergency",
+    "emergency declaration",
     "economy",
     "labor",
     "layoffs",
+    "staffing shortage",
+    "staff shortages",
+    "workforce shortage",
+    "school closure",
+    "school closures",
+    "school district",
+    "school budget cut",
+    "school budget cuts",
+    "clinic closure",
+    "clinic reductions",
+    "hospital access",
+    "hospital strain",
+    "transit service cut",
+    "transit cuts",
+    "ferry disruption",
+    "ferry service",
+    "burn ban",
+    "wildfire smoke",
+    "flood recovery",
+    "drought response",
+    "utility shutoff",
+    "power shutoff",
+    "outage recovery",
+    "housing displacement",
+    "food bank demand",
+    "rural access",
+    "road closure",
+    "weather-related infrastructure",
     "agriculture",
     "food insecurity",
     "environmental cleanup",
     "climate",
     "resilience",
     "government",
+]
+PRESSURE_EVIDENCE_TERMS = [
+    "infrastructure", "bridge", "water system", "public health", "emergency management",
+    "housing", "rent", "eviction", "utility", "utility shutoff", "power shutoff",
+    "hospital", "clinic", "health access", "healthcare access", "health care access",
+    "wildfire", "smoke", "drought", "flood", "recovery",
+    "transit", "ferry", "road closure", "bridge closure", "service disruption",
+    "food bank", "snap", "food support", "food insecurity", "food assistance",
+    "layoff", "layoffs", "wages", "job cuts", "unemployment",
+    "school closure", "school closures", "budget cuts", "school budget cuts",
+    "emergency services", "public safety", "staffing shortage", "service strain",
+    "government services", "government service", "access to services",
 ]
 REGION_TERMS = {
     "WA": ["washington", " wa ", "seattle", "spokane", "tacoma", "olympia", "yakima", "puget sound"],
@@ -68,6 +109,10 @@ EXCLUDED_TERMS = {
     "sports": ["sports", "game", "coach", "tournament", "playoff", "score"],
     "entertainment": ["movie", "concert", "album", "celebrity"],
     "opinion": ["opinion", "editorial", "letter to the editor"],
+    "investor_business_only": ["earnings call", "investor", "shareholder", "stock price", "merger", "acquisition"],
+    "generic_politics": ["campaign rally", "election poll", "party endorsement", "fundraising event", "candidate debate"],
+    "celebrity_or_lifestyle": ["celebrity", "fashion week", "red carpet", "movie premiere"],
+    "unrelated_crime": ["police blotter", "mugshot", "celebrity arrest"],
 }
 NAV_LINK_TEXT = {
     "about",
@@ -605,11 +650,14 @@ def should_keep_record(record: dict[str, Any], source: dict[str, Any]) -> str | 
     source_scope = str(source.get("state_scope") or "")
     explicit_scope = source_scope in {"WA", "OR", "ID", "PNW"}
     has_region = bool(matched_region_terms(text)) or explicit_scope
-    has_system = any(term in text for term in SYSTEM_TERMS) or int(source.get("tier") or 0) == 1
+    has_system = any(term in text for term in SYSTEM_TERMS)
+    has_pressure_evidence = any(term in text for term in PRESSURE_EVIDENCE_TERMS)
     if not has_region:
         return "no_wa_or_id_connection"
     if not has_system:
         return "no_public_systems_term"
+    if not has_pressure_evidence:
+        return "no_explicit_pressure_evidence"
     return None
 
 

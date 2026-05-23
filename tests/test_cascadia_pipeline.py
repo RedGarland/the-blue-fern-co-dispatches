@@ -74,6 +74,9 @@ def test_cascadia_source_registry_loads_free_sources(cascadia_work_root):
     assert any(source["source_id"] == "king-county-news" for source in registry)
     assert any(source["source_id"] == "opb-news-feed" and source["source_type"] == "rss" for source in registry)
     assert any(source["source_id"] == "idaho-puc-news" for source in registry)
+    assert any(source["source_id"] == "wa-wsf-service-alerts" for source in registry)
+    assert any(source["source_id"] == "or-trimet-alerts" for source in registry)
+    assert any(source["source_id"] == "id-valley-regional-transit-alerts" for source in registry)
     assert any(source["source_id"] == "manual-weekly-supplements" and source["tier"] == 4 for source in registry)
     assert all("url" in source for source in registry)
     assert not any("api_key" in json.dumps(source).lower() for source in registry)
@@ -1541,6 +1544,24 @@ def test_deterministic_summary_uses_snippet_and_safe_fallbacks():
     assert "cost" not in snippet_summary.lower()
     assert fallback_summary.startswith("This source was flagged as a Healthcare signal for Oregon")
     assert "based on its title and source metadata" in fallback_summary
+
+
+def test_deterministic_summary_removes_internal_rationale_and_incomplete_modal_sentence():
+    record = {
+        "title": "Idaho rural hospitals face pressure",
+        "text": (
+            "Idaho’s rural hospital leaders said financial pressures are rising. "
+            "In three states, Democratic lawmakers introduced bills this session that would allow. "
+            "It is included because the source metadata ties it to housing in Idaho."
+        ),
+        "category_hint": "Housing",
+        "region_scope": "ID",
+    }
+    summary = deterministic_summary(record)
+    assert "It is included because" not in summary
+    assert "source metadata ties it" not in summary
+    assert "that would allow." not in summary
+    assert "Idaho’s rural hospital leaders said financial pressures are rising." in summary
 
 
 def test_why_it_matters_is_category_and_region_grounded():

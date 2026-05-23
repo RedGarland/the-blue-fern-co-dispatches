@@ -101,6 +101,7 @@ class DedupeResult:
     stories: list[dict[str, Any]]
     report: dict[str, Any]
     memory: list[dict[str, Any]]
+    decisions: list[dict[str, Any]]
 
 
 def read_json_list(path: Path) -> list[dict[str, Any]]:
@@ -300,6 +301,37 @@ def merge_story(base: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any
     return merged
 
 
+def _is_preferred_story(candidate: dict[str, Any], current: dict[str, Any]) -> bool:
+    candidate_score = int(candidate.get("score") or 0)
+    current_score = int(current.get("score") or 0)
+    if candidate_score != current_score:
+        return candidate_score > current_score
+    candidate_sources = len(story_source_urls(candidate))
+    current_sources = len(story_source_urls(current))
+    if candidate_sources != current_sources:
+        return candidate_sources > current_sources
+    return len(str(candidate.get("summary") or "")) > len(str(current.get("summary") or ""))
+
+
+def _gaza_event_key(story: dict[str, Any]) -> str:
+    text = normalize_text(
+        " ".join(
+            [
+                str(story.get("title") or ""),
+                str(story.get("summary") or ""),
+                " ".join(str(record.get("title") or "") for record in story.get("source_records") or [] if isinstance(record, dict)),
+            ]
+        )
+    )
+    actor = bool(re.search(r"\b(israeli forces?|israel|commandos?)\b", text))
+    action = bool(re.search(r"\b(board|boarding|intercept|intercepting|storm|seize|seizing)\b", text))
+    obj = bool(re.search(r"\b(gaza bound aid flotilla|gaza bound flotilla|global sumud flotilla|aid flotilla|flotilla|vessels?|boats?)\b", text))
+    location = bool(re.search(r"\b(near cyprus|off cyprus|cyprus|international waters|maritime blockade)\b", text))
+    if actor and action and obj and location:
+        return "gaza_flotilla_interception_israeli_forces_cyprus"
+    return ""
+
+
 def has_same_topic(left: dict[str, Any], right: dict[str, Any]) -> bool:
     if normalize_text(left.get("category")) and normalize_text(left.get("category")) != normalize_text(right.get("category")):
         return False
@@ -487,7 +519,7 @@ def is_weekly_cascadia_edition(edition_dir: Path, edition_date: str) -> bool:
     return manifest.get("briefing_type") == "weekly" and manifest.get("coverage_end") == edition_date
 
 
-def collapse_within_edition(stories: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+def collapse_within_edition(stories: list[dict[str, Any]], dispatch_slug: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     included: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
     groups: list[dict[str, Any]] = []
@@ -497,6 +529,17 @@ def collapse_within_edition(stories: list[dict[str, Any]]) -> tuple[list[dict[st
         for index, existing in enumerate(included):
             candidate_urls = {normalize_url(url) for url in story_source_urls(story)}
             existing_urls = {normalize_url(url) for url in story_source_urls(existing)}
+            duplicate_reason = ""
+            normalized_event_key = ""
+            if dispatch_slug == "gaza":
+                existing_event_key = _gaza_event_key(existing)
+                candidate_event_key = _gaza_event_key(story)
+                if existing_event_key and candidate_event_key and existing_event_key == candidate_event_key:
+                    match_index = index
+                    match_reasons = ["same_event_flotilla_interception"]
+                    duplicate_reason = "same_event_flotilla_interception"
+                    normalized_event_key = existing_event_key
+                    break
             if candidate_urls and candidate_urls & existing_urls:
                 match_index = index
                 match_reasons = ["within_edition_source_url"]
@@ -513,9 +556,28 @@ def collapse_within_edition(stories: list[dict[str, Any]]) -> tuple[list[dict[st
             included.append(story)
             continue
         target = included[match_index]
-        included[match_index] = merge_story(target, story)
-        skipped.append({"story_id": story.get("story_id"), "title": story.get("title"), "classification": "duplicate_merged", "reasons": match_reasons})
-        groups.append({"kept_story_id": target.get("story_id"), "merged_story_ids": [story.get("story_id")], "reasons": match_reasons})
+        preferred = story if _is_preferred_story(story, target) else target
+        secondary = target if preferred is story else story
+        merged_story = merge_story(preferred, secondary)
+        included[match_index] = merged_story
+        skipped.append(
+            {
+                "story_id": secondary.get("story_id"),
+                "title": secondary.get("title"),
+                "classification": "duplicate_merged",
+                "reasons": match_reasons,
+                "kept_story_id": preferred.get("story_id"),
+            }
+        )
+        group = {
+            "kept_story_id": preferred.get("story_id"),
+            "merged_story_ids": [secondary.get("story_id")],
+            "merged_source_ids": unique_strings(list(secondary.get("source_record_ids") or []) + list(secondary.get("source_ids") or [])),
+            "duplicate_reason": "same_event_flotilla_interception" if "same_event_flotilla_interception" in match_reasons else "within_edition_duplicate",
+            "normalized_event_key": _gaza_event_key(preferred) or _gaza_event_key(secondary) or "",
+            "reasons": match_reasons,
+        }
+        groups.append(group)
     return included, skipped, groups
 
 
@@ -542,7 +604,7 @@ def dedupe_public_stories(
         prior_rows_by_key[key] = row
     prior_rows = sorted(prior_rows_by_key.values(), key=lambda row: str(row.get("edition_date", "")), reverse=True)
     prior_dates = sorted({str(row.get("edition_date")) for row in prior_rows if row.get("edition_date")} | set(checked), reverse=True)
-    collapsed, merged_skips, duplicate_groups = collapse_within_edition(stories)
+    collapsed, merged_skips, duplicate_groups = collapse_within_edition(stories, dispatch_slug=dispatch_slug)
     included: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
     continuing: list[dict[str, Any]] = []
@@ -557,9 +619,9 @@ def dedupe_public_stories(
             "material_update": False,
             "material_update_reasons": [],
             "duplicate_reasons": list(merged.get("reasons") or []),
-            "prior_story_matched": None,
-            "prior_edition_date": None,
-            "include_decision": "skip",
+            "prior_story_matched": merged.get("kept_story_id"),
+            "prior_edition_date": edition_date,
+            "include_decision": "merge_into_existing",
             "public_rendered": False,
         }
         skipped.append(merged_decision)
@@ -623,4 +685,4 @@ def dedupe_public_stories(
     write_json(memory_path, memory, dry_run, written)
     report_path = root / "output" / "dispatches" / dispatch_slug / "editions" / edition_date / "dedupe_report.json"
     write_json(report_path, report, dry_run, written)
-    return DedupeResult(stories=included, report=report, memory=memory)
+    return DedupeResult(stories=included, report=report, memory=memory, decisions=decisions)

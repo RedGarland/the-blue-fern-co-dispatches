@@ -129,6 +129,38 @@ def test_same_title_different_source_merged_within_edition():
     assert result.report["duplicate_groups"]
 
 
+def test_gaza_flotilla_same_event_titles_merge_into_one_group():
+    root = make_root()
+    a = story(
+        "a",
+        "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+        "https://example.com/bbc-flotilla",
+        publisher="BBC",
+    )
+    b = story(
+        "b",
+        "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
+        "https://example.com/aj-intercept",
+        publisher="Al Jazeera",
+    )
+    c = story(
+        "c",
+        "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
+        "https://example.com/aj-storm",
+        publisher="Al Jazeera",
+    )
+    result = dedupe_public_stories(root, "gaza", "2026-05-18", [a, b, c])
+    assert len(result.stories) == 1
+    merged_story = result.stories[0]
+    assert len(merged_story["source_urls"]) == 3
+    assert len(result.report["duplicate_groups"]) == 2
+    assert all(group["duplicate_reason"] == "same_event_flotilla_interception" for group in result.report["duplicate_groups"])
+    assert all(group["normalized_event_key"] == "gaza_flotilla_interception_israeli_forces_cyprus" for group in result.report["duplicate_groups"])
+    merged_decisions = [item for item in result.decisions if item.get("include_decision") == "merge_into_existing"]
+    assert len(merged_decisions) == 2
+    assert all(item.get("public_rendered") is False for item in merged_decisions)
+
+
 def test_same_normalized_title_without_material_update_skipped():
     root = make_root()
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")
@@ -315,6 +347,91 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
     assert "https://example.com/a" in html
     assert "https://example.org/b" in html
     assert (root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-08" / "dedupe_report.json").exists()
+
+
+def test_gaza_run_merges_flotilla_same_event_and_keeps_unrelated_story(monkeypatch):
+    root = make_root()
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", root / "output" / "backups" / "gaza")
+    source_dir = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-18"
+    source_dir.mkdir(parents=True)
+    source_dir.joinpath("manual_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-05-18-bbc-middle-east-5c5de389ca71",
+                    "title": "Israeli forces board Gaza-bound flotilla near Cyprus, activists say",
+                    "url": "https://www.bbc.com/news/articles/abc",
+                    "publisher": "BBC",
+                    "published_at": "2026-05-18T01:00:00Z",
+                    "retrieved_at": "2026-05-18T02:00:00Z",
+                    "summary_or_snippet": "Israeli forces board Gaza-bound aid flotilla near Cyprus.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-2026-05-18-aljazeera-middle-east-48e69cdad3d6",
+                    "title": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus",
+                    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/18/flotilla-intercept",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-05-18T01:10:00Z",
+                    "retrieved_at": "2026-05-18T02:10:00Z",
+                    "summary_or_snippet": "Israeli forces begin intercepting Gaza-bound aid flotilla near Cyprus.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-2026-05-18-aljazeera-middle-east-e3f36973737f",
+                    "title": "Israeli forces storm Gaza-bound aid flotilla off Cyprus",
+                    "url": "https://www.aljazeera.com/news/2026/5/18/flotilla-storm",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-05-18T01:20:00Z",
+                    "retrieved_at": "2026-05-18T02:20:00Z",
+                    "summary_or_snippet": "Israeli forces storm Gaza-bound aid flotilla off Cyprus.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-2026-05-18-other-story",
+                    "title": "Growing bread queues in Gaza as Israel restricts fuel, flour imports",
+                    "url": "https://www.aljazeera.com/news/2026/5/18/growing-bread-lines-gaza",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-05-18T03:00:00Z",
+                    "retrieved_at": "2026-05-18T04:00:00Z",
+                    "summary_or_snippet": "Bread lines grow amid fuel and flour restrictions.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_gaza_dispatch(root, "2026-05-18", from_manual_sources=True, dry_run=False, render=True, all_steps=False)
+    assert result["ok"] is True
+    html = (root / "output" / "site" / "gaza" / "editions" / "2026-05-18" / "index.html").read_text(encoding="utf-8")
+    glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
+    assert glance.count("flotilla") == 1
+    assert "Growing bread queues in Gaza as Israel restricts fuel, flour imports" in html
+    assert "https://www.bbc.com/news/articles/abc" in html
+    assert "https://www.aljazeera.com/video/newsfeed/2026/5/18/flotilla-intercept" in html
+    assert "https://www.aljazeera.com/news/2026/5/18/flotilla-storm" in html
+
+    dedupe = json.loads((root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-18" / "dedupe_report.json").read_text(encoding="utf-8"))
+    assert len(dedupe["duplicate_groups"]) >= 1
+    assert any(group["duplicate_reason"] == "same_event_flotilla_interception" for group in dedupe["duplicate_groups"])
+    curation = json.loads((root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-18" / "curation_manifest.json").read_text(encoding="utf-8"))
+    merged_rows = [row for row in curation if row.get("include_decision") == "merge_into_existing"]
+    assert merged_rows
+    assert all(row.get("public_rendered") is False for row in merged_rows)
 
 
 def test_cascadia_render_writes_dedupe_report_and_keeps_weekly_archive_only(cascadia_work_root):

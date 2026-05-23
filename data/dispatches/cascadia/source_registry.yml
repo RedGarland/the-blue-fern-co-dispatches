@@ -769,6 +769,34 @@ sources:
     refresh_mode: current
     notes: Local route and operations disruptions in Eugene and Lane County.
 
+  - source_id: or-pge-updates
+    name: Portland General Electric News
+    tier: 2
+    source_type: official_page
+    url: https://portlandgeneral.com/news
+    enabled: true
+    state_scope: OR
+    geographic_scope: Oregon
+    category_hints: [utilities, power, outage_recovery, infrastructure]
+    reliability_tier: public-utility
+    publisher: Portland General Electric
+    refresh_mode: archive_limited
+    notes: Utility outage, restoration, and reliability updates.
+
+  - source_id: id-achd-alerts
+    name: Central District Health News
+    tier: 1
+    source_type: official_page
+    url: https://cdh.idaho.gov/news/
+    enabled: true
+    state_scope: ID
+    geographic_scope: Boise region
+    category_hints: [health_access_strain, clinic_reductions, public_safety]
+    reliability_tier: official-public
+    publisher: Central District Health
+    refresh_mode: archive_limited
+    notes: Regional health district updates for Boise-area access pressure.
+
   - source_id: id-valley-regional-transit-alerts
     name: Valley Regional Transit Service Alerts
     tier: 1

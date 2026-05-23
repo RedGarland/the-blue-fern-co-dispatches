@@ -1845,7 +1845,14 @@ def test_generic_build_preserves_real_cascadia_public_edition(cascadia_work_root
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")
     curate_sources(cascadia_work_root, "2026-05-03")
-    render_cascadia_edition(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
 
     result = build_site(cascadia_work_root, backup_root=cascadia_work_root / "backup")
 
@@ -1861,7 +1868,14 @@ def test_pages_publish_copies_real_cascadia_public_edition(cascadia_work_root):
     ingest_sources(cascadia_work_root, "2026-05-03")
     normalize_sources(cascadia_work_root, "2026-05-03")
     curate_sources(cascadia_work_root, "2026-05-03")
-    render_cascadia_edition(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
     old_daily_dir = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
     old_daily_dir.mkdir(parents=True)
     (old_daily_dir / "index.html").write_text("<p>Old daily Cascadia edition</p>", encoding="utf-8")
@@ -2075,11 +2089,34 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "Open latest Cascadia map" in html
 
     map_data = read_json(site_edition / "map_data.json")
-    assert map_data["markers"]
-    assert all(marker.get("source_url", "").startswith("http") for marker in map_data["markers"])
-    assert all(marker.get("title") and marker.get("category") for marker in map_data["markers"])
-    assert all(marker.get("state_or_region") and marker.get("publisher") for marker in map_data["markers"])
-    assert all(marker.get("lat") is not None and marker.get("lon") is not None for marker in map_data["markers"])
+    assert map_data["markers"] or map_data["regional_reports"]
+    assert isinstance(map_data["grouped_markers"], list)
+    assert "regional_reports" in map_data
+    local_count = len(map_data["markers"])
+    regional_count = len(map_data["regional_reports"])
+    expected_fallback = (local_count == 0 and regional_count > 0) or (local_count < 3 and regional_count > 0)
+    assert map_data.get("show_regional_default") is expected_fallback
+    expected_mode = "local"
+    if local_count == 0 and regional_count > 0:
+        expected_mode = "regional_fallback"
+    elif local_count < 3 and regional_count > 0:
+        expected_mode = "sparse_local_plus_regional"
+    assert map_data.get("default_view_mode") == expected_mode
+    assert map_data.get("diagnostics", {}).get("default_view_mode") == expected_mode
+    assert map_data.get("diagnostics", {}).get("local_marker_count") == local_count
+    assert map_data.get("diagnostics", {}).get("regional_report_count") == regional_count
+    assert map_data.get("coverage_start") == "2026-04-27"
+    assert map_data.get("coverage_end") == "2026-05-03"
+    visible_rows = list(map_data["markers"]) + list(map_data["regional_reports"])
+    assert all(marker.get("source_url", "").startswith("http") for marker in visible_rows)
+    assert all(marker.get("title") and marker.get("category") for marker in visible_rows)
+    assert all(marker.get("state_or_region") and marker.get("publisher") for marker in visible_rows)
+    assert all(marker.get("lat") is not None and marker.get("lon") is not None for marker in visible_rows)
+    assert all(marker.get("place") and marker.get("state") and marker.get("region_label") for marker in visible_rows)
+    assert all(marker.get("precision_note") for marker in visible_rows)
+    assert all(marker.get("pressure_type") != "Regional systems pressure" for marker in visible_rows)
+    assert all("reports" in group for group in map_data["grouped_markers"])
+    assert all("pressure_areas" in group for group in map_data["grouped_markers"])
 
     curation = read_json(site_edition / "curation_manifest.json")
     public_ids = {story["story_id"] for story in curation if story.get("included_in_public_summary")}

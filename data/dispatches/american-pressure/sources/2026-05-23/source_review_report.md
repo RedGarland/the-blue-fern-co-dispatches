@@ -231,3 +231,35 @@
 ## Recommendation Before Weekly Run
 - Keep `manual_sources.json` empty until direct publisher/institution links are verified and source-backed summaries are confirmed.
 - Resolve at least 4 credible current-development records across pillars, with at least 3 story-plus-data pairings, then rerun readiness check.
+
+## Durable URL Resolution Results (2026-05-23 pass)
+- Resolved and promoted (4):
+1. Arizona summer electricity bills to rise: Tips and financial aid options -> https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options
+2. California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities -> https://dot.ca.gov/news-releases/news-release-2026-010
+3. Buffalo County residents assess damage after Saturday storm -> https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/
+4. WARN Listings (Republic National Distributing Company, 146 Oregon layoffs) -> https://ccwd.hecc.oregon.gov/Layoff/WARN
+
+- Unresolved or not promoted (17):
+1. Last Needy Family Fund donation aids Delaware families statewide: direct publisher URL not confirmed during this pass.
+2. Santa Cruz County food bank sees 25% increase in need as costs rise: direct URL found on KSBW, but publication date (`2026-05-13`) falls outside target week window.
+3. 16M Californians Struggling To Afford Food, Advocates Warn: source outlet quality/reliability uncertain for durable inclusion.
+4. California Utility Bills Are Rising Again Ahead of Summer. Here?s What LA Families Can Do Now: source outlet quality/reliability uncertain for durable inclusion.
+5. Pennsylvania Seniors: Don?t Miss the June 30, 2026 Deadline for the Property Tax & Rent Rebate Program: source outlet quality/reliability uncertain for durable inclusion.
+6. Hospital CEO warns Arkansas? hospital system is unsustainable, rural medical centers at risk: direct durable article URL not confirmed in this pass.
+7. Major fast food franchisee and McDonald's rival hit with $20 'minimum' policy: low-reliability/tabloid-style source.
+8. OPITQ: Chapter 11 bankruptcy, declining rental income, and ongoing liquidity risks threaten viability: investor-market framing and unclear public impact.
+9. Ludhiana: Residents face rush at hospital pharmacies as over 3,200 shops remained shut amid stir: non-U.S. relevance.
+10. 'Disgusted' patients furious as bird poo covers Basildon Hospital: non-U.S. relevance.
+11. New Medicaid Rules Could Disrupt Care for Rare Disease Patients Across California: direct durable institutional source not confirmed; outlet reliability uncertain.
+12. Portland Booze Workers Brace as 146 Jobs Cut in Oregon Liquor Shakeup: replaced with official WARN listing source.
+13. Global Auto Parts Manufacturer Announces 127 Layoffs at Two Georgia Facilities: direct official notice not confirmed in this pass.
+14. New York WARN Act: No AI-Related Layoffs Reported in First Year of Adding AI-Related Disclosure to the System: legal analysis source, limited direct household impact evidence.
+15. US funding cuts hamper response to deadly Ebola crisis, aid workers say: non-U.S. localized public-impact scope for AP pillar set.
+16. Small New Mexico community evacuated as wildfire races across 10,000 acres and threatens buildings: direct primary/local reporting not confirmed in this pass.
+17. Hartford Hospital?s $1B campus overhaul targets emergency department overcrowding: direct durable article URL not confirmed in this pass.
+
+## Updated Pillar Coverage From Promoted Sources
+- `housing_household_cost_pressure`: 1
+- `environmental_pressure`: 2
+- `labor_income_pressure`: 1
+- Missing promoted pillars in this pass: `food_pressure`, `financial_distress_pressure`, `health_access_pressure`, `local_system_strain`

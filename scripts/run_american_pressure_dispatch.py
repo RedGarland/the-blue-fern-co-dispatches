@@ -1192,7 +1192,7 @@ def render_map_html(edition_date: str, map_data: dict[str, Any]) -> str:
       <p class="eyebrow">American Pressure Map</p>
       <h1>American Pressure Map</h1>
       <p class="ap-map-subtitle">Source-backed signs of household or community strain across the U.S. ({html.escape(week_range)}).</p>
-      <p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/dashboard/">Dashboard</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>
+      <p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>
     </header>
     <section class="ap-map-shell">
       <div class="ap-map-controls">

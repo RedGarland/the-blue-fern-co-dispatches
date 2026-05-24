@@ -1207,6 +1207,7 @@ def test_map_page_has_aggregated_and_individual_view_toggle(work_root):
     map_html = (work_root / "output" / "site" / "american-pressure" / "map" / "index.html").read_text(encoding="utf-8")
     assert "Show grouped places" in map_html
     assert "Show individual reports" in map_html
+    assert "/american-pressure/dashboard/" not in map_html
     assert "Current week/current edition" in map_html
     assert '<option value="last_30_days" selected>Last 30 days</option>' in map_html
     assert "Source-backed reports:" in map_html

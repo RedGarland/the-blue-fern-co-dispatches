@@ -945,7 +945,7 @@ def _refresh_american_pressure_map_route(site_root: Path, edition_date: str, dry
         f'<title>American Pressure Map</title><link rel="stylesheet" href="../assets/site.css"></head><body>'
         f'<main class="home ap-map-home"><header class="ap-map-top"><p class="eyebrow">American Pressure Map</p>'
         f'<h1>American Pressure Map</h1><p class="ap-map-subtitle">Source-backed signs of household or community strain across the U.S. ({html.escape(display_date_range)}).</p>'
-        f'<p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/dashboard/">Dashboard</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>'
+        f'<p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>'
         f'</header></main></body></html>'
     )
     html_text = map_html_path.read_text(encoding="utf-8") if map_html_path.exists() else fallback_map_html

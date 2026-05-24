@@ -1,6 +1,7 @@
 ﻿from __future__ import annotations
 
 import json
+import inspect
 import subprocess
 import sys
 import time
@@ -863,6 +864,26 @@ def test_tooltip_instantiation_does_not_break_import():
 
     tooltip = cp.Tooltip(DummyWidget(), "x")
     assert tooltip.text == "x"
+
+
+def test_ap_review_tab_contains_publish_and_checklist_controls():
+    src = inspect.getsource(cp.DispatchesControlPanel._build_ap_review_tab)
+    for label in (
+        "Scout Week",
+        "Generate Review Report",
+        "Load Candidates",
+        "Save Review Decisions",
+        "Show Recommended Review Queue",
+        "Clear Queue/Filters",
+        "Check Weekly Readiness",
+        "Generate HTML",
+        "Open Generated HTML",
+        "Publish to Pages Locally",
+        "Run Publish Checklist",
+        "Copy Checklist Report",
+        "Push Pages Live",
+    ):
+        assert label in src
 
 
 def test_week_selector_uses_saturday_as_edition_date():

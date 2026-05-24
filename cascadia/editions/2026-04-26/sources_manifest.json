@@ -1,0 +1,192 @@
+[
+  {
+    "source_record_id": "hist-e2dbf1568037c7f3",
+    "source_id": "gdelt",
+    "title": "Microsoft AI demands more power . Can a WA fusion company supply it ?",
+    "url": "https://www.seattletimes.com/seattle-news/climate-lab/microsoft-ai-demands-more-power-can-a-wa-fusion-company-supply-it",
+    "publisher": "seattletimes.com",
+    "published_at": "2026-04-26T14:15:00Z",
+    "retrieved_at": "2026-05-09T03:23:33.149068+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-621be055b03d"
+    ],
+    "claim_ids": [
+      "story-621be055b03d"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "WA",
+    "category_hint": "Environment and climate",
+    "source_type": "historical_search",
+    "provider_id": "gdelt",
+    "provider_name": "GDELT 2.1 Document API",
+    "query_used": "(Washington OR Oregon OR Idaho OR \"Pacific Northwest\" OR Cascadia OR Seattle OR Portland OR Spokane) AND (infrastructure OR utility OR utilities OR power OR water OR transportation OR bridge OR \"road closure\" OR rail OR port)",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "seattle"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "unknown",
+    "traceability_note": "Retrieved from public historical search provider; title, URL, publisher, date, snippet, and query metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-idaho-enduring-plan",
+    "source_id": "manual",
+    "title": "Gov. Little spotlights priorities in Enduring Idaho plan",
+    "url": "https://gov.idaho.gov/pressrelease/gov-little-spotlights-priorities-in-enduring-idaho-plan",
+    "publisher": "Office of the Governor of Idaho",
+    "published_at": "2026-04-22T12:00:00Z",
+    "retrieved_at": "2026-05-09T03:23:33.149068+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-2b140a8ca79c"
+    ],
+    "claim_ids": [
+      "story-2b140a8ca79c"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "ID",
+    "category_hint": "Government and public services",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "provider_name": "Project-local manual historical sources",
+    "query_used": "manual_sources.json",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-idaho-highway-53-crash",
+    "source_id": "manual",
+    "title": "Blocking Crash Highway 53 @12, Rathdrum, ID",
+    "url": "https://isp.idaho.gov/blocking-crash-highway-53-12-rathdrum-id",
+    "publisher": "Idaho State Police",
+    "published_at": "2026-04-20T18:21:00Z",
+    "retrieved_at": "2026-05-09T03:23:33.149068+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-ad8c9c07aa05"
+    ],
+    "claim_ids": [
+      "story-ad8c9c07aa05"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "ID",
+    "category_hint": "Public safety",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "provider_name": "Project-local manual historical sources",
+    "query_used": "manual_sources.json",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-or-drought-emergency",
+    "source_id": "manual",
+    "title": "Governor Kotek Declares Drought Emergency in Crook, Grant, Jackson, Jefferson, Morrow, and Wallowa Counties",
+    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-declares-drought-emergency-in-crook-grant-jackson-jefferson-morrow-and-wallowa-counties",
+    "publisher": "Oregon Governor's Office",
+    "published_at": "2026-04-23T12:00:00Z",
+    "retrieved_at": "2026-05-09T03:23:33.149068+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-5a099769cda5"
+    ],
+    "claim_ids": [
+      "story-5a099769cda5"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "OR",
+    "category_hint": "Environment and climate",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "provider_name": "Project-local manual historical sources",
+    "query_used": "manual_sources.json",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "oregon"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  },
+  {
+    "source_record_id": "manual-2026-04-20-or-housing-bills",
+    "source_id": "manual",
+    "title": "Governor Kotek Signs Bills to Expand Housing Options for Seniors and Working Families",
+    "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/partners-gather-in-woodburn-to-celebrate-progress-addressing-oregons-long-term-housing-shortage",
+    "publisher": "Oregon Governor's Office",
+    "published_at": "2026-04-22T12:00:00Z",
+    "retrieved_at": "2026-05-09T03:23:33.149068+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-b18904e9e010"
+    ],
+    "claim_ids": [
+      "story-b18904e9e010"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-08",
+    "edition_date": "2026-04-26",
+    "coverage_start": "2026-04-20",
+    "coverage_end": "2026-04-26",
+    "coverage_label": "Apr 20\u201326, 2026",
+    "region_scope": "OR",
+    "category_hint": "Housing and homelessness",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "provider_name": "Project-local manual historical sources",
+    "query_used": "manual_sources.json",
+    "search_start_date": "2026-04-20",
+    "search_end_date": "2026-04-26",
+    "region_terms_matched": [
+      "oregon"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "editorial-record",
+    "traceability_note": "Project-local manual source supplement; URL and supplied metadata preserved."
+  }
+]

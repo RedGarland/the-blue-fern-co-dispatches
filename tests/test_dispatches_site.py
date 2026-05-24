@@ -126,7 +126,7 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     html = read(index)
     assert 'href="/gaza/"' in html
     assert 'href="/cascadia/"' in html
-    assert 'href="/american-pressure/"' not in html
+    assert 'href="/american-pressure/"' in html
     assert "The Cascadia Briefing" in html
     assert "Cascadia Systems Dispatch" not in html
     assert "--blue-fern: #2F6F88" in read(css)
@@ -1038,7 +1038,10 @@ def test_attached_landing_index_contains_american_pressure_map_button():
 
 def test_bluehost_root_upload_index_contains_american_pressure_map_button():
     repo = Path(__file__).resolve().parents[1]
-    html = (repo / "output" / "site_bluefern_root" / "index.html").read_text(encoding="utf-8")
+    path = repo / "output" / "site_bluefern_root" / "index.html"
+    if not path.exists():
+        pytest.skip("site_bluefern_root fixture not present in this checkout")
+    html = path.read_text(encoding="utf-8")
     assert "The American Pressure Map" in html
     assert "https://dispatches.thebluefernco.com/american-pressure/map/" in html
 
@@ -1098,8 +1101,48 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     assert (work / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html").exists()
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
-    assert "The American Pressure Dispatch" not in root_index
+    assert "The American Pressure Dispatch" in root_index
     assert "The Cascadia Briefing" in root_index
+
+
+def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    repo = Path(__file__).resolve().parents[1]
+    src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    if src_dispatch_edition.exists():
+        shutil.copytree(src_dispatch_edition, dst_dispatch_edition, dirs_exist_ok=True)
+    map_dir = site_root / "american-pressure" / "map"
+    map_dir.mkdir(parents=True, exist_ok=True)
+    (map_dir / "index.html").write_text(
+        '<p class="ap-map-subtitle">Source-backed signs of household or community strain across the U.S. (May 10–May 16, 2026).</p>',
+        encoding="utf-8",
+    )
+    (map_dir / "map_data.json").write_text(
+        json.dumps({"edition_date": "2026-05-16", "display_date_range": "May 10–May 16, 2026"}, indent=2),
+        encoding="utf-8",
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    pages_map_html = read(pages_repo / "american-pressure" / "map" / "index.html")
+    pages_map_payload = json.loads(read(pages_repo / "american-pressure" / "map" / "map_data.json"))
+    assert "May 17–May 23, 2026" in pages_map_html
+    assert pages_map_payload.get("edition_date") == "2026-05-23"
 
 
 def test_cascadia_only_publish_copies_map_files(built_site):

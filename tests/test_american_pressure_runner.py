@@ -1492,6 +1492,33 @@ def test_baseline_only_items_are_labeled_in_public_outputs(work_root):
     assert "Baseline/context item:" in md
 
 
+def test_edition_page_uses_local_dashboard_link_not_global_dashboard_route(work_root):
+    manual = [
+        _record(
+            "food-story",
+            "food_pressure",
+            "Food pressure story",
+            "Food bank demand rose this week.",
+            "https://example.com/food-story",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-23", manual)
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-23",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-23" / "index.html").read_text(encoding="utf-8")
+    assert 'href="dashboard.html"' in html
+    assert 'href="/american-pressure/dashboard/"' not in html
+
+
 def test_local_system_story_uses_local_system_headline_not_housing_headline(work_root):
     manual = [
         _record(

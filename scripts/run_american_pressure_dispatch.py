@@ -2685,7 +2685,7 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
     pillars_present, pillars_missing, _, _ = _coverage(stories, sources)
     display = display_date_range or edition_date
     chunks: list[str] = ["<h1>The American Pressure Dispatch</h1>", f"<p class=\"eyebrow\">Weekly briefing / {display}</p>"]
-    chunks.append('<p><a href="/american-pressure/dashboard/">View Dashboard</a> | <a href="/american-pressure/map/">View Map</a> | <a href="/american-pressure/editions/' + html.escape(edition_date) + '/sources_manifest.json">View Source Ledger</a></p>')
+    chunks.append('<p><a href="dashboard.html">View Dashboard</a> | <a href="/american-pressure/map/">View Map</a> | <a href="/american-pressure/editions/' + html.escape(edition_date) + '/sources_manifest.json">View Source Ledger</a></p>')
     chunks.append("<p>This week’s dispatch is based on source-backed reporting collected so far. It is not a complete census of American hardship.</p>")
     item_counts = _item_type_counts(stories)
     current_developments = item_counts.get("current_week_development", 0)

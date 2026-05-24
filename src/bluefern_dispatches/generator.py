@@ -4,10 +4,11 @@ import argparse
 import html
 import json
 import os
+import re
 import subprocess
 import shutil
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -54,7 +55,7 @@ ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure")
 DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
     "gaza": {"label": "Gaza", "public_visible": True},
     "cascadia": {"label": "Cascadia", "public_visible": True},
-    "american-pressure": {"label": "American Pressure", "public_visible": False},
+    "american-pressure": {"label": "American Pressure", "public_visible": True},
 }
 DISPATCH_LABELS = {slug: str(meta.get("label") or slug) for slug, meta in DISPATCH_CATALOG.items()}
 ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure")
@@ -906,6 +907,45 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
     )
 
 
+def _display_date_range_for_week(edition_date: str) -> str:
+    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    start = end - timedelta(days=6)
+    return f"{start.strftime('%B')} {start.day}\u2013{end.strftime('%B')} {end.day}, {end.year}"
+
+
+def _refresh_american_pressure_map_route(site_root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> None:
+    map_dir = site_root / "american-pressure" / "map"
+    map_data_path = map_dir / "map_data.json"
+    map_html_path = map_dir / "index.html"
+    edition_manifest_path = site_root / "american-pressure" / "editions" / edition_date / "edition_manifest.json"
+    display_date_range = _display_date_range_for_week(edition_date)
+    if edition_manifest_path.exists():
+        try:
+            manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
+            display_date_range = str(manifest.get("display_date_range") or display_date_range)
+        except json.JSONDecodeError:
+            pass
+    if map_data_path.exists():
+        try:
+            payload = json.loads(map_data_path.read_text(encoding="utf-8"))
+            if isinstance(payload, dict):
+                payload["edition_date"] = edition_date
+                payload["display_date_range"] = display_date_range
+                write_text(map_data_path, json.dumps(payload, indent=2), dry_run, wrote)
+        except json.JSONDecodeError:
+            pass
+    if map_html_path.exists():
+        html_text = map_html_path.read_text(encoding="utf-8")
+        updated = re.sub(
+            r'(<p class="ap-map-subtitle">Source-backed signs of household or community strain across the U\.S\. \().*?(\)\.</p>)',
+            rf"\g<1>{display_date_range}\g<2>",
+            html_text,
+            count=1,
+        )
+        if updated != html_text:
+            write_text(map_html_path, updated, dry_run, wrote)
+
+
 def remove_unlistable_public_cascadia_editions(site_root: Path, dry_run: bool, wrote: list[str]) -> list[str]:
     editions_root = site_root / "cascadia" / "editions"
     if not editions_root.exists():
@@ -1302,6 +1342,8 @@ def build_site(
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
+            if dispatch.slug == "american-pressure" and edition_dates:
+                _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)

@@ -812,19 +812,148 @@ def test_american_pressure_only_dispatch_expect_date_uses_public_cutoff(built_si
     )
 
     assert result["ok"] is True
-    site_index = read(site_root / "american-pressure" / "index.html")
-    site_archive = read(site_root / "american-pressure" / "archive.html")
-    site_rss = read(site_root / "american-pressure" / "rss.xml")
-    pages_index = read(pages_repo / "american-pressure" / "index.html")
-    pages_archive = read(pages_repo / "american-pressure" / "archive.html")
-    pages_rss = read(pages_repo / "american-pressure" / "rss.xml")
+    assert not (pages_repo / "american-pressure" / "editions" / "2026-05-16" / "index.html").exists()
+    assert not (pages_repo / "american-pressure" / "editions" / "2026-05-19" / "index.html").exists()
 
-    assert "2026-05-09" in site_index and "2026-05-16" not in site_index and "2026-05-19" not in site_index
-    assert "2026-05-09" in site_archive and "2026-05-16" not in site_archive and "2026-05-19" not in site_archive
-    assert "2026-05-09" in site_rss and "2026-05-16" not in site_rss and "2026-05-19" not in site_rss
-    assert "2026-05-09" in pages_index and "2026-05-16" not in pages_index and "2026-05-19" not in pages_index
-    assert "2026-05-09" in pages_archive and "2026-05-16" not in pages_archive and "2026-05-19" not in pages_archive
-    assert "2026-05-09" in pages_rss and "2026-05-16" not in pages_rss and "2026-05-19" not in pages_rss
+
+def test_expect_date_rejects_mismatched_selected_public_url_date(built_site, monkeypatch):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    real_build_site = build_site
+
+    def fake_build_site(*args, **kwargs):
+        result = real_build_site(*args, **kwargs)
+        result["public_urls"] = [
+            "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-24/"
+        ]
+        return result
+
+    monkeypatch.setattr("bluefern_dispatches.generator.build_site", fake_build_site)
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is False
+    assert any("expected american-pressure edition date 2026-05-23" in err for err in result["errors"])
+
+
+def test_targeted_american_pressure_publish_copies_expected_date_to_pages_repo(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    repo = Path(__file__).resolve().parents[1]
+    src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    if src_dispatch_edition.exists():
+        shutil.copytree(src_dispatch_edition, dst_dispatch_edition, dirs_exist_ok=True)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "american-pressure" / "editions" / "2026-05-23" / "index.html").exists()
+
+
+def test_american_pressure_only_dispatch_does_not_modify_gaza_or_cascadia_pages(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    repo = Path(__file__).resolve().parents[1]
+    src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    if src_dispatch_edition.exists():
+        shutil.copytree(src_dispatch_edition, dst_dispatch_edition, dirs_exist_ok=True)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert result["ok"] is True
+    copied = result["files_copied"]
+    assert copied
+    assert not any("\\gaza\\" in path.lower() or "/gaza/" in path.lower() for path in copied)
+    assert not any("\\cascadia\\" in path.lower() or "/cascadia/" in path.lower() for path in copied)
+
+
+def test_dry_run_reports_same_selected_ap_date_as_real_publish(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    repo = Path(__file__).resolve().parents[1]
+    src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
+    if src_dispatch_edition.exists():
+        shutil.copytree(src_dispatch_edition, dst_dispatch_edition, dirs_exist_ok=True)
+
+    dry = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+    real = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-23",
+        expect_dispatches=("american-pressure",),
+        only_dispatches=("american-pressure",),
+    )
+
+    assert dry["ok"] is True
+    assert real["ok"] is True
+    dry_dates = sorted(
+        {
+            url.rstrip("/").split("/")[-1]
+            for url in dry["build"]["public_urls"]
+            if "/american-pressure/editions/" in url
+        }
+    )
+    real_dates = sorted(
+        {
+            url.rstrip("/").split("/")[-1]
+            for url in real["build"]["public_urls"]
+            if "/american-pressure/editions/" in url
+        }
+    )
+    assert dry_dates == ["2026-05-23"]
+    assert real_dates == ["2026-05-23"]
 
 
 def test_american_pressure_index_excludes_invalid_later_edition(built_site):

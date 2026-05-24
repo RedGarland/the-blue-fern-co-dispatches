@@ -342,7 +342,13 @@ def _build_american_pressure_dispatch(root: Path, now: str, date: str, warnings:
     )
 
 
-def seed_dispatches(root: Path, now: str, warnings: list[str], errors: list[str]) -> list[DispatchConfig]:
+def seed_dispatches(
+    root: Path,
+    now: str,
+    warnings: list[str],
+    errors: list[str],
+    dispatch_seed_dates: dict[str, str] | None = None,
+) -> list[DispatchConfig]:
     # Use explicit seed edition date if provided via env, otherwise default
     # to the current run date (the 'now' param is an ISO timestamp).
     env_date = os.getenv("BLUEFERN_SEED_EDITION_DATE")
@@ -351,6 +357,8 @@ def seed_dispatches(root: Path, now: str, warnings: list[str], errors: list[str]
     else:
         # 'now' is an ISO timestamp from build_site; extract YYYY-MM-DD
         date = (now or "").split("T")[0] or "2026-05-03"
+    dispatch_seed_dates = dispatch_seed_dates or {}
+    ap_date = dispatch_seed_dates.get("american-pressure", date)
     gaza_sources = [
         SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", date),
         SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", date),
@@ -371,7 +379,7 @@ def seed_dispatches(root: Path, now: str, warnings: list[str], errors: list[str]
             body_html=gaza_body_html(date),
             detail_artifacts=[],
         ),
-        _build_american_pressure_dispatch(root, now, date, warnings, errors),
+        _build_american_pressure_dispatch(root, now, ap_date, warnings, errors),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
@@ -1176,6 +1184,7 @@ def build_site(
     backup_root: Path = DEFAULT_BACKUP_ROOT,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
+    dispatch_seed_dates: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     site_root = root / "output" / "site"
@@ -1183,7 +1192,7 @@ def build_site(
     generated_at = datetime.now(timezone.utc).isoformat()
     warnings: list[str] = []
     errors: list[str] = []
-    all_dispatches = seed_dispatches(root, generated_at, warnings, errors)
+    all_dispatches = seed_dispatches(root, generated_at, warnings, errors, dispatch_seed_dates=dispatch_seed_dates)
     dispatches = all_dispatches
     if only_dispatches:
         dispatches = [dispatch for dispatch in all_dispatches if dispatch.slug in only_dispatches]
@@ -1211,7 +1220,10 @@ def build_site(
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = (
-            (dispatch.slug in {"cascadia", "gaza"} and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote))
+            (
+                dispatch.slug in {"cascadia", "gaza", "american-pressure"}
+                and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
+            )
             if not skip_current_edition
             else False
         )
@@ -1308,6 +1320,67 @@ def build_site(
     }
 
 
+def _expected_dispatches_for_date_checks(
+    expect_date: str | None,
+    expect_dispatches: tuple[str, ...],
+    only_dispatches: tuple[str, ...],
+) -> tuple[str, ...]:
+    if expect_dispatches:
+        dispatches_to_check = expect_dispatches
+    elif expect_date and only_dispatches:
+        dispatches_to_check = tuple(slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"})
+    else:
+        dispatches_to_check = ALL_EXPECT_DISPATCHES
+    if only_dispatches:
+        scoped = tuple(slug for slug in dispatches_to_check if slug in only_dispatches)
+        if scoped:
+            dispatches_to_check = scoped
+    return dispatches_to_check
+
+
+def _validate_build_public_urls_expected_date(
+    build: dict[str, Any],
+    expect_date: str | None,
+    expect_dispatches: tuple[str, ...],
+    only_dispatches: tuple[str, ...],
+) -> list[str]:
+    if not expect_date:
+        return []
+    errors: list[str] = []
+    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    public_urls = [str(url) for url in build.get("public_urls", [])]
+    for dispatch_slug in dispatches_to_check:
+        marker = f"/{dispatch_slug}/editions/"
+        seen_dates: set[str] = set()
+        for url in public_urls:
+            if marker not in url:
+                continue
+            tail = url.split(marker, 1)[1].strip("/")
+            candidate = tail.split("/", 1)[0]
+            if len(candidate) == 10:
+                seen_dates.add(candidate)
+        if seen_dates and seen_dates != {expect_date}:
+            errors.append(
+                f"expected {dispatch_slug} edition date {expect_date}, but selected public URLs include: {', '.join(sorted(seen_dates))}"
+            )
+    return errors
+
+
+def _filter_dispatches_for_strict_expected_url_check(
+    site_root: Path,
+    expect_date: str | None,
+    dispatches_to_check: tuple[str, ...],
+) -> tuple[str, ...]:
+    if not expect_date:
+        return ()
+    eligible: list[str] = []
+    for dispatch_slug in dispatches_to_check:
+        dispatch_edition = site_root.parents[1] / "dispatches" / dispatch_slug / "editions" / expect_date
+        if dispatch_edition.exists() or public_edition_is_listable(site_root, dispatch_slug, expect_date):
+            eligible.append(dispatch_slug)
+    return tuple(eligible)
+
+
 def is_relative_to(path: Path, parent: Path) -> bool:
     try:
         path.resolve().relative_to(parent.resolve())
@@ -1351,6 +1424,7 @@ def validate_pages_publish(
 ) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
+    planning_mode = not require_git
     root = root.resolve()
     site_root = site_root.resolve()
     pages_repo = pages_repo.resolve()
@@ -1366,34 +1440,15 @@ def validate_pages_publish(
         errors.append("pages repo path must not be the project root")
     if site_root.exists() and is_relative_to(pages_repo, site_root):
         errors.append("pages repo path must not be inside output/site")
-    if not (site_root / "index.html").exists():
+    if not (site_root / "index.html").exists() and not planning_mode:
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
-    if expect_dispatches:
-        dispatches_to_check = expect_dispatches
-    elif expect_date and only_dispatches:
-        dispatches_to_check = tuple(
-            slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"}
-        )
-    else:
-        dispatches_to_check = ALL_EXPECT_DISPATCHES
-    if only_dispatches:
-        scoped = tuple(slug for slug in dispatches_to_check if slug in only_dispatches)
-        if scoped:
-            dispatches_to_check = scoped
-    if (not only_dispatches) or ("gaza" in only_dispatches):
+    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    if ((not only_dispatches) or ("gaza" in only_dispatches)) and not planning_mode:
         if not (site_root / "gaza" / "archive.html").exists():
             errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
-    if (not only_dispatches) or ("american-pressure" in only_dispatches):
+    if ((not only_dispatches) or ("american-pressure" in only_dispatches)) and not planning_mode:
         if not (site_root / "american-pressure" / "archive.html").exists():
             errors.append(f"American Pressure archive does not exist: {site_root / 'american-pressure' / 'archive.html'}")
-    if expect_date and "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
-        archive_text = (site_root / "gaza" / "archive.html").read_text(encoding="utf-8")
-        if expect_date not in archive_text:
-            errors.append(f"output/site/gaza/archive.html does not contain expected date {expect_date}")
-    if expect_date and "american-pressure" in dispatches_to_check and (site_root / "american-pressure" / "editions" / expect_date).exists():
-        archive_text = (site_root / "american-pressure" / "archive.html").read_text(encoding="utf-8")
-        if expect_date not in archive_text:
-            errors.append(f"output/site/american-pressure/archive.html does not contain expected date {expect_date}")
     detail_files = public_site_contains_detail_artifacts(site_root)
     if detail_files:
         errors.append(f"paid/detail artifacts are present in public output: {', '.join(detail_files)}")
@@ -1403,7 +1458,12 @@ def validate_pages_publish(
     if expect_date:
         for dispatch_slug in dispatches_to_check:
             source_edition = site_root / dispatch_slug / "editions" / expect_date
-            if expect_dispatches and not source_edition.exists():
+            dispatch_edition = root / "output" / "dispatches" / dispatch_slug / "editions" / expect_date
+            if not source_edition.exists() and dispatch_edition.exists():
+                continue
+            if planning_mode:
+                continue
+            if not source_edition.exists():
                 label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
                 errors.append(f"expected {label} edition missing: {expect_date}")
             elif source_edition.exists() and not (source_edition / "index.html").exists():
@@ -1589,34 +1649,17 @@ def validate_pages_repo_after_copy(
     blocked_text = public_site_contains_blocked_public_text(pages_repo)
     if blocked_text:
         errors.append(f"blocked private artifact names are present in Pages repo: {', '.join(blocked_text)}")
-    if expect_dispatches:
-        dispatches_to_check = expect_dispatches
-    elif expect_date and only_dispatches:
-        dispatches_to_check = tuple(
-            slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"}
-        )
-    else:
-        dispatches_to_check = ALL_EXPECT_DISPATCHES
-    if only_dispatches:
-        scoped = tuple(slug for slug in dispatches_to_check if slug in only_dispatches)
-        if scoped:
-            dispatches_to_check = scoped
+    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
     if expect_date:
-        archive = pages_repo / "gaza" / "archive.html"
-        if "gaza" in dispatches_to_check and (site_root / "gaza" / "editions" / expect_date).exists():
+        if "gaza" in dispatches_to_check and public_edition_is_listable(site_root, "gaza", expect_date):
             if not (pages_repo / "gaza" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected Gaza edition missing: {expect_date}")
-            elif archive.exists() and expect_date not in archive.read_text(encoding="utf-8"):
-                errors.append(f"Pages repo Gaza archive does not contain expected date {expect_date}")
-        if "cascadia" in dispatches_to_check and (site_root / "cascadia" / "editions" / expect_date).exists():
+        if "cascadia" in dispatches_to_check and public_edition_is_listable(site_root, "cascadia", expect_date):
             if not (pages_repo / "cascadia" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected Cascadia edition missing: {expect_date}")
-        if "american-pressure" in dispatches_to_check and (site_root / "american-pressure" / "editions" / expect_date).exists():
-            ap_archive = pages_repo / "american-pressure" / "archive.html"
+        if "american-pressure" in dispatches_to_check and public_edition_is_listable(site_root, "american-pressure", expect_date):
             if not (pages_repo / "american-pressure" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected American Pressure edition missing: {expect_date}")
-            elif ap_archive.exists() and expect_date not in ap_archive.read_text(encoding="utf-8"):
-                errors.append(f"Pages repo American Pressure archive does not contain expected date {expect_date}")
     return errors
 
 
@@ -1662,14 +1705,24 @@ def publish_pages(
     only_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     public_max_dates: dict[str, str] = {}
-    if expect_date and ("american-pressure" in only_dispatches or "american-pressure" in expect_dispatches):
+    dispatch_seed_dates: dict[str, str] = {}
+    ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
+    if expect_date and ap_targeted:
         public_max_dates["american-pressure"] = expect_date
+        resolved_root = root.resolve()
+        existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / expect_date
+        existing_public_edition = resolved_root / "output" / "site" / "american-pressure" / "editions" / expect_date
+        if existing_dispatch_edition.exists() or (
+            existing_public_edition.exists() and public_edition_is_listable(resolved_root / "output" / "site", "american-pressure", expect_date)
+        ):
+            dispatch_seed_dates["american-pressure"] = expect_date
     build = build_site(
         root,
         dry_run=dry_run,
         backup_root=backup_root,
         only_dispatches=only_dispatches,
         public_max_dates=public_max_dates,
+        dispatch_seed_dates=dispatch_seed_dates,
     )
     root = root.resolve()
     site_root = root / "output" / "site"
@@ -1685,6 +1738,9 @@ def publish_pages(
         only_dispatches=only_dispatches,
     )
     errors.extend(validation_errors)
+    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    strict_dispatches = _filter_dispatches_for_strict_expected_url_check(site_root, expect_date, dispatches_to_check)
+    errors.extend(_validate_build_public_urls_expected_date(build, expect_date, strict_dispatches, only_dispatches))
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
     branch_result = {
@@ -1847,12 +1903,45 @@ def main(argv: list[str] | None = None) -> int:
             only_dispatches=only_dispatches,
         )
     else:
+        public_max_dates: dict[str, str] = {}
+        dispatch_seed_dates: dict[str, str] = {}
+        ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
+        if args.expect_date and ap_targeted:
+            public_max_dates["american-pressure"] = args.expect_date
+            resolved_root = Path.cwd().resolve()
+            existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / args.expect_date
+            existing_public_edition = resolved_root / "output" / "site" / "american-pressure" / "editions" / args.expect_date
+            if existing_dispatch_edition.exists() or (
+                existing_public_edition.exists() and public_edition_is_listable(resolved_root / "output" / "site", "american-pressure", args.expect_date)
+            ):
+                dispatch_seed_dates["american-pressure"] = args.expect_date
         result = build_site(
             Path.cwd(),
             dry_run=args.dry_run,
             backup_root=Path(args.backup_root),
             only_dispatches=only_dispatches,
+            public_max_dates=public_max_dates,
+            dispatch_seed_dates=dispatch_seed_dates,
         )
+        result_errors = list(result.get("errors", []))
+        if args.expect_date:
+            dispatches_to_check = _expected_dispatches_for_date_checks(args.expect_date, expect_dispatches, only_dispatches)
+            site_root = Path.cwd().resolve() / "output" / "site"
+            strict_dispatches = _filter_dispatches_for_strict_expected_url_check(site_root, args.expect_date, dispatches_to_check)
+            result_errors.extend(
+                _validate_build_public_urls_expected_date(result, args.expect_date, strict_dispatches, only_dispatches)
+            )
+            for dispatch_slug in dispatches_to_check:
+                edition_index = site_root / dispatch_slug / "editions" / args.expect_date / "index.html"
+                if not edition_index.exists():
+                    result_errors.append(f"expected {dispatch_slug} edition missing from output/site: {args.expect_date}")
+        if result_errors:
+            result["errors"] = result_errors
+            result["ok"] = False
+        result_warnings = list(result.get("warnings", []))
+        result_warnings.append("No --pages-repo provided: wrote only to output/site and did not modify a Pages repo.")
+        result["warnings"] = result_warnings
+        result["pages_repo_modified"] = False
     print(json.dumps(result, indent=2))
     return 0 if result["ok"] else 1
 

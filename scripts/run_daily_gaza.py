@@ -6,8 +6,6 @@ import os
 import re
 import subprocess
 import sys
-import tempfile
-import time
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -39,6 +37,14 @@ from scripts.publish_gaza_historical import (
     validate_public_site_has_no_detail_files,
     valid_source_errors,
 )
+from scripts.validation_profiles import (
+    PROFILE_GAZA_DAILY,
+    apply_env_profile,
+    get_profile,
+    make_pytest_basetemp,
+    profile_names,
+    pytest_command,
+)
 
 
 DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
@@ -56,6 +62,11 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "rss_updated",
     "tests_run",
     "tests_ok",
+    "validation_profile",
+    "tests_command",
+    "skipped_unrelated_tests",
+    "publish_blocked",
+    "publish_blocked_reason",
     "pages_repo_updated",
     "pages_branch",
     "pages_commit_sha",
@@ -301,14 +312,7 @@ def generation_command(edition_date: str) -> list[str]:
     ]
 
 
-def make_pytest_basetemp() -> Path:
-    unique = f"bluefern-pytest-gaza-{os.getpid()}-{int(time.time() * 1000)}"
-    path = Path(tempfile.gettempdir()) / unique
-    path.mkdir(parents=True, exist_ok=True)
-    return path
-
-
-def run_tests(pytest_basetemp: Path) -> subprocess.CompletedProcess[str]:
+def run_tests(validation_profile: str, pytest_basetemp: Path) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     smtp_env_names = (
         "SMTP_HOST",
         "SMTP_PORT",
@@ -328,19 +332,8 @@ def run_tests(pytest_basetemp: Path) -> subprocess.CompletedProcess[str]:
     )
     saved = {name: os.environ.pop(name) for name in smtp_env_names if name in os.environ}
     try:
-        return run_command(
-            [
-                sys.executable,
-                "-B",
-                "-m",
-                "pytest",
-                "-q",
-                "-p",
-                "no:cacheprovider",
-                "--basetemp",
-                str(pytest_basetemp),
-            ]
-        )
+        cmd = pytest_command(validation_profile, pytest_basetemp)
+        return run_command(cmd), cmd
     finally:
         os.environ.update(saved)
 
@@ -397,6 +390,11 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "rss_updated": False,
         "tests_run": False,
         "tests_ok": None,
+        "validation_profile": args.validation_profile,
+        "tests_command": None,
+        "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
+        "publish_blocked": False,
+        "publish_blocked_reason": None,
         "pages_repo_updated": False,
         "pages_branch": args.pages_branch,
         "pages_commit_sha": None,
@@ -466,6 +464,11 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"rss_updated: {str(summary.get('rss_updated')).lower()}",
         f"tests_run: {summary.get('tests_run')}",
         f"tests_ok: {summary.get('tests_ok')}",
+        f"validation_profile: {summary.get('validation_profile')}",
+        f"tests_command: {summary.get('tests_command')}",
+        f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
+        f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"pages_repo_updated: {summary.get('pages_repo_updated')}",
         f"pages_branch: {summary.get('pages_branch')}",
         f"pages_commit_sha: {summary.get('pages_commit_sha')}",
@@ -513,11 +516,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-sources", type=int, default=12, help="Maximum collected source records.")
     parser.add_argument("--min-sources", type=int, default=1, help="Minimum valid source records required.")
     parser.add_argument("--source-mode", choices=sorted(SOURCE_MODES), default="both", help="Source collection mode.")
+    parser.add_argument(
+        "--validation-profile",
+        choices=list(profile_names()),
+        default=PROFILE_GAZA_DAILY,
+        help="Validation profile for scheduled/run gating.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    args.validation_profile = apply_env_profile(args.validation_profile)
+    try:
+        _ = get_profile(args.validation_profile)
+    except ValueError as exc:
+        print(json.dumps({"ok": False, "errors": [str(exc)], "validation_profile": args.validation_profile}, indent=2))
+        return 1
     args.date = validate_date(args.date)
     args.pages_repo = str(Path(args.pages_repo))
     pages_repo = Path(args.pages_repo)
@@ -563,23 +578,9 @@ def main(argv: list[str] | None = None) -> int:
         command_text(generation_command(args.date)),
         command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
     ]
-    pytest_basetemp = make_pytest_basetemp()
+    pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
     if not args.skip_tests:
-        summary["planned_actions"].append(
-            command_text(
-                [
-                    sys.executable,
-                    "-B",
-                    "-m",
-                    "pytest",
-                    "-q",
-                    "-p",
-                    "no:cacheprovider",
-                    "--basetemp",
-                    str(pytest_basetemp),
-                ]
-            )
-        )
+        summary["planned_actions"].append(command_text(pytest_command(args.validation_profile, pytest_basetemp)))
     if not args.dry_run:
         summary["planned_actions"].append(command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=False)))
     if args.push:
@@ -607,15 +608,20 @@ def main(argv: list[str] | None = None) -> int:
     summary["errors"].extend(validate_public_site_has_no_detail_files())
     log_line(log_path, f"Validation source_count={summary['source_count']} errors={summary['errors']}")
     if summary["errors"]:
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "post-generation-validation-errors"
         return finish(1)
 
     if not args.skip_tests:
         summary["tests_run"] = True
-        tests = run_tests(pytest_basetemp)
+        tests, tests_cmd = run_tests(args.validation_profile, pytest_basetemp)
+        summary["tests_command"] = subprocess.list2cmdline(tests_cmd)
         summary["tests_ok"] = tests.returncode == 0
         log_line(log_path, f"Tests return code: {tests.returncode}")
         if tests.returncode != 0:
             summary["errors"].append(tests.stdout.strip() or tests.stderr.strip() or "tests failed")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "dispatch_validation_failed"
             return finish(1)
     else:
         summary["warnings"].append("tests skipped by --skip-tests")
@@ -640,6 +646,8 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append("Pages dry-run did not confirm paid/detail exclusion")
     summary["pages_dry_run_ok"] = not summary["errors"]
     if summary["errors"]:
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-dry-run-safety-failed"
         return finish(1)
 
     if args.dry_run:
@@ -662,6 +670,8 @@ def main(argv: list[str] | None = None) -> int:
                 summary["errors"].extend(f"Pages publish failed: {error}" for error in payload_errors)
             else:
                 summary["errors"].append("Pages publish failed")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-publish-failed"
         return finish(1)
     try:
         pages_payload = parse_json_stdout(pages_publish)
@@ -679,6 +689,8 @@ def main(argv: list[str] | None = None) -> int:
     summary["pages_branch"] = pages_payload.get("target_pages_branch", args.pages_branch)
     summary["errors"].extend(validate_pages_outputs(pages_repo, args.date))
     if summary["errors"]:
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-output-validation-failed"
         return finish(1)
 
     if args.push:
@@ -688,6 +700,8 @@ def main(argv: list[str] | None = None) -> int:
         log_line(log_path, f"Push attempted result={pushed}")
         if not pushed:
             summary["errors"].append(push_result or f"git push origin {args.pages_branch} failed")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "pages-push-failed"
             return finish(1)
 
     if args.open_local:

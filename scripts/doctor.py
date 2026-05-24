@@ -115,8 +115,10 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
     absolute_python_re = re.compile(r"[A-Za-z]:\\[^\"'<>]*?\\(?:\.venv|venv)\\Scripts\\python\.exe", re.IGNORECASE)
     for path in task_files:
         text = _read_text(path)
+        lowered = text.lower()
         if (
             "run_and_notify.py" not in text
+            and "run_daily_gaza.py" not in text
             and "run_cascadia_dispatch.py" not in text
             and "run_cascadia_and_notify.py" not in text
             and "run_american_pressure_and_notify.py" not in text
@@ -131,6 +133,8 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
         for match in absolute_python_re.findall(text):
             if Path(match).resolve() != (root / ".venv" / "Scripts" / "python.exe").resolve():
                 problems.append(f"{path.relative_to(root)} contains non-project Python path {match}")
+        if "full_project" in lowered and ("run_daily_gaza.py" in lowered or "run_cascadia_and_notify.py" in lowered or "run_cascadia_dispatch.py" in lowered):
+            problems.append(f"{path.relative_to(root)} uses full_project validation profile for scheduled Gaza/Cascadia workflow")
     if not task_files:
         return _result("scheduled task .venv", True, "no scheduled task XML files found; scheduled task check skipped")
     return _result("scheduled task .venv", not problems, "scheduled task templates use project .venv" if not problems else "; ".join(problems))

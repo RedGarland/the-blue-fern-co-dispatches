@@ -115,6 +115,8 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert code == 0
     assert summary["ok"] is True
     assert summary["source_mode"] == "both"
+    assert summary["validation_profile"] == "gaza_daily"
+    assert summary["skipped_unrelated_tests"] is True
     assert summary["pages_repo_updated"] is True
     assert summary["pages_branch"] == "gh-pages"
     assert summary["pushed"] is False
@@ -142,6 +144,7 @@ def test_missing_source_file_triggers_auto_collection_when_both(isolated, monkey
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
     assert summary["source_count"] == 1
+    assert summary["validation_profile"] == "gaza_daily"
     assert Path(summary["source_file"]).exists()
 
 

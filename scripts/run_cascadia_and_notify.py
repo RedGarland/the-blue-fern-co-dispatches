@@ -15,6 +15,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.run_and_notify import _smtp_error_message, load_env_file, print_smtp_config_debug, send_email
+from scripts.validation_profiles import (
+    PROFILE_CASCADIA_WEEKLY,
+    apply_env_profile,
+    get_profile,
+    make_pytest_basetemp,
+    profile_names,
+    pytest_command,
+)
 
 DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 DEFAULT_PAGES_BRANCH = "gh-pages"
@@ -154,6 +162,11 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"log path: {log_path}",
         f"tests_run: {str(summary.get('tests_run')).lower()}",
         f"tests_ok: {str(summary.get('tests_ok')).lower()}",
+        f"validation_profile: {summary.get('validation_profile')}",
+        f"tests_command: {summary.get('tests_command')}",
+        f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
+        f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"doctor_ok: {str(summary.get('doctor_ok')).lower()}",
         "",
         "warnings:",
@@ -213,6 +226,11 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "log_path": str(log_path),
         "tests_run": False,
         "tests_ok": None,
+        "tests_command": None,
+        "validation_profile": args.validation_profile,
+        "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
+        "publish_blocked": False,
+        "publish_blocked_reason": None,
         "doctor_ok": None,
     }
 
@@ -224,6 +242,8 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     summary["errors"].extend(cascadia_json.get("errors", []))
     if int(cascadia_result["exit_code"]) != 0 or cascadia_json.get("ok") is False:
         summary["errors"].append(f"Cascadia command failed with exit code {cascadia_result['exit_code']}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "cascadia-generation-failed"
         return summary
 
     edition_date = str(cascadia_json.get("edition_date") or cascadia_json.get("date") or args.date)
@@ -237,32 +257,32 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     summary["pushed"] = bool(publish_json.get("pushed"))
     if int(publish_result["exit_code"]) != 0 or publish_json.get("ok") is False:
         summary["errors"].append(f"Pages publish/update failed with exit code {publish_result['exit_code']}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-publish-failed"
         return summary
 
     if not args.skip_tests:
+        basetemp = make_pytest_basetemp("bluefern-pytest-cascadia")
+        tests_cmd = pytest_command(args.validation_profile, basetemp)
         tests_result = run_logged_command(
-            [
-                sys.executable,
-                "-B",
-                "-m",
-                "pytest",
-                "tests\\test_cascadia_pipeline.py",
-                "-q",
-                "-p",
-                "no:cacheprovider",
-            ],
+            tests_cmd,
             log_path,
         )
         summary["tests_run"] = True
+        summary["tests_command"] = " ".join(shlex.quote(part) for part in tests_cmd)
         summary["tests_ok"] = int(tests_result["exit_code"]) == 0
         if not summary["tests_ok"]:
             summary["errors"].append(f"Focused Cascadia tests failed with exit code {tests_result['exit_code']}")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "dispatch_validation_failed"
             return summary
 
     doctor_result = run_logged_command([sys.executable, str(ROOT / "scripts" / "doctor.py")], log_path)
     summary["doctor_ok"] = int(doctor_result["exit_code"]) == 0
     if not summary["doctor_ok"]:
         summary["errors"].append(f"doctor.py failed with exit code {doctor_result['exit_code']}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "doctor-failed"
         return summary
 
     if pages_ahead_of_remote(Path(args.pages_repo), args.pages_branch):
@@ -279,6 +299,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--archive-week", help="Archive week date passed through to Cascadia weekly generation.")
     parser.add_argument("--quality-weekly", action="store_true", help="Pass --quality-weekly to the Cascadia run.")
     parser.add_argument("--skip-tests", action="store_true", help="Skip focused Cascadia pytest validation before sending success mail.")
+    parser.add_argument(
+        "--validation-profile",
+        choices=list(profile_names()),
+        default=PROFILE_CASCADIA_WEEKLY,
+        help="Validation profile for scheduled/run gating.",
+    )
     parser.add_argument("--smtp-debug", action="store_true", help="Enable smtplib debug output on the SMTP connection.")
     parser.add_argument("--send-test-email", action="store_true", help="Send an SMTP-only diagnostic email and do not run Cascadia or Pages publish.")
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repository path.")
@@ -288,6 +314,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    args.validation_profile = apply_env_profile(args.validation_profile)
+    try:
+        _ = get_profile(args.validation_profile)
+    except ValueError as exc:
+        print(json.dumps({"ok": False, "errors": [str(exc)], "validation_profile": args.validation_profile}, indent=2))
+        return 1
     args.pages_repo = str(Path(args.pages_repo))
     load_env_file()
     if args.smtp_debug:

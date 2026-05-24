@@ -21,6 +21,14 @@ if str(ROOT) not in sys.path:
 
 from scripts.run_american_pressure_dispatch import run_american_pressure_dispatch, validate_date  # noqa: E402
 from scripts.check_american_pressure_weekly_readiness import build_readiness_report  # noqa: E402
+from scripts.validation_profiles import (
+    PROFILE_AMERICAN_PRESSURE_WEEKLY,
+    apply_env_profile,
+    get_profile,
+    make_pytest_basetemp,
+    profile_names,
+    pytest_command,
+)
 
 
 def _completed_saturday_from(today: date) -> date:
@@ -168,11 +176,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--include-approved-candidates", action="store_true", help="Merge only approved daily candidates from the weekly window.")
     parser.add_argument("--allow-thin-edition", action="store_true", help="Override weekly quality gate and allow publish.")
     parser.add_argument("--force-regenerate", action="store_true", help="Force rewrite/timestamp refresh for edition output files.")
+    parser.add_argument("--skip-tests", action="store_true", help="Skip profile-scoped test validation.")
+    parser.add_argument(
+        "--validation-profile",
+        choices=list(profile_names()),
+        default=PROFILE_AMERICAN_PRESSURE_WEEKLY,
+        help="Validation profile for scheduled/run gating.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    args.validation_profile = apply_env_profile(args.validation_profile)
+    try:
+        _ = get_profile(args.validation_profile)
+    except ValueError as exc:
+        print(json.dumps({"ok": False, "errors": [str(exc)], "validation_profile": args.validation_profile}, indent=2))
+        return 1
     try:
         edition_date = _resolve_week_ending(args.date, args.week_ending)
         computed_week_start = _week_start_date(edition_date)
@@ -193,6 +214,13 @@ def main(argv: list[str] | None = None) -> int:
             "ok": False,
             "warnings": [],
             "errors": [],
+            "tests_run": False,
+            "tests_ok": None,
+            "tests_command": None,
+            "validation_profile": args.validation_profile,
+            "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
+            "publish_blocked": False,
+            "publish_blocked_reason": None,
         }
         if args.push and not args.publish:
             raise ValueError("--push requires --publish")
@@ -250,8 +278,24 @@ def main(argv: list[str] | None = None) -> int:
             }
         )
         if run.get("ok") is not True:
+            output["publish_blocked"] = True
+            output["publish_blocked_reason"] = "dispatch-generation-failed"
             print(json.dumps(output, indent=2))
             return 1
+
+        if not args.skip_tests:
+            basetemp = make_pytest_basetemp("bluefern-pytest-ap")
+            test_cmd = pytest_command(args.validation_profile, basetemp)
+            output["tests_run"] = True
+            output["tests_command"] = subprocess.list2cmdline(test_cmd)
+            tests_result = _run_cmd(test_cmd)
+            output["tests_ok"] = tests_result.returncode == 0
+            if tests_result.returncode != 0:
+                output["publish_blocked"] = True
+                output["publish_blocked_reason"] = "dispatch_validation_failed"
+                output["errors"].append(tests_result.stdout.strip() or tests_result.stderr.strip() or "tests failed")
+                print(json.dumps(output, indent=2))
+                return 1
 
         if args.publish:
             readiness = build_readiness_report(edition_date)
@@ -259,6 +303,8 @@ def main(argv: list[str] | None = None) -> int:
             if gate_errors and not args.allow_thin_edition:
                 output["errors"].extend(gate_errors)
                 output["errors"].append("weekly publish blocked by readiness/quality gate (pass --allow-thin-edition to override).")
+                output["publish_blocked"] = True
+                output["publish_blocked_reason"] = "readiness-or-quality-gate"
                 print(json.dumps(output, indent=2))
                 return 1
 
@@ -275,12 +321,16 @@ def main(argv: list[str] | None = None) -> int:
             )
             if rerun.get("ok") is not True:
                 output["errors"].extend(list(rerun.get("errors") or []))
+                output["publish_blocked"] = True
+                output["publish_blocked_reason"] = "publish-generation-failed"
                 print(json.dumps(output, indent=2))
                 return 1
             published_ok, publish_errors = _publish_pages(edition_date)
             output["pages_repo_updated"] = published_ok
             if publish_errors:
                 output["errors"].extend(publish_errors)
+                output["publish_blocked"] = True
+                output["publish_blocked_reason"] = "pages-publish-failed"
                 print(json.dumps(output, indent=2))
                 return 1
             print("Local Pages repo updated; live site not pushed. Add --push to publish live.")
@@ -289,6 +339,8 @@ def main(argv: list[str] | None = None) -> int:
                 output["pushed"] = pushed
                 if not pushed:
                     output["errors"].append(push_message)
+                    output["publish_blocked"] = True
+                    output["publish_blocked_reason"] = "pages-push-failed"
                     print(json.dumps(output, indent=2))
                     return 1
                 print(push_message)

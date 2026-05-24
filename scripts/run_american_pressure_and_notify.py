@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.run_and_notify import _smtp_error_message, load_env_file, print_smtp_config_debug, send_email
+from scripts.validation_profiles import PROFILE_AMERICAN_PRESSURE_WEEKLY
 
 
 DISPATCH_SLUG = "american-pressure"
@@ -119,6 +120,13 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"pages_branch: {summary.get('pages_branch')}",
         f"pages_commit_sha: {summary.get('pages_commit_sha') or '<none>'}",
         f"pushed: {str(summary.get('pushed')).lower()}",
+        f"validation_profile: {summary.get('validation_profile')}",
+        f"tests_run: {str(summary.get('tests_run')).lower()}",
+        f"tests_ok: {str(summary.get('tests_ok')).lower()}",
+        f"tests_command: {summary.get('tests_command')}",
+        f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
+        f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"public archive URL: {public_urls.get('archive')}",
         f"public edition URL: {public_urls.get('edition')}",
         f"local edition path: {local_paths.get('edition')}",
@@ -151,6 +159,13 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "pages_branch": args.pages_branch,
         "pages_commit_sha": None,
         "pushed": False,
+        "validation_profile": PROFILE_AMERICAN_PRESSURE_WEEKLY,
+        "tests_run": False,
+        "tests_ok": None,
+        "tests_command": "run_weekly_american_pressure.py executes profile tests directly",
+        "skipped_unrelated_tests": True,
+        "publish_blocked": False,
+        "publish_blocked_reason": None,
         "public_urls": public_urls_for(args.date),
         "local_paths": {
             "edition": str(ROOT / "output" / "site" / DISPATCH_SLUG / "editions" / args.date / "index.html"),

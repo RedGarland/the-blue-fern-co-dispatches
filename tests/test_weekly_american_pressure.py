@@ -63,7 +63,7 @@ def test_include_approved_candidates_flag_passed(monkeypatch, tmp_path):
         return {"ok": True, "source_count": 1, "story_count": 1, "warnings": [], "errors": []}
 
     monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
-    rc = weekly.main(["--week-ending", "2026-05-09", "--include-approved-candidates"])
+    rc = weekly.main(["--week-ending", "2026-05-09", "--include-approved-candidates", "--skip-tests"])
     assert rc == 0
     assert calls
     assert calls[-1]["include_approved_candidates"] is True
@@ -97,7 +97,7 @@ def test_force_regenerate_flag_passed(monkeypatch, tmp_path):
         return {"ok": True, "source_count": 1, "story_count": 1, "warnings": [], "errors": []}
 
     monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
-    rc = weekly.main(["--week-ending", "2026-05-09", "--force-regenerate"])
+    rc = weekly.main(["--week-ending", "2026-05-09", "--force-regenerate", "--skip-tests"])
     assert rc == 0
     assert calls
     assert calls[-1]["force_regenerate"] is True
@@ -161,7 +161,7 @@ def test_weekly_run_populates_week_dates_even_when_dispatch_fails(monkeypatch, t
         return {"ok": False, "warnings": [], "errors": ["quality gate fail"], "source_count": 0, "story_count": 0}
 
     monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
-    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--include-approved-candidates", "--publish"])
+    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--include-approved-candidates", "--publish", "--skip-tests"])
     assert rc == 1
     payload = json.loads(capsys.readouterr().out)
     assert payload["week_start_date"] == "2026-05-10"
@@ -208,5 +208,5 @@ def test_publish_quality_gate_blocks_without_allow_thin(monkeypatch, tmp_path):
 
     monkeypatch.setattr(weekly, "run_american_pressure_dispatch", fake_run)
     monkeypatch.setattr(weekly, "build_readiness_report", lambda _d: {"weekly_publish_recommended": False, "reasons_if_not_recommended": ["thin"]})
-    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--publish"])
+    rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--publish", "--skip-tests"])
     assert rc == 1

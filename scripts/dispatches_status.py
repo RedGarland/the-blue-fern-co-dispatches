@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -40,6 +41,7 @@ CASCADIA_RUNTIME_DATE_DIR_RE = re.compile(
 CASCADIA_RUNTIME_WEEK_DIR_RE = re.compile(
     r"^data/dispatches/cascadia/sources/\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}/"
 )
+SCHEDULED_VALIDATION_ENV = "DISPATCHES_VALIDATION_PROFILE"
 
 
 def _is_gaza_runtime_artifact_path(path: str) -> bool:
@@ -883,6 +885,25 @@ def run_doctor(root: Path) -> dict[str, Any]:
     }
 
 
+def scheduled_validation_profile_warnings(root: Path) -> list[str]:
+    warnings: list[str] = []
+    env_profile = str(os.getenv(SCHEDULED_VALIDATION_ENV, "")).strip().lower()
+    if env_profile == "full_project":
+        warnings.append(
+            "Environment DISPATCHES_VALIDATION_PROFILE is full_project; scheduled Gaza/Cascadia runs may be unintentionally coupled."
+        )
+    ops = root / "ops"
+    if not ops.exists():
+        return warnings
+    for xml in sorted(ops.glob("*.xml")):
+        text = read_text(xml).lower()
+        if "full_project" not in text:
+            continue
+        if "run_daily_gaza.py" in text or "run_cascadia_and_notify.py" in text or "run_cascadia_dispatch.py" in text:
+            warnings.append(f"Scheduled task template {xml.relative_to(root)} references full_project validation profile.")
+    return warnings
+
+
 def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) -> dict[str, Any]:
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -995,6 +1016,7 @@ def build_status(root: Path, pages_repo: Path, run_doctor_flag: bool = False) ->
             warnings.append(
                 "Gaza collection found many raw items, but relevance filtering accepted few. Review rejected candidate examples."
             )
+    warnings.extend(scheduled_validation_profile_warnings(root))
 
     recommendations = []
     if pages.get("clean") and pages.get("tracking") and str(pages.get("tracking", "")).startswith("ahead"):

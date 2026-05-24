@@ -167,6 +167,20 @@ def test_doctor_checks_cascadia_scheduled_task_template():
         _cleanup_contract_root(root)
 
 
+def test_doctor_flags_scheduled_full_project_profile_for_gaza_or_cascadia():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "ops" / "run_gaza_daily_task.xml",
+            r"<Task><Actions><Exec><Arguments>&amp; '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --validation-profile full_project</Arguments></Exec></Actions></Task>",
+        )
+        result = _result_map(root)["scheduled task .venv"]
+        assert not result.ok
+        assert "full_project validation profile" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_flags_cascadia_transitional_date_links():
     root = _make_contract_root()
     try:

@@ -624,3 +624,11 @@ def test_parse_git_status_keeps_cascadia_source_registry_as_source_change(monkey
     assert parsed["has_source_changes"] is True
     assert "data/dispatches/cascadia/source_registry.yml" in parsed["source_changes"]
     assert "data/dispatches/cascadia/source_registry.yml" not in parsed["generated_changes"]
+
+
+def test_scheduled_validation_profile_warning_when_env_full_project(tmp_path, monkeypatch):
+    root, pages = _make_repo(tmp_path)
+    _stub_git(monkeypatch, root=root, pages=pages)
+    monkeypatch.setenv("DISPATCHES_VALIDATION_PROFILE", "full_project")
+    status = dispatches_status.build_status(root, pages)
+    assert any("DISPATCHES_VALIDATION_PROFILE is full_project" in warning for warning in status["warnings"])

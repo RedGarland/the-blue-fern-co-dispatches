@@ -97,6 +97,8 @@ def test_success_email_subject_and_body_include_cascadia_urls_and_pushed_false(m
     assert "date: 2026-05-10" in body
     assert "ok: true" in body
     assert "public_story_count: 5" in body
+    assert "validation_profile: cascadia_weekly" in body
+    assert "skipped_unrelated_tests: true" in body
     assert "pushed: false" in body
     assert "https://dispatches.thebluefernco.com/cascadia/archive.html" in body
     assert "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/" in body

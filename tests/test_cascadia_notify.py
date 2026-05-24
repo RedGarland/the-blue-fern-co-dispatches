@@ -111,6 +111,108 @@ def test_success_email_subject_and_body_include_cascadia_urls_and_pushed_false(m
     assert "manual Pages push command" in body
 
 
+def test_parse_args_accepts_push_flag():
+    args = notify.parse_args(["--date", "2026-05-24", "--push", "--skip-tests"])
+    assert args.push is True
+    assert args.date == "2026-05-24"
+    assert args.skip_tests is True
+
+
+def test_cascadia_default_no_push_keeps_manual_push_command(monkeypatch, tmp_path, capsys):
+    calls = []
+
+    def fake_run(cmd, log_path):
+        calls.append(cmd)
+        Path(log_path).write_text("line\n", encoding="utf-8")
+        command = " ".join(cmd)
+        if "run_cascadia_dispatch.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _cascadia_payload()}
+        if "publish_github_pages.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _publish_payload()}
+        if "pytest" in command or "doctor.py" in command:
+            return {"exit_code": 0, "stdout": "ok", "stderr": "", "json": {}}
+        raise AssertionError(command)
+
+    monkeypatch.setattr(notify, "LOG_DIR", tmp_path)
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setattr(notify, "run_logged_command", fake_run)
+    monkeypatch.setattr(notify, "pages_ahead_of_remote", lambda pages_repo, pages_branch: True)
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: None)
+
+    rc = notify.main(["--date", "2026-05-24"])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 0
+    assert payload["pages_repo_updated"] is True
+    assert payload["pushed"] is False
+    assert payload["pages_branch"] == "gh-pages"
+    assert payload["pages_commit_sha"] == "abc1234"
+    assert "git push origin gh-pages" in payload["manual_push_command"]
+    assert all("git -C" not in " ".join(cmd) or " push " not in f" {' '.join(cmd)} " for cmd in calls)
+
+
+def test_cascadia_push_enabled_attempts_pages_push(monkeypatch, tmp_path, capsys):
+    calls = []
+
+    def fake_run(cmd, log_path):
+        calls.append(cmd)
+        Path(log_path).write_text("line\n", encoding="utf-8")
+        command = " ".join(cmd)
+        if "run_cascadia_dispatch.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _cascadia_payload()}
+        if "publish_github_pages.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _publish_payload()}
+        if "pytest" in command or "doctor.py" in command:
+            return {"exit_code": 0, "stdout": "ok", "stderr": "", "json": {}}
+        if "git -C" in command and " status" in command:
+            return {"exit_code": 0, "stdout": "On branch gh-pages", "stderr": "", "json": {}}
+        if "git -C" in command and " push origin gh-pages" in command:
+            return {"exit_code": 0, "stdout": "pushed", "stderr": "", "json": {}}
+        raise AssertionError(command)
+
+    monkeypatch.setattr(notify, "LOG_DIR", tmp_path)
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setattr(notify, "run_logged_command", fake_run)
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: None)
+
+    rc = notify.main(["--date", "2026-05-24", "--push"])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 0
+    assert payload["pushed"] is True
+    assert payload["publish_ok"] is True
+    assert payload["manual_push_command"] is None
+    assert any("git -C" in " ".join(cmd) and "push origin gh-pages" in " ".join(cmd) for cmd in calls)
+
+
+def test_cascadia_push_report_stays_false_when_push_fails(monkeypatch, tmp_path, capsys):
+    def fake_run(cmd, log_path):
+        Path(log_path).write_text("line\n", encoding="utf-8")
+        command = " ".join(cmd)
+        if "run_cascadia_dispatch.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _cascadia_payload()}
+        if "publish_github_pages.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _publish_payload()}
+        if "pytest" in command or "doctor.py" in command:
+            return {"exit_code": 0, "stdout": "ok", "stderr": "", "json": {}}
+        if "git -C" in command and " status" in command:
+            return {"exit_code": 0, "stdout": "On branch gh-pages", "stderr": "", "json": {}}
+        if "git -C" in command and " push origin gh-pages" in command:
+            return {"exit_code": 1, "stdout": "", "stderr": "push rejected", "json": {}}
+        raise AssertionError(command)
+
+    monkeypatch.setattr(notify, "LOG_DIR", tmp_path)
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setattr(notify, "run_logged_command", fake_run)
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: None)
+
+    rc = notify.main(["--date", "2026-05-24", "--push"])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 1
+    assert payload["pushed"] is False
+    assert payload["publish_ok"] is False
+    assert payload["publish_blocked_reason"] == "pages-push-failed"
+    assert any("push rejected" in str(item) for item in payload["errors"])
+
+
 def test_failure_email_subject_and_body_include_errors_and_log_tail(monkeypatch, tmp_path):
     sent = []
 
@@ -402,6 +504,28 @@ def test_build_tls_context_uses_certifi_fallback_when_available(monkeypatch, tmp
     fake_certifi = types.SimpleNamespace(where=lambda: str(certifi_pem))
     monkeypatch.setitem(sys.modules, "certifi", fake_certifi)
     monkeypatch.setenv("SMTP_TLS_CA_SOURCE", "certifi")
+    monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
+    monkeypatch.delenv("SMTP_CA_FILE", raising=False)
+    monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
+    called: dict[str, str | None] = {"cafile": None}
+
+    def fake_create_default_context(cafile=None):
+        called["cafile"] = cafile
+        return ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+    monkeypatch.setattr(run_and_notify.ssl, "create_default_context", fake_create_default_context)
+    _ctx, meta = run_and_notify._build_tls_context()
+    assert called["cafile"] == str(certifi_pem)
+    assert meta["ca_source"] == "certifi"
+
+
+def test_build_tls_context_explicit_certifi_overrides_ambient_truststore(monkeypatch, tmp_path):
+    certifi_pem = tmp_path / "certifi.pem"
+    certifi_pem.write_text("PEM", encoding="utf-8")
+    fake_certifi = types.SimpleNamespace(where=lambda: str(certifi_pem))
+    monkeypatch.setitem(sys.modules, "certifi", fake_certifi)
+    monkeypatch.setenv("SMTP_TLS_CA_SOURCE", "certifi")
+    monkeypatch.setenv("SMTP_TRUSTSTORE", "1")
     monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
     monkeypatch.delenv("SMTP_CA_FILE", raising=False)
     monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)

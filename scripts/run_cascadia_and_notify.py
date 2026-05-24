@@ -111,6 +111,19 @@ def manual_push_command(pages_repo: Path, pages_branch: str) -> str:
     return f'cd "{pages_repo}"\ngit status\ngit push origin {pages_branch}'
 
 
+def push_pages_repo(pages_repo: Path, pages_branch: str, log_path: Path) -> tuple[bool, list[str], str]:
+    messages: list[str] = []
+    status = run_logged_command(["git", "-C", str(pages_repo), "status"], log_path)
+    status_message = status.get("stdout") or status.get("stderr") or ""
+    messages.append(str(status_message).strip())
+    if int(status.get("exit_code", 1)) != 0:
+        return False, messages, str(status.get("stderr") or status.get("stdout") or "").strip()
+    push = run_logged_command(["git", "-C", str(pages_repo), "push", "origin", pages_branch], log_path)
+    push_message = push.get("stdout") or push.get("stderr") or ""
+    messages.append(str(push_message).strip())
+    return int(push.get("exit_code", 1)) == 0, messages, str(push.get("stdout") or push.get("stderr") or "").strip()
+
+
 def edition_url(edition_date: str | None) -> str | None:
     if not edition_date:
         return None
@@ -158,7 +171,7 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"pages_repo: {summary.get('pages_repo')}",
         f"pages_branch: {summary.get('pages_branch')}",
         f"pages_repo_updated: {str(summary.get('pages_repo_updated')).lower()}",
-        f"pages_commit_sha: {publish.get('commit_sha') or '<none>'}",
+        f"pages_commit_sha: {summary.get('pages_commit_sha') or '<none>'}",
         f"pushed: {str(summary.get('pushed')).lower()}",
         f"log path: {log_path}",
         f"tests_run: {str(summary.get('tests_run')).lower()}",
@@ -230,7 +243,10 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "pages_repo": str(args.pages_repo),
         "pages_branch": args.pages_branch,
         "pages_repo_updated": False,
+        "pages_commit_sha": None,
         "pushed": False,
+        "push_output": [],
+        "manual_push_command": manual_push_command(Path(args.pages_repo), args.pages_branch) if not args.push else None,
         "log_path": str(log_path),
         "tests_run": False,
         "tests_ok": None,
@@ -271,11 +287,23 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     summary["warnings"].extend(publish_json.get("warnings", []))
     summary["errors"].extend(publish_json.get("errors", []))
     summary["pages_repo_updated"] = bool(publish_json.get("copied") or publish_json.get("committed"))
+    summary["pages_commit_sha"] = publish_json.get("commit_sha")
+    summary["pages_branch"] = str(publish_json.get("target_pages_branch") or args.pages_branch)
     summary["pushed"] = bool(publish_json.get("pushed"))
     if int(publish_result["exit_code"]) != 0 or publish_json.get("ok") is False:
         summary["errors"].append(f"Pages publish/update failed with exit code {publish_result['exit_code']}")
         summary["publish_blocked"] = True
         summary["publish_blocked_reason"] = "pages-publish-failed"
+        return summary
+    if publish_json.get("target_pages_branch") not in (args.pages_branch, None):
+        summary["errors"].append(f"Pages publish targeted {publish_json.get('target_pages_branch')}, expected {args.pages_branch}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-publish-branch-mismatch"
+        return summary
+    if publish_json.get("committed_branch") not in (args.pages_branch, None):
+        summary["errors"].append(f"Pages commit targeted {publish_json.get('committed_branch')}, expected {args.pages_branch}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "pages-commit-branch-mismatch"
         return summary
 
     if not args.skip_tests:
@@ -302,13 +330,22 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         summary["publish_blocked_reason"] = "doctor-failed"
         return summary
 
-    if pages_ahead_of_remote(Path(args.pages_repo), args.pages_branch):
+    if args.push:
+        pushed, messages, push_result = push_pages_repo(Path(args.pages_repo), args.pages_branch, log_path)
+        summary["push_output"] = messages
+        summary["pushed"] = pushed
+        if not pushed:
+            summary["errors"].append(push_result or f"git push origin {args.pages_branch} failed")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "pages-push-failed"
+            return summary
+    elif pages_ahead_of_remote(Path(args.pages_repo), args.pages_branch):
         summary["manual_push_command"] = manual_push_command(Path(args.pages_repo), args.pages_branch)
 
     summary["ok"] = not summary["errors"]
     summary["pipeline_ok"] = summary["ok"]
     summary["validation_ok"] = bool(summary["tests_ok"]) if summary["tests_run"] else True
-    summary["publish_ok"] = bool(summary["pages_repo_updated"])
+    summary["publish_ok"] = bool(summary["pages_repo_updated"]) and (bool(summary["pushed"]) if args.push else True)
     summary["return_code"] = 0 if summary["ok"] else 1
     return summary
 
@@ -329,6 +366,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--send-test-email", action="store_true", help="Send an SMTP-only diagnostic email and do not run Cascadia or Pages publish.")
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repository path.")
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Pages branch name.")
+    parser.add_argument("--push", action="store_true", help="Push the Pages repo to origin after local publish succeeds.")
     return parser.parse_args(argv)
 
 

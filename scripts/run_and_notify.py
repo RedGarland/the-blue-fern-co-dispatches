@@ -270,8 +270,20 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
 
     ca_bundle, ca_source_var = _resolve_ca_bundle_path()
     tls_source_preference = (_env_text("SMTP_TLS_CA_SOURCE") or "auto").strip().lower()
-    prefer_truststore = _env_bool("SMTP_TRUSTSTORE", default=False) or (tls_source_preference == "truststore")
-    prefer_certifi = _env_bool("SMTP_CERTIFI", default=False) or (tls_source_preference == "certifi")
+    if tls_source_preference not in {"auto", "truststore", "certifi"}:
+        tls_source_preference = "auto"
+    # Explicit SMTP_TLS_CA_SOURCE must win over ambient toggles.
+    if tls_source_preference == "truststore":
+        strategy = "truststore"
+    elif tls_source_preference == "certifi":
+        strategy = "certifi"
+    else:
+        if _env_bool("SMTP_CERTIFI", default=False):
+            strategy = "certifi"
+        elif _env_bool("SMTP_TRUSTSTORE", default=False):
+            strategy = "truststore"
+        else:
+            strategy = "auto"
     context_meta: dict[str, str | bool | None] = {
         "tls_verify_enabled": not smtp_skip_verify,
         "tls_relaxed": smtp_skip_verify,
@@ -279,6 +291,7 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
         "ca_bundle_env": ca_source_var,
         "ca_source": None,
         "tls_source_preference": tls_source_preference,
+        "tls_source_strategy": strategy,
     }
 
     if smtp_skip_verify:
@@ -289,7 +302,7 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
         context_meta["ca_source"] = "custom_bundle"
         return ssl.create_default_context(cafile=ca_bundle), context_meta
 
-    if prefer_truststore:
+    if strategy == "truststore":
         try:
             import truststore  # type: ignore
 
@@ -298,8 +311,12 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
             return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT), context_meta
         except Exception:
             context_meta["ca_source"] = "truststore_unavailable"
+            if tls_source_preference == "truststore":
+                context_meta["ca_source"] = "system_default"
+                return ssl.create_default_context(), context_meta
+            strategy = "auto"
 
-    if not prefer_certifi:
+    if strategy == "auto":
         try:
             context_meta["ca_source"] = "system_default"
             return ssl.create_default_context(), context_meta

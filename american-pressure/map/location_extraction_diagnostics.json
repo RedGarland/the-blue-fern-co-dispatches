@@ -1,14 +1,14 @@
 {
-  "candidates_seen": 88,
-  "raw_extracted_candidate_count": 88,
-  "accepted_count": 26,
-  "accepted_before_dedupe_count": 26,
-  "accepted_after_dedupe_count": 19,
-  "rejected_count": 24,
+  "candidates_seen": 77,
+  "raw_extracted_candidate_count": 77,
+  "accepted_count": 30,
+  "accepted_before_dedupe_count": 30,
+  "accepted_after_dedupe_count": 23,
+  "rejected_count": 13,
   "primary_count": 10,
   "affected_count": 0,
   "service_area_count": 0,
-  "state_context_count": 16,
+  "state_context_count": 20,
   "duplicates_collapsed_count": 7,
   "extracted_candidates": [
     {
@@ -400,9 +400,7 @@
       "evidence_field": "source_title",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "city_state",
@@ -416,9 +414,7 @@
       "evidence_field": "source_snippet",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -429,96 +425,7 @@
       "evidence_field": "source_snippet",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "fitzgibbon hospital in marshall",
-      "state": "MO",
-      "evidence": "Fitzgibbon Hospital in Marshall, Missouri",
-      "confidence": "medium",
-      "method": "text_story_summary_city_state",
-      "city_cleaned": "marshall",
-      "city_original": "fitzgibbon hospital in marshall",
-      "evidence_field": "story_summary",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "MO",
-      "evidence": "MO",
-      "confidence": "low",
-      "method": "text_story_summary_state_only",
-      "evidence_field": "story_summary",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "in marshall",
-      "state": "MO",
-      "evidence": "In Marshall, Missouri",
-      "confidence": "medium",
-      "method": "text_story_human_story_summary_city_state",
-      "city_cleaned": "marshall",
-      "city_original": "in marshall",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "MO",
-      "evidence": "MO",
-      "confidence": "low",
-      "method": "text_story_human_story_summary_state_only",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "marshall",
-      "state": "MO",
-      "evidence": "Marshall, Missouri",
-      "confidence": "medium",
-      "method": "text_story_location_scope_city_state",
-      "city_cleaned": "marshall",
-      "city_original": "marshall",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "MO",
-      "evidence": "MO",
-      "confidence": "low",
-      "method": "text_story_location_scope_state_only",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "city_state",
@@ -532,9 +439,7 @@
       "evidence_field": "source_human_story_summary",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -545,9 +450,7 @@
       "evidence_field": "source_human_story_summary",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "city_state",
@@ -561,9 +464,7 @@
       "evidence_field": "source_summary_or_snippet",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -574,95 +475,7 @@
       "evidence_field": "source_summary_or_snippet",
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ]
-    },
-    {
-      "kind": "county_state",
-      "county": "in san luis obispo county",
-      "state": "CA",
-      "evidence": "In San Luis Obispo County, California",
-      "confidence": "high",
-      "method": "text_story_human_story_summary_county_state",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "in san luis obispo county",
-      "state": "CA",
-      "evidence": "In San Luis Obispo County, California",
-      "confidence": "medium",
-      "method": "text_story_human_story_summary_city_state",
-      "city_cleaned": "san luis obispo county",
-      "city_original": "in san luis obispo county",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "CA",
-      "evidence": "CA",
-      "confidence": "low",
-      "method": "text_story_human_story_summary_state_only",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
-    },
-    {
-      "kind": "county_state",
-      "county": "san luis obispo county",
-      "state": "CA",
-      "evidence": "San Luis Obispo County, California",
-      "confidence": "high",
-      "method": "text_story_location_scope_county_state",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "san luis obispo county",
-      "state": "CA",
-      "evidence": "San Luis Obispo County, California",
-      "confidence": "medium",
-      "method": "text_story_location_scope_city_state",
-      "city_cleaned": "san luis obispo county",
-      "city_original": "san luis obispo county",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "CA",
-      "evidence": "CA",
-      "confidence": "low",
-      "method": "text_story_location_scope_state_only",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -673,9 +486,7 @@
       "evidence_field": "source_human_story_summary",
       "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
       "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -686,80 +497,7 @@
       "evidence_field": "source_snippet",
       "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
       "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "IA",
-      "evidence": "IA",
-      "confidence": "low",
-      "method": "text_story_summary_state_only",
-      "evidence_field": "story_summary",
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "in centerville",
-      "state": "IA",
-      "evidence": "In Centerville, Iowa",
-      "confidence": "medium",
-      "method": "text_story_human_story_summary_city_state",
-      "city_cleaned": "centerville",
-      "city_original": "in centerville",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "IA",
-      "evidence": "IA",
-      "confidence": "low",
-      "method": "text_story_human_story_summary_state_only",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "centerville",
-      "state": "IA",
-      "evidence": "Centerville, Iowa",
-      "confidence": "medium",
-      "method": "text_story_location_scope_city_state",
-      "city_cleaned": "centerville",
-      "city_original": "centerville",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "IA",
-      "evidence": "IA",
-      "confidence": "low",
-      "method": "text_story_location_scope_state_only",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -770,67 +508,7 @@
       "evidence_field": "source_summary_or_snippet",
       "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
       "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "in sacramento",
-      "state": "CA",
-      "evidence": "In Sacramento, California",
-      "confidence": "medium",
-      "method": "text_story_human_story_summary_city_state",
-      "city_cleaned": "sacramento",
-      "city_original": "in sacramento",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "CA",
-      "evidence": "CA",
-      "confidence": "low",
-      "method": "text_story_human_story_summary_state_only",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ]
-    },
-    {
-      "kind": "city_state",
-      "city": "sacramento",
-      "state": "CA",
-      "evidence": "Sacramento, California",
-      "confidence": "medium",
-      "method": "text_story_location_scope_city_state",
-      "city_cleaned": "sacramento",
-      "city_original": "sacramento",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "CA",
-      "evidence": "CA",
-      "confidence": "low",
-      "method": "text_story_location_scope_state_only",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -841,9 +519,7 @@
       "evidence_field": "source_human_story_summary",
       "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
       "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -854,35 +530,7 @@
       "evidence_field": "source_title",
       "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
       "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-006"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "WI",
-      "evidence": "WI",
-      "confidence": "low",
-      "method": "text_story_human_story_summary_state_only",
-      "evidence_field": "story_human_story_summary",
-      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
-      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-006"
-      ]
-    },
-    {
-      "kind": "state_only",
-      "state": "WI",
-      "evidence": "WI",
-      "confidence": "low",
-      "method": "text_story_location_scope_state_only",
-      "evidence_field": "story_location_scope",
-      "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
-      "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-006"
-      ]
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -893,9 +541,139 @@
       "evidence_field": "source_human_story_summary",
       "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
       "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-006"
-      ]
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "CA",
+      "evidence": "CA",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+      "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "CA",
+      "evidence": "CA",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+      "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "AZ",
+      "evidence": "AZ",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "OR",
+      "evidence": "OR",
+      "confidence": "low",
+      "method": "text_source_title_state_only",
+      "evidence_field": "source_title",
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "OR",
+      "evidence": "OR",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "OR",
+      "evidence": "OR",
+      "confidence": "low",
+      "method": "text_reader_headline_state_only",
+      "evidence_field": "reader_headline",
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "OR",
+      "evidence": "OR",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "IA",
+      "evidence": "IA",
+      "confidence": "low",
+      "method": "text_source_snippet_state_only",
+      "evidence_field": "source_snippet",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": []
+    },
+    {
+      "kind": "state_only",
+      "state": "IA",
+      "evidence": "IA",
+      "confidence": "low",
+      "method": "text_source_summary_or_snippet_state_only",
+      "evidence_field": "source_summary_or_snippet",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": []
     },
     {
       "kind": "state_only",
@@ -1232,9 +1010,7 @@
     {
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
+      "story_ids": [],
       "location_label": "Marshall, MO",
       "method": "source_metadata_city_state",
       "evidence_text": "Marshall, MO",
@@ -1245,9 +1021,7 @@
     {
       "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
       "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ],
+      "story_ids": [],
       "location_label": "San Luis Obispo County, CA",
       "method": "source_metadata_county_state",
       "evidence_text": "San Luis Obispo County, CA",
@@ -1258,9 +1032,7 @@
     {
       "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
       "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ],
+      "story_ids": [],
       "location_label": "Centerville, IA",
       "method": "source_metadata_city_state",
       "evidence_text": "Centerville, IA",
@@ -1271,9 +1043,7 @@
     {
       "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
       "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ],
+      "story_ids": [],
       "location_label": "Sacramento, CA",
       "method": "source_metadata_city_state",
       "evidence_text": "Sacramento, CA",
@@ -1284,13 +1054,55 @@
     {
       "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
       "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-006"
-      ],
+      "story_ids": [],
       "location_label": "WI",
       "method": "text_source_title_state_only",
       "evidence_text": "WI",
       "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+      "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+      "story_ids": [],
+      "location_label": "CA",
+      "method": "text_source_title_state_only",
+      "evidence_text": "CA",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "story_ids": [],
+      "location_label": "AZ",
+      "method": "text_source_title_state_only",
+      "evidence_text": "AZ",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": [],
+      "location_label": "OR",
+      "method": "text_source_title_state_only",
+      "evidence_text": "OR",
+      "evidence_field": "source_title",
+      "precision": "state_level",
+      "location_role": "state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [],
+      "location_label": "IA",
+      "method": "text_source_snippet_state_only",
+      "evidence_text": "IA",
+      "evidence_field": "source_snippet",
       "precision": "state_level",
       "location_role": "state_context"
     },
@@ -1588,9 +1400,7 @@
     {
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
+      "story_ids": [],
       "candidate": {
         "kind": "city_state",
         "city": "fitzgibbon hospital in marshall",
@@ -1607,66 +1417,7 @@
     {
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "fitzgibbon hospital in marshall",
-        "state": "MO",
-        "evidence": "Fitzgibbon Hospital in Marshall, Missouri",
-        "confidence": "medium",
-        "method": "text_story_summary_city_state",
-        "city_cleaned": "marshall",
-        "city_original": "fitzgibbon hospital in marshall",
-        "evidence_field": "story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "in marshall",
-        "state": "MO",
-        "evidence": "In Marshall, Missouri",
-        "confidence": "medium",
-        "method": "text_story_human_story_summary_city_state",
-        "city_cleaned": "marshall",
-        "city_original": "in marshall",
-        "evidence_field": "story_human_story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "marshall",
-        "state": "MO",
-        "evidence": "Marshall, Missouri",
-        "confidence": "medium",
-        "method": "text_story_location_scope_city_state",
-        "city_cleaned": "marshall",
-        "city_original": "marshall",
-        "evidence_field": "story_location_scope"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
+      "story_ids": [],
       "candidate": {
         "kind": "city_state",
         "city": "in marshall",
@@ -1683,9 +1434,7 @@
     {
       "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
       "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-005"
-      ],
+      "story_ids": [],
       "candidate": {
         "kind": "city_state",
         "city": "fitzgibbon hospital in marshall",
@@ -1696,154 +1445,6 @@
         "city_cleaned": "marshall",
         "city_original": "fitzgibbon hospital in marshall",
         "evidence_field": "source_summary_or_snippet"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ],
-      "candidate": {
-        "kind": "county_state",
-        "county": "in san luis obispo county",
-        "state": "CA",
-        "evidence": "In San Luis Obispo County, California",
-        "confidence": "high",
-        "method": "text_story_human_story_summary_county_state",
-        "evidence_field": "story_human_story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "in san luis obispo county",
-        "state": "CA",
-        "evidence": "In San Luis Obispo County, California",
-        "confidence": "medium",
-        "method": "text_story_human_story_summary_city_state",
-        "city_cleaned": "san luis obispo county",
-        "city_original": "in san luis obispo county",
-        "evidence_field": "story_human_story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ],
-      "candidate": {
-        "kind": "county_state",
-        "county": "san luis obispo county",
-        "state": "CA",
-        "evidence": "San Luis Obispo County, California",
-        "confidence": "high",
-        "method": "text_story_location_scope_county_state",
-        "evidence_field": "story_location_scope"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-001"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "san luis obispo county",
-        "state": "CA",
-        "evidence": "San Luis Obispo County, California",
-        "confidence": "medium",
-        "method": "text_story_location_scope_city_state",
-        "city_cleaned": "san luis obispo county",
-        "city_original": "san luis obispo county",
-        "evidence_field": "story_location_scope"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "in centerville",
-        "state": "IA",
-        "evidence": "In Centerville, Iowa",
-        "confidence": "medium",
-        "method": "text_story_human_story_summary_city_state",
-        "city_cleaned": "centerville",
-        "city_original": "in centerville",
-        "evidence_field": "story_human_story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-003"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "centerville",
-        "state": "IA",
-        "evidence": "Centerville, Iowa",
-        "confidence": "medium",
-        "method": "text_story_location_scope_city_state",
-        "city_cleaned": "centerville",
-        "city_original": "centerville",
-        "evidence_field": "story_location_scope"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "in sacramento",
-        "state": "CA",
-        "evidence": "In Sacramento, California",
-        "confidence": "medium",
-        "method": "text_story_human_story_summary_city_state",
-        "city_cleaned": "sacramento",
-        "city_original": "in sacramento",
-        "evidence_field": "story_human_story_summary"
-      },
-      "rejection_reason": "no_explicit_pressure_link"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "story_ids": [
-        "american-pressure-story-2026-05-16-004"
-      ],
-      "candidate": {
-        "kind": "city_state",
-        "city": "sacramento",
-        "state": "CA",
-        "evidence": "Sacramento, California",
-        "confidence": "medium",
-        "method": "text_story_location_scope_city_state",
-        "city_cleaned": "sacramento",
-        "city_original": "sacramento",
-        "evidence_field": "story_location_scope"
       },
       "rejection_reason": "no_explicit_pressure_link"
     }
@@ -1937,6 +1538,30 @@
       "source_record_id": "ap-2026-05-16-weather-story-wi-flood-assessments",
       "source_url": "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/",
       "date": "2026-05-04",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+      "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+      "date": "2026-05-22",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "date": "2026-05-19",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "date": "2026-05-19",
+      "reason": "mapped_from_state_context"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "date": "2026-05-22",
       "reason": "mapped_from_state_context"
     },
     {
@@ -2036,6 +1661,42 @@
       "source_url": "https://www.washingtonpost.com/business/2026/04/26/utility-power-electricity-shutoff-bills/",
       "date": "2026-04-26",
       "rejection_reason": "national_scope"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage",
+      "source_url": "https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/",
+      "date": "2026-05-18",
+      "rejection_reason": "missing_location"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1",
+      "source_url": "https://www.uscourts.gov/data-table-numbers/f-5a",
+      "date": "2026-03-31",
+      "rejection_reason": "national_scope"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs",
+      "source_url": "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/",
+      "date": "2026-05-21",
+      "rejection_reason": "missing_location"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
+      "source_url": "https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879",
+      "date": "2026-05-13",
+      "rejection_reason": "missing_location"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026",
+      "source_url": "https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment",
+      "date": "2026-03-27",
+      "rejection_reason": "national_scope"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
+      "source_url": "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/",
+      "date": "2026-05-17",
+      "rejection_reason": "missing_location"
     }
   ],
   "duplicate_groups": [
@@ -2147,6 +1808,34 @@
       "category": "local_system_strain",
       "selected_kind": "state_only",
       "location_label": "WI"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+      "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+      "category": "environmental_pressure",
+      "selected_kind": "state_only",
+      "location_label": "CA"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+      "source_url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+      "category": "housing_household_cost_pressure",
+      "selected_kind": "state_only",
+      "location_label": "AZ"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "category": "labor_income_pressure",
+      "selected_kind": "state_only",
+      "location_label": "OR"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "category": "local_system_strain",
+      "selected_kind": "state_only",
+      "location_label": "IA"
     },
     {
       "source_record_id": "feed-backfill-2026-05-15-id-nonprofit-policy-news-007",
@@ -2285,36 +1974,6 @@
       "reason": "better_local_candidate_exists"
     },
     {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "state": "MO",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "state": "MO",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy",
-      "source_url": "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/",
-      "state": "MO",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "state": "CA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
-      "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
-      "state": "CA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
       "source_record_id": "ap-2026-05-16-food-story-keyt-demand",
       "source_url": "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/",
       "state": "CA",
@@ -2330,36 +1989,6 @@
       "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
       "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
       "state": "IA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "state": "IA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "state": "IA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-health-story-kcrg-clinic-closure",
-      "source_url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
-      "state": "IA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "state": "CA",
-      "reason": "better_local_candidate_exists"
-    },
-    {
-      "source_record_id": "ap-2026-05-16-labor-story-capradio-layoffs",
-      "source_url": "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/",
-      "state": "CA",
       "reason": "better_local_candidate_exists"
     },
     {

@@ -1215,6 +1215,83 @@ def test_ap_summary_counts_and_readiness_progress_update():
     assert "Readiness progress: 1 approved / 4 minimum" in panel.ap_readiness_progress_var.get()
 
 
+def test_show_recommended_queue_reports_when_empty_and_does_not_hide_all_rows():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.ap_filter_min_score_var = _Var(45)
+    panel.ap_candidate_rows = [
+        {
+            "candidate_key": "q1",
+            "review_status": "quarantine",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "location": "Seattle, WA",
+            "score": 60,
+            "url": "https://example.com/q1",
+            "reader_headline": "Q1",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x", "linked_data_anchor_ids": ["x"]},
+        }
+    ]
+    panel.ap_candidate_status_updates = {"q1": "quarantine"}
+    panel.ap_recommended_queue_keys = []
+    panel.ap_recommended_queue_active_var = _Var(False)
+    panel.ap_filter_recommended_only_var = _Var(False)
+    panel.ap_candidate_view_note_var = _Var("")
+    calls = {"rendered": 0}
+    panel.apply_ap_filters_and_render = lambda: calls.__setitem__("rendered", calls["rendered"] + 1)
+
+    panel.show_recommended_review_queue()
+    assert panel.ap_recommended_queue_active_var.get() is False
+    assert "empty" in panel.ap_candidate_view_note_var.get().lower()
+    assert calls["rendered"] == 1
+
+
+def test_show_all_ap_candidates_disables_queue_filter_and_re_renders():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.ap_recommended_queue_active_var = _Var(True)
+    panel.ap_recommended_queue_keys = ["a", "b"]
+    panel.ap_candidate_view_note_var = _Var("note")
+    calls = {"rendered": 0}
+    panel.apply_ap_filters_and_render = lambda: calls.__setitem__("rendered", calls["rendered"] + 1)
+
+    panel.show_all_ap_candidates()
+    assert panel.ap_recommended_queue_active_var.get() is False
+    assert panel.ap_recommended_queue_keys == []
+    assert panel.ap_candidate_view_note_var.get() == ""
+    assert calls["rendered"] == 1
+
+
+def test_ap_summary_uses_true_visible_count_when_visible_rows_empty():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.root_dir = Path(".")
+    panel.ap_review_date_var = _Var("2026-05-16")
+    panel.ap_candidate_path_var = _Var("")
+    panel.ap_review_report_path_var = _Var("")
+    panel.ap_summary_var = _Var("")
+    panel.ap_duplicate_note_var = _Var("")
+    panel.ap_readiness_progress_var = _Var("")
+    panel.ap_filter_min_score_var = _Var(45)
+    panel.ap_recommended_queue_active_var = _Var(False)
+    panel.ap_visible_candidate_rows = []
+    panel.ap_candidate_rows = [
+        {
+            "candidate_key": "a",
+            "source_record_id": "a",
+            "review_status": "quarantine",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "location": "Seattle, WA",
+            "score": 65,
+            "url": "https://example.com/a",
+            "reader_headline": "A",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x", "linked_data_anchor_ids": []},
+        }
+    ]
+    panel.ap_candidate_status_updates = {"a": "quarantine"}
+
+    cp.DispatchesControlPanel.refresh_ap_review_summary(panel)
+    assert "visible=0" in panel.ap_summary_var.get()
+
+
 def test_generate_ap_html_rewrites_and_reports_success(monkeypatch, tmp_path):
     day = "2026-05-16"
     site_dir = tmp_path / "output" / "site" / "american-pressure" / "editions" / day

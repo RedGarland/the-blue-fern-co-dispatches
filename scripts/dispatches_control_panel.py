@@ -1957,6 +1957,7 @@ class DispatchesControlPanel:
         self.ap_review_report_path_var = tk.StringVar(value="")
         self.ap_summary_var = tk.StringVar(value="")
         self.ap_duplicate_note_var = tk.StringVar(value="")
+        self.ap_candidate_view_note_var = tk.StringVar(value="")
         self.ap_readiness_var = tk.StringVar(value="")
         self.ap_readiness_progress_var = tk.StringVar(value="")
         self.ap_generate_status_var = tk.StringVar(value="")
@@ -2169,6 +2170,8 @@ class DispatchesControlPanel:
         btn_row_2.pack(fill=tk.X, padx=10, pady=2)
         queue_btn = ttk.Button(btn_row_2, text="Show Recommended Review Queue", command=self.show_recommended_review_queue)
         queue_btn.pack(side=tk.LEFT, padx=6)
+        show_all_btn = ttk.Button(btn_row_2, text="Show All Reviewable Candidates", command=self.show_all_ap_candidates)
+        show_all_btn.pack(side=tk.LEFT, padx=6)
         clear_queue_btn = ttk.Button(btn_row_2, text="Clear Queue/Filters", command=self.clear_ap_filters)
         clear_queue_btn.pack(side=tk.LEFT, padx=6)
         readiness_btn = ttk.Button(btn_row_2, text="Check Weekly Readiness", command=self.check_ap_weekly_readiness)
@@ -2249,6 +2252,7 @@ class DispatchesControlPanel:
 
         ttk.Label(frame, textvariable=self.ap_summary_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=4)
         ttk.Label(frame, textvariable=self.ap_duplicate_note_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        ttk.Label(frame, textvariable=self.ap_candidate_view_note_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_readiness_progress_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_readiness_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_generate_status_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
@@ -2292,6 +2296,7 @@ class DispatchesControlPanel:
                 Tooltip(load_btn, "Load candidate records for all seven days in the selected week."),
                 Tooltip(save_btn, "Save only review status metadata back to candidate JSON files."),
                 Tooltip(queue_btn, "Show strongest candidates with editorial queue caps."),
+                Tooltip(show_all_btn, "Disable recommended queue filtering and show rows allowed by current filters."),
                 Tooltip(readiness_btn, "Check weekly readiness based on approved candidates."),
                 Tooltip(generate_btn, "Generate weekly edition HTML without Pages publish/push."),
                 Tooltip(open_html_btn, "Open output/site american-pressure edition HTML for the selected week-ending date."),
@@ -2442,6 +2447,7 @@ class DispatchesControlPanel:
         self.ap_candidate_override_keys = set()
         self.ap_recommended_queue_keys = []
         self.ap_recommended_queue_active_var.set(False)
+        self.ap_candidate_view_note_var.set("")
         self._update_ap_filter_values()
         self.apply_ap_filters_and_render()
 
@@ -2556,8 +2562,21 @@ class DispatchesControlPanel:
     def show_recommended_review_queue(self) -> None:
         threshold = int(self.ap_filter_min_score_var.get() or 45)
         self.ap_recommended_queue_keys = build_recommended_review_queue(self.ap_candidate_rows, self.ap_candidate_status_updates, score_threshold=threshold, max_per_pillar=3, max_total=25)
-        self.ap_recommended_queue_active_var.set(True)
+        if not self.ap_recommended_queue_keys:
+            self.ap_recommended_queue_active_var.set(False)
+            self.ap_candidate_view_note_var.set(
+                "Recommended review queue is empty. Use Show All Reviewable Candidates, or enable Show quarantined/Show rejected to inspect all rows."
+            )
+        else:
+            self.ap_recommended_queue_active_var.set(True)
+            self.ap_candidate_view_note_var.set("")
         self.ap_filter_recommended_only_var.set(False)
+        self.apply_ap_filters_and_render()
+
+    def show_all_ap_candidates(self) -> None:
+        self.ap_recommended_queue_active_var.set(False)
+        self.ap_recommended_queue_keys = []
+        self.ap_candidate_view_note_var.set("")
         self.apply_ap_filters_and_render()
 
     def clear_ap_filters(self) -> None:
@@ -2574,6 +2593,7 @@ class DispatchesControlPanel:
         self.ap_filter_show_rejected_var.set(False)
         self.ap_recommended_queue_active_var.set(False)
         self.ap_recommended_queue_keys = []
+        self.ap_candidate_view_note_var.set("")
         self.ap_sort_column = "default"
         self.ap_sort_desc = False
         self.apply_ap_filters_and_render()
@@ -2871,8 +2891,8 @@ class DispatchesControlPanel:
         min_score_var = getattr(self, "ap_filter_min_score_var", None)
         score_threshold = int(min_score_var.get() or 45) if min_score_var is not None else 45
         recommended_count = len(build_recommended_review_queue(rows, self.ap_candidate_status_updates, score_threshold=score_threshold, max_per_pillar=3, max_total=25))
-        visible_rows = getattr(self, "ap_visible_candidate_rows", [])
-        visible_count = len(visible_rows or rows)
+        visible_rows = getattr(self, "ap_visible_candidate_rows", None)
+        visible_count = len(visible_rows) if isinstance(visible_rows, list) else len(rows)
         self.ap_summary_var.set(
             f"total={len(rows)} | visible={visible_count} | recommended_queue={recommended_count} | approved={counts.get('approved', 0)} | rejected={counts.get('rejected', 0)} | quarantine={counts.get('quarantine', 0)} | maybe={counts.get('maybe', 0)} | needs_review={counts.get('needs_review', 0)}"
         )

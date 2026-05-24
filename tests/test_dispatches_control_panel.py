@@ -890,10 +890,97 @@ def test_push_pages_live_requires_confirmation(monkeypatch, tmp_path):
     panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
     panel.root_dir = tmp_path
     panel.ap_review_date_var = type("S", (), {"get": lambda self: "2026-05-16"})()
+    panel.run_ap_publish_checklist = lambda: {"items": [], "fail_count": 0, "warn_count": 0}
     panel._run_async_command = lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("should not run"))
     monkeypatch.setattr(cp, "load_status_json", lambda _root: {"dispatches": {"american_pressure": {"latest_public_edition_date": "2026-05-09", "latest_pages_edition_date": "2026-05-09"}}})
     monkeypatch.setattr(cp.messagebox, "askyesno", lambda *_args, **_kwargs: False)
     panel.push_ap_pages_live()
+
+
+def _write_ap_publish_fixture(root: Path, day: str, *, map_dashboard_route: bool = False, landing_missing_tracks: bool = False, edition_no_sources: bool = False, include_edition: bool = True):
+    pages = root / "bluefern-dispatches-pages"
+    (pages / "american-pressure" / "map").mkdir(parents=True, exist_ok=True)
+    (pages / "american-pressure" / "editions").mkdir(parents=True, exist_ok=True)
+    (pages / "index.html").write_text('<a href="/american-pressure/">AP</a>', encoding="utf-8")
+    landing = (
+        "<h2>What American Pressure Tracks</h2>"
+        "<p><strong>What it tracks:</strong></p>"
+        "<p><strong>What it does not claim:</strong></p>"
+        "<p><strong>How to read it:</strong></p>"
+    )
+    if landing_missing_tracks:
+        landing = landing.replace("What American Pressure Tracks", "American Pressure")
+    (pages / "american-pressure" / "index.html").write_text(landing, encoding="utf-8")
+    map_html = '<a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a>'
+    if map_dashboard_route:
+        map_html += ' <a href="/american-pressure/dashboard/">Dashboard</a>'
+    map_html += " May 17–May 23, 2026"
+    (pages / "american-pressure" / "map" / "index.html").write_text(map_html, encoding="utf-8")
+    (pages / "american-pressure" / "map" / "map_data.json").write_text(
+        json.dumps({"edition_date": day, "display_date_range": "May 17–May 23, 2026"}),
+        encoding="utf-8",
+    )
+    if include_edition:
+        edition = pages / "american-pressure" / "editions" / day
+        edition.mkdir(parents=True, exist_ok=True)
+        body = (
+            '<p><a href="dashboard.html">View Dashboard</a> | <a href="/american-pressure/editions/2026-05-23/sources_manifest.json">View Source Ledger</a></p>'
+            "<p><strong>Sources:</strong></p><a href=\"https://example.com/source\">source</a>"
+        )
+        if edition_no_sources:
+            body += " No source links were available"
+        (edition / "index.html").write_text(body, encoding="utf-8")
+        (edition / "sources_manifest.json").write_text("{}", encoding="utf-8")
+        (edition / "curation_manifest.json").write_text("{}", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text("{}", encoding="utf-8")
+
+
+def test_ap_publish_checklist_passes_on_valid_fixture(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    assert report["fail_count"] == 0
+    assert report["warn_count"] >= 0
+    assert report["ok_to_push"] is True
+
+
+def test_ap_publish_checklist_fails_if_map_contains_global_dashboard_route(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day, map_dashboard_route=True)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    assert any(item["id"] == "ap-map-no-global-dashboard-route" and item["status"] == cp.CHECKLIST_FAIL for item in report["items"])
+
+
+def test_ap_publish_checklist_fails_if_landing_missing_tracks_heading(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day, landing_missing_tracks=True)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    assert any(item["id"] == "ap-landing-what-american-pressure-tracks" and item["status"] == cp.CHECKLIST_FAIL for item in report["items"])
+
+
+def test_ap_publish_checklist_fails_if_edition_has_no_source_links_placeholder(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day, edition_no_sources=True)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    assert any(item["id"] == "ap-edition-no-sourceless-placeholder" and item["status"] == cp.CHECKLIST_FAIL for item in report["items"])
+
+
+def test_ap_publish_checklist_fails_if_selected_edition_missing(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day, include_edition=False)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    assert any(item["id"] == "ap-edition-exists" and item["status"] == cp.CHECKLIST_FAIL for item in report["items"])
+
+
+def test_ap_publish_checklist_report_is_deterministic_for_copy_use(tmp_path):
+    day = "2026-05-23"
+    _write_ap_publish_fixture(tmp_path, day)
+    report = cp.run_weekly_publish_checklist(tmp_path, "american-pressure", day)
+    text = cp.format_weekly_publish_checklist_report(report)
+    assert "Weekly Publish Checklist" in text
+    assert "Dispatch: american-pressure" in text
+    assert "Date: 2026-05-23" in text
+    assert "[PASS]" in text or "[WARN]" in text or "[FAIL]" in text
 
 
 def test_ap_candidate_summary_includes_quarantine_and_failure_counts(tmp_path):

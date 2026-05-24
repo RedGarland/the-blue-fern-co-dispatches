@@ -42,6 +42,9 @@ ACTIONS = (
 STATUS_BANNER_OK = "OK to review"
 STATUS_BANNER_WARN = "Needs attention"
 STATUS_BANNER_STOP = "Do not publish"
+CHECKLIST_PASS = "PASS"
+CHECKLIST_WARN = "WARN"
+CHECKLIST_FAIL = "FAIL"
 
 
 def project_root() -> Path:
@@ -225,6 +228,209 @@ def _approved_candidates_count(end_date: str, root: Path) -> int:
             if isinstance(row, dict) and str(row.get("review_status") or "").strip().lower() == "approved":
                 total += 1
     return total
+
+
+def _read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return ""
+
+
+def _weekly_date_range_label(end_date: str) -> str:
+    end = date_cls.fromisoformat(end_date)
+    start = end - timedelta(days=6)
+    return f"{start.strftime('%b')} {start.day}\u2013{end.strftime('%b')} {end.day}, {end.year}"
+
+
+def run_weekly_publish_checklist(
+    root: Path,
+    dispatch_slug: str,
+    date_text: str,
+    pages_repo: Path | None = None,
+) -> dict[str, Any]:
+    items: list[dict[str, str]] = []
+    normalized = dispatch_slug.strip().lower()
+    pages_root = pages_repo or (root / "bluefern-dispatches-pages")
+    site_root = root / "output" / "site"
+
+    def add_item(item_id: str, label: str, passed: bool, fail_detail: str, *, warn: bool = False, pass_detail: str = "") -> None:
+        if passed:
+            items.append({"id": item_id, "label": label, "status": CHECKLIST_PASS, "detail": pass_detail or "OK"})
+            return
+        items.append(
+            {
+                "id": item_id,
+                "label": label,
+                "status": CHECKLIST_WARN if warn else CHECKLIST_FAIL,
+                "detail": fail_detail,
+            }
+        )
+
+    if not validate_date(date_text):
+        return {
+            "dispatch_slug": normalized,
+            "date": date_text,
+            "items": [{"id": "date-valid", "label": "Selected date is valid YYYY-MM-DD", "status": CHECKLIST_FAIL, "detail": "Date must be YYYY-MM-DD."}],
+            "fail_count": 1,
+            "warn_count": 0,
+            "pass_count": 0,
+            "ok_to_push": False,
+        }
+
+    if normalized != "american-pressure":
+        return {
+            "dispatch_slug": normalized,
+            "date": date_text,
+            "items": [{"id": "dispatch-supported", "label": "Checklist support for selected dispatch", "status": CHECKLIST_WARN, "detail": "Checklist currently implemented for american-pressure only."}],
+            "fail_count": 0,
+            "warn_count": 1,
+            "pass_count": 0,
+            "ok_to_push": True,
+        }
+
+    root_index = pages_root / "index.html"
+    add_item(
+        "root-home-ap-link",
+        "Root homepage includes /american-pressure/",
+        root_index.exists() and "/american-pressure/" in _read_text(root_index),
+        f"Missing /american-pressure/ link in {root_index}",
+    )
+
+    ap_root = pages_root / "american-pressure"
+    ap_landing = ap_root / "index.html"
+    landing_text = _read_text(ap_landing)
+    add_item("ap-landing-exists", "/american-pressure/index.html exists", ap_landing.exists(), f"Missing {ap_landing}")
+    for marker in ("What American Pressure Tracks", "What it tracks", "What it does not claim", "How to read it"):
+        add_item(
+            f"ap-landing-{marker.lower().replace(' ', '-')}",
+            f"AP landing page includes '{marker}'",
+            ap_landing.exists() and marker in landing_text,
+            f"Missing marker '{marker}' in {ap_landing}",
+        )
+
+    edition_dir = ap_root / "editions" / date_text
+    edition_page = edition_dir / "index.html"
+    edition_text = _read_text(edition_page)
+    add_item("ap-edition-exists", f"Selected AP edition exists for {date_text}", edition_page.exists(), f"Missing {edition_page}")
+    add_item(
+        "ap-edition-source-ledger-link",
+        "Edition includes visible source ledger link",
+        "source ledger" in edition_text.lower(),
+        f"Edition missing source ledger link text in {edition_page}",
+    )
+    add_item(
+        "ap-edition-source-backed-links",
+        "Edition includes source-backed source links",
+        "<strong>sources:</strong>" in edition_text.lower() and "href=\"http" in edition_text.lower(),
+        f"Edition does not show expected source-backed links in {edition_page}",
+    )
+    add_item(
+        "ap-edition-no-sourceless-placeholder",
+        "Edition has no 'No source links were available'",
+        "No source links were available" not in edition_text,
+        f"Found sourceless placeholder in {edition_page}",
+    )
+    add_item(
+        "ap-edition-no-data-anchor-placeholder",
+        "Edition has no 'No data anchor was available'",
+        "No data anchor was available" not in edition_text,
+        f"Found missing-data-anchor placeholder in {edition_page}",
+    )
+    add_item(
+        "ap-edition-no-global-dashboard-route",
+        "Edition does not include /american-pressure/dashboard/",
+        "/american-pressure/dashboard/" not in edition_text,
+        f"Found forbidden dashboard route in {edition_page}",
+    )
+    add_item(
+        "ap-edition-local-dashboard-link-allowed",
+        "Edition local dashboard.html link is allowed",
+        "dashboard.html" in edition_text,
+        f"No local dashboard.html link found in {edition_page}",
+        warn=True,
+    )
+
+    map_page = ap_root / "map" / "index.html"
+    map_text = _read_text(map_page)
+    add_item("ap-map-exists", "AP map page exists", map_page.exists(), f"Missing {map_page}")
+    map_data = ap_root / "map" / "map_data.json"
+    map_data_text = _read_text(map_data)
+    add_item("ap-map-data-exists", "AP map data JSON exists", map_data.exists(), f"Missing {map_data}")
+    expected_range = _weekly_date_range_label(date_text)
+    add_item(
+        "ap-map-date-range",
+        "AP map includes selected week label/date range",
+        expected_range in map_text or expected_range in map_data_text or date_text in map_data_text,
+        f"Expected week label '{expected_range}' not found in map output.",
+    )
+    add_item(
+        "ap-map-no-global-dashboard-route",
+        "AP map page does not include /american-pressure/dashboard/",
+        "/american-pressure/dashboard/" not in map_text,
+        f"Found forbidden dashboard route in {map_page}",
+    )
+    add_item(
+        "ap-map-nav-dispatch-archive-home",
+        "AP map nav includes Dispatch, Archive, Home",
+        all(token in map_text for token in (">Dispatch<", ">Archive<", ">Home<")),
+        f"Map nav missing one or more of Dispatch/Archive/Home in {map_page}",
+    )
+
+    for fname, label in (
+        ("sources_manifest.json", "Sources manifest exists"),
+        ("curation_manifest.json", "Curation manifest exists"),
+        ("edition_manifest.json", "Edition manifest exists"),
+    ):
+        path = edition_dir / fname
+        add_item(f"ap-edition-{fname}", label, path.exists(), f"Missing {path}")
+
+    paid_detail_markers = ("output/detail", "output/paid", "paid-detail")
+    public_has_paid_detail_paths = any((pages_root / segment).exists() for segment in ("detail", "paid"))
+    combined_public = "\n".join(
+        [
+            _read_text(root_index),
+            _read_text(ap_landing),
+            _read_text(edition_page),
+            map_text,
+            map_data_text,
+        ]
+    ).lower()
+    add_item(
+        "public-no-paid-detail",
+        "Public output does not include paid/detail paths or paid-detail markers",
+        (not public_has_paid_detail_paths) and not any(marker in combined_public for marker in paid_detail_markers),
+        "Found paid/detail path or marker in public output.",
+    )
+
+    fail_count = sum(1 for item in items if item["status"] == CHECKLIST_FAIL)
+    warn_count = sum(1 for item in items if item["status"] == CHECKLIST_WARN)
+    pass_count = sum(1 for item in items if item["status"] == CHECKLIST_PASS)
+    return {
+        "dispatch_slug": normalized,
+        "date": date_text,
+        "pages_repo": str(pages_root),
+        "site_root": str(site_root),
+        "items": items,
+        "fail_count": fail_count,
+        "warn_count": warn_count,
+        "pass_count": pass_count,
+        "ok_to_push": fail_count == 0,
+    }
+
+
+def format_weekly_publish_checklist_report(report: dict[str, Any]) -> str:
+    lines = [
+        "Weekly Publish Checklist",
+        f"- Dispatch: {report.get('dispatch_slug')}",
+        f"- Date: {report.get('date')}",
+        f"- Pages repo: {report.get('pages_repo', '')}",
+        f"- Results: PASS={report.get('pass_count', 0)} WARN={report.get('warn_count', 0)} FAIL={report.get('fail_count', 0)}",
+        "",
+    ]
+    for item in report.get("items", []):
+        lines.append(f"[{item.get('status')}] {item.get('label')}: {item.get('detail')}")
+    return "\n".join(lines)
 
 
 def build_command(
@@ -1755,6 +1961,8 @@ class DispatchesControlPanel:
         self.ap_readiness_progress_var = tk.StringVar(value="")
         self.ap_generate_status_var = tk.StringVar(value="")
         self.ap_last_generated_var = tk.StringVar(value="")
+        self.ap_publish_checklist_var = tk.StringVar(value="")
+        self.ap_publish_checklist_last_report = ""
         self.ap_filter_status_var = tk.StringVar(value="all")
         self.ap_filter_pillar_var = tk.StringVar(value="all")
         self.ap_filter_publisher_quality_var = tk.StringVar(value="all")
@@ -1970,6 +2178,10 @@ class DispatchesControlPanel:
         publish_btn.pack(side=tk.LEFT, padx=6)
         push_btn = ttk.Button(btn_row, text="Push Pages Live", command=self.push_ap_pages_live)
         push_btn.pack(side=tk.LEFT, padx=6)
+        checklist_btn = ttk.Button(btn_row, text="Run Publish Checklist", command=self.run_ap_publish_checklist)
+        checklist_btn.pack(side=tk.LEFT, padx=6)
+        copy_checklist_btn = ttk.Button(btn_row, text="Copy Checklist Report", command=self.copy_ap_publish_checklist)
+        copy_checklist_btn.pack(side=tk.LEFT, padx=6)
 
         workflow_row = ttk.Frame(frame)
         workflow_row.pack(fill=tk.X, padx=10, pady=2)
@@ -2035,6 +2247,7 @@ class DispatchesControlPanel:
         ttk.Label(frame, textvariable=self.ap_readiness_var, foreground="#6a4d00", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_generate_status_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         ttk.Label(frame, textvariable=self.ap_last_generated_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
+        ttk.Label(frame, textvariable=self.ap_publish_checklist_var, foreground="#1f3f55", justify=tk.LEFT).pack(anchor="w", padx=10, pady=2)
         columns = ("date", "status", "pillar", "publisher_quality", "source_publisher", "reader_headline", "location", "score", "flags", "reason", "url")
         self.ap_candidates_tree = ttk.Treeview(frame, columns=columns, show="headings", height=18)
         for col in columns:
@@ -2062,6 +2275,8 @@ class DispatchesControlPanel:
 
         self.ap_details_text = ScrolledText(frame, height=8)
         self.ap_details_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=6)
+        self.ap_publish_checklist_text = ScrolledText(frame, height=8)
+        self.ap_publish_checklist_text.pack(fill=tk.BOTH, expand=False, padx=10, pady=6)
         self._tooltips.extend(
             [
                 Tooltip(year_combo, "Select the year for Sunday-Saturday weekly review."),
@@ -2076,6 +2291,8 @@ class DispatchesControlPanel:
                 Tooltip(open_html_btn, "Open output/site american-pressure edition HTML for the selected week-ending date."),
                 Tooltip(publish_btn, "Publish selected edition into local Pages repo only."),
                 Tooltip(push_btn, "Push local Pages gh-pages branch live after confirmation."),
+                Tooltip(checklist_btn, "Validate local Pages/output AP publish safety checks before push."),
+                Tooltip(copy_checklist_btn, "Copy checklist report text to clipboard."),
             ]
         )
         self.load_ap_candidates()
@@ -2562,7 +2779,46 @@ class DispatchesControlPanel:
             weekly_cmd.append("--allow-thin-edition")
         self._run_async_command(weekly_cmd, f"Publishing Pages locally for {date_text}")
 
+    def run_ap_publish_checklist(self) -> dict[str, Any]:
+        date_text = self.ap_review_date_var.get().strip()
+        report = run_weekly_publish_checklist(self.root_dir, "american-pressure", date_text)
+        report_text = format_weekly_publish_checklist_report(report)
+        self.ap_publish_checklist_last_report = report_text
+        checklist_var = getattr(self, "ap_publish_checklist_var", None)
+        if checklist_var is not None:
+            checklist_var.set(
+                f"Publish checklist: PASS={report.get('pass_count', 0)} WARN={report.get('warn_count', 0)} FAIL={report.get('fail_count', 0)}"
+            )
+        checklist_text = getattr(self, "ap_publish_checklist_text", None)
+        if checklist_text is not None:
+            checklist_text.delete("1.0", tk.END)
+            checklist_text.insert(tk.END, report_text)
+        append_output = getattr(self, "_append_output", None)
+        if callable(append_output):
+            append_output("[status] ran weekly publish checklist")
+        return report
+
+    def copy_ap_publish_checklist(self) -> None:
+        text = str(getattr(self, "ap_publish_checklist_last_report", "")).strip()
+        if not text:
+            messagebox.showinfo("Checklist", "Run publish checklist first.")
+            return
+        self.root_win.clipboard_clear()
+        self.root_win.clipboard_append(text)
+        self._append_output("[status] copied publish checklist report")
+
     def push_ap_pages_live(self) -> None:
+        checklist = self.run_ap_publish_checklist()
+        fail_items = [item for item in checklist.get("items", []) if item.get("status") == CHECKLIST_FAIL]
+        warn_items = [item for item in checklist.get("items", []) if item.get("status") == CHECKLIST_WARN]
+        if fail_items:
+            fail_lines = "\n".join(f"- {item.get('label')}: {item.get('detail')}" for item in fail_items[:8])
+            messagebox.showerror("Push blocked by checklist FAIL", f"Resolve checklist failures before push:\n{fail_lines}")
+            return
+        if warn_items:
+            warn_lines = "\n".join(f"- {item.get('label')}: {item.get('detail')}" for item in warn_items[:8])
+            if not messagebox.askyesno("Checklist warnings", f"Checklist has warning items:\n{warn_lines}\n\nContinue to push anyway?"):
+                return
         status = load_status_json(self.root_dir)
         ap = ((status.get("dispatches") or {}).get("american_pressure") or {})
         latest_public = str(ap.get("latest_public_edition_date") or "n/a")

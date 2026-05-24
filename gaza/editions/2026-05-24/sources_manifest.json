@@ -1,0 +1,93 @@
+[
+  {
+    "source_record_id": "gaza-2026-05-24-guardian-world-fde743c1f660",
+    "source_id": "gaza-2026-05-24-guardian-world-fde743c1f660",
+    "title": "Former prosecutor calls for EU statute blocking US sanctions on ICC members",
+    "url": "https://www.theguardian.com/law/2026/may/24/former-international-criminal-court-prosecutor-calls-for-eu-statute-blocking-us-sanctions-on-icc-members",
+    "canonical_url": "https://www.theguardian.com/law/2026/may/24/former-international-criminal-court-prosecutor-calls-for-eu-statute-blocking-us-sanctions-on-icc-members",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-24T04:00:47+00:00",
+    "retrieved_at": "2026-05-24T13:00:35.359102+00:00",
+    "summary_or_snippet": "US imposed sanctions on nine judges and a prosecutor after ICC issued arrest warrants for members of Israeli cabinet A former prosecutor at the international criminal court has called for an EU-wide statute blocking what she describes as \"thuggish\" and \"bullying\" US sanctions imposed on members of the court that are designed to send the court into oblivion. In February 2025, the US imposed sanctions on 11 ICC officials, including nine judges and the chief prosecutor as well three Palestinian organisations, in response to the ICC decision in 2024 to issue arrest warrants for members of the Israeli cabinet, including the prime minister, Benjamin Netanyahu.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-24",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-24-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|former prosecutor calls for eu statute blocking us sanctions on icc members",
+    "title_fingerprint": "former prosecutor calls for eu statute blocking us sanctions on icc members",
+    "claim_fingerprint": "guardian|former prosecutor calls for eu statute blocking us sanctions on icc members|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-24-aljazeera-middle-east-4d37c5cabcfe",
+    "source_id": "gaza-2026-05-24-aljazeera-middle-east-4d37c5cabcfe",
+    "title": "Israeli attack on Gaza kills three family members, including infant",
+    "url": "https://www.aljazeera.com/news/2026/5/24/israeli-attack-on-gaza-kills-three-family-members-including-infant?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/24/israeli-attack-on-gaza-kills-three-family-members-including-infant?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-24T11:41:58+00:00",
+    "retrieved_at": "2026-05-24T13:00:35.359102+00:00",
+    "summary_or_snippet": "Mohammad Abu Mallouh, \u200bAlaa Zaqlan and their child, Osama, killed in the attack on Nuseirat refugee camp, medics say.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-24",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-24-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israeli attack on gaza kills three family members including infant",
+    "title_fingerprint": "israeli attack on gaza kills three family members including infant",
+    "claim_fingerprint": "al jazeera|israeli attack on gaza kills three family members including infant|conflict"
+  }
+]

@@ -874,6 +874,7 @@ def test_ap_review_tab_contains_publish_and_checklist_controls():
         "Load Candidates",
         "Save Review Decisions",
         "Show Recommended Review Queue",
+        "Show All Candidates",
         "Clear Queue/Filters",
         "Check Weekly Readiness",
         "Generate HTML",
@@ -1250,13 +1251,35 @@ def test_show_all_ap_candidates_disables_queue_filter_and_re_renders():
     panel.ap_recommended_queue_active_var = _Var(True)
     panel.ap_recommended_queue_keys = ["a", "b"]
     panel.ap_candidate_view_note_var = _Var("note")
+    panel.ap_filter_recommended_only_var = _Var(True)
+    panel.ap_filter_show_quarantined_var = _Var(False)
+    panel.ap_filter_show_rejected_var = _Var(False)
+    panel.ap_filter_min_score_var = _Var(45)
+    panel.ap_filter_status_var = _Var("approved")
+    panel.ap_filter_pillar_var = _Var("food_pressure")
+    panel.ap_filter_publisher_quality_var = _Var("local_reporting")
+    panel.ap_filter_us_relevance_var = _Var("pass")
+    panel.ap_filter_prose_quality_var = _Var("pass")
+    panel.ap_filter_has_location_var = _Var(True)
+    panel.ap_filter_has_anchor_var = _Var(True)
     calls = {"rendered": 0}
     panel.apply_ap_filters_and_render = lambda: calls.__setitem__("rendered", calls["rendered"] + 1)
 
     panel.show_all_ap_candidates()
     assert panel.ap_recommended_queue_active_var.get() is False
     assert panel.ap_recommended_queue_keys == []
-    assert panel.ap_candidate_view_note_var.get() == ""
+    assert panel.ap_filter_recommended_only_var.get() is False
+    assert panel.ap_filter_show_quarantined_var.get() is True
+    assert panel.ap_filter_show_rejected_var.get() is True
+    assert panel.ap_filter_min_score_var.get() == 0
+    assert panel.ap_filter_status_var.get() == "all"
+    assert panel.ap_filter_pillar_var.get() == "all"
+    assert panel.ap_filter_publisher_quality_var.get() == "all"
+    assert panel.ap_filter_us_relevance_var.get() == "all"
+    assert panel.ap_filter_prose_quality_var.get() == "all"
+    assert panel.ap_filter_has_location_var.get() is False
+    assert panel.ap_filter_has_anchor_var.get() is False
+    assert "including quarantined and rejected" in panel.ap_candidate_view_note_var.get().lower()
     assert calls["rendered"] == 1
 
 
@@ -1290,6 +1313,105 @@ def test_ap_summary_uses_true_visible_count_when_visible_rows_empty():
 
     cp.DispatchesControlPanel.refresh_ap_review_summary(panel)
     assert "visible=0" in panel.ap_summary_var.get()
+
+
+def test_all_quarantine_rows_hidden_by_default_filters_then_show_all_makes_visible():
+    rows = [
+        {
+            "candidate_key": "q1",
+            "date": "2026-05-16",
+            "review_status": "quarantine",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "source_publisher": "Example",
+            "reader_headline": "Q1",
+            "location": "",
+            "score": 20,
+            "reason": "",
+            "url": "https://example.com/q1",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x"},
+        }
+    ]
+    status_updates = {"q1": "quarantine"}
+    default_filters = {
+        "status": "all",
+        "pillar": "all",
+        "publisher_quality": "all",
+        "min_score": 45,
+        "us_relevance": "all",
+        "prose_quality": "all",
+        "has_location": False,
+        "has_anchor": False,
+        "recommended_only": False,
+        "show_quarantined": False,
+        "show_rejected": False,
+    }
+    visible_default = [row for row in rows if cp.row_matches_ap_filters(row, status_updates, default_filters)]
+    assert visible_default == []
+    show_all_filters = dict(default_filters)
+    show_all_filters.update(
+        {
+            "min_score": 0,
+            "show_quarantined": True,
+            "show_rejected": True,
+        }
+    )
+    visible_after = [row for row in rows if cp.row_matches_ap_filters(row, status_updates, show_all_filters)]
+    assert [row["candidate_key"] for row in visible_after] == ["q1"]
+
+
+def test_apply_filters_sets_zero_row_diagnostic_for_active_filters():
+    panel = cp.DispatchesControlPanel.__new__(cp.DispatchesControlPanel)
+    panel.ap_candidate_rows = [
+        {
+            "candidate_key": "q1",
+            "date": "2026-05-16",
+            "review_status": "quarantine",
+            "pillar": "food_pressure",
+            "publisher_quality": "local_reporting",
+            "source_publisher": "Example",
+            "reader_headline": "Q1",
+            "location": "",
+            "score": 20,
+            "reason": "",
+            "url": "https://example.com/q1",
+            "raw": {"us_relevance_ok": True, "public_pressure_angle": "x"},
+        }
+    ]
+    panel.ap_candidate_status_updates = {"q1": "quarantine"}
+    panel.ap_recommended_queue_active_var = _Var(False)
+    panel.ap_filter_status_var = _Var("all")
+    panel.ap_filter_pillar_var = _Var("all")
+    panel.ap_filter_publisher_quality_var = _Var("all")
+    panel.ap_filter_min_score_var = _Var(45)
+    panel.ap_filter_us_relevance_var = _Var("all")
+    panel.ap_filter_prose_quality_var = _Var("all")
+    panel.ap_filter_has_location_var = _Var(False)
+    panel.ap_filter_has_anchor_var = _Var(False)
+    panel.ap_filter_recommended_only_var = _Var(False)
+    panel.ap_filter_show_quarantined_var = _Var(False)
+    panel.ap_filter_show_rejected_var = _Var(False)
+    panel.ap_candidate_view_note_var = _Var("")
+    panel.ap_visible_candidate_rows = []
+    panel.ap_visible_candidate_keys = []
+    panel.ap_recommended_queue_keys = []
+    panel.ap_sort_column = "default"
+    panel.ap_sort_desc = False
+    panel.refresh_ap_review_summary = lambda: None
+    panel.ap_candidates_tree = type(
+        "T",
+        (),
+        {
+            "get_children": lambda self: (),
+            "delete": lambda self, _item: None,
+            "insert": lambda self, *_args, **_kwargs: None,
+        },
+    )()
+    panel._ap_row_has_risk_flag = lambda _row: False
+    panel._ap_row_flags_text = lambda _row: ""
+
+    cp.DispatchesControlPanel.apply_ap_filters_and_render(panel)
+    assert "No rows match current filters." in panel.ap_candidate_view_note_var.get()
 
 
 def test_generate_ap_html_rewrites_and_reports_success(monkeypatch, tmp_path):

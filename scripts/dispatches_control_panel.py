@@ -1,4 +1,5 @@
-﻿from __future__ import annotations
+﻿#dispatches_control_panel.py
+from __future__ import annotations
 
 import json
 import os
@@ -2170,7 +2171,7 @@ class DispatchesControlPanel:
         btn_row_2.pack(fill=tk.X, padx=10, pady=2)
         queue_btn = ttk.Button(btn_row_2, text="Show Recommended Review Queue", command=self.show_recommended_review_queue)
         queue_btn.pack(side=tk.LEFT, padx=6)
-        show_all_btn = ttk.Button(btn_row_2, text="Show All Reviewable Candidates", command=self.show_all_ap_candidates)
+        show_all_btn = ttk.Button(btn_row_2, text="Show All Candidates", command=self.show_all_ap_candidates)
         show_all_btn.pack(side=tk.LEFT, padx=6)
         clear_queue_btn = ttk.Button(btn_row_2, text="Clear Queue/Filters", command=self.clear_ap_filters)
         clear_queue_btn.pack(side=tk.LEFT, padx=6)
@@ -2296,7 +2297,7 @@ class DispatchesControlPanel:
                 Tooltip(load_btn, "Load candidate records for all seven days in the selected week."),
                 Tooltip(save_btn, "Save only review status metadata back to candidate JSON files."),
                 Tooltip(queue_btn, "Show strongest candidates with editorial queue caps."),
-                Tooltip(show_all_btn, "Disable recommended queue filtering and show rows allowed by current filters."),
+                Tooltip(show_all_btn, "Show all rows, including quarantined/rejected, by widening AP candidate filters."),
                 Tooltip(readiness_btn, "Check weekly readiness based on approved candidates."),
                 Tooltip(generate_btn, "Generate weekly edition HTML without Pages publish/push."),
                 Tooltip(open_html_btn, "Open output/site american-pressure edition HTML for the selected week-ending date."),
@@ -2542,6 +2543,28 @@ class DispatchesControlPanel:
                 ),
                 tags=tuple(tags),
             )
+        if self.ap_candidate_rows and not rows:
+            reasons: list[str] = []
+            if not bool(filters.get("show_quarantined")):
+                reasons.append("quarantined rows hidden")
+            if not bool(filters.get("show_rejected")):
+                reasons.append("rejected rows hidden")
+            if int(filters.get("min_score") or 0) > 0:
+                reasons.append(f"min score filter ({int(filters.get('min_score') or 0)})")
+            if bool(filters.get("recommended_only")):
+                reasons.append("recommended-only filter")
+            if self.ap_recommended_queue_active_var.get():
+                reasons.append("recommended queue filter active")
+            for key in ("status", "pillar", "publisher_quality", "us_relevance", "prose_quality"):
+                value = str(filters.get(key) or "all")
+                if value != "all":
+                    reasons.append(f"{key} filter ({value})")
+            reason_text = ", ".join(reasons) if reasons else "active filters"
+            self.ap_candidate_view_note_var.set(
+                f"No rows match current filters. Likely causes: {reason_text}. Use Show All Candidates to widen filters."
+            )
+        elif self.ap_candidate_view_note_var.get().startswith("No rows match current filters."):
+            self.ap_candidate_view_note_var.set("")
         self.refresh_ap_review_summary()
 
     def _ap_row_has_risk_flag(self, row: dict[str, Any]) -> bool:
@@ -2565,7 +2588,7 @@ class DispatchesControlPanel:
         if not self.ap_recommended_queue_keys:
             self.ap_recommended_queue_active_var.set(False)
             self.ap_candidate_view_note_var.set(
-                "Recommended review queue is empty. Use Show All Reviewable Candidates, or enable Show quarantined/Show rejected to inspect all rows."
+                "Recommended review queue is empty. Use Show All Candidates, or enable Show quarantined/Show rejected to inspect all rows."
             )
         else:
             self.ap_recommended_queue_active_var.set(True)
@@ -2576,7 +2599,18 @@ class DispatchesControlPanel:
     def show_all_ap_candidates(self) -> None:
         self.ap_recommended_queue_active_var.set(False)
         self.ap_recommended_queue_keys = []
-        self.ap_candidate_view_note_var.set("")
+        self.ap_filter_recommended_only_var.set(False)
+        self.ap_filter_show_quarantined_var.set(True)
+        self.ap_filter_show_rejected_var.set(True)
+        self.ap_filter_min_score_var.set(0)
+        self.ap_filter_status_var.set("all")
+        self.ap_filter_pillar_var.set("all")
+        self.ap_filter_publisher_quality_var.set("all")
+        self.ap_filter_us_relevance_var.set("all")
+        self.ap_filter_prose_quality_var.set("all")
+        self.ap_filter_has_location_var.set(False)
+        self.ap_filter_has_anchor_var.set(False)
+        self.ap_candidate_view_note_var.set("Showing all candidates, including quarantined and rejected rows.")
         self.apply_ap_filters_and_render()
 
     def clear_ap_filters(self) -> None:

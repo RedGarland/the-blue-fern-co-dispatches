@@ -2,14 +2,14 @@
   "stories": [
     {
       "story_id": "american-pressure-story-2026-05-23-001",
-      "title": "Food support networks report rising demand",
-      "summary": "Second Harvest Food Bank of Santa Cruz County reported a sharp rise in demand tied to higher living costs, with more than 80,000 people served in the prior month.",
+      "title": "Food support networks in Food, Advocates report rising demand",
+      "summary": "16M Californians Struggling To Afford Food, Advocates Warn Hoodline",
       "category": "food-pressure",
       "pillar": "food_pressure",
       "curation_reason": "food assistance dependency",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 54,
         "watchlist_signal": 0
       },
@@ -17,37 +17,40 @@
       "score": 99,
       "included_in_public_summary": true,
       "source_record_ids": [
+        "ap-2026-05-19-food-pressure-16m-californians-struggling-to-afford-food-advocates-warn",
         "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
+        "ap-2026-05-23-food-pressure-branch-county-food-pantry-awarded-75k-grant-as-food-insecurity-gro",
         "auto-2026-05-23-usda-fns-snap-household-characteristics",
         "auto-2026-05-23-usda-fns-snap-data-tables",
-        "auto-2026-05-23-usda-ers-food-price-outlook",
-        "registry-2026-05-23-al-local-rural-news",
-        "registry-2026-05-23-ak-local-rural-news"
+        "auto-2026-05-23-usda-ers-food-price-outlook"
       ],
       "source_urls": [
+        "https://news.google.com/rss/articles/CBMipgFBVV95cUxPZHp0YmhqUGktR2xicm9laHpzVTNFZTEyN0Y1ZWFPYXJIbTVvVjZhRmk0M0RUdlpUam0yMThOQ2JhTWg4Z0MweFVZUl8xYUlXb0ZSQkJadmxPNTNnZWFXOVdlT2xzbTlYVWF6cjB6NW5lUVNPSS1vUVcxcDVMWjNZbmQtSHpOZ1IyeFREWFJBQ053Z0M2bDRWNXdWTFJteTc5RWZPa0h3?oc=5",
         "https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879",
+        "https://news.google.com/rss/articles/CBMigwFBVV95cUxOakMxeEF6VWtOZlNtNzdjOU0xMG9HNnRxUkt2TWZVQWI4VWZkTXU3WE9IM29DZExHd2o1a1c1NWRlazA4OTcwNlBURmU0X3RWRW9sLUpLSUxNc2RhWEJ5RHFrSG9FMTVDdEs1dnlNMDVJRVdsZFBYdWJvZDJqelk2a3d3Zw?oc=5",
         "https://www.fns.usda.gov/research/snap/household-characteristics",
         "https://www.fns.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
-        "https://www.ers.usda.gov/data-products/food-price-outlook/",
-        "https://www.annistonstar.com",
-        "https://www.frontiersman.com"
+        "https://www.ers.usda.gov/data-products/food-price-outlook/"
       ],
       "publisher_names": [
+        "Hoodline",
         "KSBW",
+        "AOL.com",
         "USDA Food and Nutrition Service",
         "USDA Food and Nutrition Service",
-        "USDA Economic Research Service",
-        "local_or_regional_newsroom",
-        "local_or_regional_newsroom"
+        "USDA Economic Research Service"
       ],
       "public_source_record_ids": [
+        "ap-2026-05-19-food-pressure-16m-californians-struggling-to-afford-food-advocates-warn",
         "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
         "auto-2026-05-23-usda-fns-snap-household-characteristics",
         "auto-2026-05-23-usda-fns-snap-data-tables",
         "auto-2026-05-23-usda-ers-food-price-outlook"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand"
+        "ap-2026-05-19-food-pressure-16m-californians-struggling-to-afford-food-advocates-warn",
+        "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
+        "ap-2026-05-23-food-pressure-branch-county-food-pantry-awarded-75k-grant-as-food-insecurity-gro"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-23-usda-fns-snap-household-characteristics",
@@ -106,32 +109,32 @@
         "registry-2026-05-23-dc-local-rural-news"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Food support networks report rising demand",
-      "human_story_summary": "In US-CA, Food banks and assistance providers are reporting tighter conditions for households.",
+      "reader_headline": "Food support networks in Food, Advocates report rising demand",
+      "human_story_summary": "In Food, Advocates, Food banks and assistance providers are reporting tighter conditions for households.",
       "data_context_summary": "Data context from SNAP Household Characteristics, SNAP Data Tables, USDA ERS Food Price Outlook is a baseline for tracking whether food pressure is broadening.",
-      "what_happened": "Food banks and assistance providers are reporting tighter conditions for households.",
-      "potential_relevance": "This signal may show up later as tighter grocery tradeoffs, higher pantry demand, and less room in monthly budgets.",
-      "who_may_feel_it": "Families with low or fixed incomes, households with children, and older adults.",
-      "what_to_watch_next": "Watch whether food assistance reliance and grocery cost pressure are rising or easing.",
-      "location_scope": "",
+      "what_happened": "16M Californians Struggling To Afford Food, Advocates Warn Hoodline",
+      "potential_relevance": "This may signal tighter grocery tradeoffs and higher pantry demand.",
+      "who_may_feel_it": "Households with low or fixed incomes and local food support networks.",
+      "what_to_watch_next": "Watch pantry demand, benefit access, and grocery affordability shifts.",
+      "location_scope": "Food, Advocates",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "",
-      "public_pressure_angle": "Rising local food-bank utilization signals household food affordability strain.",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
       "story_id": "american-pressure-story-2026-05-23-002",
-      "title": "Housing and bill pressure is squeezing household budgets",
-      "summary": "Arizona Corporation Commission warned of significant summer electricity bill increases and highlighted payment-assistance and disconnection-protection options for households.",
+      "title": "Housing and bill pressure in City, Say is squeezing household budgets",
+      "summary": "Guwahati No Longer Feels Like an Affordable City, Say Residents G Plus News",
       "category": "housing-household-cost-pressure",
       "pillar": "housing_household_cost_pressure",
       "curation_reason": "shelter cost pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 52,
         "watchlist_signal": 0
       },
@@ -139,35 +142,38 @@
       "score": 98,
       "included_in_public_summary": true,
       "source_record_ids": [
-        "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+        "ap-2026-05-23-housing-household-cost-pressure-guwahati-no-longer-feels-like-an-affordable-city",
+        "ap-2026-05-23-housing-household-cost-pressure-minneapolis-st-paul-started-paying-rent-aid-afte",
+        "ap-2026-05-22-housing-household-cost-pressure-rep-cavitt-house-republicans-address-affordabili",
         "auto-2026-05-23-bls-cpi-shelter",
         "registry-2026-05-23-al-local-urban-news",
-        "registry-2026-05-23-ak-local-urban-news",
-        "registry-2026-05-23-az-local-urban-news",
-        "registry-2026-05-23-ar-local-urban-news"
+        "registry-2026-05-23-ak-local-urban-news"
       ],
       "source_urls": [
-        "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+        "https://news.google.com/rss/articles/CBMingFBVV95cUxQcFJxbGd6MUpPazhkVTdBQ0RiaGJWZ2l5QmRlR185NV9CTF9YQXA4dEZfeU1HZFJHYTVFS211cERzQU5wdm9vMUlxQThxeDdiYUNVdlZWV21oa0JsTjdoX081c3oyWVJlUG9rSWdNZmRrVk9BckpMc2pZMVdQeERrd3dwNk04d0xqb1pWbjFrbGNZWXNOeE1pVlRRN19Bdw?oc=5",
+        "https://news.google.com/rss/articles/CBMijgFBVV95cUxPcWhhVW5IQ3ZZTFEtdkYzbGZhbFdnZmlPU19oMUFjUDQtblpBS3lkRkNHOTdocFJTUGNxNVBlNExHbmR2TkZOWm9sNVo0aG42aTZ1SGVmMXN4eHFyM3QyOE9HZGpUdFBibHdLZFE3TDlhOXdqQnRkZXZBbFBLSDZGYm5XcmtiN09tU3VqdW9n?oc=5",
+        "https://news.google.com/rss/articles/CBMimAFBVV95cUxOS3R1V1MzajBVeTE3ZHlKSS1ramduOENHQzZpTVRKVnMxQ3RXbmJxZzBCTEZTX2Z3cmw2Mlh2bG9ONVdUU2FRc0JNelo1V1FBS3lsOUVIWXBaS0FDRFRmWEVPU250SG44VldQcFNoY1R5Z3J5SEFoLUxNMmVFTDJYMENlWEx6TWVGU3dESkZTc2o5aTRiOXgwRg?oc=5",
         "https://www.bls.gov/cpi/",
         "https://www.al.com",
-        "https://www.adn.com",
-        "https://www.azcentral.com",
-        "https://www.arkansasonline.com"
+        "https://www.adn.com"
       ],
       "publisher_names": [
-        "FOX 10 Phoenix",
+        "G Plus News",
+        "Star Tribune",
+        "Michigan House Republicans",
         "U.S. Bureau of Labor Statistics",
-        "local_or_regional_newsroom",
-        "local_or_regional_newsroom",
         "local_or_regional_newsroom",
         "local_or_regional_newsroom"
       ],
       "public_source_record_ids": [
-        "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+        "ap-2026-05-23-housing-household-cost-pressure-guwahati-no-longer-feels-like-an-affordable-city",
+        "ap-2026-05-23-housing-household-cost-pressure-minneapolis-st-paul-started-paying-rent-aid-afte",
         "auto-2026-05-23-bls-cpi-shelter"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-23-housing-fox10-az-summer-electricity-bills"
+        "ap-2026-05-23-housing-household-cost-pressure-guwahati-no-longer-feels-like-an-affordable-city",
+        "ap-2026-05-23-housing-household-cost-pressure-minneapolis-st-paul-started-paying-rent-aid-afte",
+        "ap-2026-05-22-housing-household-cost-pressure-rep-cavitt-house-republicans-address-affordabili"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-23-bls-cpi-shelter",
@@ -224,32 +230,32 @@
         "registry-2026-05-23-dc-local-urban-news"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Housing and bill pressure is squeezing household budgets",
-      "human_story_summary": "In US-AZ, Housing and monthly bill pressures are increasing strain on household budgets.",
+      "reader_headline": "Housing and bill pressure in City, Say is squeezing household budgets",
+      "human_story_summary": "In City, Say, Housing and monthly bill pressures are increasing strain on household budgets.",
       "data_context_summary": "Data context from BLS CPI Shelter Index is a baseline for whether housing and bill pressure remains persistent.",
-      "what_happened": "Housing and monthly bill pressures are increasing strain on household budgets.",
-      "potential_relevance": "This is a baseline for watching whether housing and utility costs keep crowding out other essentials.",
-      "who_may_feel_it": "Renters, first-time buyers, and households already cost-burdened on monthly bills.",
-      "what_to_watch_next": "Watch whether shelter and utility pressure is broadening or stabilizing.",
-      "location_scope": "",
+      "what_happened": "Guwahati No Longer Feels Like an Affordable City, Say Residents G Plus News",
+      "potential_relevance": "This may signal heavier monthly housing and utility burden.",
+      "who_may_feel_it": "Renters, cost-burdened households, and residents facing utility pressure.",
+      "what_to_watch_next": "Watch eviction risk, rent trends, and utility burden changes.",
+      "location_scope": "City, Say",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "",
-      "public_pressure_angle": "Summer utility-cost pressure and affordability risk for households.",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
       "story_id": "american-pressure-story-2026-05-23-003",
-      "title": "Health access pressure is disrupting care",
-      "summary": "Local reporting documents patient concern and travel burden after Los Alamos Medical Center halted labor and delivery services, indicating an active health-access disruption in the review window.",
+      "title": "Health access pressure in Concord, Adding is disrupting care",
+      "summary": "Atrium Health Opens Round-the-Clock Emergency Facility in Concord, Adding Nearly 100 Jobs Country 103.7",
       "category": "health-access-pressure",
       "pillar": "health_access_pressure",
       "curation_reason": "health coverage/access pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 33,
         "watchlist_signal": 0
       },
@@ -257,36 +263,39 @@
       "score": 97,
       "included_in_public_summary": true,
       "source_record_ids": [
+        "ap-2026-05-19-health-access-pressure-atrium-health-opens-round-the-clock-emergency-facility-in",
         "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
+        "ap-2026-05-23-health-access-pressure-vermont-hospitals-face-restructuring-for-financial-health",
         "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026",
         "auto-2026-05-23-cms-medicaid-chip-enrollment",
-        "registry-2026-05-23-al-hrsa-shortage-areas",
-        "registry-2026-05-23-ak-hrsa-shortage-areas",
-        "registry-2026-05-23-az-hrsa-shortage-areas"
+        "registry-2026-05-23-al-hrsa-shortage-areas"
       ],
       "source_urls": [
+        "https://news.google.com/rss/articles/CBMixAFBVV95cUxNd2FuX1gwWmR0TGdyNXpSSWgzWUFhbXAtb0VaYk5LVHlIZHBLMkNjVk1tVXNNV0ltZ19NX05SSkpXWXNYQkJvQi1MQ01oc3owQTBmcEJIZ1JtX2thZGxkRjJvTGJaMEkydlhTUm5vQ21QZ3Q1MWFQdjRyUUprcWk0Qko4NDNjZ3UtM1JyMkx1VVV1eFhHRGw4bUFxUk92akU5Y0tQR2JVS0RHck9Xb0lQVUZjcE8tS3ROc2JlMW5sM29sR01u?oc=5",
         "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/",
+        "https://news.google.com/rss/articles/CBMib0FVX3lxTE1tVmFxZ2pWRVhVMlVkdDJWNmM2RVZKN1d2engwQ256S3NKd2RUMHZGWHVkcVdSYl85OV9WRzdReVZwZzh0Ui02SGhqZFpMWjVHSGdoTHBxNEZLd0tFN0c4OFRORFhHdExjSE1xUl8zYw?oc=5",
         "https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment",
         "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
-        "https://data.hrsa.gov/topics/health-workforce/shortage-areas",
-        "https://data.hrsa.gov/topics/health-workforce/shortage-areas",
         "https://data.hrsa.gov/topics/health-workforce/shortage-areas"
       ],
       "publisher_names": [
+        "Country 103.7",
         "Searchlight New Mexico",
+        "Valley News",
         "Medicaid.gov",
         "Centers for Medicare and Medicaid Services",
-        "federal_public_health",
-        "federal_public_health",
         "federal_public_health"
       ],
       "public_source_record_ids": [
+        "ap-2026-05-19-health-access-pressure-atrium-health-opens-round-the-clock-emergency-facility-in",
         "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
         "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026",
         "auto-2026-05-23-cms-medicaid-chip-enrollment"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt"
+        "ap-2026-05-19-health-access-pressure-atrium-health-opens-round-the-clock-emergency-facility-in",
+        "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
+        "ap-2026-05-23-health-access-pressure-vermont-hospitals-face-restructuring-for-financial-health"
       ],
       "data_anchor_source_ids": [
         "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026",
@@ -324,20 +333,20 @@
         "registry-2026-05-23-dc-hrsa-shortage-areas"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Health access pressure is disrupting care",
-      "human_story_summary": "In US-NM, Local developments suggest growing pressure on care access and service continuity.",
+      "reader_headline": "Health access pressure in Concord, Adding is disrupting care",
+      "human_story_summary": "In Concord, Adding, Local developments suggest growing pressure on care access and service continuity.",
       "data_context_summary": "Data context from Map Element, Medicaid and CHIP Enrollment Data helps track whether coverage and access pressure could widen.",
-      "what_happened": "Local developments suggest growing pressure on care access and service continuity.",
-      "potential_relevance": "This signal may matter if households could face coverage gaps, delayed care, or higher out-of-pocket pressure.",
-      "who_may_feel_it": "People with chronic conditions, caregivers, and uninsured or underinsured households.",
-      "what_to_watch_next": "Watch for coverage changes, closures, and access bottlenecks.",
-      "location_scope": "",
+      "what_happened": "Atrium Health Opens Round-the-Clock Emergency Facility in Concord, Adding Nearly 100 Jobs Country 103.7",
+      "potential_relevance": "This may signal pressure in coverage, clinic access, or care continuity.",
+      "who_may_feel_it": "Patients with chronic needs, caregivers, and underinsured households.",
+      "what_to_watch_next": "Watch clinic capacity, coverage shifts, and care delays.",
+      "location_scope": "Concord, Adding",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "",
-      "public_pressure_angle": "Service reduction creates near-term access barriers and longer travel requirements for maternal care.",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -349,7 +358,7 @@
       "curation_reason": "job market pressure",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 1,
         "watchlist_signal": 0
       },
@@ -358,22 +367,31 @@
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-23-labor-oregon-warn-rndc-146",
+        "ap-2026-05-21-labor-income-pressure-singapore-retrenchments-2026-amazon-tiger-beer-yeo-s-and-m",
+        "ap-2026-05-23-labor-income-pressure-everyone-talks-about-layoffs-few-talk-about-the-survivors-",
         "auto-2026-05-23-bls-unemployment-situation"
       ],
       "source_urls": [
         "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+        "https://news.google.com/rss/articles/CBMi3AFBVV95cUxPTlEwNEJOR3E5eE9wZFN3dFBQRHpOTWRSdzNObF9HMmVrWlRSaDc1N0xpMDRUZkEwd2w3WF95bVlVSXNjNTRFbUswT09JcFZLTlg1WlN2ZzVudE1rOFFpM2xGOUhxQ3VQVTNPcjc4UXRDMGRpckQ2UXR3WWs2OVlXdnZURlRwSnVSZXYxMkYtbEhHcHdjMWxfcGV3bmdZWmx0eF91WTNZcDc2Zkg2ZmhNNGM3aTNYNXc4M00ySHJ3ZHVkb19YOVliRDdwbkZ5WTkxWU40YjExVURkRnlI?oc=5",
+        "https://news.google.com/rss/articles/CBMiigJBVV95cUxPX0dmejBtY1FfNUJCQ2c0ZHlteW5ZcjFUbzNLTkhPemFlUU9CNU5JcnJxeTUtcV9VY0dXOFc4bDZuaVhibWphczVZZUtENERhRE9pX0hXVlpJaU5YVTM1NjVRR290YU5WY2FQeFdibnNkRG9mU2pndExiRDdvVDhicjRiMnlGSlpLWTBneGdlZU1BQy1JOVRWXzF4d0tnaF9nUXdtZkpCY01OUW1VRF9CS2Y0REdfQ2NJZlNSbktNVXEtLUtQc2IwQnVaUzVRbHFHdmIxcDNQR294VGFQREJ5eVNYenNETlRiX1A0WWZvUFYySE5udkhNMUU4Nk9QLWU5ZGxlTEl0ZERoQQ?oc=5",
         "https://www.bls.gov/news.release/empsit.nr0.htm"
       ],
       "publisher_names": [
         "Oregon Rapid Response Activity Tracking System",
+        "The Independent Singapore News",
+        "MSN",
         "U.S. Bureau of Labor Statistics"
       ],
       "public_source_record_ids": [
         "ap-2026-05-23-labor-oregon-warn-rndc-146",
+        "ap-2026-05-21-labor-income-pressure-singapore-retrenchments-2026-amazon-tiger-beer-yeo-s-and-m",
         "auto-2026-05-23-bls-unemployment-situation"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-23-labor-oregon-warn-rndc-146"
+        "ap-2026-05-23-labor-oregon-warn-rndc-146",
+        "ap-2026-05-21-labor-income-pressure-singapore-retrenchments-2026-amazon-tiger-beer-yeo-s-and-m",
+        "ap-2026-05-23-labor-income-pressure-everyone-talks-about-layoffs-few-talk-about-the-survivors-"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-23-bls-unemployment-situation"
@@ -392,19 +410,19 @@
       "pressure_direction": "",
       "public_pressure_angle": "Documented mass-layoff notice tied to household paycheck risk.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
       "story_id": "american-pressure-story-2026-05-23-005",
-      "title": "Financial distress signals suggest higher household risk",
-      "summary": "Watertown City Council adopted a budget with an 8 percent property-tax increase and layoffs, signaling immediate local fiscal strain likely to tighten household budgets and service capacity.",
+      "title": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case",
+      "summary": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case Trucks, Parts, Service",
       "category": "financial-distress-pressure",
       "pillar": "financial_distress_pressure",
       "curation_reason": "bankruptcy/financial distress baseline",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 3,
         "watchlist_signal": 0
       },
@@ -412,30 +430,39 @@
       "score": 95,
       "included_in_public_summary": true,
       "source_record_ids": [
+        "ap-2026-05-22-financial-distress-pressure-liquidation-looms-as-u-s-trustee-pushes-to-convert-f",
+        "ap-2026-05-19-financial-distress-pressure-sap-powers-tcs-s-large-scale-payroll-transformation-",
         "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs",
         "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1",
         "auto-2026-05-23-us-courts-bankruptcy-filings-statistics",
         "auto-2026-05-23-us-courts-bankruptcy-data-visualizations"
       ],
       "source_urls": [
+        "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNOTcyREtrMVA4eFlNaWxQNWhkSnJsZG4xeTRSLUE4T19nM1lSYW9MalF4SUo1WGNieEdtOUVKSkFmRjBoenVGclVneXBtU0lDRnBJemZmMUg3cWZYaTNWOWJkcFEyTVJfZVZ1LXI2bmtaUXZ4anZJUHhSc3JJWEpfdlk5OFBhckVEWWM3OVRibjlCckdDRHpqR3ZVSm90RllrUTlYTHBwMkZLd2ZKbi1SV1BMay10cExCN09SbGxfMkpvN1pwSWZ4c3NsWEhVamNrU0NnT1Y0dmdDY3RKT1VFeHV6dw?oc=5",
+        "https://news.google.com/rss/articles/CBMivwFBVV95cUxQVXhzUTJ0X2Yta0JrTmZlTGUxU1VBQmo0TEVxT2xjUlVBYmJ1bzFwQzV4NHlnckh3NHAyTUNvd3FyUlIzMDJySWt3ZGtpU1d5UTdVM0hBMWpnRHZVM2ZZY1dTWHFWYlNHTFg3S05tVkxkTVc2QlpwVVFFaHR1a3NObDJhQWgwNTFodkpzSDl0b1ZXYzZkNUlxeTNSNXZCcG44ajdMQmxXMFJUd2Qzem0ybWZZelU5Z1YzYllwU2w2Zw?oc=5",
         "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/",
         "https://www.uscourts.gov/data-table-numbers/f-5a",
         "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics",
         "https://www.uscourts.gov/statistics-reports/caseload-statistics-data-tables"
       ],
       "publisher_names": [
+        "Trucks, Parts, Service",
+        "SAP News Center",
         "WWNYTV",
         "United States Courts",
         "Administrative Office of the U.S. Courts",
         "Administrative Office of the U.S. Courts"
       ],
       "public_source_record_ids": [
-        "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs",
+        "ap-2026-05-22-financial-distress-pressure-liquidation-looms-as-u-s-trustee-pushes-to-convert-f",
+        "ap-2026-05-19-financial-distress-pressure-sap-powers-tcs-s-large-scale-payroll-transformation-",
         "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1",
         "auto-2026-05-23-us-courts-bankruptcy-filings-statistics",
         "auto-2026-05-23-us-courts-bankruptcy-data-visualizations"
       ],
       "human_story_source_ids": [
+        "ap-2026-05-22-financial-distress-pressure-liquidation-looms-as-u-s-trustee-pushes-to-convert-f",
+        "ap-2026-05-19-financial-distress-pressure-sap-powers-tcs-s-large-scale-payroll-transformation-",
         "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs"
       ],
       "data_anchor_source_ids": [
@@ -444,20 +471,20 @@
         "auto-2026-05-23-us-courts-bankruptcy-data-visualizations"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Financial distress signals suggest higher household risk",
-      "human_story_summary": "In US-NY, Watertown City Council adopted a budget with an 8 percent property-tax increase and layoffs, signaling immediate local fiscal strain likely to tighten household budgets and service capacity.",
+      "reader_headline": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case",
+      "human_story_summary": "In Trucks, Parts, Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case Trucks, Parts, Service.",
       "data_context_summary": "Data context from Business and Nonbusiness Cases Filed, by Chapter of the Bankruptcy Code, District, and County (F-5A), U.S. Courts Bankruptcy Filings Statistics, U.S. Courts Caseload Data Tables helps anchor whether debt stress may be moving from warning signs to hard outcomes.",
-      "what_happened": "Watertown City Council adopted a budget with an 8 percent property-tax increase and layoffs, signaling immediate local fiscal strain likely to tighten household budgets and service capacity.",
-      "potential_relevance": "This signal can show where debt stress could break into missed payments, service disruption, or local job risk.",
-      "who_may_feel_it": "Heavily indebted households, small businesses, and workers tied to stressed employers.",
-      "what_to_watch_next": "Watch for spillover into layoffs, service disruptions, and local business closures.",
-      "location_scope": "",
+      "what_happened": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case Trucks, Parts, Service",
+      "potential_relevance": "This may signal rising debt stress or instability in local employers/services.",
+      "who_may_feel_it": "Workers tied to stressed employers, borrowers, and local small businesses.",
+      "what_to_watch_next": "Watch layoffs, service disruptions, and distress spillover into bills or housing.",
+      "location_scope": "Trucks, Parts",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "",
-      "public_pressure_angle": "Municipal budget stress producing layoffs and higher local tax burden in the review week.",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -469,7 +496,7 @@
       "curation_reason": "drought/disaster/local-system strain",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 1,
+        "human_story": 3,
         "data_anchor": 32,
         "watchlist_signal": 0
       },
@@ -478,34 +505,37 @@
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "ap-2026-05-20-local-system-strain-power-grids-hospitals-schools-homes-northeast-heat-wave-impa",
+        "ap-2026-05-18-local-system-strain-sac-schools-struggle-with-budget-cuts-strikes-layoffs-thre",
         "auto-2026-05-23-fema-disaster-declarations",
         "registry-2026-05-23-al-public-media-npr-network",
-        "registry-2026-05-23-ak-public-media-npr-network",
-        "registry-2026-05-23-az-public-media-npr-network",
-        "registry-2026-05-23-ar-public-media-npr-network"
+        "registry-2026-05-23-ak-public-media-npr-network"
       ],
       "source_urls": [
         "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPN3RGaldwOE9leGh4VlhHNXlyYVM4bTY5N3o0M3p2ckpWWUluMGdCOWJEcGVraGszd2syZ1JLMXZQeHNxX3ZZZnVCTmQ0WEdFNDN3U3BlaDlGUWR2ckpRSmYxVzd3dXAwb3ZQYVBZN0x1Umw3dHVBb09qY09uUFpBOEE4VDN0MjQyZEdVemFiYWx4cHA2amJpTERCemw2LWs4aFZ6Wi1IVHFDZw?oc=5",
+        "https://news.google.com/rss/articles/CBMirgFBVV95cUxQNEtSR3pid3RVN0dvdWFXVjdadEZvLUxMVjI3OVRvX1RNOFpMUXdGX0FIdFJ0dURQRmdVTWluTUlyOW5adGFrY2hCM09MYnl4c054eDV0UW1hNG1nbE02bjhyZVJHTVo5OGFpMC00UlBMSkZLUUZIQlFkWklLVWstY040YUJsVTdndnJ1dGxPSWtua0Fma2VjZzZwQjB3d3lXd01PV1hzZFpnV0VXQ1E?oc=5",
         "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
-        "https://www.npr.org/network/",
-        "https://www.npr.org/network/",
         "https://www.npr.org/network/",
         "https://www.npr.org/network/"
       ],
       "publisher_names": [
         "Office of the Governor of Iowa",
+        "The Weather Channel",
+        "The Sacramento Observer",
         "Federal Emergency Management Agency",
-        "public_media_member_network",
-        "public_media_member_network",
         "public_media_member_network",
         "public_media_member_network"
       ],
       "public_source_record_ids": [
         "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "ap-2026-05-20-local-system-strain-power-grids-hospitals-schools-homes-northeast-heat-wave-impa",
         "auto-2026-05-23-fema-disaster-declarations"
       ],
       "human_story_source_ids": [
-        "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
+        "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "ap-2026-05-20-local-system-strain-power-grids-hospitals-schools-homes-northeast-heat-wave-impa",
+        "ap-2026-05-18-local-system-strain-sac-schools-struggle-with-budget-cuts-strikes-layoffs-thre"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-23-fema-disaster-declarations",
@@ -555,7 +585,7 @@
       "pressure_direction": "",
       "public_pressure_angle": "State disaster activation indicates local service strain and direct household recovery pressure.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
@@ -567,7 +597,7 @@
       "curation_reason": "drought/disaster/local-system strain",
       "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 2,
+        "human_story": 3,
         "data_anchor": 32,
         "watchlist_signal": 0
       },
@@ -576,37 +606,38 @@
       "included_in_public_summary": true,
       "source_record_ids": [
         "ap-2026-05-23-environment-caltrans-540m-transport-investments",
-        "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage",
+        "ap-2026-05-21-environmental-pressure-california-invests-540-million-to-support-zero-emission-p",
+        "ap-2026-05-19-environmental-pressure-andrew-county-sheriff-s-office-reports-storm-damage-in-fi",
         "auto-2026-05-23-noaa-ncei-monthly-climate-report",
         "auto-2026-05-23-us-drought-monitor",
-        "registry-2026-05-23-al-fema-disaster-declarations",
-        "registry-2026-05-23-ak-fema-disaster-declarations"
+        "registry-2026-05-23-al-fema-disaster-declarations"
       ],
       "source_urls": [
         "https://dot.ca.gov/news-releases/news-release-2026-010",
-        "https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/",
+        "https://news.google.com/rss/articles/CBMigAFBVV95cUxOSG4zQmN0c0h3SnA5d1ZMeVJoaUpWUGdyQlJ2SjhJRWFycS0wVjhIQzROaDVPVjFBN3FReFduRjdiak5ncG54Z1F2dFRhTU1NcldERDBObHQzWHhObEx0bEVzNS1uQlVIY05Za0pBcjJGUEdJR25DUFdLZUEwZmViaQ?oc=5",
+        "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQQ3pkSkczNEFsTmtvWG9kb0tqSDhkcVp1YmQyVng0Z0lNd3JTMS1QYnpUaFVUVElueWRqbGtHNl9oWENDdzJvdl8zb2x5WktIVXpYU1pNSFJkWk5yM1lCZXU3aU1ZaTBaQVpzNnZ3Y1VYbVMwNVhWbXVOUm1xNWMwWklDZkJsWjM4WENBMXR5dkdoa2k0bzR0aEpkTlU4UW5jcG9WeU9VM3NUUEk?oc=5",
         "https://www.ncei.noaa.gov/access/monitoring/monthly-report/",
         "https://droughtmonitor.unl.edu/",
-        "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
         "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
       ],
       "publisher_names": [
         "Caltrans",
-        "KSNB Local4",
+        "California Department of Transportation",
+        "KQ2",
         "NOAA National Centers for Environmental Information",
         "National Drought Mitigation Center and USDA and NOAA",
-        "federal_government",
         "federal_government"
       ],
       "public_source_record_ids": [
         "ap-2026-05-23-environment-caltrans-540m-transport-investments",
-        "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage",
+        "ap-2026-05-21-environmental-pressure-california-invests-540-million-to-support-zero-emission-p",
         "auto-2026-05-23-noaa-ncei-monthly-climate-report",
         "auto-2026-05-23-us-drought-monitor"
       ],
       "human_story_source_ids": [
         "ap-2026-05-23-environment-caltrans-540m-transport-investments",
-        "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage"
+        "ap-2026-05-21-environmental-pressure-california-invests-540-million-to-support-zero-emission-p",
+        "ap-2026-05-19-environmental-pressure-andrew-county-sheriff-s-office-reports-storm-damage-in-fi"
       ],
       "data_anchor_source_ids": [
         "auto-2026-05-23-noaa-ncei-monthly-climate-report",
@@ -656,51 +687,58 @@
       "pressure_direction": "",
       "public_pressure_angle": "State storm-resiliency and infrastructure response to extreme-weather strain.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     },
     {
       "story_id": "american-pressure-story-2026-05-23-008",
-      "title": "Source-backed pressure signal",
-      "summary": "State-level nonprofit policy and systems reporting.",
+      "title": "Policy rollout friction in Caballero, California is slowing support delivery",
+      "summary": "Anna Caballero, California treasurer candidate, answers Bay Area News Group\u2019s primary questionnaire The Mercury News",
       "category": "policy-implementation",
       "pillar": "policy_implementation",
       "curation_reason": "policy implementation pressure",
-      "item_type": "baseline_gauge",
+      "item_type": "current_week_development",
       "source_role_counts": {
-        "human_story": 0,
+        "human_story": 3,
         "data_anchor": 51,
         "watchlist_signal": 0
       },
-      "brief_quality": "baseline_only",
+      "brief_quality": "story_plus_data",
       "score": 92,
       "included_in_public_summary": true,
       "source_record_ids": [
+        "ap-2026-05-23-policy-implementation-anna-caballero-california-treasurer-candidate-answers-bay-",
+        "ap-2026-05-23-policy-implementation-aisha-wahab-california-congressional-candidate-answers-bay",
+        "ap-2026-05-23-policy-implementation-president-ruto-blames-local-leadership-wrangles-for-delaye",
         "registry-2026-05-23-al-nonprofit-policy-news",
         "registry-2026-05-23-ak-nonprofit-policy-news",
-        "registry-2026-05-23-az-nonprofit-policy-news",
-        "registry-2026-05-23-ar-nonprofit-policy-news",
-        "registry-2026-05-23-ca-nonprofit-policy-news",
-        "registry-2026-05-23-co-nonprofit-policy-news"
+        "registry-2026-05-23-az-nonprofit-policy-news"
       ],
       "source_urls": [
+        "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQRFZUUE9TcXRweHcyeU1zSlZ0NUNYazI5WWVhRVlKWmEwcF9QTWRHaGtZNzROY2llbXNneVNwSG5jSnA1dVlLSlQzbEJyM1ZCTklZR1hiV3YwZ1FubTF6UGc0ZWwzVi1kczBqa0xreEJMWF9Yb1RyMkZNcUdyOVlLTXlWNEZxTlhITC1Lc196UVJjSi14Q1hFMDN1WFBsNVN2c2hIbk9TM1N4V3ZrQjR4WG50bzE1emRFTmw5TThJMmhmSkNRMXZXajU3Y2lXYk5uUFJkYk1zd9IB1wFBVV95cUxQRFZUUE9TcXRweHcyeU1zSlZ0NUNYazI5WWVhRVlKWmEwcF9QTWRHaGtZNzROY2llbXNneVNwSG5jSnA1dVlLSlQzbEJyM1ZCTklZR1hiV3YwZ1FubTF6UGc0ZWwzVi1kczBqa0xreEJMWF9Yb1RyMkZNcUdyOVlLTXlWNEZxTlhITC1Lc196UVJjSi14Q1hFMDN1WFBsNVN2c2hIbk9TM1N4V3ZrQjR4WG50bzE1emRFTmw5TThJMmhmSkNRMXZXajU3Y2lXYk5uUFJkYk1zdw?oc=5",
+        "https://news.google.com/rss/articles/CBMi2AFBVV95cUxPaXZCQmtGSU9OTC1VN003UkU3Z05jOERncjZJcE0zeU1GY1ozeDJady1TWi13TzlNd0tWZHFkcDVheVAtS1VPRVZyU19ROTY5SGItNUxyVGhKUGEtSGowTFloQzdzZzBnOHl6RzZVZ2NHQzJMRmhCVEJuNFdsQnFiUVZrSnBJdVdmLWc5blB2U0RoN1dkeTl0NFhoRXR3dFJFSmFjLXBNQVl1VmpQMi1CajZzQ1dmSV9lRE9LcmlyajlidlRBR0szN0tsOEFrNk5CSUMxVWVKTDLSAdgBQVVfeXFMT2l2QkJrRklPTkwtVTdNN1JFN2dOYzhEZ3I2SXBNM3lNRmNaM3gyWnctU1otd085TXdLVmRxZHA1YXlQLUtVT0VWclNfUTk2OUhiLTVMclRoSlBhLUhqMExZaEM3c2cwZzh5ekc2VWdjR0MyTEZoQlRCbjRXbEJxYlFWa0pwSXVXZi1nOW5QdlNEaDdXZHk5dDRYaEV0d3RSRUphYy1wTUFZdVZqUDItQmo2c0NXZklfZURPS3Jpcmo5YnZUQUdLMzdLbDhBazZOQklDMVVlSkwy?oc=5",
+        "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNXzg5bWtUZHRBM2paUWdfUjNmRjNjbVl2bmFCNXhkTzBqbk1ONjJYeG5fb29kSUtON3VjMnhfaFUtU2J5Rk82b0E0VmZQS3N6dFdzM3hXRXo3NTVRWGdpNWFqNGpmUjRYVlc2anBfZUtkR2FiYWFSdF9CSmNEQzEwVnY1QTNacy1xU2wxRE1RcU1YNWcweC1hTWNtYXhzX1lmMGJ0VF92SDE0OFNrazhDYTJRV21VU0pSWlpnX3BuVlpZTWktOHRhclZ5dTNHSmd3?oc=5",
         "https://alabamareflector.com",
         "https://alaskabeacon.com",
-        "https://azmirror.com",
-        "https://arkansasadvocate.com",
-        "https://calmatters.org",
-        "https://coloradonewsline.com"
+        "https://azmirror.com"
       ],
       "publisher_names": [
-        "nonprofit",
-        "nonprofit",
-        "nonprofit",
+        "The Mercury News",
+        "The Mercury News",
+        "capitalfm.co.ke",
         "nonprofit",
         "nonprofit",
         "nonprofit"
       ],
-      "public_source_record_ids": [],
-      "human_story_source_ids": [],
+      "public_source_record_ids": [
+        "ap-2026-05-23-policy-implementation-anna-caballero-california-treasurer-candidate-answers-bay-",
+        "ap-2026-05-23-policy-implementation-aisha-wahab-california-congressional-candidate-answers-bay"
+      ],
+      "human_story_source_ids": [
+        "ap-2026-05-23-policy-implementation-anna-caballero-california-treasurer-candidate-answers-bay-",
+        "ap-2026-05-23-policy-implementation-aisha-wahab-california-congressional-candidate-answers-bay",
+        "ap-2026-05-23-policy-implementation-president-ruto-blames-local-leadership-wrangles-for-delaye"
+      ],
       "data_anchor_source_ids": [
         "registry-2026-05-23-al-nonprofit-policy-news",
         "registry-2026-05-23-ak-nonprofit-policy-news",
@@ -755,20 +793,20 @@
         "registry-2026-05-23-dc-nonprofit-policy-news"
       ],
       "watchlist_source_ids": [],
-      "reader_headline": "Source-backed pressure signal",
-      "human_story_summary": "",
+      "reader_headline": "Policy rollout friction in Caballero, California is slowing support delivery",
+      "human_story_summary": "In Caballero, California, Anna Caballero, California treasurer candidate, answers Bay Area News Group\u2019s primary questionnaire The Mercury News.",
       "data_context_summary": "No data anchor was available for this item this week.",
-      "what_happened": "State-level nonprofit policy and systems reporting.",
-      "potential_relevance": "This is a baseline for watching whether support can reach people quickly when pressure rises.",
-      "who_may_feel_it": "Benefit-dependent households, providers, and local agencies.",
-      "what_to_watch_next": "Watch for enrollment delays, eligibility changes, and access friction.",
-      "location_scope": "",
+      "what_happened": "Anna Caballero, California treasurer candidate, answers Bay Area News Group\u2019s primary questionnaire The Mercury News",
+      "potential_relevance": "This may signal friction in delivering policy support to households.",
+      "who_may_feel_it": "Benefit-dependent households and frontline service providers.",
+      "what_to_watch_next": "Watch enrollment delays, eligibility barriers, and implementation backlog.",
+      "location_scope": "Caballero, California",
       "affected_people": "",
       "pressure_area": "",
-      "pressure_direction": "",
-      "public_pressure_angle": "",
+      "pressure_direction": "rising",
+      "public_pressure_angle": "Candidate signal; review against source text before approval.",
       "key_stat": null,
-      "generated_at": "2026-05-24T15:01:00.416931+00:00",
+      "generated_at": "2026-05-24T20:59:44.527465+00:00",
       "collection_gap_pillars": []
     }
   ],
@@ -791,14 +829,14 @@
     "childcare_school_family_pressure"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 55,
-    "housing_household_cost_pressure": 53,
-    "health_access_pressure": 34,
-    "labor_income_pressure": 2,
-    "financial_distress_pressure": 4,
-    "local_system_strain": 33,
-    "environmental_pressure": 34,
-    "policy_implementation": 51,
+    "food_pressure": 83,
+    "housing_household_cost_pressure": 85,
+    "health_access_pressure": 69,
+    "labor_income_pressure": 30,
+    "financial_distress_pressure": 15,
+    "local_system_strain": 67,
+    "environmental_pressure": 66,
+    "policy_implementation": 65,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
@@ -814,24 +852,24 @@
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
-  "rejected_no_public_pressure_angle": 0,
+  "rejected_no_public_pressure_angle": 2,
   "rejected_investor_only": 0,
-  "rejected_duplicate_or_stale": 61,
+  "rejected_duplicate_or_stale": 97,
   "rejected_missing_required_fields": 0,
   "item_type_counts": {
-    "baseline_gauge": 1,
-    "current_week_development": 7,
+    "baseline_gauge": 0,
+    "current_week_development": 8,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 8,
+    "human_story": 222,
     "data_anchor": 258,
     "watchlist_signal": 0
   },
   "brief_quality_counts": {
-    "story_plus_data": 7,
+    "story_plus_data": 8,
     "official_release_only": 0,
-    "baseline_only": 1,
+    "baseline_only": 0,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -853,39 +891,37 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 1,
-    "housing_household_cost_pressure": 1,
-    "health_access_pressure": 1,
-    "labor_income_pressure": 1,
-    "financial_distress_pressure": 2,
-    "local_system_strain": 1,
-    "environmental_pressure": 32,
-    "policy_implementation": 0,
+    "food_pressure": 29,
+    "housing_household_cost_pressure": 33,
+    "health_access_pressure": 36,
+    "labor_income_pressure": 29,
+    "financial_distress_pressure": 13,
+    "local_system_strain": 35,
+    "environmental_pressure": 64,
+    "policy_implementation": 14,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 1,
-    "housing_household_cost_pressure": 1,
-    "health_access_pressure": 1,
-    "labor_income_pressure": 1,
-    "financial_distress_pressure": 1,
-    "local_system_strain": 1,
-    "environmental_pressure": 2,
-    "policy_implementation": 0,
+    "food_pressure": 29,
+    "housing_household_cost_pressure": 33,
+    "health_access_pressure": 36,
+    "labor_income_pressure": 29,
+    "financial_distress_pressure": 12,
+    "local_system_strain": 35,
+    "environmental_pressure": 34,
+    "policy_implementation": 14,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
   "missing_required_current_development_pillars": [],
   "collection_gap_pillars": [],
-  "story_plus_data_count": 7,
-  "baseline_only_count": 1,
-  "briefs_with_human_story": 7,
+  "story_plus_data_count": 8,
+  "baseline_only_count": 0,
+  "briefs_with_human_story": 8,
   "briefs_with_data_anchor": 8,
-  "baseline_only_briefs": 1,
-  "missing_human_story_pillars": [
-    "policy_implementation"
-  ],
+  "baseline_only_briefs": 0,
+  "missing_human_story_pillars": [],
   "low_quality_story_ids": [],
   "future_enhancements": {
     "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."

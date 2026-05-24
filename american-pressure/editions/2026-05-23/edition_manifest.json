@@ -5,9 +5,9 @@
   "week_start_date": "2026-05-17",
   "week_end_date": "2026-05-23",
   "display_date_range": "May 17\u2013May 23, 2026",
-  "generated_at": "2026-05-24T15:01:00.416931+00:00",
+  "generated_at": "2026-05-24T20:59:44.527465+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-23/",
-  "source_count": 266,
+  "source_count": 480,
   "story_count": 8,
   "pillars_present": [
     "food_pressure",
@@ -24,14 +24,14 @@
     "childcare_school_family_pressure"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 55,
-    "housing_household_cost_pressure": 53,
-    "health_access_pressure": 34,
-    "labor_income_pressure": 2,
-    "financial_distress_pressure": 4,
-    "local_system_strain": 33,
-    "environmental_pressure": 34,
-    "policy_implementation": 51,
+    "food_pressure": 83,
+    "housing_household_cost_pressure": 85,
+    "health_access_pressure": 69,
+    "labor_income_pressure": 30,
+    "financial_distress_pressure": 15,
+    "local_system_strain": 67,
+    "environmental_pressure": 66,
+    "policy_implementation": 65,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
@@ -47,28 +47,28 @@
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
-  "rejected_no_public_pressure_angle": 0,
+  "rejected_no_public_pressure_angle": 2,
   "rejected_investor_only": 0,
-  "rejected_duplicate_or_stale": 61,
+  "rejected_duplicate_or_stale": 97,
   "rejected_missing_required_fields": 0,
   "is_free_public": true,
   "public_exposed": true,
   "has_detail_tier": false,
   "source_mode": "both",
   "item_type_counts": {
-    "baseline_gauge": 1,
-    "current_week_development": 7,
+    "baseline_gauge": 0,
+    "current_week_development": 8,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 8,
+    "human_story": 222,
     "data_anchor": 258,
     "watchlist_signal": 0
   },
   "brief_quality_counts": {
-    "story_plus_data": 7,
+    "story_plus_data": 8,
     "official_release_only": 0,
-    "baseline_only": 1,
+    "baseline_only": 0,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -90,46 +90,45 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 1,
-    "housing_household_cost_pressure": 1,
-    "health_access_pressure": 1,
-    "labor_income_pressure": 1,
-    "financial_distress_pressure": 2,
-    "local_system_strain": 1,
-    "environmental_pressure": 32,
-    "policy_implementation": 0,
+    "food_pressure": 29,
+    "housing_household_cost_pressure": 33,
+    "health_access_pressure": 36,
+    "labor_income_pressure": 29,
+    "financial_distress_pressure": 13,
+    "local_system_strain": 35,
+    "environmental_pressure": 64,
+    "policy_implementation": 14,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 1,
-    "housing_household_cost_pressure": 1,
-    "health_access_pressure": 1,
-    "labor_income_pressure": 1,
-    "financial_distress_pressure": 1,
-    "local_system_strain": 1,
-    "environmental_pressure": 2,
-    "policy_implementation": 0,
+    "food_pressure": 29,
+    "housing_household_cost_pressure": 33,
+    "health_access_pressure": 36,
+    "labor_income_pressure": 29,
+    "financial_distress_pressure": 12,
+    "local_system_strain": 35,
+    "environmental_pressure": 34,
+    "policy_implementation": 14,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
   "missing_required_current_development_pillars": [],
   "collection_gap_pillars": [],
-  "story_plus_data_count": 7,
-  "baseline_only_count": 1,
-  "briefs_with_human_story": 7,
+  "story_plus_data_count": 8,
+  "baseline_only_count": 0,
+  "briefs_with_human_story": 8,
   "briefs_with_data_anchor": 8,
-  "baseline_only_briefs": 1,
-  "missing_human_story_pillars": [
-    "policy_implementation"
-  ],
+  "baseline_only_briefs": 0,
+  "missing_human_story_pillars": [],
   "baseline_only_edition": false,
   "low_quality_story_ids": [],
   "future_enhancements": {
     "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
   },
   "warnings": [
-    "curation_diagnostics={\"candidates_accepted\": 266, \"candidates_found\": 327, \"rejected_duplicate_or_stale\": 61, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"sources_attempted\": 327}"
+    "curation_diagnostics={\"candidates_accepted\": 480, \"candidates_found\": 579, \"rejected_duplicate_or_stale\": 97, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 2, \"sources_attempted\": 579}",
+    "human_story record policy-implementation-govt-withholds-salaries-of-four-acds-over-poor-mgnrega-per has no linked data anchors"
   ],
   "errors": []
 }

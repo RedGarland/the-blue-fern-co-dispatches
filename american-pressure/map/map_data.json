@@ -76,7 +76,7 @@
       "source_urls": [
         "https://www.waka.com/2026/05/08/mizell-memorial-hospital-in-opp-files-for-chapter-11-bankruptcy-protection/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-financial-story-mizell-ch11"
       ],
@@ -121,7 +121,7 @@
       "source_urls": [
         "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-food-story-keyt-demand",
         "ap-2026-05-12-food-story-keyt-demand",
@@ -173,7 +173,7 @@
       "source_urls": [
         "https://www.wvik.org/illinois/2026-05-06/cut-with-an-axe-watchdogs-ag-call-for-massive-cuts-to-peoples-gas-rate-request"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-housing-story-peoples-gas-rate-request"
       ],
@@ -218,7 +218,7 @@
       "source_urls": [
         "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-labor-story-capradio-layoffs"
       ],
@@ -263,7 +263,7 @@
       "source_urls": [
         "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-local-story-wi-flood-assessments",
         "ap-2026-05-12-weather-story-wi-flood-assessments",
@@ -315,7 +315,7 @@
       "source_urls": [
         "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-12-financial-story-fitzgibbon-bankruptcy",
         "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
@@ -364,7 +364,7 @@
       "source_urls": [
         "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-12-health-story-kcrg-clinic-closure",
         "ap-2026-05-16-health-story-kcrg-clinic-closure"
@@ -413,7 +413,7 @@
       "source_urls": [
         "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-12-labor-story-capradio-layoffs",
         "ap-2026-05-16-labor-story-capradio-layoffs"
@@ -462,12 +462,20 @@
       "source_urls": [
         "https://dot.ca.gov/news-releases/news-release-2026-010"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-environment-caltrans-540m-transport-investments"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-007",
+          "url": "/american-pressure/editions/2026-05-23/#disaster-insurance-and-recovery-pressure",
+          "label": "Weather and environmental stress is adding household pressure"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities (2026-05-22T00:00:00-07:00)",
       "latitude": 36.778259,
@@ -487,14 +495,16 @@
       "is_exact_location": false,
       "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
       "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-      "story_id": "",
+      "story_id": "american-pressure-story-2026-05-23-007",
       "raw_record_count": 1,
       "duplicate_count": 0,
       "duplicate_record_ids": [],
       "audit_source_record_ids": [
         "ap-2026-05-23-environment-caltrans-540m-transport-investments"
       ],
-      "audit_story_ids": [],
+      "audit_story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ],
       "time_window": "current_week"
     },
     {
@@ -507,7 +517,7 @@
       "source_urls": [
         "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-housing-fox10-az-summer-electricity-bills"
       ],
@@ -552,12 +562,20 @@
       "source_urls": [
         "https://ccwd.hecc.oregon.gov/Layoff/WARN"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-labor-oregon-warn-rndc-146"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-004",
+          "url": "/american-pressure/editions/2026-05-23/#jobs-and-paycheck-pressure",
+          "label": "Local job and paycheck strain is affecting households"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "WARN Listings (Republic National Distributing Company, 146 Oregon layoffs) (2026-05-19T00:00:00Z)",
       "latitude": 43.804133,
@@ -577,14 +595,16 @@
       "is_exact_location": false,
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_id": "",
+      "story_id": "american-pressure-story-2026-05-23-004",
       "raw_record_count": 1,
       "duplicate_count": 0,
       "duplicate_record_ids": [],
       "audit_source_record_ids": [
         "ap-2026-05-23-labor-oregon-warn-rndc-146"
       ],
-      "audit_story_ids": [],
+      "audit_story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ],
       "time_window": "current_week"
     },
     {
@@ -597,12 +617,20 @@
       "source_urls": [
         "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-006",
+          "url": "/american-pressure/editions/2026-05-23/#public-services-under-strain",
+          "label": "Local systems are showing strain"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather (2026-05-22T00:00:00-05:00)",
       "latitude": 41.878003,
@@ -622,14 +650,16 @@
       "is_exact_location": false,
       "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
       "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-      "story_id": "",
+      "story_id": "american-pressure-story-2026-05-23-006",
       "raw_record_count": 1,
       "duplicate_count": 0,
       "duplicate_record_ids": [],
       "audit_source_record_ids": [
         "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
       ],
-      "audit_story_ids": [],
+      "audit_story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ],
       "time_window": "current_week"
     },
     {
@@ -642,7 +672,7 @@
       "source_urls": [
         "https://nysfocus.com/2026/05/13/unaccompanied-kids-immigrant-habeas-orr-detained-parents"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-13-ny-nonprofit-policy-news-001"
       ],
@@ -687,7 +717,7 @@
       "source_urls": [
         "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-id-nonprofit-policy-news-007"
       ],
@@ -732,7 +762,7 @@
       "source_urls": [
         "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012"
       ],
@@ -777,7 +807,7 @@
       "source_urls": [
         "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013"
       ],
@@ -822,7 +852,7 @@
       "source_urls": [
         "https://scdailygazette.com/2026/05/15/sc-ports-to-address-flooding-expand-cargo-opportunities-with-vehicle-export-move-to-north-charleton"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-sc-nonprofit-policy-news-020"
       ],
@@ -867,7 +897,7 @@
       "source_urls": [
         "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-wa-nonprofit-policy-news-026"
       ],
@@ -912,7 +942,7 @@
       "source_urls": [
         "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030"
       ],
@@ -957,7 +987,7 @@
       "source_urls": [
         "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003"
       ],
@@ -1002,7 +1032,7 @@
       "source_urls": [
         "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-16-va-nonprofit-policy-news-011"
       ],
@@ -1047,7 +1077,7 @@
       "source_urls": [
         "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-16-va-nonprofit-policy-news-011"
       ],
@@ -1092,7 +1122,7 @@
       "source_urls": [
         "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "feed-backfill-2026-05-16-wa-nonprofit-policy-news-012"
       ],
@@ -1162,7 +1192,7 @@
           "source_urls": [
             "https://www.waka.com/2026/05/08/mizell-memorial-hospital-in-opp-files-for-chapter-11-bankruptcy-protection/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-09-financial-story-mizell-ch11"
           ],
@@ -1233,7 +1263,7 @@
           "source_urls": [
             "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-23-housing-fox10-az-summer-electricity-bills"
           ],
@@ -1285,14 +1315,22 @@
       "source_urls": [
         "https://dot.ca.gov/news-releases/news-release-2026-010"
       ],
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ],
       "categories": [
         "environmental_pressure"
       ],
       "role_counts": {
         "state_context": 1
       },
-      "written_story_links": [],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-007",
+          "url": "/american-pressure/editions/2026-05-23/#disaster-insurance-and-recovery-pressure",
+          "label": "Weather and environmental stress is adding household pressure"
+        }
+      ],
       "pins": [
         {
           "title": "California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities",
@@ -1304,12 +1342,20 @@
           "source_urls": [
             "https://dot.ca.gov/news-releases/news-release-2026-010"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-23-environment-caltrans-540m-transport-investments"
           ],
-          "story_ids": [],
-          "written_story_links": [],
+          "story_ids": [
+            "american-pressure-story-2026-05-23-007"
+          ],
+          "written_story_links": [
+            {
+              "story_id": "american-pressure-story-2026-05-23-007",
+              "url": "/american-pressure/editions/2026-05-23/#disaster-insurance-and-recovery-pressure",
+              "label": "Weather and environmental stress is adding household pressure"
+            }
+          ],
           "dispatch_url": "/american-pressure/",
           "source_title_date": "California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities (2026-05-22T00:00:00-07:00)",
           "latitude": 36.778259,
@@ -1329,14 +1375,16 @@
           "is_exact_location": false,
           "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
           "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-          "story_id": "",
+          "story_id": "american-pressure-story-2026-05-23-007",
           "raw_record_count": 1,
           "duplicate_count": 0,
           "duplicate_record_ids": [],
           "audit_source_record_ids": [
             "ap-2026-05-23-environment-caltrans-540m-transport-investments"
           ],
-          "audit_story_ids": [],
+          "audit_story_ids": [
+            "american-pressure-story-2026-05-23-007"
+          ],
           "time_window": "current_week"
         }
       ],
@@ -1376,7 +1424,7 @@
           "source_urls": [
             "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-12-health-story-kcrg-clinic-closure",
             "ap-2026-05-16-health-story-kcrg-clinic-closure"
@@ -1451,7 +1499,7 @@
           "source_urls": [
             "https://georgiarecorder.com/2026/05/16/democratic-challengers-say-georgia-commissioner-should-do-more-to-hold-insurers-accountable"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-16-ga-nonprofit-policy-news-003"
           ],
@@ -1503,14 +1551,22 @@
       "source_urls": [
         "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather"
       ],
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ],
       "categories": [
         "local_system_strain"
       ],
       "role_counts": {
         "state_context": 1
       },
-      "written_story_links": [],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-006",
+          "url": "/american-pressure/editions/2026-05-23/#public-services-under-strain",
+          "label": "Local systems are showing strain"
+        }
+      ],
       "pins": [
         {
           "title": "Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather",
@@ -1522,12 +1578,20 @@
           "source_urls": [
             "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
           ],
-          "story_ids": [],
-          "written_story_links": [],
+          "story_ids": [
+            "american-pressure-story-2026-05-23-006"
+          ],
+          "written_story_links": [
+            {
+              "story_id": "american-pressure-story-2026-05-23-006",
+              "url": "/american-pressure/editions/2026-05-23/#public-services-under-strain",
+              "label": "Local systems are showing strain"
+            }
+          ],
           "dispatch_url": "/american-pressure/",
           "source_title_date": "Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather (2026-05-22T00:00:00-05:00)",
           "latitude": 41.878003,
@@ -1547,14 +1611,16 @@
           "is_exact_location": false,
           "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
           "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-          "story_id": "",
+          "story_id": "american-pressure-story-2026-05-23-006",
           "raw_record_count": 1,
           "duplicate_count": 0,
           "duplicate_record_ids": [],
           "audit_source_record_ids": [
             "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
           ],
-          "audit_story_ids": [],
+          "audit_story_ids": [
+            "american-pressure-story-2026-05-23-006"
+          ],
           "time_window": "current_week"
         }
       ],
@@ -1593,7 +1659,7 @@
           "source_urls": [
             "https://idahocapitalsun.com/2026/05/15/idaho-farmers-can-band-together-to-buy-cheaper-health-insurance-through-farm-bureau-deal"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-id-nonprofit-policy-news-007"
           ],
@@ -1664,7 +1730,7 @@
           "source_urls": [
             "https://www.wvik.org/illinois/2026-05-06/cut-with-an-axe-watchdogs-ag-call-for-massive-cuts-to-peoples-gas-rate-request"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-09-housing-story-peoples-gas-rate-request"
           ],
@@ -1735,7 +1801,7 @@
           "source_urls": [
             "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-16-va-nonprofit-policy-news-011"
           ],
@@ -1807,7 +1873,7 @@
           "source_urls": [
             "https://thebeaconnews.org/stories/2026/05/12/fitzgibbon-hospital-bankruptcy-sale-2026-marshall-mi/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-12-financial-story-fitzgibbon-bankruptcy",
             "ap-2026-05-16-financial-story-fitzgibbon-bankruptcy"
@@ -1882,7 +1948,7 @@
           "source_urls": [
             "https://newhampshirebulletin.com/2026/05/15/book-removals-tax-caps-school-meals-the-flurry-of-end-of-year-education-bills"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-nh-nonprofit-policy-news-012"
           ],
@@ -1953,7 +2019,7 @@
           "source_urls": [
             "https://newhampshirebulletin.com/2026/05/15/state-senators-keep-wraparound-mental-health-initiative-alive"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-nh-nonprofit-policy-news-013"
           ],
@@ -2024,7 +2090,7 @@
           "source_urls": [
             "https://nysfocus.com/2026/05/13/unaccompanied-kids-immigrant-habeas-orr-detained-parents"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-13-ny-nonprofit-policy-news-001"
           ],
@@ -2076,14 +2142,22 @@
       "source_urls": [
         "https://ccwd.hecc.oregon.gov/Layoff/WARN"
       ],
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ],
       "categories": [
         "labor_income_pressure"
       ],
       "role_counts": {
         "state_context": 1
       },
-      "written_story_links": [],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-004",
+          "url": "/american-pressure/editions/2026-05-23/#jobs-and-paycheck-pressure",
+          "label": "Local job and paycheck strain is affecting households"
+        }
+      ],
       "pins": [
         {
           "title": "WARN Listings (Republic National Distributing Company, 146 Oregon layoffs)",
@@ -2095,12 +2169,20 @@
           "source_urls": [
             "https://ccwd.hecc.oregon.gov/Layoff/WARN"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-23-labor-oregon-warn-rndc-146"
           ],
-          "story_ids": [],
-          "written_story_links": [],
+          "story_ids": [
+            "american-pressure-story-2026-05-23-004"
+          ],
+          "written_story_links": [
+            {
+              "story_id": "american-pressure-story-2026-05-23-004",
+              "url": "/american-pressure/editions/2026-05-23/#jobs-and-paycheck-pressure",
+              "label": "Local job and paycheck strain is affecting households"
+            }
+          ],
           "dispatch_url": "/american-pressure/",
           "source_title_date": "WARN Listings (Republic National Distributing Company, 146 Oregon layoffs) (2026-05-19T00:00:00Z)",
           "latitude": 43.804133,
@@ -2120,14 +2202,16 @@
           "is_exact_location": false,
           "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
           "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-          "story_id": "",
+          "story_id": "american-pressure-story-2026-05-23-004",
           "raw_record_count": 1,
           "duplicate_count": 0,
           "duplicate_record_ids": [],
           "audit_source_record_ids": [
             "ap-2026-05-23-labor-oregon-warn-rndc-146"
           ],
-          "audit_story_ids": [],
+          "audit_story_ids": [
+            "american-pressure-story-2026-05-23-004"
+          ],
           "time_window": "current_week"
         }
       ],
@@ -2166,7 +2250,7 @@
           "source_urls": [
             "https://scdailygazette.com/2026/05/15/sc-ports-to-address-flooding-expand-cargo-opportunities-with-vehicle-export-move-to-north-charleton"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-sc-nonprofit-policy-news-020"
           ],
@@ -2237,7 +2321,7 @@
           "source_urls": [
             "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-09-labor-story-capradio-layoffs"
           ],
@@ -2309,7 +2393,7 @@
           "source_urls": [
             "https://www.capradio.org/articles/2026/05/08/amidst-sacramento-city-unifieds-budget-crisis-503-employees-laid-off-and-receivership-looms/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-12-labor-story-capradio-layoffs",
             "ap-2026-05-16-labor-story-capradio-layoffs"
@@ -2386,7 +2470,7 @@
           "source_urls": [
             "https://keyt.com/news/economy/2026/05/01/slo-food-bank-braces-for-major-funding-cuts-amid-rising-demand/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-09-food-story-keyt-demand",
             "ap-2026-05-12-food-story-keyt-demand",
@@ -2464,7 +2548,7 @@
           "source_urls": [
             "https://virginiamercury.com/2026/05/16/how-a-19th-century-law-thats-central-to-a-national-telehealth-abortion-case-could-impact-virginia"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-16-va-nonprofit-policy-news-011"
           ],
@@ -2535,7 +2619,7 @@
           "source_urls": [
             "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-wa-nonprofit-policy-news-026"
           ],
@@ -2606,7 +2690,7 @@
           "source_urls": [
             "https://washingtonstatestandard.com/2026/05/16/repub/as-property-insurance-crisis-worsens-some-lawmakers-target-big-oil"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-16-wa-nonprofit-policy-news-012"
           ],
@@ -2679,7 +2763,7 @@
           "source_urls": [
             "https://wem.wi.gov/wi-begins-preliminary-damage-assessments/"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "ap-2026-05-09-local-story-wi-flood-assessments",
             "ap-2026-05-12-weather-story-wi-flood-assessments",
@@ -2757,7 +2841,7 @@
           "source_urls": [
             "https://wyofile.com/feds-deny-wyomings-proposal-for-long-term-rural-health-funding-sending-state-back-to-drawing-board"
           ],
-          "edition_url": "/american-pressure/editions/2026-05-24/",
+          "edition_url": "/american-pressure/editions/2026-05-23/",
           "source_record_ids": [
             "feed-backfill-2026-05-15-wy-nonprofit-policy-news-030"
           ],
@@ -2807,7 +2891,7 @@
       "source_urls": [
         "https://www.ncei.noaa.gov/access/monitoring/monthly-report/national/202504"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "american-pressure-2026-05-03-noaa-heat-001"
       ],
@@ -2827,7 +2911,7 @@
       "source_urls": [
         "https://www.fns.usda.gov/research/snap/household-characteristics"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "american-pressure-2026-05-03-usda-snap-001"
       ],
@@ -2847,7 +2931,7 @@
       "source_urls": [
         "https://www.heraldstandard.com/news/local-news/2026/may/07/medicaid-cuts-threaten-hundreds-of-hospitals-new-report-finds/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-09-health-story-medicaid-cuts-hospitals"
       ],
@@ -2867,7 +2951,7 @@
       "source_urls": [
         "https://www.washingtonpost.com/business/2026/04/26/utility-power-electricity-shutoff-bills/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-12-housing-story-utility-shutoffs-wapo"
       ],
@@ -2887,7 +2971,7 @@
       "source_urls": [
         "https://www.washingtonpost.com/business/2026/04/26/utility-power-electricity-shutoff-bills/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-16-housing-story-utility-shutoffs-wapo"
       ],
@@ -2907,12 +2991,20 @@
       "source_urls": [
         "https://www.uscourts.gov/data-table-numbers/f-5a"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-005"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-005",
+          "url": "/american-pressure/editions/2026-05-23/#debt-and-bankruptcy-pressure",
+          "label": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Business and Nonbusiness Cases Filed, by Chapter of the Bankruptcy Code, District, and County (F-5A) (2026-03-31T00:00:00Z)",
       "unmapped_reason": "national_scope"
@@ -2927,12 +3019,20 @@
       "source_urls": [
         "https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-003"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-003",
+          "url": "/american-pressure/editions/2026-05-23/#health-care-access-pressure",
+          "label": "Health access pressure in Concord, Adding is disrupting care"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Map Element - Medicaid & CHIP Enrollment (2026-03-27T00:00:00Z)",
       "unmapped_reason": "national_scope"
@@ -2949,7 +3049,7 @@
       "source_urls": [
         "https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage"
       ],
@@ -2969,12 +3069,20 @@
       "source_urls": [
         "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-005"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-005",
+          "url": "/american-pressure/editions/2026-05-23/#debt-and-bankruptcy-pressure",
+          "label": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Watertown adopts budget with tax increase, layoffs (2026-05-21T17:32:00-04:00)",
       "unmapped_reason": "missing_location"
@@ -2989,12 +3097,20 @@
       "source_urls": [
         "https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-001"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-001",
+          "url": "/american-pressure/editions/2026-05-23/#food-and-grocery-pressure",
+          "label": "Food support networks in Food, Advocates report rising demand"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Food bank demand surges in Santa Cruz County as costs strain families (2026-05-13T09:49:00-07:00)",
       "unmapped_reason": "missing_location"
@@ -3009,12 +3125,20 @@
       "source_urls": [
         "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-003"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-003",
+          "url": "/american-pressure/editions/2026-05-23/#health-care-access-pressure",
+          "label": "Health access pressure in Concord, Adding is disrupting care"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Patients worry after Los Alamos Medical Center halts labor, delivery services (2026-05-17T00:00:00-06:00)",
       "unmapped_reason": "missing_location"
@@ -3031,7 +3155,7 @@
       "source_urls": [
         "https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage"
       ],
@@ -3051,12 +3175,20 @@
       "source_urls": [
         "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-005"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-005",
+          "url": "/american-pressure/editions/2026-05-23/#debt-and-bankruptcy-pressure",
+          "label": "Liquidation looms as U.S. trustee pushes to convert First Brands Chapter 11 case"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Watertown adopts budget with tax increase, layoffs (2026-05-21T17:32:00-04:00)",
       "unmapped_reason": "missing_location"
@@ -3071,12 +3203,20 @@
       "source_urls": [
         "https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-001"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-001",
+          "url": "/american-pressure/editions/2026-05-23/#food-and-grocery-pressure",
+          "label": "Food support networks in Food, Advocates report rising demand"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Food bank demand surges in Santa Cruz County as costs strain families (2026-05-13T09:49:00-07:00)",
       "unmapped_reason": "missing_location"
@@ -3091,24 +3231,32 @@
       "source_urls": [
         "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/"
       ],
-      "edition_url": "/american-pressure/editions/2026-05-24/",
+      "edition_url": "/american-pressure/editions/2026-05-23/",
       "source_record_ids": [
         "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt"
       ],
-      "story_ids": [],
-      "written_story_links": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-003"
+      ],
+      "written_story_links": [
+        {
+          "story_id": "american-pressure-story-2026-05-23-003",
+          "url": "/american-pressure/editions/2026-05-23/#health-care-access-pressure",
+          "label": "Health access pressure in Concord, Adding is disrupting care"
+        }
+      ],
       "dispatch_url": "/american-pressure/",
       "source_title_date": "Patients worry after Los Alamos Medical Center halts labor, delivery services (2026-05-17T00:00:00-06:00)",
       "unmapped_reason": "missing_location"
     }
   ],
   "location_extraction_diagnostics": {
-    "candidates_seen": 77,
-    "raw_extracted_candidate_count": 77,
+    "candidates_seen": 82,
+    "raw_extracted_candidate_count": 82,
     "accepted_count": 30,
     "accepted_before_dedupe_count": 30,
     "accepted_after_dedupe_count": 23,
-    "rejected_count": 13,
+    "rejected_count": 14,
     "primary_count": 10,
     "affected_count": 0,
     "service_area_count": 0,
@@ -3656,7 +3804,9 @@
         "evidence_field": "source_title",
         "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
         "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-007"
+        ]
       },
       {
         "kind": "state_only",
@@ -3667,7 +3817,9 @@
         "evidence_field": "reader_headline",
         "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
         "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-007"
+        ]
       },
       {
         "kind": "state_only",
@@ -3722,7 +3874,9 @@
         "evidence_field": "source_title",
         "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
         "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ]
       },
       {
         "kind": "state_only",
@@ -3733,7 +3887,9 @@
         "evidence_field": "source_snippet",
         "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
         "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ]
       },
       {
         "kind": "state_only",
@@ -3744,7 +3900,22 @@
         "evidence_field": "reader_headline",
         "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
         "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "OR",
+        "evidence": "OR",
+        "confidence": "low",
+        "method": "text_story_summary_state_only",
+        "evidence_field": "story_summary",
+        "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+        "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ]
       },
       {
         "kind": "state_only",
@@ -3755,7 +3926,9 @@
         "evidence_field": "source_summary_or_snippet",
         "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
         "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ]
       },
       {
         "kind": "state_only",
@@ -3766,7 +3939,64 @@
         "evidence_field": "source_snippet",
         "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
         "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "IA",
+        "evidence": "IA",
+        "confidence": "low",
+        "method": "text_story_summary_state_only",
+        "evidence_field": "story_summary",
+        "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
+      },
+      {
+        "kind": "city_state",
+        "city": "in us-ia",
+        "state": "IA",
+        "evidence": "In US-IA, Iowa",
+        "confidence": "medium",
+        "method": "text_story_human_story_summary_city_state",
+        "city_cleaned": "us-ia",
+        "city_original": "in us-ia",
+        "evidence_field": "story_human_story_summary",
+        "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "IA",
+        "evidence": "IA",
+        "confidence": "low",
+        "method": "text_story_human_story_summary_state_only",
+        "evidence_field": "story_human_story_summary",
+        "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
+      },
+      {
+        "kind": "state_only",
+        "state": "IA",
+        "evidence": "IA",
+        "confidence": "low",
+        "method": "text_story_what_happened_state_only",
+        "evidence_field": "story_what_happened",
+        "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
       },
       {
         "kind": "state_only",
@@ -3777,7 +4007,9 @@
         "evidence_field": "source_summary_or_snippet",
         "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
         "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-        "story_ids": []
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ]
       },
       {
         "kind": "state_only",
@@ -4169,7 +4401,9 @@
       {
         "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
         "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-        "story_ids": [],
+        "story_ids": [
+          "american-pressure-story-2026-05-23-007"
+        ],
         "location_label": "CA",
         "method": "text_source_title_state_only",
         "evidence_text": "CA",
@@ -4191,7 +4425,9 @@
       {
         "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
         "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-        "story_ids": [],
+        "story_ids": [
+          "american-pressure-story-2026-05-23-004"
+        ],
         "location_label": "OR",
         "method": "text_source_title_state_only",
         "evidence_text": "OR",
@@ -4202,7 +4438,9 @@
       {
         "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
         "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-        "story_ids": [],
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ],
         "location_label": "IA",
         "method": "text_source_snippet_state_only",
         "evidence_text": "IA",
@@ -4549,6 +4787,25 @@
           "city_cleaned": "marshall",
           "city_original": "fitzgibbon hospital in marshall",
           "evidence_field": "source_summary_or_snippet"
+        },
+        "rejection_reason": "no_explicit_pressure_link"
+      },
+      {
+        "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+        "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+        "story_ids": [
+          "american-pressure-story-2026-05-23-006"
+        ],
+        "candidate": {
+          "kind": "city_state",
+          "city": "in us-ia",
+          "state": "IA",
+          "evidence": "In US-IA, Iowa",
+          "confidence": "medium",
+          "method": "text_story_human_story_summary_city_state",
+          "city_cleaned": "us-ia",
+          "city_original": "in us-ia",
+          "evidence_field": "story_human_story_summary"
         },
         "rejection_reason": "no_explicit_pressure_link"
       }

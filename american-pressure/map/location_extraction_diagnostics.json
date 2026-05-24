@@ -1,10 +1,10 @@
 {
-  "candidates_seen": 77,
-  "raw_extracted_candidate_count": 77,
+  "candidates_seen": 82,
+  "raw_extracted_candidate_count": 82,
   "accepted_count": 30,
   "accepted_before_dedupe_count": 30,
   "accepted_after_dedupe_count": 23,
-  "rejected_count": 13,
+  "rejected_count": 14,
   "primary_count": 10,
   "affected_count": 0,
   "service_area_count": 0,
@@ -552,7 +552,9 @@
       "evidence_field": "source_title",
       "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
       "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ]
     },
     {
       "kind": "state_only",
@@ -563,7 +565,9 @@
       "evidence_field": "reader_headline",
       "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
       "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ]
     },
     {
       "kind": "state_only",
@@ -618,7 +622,9 @@
       "evidence_field": "source_title",
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ]
     },
     {
       "kind": "state_only",
@@ -629,7 +635,9 @@
       "evidence_field": "source_snippet",
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ]
     },
     {
       "kind": "state_only",
@@ -640,7 +648,22 @@
       "evidence_field": "reader_headline",
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "OR",
+      "evidence": "OR",
+      "confidence": "low",
+      "method": "text_story_summary_state_only",
+      "evidence_field": "story_summary",
+      "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+      "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ]
     },
     {
       "kind": "state_only",
@@ -651,7 +674,9 @@
       "evidence_field": "source_summary_or_snippet",
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ]
     },
     {
       "kind": "state_only",
@@ -662,7 +687,64 @@
       "evidence_field": "source_snippet",
       "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
       "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "IA",
+      "evidence": "IA",
+      "confidence": "low",
+      "method": "text_story_summary_state_only",
+      "evidence_field": "story_summary",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
+    },
+    {
+      "kind": "city_state",
+      "city": "in us-ia",
+      "state": "IA",
+      "evidence": "In US-IA, Iowa",
+      "confidence": "medium",
+      "method": "text_story_human_story_summary_city_state",
+      "city_cleaned": "us-ia",
+      "city_original": "in us-ia",
+      "evidence_field": "story_human_story_summary",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "IA",
+      "evidence": "IA",
+      "confidence": "low",
+      "method": "text_story_human_story_summary_state_only",
+      "evidence_field": "story_human_story_summary",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
+    },
+    {
+      "kind": "state_only",
+      "state": "IA",
+      "evidence": "IA",
+      "confidence": "low",
+      "method": "text_story_what_happened_state_only",
+      "evidence_field": "story_what_happened",
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
     },
     {
       "kind": "state_only",
@@ -673,7 +755,9 @@
       "evidence_field": "source_summary_or_snippet",
       "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
       "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-      "story_ids": []
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ]
     },
     {
       "kind": "state_only",
@@ -1065,7 +1149,9 @@
     {
       "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
       "source_url": "https://dot.ca.gov/news-releases/news-release-2026-010",
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-007"
+      ],
       "location_label": "CA",
       "method": "text_source_title_state_only",
       "evidence_text": "CA",
@@ -1087,7 +1173,9 @@
     {
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
       "source_url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-004"
+      ],
       "location_label": "OR",
       "method": "text_source_title_state_only",
       "evidence_text": "OR",
@@ -1098,7 +1186,9 @@
     {
       "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
       "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
-      "story_ids": [],
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ],
       "location_label": "IA",
       "method": "text_source_snippet_state_only",
       "evidence_text": "IA",
@@ -1445,6 +1535,25 @@
         "city_cleaned": "marshall",
         "city_original": "fitzgibbon hospital in marshall",
         "evidence_field": "source_summary_or_snippet"
+      },
+      "rejection_reason": "no_explicit_pressure_link"
+    },
+    {
+      "source_record_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+      "source_url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+      "story_ids": [
+        "american-pressure-story-2026-05-23-006"
+      ],
+      "candidate": {
+        "kind": "city_state",
+        "city": "in us-ia",
+        "state": "IA",
+        "evidence": "In US-IA, Iowa",
+        "confidence": "medium",
+        "method": "text_story_human_story_summary_city_state",
+        "city_cleaned": "us-ia",
+        "city_original": "in us-ia",
+        "evidence_field": "story_human_story_summary"
       },
       "rejection_reason": "no_explicit_pressure_link"
     }

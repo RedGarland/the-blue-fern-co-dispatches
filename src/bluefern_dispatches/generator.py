@@ -1001,10 +1001,18 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     )
     map_link = ""
     dashboard_link = ""
+    explainer_block = ""
     if dispatch.slug == "american-pressure":
         map_link = '\n    <p><a href="map/">View American Pressure Map</a></p>'
         if (site_root / "american-pressure" / "dashboard" / "index.html").exists():
             dashboard_link = '\n    <p><a href="dashboard/">View American Pressure Dashboard</a></p>'
+        explainer_block = """
+    <section class="section">
+      <h2>What American Pressure Tracks</h2>
+      <p><strong>What it tracks:</strong> Source-backed signs of household and community strain across food, housing, health care access, jobs, debt, local services, disaster recovery, transportation, benefits delivery, and childcare/schools.</p>
+      <p><strong>What it does not claim:</strong> This is not a complete national census and does not measure every hardship event in the country.</p>
+      <p><strong>How to read it:</strong> Each weekly edition links claims to source records. The map shows collected source-backed locations, not every affected place.</p>
+    </section>"""
     elif dispatch.slug == "cascadia":
         map_link = '\n    <p><a href="map/">Open latest Cascadia pressure map</a></p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
@@ -1018,6 +1026,7 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     {latest_link}
     {map_link}
     {dashboard_link}
+    {explainer_block}
     {signal_pack_note}
     <h2>Recent Editions</h2>
     <ul class="edition-list">

@@ -368,6 +368,10 @@ def test_american_pressure_index_links_to_map_only(built_site):
     ap_index = read(work / "output" / "site" / "american-pressure" / "index.html")
     assert 'href="map/"' in ap_index
     assert 'href="dashboard/"' not in ap_index
+    assert "What American Pressure Tracks" in ap_index
+    assert "What it tracks:" in ap_index
+    assert "What it does not claim:" in ap_index
+    assert "How to read it:" in ap_index
 
 
 def test_manifests_and_source_traceability(built_site):

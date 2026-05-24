@@ -34,7 +34,7 @@
     "https://www.publicalerts.org/wildfire",
     "https://www.publicalerts.org/wildfire-smoke"
   ],
-  "generated_at": "2026-05-24T20:12:32.156107+00:00",
+  "generated_at": "2026-05-24T20:32:35.821920+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-17/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-17",
   "local_backup_path": null,
@@ -71,7 +71,7 @@
     "gdelt",
     "registry"
   ],
-  "query_count": 3,
+  "query_count": 2,
   "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-11_2026-05-17\\historical_search_report.json",
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-17\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-17\\curation_manifest.json",
@@ -248,8 +248,7 @@
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
     "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "historical provider gdelt rate limited for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): HTTP 429 Too Many Requests after max retries"
+    "historical provider gdelt rate limited for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): HTTP 429 Too Many Requests after max retries"
   ],
   "errors": []
 }

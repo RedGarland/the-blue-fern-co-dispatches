@@ -1413,11 +1413,16 @@ def _validate_build_public_urls_expected_date(
     expect_date: str | None,
     expect_dispatches: tuple[str, ...],
     only_dispatches: tuple[str, ...],
+    site_root: Path | None = None,
 ) -> list[str]:
     if not expect_date:
         return []
+    # Strict selected-public-URL date matching is meaningful only for scoped
+    # publish runs where --only-dispatch is set.
+    if not only_dispatches:
+        return []
     errors: list[str] = []
-    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    dispatches_to_check = tuple(expect_dispatches)
     public_urls = [str(url) for url in build.get("public_urls", [])]
     for dispatch_slug in dispatches_to_check:
         marker = f"/{dispatch_slug}/editions/"
@@ -1430,6 +1435,8 @@ def _validate_build_public_urls_expected_date(
             if len(candidate) == 10:
                 seen_dates.add(candidate)
         if seen_dates and seen_dates != {expect_date}:
+            if site_root is not None and public_edition_is_listable(site_root, dispatch_slug, expect_date):
+                continue
             errors.append(
                 f"expected {dispatch_slug} edition date {expect_date}, but selected public URLs include: {', '.join(sorted(seen_dates))}"
             )
@@ -1446,7 +1453,9 @@ def _filter_dispatches_for_strict_expected_url_check(
     eligible: list[str] = []
     for dispatch_slug in dispatches_to_check:
         dispatch_edition = site_root.parents[1] / "dispatches" / dispatch_slug / "editions" / expect_date
-        if dispatch_edition.exists() or public_edition_is_listable(site_root, dispatch_slug, expect_date):
+        # Strict public-URL date checks are only reliable when we have a
+        # concrete dispatch build artifact for the expected date.
+        if dispatch_edition.exists():
             eligible.append(dispatch_slug)
     return tuple(eligible)
 
@@ -1781,10 +1790,7 @@ def publish_pages(
         public_max_dates["american-pressure"] = expect_date
         resolved_root = root.resolve()
         existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / expect_date
-        existing_public_edition = resolved_root / "output" / "site" / "american-pressure" / "editions" / expect_date
-        if existing_dispatch_edition.exists() or (
-            existing_public_edition.exists() and public_edition_is_listable(resolved_root / "output" / "site", "american-pressure", expect_date)
-        ):
+        if existing_dispatch_edition.exists():
             dispatch_seed_dates["american-pressure"] = expect_date
     build = build_site(
         root,
@@ -1809,8 +1815,15 @@ def publish_pages(
     )
     errors.extend(validation_errors)
     dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
-    strict_dispatches = _filter_dispatches_for_strict_expected_url_check(site_root, expect_date, dispatches_to_check)
-    errors.extend(_validate_build_public_urls_expected_date(build, expect_date, strict_dispatches, only_dispatches))
+    errors.extend(
+        _validate_build_public_urls_expected_date(
+            build,
+            expect_date,
+            dispatches_to_check,
+            only_dispatches,
+            site_root=site_root,
+        )
+    )
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
     branch_result = {
@@ -1980,10 +1993,7 @@ def main(argv: list[str] | None = None) -> int:
             public_max_dates["american-pressure"] = args.expect_date
             resolved_root = Path.cwd().resolve()
             existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / args.expect_date
-            existing_public_edition = resolved_root / "output" / "site" / "american-pressure" / "editions" / args.expect_date
-            if existing_dispatch_edition.exists() or (
-                existing_public_edition.exists() and public_edition_is_listable(resolved_root / "output" / "site", "american-pressure", args.expect_date)
-            ):
+            if existing_dispatch_edition.exists():
                 dispatch_seed_dates["american-pressure"] = args.expect_date
         result = build_site(
             Path.cwd(),
@@ -1997,9 +2007,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.expect_date:
             dispatches_to_check = _expected_dispatches_for_date_checks(args.expect_date, expect_dispatches, only_dispatches)
             site_root = Path.cwd().resolve() / "output" / "site"
-            strict_dispatches = _filter_dispatches_for_strict_expected_url_check(site_root, args.expect_date, dispatches_to_check)
             result_errors.extend(
-                _validate_build_public_urls_expected_date(result, args.expect_date, strict_dispatches, only_dispatches)
+                _validate_build_public_urls_expected_date(
+                    result,
+                    args.expect_date,
+                    dispatches_to_check,
+                    only_dispatches,
+                    site_root=site_root,
+                )
             )
             for dispatch_slug in dispatches_to_check:
                 edition_index = site_root / dispatch_slug / "editions" / args.expect_date / "index.html"

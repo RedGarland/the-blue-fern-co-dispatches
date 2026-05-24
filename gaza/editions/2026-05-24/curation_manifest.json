@@ -1,13 +1,12 @@
 [
   {
     "story_id": "gaza-story-2026-05-24-001",
-    "title": "Former prosecutor calls for EU statute blocking US sanctions on ICC members",
-    "summary": "US imposed sanctions on nine judges and a prosecutor after ICC issued arrest warrants for members of Israeli cabinet A former prosecutor at the international criminal court has called for an EU-wide statute blocking what she describes as \"thuggish\" and \"bullying\" US sanctions imposed on members of the court that are designed to send the court into oblivion. In February 2025, the US imposed sanctions on 11 ICC officials, including nine judges and the chief prosecutor as well three Palestinian organisations, in response to the ICC decision in 2024 to issue arrest warrants for members of the Israeli cabinet, including the prime minister, Benjamin Netanyahu.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 40,
+    "title": "France bans Ben-Gvir: Which other Israeli leaders have been penalised?",
+    "summary": "France bans the Israeli far-right minister after his 'unspeakable' behaviour against arrested Gaza flotilla activists.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
     "scoring_reasons": [
-      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
@@ -18,25 +17,25 @@
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-05-24-guardian-world-fde743c1f660"
+      "gaza-2026-05-24-aljazeera-middle-east-22774d491e4f"
     ],
     "source_ids": [
-      "gaza-2026-05-24-guardian-world-fde743c1f660"
+      "gaza-2026-05-24-aljazeera-middle-east-22774d491e4f"
     ],
     "source_urls": [
-      "https://www.theguardian.com/law/2026/may/24/former-international-criminal-court-prosecutor-calls-for-eu-statute-blocking-us-sanctions-on-icc-members"
+      "https://www.aljazeera.com/news/2026/5/24/france-bans-ben-gvir-which-other-israeli-leaders-have-been-penalised?traffic_source=rss"
     ],
     "publisher_names": [
-      "The Guardian"
+      "Al Jazeera"
     ],
-    "generated_at": "2026-05-24T18:50:37.621963+00:00",
+    "generated_at": "2026-05-24T19:06:33.501095+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -46,6 +45,50 @@
   },
   {
     "story_id": "gaza-story-2026-05-24-002",
+    "title": "For third year in a row, Israel blocks Hajj pilgrimage for Gaza Muslims",
+    "summary": "As millions of Muslims gather in Mecca, Palestinians in Gaza face a third year of heartbreak as Israel has shut border.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-24-aljazeera-middle-east-80066c8e58b1"
+    ],
+    "source_ids": [
+      "gaza-2026-05-24-aljazeera-middle-east-80066c8e58b1"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/24/for-third-year-in-a-row-israel-blocks-hajj-pilgrimage-for-gaza-muslims?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-24T19:06:33.501095+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-24-003",
     "title": "Israeli attack on Gaza kills three family members, including infant",
     "summary": "Mohammad Abu Mallouh, \u200bAlaa Zaqlan and their child, Osama, killed in the attack on Nuseirat refugee camp, medics say.",
     "category": "conflict",
@@ -82,7 +125,52 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-24T18:50:37.621963+00:00",
+    "generated_at": "2026-05-24T19:06:33.501095+00:00",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-24-004",
+    "title": "Former prosecutor calls for EU statute blocking US sanctions on ICC members",
+    "summary": "US imposed sanctions on nine judges and a prosecutor after ICC issued arrest warrants for members of Israeli cabinet A former prosecutor at the international criminal court has called for an EU-wide statute blocking what she describes as \"thuggish\" and \"bullying\" US sanctions imposed on members of the court that are designed to send the court into oblivion. In February 2025, the US imposed sanctions on 11 ICC officials, including nine judges and the chief prosecutor as well three Palestinian organisations, in response to the ICC decision in 2024 to issue arrest warrants for members of the Israeli cabinet, including the prime minister, Benjamin Netanyahu.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 40,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-24-guardian-world-fde743c1f660"
+    ],
+    "source_ids": [
+      "gaza-2026-05-24-guardian-world-fde743c1f660"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/law/2026/may/24/former-international-criminal-court-prosecutor-calls-for-eu-statute-blocking-us-sanctions-on-icc-members"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-24T19:06:33.501095+00:00",
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,

@@ -231,6 +231,64 @@ def notification_error_message(exc: BaseException) -> str:
     return message
 
 
+def _smtp_mode(smtp_port: int, smtp_use_ssl: bool) -> str:
+    if smtp_use_ssl:
+        return "ssl"
+    if smtp_port == 587:
+        return "starttls-required"
+    return "starttls-opportunistic"
+
+
+def _resolve_ca_bundle_path() -> tuple[str | None, str | None]:
+    # Support both env keys consistently; BUNDLE takes precedence if both are set.
+    for key in ("SMTP_CA_BUNDLE", "SMTP_CA_FILE"):
+        value = os.getenv(key)
+        if value and value.strip():
+            path = Path(value).expanduser().resolve()
+            if not path.is_file():
+                raise RuntimeError(
+                    f"{key} is set to {value!r} but that file does not exist or is not a file. "
+                    "Unset it or point it to a valid PEM file."
+                )
+            return str(path), key
+    return None, None
+
+
+def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
+    smtp_skip_verify = _env_bool_any(["SMTP_SKIP_VERIFY", "SMTP_RELAX_X509_STRICT"], default=False)
+    if _env_bool_any(["SMTP_TLS_VERIFY"], default=True) is False:
+        smtp_skip_verify = True
+
+    ca_bundle, ca_source_var = _resolve_ca_bundle_path()
+    context_meta: dict[str, str | bool | None] = {
+        "tls_verify_enabled": not smtp_skip_verify,
+        "tls_relaxed": smtp_skip_verify,
+        "ca_bundle_path": ca_bundle,
+        "ca_bundle_env": ca_source_var,
+        "ca_source": None,
+    }
+
+    if smtp_skip_verify:
+        context_meta["ca_source"] = "unverified_context"
+        return ssl._create_unverified_context(), context_meta
+
+    if ca_bundle:
+        context_meta["ca_source"] = "custom_bundle"
+        return ssl.create_default_context(cafile=ca_bundle), context_meta
+
+    try:
+        import certifi  # type: ignore
+
+        certifi_path = certifi.where()
+        context_meta["ca_source"] = "certifi"
+        context_meta["ca_bundle_path"] = certifi_path
+        context_meta["ca_bundle_env"] = "certifi"
+        return ssl.create_default_context(cafile=certifi_path), context_meta
+    except Exception:
+        context_meta["ca_source"] = "system_default"
+        return ssl.create_default_context(), context_meta
+
+
 def _smtp_local_hostname(email_from: str) -> str:
     configured = os.getenv("SMTP_LOCAL_HOSTNAME")
     if configured and configured.strip():
@@ -255,6 +313,13 @@ def _smtp_ehlo(smtp: smtplib.SMTP, local_hostname: str) -> None:
 
 
 def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False) -> None:
+    # Recommended normal configuration (for example Gmail):
+    # SMTP_HOST=smtp.gmail.com
+    # SMTP_PORT=587
+    # SMTP_USE_SSL=0 (STARTTLS mode)
+    # SMTP_TLS_VERIFY=1
+    # Set SMTP_CA_FILE/SMTP_CA_BUNDLE only for intentional local TLS inspection.
+    # SMTP_RELAX_X509_STRICT=1 is diagnostic-only and should not be a steady-state default.
     smtp_host = os.getenv("SMTP_HOST")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_use_ssl = _env_bool("SMTP_USE_SSL")
@@ -287,45 +352,15 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     msg["Date"] = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     msg.set_content(body)
 
-    use_smtps = smtp_use_ssl or smtp_port == 465
+    mode = _smtp_mode(smtp_port, smtp_use_ssl)
+    use_smtps = mode == "ssl"
     last_error: BaseException | None = None
     retryable_errors = (smtplib.SMTPException, OSError, socket.timeout)
 
     local_hostname = _smtp_local_hostname(email_from)
 
-    smtp_ca_bundle = _env_first("SMTP_CA_BUNDLE", "SMTP_CA_FILE")
-    if smtp_ca_bundle and smtp_ca_bundle.strip():
-        smtp_ca_bundle_path = Path(smtp_ca_bundle).expanduser().resolve()
-        if not smtp_ca_bundle_path.is_file():
-            raise RuntimeError(
-                f"SMTP_CA_BUNDLE is set to {smtp_ca_bundle!r} but that file does not exist or is not a file. "
-                "Unset SMTP_CA_BUNDLE or point it to a valid PEM file."
-            )
-        cafile = str(smtp_ca_bundle_path)
-    else:
-        cafile = None
-    smtp_skip_verify = _env_bool_any(["SMTP_SKIP_VERIFY", "SMTP_RELAX_X509_STRICT"], default=False)
-    if _env_bool_any(["SMTP_TLS_VERIFY"], default=True) is False:
-        smtp_skip_verify = True
-
-    if smtp_skip_verify:
-        tls_context = ssl._create_unverified_context()
-    else:
-        try:
-            if cafile:
-                tls_context = ssl.create_default_context(cafile=cafile)
-            else:
-                try:
-                    import certifi
-                    tls_context = ssl.create_default_context(cafile=certifi.where())
-                except Exception:
-                    tls_context = ssl.create_default_context()
-        except FileNotFoundError:
-            raise RuntimeError(
-                "SMTP_CA_BUNDLE referenced file not found. Unset SMTP_CA_BUNDLE or point it to a valid PEM file."
-            ) from None
-        except Exception:
-            tls_context = ssl.create_default_context()
+    tls_context, tls_meta = _build_tls_context()
+    smtp_skip_verify = bool(tls_meta["tls_relaxed"])
 
     for attempt in range(1, smtp_retries + 2):
         smtp = None
@@ -355,6 +390,8 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
                         smtp.starttls(context=tls_context)
                         _smtp_ehlo(smtp, local_hostname)
                         connection_label = "STARTTLS"
+                    elif mode == "starttls-required":
+                        raise RuntimeError(f"SMTP server {smtp_host}:{smtp_port} did not advertise STARTTLS on required mode")
                     else:
                         print(
                             f"Warning: SMTP server {smtp_host}:{smtp_port} does not advertise STARTTLS; sending without TLS for {date_str}.",
@@ -464,10 +501,10 @@ def print_smtp_config_debug() -> None:
     smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
     email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
     smtp_port = os.getenv("SMTP_PORT", "587")
-    smtp_use_ssl = _env_bool("SMTP_USE_SSL") or smtp_port == "465"
-    smtp_skip_verify = _env_bool_any(["SMTP_SKIP_VERIFY", "SMTP_RELAX_X509_STRICT"], default=False)
-    if _env_bool_any(["SMTP_TLS_VERIFY"], default=True) is False:
-        smtp_skip_verify = True
+    smtp_port_int = int(smtp_port)
+    smtp_use_ssl = _env_bool("SMTP_USE_SSL")
+    mode = _smtp_mode(smtp_port_int, smtp_use_ssl)
+    _tls_context, tls_meta = _build_tls_context()
     lines = [
         "SMTP diagnostic config:",
         f"- SMTP host: {os.getenv('SMTP_HOST') or '<unset>'}",
@@ -475,8 +512,11 @@ def print_smtp_config_debug() -> None:
         f"- SMTP username: {_mask_email(smtp_user)}",
         f"- Email from: {_mask_email(email_from)}",
         f"- Email to: {_mask_recipients(os.getenv('EMAIL_TO'))}",
-        f"- TLS mode: {'SMTPS' if smtp_use_ssl else 'STARTTLS if advertised'}",
-        f"- TLS verification: {str(not smtp_skip_verify).lower()}",
+        f"- TLS mode: {mode}",
+        f"- TLS verification: {str(bool(tls_meta['tls_verify_enabled'])).lower()}",
+        f"- TLS relaxed (diagnostic): {str(bool(tls_meta['tls_relaxed'])).lower()}",
+        f"- CA source: {tls_meta.get('ca_source') or '<none>'}",
+        f"- CA bundle path: {tls_meta.get('ca_bundle_path') or '<none>'}",
         f"- SMTP debug file: {os.getenv('SMTP_DEBUG_FILE') or '<unset>'}",
     ]
     print("\n".join(lines), file=sys.stderr)
@@ -500,7 +540,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             send_email(subject, build_test_email_body(args.date), args.date, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
-            print(f"Failed to send test email: {_smtp_error_message(exc)}", file=sys.stderr)
+            print(f"Failed to send test email: {notification_error_message(exc)}", file=sys.stderr)
             return 2
         return 0
 

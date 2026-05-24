@@ -2,6 +2,8 @@ import base64
 import importlib.util
 import json
 import ssl
+import sys
+import types
 from email.message import EmailMessage
 from pathlib import Path
 
@@ -280,3 +282,147 @@ def test_cascadia_smtp_debug_redacts_credentials(monkeypatch, capsys, tmp_path):
     assert base64.b64encode(b"\0alerts@example.test\0secret-app-password").decode() not in captured.err
     assert "secret-app-password" not in debug_text
     assert "alerts@example.test" not in debug_text
+
+
+def test_send_email_ssl_mode_uses_smtp_ssl(monkeypatch):
+    called = {"ssl": False, "starttls": False}
+
+    class FakeSMTPSSL:
+        def __init__(self, host, port, local_hostname=None, timeout=None, context=None):
+            called["ssl"] = True
+            self.context = context
+
+        def set_debuglevel(self, level):
+            return None
+
+        def ehlo(self, name=None):
+            return 250, b"OK"
+
+        def login(self, user, password):
+            return None
+
+        def send_message(self, msg):
+            return None
+
+        def quit(self):
+            return None
+
+        def close(self):
+            return None
+
+    class FakeSMTP:
+        def __init__(self, *args, **kwargs):
+            raise AssertionError("SMTP should not be used in SSL mode")
+
+    monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
+    monkeypatch.setenv("SMTP_PORT", "465")
+    monkeypatch.setenv("SMTP_USE_SSL", "1")
+    monkeypatch.setenv("SMTP_USER", "alerts@example.test")
+    monkeypatch.setenv("SMTP_PASSWORD", "pw")
+    monkeypatch.setenv("EMAIL_TO", "ops@example.test")
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP_SSL", FakeSMTPSSL)
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)
+    run_and_notify.send_email("subj", "body", "2026-05-10")
+    assert called["ssl"] is True
+    assert called["starttls"] is False
+
+
+def test_send_email_starttls_mode_uses_smtp_starttls(monkeypatch):
+    called = {"smtp": False, "starttls": False}
+
+    class FakeSMTP:
+        def __init__(self, host, port, local_hostname=None, timeout=None):
+            called["smtp"] = True
+
+        def set_debuglevel(self, level):
+            return None
+
+        def ehlo(self, name=None):
+            return 250, b"OK"
+
+        def has_extn(self, name):
+            return name.lower() == "starttls"
+
+        def starttls(self, context=None):
+            called["starttls"] = True
+
+        def login(self, user, password):
+            return None
+
+        def send_message(self, msg):
+            return None
+
+        def quit(self):
+            return None
+
+        def close(self):
+            return None
+
+    class FakeSMTPSSL:
+        def __init__(self, *args, **kwargs):
+            raise AssertionError("SMTP_SSL should not be used in STARTTLS mode")
+
+    monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
+    monkeypatch.setenv("SMTP_PORT", "587")
+    monkeypatch.setenv("SMTP_USE_SSL", "0")
+    monkeypatch.setenv("SMTP_USER", "alerts@example.test")
+    monkeypatch.setenv("SMTP_PASSWORD", "pw")
+    monkeypatch.setenv("EMAIL_TO", "ops@example.test")
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP_SSL", FakeSMTPSSL)
+    run_and_notify.send_email("subj", "body", "2026-05-10")
+    assert called["smtp"] is True
+    assert called["starttls"] is True
+
+
+def test_build_tls_context_uses_custom_ca_bundle(monkeypatch, tmp_path):
+    pem = tmp_path / "custom-ca.pem"
+    pem.write_text("PEM", encoding="utf-8")
+    monkeypatch.setenv("SMTP_CA_FILE", str(pem))
+    monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
+    monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
+    monkeypatch.delenv("SMTP_SKIP_VERIFY", raising=False)
+    monkeypatch.delenv("SMTP_TLS_VERIFY", raising=False)
+    called: dict[str, str | None] = {"cafile": None}
+
+    def fake_create_default_context(cafile=None):
+        called["cafile"] = cafile
+        return ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+    monkeypatch.setattr(run_and_notify.ssl, "create_default_context", fake_create_default_context)
+    _ctx, meta = run_and_notify._build_tls_context()
+    assert called["cafile"] == str(pem.resolve())
+    assert meta["ca_source"] == "custom_bundle"
+    assert meta["ca_bundle_env"] == "SMTP_CA_FILE"
+
+
+def test_build_tls_context_uses_certifi_fallback_when_available(monkeypatch, tmp_path):
+    certifi_pem = tmp_path / "certifi.pem"
+    certifi_pem.write_text("PEM", encoding="utf-8")
+    fake_certifi = types.SimpleNamespace(where=lambda: str(certifi_pem))
+    monkeypatch.setitem(sys.modules, "certifi", fake_certifi)
+    monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
+    monkeypatch.delenv("SMTP_CA_FILE", raising=False)
+    monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
+    called: dict[str, str | None] = {"cafile": None}
+
+    def fake_create_default_context(cafile=None):
+        called["cafile"] = cafile
+        return ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+    monkeypatch.setattr(run_and_notify.ssl, "create_default_context", fake_create_default_context)
+    _ctx, meta = run_and_notify._build_tls_context()
+    assert called["cafile"] == str(certifi_pem)
+    assert meta["ca_source"] == "certifi"
+
+
+def test_build_tls_context_relax_strict_only_when_explicit(monkeypatch):
+    monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
+    monkeypatch.delenv("SMTP_SKIP_VERIFY", raising=False)
+    monkeypatch.delenv("SMTP_TLS_VERIFY", raising=False)
+    _ctx_strict, strict_meta = run_and_notify._build_tls_context()
+    assert strict_meta["tls_verify_enabled"] is True
+    monkeypatch.setenv("SMTP_RELAX_X509_STRICT", "1")
+    _ctx_relaxed, relaxed_meta = run_and_notify._build_tls_context()
+    assert relaxed_meta["tls_verify_enabled"] is False
+    assert relaxed_meta["tls_relaxed"] is True

@@ -1,4 +1,5 @@
 import json
+import ssl
 import shutil
 import subprocess
 import uuid
@@ -437,6 +438,28 @@ def test_pipeline_success_email_failure_sets_notification_error_and_keeps_pipeli
     assert summary["email_ok"] is False
     assert summary["overall_ok"] is False
     assert "smtp outage" in str(summary["notification_error"])
+
+
+def test_pipeline_success_email_tls_failure_includes_safe_guidance(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    tls_exc = ssl.SSLCertVerificationError("certificate verify failed")
+    monkeypatch.setattr(daily, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(tls_exc))
+    monkeypatch.setattr(
+        daily,
+        "run_command",
+        lambda args, cwd=daily.ROOT: (write_generated_output(root, "2026-05-07") or completed(args))
+        if "run_gaza_dispatch.py" in " ".join(args)
+        else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
+    )
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 2
+    err = str(summary["notification_error"])
+    assert "SMTP TLS certificate verification failed" in err
+    assert "SMTP_CA_FILE" in err and "SMTP_CA_BUNDLE" in err
+    assert "SMTP_RELAX_X509_STRICT=1" in err
 
 
 def test_no_old_gaza_project_path_is_referenced():

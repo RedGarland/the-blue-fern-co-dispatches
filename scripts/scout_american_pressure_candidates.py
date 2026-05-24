@@ -151,7 +151,9 @@ def _looks_non_us(text: str) -> bool:
 def _publisher_quality(raw: dict[str, Any]) -> str:
     publisher = _safe_text(raw.get("publisher")).lower()
     url = _safe_text(raw.get("url")).lower()
-    if "news.google.com" in url:
+    # Google News RSS URLs are wrappers around the underlying publisher's story.
+    # Do not auto-classify wrapper links as low-quality aggregators.
+    if "news.google.com" in url and not publisher:
         return "aggregator_or_repost"
     if any(term in publisher for term in ("opinion", "editorial", "column", "advice")):
         return "opinion_or_advice"

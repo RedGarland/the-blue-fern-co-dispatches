@@ -79,9 +79,9 @@
     },
     "policy_implementation": {
       "search_phrases": [
-        "benefit implementation delays households",
-        "program enrollment backlog local agency",
-        "utility assistance policy access problems"
+        "LIHEAP application backlog county households",
+        "SNAP recertification delay state agency families",
+        "rental assistance enrollment delay local households"
       ],
       "data_anchor_hints": [
         "hhs-liheap",
@@ -90,4 +90,3 @@
     }
   }
 }
-

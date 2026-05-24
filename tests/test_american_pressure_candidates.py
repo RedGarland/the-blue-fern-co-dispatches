@@ -91,6 +91,38 @@ def test_google_rss_html_is_stripped_from_candidate_text(monkeypatch):
     assert "news.google.com/rss/articles" not in combined
 
 
+def test_policy_candidate_from_google_wrapper_can_remain_reviewable_when_us_and_reputable(monkeypatch):
+    monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["anchor-1"] for pillar in scout.PILLARS})
+    monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())
+    monkeypatch.setattr(
+        scout,
+        "_load_targets",
+        lambda: {
+            "target_groups": {
+                pillar: {"search_phrases": ["x"], "data_anchor_hints": ["anchor-1"]}
+                for pillar in scout.PILLARS
+            }
+        },
+    )
+    fake = [
+        {
+            "title": "Texas county utility assistance enrollment backlog hits households",
+            "url": "https://news.google.com/rss/articles/abc123",
+            "publisher": "The Texas Tribune",
+            "published_at": "2026-05-10T00:00:00Z",
+            "summary_or_snippet": "Families report benefit application delays in county offices.",
+        }
+    ]
+    payload = scout.scout_day("2026-05-10", max_per_pillar=1, fetcher=lambda _query: fake)
+    policy_rows = [row for row in payload["sources"] if row.get("pillar") == "policy_implementation"]
+    assert policy_rows
+    row = policy_rows[0]
+    assert row["publisher_quality"] != "aggregator_or_repost"
+    assert row["us_relevance_ok"] is True
+    assert row["review_status"] == "needs_review"
+    assert row["candidate_bucket"] in {"recommended", "maybe"}
+
+
 def test_non_us_candidate_is_quarantined(monkeypatch):
     monkeypatch.setattr(scout, "_load_registry_anchors", lambda: {pillar: ["anchor-1"] for pillar in scout.PILLARS})
     monkeypatch.setattr(scout, "_read_existing_candidate_urls", lambda: set())

@@ -220,6 +220,8 @@ data/dispatches/gaza/editions/YYYY-MM-DD/run_manifest.json
 - `SMTP_USE_SSL` optional
 - `SMTP_TLS_VERIFY` optional, defaults to `true`
 - `SMTP_RELAX_X509_STRICT` optional; set to `1` only for temporary diagnostics
+- `SMTP_TRUSTSTORE` optional; set to `1` to prefer truststore-backed verification when available
+- `SMTP_TLS_CA_SOURCE` optional (`auto`, `truststore`, `certifi`); defaults to `auto`
 - `SMTP_CA_FILE` or `SMTP_CA_BUNDLE` optional path to a PEM CA bundle used for SMTP TLS verification
 - `SMTP_TIMEOUT` optional
 - `SMTP_RETRIES` optional
@@ -229,7 +231,7 @@ data/dispatches/gaza/editions/YYYY-MM-DD/run_manifest.json
 - `EMAIL_TO` required, comma-separated recipients
 - `EMAIL_FROM` or `SMTP_FROM` optional
 
-For Gmail on port `587`, use STARTTLS with `SMTP_USE_SSL=0`. For Gmail on port `465`, use SMTP over SSL with `SMTP_USE_SSL=1`. Keep TLS verification enabled for normal runs. A self-signed certificate chain error usually means local TLS inspection is replacing the SMTP server certificate, or Python is missing the trusted local CA; export that CA as PEM and set `SMTP_CA_FILE`/`SMTP_CA_BUNDLE` when inspection is intentional. `SMTP_RELAX_X509_STRICT=1` is a temporary diagnostic escape hatch only.
+For Gmail on port `587`, use STARTTLS with `SMTP_USE_SSL=0`. For Gmail on port `465`, use SMTP over SSL with `SMTP_USE_SSL=1`. Keep TLS verification enabled for normal runs. A self-signed certificate chain error usually means local TLS inspection is replacing the SMTP server certificate, or Python is missing the trusted local CA; export that CA as PEM and set `SMTP_CA_FILE`/`SMTP_CA_BUNDLE` when inspection is intentional, or enable `SMTP_TRUSTSTORE=1` if truststore-backed system trust is available. `SMTP_RELAX_X509_STRICT=1` is a temporary diagnostic escape hatch only.
 
 Exit codes: `0` means the pipeline succeeded and email was sent, or email was not requested. `1` means the pipeline failed but email was sent. `2` means email was requested but could not be sent. SMTP passwords must stay in environment variables or a credential manager, never in scheduled task arguments or logs.
 

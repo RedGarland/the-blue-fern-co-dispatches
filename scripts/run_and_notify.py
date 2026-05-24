@@ -226,6 +226,7 @@ def notification_error_message(exc: BaseException) -> str:
             "SMTP TLS certificate verification failed. "
             f"{message}. "
             "Check SMTP_CA_FILE/SMTP_CA_BUNDLE if local TLS inspection is intentional. "
+            "You can also enable truststore-backed verification with SMTP_TRUSTSTORE=1 when available. "
             "SMTP_RELAX_X509_STRICT=1 is diagnostic only."
         )
     return message
@@ -237,6 +238,14 @@ def _smtp_mode(smtp_port: int, smtp_use_ssl: bool) -> str:
     if smtp_port == 587:
         return "starttls-required"
     return "starttls-opportunistic"
+
+
+def _env_text(name: str) -> str | None:
+    value = os.getenv(name)
+    if value is None:
+        return None
+    stripped = value.strip()
+    return stripped if stripped else None
 
 
 def _resolve_ca_bundle_path() -> tuple[str | None, str | None]:
@@ -260,12 +269,16 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
         smtp_skip_verify = True
 
     ca_bundle, ca_source_var = _resolve_ca_bundle_path()
+    tls_source_preference = (_env_text("SMTP_TLS_CA_SOURCE") or "auto").strip().lower()
+    prefer_truststore = _env_bool("SMTP_TRUSTSTORE", default=False) or (tls_source_preference == "truststore")
+    prefer_certifi = _env_bool("SMTP_CERTIFI", default=False) or (tls_source_preference == "certifi")
     context_meta: dict[str, str | bool | None] = {
         "tls_verify_enabled": not smtp_skip_verify,
         "tls_relaxed": smtp_skip_verify,
         "ca_bundle_path": ca_bundle,
         "ca_bundle_env": ca_source_var,
         "ca_source": None,
+        "tls_source_preference": tls_source_preference,
     }
 
     if smtp_skip_verify:
@@ -275,6 +288,23 @@ def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
     if ca_bundle:
         context_meta["ca_source"] = "custom_bundle"
         return ssl.create_default_context(cafile=ca_bundle), context_meta
+
+    if prefer_truststore:
+        try:
+            import truststore  # type: ignore
+
+            context_meta["ca_source"] = "truststore"
+            context_meta["ca_bundle_env"] = "truststore"
+            return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT), context_meta
+        except Exception:
+            context_meta["ca_source"] = "truststore_unavailable"
+
+    if not prefer_certifi:
+        try:
+            context_meta["ca_source"] = "system_default"
+            return ssl.create_default_context(), context_meta
+        except Exception:
+            context_meta["ca_source"] = "system_default_unavailable"
 
     try:
         import certifi  # type: ignore
@@ -515,6 +545,7 @@ def print_smtp_config_debug() -> None:
         f"- TLS mode: {mode}",
         f"- TLS verification: {str(bool(tls_meta['tls_verify_enabled'])).lower()}",
         f"- TLS relaxed (diagnostic): {str(bool(tls_meta['tls_relaxed'])).lower()}",
+        f"- TLS source preference: {tls_meta.get('tls_source_preference')}",
         f"- CA source: {tls_meta.get('ca_source') or '<none>'}",
         f"- CA bundle path: {tls_meta.get('ca_bundle_path') or '<none>'}",
         f"- SMTP debug file: {os.getenv('SMTP_DEBUG_FILE') or '<unset>'}",

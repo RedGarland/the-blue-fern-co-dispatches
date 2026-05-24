@@ -401,6 +401,7 @@ def test_build_tls_context_uses_certifi_fallback_when_available(monkeypatch, tmp
     certifi_pem.write_text("PEM", encoding="utf-8")
     fake_certifi = types.SimpleNamespace(where=lambda: str(certifi_pem))
     monkeypatch.setitem(sys.modules, "certifi", fake_certifi)
+    monkeypatch.setenv("SMTP_TLS_CA_SOURCE", "certifi")
     monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
     monkeypatch.delenv("SMTP_CA_FILE", raising=False)
     monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
@@ -414,6 +415,16 @@ def test_build_tls_context_uses_certifi_fallback_when_available(monkeypatch, tmp
     _ctx, meta = run_and_notify._build_tls_context()
     assert called["cafile"] == str(certifi_pem)
     assert meta["ca_source"] == "certifi"
+
+
+def test_build_tls_context_prefers_truststore_when_enabled(monkeypatch):
+    fake_truststore = types.SimpleNamespace(SSLContext=lambda protocol: ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT))
+    monkeypatch.setitem(sys.modules, "truststore", fake_truststore)
+    monkeypatch.setenv("SMTP_TRUSTSTORE", "1")
+    monkeypatch.delenv("SMTP_CA_BUNDLE", raising=False)
+    monkeypatch.delenv("SMTP_CA_FILE", raising=False)
+    _ctx, meta = run_and_notify._build_tls_context()
+    assert meta["ca_source"] == "truststore"
 
 
 def test_build_tls_context_relax_strict_only_when_explicit(monkeypatch):

@@ -91,6 +91,22 @@ def _run_quality_gate(edition_date: str, manifest: dict[str, Any], readiness: di
     errors: list[str] = []
     if readiness.get("weekly_publish_recommended") is not True:
         errors.extend([str(item) for item in (readiness.get("reasons_if_not_recommended") or [])])
+    missing_pillars = [str(item) for item in (readiness.get("missing_required_current_development_pillars") or []) if str(item)]
+    if missing_pillars:
+        errors.append(f"Missing required current-development pillars: {', '.join(missing_pillars)}")
+    relevance_failures = readiness.get("approved_us_relevance_failures") or []
+    if isinstance(relevance_failures, list):
+        for item in relevance_failures:
+            if not isinstance(item, dict):
+                continue
+            errors.append(
+                "Approved U.S.-relevance failure: "
+                f"date={item.get('candidate_date') or '<unknown>'} | "
+                f"pillar={item.get('pillar') or '<unknown>'} | "
+                f"category={item.get('category_hint') or '<unknown>'} | "
+                f"title={item.get('title') or '<unknown>'} | "
+                f"url={item.get('url') or '<unknown>'}"
+            )
     if int(manifest.get("story_count") or 0) < 4:
         errors.append("story_count below minimum quality gate (need >=4).")
     if int(manifest.get("story_plus_data_count") or 0) < 3:
@@ -118,7 +134,20 @@ def _validate_pages_view_for_date(edition_date: str) -> list[str]:
             errors.append(f"missing Pages file: {path}")
             continue
         content = path.read_text(encoding="utf-8", errors="replace")
-        if edition_date not in content:
+        if label == "map_data":
+            try:
+                payload = json.loads(content)
+            except json.JSONDecodeError:
+                errors.append(f"american-pressure/{label} is invalid JSON")
+            else:
+                if str(payload.get("edition_date") or "") != edition_date:
+                    errors.append(
+                        f"american-pressure/{label} edition_date is {payload.get('edition_date')}, expected {edition_date}"
+                    )
+        elif label == "map_index":
+            if "American Pressure Map" not in content:
+                errors.append(f"american-pressure/{label} is missing expected map heading")
+        elif edition_date not in content:
             errors.append(f"american-pressure/{label} does not reference expected week-ending date {edition_date}")
         for found in _extract_dates(content):
             if found > edition_date:

@@ -5,7 +5,7 @@ import json
 import shlex
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -15,12 +15,20 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.run_and_notify import load_env_file, notification_error_message, print_smtp_config_debug, send_email
-from scripts.validation_profiles import PROFILE_AMERICAN_PRESSURE_WEEKLY
+from scripts.validation_profiles import (
+    PROFILE_AMERICAN_PRESSURE_WEEKLY,
+    apply_env_profile,
+    get_profile,
+    make_pytest_basetemp,
+    profile_names,
+    pytest_command,
+)
 
 
 DISPATCH_SLUG = "american-pressure"
 DISPATCH_NAME = "The American Pressure Dispatch"
 DEFAULT_PAGES_BRANCH = "gh-pages"
+DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 LOG_DIR = ROOT / "logs"
 
 
@@ -89,6 +97,29 @@ def public_urls_for(edition_date: str) -> dict[str, str]:
     }
 
 
+def _completed_saturday_for(run_date: str) -> str:
+    requested = datetime.strptime(run_date, "%Y-%m-%d").date()
+    days_since_saturday = (requested.weekday() - 5) % 7
+    return (requested - timedelta(days=days_since_saturday)).isoformat()
+
+
+def pages_ahead_of_remote(pages_repo: Path, pages_branch: str) -> bool:
+    if not (pages_repo / ".git").exists():
+        return False
+    completed = subprocess.run(
+        ["git", "-C", str(pages_repo), "status", "-sb"],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return completed.returncode == 0 and f"ahead" in completed.stdout and pages_branch in completed.stdout
+
+
+def manual_push_command(pages_repo: Path, pages_branch: str) -> str:
+    return f'cd "{pages_repo}"\ngit status\ngit push origin {pages_branch}'
+
+
 def build_test_email_body(date_str: str) -> str:
     return "\n".join(
         [
@@ -154,8 +185,10 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
 
 
 def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
+    edition_date = _completed_saturday_for(args.date)
     summary: dict[str, Any] = {
         "date": args.date,
+        "edition_date": edition_date,
         "ok": False,
         "return_code": 1,
         "source_count": 0,
@@ -165,15 +198,16 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "archive_updated": False,
         "rss_updated": False,
         "pages_repo_updated": False,
+        "pages_repo": str(args.pages_repo),
         "pages_branch": args.pages_branch,
         "pages_commit_sha": None,
         "pushed": False,
-        "validation_profile": PROFILE_AMERICAN_PRESSURE_WEEKLY,
+        "validation_profile": args.validation_profile,
         "tests_run": False,
         "tests_ok": None,
-        "validation_ok": True,
-        "tests_command": "run_weekly_american_pressure.py executes profile tests directly",
-        "skipped_unrelated_tests": True,
+        "validation_ok": None,
+        "tests_command": None,
+        "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
         "pipeline_ok": False,
         "email_requested": True,
         "email_ok": None,
@@ -182,10 +216,11 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "publish_ok": False,
         "publish_blocked": False,
         "publish_blocked_reason": None,
-        "public_urls": public_urls_for(args.date),
+        "manual_push_command": None,
+        "public_urls": public_urls_for(edition_date),
         "local_paths": {
-            "edition": str(ROOT / "output" / "site" / DISPATCH_SLUG / "editions" / args.date / "index.html"),
-            "source_file": str(ROOT / "data" / "dispatches" / DISPATCH_SLUG / "sources" / args.date / "manual_sources.json"),
+            "edition": str(ROOT / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date / "index.html"),
+            "source_file": str(ROOT / "data" / "dispatches" / DISPATCH_SLUG / "sources" / edition_date / "manual_sources.json"),
             "log": str(log_path),
         },
         "warnings": [],
@@ -193,13 +228,18 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     }
     cmd = [
         sys.executable,
-        str(ROOT / "scripts" / "run_american_pressure_dispatch.py"),
-        "--date",
-        args.date,
-        "--from-manual-sources",
+        str(ROOT / "scripts" / "run_weekly_american_pressure.py"),
+        "--week-ending",
+        edition_date,
+        "--validation-profile",
+        args.validation_profile,
     ]
     if args.publish:
         cmd.append("--publish")
+    if args.skip_tests:
+        cmd.append("--skip-tests")
+    if args.push:
+        cmd.append("--push")
     if args.dry_run:
         cmd.append("--dry-run")
     result = run_logged_command(cmd, log_path)
@@ -208,16 +248,35 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     summary["errors"].extend(payload.get("errors", []) if isinstance(payload.get("errors"), list) else [])
     summary["source_count"] = int(payload.get("source_count") or 0)
     summary["story_count"] = int(payload.get("story_count") or 0)
-    summary["generated"] = bool(payload.get("generated"))
+    summary["generated"] = bool(payload.get("ok"))
     summary["generation_ok"] = summary["generated"]
-    summary["archive_updated"] = bool(payload.get("archive_updated"))
-    summary["rss_updated"] = bool(payload.get("rss_updated"))
+    summary["archive_updated"] = bool(args.publish and payload.get("ok"))
+    summary["rss_updated"] = bool(args.publish and payload.get("ok"))
+    summary["pages_repo_updated"] = bool(payload.get("pages_repo_updated"))
+    summary["pages_commit_sha"] = payload.get("pages_commit_sha")
+    summary["pushed"] = bool(payload.get("pushed"))
+    summary["tests_run"] = bool(payload.get("tests_run"))
+    summary["tests_ok"] = payload.get("tests_ok")
+    summary["validation_ok"] = payload.get("tests_ok") if summary["tests_run"] else True
+    basetemp = make_pytest_basetemp("bluefern-pytest-ap")
+    summary["tests_command"] = " ".join(pytest_command(args.validation_profile, basetemp))
+    summary["publish_blocked"] = bool(payload.get("publish_blocked"))
+    summary["publish_blocked_reason"] = payload.get("publish_blocked_reason")
     if int(result["exit_code"]) != 0 or payload.get("ok") is False:
         summary["errors"].append(f"American Pressure command failed with exit code {result['exit_code']}")
+        if not summary["publish_blocked"]:
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "american-pressure-weekly-failed"
+        summary["publish_ok"] = False
         return summary
+
+    if not args.push and pages_ahead_of_remote(Path(args.pages_repo), args.pages_branch):
+        summary["manual_push_command"] = manual_push_command(Path(args.pages_repo), args.pages_branch)
+
+    summary["validation_ok"] = bool(summary["tests_ok"]) if summary["tests_run"] else True
     summary["ok"] = True
     summary["pipeline_ok"] = True
-    summary["publish_ok"] = bool(summary["pages_repo_updated"]) or bool(args.publish) is False
+    summary["publish_ok"] = bool(summary["pages_repo_updated"]) if args.publish else True
     summary["return_code"] = 0
     return summary
 
@@ -226,15 +285,66 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run weekly American Pressure manual-source update and email a report.")
     parser.add_argument("--date", default=date.today().isoformat(), help="Edition date in YYYY-MM-DD format. Defaults to today.")
     parser.add_argument("--publish", action="store_true", help="Update American Pressure public index/archive/rss after edition generation.")
+    parser.add_argument("--push", action="store_true", help="Push the Pages repo to origin after local publish succeeds.")
     parser.add_argument("--dry-run", action="store_true", help="Run generation in dry-run mode.")
+    parser.add_argument("--skip-tests", action="store_true", help="Skip profile-scoped American Pressure validation tests.")
+    parser.add_argument(
+        "--validation-profile",
+        choices=list(profile_names()),
+        default=PROFILE_AMERICAN_PRESSURE_WEEKLY,
+        help="Validation profile for scheduled/run gating.",
+    )
     parser.add_argument("--smtp-debug", action="store_true", help="Enable smtplib debug output on the SMTP connection.")
     parser.add_argument("--send-test-email", action="store_true", help="Send SMTP diagnostic mail and do not run the pipeline.")
+    parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repository path.")
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Reported Pages branch field.")
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    args.validation_profile = apply_env_profile(args.validation_profile)
+    _ = get_profile(args.validation_profile)
+    args.pages_repo = str(Path(args.pages_repo))
+    if Path(args.pages_repo).resolve() != DEFAULT_PAGES_REPO.resolve():
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "errors": [f"--pages-repo must be {DEFAULT_PAGES_REPO}"],
+                    "pages_repo_updated": False,
+                    "pushed": False,
+                },
+                indent=2,
+            )
+        )
+        return 1
+    if args.pages_branch != DEFAULT_PAGES_BRANCH:
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "errors": [f"--pages-branch must be {DEFAULT_PAGES_BRANCH}"],
+                    "pages_repo_updated": False,
+                    "pushed": False,
+                },
+                indent=2,
+            )
+        )
+        return 1
+    if args.push and not args.publish:
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "errors": ["--push requires --publish"],
+                    "pages_repo_updated": False,
+                    "pushed": False,
+                },
+                indent=2,
+            )
+        )
+        return 1
     load_env_file()
     if args.smtp_debug:
         print_smtp_config_debug()

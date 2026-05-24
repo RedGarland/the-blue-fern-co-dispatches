@@ -51,7 +51,7 @@ def test_notify_success_email_includes_paths_and_pushed_false(monkeypatch, tmp_p
     assert sent
     body = sent[0][1]
     assert "public archive URL: https://dispatches.thebluefernco.com/american-pressure/archive.html" in body
-    assert "public edition URL: https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-12/" in body
+    assert "public edition URL: https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-09/" in body
     assert "local edition path:" in body
     assert "pushed: false" in body
 
@@ -102,3 +102,15 @@ def test_task_template_uses_project_venv_and_clean_path():
     assert r"&amp; '.\.venv\Scripts\python.exe'" in task
     assert "OneDrive" not in task
     assert "C:\\Users\\Admin\\Desktop\\Python" not in task
+
+
+def test_notify_rejects_push_without_publish(monkeypatch):
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    rc = notify.main(["--date", "2026-05-12", "--push"])
+    assert rc == 1
+
+
+def test_notify_rejects_non_default_pages_repo(monkeypatch, tmp_path):
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    rc = notify.main(["--date", "2026-05-12", "--pages-repo", str(tmp_path)])
+    assert rc == 1

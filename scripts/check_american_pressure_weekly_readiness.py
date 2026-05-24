@@ -67,21 +67,29 @@ def _load_rows(week_end: str) -> tuple[str, list[dict[str, Any]]]:
             continue
         for row in payload.get("sources", []):
             if isinstance(row, dict):
-                rows.append(row)
+                record = dict(row)
+                record.setdefault("candidate_date", day)
+                rows.append(record)
     return week_start, rows
 
 
 def build_readiness_report(week_end: str) -> dict[str, Any]:
     week_start, rows = _load_rows(week_end)
-    approved = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "approved"]
+    approved: list[dict[str, Any]] = []
+    approved_with_day: list[tuple[str | None, dict[str, Any]]] = []
+    for row in rows:
+        if str(row.get("review_status") or "").strip().lower() == "approved":
+            approved.append(row)
+            approved_with_day.append((str(row.get("candidate_date") or row.get("date") or row.get("day") or ""), row))
     quarantined = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "quarantine"]
     maybe_rows = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "maybe"]
     rejected = [row for row in rows if str(row.get("review_status") or "").strip().lower() == "rejected"]
     approved_by_pillar: Counter[str] = Counter()
     story_plus_data = 0
     us_relevance_failures = 0
+    approved_us_relevance_failures: list[dict[str, Any]] = []
     prose_quality_failures = 0
-    for row in approved:
+    for day, row in approved_with_day:
         pillar = str(row.get("pillar") or "").strip() or "unknown"
         approved_by_pillar[pillar] += 1
         anchors = row.get("linked_data_anchor_ids")
@@ -89,6 +97,17 @@ def build_readiness_report(week_end: str) -> dict[str, Any]:
             story_plus_data += 1
         if row.get("us_relevance_ok") is False:
             us_relevance_failures += 1
+            approved_us_relevance_failures.append(
+                {
+                    "candidate_date": day or None,
+                    "source_record_id": str(row.get("source_record_id") or ""),
+                    "pillar": pillar,
+                    "category_hint": str(row.get("category_hint") or ""),
+                    "title": str(row.get("title") or ""),
+                    "url": str(row.get("url") or ""),
+                    "us_relevance_reason": str(row.get("us_relevance_reason") or ""),
+                }
+            )
         if str(row.get("editorial_rejection_reason") or "").strip() == "prose_quality_failed":
             prose_quality_failures += 1
     missing = [pillar for pillar in REQUIRED_CURRENT_DEVELOPMENT_PILLARS if approved_by_pillar.get(pillar, 0) <= 0]
@@ -114,6 +133,7 @@ def build_readiness_report(week_end: str) -> dict[str, Any]:
         "maybe_count": len(maybe_rows),
         "approved_by_pillar": dict(sorted(approved_by_pillar.items())),
         "us_relevance_failures": us_relevance_failures,
+        "approved_us_relevance_failures": approved_us_relevance_failures,
         "prose_quality_failures": prose_quality_failures,
         "missing_required_current_development_pillars": missing,
         "estimated_story_plus_data_potential": story_plus_data,

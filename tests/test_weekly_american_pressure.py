@@ -129,6 +129,36 @@ def test_weekly_readiness_reports_missing_pillars(tmp_path, monkeypatch):
     assert report["weekly_publish_recommended"] is False
 
 
+def test_weekly_readiness_lists_approved_us_relevance_failures(tmp_path, monkeypatch):
+    monkeypatch.setattr(readiness, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
+    day = readiness.CANDIDATES_ROOT / "2026-05-09" / "candidate_sources.json"
+    day.parent.mkdir(parents=True, exist_ok=True)
+    day.write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "source_record_id": "ap-bad-1",
+                        "pillar": "food_pressure",
+                        "category_hint": "food_pressure",
+                        "review_status": "approved",
+                        "us_relevance_ok": False,
+                        "title": "Non-US item",
+                        "url": "https://example.com/non-us",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    report = readiness.build_readiness_report("2026-05-09")
+    failures = report["approved_us_relevance_failures"]
+    assert len(failures) == 1
+    assert failures[0]["source_record_id"] == "ap-bad-1"
+    assert failures[0]["title"] == "Non-US item"
+    assert failures[0]["url"] == "https://example.com/non-us"
+
+
 def test_weekly_readiness_recommended_only_with_approved_candidates(tmp_path, monkeypatch):
     monkeypatch.setattr(readiness, "CANDIDATES_ROOT", tmp_path / "data" / "dispatches" / "american-pressure" / "candidates")
     approved_day = readiness.CANDIDATES_ROOT / "2026-05-09" / "candidate_sources.json"
@@ -210,3 +240,30 @@ def test_publish_quality_gate_blocks_without_allow_thin(monkeypatch, tmp_path):
     monkeypatch.setattr(weekly, "build_readiness_report", lambda _d: {"weekly_publish_recommended": False, "reasons_if_not_recommended": ["thin"]})
     rc = weekly.main(["--date", "2026-05-16", "--source-mode", "both", "--publish", "--skip-tests"])
     assert rc == 1
+
+
+def test_quality_gate_emits_failure_details_for_us_relevance_items(tmp_path, monkeypatch):
+    monkeypatch.setattr(weekly, "ROOT", tmp_path)
+    html = tmp_path / "output" / "site" / "american-pressure" / "editions" / "2026-05-16" / "index.html"
+    html.parent.mkdir(parents=True, exist_ok=True)
+    html.write_text("<html></html>", encoding="utf-8")
+    errors = weekly._run_quality_gate(
+        "2026-05-16",
+        {"story_count": 5, "story_plus_data_count": 5},
+        {
+            "weekly_publish_recommended": False,
+            "reasons_if_not_recommended": [],
+            "missing_required_current_development_pillars": ["policy_implementation"],
+            "approved_us_relevance_failures": [
+                {
+                    "candidate_date": "2026-05-15",
+                    "pillar": "labor_income_pressure",
+                    "category_hint": "labor_income_pressure",
+                    "title": "Bad item",
+                    "url": "https://example.com/bad-item",
+                }
+            ],
+        },
+    )
+    assert any("Missing required current-development pillars: policy_implementation" in item for item in errors)
+    assert any("Approved U.S.-relevance failure:" in item and "https://example.com/bad-item" in item for item in errors)

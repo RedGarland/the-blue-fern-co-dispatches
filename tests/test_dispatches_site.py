@@ -1142,6 +1142,7 @@ def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):
     pages_map_html = read(pages_repo / "american-pressure" / "map" / "index.html")
     pages_map_payload = json.loads(read(pages_repo / "american-pressure" / "map" / "map_data.json"))
     assert "May 17–May 23, 2026" in pages_map_html
+    assert "/american-pressure/dashboard/" not in pages_map_html
     assert pages_map_payload.get("edition_date") == "2026-05-23"
 
 

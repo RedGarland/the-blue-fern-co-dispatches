@@ -955,6 +955,13 @@ def _refresh_american_pressure_map_route(site_root: Path, edition_date: str, dry
         html_text,
         count=1,
     )
+    updated = re.sub(
+        r'<p class="ap-map-links">.*?</p>',
+        '<p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>',
+        updated,
+        count=1,
+        flags=re.DOTALL,
+    )
     write_text(map_html_path, updated, dry_run, wrote)
 
 

@@ -129,6 +129,40 @@ def test_baseline_only_item_gets_baseline_label(work_root):
     assert "Type: baseline_gauge" not in html
 
 
+def test_source_less_baseline_item_is_not_rendered_as_public_article(work_root):
+    manual = [
+        _record(
+            "food-story",
+            "food_pressure",
+            "Local pantry demand rises",
+            "Pantry demand rose this week in a local service area.",
+            "https://example.com/food-story",
+            source_type="news_report",
+            source_role="human_story",
+        ),
+        _record(
+            "policy-watch",
+            "policy_implementation",
+            "Benefits processing monitor",
+            "Monitoring note with no source-backed development or anchor this week.",
+            "https://example.com/policy-watch",
+            source_type="watchlist_note",
+            source_role="watchlist_signal",
+        ),
+    ]
+    _write_manual_sources(work_root, "2026-05-12", manual)
+    result = ap_runner.run_american_pressure_dispatch(work_root, "2026-05-12", publish=False, dry_run=False, from_manual_sources=False, source_mode="manual")
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-12" / "index.html").read_text(encoding="utf-8")
+    markdown = (work_root / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-12" / "edition.md").read_text(encoding="utf-8")
+    assert "No source links were available for this item." not in html
+    assert "<h2>Benefits and policy delivery pressure</h2>" in html
+    assert "Not enough collected this week." in html
+    assert "Where our view is limited" in html
+    assert "Benefits and policy delivery pressure" in html
+    assert "No source links were available for this item." not in markdown
+
+
 def test_data_anchor_not_mislabeled_current_week_development(work_root):
     manual = [
         _record("uscourts", "financial_distress_pressure", "U.S. Courts Bankruptcy Filings Statistics", "Official baseline indicator source.", "https://www.uscourts.gov/statistics-reports/analysis-reports/bankruptcy-filings-statistics", source_role="data_anchor"),

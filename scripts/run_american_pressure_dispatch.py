@@ -2670,6 +2670,16 @@ def _brief_quality_counts(stories: list[dict[str, Any]]) -> dict[str, int]:
     return counts
 
 
+def _is_source_less_baseline_story(story: dict[str, Any]) -> bool:
+    item_type = _safe_text(story.get("item_type"))
+    if item_type != "baseline_gauge":
+        return False
+    has_human = bool(story.get("human_story_source_ids") or [])
+    has_data = _safe_text(story.get("data_context_summary")) != "No data anchor was available for this item this week."
+    has_public_links = bool(story.get("public_source_record_ids") or [])
+    return (not has_human) and (not has_data) and (not has_public_links)
+
+
 def render_edition_html(edition_date: str, stories: list[dict[str, Any]], sources: list[dict[str, Any]], source_mode: str, *, display_date_range: str | None = None) -> str:
     source_by_id = {source["source_record_id"]: source for source in sources}
     pillars_present, pillars_missing, _, _ = _coverage(stories, sources)
@@ -2698,15 +2708,19 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
     for story in stories:
         stories_by_pillar.setdefault(story.get("pillar", "local_system_strain"), []).append(story)
 
+    source_less_limited_pillars: set[str] = set()
     chunks.append("<h2>Where pressure is visible</h2>")
     for pillar in PILLAR_ORDER:
         chunks.append(f"<h2>{html.escape(PILLAR_HEADINGS[pillar])}</h2>")
         items = sorted(stories_by_pillar.get(pillar, []), key=_item_sort_key)
-        if not items:
+        renderable_items = [story for story in items if not _is_source_less_baseline_story(story)]
+        if items and not renderable_items:
+            source_less_limited_pillars.add(pillar)
+        if not renderable_items:
             chunks.append("<p>Not enough collected this week.</p>")
             continue
         guide = PILLAR_GUIDANCE[pillar]
-        for story in items:
+        for story in renderable_items:
             chunks.append(f"<article><h3>{html.escape(story['title'])}</h3>")
             human_story_summary = _safe_text(story.get("human_story_summary"))
             if human_story_summary:
@@ -2745,8 +2759,9 @@ def render_edition_html(edition_date: str, stories: list[dict[str, Any]], source
     chunks.append("<h2>What we’re watching next</h2>")
     chunks.append("<p>Watch for developments in layoffs/WARN notices, local closures, food-bank demand, utility burden, benefit access changes, and local budget stress.</p>")
     chunks.append("<h2>Where our view is limited</h2>")
-    if pillars_missing:
-        chunks.append("<ul>" + "".join(f"<li>{html.escape(PILLAR_HEADINGS[p])}</li>" for p in pillars_missing) + "</ul>")
+    limited_pillars = sorted(set(pillars_missing) | source_less_limited_pillars, key=lambda p: PILLAR_ORDER.index(p) if p in PILLAR_ORDER else 999)
+    if limited_pillars:
+        chunks.append("<ul>" + "".join(f"<li>{html.escape(PILLAR_HEADINGS[p])}</li>" for p in limited_pillars) + "</ul>")
     else:
         chunks.append("<p>All pillar families had at least one source-backed signal this week.</p>")
 
@@ -2768,6 +2783,8 @@ def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], so
     display = display_date_range or edition_date
     lines = [f"# {DISPATCH_NAME}", "", f"Weekly briefing / {display}", ""]
     for story in stories:
+        if _is_source_less_baseline_story(story):
+            continue
         lines.append(f"## {story['title']}")
         if _safe_text(story.get("item_type")) == "baseline_gauge":
             lines.append("Baseline/context item: this item provides context and does not by itself prove a new weekly development.")

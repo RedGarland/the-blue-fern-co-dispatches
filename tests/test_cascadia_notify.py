@@ -1,5 +1,7 @@
 import base64
 import importlib.util
+import json
+import ssl
 from email.message import EmailMessage
 from pathlib import Path
 
@@ -99,6 +101,8 @@ def test_success_email_subject_and_body_include_cascadia_urls_and_pushed_false(m
     assert "public_story_count: 5" in body
     assert "validation_profile: cascadia_weekly" in body
     assert "skipped_unrelated_tests: true" in body
+    assert "pipeline_ok: false" not in body
+    assert "email_ok: none" in body
     assert "pushed: false" in body
     assert "https://dispatches.thebluefernco.com/cascadia/archive.html" in body
     assert "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-10/" in body
@@ -133,6 +137,66 @@ def test_failure_email_subject_and_body_include_errors_and_log_tail(monkeypatch,
     assert "last 80 log lines" in body
     assert "log 20" in body
     assert "log 19" not in body
+
+
+def test_cascadia_pipeline_success_email_failure_reports_pipeline_ok(monkeypatch, tmp_path, capsys):
+    def fake_run(cmd, log_path):
+        Path(log_path).write_text("line\n", encoding="utf-8")
+        command = " ".join(cmd)
+        if "run_cascadia_dispatch.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _cascadia_payload()}
+        if "publish_github_pages.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _publish_payload()}
+        if "pytest" in command or "doctor.py" in command:
+            return {"exit_code": 0, "stdout": "ok", "stderr": "", "json": {}}
+        raise AssertionError(command)
+
+    monkeypatch.setattr(notify, "LOG_DIR", tmp_path)
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setattr(notify, "run_logged_command", fake_run)
+    monkeypatch.setattr(notify, "pages_ahead_of_remote", lambda pages_repo, pages_branch: False)
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp down")))
+
+    rc = notify.main(["--date", "2026-05-10"])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 2
+    assert payload["pipeline_ok"] is True
+    assert payload["generation_ok"] is True
+    assert payload["publish_ok"] is True
+    assert payload["email_requested"] is True
+    assert payload["email_ok"] is False
+    assert payload["overall_ok"] is False
+    assert "smtp down" in str(payload["notification_error"])
+
+
+def test_cascadia_notification_error_tls_hint_is_sanitized(monkeypatch, tmp_path, capsys):
+    def fake_run(cmd, log_path):
+        Path(log_path).write_text("line\n", encoding="utf-8")
+        command = " ".join(cmd)
+        if "run_cascadia_dispatch.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _cascadia_payload()}
+        if "publish_github_pages.py" in command:
+            return {"exit_code": 0, "stdout": "", "stderr": "", "json": _publish_payload()}
+        if "pytest" in command or "doctor.py" in command:
+            return {"exit_code": 0, "stdout": "ok", "stderr": "", "json": {}}
+        raise AssertionError(command)
+
+    monkeypatch.setattr(notify, "LOG_DIR", tmp_path)
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setattr(notify, "run_logged_command", fake_run)
+    monkeypatch.setattr(notify, "pages_ahead_of_remote", lambda pages_repo, pages_branch: False)
+    monkeypatch.setenv("SMTP_PASSWORD", "super-secret")
+    tls_exc = ssl.SSLCertVerificationError("certificate verify failed")
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(tls_exc))
+
+    rc = notify.main(["--date", "2026-05-10"])
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 2
+    err = str(payload["notification_error"])
+    assert "SMTP TLS certificate verification failed" in err
+    assert "SMTP_CA_FILE" in err and "SMTP_CA_BUNDLE" in err
+    assert "SMTP_RELAX_X509_STRICT=1" in err
+    assert "super-secret" not in err
 
 
 def test_logged_command_sanitizes_smtp_password_marker(monkeypatch, tmp_path):

@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.run_and_notify import _smtp_error_message, load_env_file, print_smtp_config_debug, send_email
+from scripts.run_and_notify import load_env_file, notification_error_message, print_smtp_config_debug, send_email
 from scripts.validation_profiles import PROFILE_AMERICAN_PRESSURE_WEEKLY
 
 
@@ -113,6 +113,7 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"ok: {str(summary.get('ok')).lower()}",
         f"source_count: {summary.get('source_count')}",
         f"story_count: {summary.get('story_count')}",
+        f"generation_ok: {str(summary.get('generation_ok')).lower()}",
         f"generated: {str(summary.get('generated')).lower()}",
         f"archive_updated: {str(summary.get('archive_updated')).lower()}",
         f"rss_updated: {str(summary.get('rss_updated')).lower()}",
@@ -123,8 +124,15 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"validation_profile: {summary.get('validation_profile')}",
         f"tests_run: {str(summary.get('tests_run')).lower()}",
         f"tests_ok: {str(summary.get('tests_ok')).lower()}",
+        f"validation_ok: {str(summary.get('validation_ok')).lower()}",
         f"tests_command: {summary.get('tests_command')}",
         f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"pipeline_ok: {str(summary.get('pipeline_ok')).lower()}",
+        f"email_requested: {str(summary.get('email_requested')).lower()}",
+        f"email_ok: {str(summary.get('email_ok')).lower()}",
+        f"notification_error: {summary.get('notification_error')}",
+        f"overall_ok: {str(summary.get('overall_ok')).lower()}",
+        f"publish_ok: {str(summary.get('publish_ok')).lower()}",
         f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
         f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"public archive URL: {public_urls.get('archive')}",
@@ -152,6 +160,7 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "return_code": 1,
         "source_count": 0,
         "story_count": 0,
+        "generation_ok": False,
         "generated": False,
         "archive_updated": False,
         "rss_updated": False,
@@ -162,8 +171,15 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "validation_profile": PROFILE_AMERICAN_PRESSURE_WEEKLY,
         "tests_run": False,
         "tests_ok": None,
+        "validation_ok": True,
         "tests_command": "run_weekly_american_pressure.py executes profile tests directly",
         "skipped_unrelated_tests": True,
+        "pipeline_ok": False,
+        "email_requested": True,
+        "email_ok": None,
+        "notification_error": None,
+        "overall_ok": False,
+        "publish_ok": False,
         "publish_blocked": False,
         "publish_blocked_reason": None,
         "public_urls": public_urls_for(args.date),
@@ -193,12 +209,15 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
     summary["source_count"] = int(payload.get("source_count") or 0)
     summary["story_count"] = int(payload.get("story_count") or 0)
     summary["generated"] = bool(payload.get("generated"))
+    summary["generation_ok"] = summary["generated"]
     summary["archive_updated"] = bool(payload.get("archive_updated"))
     summary["rss_updated"] = bool(payload.get("rss_updated"))
     if int(result["exit_code"]) != 0 or payload.get("ok") is False:
         summary["errors"].append(f"American Pressure command failed with exit code {result['exit_code']}")
         return summary
     summary["ok"] = True
+    summary["pipeline_ok"] = True
+    summary["publish_ok"] = bool(summary["pages_repo_updated"]) or bool(args.publish) is False
     summary["return_code"] = 0
     return summary
 
@@ -224,7 +243,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             send_email(subject, build_test_email_body(args.date), args.date, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
-            print(f"Failed to send test email: {_smtp_error_message(exc)}", file=sys.stderr)
+            print(f"Failed to send test email: {notification_error_message(exc)}", file=sys.stderr)
             return 2
         return 0
     log_path = log_path_for(args.date)
@@ -237,8 +256,16 @@ def main(argv: list[str] | None = None) -> int:
     try:
         send_email(subject, body, args.date, smtp_debug=bool(args.smtp_debug))
     except Exception as exc:  # noqa: BLE001
-        print(f"Failed to send American Pressure notification email: {_smtp_error_message(exc)}", file=sys.stderr)
+        summary["pipeline_ok"] = summary.get("return_code", 1) == 0
+        summary["email_ok"] = False
+        summary["notification_error"] = notification_error_message(exc)
+        summary["overall_ok"] = False
+        print(json.dumps(summary, indent=2))
+        print(f"Failed to send American Pressure notification email: {summary['notification_error']}", file=sys.stderr)
         return 2
+    summary["email_ok"] = True
+    summary["overall_ok"] = bool(summary.get("pipeline_ok"))
+    summary["ok"] = bool(summary["overall_ok"])
     print(json.dumps(summary, indent=2))
     return int(summary["return_code"])
 

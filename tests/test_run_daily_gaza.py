@@ -259,6 +259,11 @@ def test_email_report_sends_on_success(isolated, monkeypatch, capsys):
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert summary["ok"] is True
+    assert summary["pipeline_ok"] is True
+    assert summary["email_requested"] is True
+    assert summary["email_ok"] is True
+    assert summary["notification_error"] is None
+    assert summary["overall_ok"] is True
     assert sent[0][0] == "[Blue Fern Dispatches] Gaza daily succeeded - 2026-05-07"
     assert "source_count: 1" in sent[0][1]
     assert "run manifest path:" in sent[0][1]
@@ -345,7 +350,12 @@ def test_email_report_failure_does_not_log_smtp_password(isolated, monkeypatch, 
     code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
     captured = capsys.readouterr().out
+    summary = json.loads(captured)
     assert code == 2
+    assert summary["pipeline_ok"] is True
+    assert summary["email_ok"] is False
+    assert summary["overall_ok"] is False
+    assert isinstance(summary["notification_error"], str) and summary["notification_error"]
     assert secret not in captured
     assert secret not in (root / "logs" / "gaza-daily-2026-05-07.log").read_text(encoding="utf-8")
 
@@ -396,8 +406,37 @@ def test_email_report_exit_2_when_email_fails_after_pipeline_failure(isolated, m
 
     summary = json.loads(capsys.readouterr().out)
     assert code == 2
+    assert summary["pipeline_ok"] is False
+    assert summary["email_ok"] is False
+    assert summary["overall_ok"] is False
+    assert isinstance(summary["notification_error"], str) and summary["notification_error"]
     assert "source count 0 is below minimum 1" in summary["errors"]
-    assert any("smtp down" in error for error in summary["errors"])
+    assert "smtp down" in summary["notification_error"]
+
+
+def test_pipeline_success_email_failure_sets_notification_error_and_keeps_pipeline_ok(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    monkeypatch.setattr(daily, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+    monkeypatch.setattr(
+        daily,
+        "run_command",
+        lambda args, cwd=daily.ROOT: (write_generated_output(root, "2026-05-07") or completed(args))
+        if "run_gaza_dispatch.py" in " ".join(args)
+        else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
+    )
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--email-report", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 2
+    assert summary["pipeline_ok"] is True
+    assert summary["generation_ok"] is True
+    assert summary["validation_ok"] is True
+    assert summary["publish_ok"] is True
+    assert summary["email_requested"] is True
+    assert summary["email_ok"] is False
+    assert summary["overall_ok"] is False
+    assert "smtp outage" in str(summary["notification_error"])
 
 
 def test_no_old_gaza_project_path_is_referenced():

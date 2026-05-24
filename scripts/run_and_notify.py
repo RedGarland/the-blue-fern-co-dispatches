@@ -218,6 +218,19 @@ def _smtp_error_message(exc: BaseException) -> str:
     return f"{exc.__class__.__name__}: {exc}"
 
 
+def notification_error_message(exc: BaseException) -> str:
+    message = _redact_text(_smtp_error_message(exc))
+    lower = message.lower()
+    if "certificate_verify_failed" in lower or "sslcertverificationerror" in lower:
+        return (
+            "SMTP TLS certificate verification failed. "
+            f"{message}. "
+            "Check SMTP_CA_FILE/SMTP_CA_BUNDLE if local TLS inspection is intentional. "
+            "SMTP_RELAX_X509_STRICT=1 is diagnostic only."
+        )
+    return message
+
+
 def _smtp_local_hostname(email_from: str) -> str:
     configured = os.getenv("SMTP_LOCAL_HOSTNAME")
     if configured and configured.strip():

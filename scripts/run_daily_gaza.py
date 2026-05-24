@@ -20,7 +20,7 @@ if str(SRC) not in sys.path:
 
 from bluefern_dispatches.gaza_sources import collect_gaza_sources
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
-from scripts.run_and_notify import _smtp_error_message, send_email
+from scripts.run_and_notify import notification_error_message, send_email
 from scripts.publish_gaza_historical import (
     BASE_PUBLIC_URL,
     DEFAULT_PAGES_BRANCH,
@@ -57,14 +57,22 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "source_mode",
     "source_file",
     "source_count",
+    "generation_ok",
     "generated",
     "archive_updated",
     "rss_updated",
     "tests_run",
     "tests_ok",
+    "validation_ok",
     "validation_profile",
     "tests_command",
     "skipped_unrelated_tests",
+    "pipeline_ok",
+    "email_requested",
+    "email_ok",
+    "notification_error",
+    "overall_ok",
+    "publish_ok",
     "publish_blocked",
     "publish_blocked_reason",
     "pages_repo_updated",
@@ -385,14 +393,22 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "source_mode": args.source_mode,
         "source_file": str(source_file_for(args.date)),
         "source_count": 0,
+        "generation_ok": False,
         "generated": False,
         "archive_updated": False,
         "rss_updated": False,
         "tests_run": False,
         "tests_ok": None,
+        "validation_ok": None,
         "validation_profile": args.validation_profile,
         "tests_command": None,
         "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
+        "pipeline_ok": False,
+        "email_requested": bool(args.email_report),
+        "email_ok": None,
+        "notification_error": None,
+        "overall_ok": False,
+        "publish_ok": False,
         "publish_blocked": False,
         "publish_blocked_reason": None,
         "pages_repo_updated": False,
@@ -459,14 +475,22 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"date: {summary.get('date')}",
         f"ok: {str(summary.get('ok')).lower()}",
         f"source_count: {summary.get('source_count')}",
+        f"generation_ok: {str(summary.get('generation_ok')).lower()}",
         f"generated: {str(summary.get('generated')).lower()}",
         f"archive_updated: {str(summary.get('archive_updated')).lower()}",
         f"rss_updated: {str(summary.get('rss_updated')).lower()}",
         f"tests_run: {summary.get('tests_run')}",
         f"tests_ok: {summary.get('tests_ok')}",
+        f"validation_ok: {summary.get('validation_ok')}",
         f"validation_profile: {summary.get('validation_profile')}",
         f"tests_command: {summary.get('tests_command')}",
         f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"pipeline_ok: {str(summary.get('pipeline_ok')).lower()}",
+        f"email_requested: {str(summary.get('email_requested')).lower()}",
+        f"email_ok: {str(summary.get('email_ok')).lower()}",
+        f"notification_error: {summary.get('notification_error')}",
+        f"overall_ok: {str(summary.get('overall_ok')).lower()}",
+        f"publish_ok: {str(summary.get('publish_ok')).lower()}",
         f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
         f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"pages_repo_updated: {summary.get('pages_repo_updated')}",
@@ -541,7 +565,13 @@ def main(argv: list[str] | None = None) -> int:
     log_line(log_path, f"Starting daily Gaza run for {args.date} source_mode={args.source_mode} dry_run={args.dry_run}")
 
     def finish(pipeline_code: int) -> int:
+        summary["pipeline_ok"] = pipeline_code == 0
+        summary["overall_ok"] = summary["pipeline_ok"]
+        if summary.get("email_requested"):
+            summary["email_ok"] = False
         if not args.email_report:
+            summary["email_ok"] = None
+            summary["ok"] = summary["overall_ok"]
             write_summary(summary)
             return pipeline_code
         write_run_manifest(summary)
@@ -549,12 +579,19 @@ def main(argv: list[str] | None = None) -> int:
         try:
             send_email_report(summary, log_path, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
-            message = f"Email report failed: {_smtp_error_message(exc)}"
-            summary["errors"].append(message)
-            log_line(log_path, message)
+            message = notification_error_message(exc)
+            summary["email_ok"] = False
+            summary["notification_error"] = message
+            summary["overall_ok"] = False
+            summary["errors"].append(f"Email report failed: {message}")
+            log_line(log_path, f"Email report failed: {message}")
+            summary["ok"] = summary["overall_ok"]
             write_summary(summary)
             return 2
         summary["email_report_sent"] = True
+        summary["email_ok"] = True
+        summary["overall_ok"] = summary["pipeline_ok"]
+        summary["ok"] = summary["overall_ok"]
         log_line(log_path, "Email notification succeeded.")
         write_summary(summary)
         return pipeline_code
@@ -593,6 +630,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append(generation.stderr.strip() or generation.stdout.strip() or "Gaza generation failed")
         return finish(1)
     summary["generated"] = True
+    summary["generation_ok"] = True
 
     generated_validation = validate_generated_output(args.date)
     summary.update(
@@ -617,6 +655,7 @@ def main(argv: list[str] | None = None) -> int:
         tests, tests_cmd = run_tests(args.validation_profile, pytest_basetemp)
         summary["tests_command"] = subprocess.list2cmdline(tests_cmd)
         summary["tests_ok"] = tests.returncode == 0
+        summary["validation_ok"] = summary["tests_ok"]
         log_line(log_path, f"Tests return code: {tests.returncode}")
         if tests.returncode != 0:
             summary["errors"].append(tests.stdout.strip() or tests.stderr.strip() or "tests failed")
@@ -625,6 +664,7 @@ def main(argv: list[str] | None = None) -> int:
             return finish(1)
     else:
         summary["warnings"].append("tests skipped by --skip-tests")
+        summary["validation_ok"] = True
 
     pages_dry_run = run_command(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True))
     log_line(log_path, f"Pages dry-run return code: {pages_dry_run.returncode}")
@@ -652,6 +692,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.dry_run:
         summary["ok"] = True
+        summary["publish_ok"] = True
         log_line(log_path, "Dry run complete; Pages repo was not updated.")
         return finish(0)
 
@@ -685,6 +726,7 @@ def main(argv: list[str] | None = None) -> int:
     if pages_payload.get("committed_branch") not in (args.pages_branch, None):
         summary["errors"].append(f"Pages commit targeted {pages_payload.get('committed_branch')}, expected {args.pages_branch}")
     summary["pages_repo_updated"] = bool(pages_payload.get("copied"))
+    summary["publish_ok"] = True
     summary["pages_commit_sha"] = pages_payload.get("commit_sha")
     summary["pages_branch"] = pages_payload.get("target_pages_branch", args.pages_branch)
     summary["errors"].extend(validate_pages_outputs(pages_repo, args.date))

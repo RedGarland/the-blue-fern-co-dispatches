@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.run_and_notify import _smtp_error_message, load_env_file, print_smtp_config_debug, send_email
+from scripts.run_and_notify import load_env_file, notification_error_message, print_smtp_config_debug, send_email
 from scripts.validation_profiles import (
     PROFILE_CASCADIA_WEEKLY,
     apply_env_profile,
@@ -151,6 +151,7 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"coverage_end: {cascadia.get('coverage_end') or '<unknown>'}",
         f"coverage_label: {coverage_label or '<unknown>'}",
         f"public_story_count: {cascadia.get('public_story_count', '<unknown>')}",
+        f"generation_ok: {str(summary.get('generation_ok')).lower()}",
         f"archive URL: {ARCHIVE_URL}",
         f"edition URL: {edition_url(edition_date) or '<unknown>'}",
         f"local edition path: {local_paths.get('public_site_output') or '<unknown>'}",
@@ -162,9 +163,16 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"log path: {log_path}",
         f"tests_run: {str(summary.get('tests_run')).lower()}",
         f"tests_ok: {str(summary.get('tests_ok')).lower()}",
+        f"validation_ok: {str(summary.get('validation_ok')).lower()}",
         f"validation_profile: {summary.get('validation_profile')}",
         f"tests_command: {summary.get('tests_command')}",
         f"skipped_unrelated_tests: {str(summary.get('skipped_unrelated_tests')).lower()}",
+        f"pipeline_ok: {str(summary.get('pipeline_ok')).lower()}",
+        f"email_requested: {str(summary.get('email_requested')).lower()}",
+        f"email_ok: {str(summary.get('email_ok')).lower()}",
+        f"notification_error: {summary.get('notification_error')}",
+        f"overall_ok: {str(summary.get('overall_ok')).lower()}",
+        f"publish_ok: {str(summary.get('publish_ok')).lower()}",
         f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
         f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"doctor_ok: {str(summary.get('doctor_ok')).lower()}",
@@ -226,9 +234,17 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         "log_path": str(log_path),
         "tests_run": False,
         "tests_ok": None,
+        "validation_ok": None,
+        "generation_ok": False,
         "tests_command": None,
         "validation_profile": args.validation_profile,
         "skipped_unrelated_tests": bool(get_profile(args.validation_profile).skipped_unrelated_tests),
+        "pipeline_ok": False,
+        "email_requested": True,
+        "email_ok": None,
+        "notification_error": None,
+        "overall_ok": False,
+        "publish_ok": False,
         "publish_blocked": False,
         "publish_blocked_reason": None,
         "doctor_ok": None,
@@ -245,6 +261,7 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         summary["publish_blocked"] = True
         summary["publish_blocked_reason"] = "cascadia-generation-failed"
         return summary
+    summary["generation_ok"] = True
 
     edition_date = str(cascadia_json.get("edition_date") or cascadia_json.get("date") or args.date)
     publish_result = run_logged_command(build_publish_command(args, edition_date), log_path)
@@ -289,6 +306,9 @@ def build_summary(args: argparse.Namespace, log_path: Path) -> dict[str, Any]:
         summary["manual_push_command"] = manual_push_command(Path(args.pages_repo), args.pages_branch)
 
     summary["ok"] = not summary["errors"]
+    summary["pipeline_ok"] = summary["ok"]
+    summary["validation_ok"] = bool(summary["tests_ok"]) if summary["tests_run"] else True
+    summary["publish_ok"] = bool(summary["pages_repo_updated"])
     summary["return_code"] = 0 if summary["ok"] else 1
     return summary
 
@@ -330,7 +350,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             send_email(subject, build_test_email_body(args.date), args.date, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
-            print(f"Failed to send test email: {_smtp_error_message(exc)}", file=sys.stderr)
+            print(f"Failed to send test email: {notification_error_message(exc)}", file=sys.stderr)
             return 2
         return 0
 
@@ -345,9 +365,17 @@ def main(argv: list[str] | None = None) -> int:
     try:
         send_email(subject, body, args.date, smtp_debug=bool(args.smtp_debug))
     except Exception as exc:  # noqa: BLE001
-        print(f"Failed to send Cascadia notification email: {_smtp_error_message(exc)}", file=sys.stderr)
+        summary["pipeline_ok"] = summary.get("return_code", 1) == 0
+        summary["email_ok"] = False
+        summary["notification_error"] = notification_error_message(exc)
+        summary["overall_ok"] = False
+        print(json.dumps(summary, indent=2))
+        print(f"Failed to send Cascadia notification email: {summary['notification_error']}", file=sys.stderr)
         return 2
 
+    summary["email_ok"] = True
+    summary["overall_ok"] = bool(summary.get("pipeline_ok"))
+    summary["ok"] = bool(summary["overall_ok"])
     print(json.dumps(summary, indent=2))
     return int(summary["return_code"])
 

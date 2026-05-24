@@ -925,25 +925,37 @@ def _refresh_american_pressure_map_route(site_root: Path, edition_date: str, dry
             display_date_range = str(manifest.get("display_date_range") or display_date_range)
         except json.JSONDecodeError:
             pass
+    payload: dict[str, Any] = {
+        "edition_date": edition_date,
+        "display_date_range": display_date_range,
+    }
     if map_data_path.exists():
         try:
-            payload = json.loads(map_data_path.read_text(encoding="utf-8"))
-            if isinstance(payload, dict):
-                payload["edition_date"] = edition_date
-                payload["display_date_range"] = display_date_range
-                write_text(map_data_path, json.dumps(payload, indent=2), dry_run, wrote)
+            loaded = json.loads(map_data_path.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                payload = loaded
         except json.JSONDecodeError:
             pass
-    if map_html_path.exists():
-        html_text = map_html_path.read_text(encoding="utf-8")
-        updated = re.sub(
-            r'(<p class="ap-map-subtitle">Source-backed signs of household or community strain across the U\.S\. \().*?(\)\.</p>)',
-            rf"\g<1>{display_date_range}\g<2>",
-            html_text,
-            count=1,
-        )
-        if updated != html_text:
-            write_text(map_html_path, updated, dry_run, wrote)
+    payload["edition_date"] = edition_date
+    payload["display_date_range"] = display_date_range
+    write_text(map_data_path, json.dumps(payload, indent=2), dry_run, wrote)
+
+    fallback_map_html = (
+        f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+        f'<title>American Pressure Map</title><link rel="stylesheet" href="../assets/site.css"></head><body>'
+        f'<main class="home ap-map-home"><header class="ap-map-top"><p class="eyebrow">American Pressure Map</p>'
+        f'<h1>American Pressure Map</h1><p class="ap-map-subtitle">Source-backed signs of household or community strain across the U.S. ({html.escape(display_date_range)}).</p>'
+        f'<p class="ap-map-links"><a href="/american-pressure/">Dispatch</a> | <a href="/american-pressure/dashboard/">Dashboard</a> | <a href="/american-pressure/archive.html">Archive</a> | <a href="/">Home</a></p>'
+        f'</header></main></body></html>'
+    )
+    html_text = map_html_path.read_text(encoding="utf-8") if map_html_path.exists() else fallback_map_html
+    updated = re.sub(
+        r'(<p class="ap-map-subtitle">Source-backed signs of household or community strain across the U\.S\. \().*?(\)\.</p>)',
+        rf"\g<1>{display_date_range}\g<2>",
+        html_text,
+        count=1,
+    )
+    write_text(map_html_path, updated, dry_run, wrote)
 
 
 def remove_unlistable_public_cascadia_editions(site_root: Path, dry_run: bool, wrote: list[str]) -> list[str]:

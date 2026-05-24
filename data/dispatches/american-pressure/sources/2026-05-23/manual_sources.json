@@ -15,7 +15,10 @@
       "pillar": "housing_household_cost_pressure",
       "source_role": "human_story",
       "item_type": "current_week_development",
-      "public_pressure_angle": "Summer utility-cost pressure and affordability risk for households."
+      "public_pressure_angle": "Summer utility-cost pressure and affordability risk for households.",
+      "linked_data_anchor_ids": [
+        "bls-cpi-shelter"
+      ]
     },
     {
       "source_record_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
@@ -32,7 +35,10 @@
       "pillar": "environmental_pressure",
       "source_role": "human_story",
       "item_type": "current_week_development",
-      "public_pressure_angle": "State storm-resiliency and infrastructure response to extreme-weather strain."
+      "public_pressure_angle": "State storm-resiliency and infrastructure response to extreme-weather strain.",
+      "linked_data_anchor_ids": [
+        "noaa-ncei-monthly-climate-report"
+      ]
     },
     {
       "source_record_id": "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage",
@@ -49,7 +55,10 @@
       "pillar": "environmental_pressure",
       "source_role": "human_story",
       "item_type": "current_week_development",
-      "public_pressure_angle": "Storm damage and restoration strain on local households and systems."
+      "public_pressure_angle": "Storm damage and restoration strain on local households and systems.",
+      "linked_data_anchor_ids": [
+        "noaa-ncei-monthly-climate-report"
+      ]
     },
     {
       "source_record_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
@@ -66,7 +75,10 @@
       "pillar": "labor_income_pressure",
       "source_role": "human_story",
       "item_type": "current_week_development",
-      "public_pressure_angle": "Documented mass-layoff notice tied to household paycheck risk."
+      "public_pressure_angle": "Documented mass-layoff notice tied to household paycheck risk.",
+      "linked_data_anchor_ids": [
+        "bls-unemployment-situation"
+      ]
     },
     {
       "source_record_id": "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
@@ -85,6 +97,50 @@
       "item_type": "current_week_development",
       "public_pressure_angle": "Rising local food-bank utilization signals household food affordability strain.",
       "inclusion_note": "Near-window source (published 2026-05-13) retained because it is a direct publisher URL with concrete local demand signal relevant to week-ending 2026-05-23 review."
+      ,
+      "linked_data_anchor_ids": [
+        "usda-fns-snap-data-tables"
+      ]
+    },
+    {
+      "source_record_id": "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs",
+      "title": "Watertown adopts budget with tax increase, layoffs",
+      "url": "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/",
+      "publisher": "WWNYTV",
+      "published_at": "2026-05-21T17:32:00-04:00",
+      "retrieved_at": "2026-05-23T23:45:00Z",
+      "summary_or_snippet": "Watertown City Council adopted a budget with an 8 percent property-tax increase and layoffs, signaling immediate local fiscal strain likely to tighten household budgets and service capacity.",
+      "source_type": "news_report",
+      "region_scope": "US-NY",
+      "category_hint": "financial_distress_pressure",
+      "reliability_tier": "reputable_local_news",
+      "pillar": "financial_distress_pressure",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "public_pressure_angle": "Municipal budget stress producing layoffs and higher local tax burden in the review week.",
+      "linked_data_anchor_ids": [
+        "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1"
+      ]
+    },
+    {
+      "source_record_id": "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
+      "title": "Patients worry after Los Alamos Medical Center halts labor, delivery services",
+      "url": "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/",
+      "publisher": "Searchlight New Mexico",
+      "published_at": "2026-05-17T00:00:00-06:00",
+      "retrieved_at": "2026-05-23T23:45:00Z",
+      "summary_or_snippet": "Local reporting documents patient concern and travel burden after Los Alamos Medical Center halted labor and delivery services, indicating an active health-access disruption in the review window.",
+      "source_type": "news_report",
+      "region_scope": "US-NM",
+      "category_hint": "health_access_pressure",
+      "reliability_tier": "reputable_local_news",
+      "pillar": "health_access_pressure",
+      "source_role": "human_story",
+      "item_type": "current_week_development",
+      "public_pressure_angle": "Service reduction creates near-term access barriers and longer travel requirements for maternal care.",
+      "linked_data_anchor_ids": [
+        "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026"
+      ]
     },
     {
       "source_record_id": "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1",
@@ -135,7 +191,10 @@
       "pillar": "local_system_strain",
       "source_role": "human_story",
       "item_type": "current_week_development",
-      "public_pressure_angle": "State disaster activation indicates local service strain and direct household recovery pressure."
+      "public_pressure_angle": "State disaster activation indicates local service strain and direct household recovery pressure.",
+      "linked_data_anchor_ids": [
+        "fema-disaster-declarations"
+      ]
     }
   ],
   "_scaffold": {

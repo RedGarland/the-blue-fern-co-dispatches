@@ -305,3 +305,30 @@
 - `environmental_pressure`: 2
 - `local_system_strain`: 1
 - Missing promoted pillars in this pass: none
+
+## Editorial Readiness Follow-up (2026-05-23 late pass)
+### Added current-development records
+- `financial_distress_pressure`
+  - Title: Watertown adopts budget with tax increase, layoffs
+  - URL: https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/
+  - Why added: In-window local reporting (May 21) documents immediate fiscal stress with layoffs and tax burden increases.
+  - Manual classification: `source_role: human_story`, `item_type: current_week_development`
+  - Linked data anchor: `ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1`
+
+- `health_access_pressure`
+  - Title: Patients worry after Los Alamos Medical Center halts labor, delivery services
+  - URL: https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/
+  - Why added: In-window local nonprofit reporting (May 17) documents a concrete care-access disruption and travel burden.
+  - Manual classification: `source_role: human_story`, `item_type: current_week_development`
+  - Linked data anchor: `ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026`
+
+### Linked data anchors added to existing human-story records
+- `ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand` -> `usda-fns-snap-data-tables`
+- `ap-2026-05-23-housing-fox10-az-summer-electricity-bills` -> `bls-cpi-shelter`
+- `ap-2026-05-23-labor-oregon-warn-rndc-146` -> `bls-unemployment-situation`
+- `ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties` -> `fema-disaster-declarations`
+- `ap-2026-05-23-environment-caltrans-540m-transport-investments` -> `noaa-ncei-monthly-climate-report`
+- `ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage` -> `noaa-ncei-monthly-climate-report`
+
+### Rejected in this follow-up
+- No additional candidate URLs were promoted beyond the two additions above, to avoid adding weakly-sourced or non-direct links.

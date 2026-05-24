@@ -161,7 +161,7 @@ def gaza_body_html(edition_date: str) -> str:
     return GAZA_BODY_HTML.replace("Daily Briefing - 2026-05-03", f"Daily Briefing - {edition_date}")
 
 
-def _american_pressure_fixtures(root: Path, edition_date: str) -> tuple[list[dict[str, Any]], Path | None]:
+def _american_pressure_fixtures(root: Path, edition_date: str) -> tuple[Any, Path | None]:
     base = root / "data" / "dispatches" / "american-pressure" / "sources"
     direct = base / edition_date / "manual_sources.json"
     if direct.exists():
@@ -173,6 +173,37 @@ def _american_pressure_fixtures(root: Path, edition_date: str) -> tuple[list[dic
         return [], None
     chosen = dated[-1]
     return json.loads(chosen.read_text(encoding="utf-8")), chosen
+
+
+def _normalize_american_pressure_fixture_rows(
+    raw_payload: Any,
+    fixture_path: Path | None,
+    warnings: list[str],
+    errors: list[str],
+) -> list[dict[str, Any]]:
+    if fixture_path is None:
+        return []
+    path_label = str(fixture_path)
+    expected = "expected JSON root to be a list of records or an object with a 'sources' list"
+    if isinstance(raw_payload, list):
+        rows = raw_payload
+    elif isinstance(raw_payload, dict):
+        rows = raw_payload.get("sources")
+        if not isinstance(rows, list):
+            errors.append(f"american-pressure manual sources file has invalid shape: {path_label}; {expected}")
+            return []
+    else:
+        errors.append(f"american-pressure manual sources file has invalid shape: {path_label}; {expected}")
+        return []
+    valid_rows: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            warnings.append(
+                f"american-pressure fixture record {index + 1} in {path_label} is not an object; got {type(row).__name__}"
+            )
+            continue
+        valid_rows.append(row)
+    return valid_rows
 
 
 def _source_category_to_story_category(source_category_hint: str) -> str:
@@ -251,7 +282,8 @@ def _render_american_pressure_body(stories: list[StoryRecord], sources: list[Sou
 
 
 def _build_american_pressure_dispatch(root: Path, now: str, date: str, warnings: list[str], errors: list[str]) -> DispatchConfig:
-    fixture_rows, fixture_path = _american_pressure_fixtures(root, date)
+    fixture_payload, fixture_path = _american_pressure_fixtures(root, date)
+    fixture_rows = _normalize_american_pressure_fixture_rows(fixture_payload, fixture_path, warnings, errors)
     valid_rows: list[dict[str, Any]] = []
     for index, row in enumerate(fixture_rows):
         missing = sorted(AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS - set(row.keys()))

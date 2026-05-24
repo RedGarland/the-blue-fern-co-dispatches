@@ -20,6 +20,22 @@ def _build_with_fixture(monkeypatch):
     return work, result, fixture_dst
 
 
+def _required_source_record() -> dict:
+    return {
+        "source_record_id": "ap-test-001",
+        "title": "AP Test Source",
+        "url": "https://example.com/ap-test-source",
+        "publisher": "Example Publisher",
+        "published_at": "2026-05-03T00:00:00Z",
+        "retrieved_at": "2026-05-03T12:00:00Z",
+        "summary_or_snippet": "Source-backed test snippet for generator shape handling.",
+        "source_type": "report",
+        "region_scope": "United States",
+        "category_hint": "food",
+        "reliability_tier": "official-public-source",
+    }
+
+
 def test_american_pressure_fixture_schema_matches_required_fields():
     fixture_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-03" / "manual_sources.json"
     records = json.loads(fixture_path.read_text(encoding="utf-8"))
@@ -27,6 +43,60 @@ def test_american_pressure_fixture_schema_matches_required_fields():
     for record in records:
         missing = sorted(REQUIRED_SOURCE_FIELDS - set(record.keys()))
         assert not missing
+
+
+def test_american_pressure_fixture_schema_matches_required_fields_when_wrapped():
+    record = _required_source_record()
+    missing = sorted(REQUIRED_SOURCE_FIELDS - set(record.keys()))
+    assert not missing
+
+
+def test_american_pressure_build_accepts_sources_wrapped_shape(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    fixture_dst = work / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-03" / "manual_sources.json"
+    fixture_dst.parent.mkdir(parents=True, exist_ok=True)
+    fixture_dst.write_text(json.dumps({"sources": [_required_source_record()]}, indent=2), encoding="utf-8")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    assert result["ok"] is True
+    assert not result["errors"]
+    edition = (work / "output" / "site" / "american-pressure" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
+    assert "AP Test Source" in edition
+
+
+def test_american_pressure_build_accepts_legacy_list_shape(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    fixture_dst = work / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-03" / "manual_sources.json"
+    fixture_dst.parent.mkdir(parents=True, exist_ok=True)
+    fixture_dst.write_text(json.dumps([_required_source_record()], indent=2), encoding="utf-8")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    assert result["ok"] is True
+    assert not result["errors"]
+
+
+def test_american_pressure_invalid_shape_reports_clear_error(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    shutil.copytree(repo / "assets", work / "assets")
+    fixture_dst = work / "data" / "dispatches" / "american-pressure" / "sources" / "2026-05-03" / "manual_sources.json"
+    fixture_dst.parent.mkdir(parents=True, exist_ok=True)
+    fixture_dst.write_text(json.dumps({"bad_root": []}, indent=2), encoding="utf-8")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup")
+
+    assert result["ok"] is False
+    assert any("american-pressure manual sources file has invalid shape" in err for err in result["errors"])
+    assert any(str(fixture_dst) in err for err in result["errors"])
 
 
 def test_american_pressure_topic_builds_and_links(monkeypatch):

@@ -116,44 +116,6 @@
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {
-    "source_record_id": "src-7a7b82bc50600603",
-    "source_id": "portland-public-alerts",
-    "title": "Wildfire Smoke",
-    "url": "https://www.publicalerts.org/wildfire-smoke",
-    "publisher": "Portland Public Alerts",
-    "published_at": null,
-    "retrieved_at": "2026-05-24T20:30:54.062750+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-ae991974d195"
-    ],
-    "claim_ids": [
-      "story-ae991974d195"
-    ],
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-24",
-    "edition_date": "2026-05-17",
-    "coverage_start": "2026-05-11",
-    "coverage_end": "2026-05-17",
-    "coverage_label": "May 11\u201317, 2026",
-    "region_scope": "OR",
-    "category_hint": "public_safety",
-    "source_type": "official_page",
-    "provider_id": "registry",
-    "provider_name": "Cascadia source registry",
-    "query_used": "https://www.publicalerts.org/",
-    "search_start_date": "2026-05-11",
-    "search_end_date": "2026-05-17",
-    "region_terms_matched": [
-      "portland"
-    ],
-    "state_hint": "OR",
-    "reliability_tier": "official-public",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
-  },
-  {
     "source_record_id": "src-7e9b989051207067",
     "source_id": "idaho-capital-sun-feed",
     "title": "New construction reduces housing shortage in most states",
@@ -189,44 +151,6 @@
     ],
     "state_hint": "ID",
     "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
-  },
-  {
-    "source_record_id": "src-bf028459a1c8c5e4",
-    "source_id": "portland-public-alerts",
-    "title": "Wildfire",
-    "url": "https://www.publicalerts.org/wildfire",
-    "publisher": "Portland Public Alerts",
-    "published_at": null,
-    "retrieved_at": "2026-05-24T20:30:54.062750+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-7dfd23c0456d"
-    ],
-    "claim_ids": [
-      "story-7dfd23c0456d"
-    ],
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-24",
-    "edition_date": "2026-05-17",
-    "coverage_start": "2026-05-11",
-    "coverage_end": "2026-05-17",
-    "coverage_label": "May 11\u201317, 2026",
-    "region_scope": "OR",
-    "category_hint": "public_safety",
-    "source_type": "official_page",
-    "provider_id": "registry",
-    "provider_name": "Cascadia source registry",
-    "query_used": "https://www.publicalerts.org/",
-    "search_start_date": "2026-05-11",
-    "search_end_date": "2026-05-17",
-    "region_terms_matched": [
-      "portland"
-    ],
-    "state_hint": "OR",
-    "reliability_tier": "official-public",
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
   },
   {

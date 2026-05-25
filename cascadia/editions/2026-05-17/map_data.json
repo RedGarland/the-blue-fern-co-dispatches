@@ -707,67 +707,37 @@
     }
   ],
   "diagnostics": {
-    "raw_candidate_count": 26,
+    "raw_candidate_count": 24,
     "accepted_local_marker_count": 3,
     "regional_statewide_report_count": 9,
-    "excluded_count": 23,
+    "excluded_count": 21,
     "excluded_reasons": {
-      "no_source_date": 14,
-      "statewide_not_default_layer": 9
+      "statewide_not_default_layer": 9,
+      "no_source_date": 12
     },
     "category_corrections_applied": 17,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
-    "local_extraction_success_count": 19,
+    "local_extraction_success_count": 17,
     "local_extraction_failure_count": 7,
-    "local_extraction_success_rate": 0.7308,
+    "local_extraction_success_rate": 0.7083,
     "unresolved_category_count": 0,
-    "category_resolution_success_count": 7,
+    "category_resolution_success_count": 5,
     "extraction_fields_success": {
-      "city_hint": 13,
-      "pattern": 6
+      "pattern": 6,
+      "city_hint": 11
     },
     "extraction_fields_failed": {
       "none": 7
     },
-    "place_extraction_attempted": 26,
-    "place_extraction_succeeded": 19,
+    "place_extraction_attempted": 24,
+    "place_extraction_succeeded": 17,
     "place_match_by_type": {
-      "city_hint": 13,
       "pattern": 6,
-      "none": 7
+      "none": 7,
+      "city_hint": 11
     },
     "candidate_diagnostics_rows": [
-      {
-        "title": "Wildfire",
-        "source_url": "https://www.publicalerts.org/wildfire",
-        "publisher": "Portland Public Alerts",
-        "detected_pressure_category": "Public safety and emergency services",
-        "detected_place_candidates": [
-          "Portland",
-          ""
-        ],
-        "selected_place": "Portland",
-        "selected_precision": "city",
-        "coordinate_basis": "source_default",
-        "inclusion_decision": "excluded",
-        "excluded_reason": "no_source_date"
-      },
-      {
-        "title": "Wildfire Smoke",
-        "source_url": "https://www.publicalerts.org/wildfire-smoke",
-        "publisher": "Portland Public Alerts",
-        "detected_pressure_category": "Public safety and emergency services",
-        "detected_place_candidates": [
-          "Portland",
-          ""
-        ],
-        "selected_place": "Portland",
-        "selected_precision": "city",
-        "coordinate_basis": "source_default",
-        "inclusion_decision": "excluded",
-        "excluded_reason": "no_source_date"
-      },
       {
         "title": "Judge rejects lawsuit against rewrite of WA parental rights law",
         "source_url": "https://washingtonstatestandard.com/2026/05/15/judge-rejects-challenge-to-rewrite-of-wa-parental-rights-law",
@@ -1178,10 +1148,6 @@
       {
         "source": "Idaho Capital Sun",
         "non_local_reports": 3
-      },
-      {
-        "source": "Portland Public Alerts",
-        "non_local_reports": 2
       },
       {
         "source": "Washington State Standard Feed",

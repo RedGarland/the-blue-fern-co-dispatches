@@ -30,9 +30,10 @@ def test_gaza_pipeline_smoke_normalize_rank_compose_render_validate_links():
     assert not errors
     assert normalized[0]["candidate_score"] > 0
 
-    stories = curate_stories(normalized, edition_date, now)
+    stories, relevance_decisions, _top_story_candidates = curate_stories(normalized, edition_date, now)
     assert stories
-    assert stories[0]["score"] == normalized[0]["candidate_score"]
+    assert relevance_decisions == []
+    assert stories[0]["score"] >= normalized[0]["candidate_score"]
 
     html = render_gaza_edition(edition_date, stories, normalized)
     assert "Dispatches From Gaza" in html

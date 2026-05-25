@@ -308,8 +308,8 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
     return source_path, records
 
 
-def generation_command(edition_date: str) -> list[str]:
-    return [
+def generation_command(edition_date: str, allow_thin_edition: bool = False) -> list[str]:
+    cmd = [
         sys.executable,
         "scripts\\run_gaza_dispatch.py",
         "--date",
@@ -318,6 +318,9 @@ def generation_command(edition_date: str) -> list[str]:
         "--from-manual-sources",
         "--all",
     ]
+    if allow_thin_edition:
+        cmd.append("--allow-thin-edition")
+    return cmd
 
 
 def run_tests(validation_profile: str, pytest_basetemp: Path) -> tuple[subprocess.CompletedProcess[str], list[str]]:
@@ -540,6 +543,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-sources", type=int, default=12, help="Maximum collected source records.")
     parser.add_argument("--min-sources", type=int, default=1, help="Minimum valid source records required.")
     parser.add_argument("--source-mode", choices=sorted(SOURCE_MODES), default="both", help="Source collection mode.")
+    parser.add_argument("--allow-thin-edition", action="store_true", help="Allow publish when only thin Gaza coverage survives relevance gates.")
     parser.add_argument(
         "--validation-profile",
         choices=list(profile_names()),
@@ -612,7 +616,7 @@ def main(argv: list[str] | None = None) -> int:
         return finish(1)
 
     summary["planned_actions"] = [
-        command_text(generation_command(args.date)),
+        command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition))),
         command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
     ]
     pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
@@ -623,8 +627,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.push:
         summary["planned_actions"].extend(["git status", f"git push origin {args.pages_branch}"])
 
-    log_line(log_path, f"Pipeline command started: {command_text(generation_command(args.date))}")
-    generation = run_command(generation_command(args.date))
+    log_line(log_path, f"Pipeline command started: {command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))}")
+    generation = run_command(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))
     log_line(log_path, f"Generation return code: {generation.returncode}")
     if generation.returncode != 0:
         summary["errors"].append(generation.stderr.strip() or generation.stdout.strip() or "Gaza generation failed")

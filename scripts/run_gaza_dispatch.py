@@ -59,6 +59,30 @@ REQUIRED_SOURCE_FIELDS = {
     "reliability_tier",
 }
 COLLECTION_CONTEXT_NAME = "source_collection_context.json"
+GROUND_DEVELOPMENT_TERMS = (
+    "airstrike",
+    "strike",
+    "killed",
+    "injured",
+    "hospital",
+    "aid",
+    "ceasefire",
+    "displaced",
+    "displacement",
+    "famine",
+    "hunger",
+    "food",
+    "water",
+    "fuel",
+    "evacuation",
+    "rafah",
+    "khan younis",
+    "jabalia",
+    "deir al-balah",
+    "unrwa",
+)
+FLOTILLA_TERMS = ("flotilla", "activist return", "activists return", "aid boat", "aid ship")
+INCIDENTAL_OFF_TOPIC_TERMS = ("live blog", "as it happened", "australia", "liberal mp", "budget reply", "electoral reform", "coal", "ev")
 
 
 def utc_now() -> str:
@@ -206,7 +230,57 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
     return ranked, warnings, errors
 
 
-def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -> list[dict[str, Any]]:
+def _story_relevance_profile(source: dict[str, Any]) -> dict[str, Any]:
+    title = str(source.get("title") or "")
+    summary = str(source.get("summary_or_snippet") or "")
+    category = str(source.get("category_hint") or "")
+    region_scope = str(source.get("region_scope") or "")
+    publisher = str(source.get("publisher") or "")
+    text = " ".join([title, summary, str(source.get("url") or ""), category, region_scope, publisher]).lower()
+    title_summary = f"{title} {summary}".lower()
+    matched_terms = sorted({term for term in ("gaza", "palestin", "west bank", "east jerusalem", "unrwa", "rafah", "khan younis", "jabalia", "deir al-balah") if term in text})
+    explicit = len(matched_terms) > 0
+    incidental_hits = [term for term in INCIDENTAL_OFF_TOPIC_TERMS if term in title_summary]
+    ground_hits = [term for term in GROUND_DEVELOPMENT_TERMS if term in text]
+    flotilla_hits = [term for term in FLOTILLA_TERMS if term in text]
+    substantive_ground = len(ground_hits) > 0
+    flotilla_only = len(flotilla_hits) > 0 and not substantive_ground
+    score_adjustment = len(ground_hits) * 3 + len(matched_terms) * 6 - len(incidental_hits) * 10 - (6 if flotilla_only else 0)
+    if not explicit:
+        return {
+            "passes": False,
+            "score_adjustment": -100,
+            "matched_terms": matched_terms,
+            "ground_hits": ground_hits,
+            "incidental_hits": incidental_hits,
+            "reject_reason": "missing_explicit_gaza_or_palestine_relevance",
+            "substantive_ground": substantive_ground,
+            "flotilla_only": flotilla_only,
+        }
+    if incidental_hits and not substantive_ground:
+        return {
+            "passes": False,
+            "score_adjustment": -80,
+            "matched_terms": matched_terms,
+            "ground_hits": ground_hits,
+            "incidental_hits": incidental_hits,
+            "reject_reason": "incidental_liveblog_or_domestic_politics_without_ground_development",
+            "substantive_ground": substantive_ground,
+            "flotilla_only": flotilla_only,
+        }
+    return {
+        "passes": True,
+        "score_adjustment": score_adjustment,
+        "matched_terms": matched_terms,
+        "ground_hits": ground_hits,
+        "incidental_hits": incidental_hits,
+        "reject_reason": None,
+        "substantive_ground": substantive_ground,
+        "flotilla_only": flotilla_only,
+    }
+
+
+def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     def _story_scope(source: dict[str, Any]) -> str:
         text = " ".join(
             [
@@ -222,12 +296,28 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
         return "core_gaza"
 
     stories: list[dict[str, Any]] = []
+    rejected_or_downranked: list[dict[str, Any]] = []
+    top_story_candidates: list[dict[str, Any]] = []
     for index, source in enumerate(sources, start=1):
         source_score = int(source.get("candidate_score") or 0)
-        score = max(1, source_score)
+        relevance = _story_relevance_profile(source)
+        score = max(1, source_score + int(relevance.get("score_adjustment") or 0))
         ranking_reasons = list(source.get("ranking_reasons") or [])
         breakdown = dict(source.get("candidate_score_breakdown") or {})
         scope = _story_scope(source)
+        if not bool(relevance.get("passes")):
+            rejected_or_downranked.append(
+                {
+                    "source_record_id": source.get("source_record_id"),
+                    "title": source.get("title"),
+                    "score_before": source_score,
+                    "score_after": score,
+                    "action": "rejected",
+                    "reason": relevance.get("reject_reason"),
+                    "relevance_terms_matched": relevance.get("matched_terms") or [],
+                }
+            )
+            continue
         stories.append(
             {
                 "story_id": f"gaza-story-{edition_date}-{index:03d}",
@@ -245,9 +335,35 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 "source_urls": [source["url"]],
                 "publisher_names": [source["publisher"]],
                 "generated_at": now,
+                "relevance_terms_matched": relevance.get("matched_terms") or [],
+                "top_story_relevance_score": score,
+                "substantive_ground": bool(relevance.get("substantive_ground")),
+                "flotilla_only": bool(relevance.get("flotilla_only")),
             }
         )
-    return stories
+        if relevance.get("incidental_hits") or relevance.get("flotilla_only"):
+            rejected_or_downranked.append(
+                {
+                    "source_record_id": source.get("source_record_id"),
+                    "title": source.get("title"),
+                    "score_before": source_score,
+                    "score_after": score,
+                    "action": "downranked",
+                    "reason": "incidental_topic_or_flotilla_only",
+                    "relevance_terms_matched": relevance.get("matched_terms") or [],
+                }
+            )
+    stories.sort(key=lambda row: (int(row.get("score") or 0), int(row.get("substantive_ground") or 0)), reverse=True)
+    for story in stories:
+        top_story_candidates.append(
+            {
+                "story_id": story.get("story_id"),
+                "title": story.get("title"),
+                "top_story_relevance_score": int(story.get("top_story_relevance_score") or 0),
+                "relevance_terms_matched": list(story.get("relevance_terms_matched") or []),
+            }
+        )
+    return stories, rejected_or_downranked, top_story_candidates
 
 
 def _assert_gaza_artifact_consistency(
@@ -557,7 +673,7 @@ def update_shared_records(
     write_json(files["detail_packages"], read_record_file(files["detail_packages"]), dry_run, wrote)
 
 
-def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, dry_run: bool, render: bool, all_steps: bool) -> dict[str, Any]:
+def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, dry_run: bool, render: bool, all_steps: bool, allow_thin_edition: bool = False) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     generated_at = utc_now()
     warnings: list[str] = []
@@ -665,7 +781,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),
         "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
     }
-    stories = curate_stories(normalized, edition_date, generated_at)
+    stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
     original_story_rows = [dict(story) for story in stories]
     collection_report["final_story_count"] = len(stories)
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
@@ -673,6 +789,23 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         1 for story in stories if str(story.get("story_scope") or "") == "palestinian_development"
     )
     collection_report["rejected_count"] = int(sum(int(v or 0) for v in rejected_by_reason.values()))
+    collection_report["story_relevance_diagnostics"] = relevance_decisions
+    collection_report["top_story_candidates"] = top_story_candidates
+    top_story = stories[0] if stories else None
+    collection_report["top_story_relevance_score"] = int(top_story.get("top_story_relevance_score") or 0) if top_story else 0
+    collection_report["top_story_relevance_terms_matched"] = list(top_story.get("relevance_terms_matched") or []) if top_story else []
+    has_substantive_ground = any(bool(story.get("substantive_ground")) for story in stories)
+    collection_report["thin_edition_override_used"] = bool(allow_thin_edition)
+    collection_report["blocked_for_thin_or_off_topic"] = False
+    collection_report["thin_edition_reason"] = None
+    if stories and not has_substantive_ground:
+        if allow_thin_edition:
+            warnings.append("thin Gaza edition override used: no substantive Gaza/Palestinian ground-development story cleared threshold.")
+            collection_report["thin_edition_reason"] = "no_substantive_ground_story_override_used"
+        else:
+            errors.append("No substantive Gaza/Palestinian ground-development story cleared threshold; publication blocked (use --allow-thin-edition to override).")
+            collection_report["blocked_for_thin_or_off_topic"] = True
+            collection_report["thin_edition_reason"] = "no_substantive_ground_story"
     if len(normalized) > 0 and len(stories) == 0:
         collection_report["no_story_explanation"] = "all_candidates_rejected_or_deduped_in_curation"
         collection_report["no_story_credibility_decision"] = "candidates_rejected"
@@ -788,6 +921,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "has_detail_tier": False,
         "public_exposed": not errors,
         "backup_root": str(BACKUP_ROOT),
+        "allow_thin_edition": bool(allow_thin_edition),
     }
 
 
@@ -799,6 +933,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Report writes without changing files.")
     parser.add_argument("--render", action="store_true", help="Render the public edition and manifests.")
     parser.add_argument("--all", action="store_true", help="Run all generation stages.")
+    parser.add_argument("--allow-thin-edition", action="store_true", help="Allow publish when only thin Gaza coverage survives relevance gates.")
     return parser.parse_args()
 
 
@@ -812,6 +947,7 @@ def main() -> int:
             dry_run=args.dry_run,
             render=args.render,
             all_steps=args.all,
+            allow_thin_edition=args.allow_thin_edition,
         )
     except Exception as exc:
         result = {"ok": False, "errors": [str(exc)]}

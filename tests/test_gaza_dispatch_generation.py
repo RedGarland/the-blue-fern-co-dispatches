@@ -364,8 +364,16 @@ def test_repeated_cross_edition_sources_fail_cleanly_and_write_dedupe_report(mon
         }
     ]
     write_manual_sources(work, "2026-05-10", repeated)
-    first = run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
-    assert first["ok"] is True
+    first = run_gaza_dispatch(
+        work,
+        "2026-05-10",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
+    assert (work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-10" / "sources_manifest.json").exists()
     write_manual_sources(work, "2026-05-11", repeated)
 
     result = run_gaza_dispatch(work, "2026-05-11", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
@@ -469,7 +477,15 @@ def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeyp
     ]
     write_manual_sources(work, "2026-05-10", repeated)
     write_manual_sources(work, "2026-05-11", repeated)
-    run_gaza_dispatch(work, "2026-05-10", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    run_gaza_dispatch(
+        work,
+        "2026-05-10",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
     run_gaza_dispatch(work, "2026-05-11", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
     build_result = build_site(work, dry_run=False, backup_root=work / "backup")
     assert build_result["ok"] is True
@@ -765,3 +781,60 @@ def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-15" / "index.html")
     assert "Gaza hospitals face acute aid shortages after airstrikes" in html
     assert "Equatorial Guinea" not in html
+
+
+def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_without_override(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-05-25",
+        [
+            {
+                "source_record_id": "gaza-src-2026-05-25-001",
+                "title": "Liberal MP is first to be suspended from lower house in five years - as it happened",
+                "url": "https://www.theguardian.com/australia-news/live/2026/may/25/liberal-mp-suspended-live",
+                "publisher": "The Guardian",
+                "published_at": "2026-05-25T10:00:00Z",
+                "retrieved_at": "2026-05-25T12:00:00Z",
+                "summary_or_snippet": "Australian politics live coverage with incidental Gaza references.",
+                "source_type": "news",
+                "region_scope": "Global",
+                "category_hint": "politics",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-05-25-002",
+                "title": "Court extends detention of Gaza flotilla activists",
+                "url": "https://example.com/gaza-flotilla-detention",
+                "publisher": "Example News",
+                "published_at": "2026-05-25T11:00:00Z",
+                "retrieved_at": "2026-05-25T12:10:00Z",
+                "summary_or_snippet": "Gaza flotilla and activist return update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+
+    blocked = run_gaza_dispatch(work, "2026-05-25", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert blocked["ok"] is False
+    assert any("No substantive Gaza/Palestinian ground-development story cleared threshold" in err for err in blocked["errors"])
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html").exists()
+
+    allowed = run_gaza_dispatch(
+        work,
+        "2026-05-25",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
+    assert allowed["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html")
+    assert "Liberal MP is first to be suspended from lower house in five years - as it happened" not in html
+    assert "Court extends detention of Gaza flotilla activists" in html

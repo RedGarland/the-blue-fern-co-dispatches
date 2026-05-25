@@ -159,6 +159,8 @@ sources:
     source_type: press_release_page
     url: https://www.oregon.gov/odot/Pages/news.aspx
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; replaced by Oregon newsroom statewide feed until a verified ODOT news URL is confirmed.
     state_scope: OR
     geographic_scope: Oregon
     category_hints: [transportation, infrastructure, public_safety]
@@ -173,6 +175,8 @@ sources:
     source_type: official_page
     url: https://www.oregon.gov/gov/media/Pages/newsroom.aspx
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; use Oregon newsroom statewide feed while this endpoint is re-verified.
     state_scope: OR
     geographic_scope: Oregon
     category_hints: [government, public_safety, emergency_management, economy]
@@ -187,6 +191,8 @@ sources:
     source_type: official_page
     url: https://www.oregon.gov/ohcs/about-us/Pages/newsroom.aspx
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; statewide Oregon newsroom remains active for housing-related updates.
     state_scope: OR
     geographic_scope: Oregon
     category_hints: [housing, homelessness, rent, shelter]
@@ -201,6 +207,8 @@ sources:
     source_type: official_page
     url: https://www.oregon.gov/employ/Agency/Pages/News.aspx
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; statewide Oregon newsroom and WA/ID labor sources remain enabled.
     state_scope: OR
     geographic_scope: Oregon
     category_hints: [labor, unemployment, economy, workforce]
@@ -257,6 +265,8 @@ sources:
     source_type: official_page
     url: https://www.idaho.gov/news/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; replaced operationally by agency-level Idaho official sources.
     state_scope: ID
     geographic_scope: Idaho
     category_hints: [government, public_safety, health, transportation, environment]
@@ -369,6 +379,8 @@ sources:
     source_type: official_page
     url: https://www.utc.wa.gov/news
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; retain transportation utility coverage through WSDOT and other active sources.
     state_scope: WA
     geographic_scope: Washington
     category_hints: [utilities, transportation, infrastructure, public_safety]
@@ -439,6 +451,8 @@ sources:
     source_type: official_page
     url: https://adacounty.id.gov/emergency-management/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; Ada County coverage is still available from ada-county-alerts.
     state_scope: ID
     geographic_scope: Ada County
     category_hints: [public_safety, emergency_management]
@@ -551,6 +565,8 @@ sources:
     source_type: official_page
     url: https://puc.idaho.gov/press-releases/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; state utility coverage retained through other Idaho public utility sources.
     state_scope: ID
     geographic_scope: Idaho
     category_hints: [utilities, energy, infrastructure]
@@ -649,6 +665,8 @@ sources:
     source_type: alert_feed
     url: https://alerts.weather.gov/cap/wwaatmget.php?x=WAC000&y=0
     enabled: true
+    operational_status: needs_manual_review
+    status_reason: Intermittent DNS/curl host resolution failures observed; keep enabled for public-safety signal coverage while network path is reviewed.
     state_scope: WA
     geographic_scope: Washington
     category_hints: [emergency_management, public_safety, environment]
@@ -663,6 +681,8 @@ sources:
     source_type: alert_feed
     url: https://alerts.weather.gov/cap/wwaatmget.php?x=ORC000&y=0
     enabled: true
+    operational_status: needs_manual_review
+    status_reason: Intermittent DNS/curl host resolution failures observed; keep enabled for public-safety signal coverage while network path is reviewed.
     state_scope: OR
     geographic_scope: Oregon
     category_hints: [emergency_management, public_safety, environment]
@@ -677,6 +697,8 @@ sources:
     source_type: alert_feed
     url: https://alerts.weather.gov/cap/wwaatmget.php?x=IDC000&y=0
     enabled: true
+    operational_status: needs_manual_review
+    status_reason: Intermittent DNS/curl host resolution failures observed; keep enabled for public-safety signal coverage while network path is reviewed.
     state_scope: ID
     geographic_scope: Idaho
     category_hints: [emergency_management, public_safety, environment]
@@ -705,6 +727,8 @@ sources:
     source_type: rss
     url: https://wsdot.wa.gov/ferries/schedule/bulletin/rss.xml
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; ferry disruption coverage continues through active transportation sources.
     state_scope: WA
     geographic_scope: Puget Sound ferry routes
     category_hints: [transportation, ferry_disruption, infrastructure, public_safety]
@@ -733,6 +757,8 @@ sources:
     source_type: rss
     url: https://kingcounty.gov/en/dept/metro/rider-tools/alerts-updates/service-advisories/rss
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; keep King County News and Sound Transit sources active.
     state_scope: WA
     geographic_scope: Seattle and King County
     category_hints: [transit_cuts, transportation, public_safety]
@@ -747,6 +773,8 @@ sources:
     source_type: rss
     url: https://trimet.org/alerts/rss.xml
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; retain transit coverage via other active OR/PNW sources.
     state_scope: OR
     geographic_scope: Portland metro
     category_hints: [transit_cuts, transportation, infrastructure, rural_access]
@@ -761,6 +789,8 @@ sources:
     source_type: rss
     url: https://www.ltd.org/service-alerts/rss/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; Lane County and statewide Oregon sources remain active.
     state_scope: OR
     geographic_scope: Eugene and Lane County
     category_hints: [transit_cuts, transportation, rural_access]
@@ -803,6 +833,8 @@ sources:
     source_type: official_page
     url: https://www.valleyregionaltransit.org/rider-alerts/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Repeated HTTP 404 in weekly runs; Boise/Ada coverage retained via other active local sources.
     state_scope: ID
     geographic_scope: Boise and Ada County
     category_hints: [transit_cuts, transportation, rural_access]
@@ -817,6 +849,8 @@ sources:
     source_type: rss
     url: https://www.opb.org/rss/
     enabled: true
+    operational_status: disabled_stale_url
+    status_reason: Duplicate/stale OPB RSS endpoint repeatedly returned 404; primary OPB News feed remains enabled.
     state_scope: PNW
     geographic_scope: Oregon and Pacific Northwest
     category_hints: [government, environment, health, housing, economy, public_safety, transportation]
@@ -831,6 +865,8 @@ sources:
     source_type: rss
     url: https://crosscut.com/rss.xml
     enabled: true
+    operational_status: needs_manual_review
+    status_reason: Repeated 404 observed in prior runs; keep for manual re-verification due regional public-interest relevance.
     state_scope: WA
     geographic_scope: Washington and Pacific Northwest
     category_hints: [government, economy, housing, environment, public_safety]
@@ -845,6 +881,8 @@ sources:
     source_type: rss
     url: https://www.kuow.org/feeds/rss
     enabled: true
+    operational_status: needs_manual_review
+    status_reason: Repeated 404 observed in prior runs; keep for manual re-verification due regional public-interest relevance.
     state_scope: WA
     geographic_scope: Puget Sound and Washington
     category_hints: [government, health, housing, environment, public_safety, transportation]

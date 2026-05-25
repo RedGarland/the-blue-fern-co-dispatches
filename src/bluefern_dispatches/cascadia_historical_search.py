@@ -78,6 +78,8 @@ KNOWN_REGIONAL_DOMAINS = [
 ]
 PROVIDER_BACKOFF_UNTIL: dict[str, float] = {}
 TRUTHY = {"1", "true", "yes", "on"}
+GDELT_QUERY_MIN_LEN = 40
+GDELT_QUERY_MAX_LEN = 450
 
 
 def provider_backoff_key(provider_id: Any) -> str:
@@ -307,9 +309,10 @@ def build_queries(config: dict[str, Any]) -> list[str]:
             return f'"{term}"'
         return term
 
-    region_query = " OR ".join(quote_query_term(str(term)) for term in priority_regions)
+    region_terms = [quote_query_term(str(term)) for term in priority_regions]
+    region_query = " OR ".join(region_terms)
     system_groups = groups.get("system_groups") or []
-    queries = []
+    queries: list[str] = []
     for raw_group in system_groups:
         group_text = str(raw_group)
         parts = [part.strip() for part in group_text.split("|") if part.strip()]
@@ -317,7 +320,18 @@ def build_queries(config: dict[str, Any]) -> list[str]:
         if not terms:
             continue
         systems_query = " OR ".join(quote_query_term(str(term)) for term in terms)
-        queries.append(f"({region_query}) AND ({systems_query})")
+        candidate = f"({region_query}) AND ({systems_query})"
+        if len(candidate) > GDELT_QUERY_MAX_LEN:
+            # Keep traceable system-group terms but enforce bounded query size to avoid provider "too long" failures.
+            trimmed_terms = terms[: max(3, min(len(terms), 8))]
+            systems_query = " OR ".join(quote_query_term(str(term)) for term in trimmed_terms)
+            candidate = f"({region_query}) AND ({systems_query})"
+        while len(candidate) > GDELT_QUERY_MAX_LEN and len(region_terms) > 3:
+            region_terms = region_terms[:-1]
+            region_query = " OR ".join(region_terms)
+            candidate = f"({region_query}) AND ({systems_query})"
+        if len(candidate) >= GDELT_QUERY_MIN_LEN:
+            queries.append(candidate)
         if len(queries) >= max_queries:
             return queries
     if not systems:
@@ -325,10 +339,54 @@ def build_queries(config: dict[str, Any]) -> list[str]:
     for offset in range(0, len(systems), system_terms_per_query):
         system_chunk = systems[offset : offset + system_terms_per_query]
         systems_query = " OR ".join(quote_query_term(str(term)) for term in system_chunk)
-        queries.append(f"({region_query}) AND ({systems_query})")
+        candidate = f"({region_query}) AND ({systems_query})"
+        while len(candidate) > GDELT_QUERY_MAX_LEN and len(region_terms) > 3:
+            region_terms = region_terms[:-1]
+            region_query = " OR ".join(region_terms)
+            candidate = f"({region_query}) AND ({systems_query})"
+        if len(candidate) > GDELT_QUERY_MAX_LEN:
+            continue
+        if len(candidate) >= GDELT_QUERY_MIN_LEN:
+            queries.append(candidate)
         if len(queries) >= max_queries:
             break
     return queries
+
+
+def dedupe_preserve_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for item in values:
+        if item in seen:
+            continue
+        seen.add(item)
+        output.append(item)
+    return output
+
+
+def summarize_pipeline_warnings(
+    warnings: list[str],
+    provider_request_diagnostics: list[dict[str, Any]],
+    registry_report: dict[str, Any],
+    rate_limit_count: int,
+) -> tuple[list[str], list[str]]:
+    detailed = [str(item) for item in warnings if str(item).strip()]
+    summary: list[str] = []
+    if rate_limit_count:
+        summary.append(f"provider rate-limit events: {rate_limit_count}")
+    invalid_json_count = sum(1 for item in detailed if "invalid JSON response" in item)
+    if invalid_json_count:
+        summary.append(f"provider invalid JSON responses: {invalid_json_count}")
+    fetch_error_count = int(registry_report.get("registry_fetch_errors") or 0)
+    if fetch_error_count:
+        summary.append(f"registry fetch errors: {fetch_error_count}")
+    gdelt_diag = [diag for diag in provider_request_diagnostics if str(diag.get("provider_id")) == "gdelt"]
+    if gdelt_diag:
+        summary.append(
+            f"gdelt guardrails: min_len={GDELT_QUERY_MIN_LEN}, max_len={GDELT_QUERY_MAX_LEN}, requests={len(gdelt_diag)}"
+        )
+    deduped = dedupe_preserve_order(detailed)
+    return summary + deduped, deduped
 
 
 def query_group_label(query: str, config: dict[str, Any]) -> str:
@@ -1203,6 +1261,21 @@ def retrieve_historical_sources(
         recommendation = curl_success_recommendation
     elif fetch_recommendations:
         recommendation = fetch_recommendations[0]
+    summary_warnings, detailed_warnings = summarize_pipeline_warnings(
+        warnings=warnings,
+        provider_request_diagnostics=provider_request_diagnostics,
+        registry_report=registry_report,
+        rate_limit_count=rate_limit_count,
+    )
+    source_health_summary = {
+        "sources_attempted": int(registry_report.get("registry_sources_run") or 0),
+        "sources_succeeded": max(
+            0,
+            int(registry_report.get("registry_sources_run") or 0) - int(registry_report.get("registry_fetch_errors") or 0),
+        ),
+        "sources_failed": int(registry_report.get("registry_fetch_errors") or 0),
+        "sources_saved": int(registry_report.get("registry_records_saved") or 0),
+    }
     report = {
         "coverage_start": week_start.isoformat(),
         "coverage_end": week_end.isoformat(),
@@ -1253,6 +1326,7 @@ def retrieve_historical_sources(
         "weak_date_count": registry_report.get("weak_date_count", 0),
         "same_domain_links_only": registry_report.get("same_domain_links_only", True),
         "unsupported_source_type_count": registry_report.get("unsupported_source_type_count", 0),
+        "source_health_summary": source_health_summary,
         "records_by_source_id": registry_report.get("records_by_source_id", {}),
         "records_by_tier": registry_report.get("records_by_tier", {}),
         "records_by_category_hint": dict(sorted(records_by_category.items())),
@@ -1267,7 +1341,8 @@ def retrieve_historical_sources(
         "provider_request_diagnostics": provider_request_diagnostics,
         "registry_source_diagnostics": registry_report.get("diagnostics", []),
         "recommendation": recommendation,
-        "warnings": warnings,
+        "warnings": summary_warnings,
+        "warnings_detailed": detailed_warnings,
         "errors": errors,
     }
     historical_path = folder / "historical_sources.json"
@@ -1309,6 +1384,7 @@ def retrieve_historical_sources(
         "historical_search_report_path": str(report_path),
         "raw_path": str(raw_path),
         "report": report,
-        "warnings": warnings,
+        "warnings": summary_warnings,
+        "warnings_detailed": detailed_warnings,
         "errors": errors,
     }

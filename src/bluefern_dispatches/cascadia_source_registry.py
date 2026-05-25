@@ -217,8 +217,18 @@ def parse_yaml_scalar(value: str) -> Any:
 def source_operational_state(source: dict[str, Any]) -> str:
     if source.get("enabled") is False:
         return "disabled"
-    status = str(source.get("status") or "").strip().lower()
-    if status in {"disabled", "diagnostics_only", "manual_only", "degraded"}:
+    status = str(source.get("operational_status") or source.get("status") or "").strip().lower()
+    if status in {
+        "disabled",
+        "diagnostics_only",
+        "manual_only",
+        "degraded",
+        "replaced",
+        "disabled_stale_url",
+        "disabled_unrecoverable_403",
+        "needs_manual_review",
+        "rate_limited",
+    }:
         return status
     if source.get("diagnostics_only") is True:
         return "diagnostics_only"
@@ -228,10 +238,35 @@ def source_operational_state(source: dict[str, Any]) -> str:
 
 
 def enabled_sources(sources: list[dict[str, Any]], include_diagnostics: bool = False) -> list[dict[str, Any]]:
-    allowed_states = {"enabled", "degraded"}
+    allowed_states = {"enabled", "degraded", "needs_manual_review", "rate_limited"}
     if include_diagnostics:
         allowed_states.update({"diagnostics_only", "manual_only"})
     return [source for source in sources if source_operational_state(source) in allowed_states]
+
+
+def dedupe_preserve_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    output: list[str] = []
+    for item in values:
+        if item in seen:
+            continue
+        seen.add(item)
+        output.append(item)
+    return output
+
+
+def summarize_registry_warnings(warnings: list[str], diagnostics: list[dict[str, Any]], weak_date_count: int) -> tuple[list[str], list[str]]:
+    actionable: list[str] = []
+    informational: list[str] = []
+    if weak_date_count:
+        informational.append(f"weak date basis warnings (deduped): {weak_date_count} item(s)")
+    fetch_error_sources = [str(item.get("source_id") or "unknown") for item in diagnostics if item.get("errors")]
+    if fetch_error_sources:
+        counts = Counter(fetch_error_sources)
+        top = ", ".join(f"{source}:{count}" for source, count in sorted(counts.items()))
+        actionable.append(f"registry fetch failures by source (deduped): {top}")
+    unique = dedupe_preserve_order([str(item) for item in warnings if str(item).strip()])
+    return actionable + informational + unique, unique
 
 
 def parse_datetime(value: str | None) -> datetime | None:
@@ -800,6 +835,24 @@ def collect_registry_sources(
     deduped, duplicates_removed = dedupe_registry_records(records)
     if duplicates_removed:
         excluded["duplicate"] += duplicates_removed
+    summary_warnings, detailed_warnings = summarize_registry_warnings(warnings, diagnostics, weak_date_count)
+    source_status_counts = dict(
+        sorted(Counter(source_operational_state(source) for source in registry if isinstance(source, dict)).items())
+    )
+    source_health_summary = {
+        "sources_attempted": run,
+        "sources_succeeded": max(0, run - len([item for item in diagnostics if item.get("errors")])),
+        "sources_failed": len([item for item in diagnostics if item.get("errors")]),
+        "disabled_or_replaced_sources": [
+            {
+                "source_id": source.get("source_id"),
+                "operational_status": source_operational_state(source),
+                "reason": source.get("status_reason") or source.get("notes"),
+            }
+            for source in registry
+            if source_operational_state(source) in {"disabled", "replaced", "disabled_stale_url", "disabled_unrecoverable_403"}
+        ],
+    }
     report = {
         "fetch_backend": fetch_backend(),
         "fallback_used": any(bool(item.get("fallback_used")) for item in diagnostics),
@@ -807,6 +860,8 @@ def collect_registry_sources(
         "curl_exit_code": next((item.get("curl_exit_code") for item in diagnostics if item.get("curl_exit_code") is not None), None),
         "curl_stderr_tail": next((item.get("curl_stderr_tail") for item in diagnostics if item.get("curl_stderr_tail")), None),
         "tls_or_revocation_hint": next((item.get("tls_or_revocation_hint") for item in diagnostics if item.get("tls_or_revocation_hint")), None),
+        "source_status_counts": source_status_counts,
+        "source_health_summary": source_health_summary,
         "registry_sources_configured": len(registry),
         "registry_sources_enabled": len(sources),
         "registry_sources_planned": planned,
@@ -831,11 +886,12 @@ def collect_registry_sources(
         "records_by_tier": dict(sorted(Counter(str(record.get("tier") or "unknown") for record in deduped).items())),
         "records_by_category_hint": dict(sorted(Counter(str(record.get("category_hint") or "unknown") for record in deduped).items())),
         "diagnostics": diagnostics,
-        "warnings": warnings,
+        "warnings": summary_warnings,
+        "warnings_detailed": detailed_warnings,
         "errors": errors,
     }
     report["recommendation"] = next((item.get("recommendation") for item in diagnostics if item.get("recommendation")), None)
-    return {"records": deduped, "report": report, "warnings": warnings, "errors": errors}
+    return {"records": deduped, "report": report, "warnings": summary_warnings, "warnings_detailed": detailed_warnings, "errors": errors}
 
 
 def dedupe_registry_records(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:

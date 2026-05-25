@@ -16,7 +16,7 @@ from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
 from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
-from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, load_source_registry
+from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, load_source_registry, source_operational_state
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, format_coverage_label, previous_completed_week
 from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, publish_pages
 from bluefern_dispatches.shared_records import update_shared_records
@@ -3345,3 +3345,145 @@ sources:
     assert record["date_basis"] == "retrieved_only"
     assert record["date_basis_confidence"] == "low"
     assert "retrieved_at is not evidence" in record["date_basis_note"]
+
+
+def test_registry_operational_statuses_and_disabled_reasons_reported(cascadia_work_root):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: stale-disabled
+    name: Stale Disabled
+    tier: 1
+    source_type: rss
+    url: https://example.com/stale.xml
+    enabled: true
+    operational_status: disabled_stale_url
+    status_reason: repeated 404
+  - source_id: review-feed
+    name: Review Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/review.xml
+    enabled: true
+    operational_status: needs_manual_review
+""",
+        encoding="utf-8",
+    )
+    week_start, week_end = containing_week("2026-04-28")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+    status_counts = result["report"]["source_status_counts"]
+    assert status_counts.get("disabled_stale_url") == 1
+    assert status_counts.get("needs_manual_review") == 1
+    disabled_list = result["report"]["source_health_summary"]["disabled_or_replaced_sources"]
+    assert any(item["source_id"] == "stale-disabled" and item["reason"] == "repeated 404" for item in disabled_list)
+    assert source_operational_state({"enabled": True, "operational_status": "needs_manual_review"}) == "needs_manual_review"
+
+
+def test_registry_warning_summary_dedupes_weak_date_lines(cascadia_work_root, monkeypatch):
+    registry_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "source_registry.yml"
+    registry_path.write_text(
+        """
+sources:
+  - source_id: weak-date-feed
+    name: Weak Date Feed
+    tier: 1
+    source_type: rss
+    url: https://example.com/feed.xml
+    enabled: true
+    state_scope: WA
+    geographic_scope: Washington
+    category_hints: [infrastructure]
+    reliability_tier: test
+    publisher: Example
+    refresh_mode: current
+""",
+        encoding="utf-8",
+    )
+    feed = """<?xml version="1.0"?><rss><channel>
+<item><title>Washington infrastructure alert one</title><link>https://example.com/a</link><description>Infrastructure service disruption.</description></item>
+<item><title>Washington infrastructure alert two</title><link>https://example.com/b</link><description>Infrastructure service disruption.</description></item>
+</channel></rss>"""
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return feed.encode("utf-8")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_fetch.urllib.request.urlopen", lambda request, timeout: FakeResponse())
+    week_start, week_end = containing_week("2026-04-28")
+    result = collect_registry_sources(cascadia_work_root, week_start, week_end, retrieved_at="2026-05-08T12:00:00Z")
+    assert any("weak date basis warnings (deduped): 2 item(s)" in warning for warning in result["warnings"])
+    assert any("weak date basis" in warning for warning in result["report"]["warnings_detailed"])
+
+
+def test_gdelt_query_guardrails_keep_queries_bounded(cascadia_work_root):
+    config = load_historical_config(cascadia_work_root)
+    config["query_groups"]["region_terms"] = [f"RegionTerm{i}" for i in range(1, 80)]
+    config["query_groups"]["system_groups"] = [
+        "oversized|" + "|".join(f"system term {i}" for i in range(1, 80)),
+    ]
+    queries = build_queries(config)
+    assert queries
+    assert all(len(query) >= 40 for query in queries)
+    assert all(len(query) <= 450 for query in queries)
+
+
+def test_historical_warning_summary_dedupes_repeated_provider_warnings(cascadia_work_root, monkeypatch):
+    def fake_collect_registry_sources(root, week_start_arg, week_end_arg, retrieved_at=None, refresh_cache=False):
+        return {
+            "records": [],
+            "warnings": [
+                "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
+                "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
+            ],
+            "errors": ["HTTP Error 404: Not Found", "HTTP Error 404: Not Found"],
+            "report": {
+                "registry_sources_planned": 2,
+                "registry_sources_run": 2,
+                "registry_cache_hits": 0,
+                "registry_cache_misses": 2,
+                "registry_fetch_errors": 2,
+                "registry_records_raw": 0,
+                "registry_records_saved": 0,
+                "registry_records_excluded": 0,
+                "registry_exclusion_reasons": {},
+                "records_by_source_id": {},
+                "records_by_tier": {},
+                "records_by_category_hint": {},
+                "official_pages_planned": 0,
+                "official_pages_run": 0,
+                "official_links_found": 0,
+                "official_links_saved": 0,
+                "official_links_excluded": 0,
+                "official_exclusion_reasons": {},
+                "weak_date_count": 0,
+                "same_domain_links_only": True,
+                "unsupported_source_type_count": 0,
+                "diagnostics": [],
+            },
+        }
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.collect_registry_sources", fake_collect_registry_sources)
+    week_start, week_end = containing_week("2026-05-17")
+    result = retrieve_historical_sources(
+        cascadia_work_root,
+        week_start=week_start,
+        week_end=week_end,
+        run_date="2026-05-24",
+        edition_date="2026-05-17",
+        historical_provider="registry",
+        dry_run=True,
+    )
+    assert any("registry fetch errors: 2" in warning for warning in result["warnings"])
+    assert result["warnings"].count("invalid JSON response: Expecting value: line 1 column 1 (char 0)") == 1
+    assert result["warnings"].count("registry source fetch error: HTTP Error 404: Not Found") == 1
+    assert "warnings_detailed" in result

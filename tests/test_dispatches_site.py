@@ -1156,6 +1156,10 @@ def test_cascadia_only_publish_copies_map_files(built_site):
     edition_dir.mkdir(parents=True, exist_ok=True)
     (edition_dir / "map.html").write_text("<html><body>map</body></html>", encoding="utf-8")
     (edition_dir / "map_data.json").write_text(json.dumps({"markers": []}, indent=2), encoding="utf-8")
+    (edition_dir / "source_table.html").write_text("<html><body>source table</body></html>", encoding="utf-8")
+    site_map_dir = work / "output" / "site" / "cascadia" / "map"
+    site_map_dir.mkdir(parents=True, exist_ok=True)
+    (site_map_dir / "source_table.html").write_text("<html><body>latest source table</body></html>", encoding="utf-8")
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
 
     result = publish_pages(
@@ -1172,6 +1176,8 @@ def test_cascadia_only_publish_copies_map_files(built_site):
     assert result["ok"] is True
     assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "map.html").exists()
     assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "map_data.json").exists()
+    assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "source_table.html").exists()
+    assert (pages_repo / "cascadia" / "map" / "source_table.html").exists()
     assert result["only_dispatches"] == ["cascadia"]
 
 

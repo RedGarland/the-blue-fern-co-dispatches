@@ -1420,7 +1420,7 @@ def build_source_density_diagnostics(
     }
 
 
-def render_map_html(edition_date: str, note: str) -> str:
+def render_map_html(edition_date: str, note: str, source_table_href: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -1455,7 +1455,7 @@ def render_map_html(edition_date: str, note: str) -> str:
     details.filters {{ position:absolute; z-index:930; right:14px; top:14px; width:270px; }}
     .mobile-filter-fab {{ display:none; position:absolute; right:14px; bottom:14px; z-index:940; border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:999px; min-height:44px; padding:10px 14px; font-size:13px; font-weight:700; box-shadow:0 8px 18px rgba(15,40,52,.2); }}
     .mobile-filter-sheet {{ display:none; position:fixed; inset:0; z-index:950; background:rgba(8,18,24,.34); align-items:flex-end; justify-content:center; padding:10px; }}
-    .mobile-filter-sheet.open {{ display:flex; }}
+    body.filters-open .mobile-filter-sheet {{ display:flex; }}
     .mobile-filter-sheet-card {{ width:min(640px, 100%); max-height:78vh; background:#f8fcfc; border:1px solid #c8d7db; border-radius:14px 14px 0 0; box-shadow:0 -10px 28px rgba(16,36,44,.24); display:flex; flex-direction:column; }}
     .mobile-filter-sheet-header {{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px; border-bottom:1px solid #d7e4e9; }}
     .mobile-filter-sheet-header strong {{ color:#15384a; }}
@@ -1530,7 +1530,7 @@ def render_map_html(edition_date: str, note: str) -> str:
       <p class="source-note">Sources: public regional reporting and official/public sources</p>
       <div class="header-actions">
         <button id="resetMap">Reset Map</button>
-        <a href="/cascadia/editions/{html.escape(edition_date)}/source_table.html">Open Source Table</a>
+        <a href="{html.escape(source_table_href)}">Open Source Table</a>
       </div>
     </header>
     <div id="mapWrap">
@@ -1547,7 +1547,7 @@ def render_map_html(edition_date: str, note: str) -> str:
       <div id="renderWarning" class="empty-state">Some map markers could not be displayed.</div>
       <div id="map"></div>
     </div>
-    <div id="mobileFilterSheet" class="mobile-filter-sheet" aria-hidden="true">
+    <div id="mobileFilterSheet" class="mobile-filter-sheet" data-state="closed" aria-hidden="true">
       <div class="mobile-filter-sheet-card">
         <div class="mobile-filter-sheet-header">
           <strong>Filters</strong>
@@ -1615,13 +1615,15 @@ def render_map_html(edition_date: str, note: str) -> str:
       const mobileClose = getEl('mobileFiltersClose');
       function closeMobileFilters() {{
         if (!mobileSheet) return;
-        mobileSheet.classList.remove('open');
+        document.body.classList.remove('filters-open');
+        mobileSheet.setAttribute('data-state', 'closed');
         mobileSheet.setAttribute('aria-hidden', 'true');
         if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
       }}
       function openMobileFilters() {{
         if (!mobileSheet) return;
-        mobileSheet.classList.add('open');
+        document.body.classList.add('filters-open');
+        mobileSheet.setAttribute('data-state', 'open');
         mobileSheet.setAttribute('aria-hidden', 'false');
         if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'true');
       }}
@@ -1636,9 +1638,10 @@ def render_map_html(edition_date: str, note: str) -> str:
       }}
       syncFilterHost();
       mobileMedia.addEventListener('change', syncFilterHost);
-      if (mobileToggle) mobileToggle.addEventListener('click', () => {{ if (mobileSheet && mobileSheet.classList.contains('open')) closeMobileFilters(); else openMobileFilters(); }});
+      if (mobileToggle) mobileToggle.addEventListener('click', () => {{ if (document.body.classList.contains('filters-open')) closeMobileFilters(); else openMobileFilters(); }});
       if (mobileClose) mobileClose.addEventListener('click', closeMobileFilters);
       if (mobileSheet) mobileSheet.addEventListener('click', (event) => {{ if (event.target === mobileSheet) closeMobileFilters(); }});
+      document.addEventListener('keydown', (event) => {{ if (event.key === 'Escape') closeMobileFilters(); }});
       const controlsReady = () => ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional','resetMap'].every((id) => Boolean(getEl(id)));
       function optionize(id, values) {{ const el = document.getElementById(id); for (const value of values) {{ const option = document.createElement('option'); option.value = value; option.textContent = value; el.appendChild(option); }} }}
       optionize('pressureFilter', [...new Set(markers.map((m) => m.pressure_type).filter(Boolean))].sort());
@@ -1661,6 +1664,70 @@ def render_map_html(edition_date: str, note: str) -> str:
       if (controlsReady()) {{ ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].forEach((id) => {{ const el = getEl(id); if (el) el.addEventListener('change', applyFilters); }}); const resetBtn = getEl('resetMap'); if (resetBtn) resetBtn.addEventListener('click', resetToDefaultView); }}
     }});
   </script>
+</body>
+</html>
+"""
+
+
+def render_cascadia_source_table_html(
+    edition_date: str,
+    coverage_label: str | None,
+    sources_manifest: list[dict[str, Any]],
+) -> str:
+    rows = []
+    for source in sources_manifest:
+        source_id = html.escape(str(source.get("source_record_id") or ""))
+        title = html.escape(str(source.get("title") or "Untitled source"))
+        publisher = html.escape(str(source.get("publisher") or "Source"))
+        published_at = html.escape(str(source.get("published_at") or ""))
+        url = str(source.get("url") or "").strip()
+        link = f'<a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">Open source</a>' if url else ""
+        rows.append(
+            "<tr>"
+            f"<td>{source_id}</td>"
+            f"<td>{title}</td>"
+            f"<td>{publisher}</td>"
+            f"<td>{published_at}</td>"
+            f"<td>{link}</td>"
+            "</tr>"
+        )
+    if not rows:
+        rows.append("<tr><td colspan=\"5\">No source records available for this edition.</td></tr>")
+    label = coverage_label or edition_date
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cascadia Source Table - {html.escape(edition_date)}</title>
+  <style>
+    body {{ margin:0; font: 15px/1.45 "Segoe UI", Tahoma, sans-serif; background:#eef3f5; color:#13252f; }}
+    .wrap {{ max-width:1100px; margin:0 auto; padding:18px 14px 28px; }}
+    h1 {{ margin:0 0 8px; color:#15384a; font-size:1.4rem; }}
+    p {{ margin:0 0 12px; color:#2a4c59; }}
+    .actions {{ margin:0 0 14px; display:flex; flex-wrap:wrap; gap:8px; }}
+    .actions a {{ border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:8px 12px; font-size:13px; font-weight:700; text-decoration:none; }}
+    table {{ width:100%; border-collapse:collapse; background:#fff; border:1px solid #d2e0e5; }}
+    th, td {{ border:1px solid #d2e0e5; padding:8px 9px; text-align:left; vertical-align:top; }}
+    th {{ background:#f2f8fb; color:#15384a; font-weight:700; }}
+    td {{ font-size:13px; word-break:break-word; overflow-wrap:anywhere; }}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Cascadia Source Table</h1>
+    <p>Edition: {html.escape(edition_date)}{f" | Coverage: {html.escape(label)}" if label else ""}</p>
+    <p>Every row is a traceable source used in this public edition.</p>
+    <div class="actions">
+      <a href="/cascadia/editions/{html.escape(edition_date)}/">Back to edition</a>
+      <a href="/cascadia/editions/{html.escape(edition_date)}/map.html">Back to edition map</a>
+      <a href="/cascadia/map/">Open latest Cascadia map</a>
+    </div>
+    <table>
+      <thead><tr><th>Source ID</th><th>Title</th><th>Publisher</th><th>Published</th><th>Link</th></tr></thead>
+      <tbody>{''.join(rows)}</tbody>
+    </table>
+  </main>
 </body>
 </html>
 """
@@ -2071,7 +2138,9 @@ def render_cascadia_edition(
         "grouped_markers": grouped_markers,
         "diagnostics": map_diagnostics,
     }
-    map_html = render_map_html(edition_date, MAP_NOTE)
+    edition_map_html = render_map_html(edition_date, MAP_NOTE, "source_table.html")
+    latest_map_html = render_map_html(edition_date, MAP_NOTE, "/cascadia/map/source_table.html")
+    source_table_html = render_cascadia_source_table_html(edition_date, coverage_label, sources_manifest)
     map_embed_html = render_map_embed_html(
         include_edition_map_link=True,
         include_source_table_link=True,
@@ -2162,10 +2231,12 @@ def render_cascadia_edition(
         write_json(out_dir / "sources_manifest.json", sources_manifest, dry_run, written)
         write_json(out_dir / "curation_manifest.json", curation_manifest, dry_run, written)
         write_json(out_dir / "map_data.json", map_data, dry_run, written)
-        write_text(out_dir / "map.html", map_html, dry_run, written)
+        write_text(out_dir / "map.html", edition_map_html, dry_run, written)
+        write_text(out_dir / "source_table.html", source_table_html, dry_run, written)
     dashboard_html = render_dashboard_html(edition_date, coverage_label or edition_date, map_data)
     write_json(root / "output" / "site" / "cascadia" / "map" / "map_data.json", map_data, dry_run, written)
-    write_text(root / "output" / "site" / "cascadia" / "map" / "index.html", map_html, dry_run, written)
+    write_text(root / "output" / "site" / "cascadia" / "map" / "index.html", latest_map_html, dry_run, written)
+    write_text(root / "output" / "site" / "cascadia" / "map" / "source_table.html", source_table_html, dry_run, written)
     write_text(root / "output" / "site" / "cascadia" / "dashboard" / "index.html", dashboard_html, dry_run, written)
     write_text(
         output_dispatch_dir / "editorial_review.md",

@@ -1,4 +1,5 @@
 import json
+import re
 import urllib.error
 import shutil
 import subprocess
@@ -2104,7 +2105,9 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     site_edition = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
     assert (site_edition / "map_data.json").exists()
     assert (site_edition / "map.html").exists()
+    assert (site_edition / "source_table.html").exists()
     assert (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "index.html").exists()
+    assert (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "source_table.html").exists()
     assert (cascadia_work_root / "output" / "site" / "cascadia" / "dashboard" / "index.html").exists()
     html = (site_edition / "index.html").read_text(encoding="utf-8")
     assert 'src="/cascadia/map/"' not in html
@@ -2169,6 +2172,7 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "id=\"mobileFiltersToggle\"" in map_html
     assert "mobile-filter-sheet" in map_html
     assert "id=\"mobileFiltersClose\"" in map_html
+    assert "data-state=\"closed\"" in map_html
     assert "State" in map_html
     assert "Region" in map_html
     assert "Report window" in map_html
@@ -2188,8 +2192,12 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "height:72vh" in map_html
     assert "details.filters { display:none; }" in map_html
     assert ".mobile-filter-fab { display:inline-flex;" in map_html
+    assert "body.filters-open .mobile-filter-sheet { display:flex; }" in map_html
     assert "leaflet-control-attribution" in map_html
     assert "syncFilterHost()" in map_html
+    assert "document.body.classList.add('filters-open')" in map_html
+    assert "document.body.classList.remove('filters-open')" in map_html
+    assert "event.key === 'Escape'" in map_html
     assert "How to read this map" in map_html
     assert "regional systems weather map" in map_html
     assert "not a complete census or disaster map" in map_html
@@ -2232,9 +2240,13 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "Source:</strong>" in map_html
     assert "Read more" in map_html
     assert "Open Source Table" in map_html
-    assert "/source_table.html" in map_html
+    assert "/cascadia/map/source_table.html" in map_html
     assert "source_record_id" not in map_html
     assert "coordinate_basis" not in map_html
+    edition_map_html = (site_edition / "map.html").read_text(encoding="utf-8")
+    assert "source_table.html" in edition_map_html
+    edition_index_html = (site_edition / "index.html").read_text(encoding="utf-8")
+    assert "source_table.html" in edition_index_html
 
 
 def test_cascadia_mapping_philosophy_doc_exists_and_has_required_sections():
@@ -2269,6 +2281,37 @@ def test_cascadia_mapping_philosophy_doc_exists_and_has_required_sections():
     ]
     for rule in required_rules:
         assert rule in text
+
+
+def test_cascadia_source_table_links_resolve_to_generated_public_files(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    site_root = cascadia_work_root / "output" / "site"
+    html_paths = [
+        site_root / "cascadia" / "map" / "index.html",
+        site_root / "cascadia" / "editions" / "2026-05-03" / "map.html",
+        site_root / "cascadia" / "editions" / "2026-05-03" / "index.html",
+    ]
+    for html_path in html_paths:
+        html_text = html_path.read_text(encoding="utf-8")
+        hrefs = re.findall(r'href="([^"]*source_table\.html)"', html_text)
+        assert hrefs, f"no source_table hrefs found in {html_path}"
+        for href in hrefs:
+            if href.startswith("/"):
+                target = site_root / href.lstrip("/")
+            else:
+                target = (html_path.parent / href).resolve()
+            assert target.exists(), f"missing target for {href} in {html_path}"
 
 
 

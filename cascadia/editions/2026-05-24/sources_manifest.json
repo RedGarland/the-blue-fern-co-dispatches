@@ -1,0 +1,233 @@
+[
+  {
+    "source_record_id": "src-0e5968259184711f",
+    "source_id": "washington-state-standard-feed",
+    "title": "US House passes sweeping \u2018gender ideology\u2019 bill aimed at trans kids in schools",
+    "url": "https://washingtonstatestandard.com/2026/05/20/repub/us-house-passes-sweeping-gender-ideology-bill-aimed-at-trans-kids-in-schools",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-20T22:47:48Z",
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-9c7fd29082be"
+    ],
+    "claim_ids": [
+      "story-9c7fd29082be"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "or",
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-52c251702deda66b",
+    "source_id": "washington-state-standard-feed",
+    "title": "Washington\u2019s largest utility moves to add more wind power",
+    "url": "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-21T22:22:48Z",
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-0a341d401b1c"
+    ],
+    "claim_ids": [
+      "story-0a341d401b1c"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "puget sound",
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-7c082ce339c03251",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
+    "url": "https://idahocapitalsun.com/2026/05/20/six-idaho-republican-lawmakers-lose-primary-election-two-more-are-trailing",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-05-20T08:35:07Z",
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-c29bdf1d3dd9"
+    ],
+    "claim_ids": [
+      "story-c29bdf1d3dd9"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "ID",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://idahocapitalsun.com/feed/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "idaho"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-7cf11652ce18867d",
+    "source_id": "washington-state-standard-feed",
+    "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
+    "url": "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
+    "publisher": "Washington State Standard Feed",
+    "published_at": "2026-05-20T22:38:56Z",
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-cb40ce4a0ae4"
+    ],
+    "claim_ids": [
+      "story-cb40ce4a0ae4"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "WA",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://washingtonstatestandard.com/feed/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "washington"
+    ],
+    "state_hint": "WA",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-a2da713a427edc0a",
+    "source_id": "portland-public-alerts",
+    "title": "Flooding and Land Movement",
+    "url": "https://www.publicalerts.org/flooding-and-land-movement",
+    "publisher": "Portland Public Alerts",
+    "published_at": null,
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-15f927fd0944"
+    ],
+    "claim_ids": [
+      "story-15f927fd0944"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "OR",
+    "category_hint": "public_safety",
+    "source_type": "official_page",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://www.publicalerts.org/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "portland"
+    ],
+    "state_hint": "OR",
+    "reliability_tier": "official-public",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  },
+  {
+    "source_record_id": "src-cf5891eed5a323a6",
+    "source_id": "idaho-capital-sun-feed",
+    "title": "Governor declares drought emergency as Utah dips into reservoir \u2018savings\u2019",
+    "url": "https://idahocapitalsun.com/2026/05/22/repub/governor-declares-drought-emergency-as-utah-dips-into-reservoir-savings",
+    "publisher": "Idaho Capital Sun Feed",
+    "published_at": "2026-05-22T20:54:41Z",
+    "retrieved_at": "2026-05-25T13:00:56.683165+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "story-f1255e4fc801"
+    ],
+    "claim_ids": [
+      "story-f1255e4fc801"
+    ],
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026",
+    "region_scope": "ID",
+    "category_hint": "government",
+    "source_type": "rss",
+    "provider_id": "registry",
+    "provider_name": "Cascadia source registry",
+    "query_used": "https://idahocapitalsun.com/feed/",
+    "search_start_date": "2026-05-18",
+    "search_end_date": "2026-05-24",
+    "region_terms_matched": [
+      "idaho",
+      "or"
+    ],
+    "state_hint": "ID",
+    "reliability_tier": "reputable-regional-media",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
+  }
+]

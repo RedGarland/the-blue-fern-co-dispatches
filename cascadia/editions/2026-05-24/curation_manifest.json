@@ -1,0 +1,795 @@
+[
+  {
+    "story_id": "story-fb7596ce9bb8",
+    "title": "Public Safety",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-73e63f4d92cc2b46"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/category/public-safety"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-afe848d32043",
+    "title": "OEM \u2013 Wildfire Smoke and Air Quality Guidance",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-26f27ca81c02cae5"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2023/08/19/oem-wildfire-smoke-and-air-quality-guidance-2"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-97fc4fc48372",
+    "title": "Seattle City Light providing assistance as Sourdough wildfire continues to grow",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-c36c66999332d3e7"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-18430b69e9db",
+    "title": "Winter Storm: High Winds and Flooding due to King Tides and Rainfall",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-7ea7cbc37cd02b79"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2022/12/27/storms"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-2e95aaf992f2",
+    "title": "Wildfire Smoke Alert: Unhealthy Air Quality",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-3146ec08373abb32"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2022/10/18/wildfire-smoke-10-18-22"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-a8de6e6dbc82",
+    "title": "Wildfire Smoke is Impacting Air Quality",
+    "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-f33f42fa2580268f"
+    ],
+    "source_urls": [
+      "https://alert.seattle.gov/2022/09/09/wildfire-smoke-09-09-22"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-7dfd23c0456d",
+    "title": "Wildfire",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "src-bf028459a1c8c5e4"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/wildfire"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-ae991974d195",
+    "title": "Wildfire Smoke",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-7a7b82bc50600603"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/wildfire-smoke"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-15f927fd0944",
+    "title": "Flooding and Land Movement",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Oregon, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=OR",
+      "source_reliability=official-public"
+    ],
+    "source_record_ids": [
+      "src-a2da713a427edc0a"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/flooding-and-land-movement"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-452457dd5fdf",
+    "title": "Wildfire Recovery",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Public safety",
+    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=OR",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-1d7766b32b2d8f2a"
+    ],
+    "source_urls": [
+      "https://www.publicalerts.org/wildfire-recovery"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-7810fd0ad62a",
+    "title": "Affordable Housing Information",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Housing and homelessness",
+    "why_it_matters": "In Oregon, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Housing and homelessness",
+      "region_scope=OR",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-384b0b363e7dd13d"
+    ],
+    "source_urls": [
+      "https://www.co.marion.or.us/HA/Pages/default.aspx"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-85ccdda0d699",
+    "title": "Alerts & Emergencies Currently selected",
+    "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
+    "category": "Housing and homelessness",
+    "why_it_matters": "In Oregon, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "score": 63,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 5,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Housing and homelessness",
+      "region_scope=OR",
+      "source_reliability=official-public",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-d2ade19587162598"
+    ],
+    "source_urls": [
+      "https://www.co.marion.or.us/PW/EmergencyManagement/Pages/alerts.aspx"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-0a341d401b1c",
+    "title": "Washington\u2019s largest utility moves to add more wind power",
+    "summary": "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, the latest move in the utility\u2019s transition to become greenhouse gas neutral by 2030, as state law mandates. On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind.",
+    "category": "Energy and utilities",
+    "why_it_matters": "In Washington, Public systems signals can affect public services, local planning, and regional resilience.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Energy and utilities",
+      "region_scope=WA",
+      "source_reliability=reputable-regional-media"
+    ],
+    "source_record_ids": [
+      "src-52c251702deda66b"
+    ],
+    "source_urls": [
+      "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-9c7fd29082be",
+    "title": "US House passes sweeping \u2018gender ideology\u2019 bill aimed at trans kids in schools",
+    "summary": "WASHINGTON \u2014 The U.S. House passed a bill Wednesday that would require parental consent before a public elementary or middle school can update a student\u2019s pronouns, gender markers or preferred name on records in order to receive federal funding.",
+    "category": "Housing and homelessness",
+    "why_it_matters": "In Washington, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Housing and homelessness",
+      "region_scope=WA",
+      "source_reliability=reputable-regional-media"
+    ],
+    "source_record_ids": [
+      "src-0e5968259184711f"
+    ],
+    "source_urls": [
+      "https://washingtonstatestandard.com/2026/05/20/repub/us-house-passes-sweeping-gender-ideology-bill-aimed-at-trans-kids-in-schools"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-cb40ce4a0ae4",
+    "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
+    "summary": "During the height of December\u2019s severe flooding, Washington made $3.5 million available to those in need. Five months later, most of that funding has gone unused.",
+    "category": "Environment and climate",
+    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Environment and climate",
+      "region_scope=WA",
+      "source_reliability=reputable-regional-media"
+    ],
+    "source_record_ids": [
+      "src-7cf11652ce18867d"
+    ],
+    "source_urls": [
+      "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-9d692782ab09",
+    "title": "Minnesota becomes first state to outlaw prediction markets, immediately sued by federal regulators",
+    "summary": "Minnesota became the first state to outlaw prediction markets \u2014 online platforms where people can bet on the outcomes of events \u2014 after Gov. Tim Walz signed a public safety bill (SF4760) into law Monday.",
+    "category": "Public safety",
+    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=WA",
+      "source_reliability=reputable-regional-media",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-68654221f6b9ad53"
+    ],
+    "source_urls": [
+      "https://washingtonstatestandard.com/2026/05/19/repub/minnesota-becomes-first-state-to-outlaw-prediction-markets-immediately-sued-by-federal-regulators"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-491d7b3f3269",
+    "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
+    "summary": "The Trump administration on Tuesday launched an investigation into Washington state\u2019s practice of housing transgender women in its women\u2019s prison. In a letter to Gov.",
+    "category": "Housing and homelessness",
+    "why_it_matters": "In Washington, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Housing and homelessness",
+      "region_scope=WA",
+      "source_reliability=reputable-regional-media",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-21e1ab7216fc8d2d"
+    ],
+    "source_urls": [
+      "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-f1255e4fc801",
+    "title": "Governor declares drought emergency as Utah dips into reservoir \u2018savings\u2019",
+    "summary": "Gov. Spencer Cox declared a state of emergency Thursday, noting every county is in a state of severe or extreme drought after a dry winter marked by record warmth robbed Utah of its snowpack and left rivers and streams running low.",
+    "category": "Public safety",
+    "why_it_matters": "In Idaho, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=ID",
+      "source_reliability=reputable-regional-media"
+    ],
+    "source_record_ids": [
+      "src-cf5891eed5a323a6"
+    ],
+    "source_urls": [
+      "https://idahocapitalsun.com/2026/05/22/repub/governor-declares-drought-emergency-as-utah-dips-into-reservoir-savings"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-f2a695029e54",
+    "title": "This wildfire season could be hotter, drier and pricier, Utah officials say",
+    "summary": "The 2026 wildfire season is shaping up to be not just hotter and drier but also more expensive after the cost of gasoline soared in the three months since the Iran war began. Usually, when state officials refer to \u201cfuel\u201d in wildland firefighting, they\u2019re talking about grass, brush and trees at risk of burning in [\u2026]",
+    "category": "Public safety",
+    "why_it_matters": "In Idaho, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Public safety",
+      "region_scope=ID",
+      "source_reliability=reputable-regional-media",
+      "public_balance=held_for_detail"
+    ],
+    "source_record_ids": [
+      "src-99aaa3e6c4d206f3"
+    ],
+    "source_urls": [
+      "https://idahocapitalsun.com/2026/05/21/repub/this-wildfire-season-could-be-hotter-drier-and-pricer-utah-officials-say"
+    ],
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": true,
+    "excluded_reason": "quality_weekly_balance_limit",
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  },
+  {
+    "story_id": "story-c29bdf1d3dd9",
+    "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
+    "summary": "Correction: This story has been corrected to accurately reflect how many incumbent legislators lost re-election bids, and to correct which Gang of Eight members won their primaries. Nine incumbent Idaho Republican legislators lost their re-election bids in the primary election Tuesday, including several who pushed to.",
+    "category": "Government and public services",
+    "why_it_matters": "In Idaho, Public systems signals can affect public services, local planning, and regional resilience.",
+    "score": 68,
+    "regional_relevance_score": 15,
+    "systems_impact_score": 20,
+    "public_consequence_score": 15,
+    "recency_score": 10,
+    "source_reliability_score": 8,
+    "multi_source_score": 0,
+    "duplicate_penalty": 0,
+    "low_signal_penalty": 0,
+    "scoring_reasons": [
+      "category=Government and public services",
+      "region_scope=ID",
+      "source_reliability=reputable-regional-media"
+    ],
+    "source_record_ids": [
+      "src-7c082ce339c03251"
+    ],
+    "source_urls": [
+      "https://idahocapitalsun.com/2026/05/20/six-idaho-republican-lawmakers-lose-primary-election-two-more-are-trailing"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": true,
+    "excluded_reason": null,
+    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
+    "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-25",
+    "edition_date": "2026-05-24",
+    "coverage_start": "2026-05-18",
+    "coverage_end": "2026-05-24",
+    "coverage_label": "May 18\u201324, 2026"
+  }
+]

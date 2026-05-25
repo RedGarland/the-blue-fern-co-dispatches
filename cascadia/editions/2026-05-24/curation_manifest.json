@@ -265,7 +265,7 @@
     "source_urls": [
       "https://www.publicalerts.org/wildfire"
     ],
-    "included_in_public_summary": false,
+    "included_in_public_summary": true,
     "included_in_detail_dataset": true,
     "excluded_reason": null,
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",

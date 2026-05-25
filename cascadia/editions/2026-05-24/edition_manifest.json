@@ -22,6 +22,7 @@
     "src-7c082ce339c03251",
     "src-7cf11652ce18867d",
     "src-a2da713a427edc0a",
+    "src-bf028459a1c8c5e4",
     "src-cf5891eed5a323a6"
   ],
   "source_urls": [
@@ -30,23 +31,24 @@
     "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
     "https://washingtonstatestandard.com/2026/05/20/repub/us-house-passes-sweeping-gender-ideology-bill-aimed-at-trans-kids-in-schools",
     "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power",
-    "https://www.publicalerts.org/flooding-and-land-movement"
+    "https://www.publicalerts.org/flooding-and-land-movement",
+    "https://www.publicalerts.org/wildfire"
   ],
-  "generated_at": "2026-05-25T13:07:25.846296+00:00",
+  "generated_at": "2026-05-25T20:29:32.486774+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-24/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24",
   "local_backup_path": null,
   "template_version": "dispatches-static-v1",
-  "source_count": 6,
-  "included_source_count": 6,
+  "source_count": 7,
+  "included_source_count": 7,
   "excluded_source_count": 0,
   "story_count": 20,
-  "public_story_count": 6,
+  "public_story_count": 7,
   "public_categories": [
+    "Public safety",
     "Environment and climate",
     "Energy and utilities",
     "Housing and homelessness",
-    "Public safety",
     "Government and public services"
   ],
   "public_state_hints": [
@@ -60,11 +62,11 @@
     "Idaho Capital Sun Feed"
   ],
   "weekly_summary_bullets": [
-    "Environment and climate, Energy and utilities, and Housing and homelessness appeared in OR, WA, and ID source records.",
+    "Public safety, Environment and climate, and Energy and utilities appeared in OR, WA, and ID source records.",
     "This edition includes source-backed items from Portland Public Alerts, Washington State Standard Feed, and Idaho Capital Sun Feed.",
-    "6 public source-backed stories met the current public-systems criteria."
+    "7 public source-backed stories met the current public-systems criteria."
   ],
-  "public_archive_subtitle": "6 stories | OR, WA, ID | Environment and climate, Energy and utilities, Housing and homelessness, Public safety",
+  "public_archive_subtitle": "7 stories | OR, WA, ID | Public safety, Environment and climate, Energy and utilities, Housing and homelessness",
   "historical_search": true,
   "providers_used": [
     "gdelt",
@@ -147,7 +149,6 @@
     "portland-public-alerts item has weak date basis; published_at unavailable or unparseable",
     "portland-public-alerts item has weak date basis; published_at unavailable or unparseable",
     "portland-public-alerts item has weak date basis; published_at unavailable or unparseable",
-    "Set CASCADIA_ALLOW_CURL_NO_REVOKE=1 only if you accept the local Windows revocation-check workaround, or fix Windows certificate revocation/proxy/security settings.",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
     "marion-county-alerts item has weak date basis; published_at unavailable or unparseable",
@@ -230,7 +231,6 @@
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 403: Forbidden",
-    "registry source fetch error: The read operation timed out",
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
@@ -247,14 +247,14 @@
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: HTTP Error 404: Not Found",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR utility OR utilities OR \"power outage\" OR outage OR power OR \"water system\" OR water OR bridge OR \"road closure\"): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR utility OR utilities OR \"power outage\" OR outage OR power OR \"water system\" OR water OR bridge OR \"road closure\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (wildfire OR fire OR smoke OR \"air quality\" OR drought OR flood OR landslide OR earthquake OR climate): <urlopen error _ssl.c:1015: The handshake operation timed out>",
     "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (housing OR homelessness OR shelter OR rent OR eviction): <urlopen error _ssl.c:1015: The handshake operation timed out>",
     "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (layoffs OR unemployment OR \"budget cuts\" OR \"school closure\" OR \"public services\" OR workforce): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (crime OR \"public safety\" OR \"emergency declaration\" OR evacuation OR \"emergency management\"): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (agriculture OR \"food assistance\" OR SNAP OR \"food bank\" OR \"food insecurity\"): <urlopen error _ssl.c:1015: The handshake operation timed out>"
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (crime OR \"public safety\" OR \"emergency declaration\" OR evacuation OR \"emergency management\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "invalid JSON response: Expecting value: line 1 column 1 (char 0)"
   ],
   "errors": []
 }

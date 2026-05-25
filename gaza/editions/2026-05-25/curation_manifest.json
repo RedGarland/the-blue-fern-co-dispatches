@@ -37,7 +37,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:28:02.927273+00:00",
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
     "relevance_terms_matched": [
       "gaza",
       "khan younis",
@@ -45,6 +45,59 @@
     ],
     "top_story_relevance_score": 82,
     "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-25-003",
+    "title": "In Beirut, refugee girls and women learn more than self-defense in martial arts class",
+    "summary": "In the male-dominated world of Palestinian refugee camps in Lebanon, a martial arts teacher offers women a way to empowerment.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 60,
+    "scoring_reasons": [
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-25-npr-world-4d7f1f3124d8"
+    ],
+    "source_ids": [
+      "gaza-2026-05-25-npr-world-4d7f1f3124d8"
+    ],
+    "source_urls": [
+      "https://www.npr.org/2026/05/25/g-s1-120826/lebanon-women-martial-arts"
+    ],
+    "publisher_names": [
+      "NPR"
+    ],
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 60,
+    "substantive_ground": false,
     "flotilla_only": false,
     "include_decision": "include",
     "public_rendered": true,
@@ -91,7 +144,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:28:02.927273+00:00",
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -106,7 +159,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-003",
+    "story_id": "gaza-story-2026-05-25-004",
     "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
     "summary": "Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
     "category": "conflict",
@@ -143,7 +196,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:28:02.927273+00:00",
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -158,7 +211,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-006",
+    "story_id": "gaza-story-2026-05-25-007",
     "title": "Gaza flotilla activists return to Australia, describing abuse",
     "summary": "Australian activists from the Gaza-bound aid flotilla have arrived back in Sydney, reuniting with loved ones.",
     "category": "conflict",
@@ -194,7 +247,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:28:02.927273+00:00",
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -209,7 +262,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-005",
+    "story_id": "gaza-story-2026-05-25-006",
     "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
     "summary": "A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
     "category": "conflict",
@@ -245,7 +298,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:28:02.927273+00:00",
+    "generated_at": "2026-05-25T23:54:28.295307+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

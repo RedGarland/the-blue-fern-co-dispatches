@@ -1,11 +1,22 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-25",
-  "candidates_seen": 5,
+  "candidates_seen": 6,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-05-25-001",
       "title": "Father mourns daughter killed in Israeli strike on Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-25-003",
+      "title": "In Beirut, refugee girls and women learn more than self-defense in martial arts class",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -24,7 +35,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-003",
+      "story_id": "gaza-story-2026-05-25-004",
       "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
       "classification": "major_update",
       "material_update": true,
@@ -35,7 +46,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-006",
+      "story_id": "gaza-story-2026-05-25-007",
       "title": "Gaza flotilla activists return to Australia, describing abuse",
       "classification": "new",
       "material_update": true,
@@ -46,7 +57,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-005",
+      "story_id": "gaza-story-2026-05-25-006",
       "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
       "classification": "new",
       "material_update": true,
@@ -73,7 +84,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-003",
+      "story_id": "gaza-story-2026-05-25-004",
       "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
       "classification": "major_update",
       "material_update": true,
@@ -105,6 +116,20 @@
       "public_rendered": true
     },
     {
+      "story_id": "gaza-story-2026-05-25-003",
+      "title": "In Beirut, refugee girls and women learn more than self-defense in martial arts class",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
       "story_id": "gaza-story-2026-05-25-002",
       "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
       "classification": "major_update",
@@ -117,7 +142,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-003",
+      "story_id": "gaza-story-2026-05-25-004",
       "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
       "classification": "major_update",
       "material_update": true,
@@ -131,7 +156,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-006",
+      "story_id": "gaza-story-2026-05-25-007",
       "title": "Gaza flotilla activists return to Australia, describing abuse",
       "classification": "new",
       "material_update": true,
@@ -145,7 +170,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-005",
+      "story_id": "gaza-story-2026-05-25-006",
       "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
       "classification": "new",
       "material_update": true,

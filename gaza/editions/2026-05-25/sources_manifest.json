@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-25T19:12:58+00:00",
-    "retrieved_at": "2026-05-25T23:28:01.642153+00:00",
+    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
     "summary_or_snippet": "A six-year-old Palestinian girl was killed by an Israeli strike on a displacement camp in Khan Younis.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -56,7 +56,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-25T17:46:09+00:00",
-    "retrieved_at": "2026-05-25T23:28:01.642153+00:00",
+    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
     "summary_or_snippet": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -92,6 +92,52 @@
     "claim_fingerprint": "al jazeera|israel escalates gaza attacks as netanyahu stalls ceasefire for polls|conflict"
   },
   {
+    "source_record_id": "gaza-2026-05-25-npr-world-4d7f1f3124d8",
+    "source_id": "gaza-2026-05-25-npr-world-4d7f1f3124d8",
+    "title": "In Beirut, refugee girls and women learn more than self-defense in martial arts class",
+    "url": "https://www.npr.org/2026/05/25/g-s1-120826/lebanon-women-martial-arts",
+    "canonical_url": "https://www.npr.org/2026/05/25/g-s1-120826/lebanon-women-martial-arts",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "NPR",
+    "published_at": "2026-05-25T10:00:00+00:00",
+    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
+    "summary_or_snippet": "In the male-dominated world of Palestinian refugee camps in Lebanon, a martial arts teacher offers women a way to empowerment.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-25",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-25-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 48,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "npr|in beirut refugee girls and women learn more than self defense in martial arts class",
+    "title_fingerprint": "in beirut refugee girls and women learn more than self defense in martial arts class",
+    "claim_fingerprint": "npr|in beirut refugee girls and women learn more than self defense in martial arts class|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a",
     "source_id": "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a",
     "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
@@ -111,7 +157,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-004"
+      "gaza-story-2026-05-25-005"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -157,7 +203,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-005"
+      "gaza-story-2026-05-25-006"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -201,7 +247,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-006"
+      "gaza-story-2026-05-25-007"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -246,7 +292,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-007"
+      "gaza-story-2026-05-25-008"
     ],
     "claim_ids": [],
     "candidate_score": 44,

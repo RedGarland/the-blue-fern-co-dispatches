@@ -2152,6 +2152,7 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert not (cascadia_work_root / "output" / "site" / "paid").exists()
     map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "index.html").read_text(encoding="utf-8")
     assert "resource-header" in map_html
+    assert '<meta name="viewport" content="width=device-width, initial-scale=1">' in map_html
     assert "text-align:center" in map_html
     assert "--header-bg:#1E3F4F" in map_html
     assert "--header-primary:#EFE7DA" in map_html
@@ -2163,6 +2164,11 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "resource-home" not in map_html
     assert "padding:8px 12px 10px" in map_html
     assert "Pressure area" in map_html
+    assert "<summary>Filters</summary>" in map_html
+    assert "details class=\"panel filters\"" in map_html
+    assert "id=\"mobileFiltersToggle\"" in map_html
+    assert "mobile-filter-sheet" in map_html
+    assert "id=\"mobileFiltersClose\"" in map_html
     assert "State" in map_html
     assert "Region" in map_html
     assert "Report window" in map_html
@@ -2170,10 +2176,20 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "Individual reports" in map_html
     assert "Reset Map" in map_html
     assert "<summary>Legend</summary>" in map_html
+    assert "details class=\"panel howto mobile-collapsible\"" in map_html
+    assert "details class=\"panel legend mobile-collapsible\"" in map_html
     assert "Reports shown:" in map_html
     assert "Sources: public regional reporting and official/public sources" in map_html
     assert "Map view" in map_html
     assert "Show regional/statewide reports" in map_html
+    assert "min-height:44px" in map_html
+    assert "@media (max-width: 900px)" in map_html
+    assert "@media (max-width: 430px)" in map_html
+    assert "height:72vh" in map_html
+    assert "details.filters { display:none; }" in map_html
+    assert ".mobile-filter-fab { display:inline-flex;" in map_html
+    assert "leaflet-control-attribution" in map_html
+    assert "syncFilterHost()" in map_html
     assert "How to read this map" in map_html
     assert "regional systems weather map" in map_html
     assert "not a complete census or disaster map" in map_html
@@ -2215,6 +2231,8 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "Number of reports:" in map_html
     assert "Source:</strong>" in map_html
     assert "Read more" in map_html
+    assert "Open Source Table" in map_html
+    assert "/source_table.html" in map_html
     assert "source_record_id" not in map_html
     assert "coordinate_basis" not in map_html
 

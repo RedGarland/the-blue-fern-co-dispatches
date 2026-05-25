@@ -17,11 +17,15 @@
     .resource-header { background:var(--header-bg); color:var(--header-secondary); padding:8px 12px 10px; border-bottom:1px solid #355564; text-align:center; }
     .resource-branding { margin-top:2px; display:flex; flex-direction:column; align-items:center; gap:4px; }
     .bluefern-icon-link img { width:30px; height:30px; border-radius:6px; display:block; }
+    .header-topline { display:flex; align-items:center; justify-content:center; gap:10px; }
+    .mobile-header-toggle { display:none; border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; min-height:44px; padding:8px 12px; font-size:13px; font-weight:700; cursor:pointer; }
+    .mobile-header-toggle:hover { background:#e9f6ff; }
     .resource-header h1 { margin:2px 0 0; font-size:1rem; }
     .map-title-accent { color:var(--header-primary); }
     .resource-header p { margin:.16rem 0 0; color:var(--header-secondary); font-size:.8rem; }
     .resource-header .date-range { margin-top:.2rem; font-size:.82rem; font-weight:700; color:var(--header-primary); }
     .resource-header .source-note { color:var(--header-secondary); }
+    .header-details { display:block; }
     .header-actions { margin-top:8px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
     .header-actions a,
     #resetMap { border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:8px 12px; cursor:pointer; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; }
@@ -82,6 +86,10 @@
       .resource-header { padding:8px 10px; }
       .resource-header h1 { font-size:.95rem; margin:0; }
       .resource-header p { font-size:.76rem; }
+      .mobile-header-toggle { display:inline-flex; align-items:center; justify-content:center; }
+      body:not(.map-header-expanded) .resource-header .resource-branding { display:none; }
+      body:not(.map-header-expanded) .resource-header .header-details { display:none; }
+      body:not(.map-header-expanded) .resource-header { padding-top:6px; padding-bottom:8px; }
       #mapWrap { height:72vh; min-height:420px; }
       details.filters { display:none; }
       .mobile-filter-fab { display:inline-flex; align-items:center; justify-content:center; }
@@ -102,13 +110,18 @@
 <body>
   <div class="shell">
     <header class="resource-header">
-      <div class="resource-branding">
+      <div class="resource-branding" id="mapHeaderBranding">
         <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
       </div>
-      <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
-      <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
+      <div class="header-topline">
+        <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
+        <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="headerDetails">More</button>
+      </div>
       <p class="date-range" id="dateRange">Reports shown: 2026-05-24</p>
-      <p class="source-note">Sources: public regional reporting and official/public sources</p>
+      <div id="headerDetails" class="header-details">
+        <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
+        <p class="source-note">Sources: public regional reporting and official/public sources</p>
+      </div>
       <div class="header-actions">
         <button id="resetMap">Reset Map</button>
         <a href="/cascadia/map/source_table.html">Open Source Table</a>
@@ -194,6 +207,7 @@
       const mobileSheet = getEl('mobileFilterSheet');
       const mobileToggle = getEl('mobileFiltersToggle');
       const mobileClose = getEl('mobileFiltersClose');
+      const mobileHeaderToggle = getEl('mobileHeaderToggle');
       function closeMobileFilters() {
         if (!mobileSheet) return;
         document.body.classList.remove('filters-open');
@@ -217,8 +231,26 @@
           if (filterControls.parentElement !== desktopFiltersHost) desktopFiltersHost.appendChild(filterControls);
         }
       }
+      function setMobileHeaderExpanded(expanded) {
+        if (!mobileHeaderToggle) return;
+        if (!mobileMedia.matches) {
+          document.body.classList.remove('map-header-expanded');
+          mobileHeaderToggle.setAttribute('aria-expanded', 'false');
+          mobileHeaderToggle.textContent = 'More';
+          return;
+        }
+        if (expanded) {
+          document.body.classList.add('map-header-expanded');
+        } else {
+          document.body.classList.remove('map-header-expanded');
+        }
+        mobileHeaderToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        mobileHeaderToggle.textContent = expanded ? 'Less' : 'More';
+      }
       syncFilterHost();
-      mobileMedia.addEventListener('change', syncFilterHost);
+      setMobileHeaderExpanded(false);
+      mobileMedia.addEventListener('change', () => { syncFilterHost(); setMobileHeaderExpanded(false); });
+      if (mobileHeaderToggle) mobileHeaderToggle.addEventListener('click', () => setMobileHeaderExpanded(!document.body.classList.contains('map-header-expanded')));
       if (mobileToggle) mobileToggle.addEventListener('click', () => { if (document.body.classList.contains('filters-open')) closeMobileFilters(); else openMobileFilters(); });
       if (mobileClose) mobileClose.addEventListener('click', closeMobileFilters);
       if (mobileSheet) mobileSheet.addEventListener('click', (event) => { if (event.target === mobileSheet) closeMobileFilters(); });

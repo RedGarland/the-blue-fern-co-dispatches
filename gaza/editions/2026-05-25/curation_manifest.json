@@ -1,55 +1,11 @@
 [
   {
-    "story_id": "gaza-story-2026-05-25-001",
-    "title": "Liberal MP is first to be suspended from lower house in five years - as it happened",
-    "summary": "This blog is now closed Get our breaking news email , free app or daily news podcast Were the teal party conversations sparked by the government's electoral reforms? Yes and no, Allegra Spender and Zali Steggall say. There are many things that favour major party structures, and again, the public was incredibly cynical about that move, that it's yet again major parties trying to rig the game for their benefit. I have had conversations over a period of time about how politics could evolve because people keep on coming to me and say they really worried about the times that we're in. The question is: look, are there ways to better collaborate to evolve and how we work together or how some of us work together so that we can more explicitly align on certain areas and then where our communities and where we fundamentally disagree to have that freedom.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 32,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-05-25-guardian-world-4584a4efb294"
-    ],
-    "source_ids": [
-      "gaza-2026-05-25-guardian-world-4584a4efb294"
-    ],
-    "source_urls": [
-      "https://www.theguardian.com/australia-news/live/2026/may/25/teals-new-party-gaza-flotilla-activists-anthony-albanese-jim-chalmers-labor-angus-taylor-coalition-one-nation-budget-capital-gains-tax-estimates-ntwnfb"
-    ],
-    "publisher_names": [
-      "The Guardian"
-    ],
-    "generated_at": "2026-05-25T13:00:39.631655+00:00",
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
     "story_id": "gaza-story-2026-05-25-002",
     "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
     "summary": "A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 44,
+    "score": 43,
     "scoring_reasons": [
       "humanitarian_impact",
       "source_reliability",
@@ -80,7 +36,13 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T13:00:39.631655+00:00",
+    "generated_at": "2026-05-25T19:11:20.656547+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -94,7 +56,7 @@
     "summary": "Australian activists from the Gaza-bound aid flotilla have arrived back in Sydney, reuniting with loved ones.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 44,
+    "score": 43,
     "scoring_reasons": [
       "humanitarian_impact",
       "source_reliability",
@@ -125,7 +87,13 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T13:00:39.631655+00:00",
+    "generated_at": "2026-05-25T19:11:20.656547+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,

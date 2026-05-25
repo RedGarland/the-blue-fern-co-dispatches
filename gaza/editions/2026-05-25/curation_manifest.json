@@ -1,6 +1,60 @@
 [
   {
     "story_id": "gaza-story-2026-05-25-001",
+    "title": "Father mourns daughter killed in Israeli strike on Gaza",
+    "summary": "A six-year-old Palestinian girl was killed by an Israeli strike on a displacement camp in Khan Younis.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 82,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/25/father-mourns-daughter-killed-in-israeli-strike-on-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-25T22:53:31.735594+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 82,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-25-002",
     "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
     "summary": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
     "category": "conflict",
@@ -37,7 +91,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "generated_at": "2026-05-25T22:53:31.735594+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -52,7 +106,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-002",
+    "story_id": "gaza-story-2026-05-25-003",
     "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
     "summary": "Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
     "category": "conflict",
@@ -89,7 +143,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "generated_at": "2026-05-25T22:53:31.735594+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -104,7 +158,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-004",
+    "story_id": "gaza-story-2026-05-25-005",
     "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
     "summary": "A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
     "category": "conflict",
@@ -140,7 +194,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "generated_at": "2026-05-25T22:53:31.735594+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -155,7 +209,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-005",
+    "story_id": "gaza-story-2026-05-25-006",
     "title": "Gaza flotilla activists return to Australia, describing abuse",
     "summary": "Australian activists from the Gaza-bound aid flotilla have arrived back in Sydney, reuniting with loved ones.",
     "category": "conflict",
@@ -191,7 +245,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "generated_at": "2026-05-25T22:53:31.735594+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

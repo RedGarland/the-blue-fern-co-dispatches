@@ -1,5 +1,51 @@
 [
   {
+    "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6",
+    "source_id": "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6",
+    "title": "Father mourns daughter killed in Israeli strike on Gaza",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/father-mourns-daughter-killed-in-israeli-strike-on-gaza?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/5/25/father-mourns-daughter-killed-in-israeli-strike-on-gaza?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-25T19:12:58+00:00",
+    "retrieved_at": "2026-05-25T22:53:30.633063+00:00",
+    "summary_or_snippet": "A six-year-old Palestinian girl was killed by an Israeli strike on a displacement camp in Khan Younis.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-25",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-25-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|father mourns daughter killed in israeli strike on gaza",
+    "title_fingerprint": "father mourns daughter killed in israeli strike on gaza",
+    "claim_fingerprint": "al jazeera|father mourns daughter killed in israeli strike on gaza|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9",
     "source_id": "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9",
     "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
@@ -10,7 +56,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-25T17:46:09+00:00",
-    "retrieved_at": "2026-05-25T19:19:40.393052+00:00",
+    "retrieved_at": "2026-05-25T22:53:30.633063+00:00",
     "summary_or_snippet": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -19,7 +65,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-002"
+      "gaza-story-2026-05-25-003"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -65,7 +111,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-003"
+      "gaza-story-2026-05-25-004"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -111,7 +157,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-004"
+      "gaza-story-2026-05-25-005"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -155,7 +201,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-005"
+      "gaza-story-2026-05-25-006"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -200,7 +246,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-006"
+      "gaza-story-2026-05-25-007"
     ],
     "claim_ids": [],
     "candidate_score": 44,

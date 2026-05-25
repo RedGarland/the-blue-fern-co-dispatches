@@ -15,6 +15,8 @@
     html, body { height: 100%; margin: 0; font: 15px/1.45 "Segoe UI", Tahoma, sans-serif; background: #e8eff1; color:#13252f; }
     .shell { height: 100%; display: flex; flex-direction: column; }
     .resource-header { background:var(--header-bg); color:var(--header-secondary); padding:8px 12px 10px; border-bottom:1px solid #355564; text-align:center; }
+    .desktop-map-header { display:block; }
+    .mobile-map-header { display:none; }
     .resource-branding { margin-top:2px; display:flex; flex-direction:column; align-items:center; gap:4px; }
     .bluefern-icon-link img { width:30px; height:30px; border-radius:6px; display:block; }
     .header-topline { display:flex; align-items:center; justify-content:center; gap:10px; }
@@ -25,7 +27,7 @@
     .resource-header p { margin:.16rem 0 0; color:var(--header-secondary); font-size:.8rem; }
     .resource-header .date-range { margin-top:.2rem; font-size:.82rem; font-weight:700; color:var(--header-primary); }
     .resource-header .source-note { color:var(--header-secondary); }
-    .header-details { display:block; }
+    .mobile-header-details { display:block; }
     .header-actions { margin-top:8px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
     .header-actions a,
     #resetMap { border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:8px 12px; cursor:pointer; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; }
@@ -86,13 +88,19 @@
       .resource-header { padding:8px 10px; }
       .resource-header h1 { font-size:.95rem; margin:0; }
       .resource-header p { font-size:.76rem; }
+      .desktop-map-header { display:none; }
+      .mobile-map-header { display:block; }
       .mobile-header-toggle { display:inline-flex; align-items:center; justify-content:center; }
-      body:not(.map-header-expanded) .resource-header .resource-branding { display:none; }
-      body:not(.map-header-expanded) .resource-header .header-details { display:none; }
+      .mobile-map-header .resource-branding { display:none; }
+      .mobile-map-header .mobile-header-details { display:none; }
+      body.map-header-expanded .mobile-map-header .resource-branding { display:flex; }
+      body.map-header-expanded .mobile-map-header .mobile-header-details { display:block; }
       body:not(.map-header-expanded) .resource-header { padding-top:6px; padding-bottom:8px; }
       #mapWrap { height:72vh; min-height:420px; }
-      details.filters { display:none; }
+      details.filters { display:none !important; }
       .mobile-filter-fab { display:inline-flex; align-items:center; justify-content:center; }
+      .mobile-filter-sheet[data-state="closed"] { display:none !important; }
+      .mobile-filter-sheet[data-state="open"] { display:flex !important; }
       .controls { grid-template-columns:1fr; }
       .empty-state { left:10px; right:10px; bottom:72px; max-width:none; }
       .leaflet-control-attribution { margin-bottom:64px; }
@@ -110,21 +118,36 @@
 <body>
   <div class="shell">
     <header class="resource-header">
-      <div class="resource-branding" id="mapHeaderBranding">
-        <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
-      </div>
-      <div class="header-topline">
+      <div class="desktop-map-header">
+        <div class="resource-branding">
+          <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
+        </div>
         <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
-        <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="headerDetails">More</button>
-      </div>
-      <p class="date-range" id="dateRange">Reports shown: 2026-05-24</p>
-      <div id="headerDetails" class="header-details">
         <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
+        <p class="date-range" id="dateRangeDesktop">Reports shown: 2026-05-24</p>
         <p class="source-note">Sources: public regional reporting and official/public sources</p>
+        <div class="header-actions">
+          <button id="resetMapDesktop">Reset Map</button>
+          <a href="source_table.html">Open Source Table</a>
+        </div>
       </div>
-      <div class="header-actions">
-        <button id="resetMap">Reset Map</button>
-        <a href="source_table.html">Open Source Table</a>
+      <div class="mobile-map-header">
+        <div class="resource-branding" id="mapHeaderBranding">
+          <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
+        </div>
+        <div class="header-topline">
+          <h1 class="map-title-accent">Cascadia Map</h1>
+          <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="mobileHeaderDetails">More</button>
+        </div>
+        <p class="date-range" id="dateRangeMobile">Reports shown: 2026-05-24</p>
+        <div id="mobileHeaderDetails" class="mobile-header-details">
+          <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
+          <p class="source-note">Sources: public regional reporting and official/public sources</p>
+        </div>
+        <div class="header-actions">
+          <button id="resetMap">Reset Map</button>
+          <a href="source_table.html">Open Source Table</a>
+        </div>
       </div>
     </header>
     <div id="mapWrap">
@@ -255,14 +278,15 @@
       if (mobileClose) mobileClose.addEventListener('click', closeMobileFilters);
       if (mobileSheet) mobileSheet.addEventListener('click', (event) => { if (event.target === mobileSheet) closeMobileFilters(); });
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMobileFilters(); });
-      const controlsReady = () => ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional','resetMap'].every((id) => Boolean(getEl(id)));
+      const controlsReady = () => ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].every((id) => Boolean(getEl(id)));
       function optionize(id, values) { const el = document.getElementById(id); for (const value of values) { const option = document.createElement('option'); option.value = value; option.textContent = value; el.appendChild(option); } }
       optionize('pressureFilter', [...new Set(markers.map((m) => m.pressure_type).filter(Boolean))].sort());
       optionize('stateFilter', [...new Set(markers.map((m) => m.state).filter(Boolean))].sort());
       optionize('regionFilter', [...new Set(markers.map((m) => m.region_label).filter(Boolean))].sort());
-      const dateRange = document.getElementById('dateRange');
+      const dateRangeDesktop = document.getElementById('dateRangeDesktop');
+      const dateRangeMobile = document.getElementById('dateRangeMobile');
       const formatDate = (value) => { const dt = new Date(String(value || '')); if (Number.isNaN(dt.getTime())) return null; return dt.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}); };
-      if (payload.coverage_start && payload.coverage_end) { const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) dateRange.textContent = `Reports shown: ${start}-${end}`; }
+      if (payload.coverage_start && payload.coverage_end) { const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) { if (dateRangeDesktop) dateRangeDesktop.textContent = `Reports shown: ${start}-${end}`; if (dateRangeMobile) dateRangeMobile.textContent = `Reports shown: ${start}-${end}`; } }
       function defaultNoteText() { if (defaultViewMode === 'regional_fallback') return fallbackNote; if (defaultViewMode === 'sparse_local_plus_regional') return sparseNote; return noResultsNote; }
       function defaultRows() { const modeEl = getEl('viewMode'); const regionalEl = getEl('showRegional'); const mode = modeEl ? modeEl.value : 'grouped'; const includeRegional = regionalEl ? regionalEl.checked : showRegionalDefault; const baseLocal = mode === 'grouped' && grouped.length ? grouped : markers; const baseRegional = mode === 'grouped' && groupedRegional.length ? groupedRegional : regional; return includeRegional ? baseLocal.concat(baseRegional) : baseLocal; }
       function applyFilters() { const pressureEl = getEl('pressureFilter'); const stateEl = getEl('stateFilter'); const regionEl = getEl('regionFilter'); const timeEl = getEl('timeFilter'); const note = getEl('emptyState'); if (note) note.textContent = defaultNoteText(); const pressure = pressureEl ? pressureEl.value : ''; const state = stateEl ? stateEl.value : ''; const region = regionEl ? regionEl.value : ''; const time = timeEl ? timeEl.value : 'all'; const base = defaultRows(); const now = new Date(); const filtered = base.filter((item) => { if (pressure && item.pressure_type !== pressure) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') { const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; } return true; }); const wrap = getEl('mapWrap'); if (wrap) wrap.setAttribute('data-post-filter-count', String(filtered.length)); draw(filtered); }
@@ -274,7 +298,7 @@
       draw(defaultRows());
       resetToDefaultView();
       map.on('popupopen', (event) => { const root = event.popup && event.popup.getElement ? event.popup.getElement() : null; if (!root) return; root.querySelectorAll('.js-toggle-reports').forEach((button) => { button.addEventListener('click', () => { const target = String(button.getAttribute('data-target') || ''); if (!target) return; const panel = root.querySelector(`#reports-${target}`); if (!panel) return; panel.classList.toggle('open'); button.textContent = panel.classList.contains('open') ? 'Hide reports' : 'View individual reports'; }); }); });
-      if (controlsReady()) { ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].forEach((id) => { const el = getEl(id); if (el) el.addEventListener('change', applyFilters); }); const resetBtn = getEl('resetMap'); if (resetBtn) resetBtn.addEventListener('click', resetToDefaultView); }
+      if (controlsReady()) { ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].forEach((id) => { const el = getEl(id); if (el) el.addEventListener('change', applyFilters); }); ['resetMap','resetMapDesktop'].forEach((id) => { const resetBtn = getEl(id); if (resetBtn) resetBtn.addEventListener('click', resetToDefaultView); }); }
     });
   </script>
 </body>

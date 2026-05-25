@@ -1,10 +1,30 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-25",
-  "candidates_seen": 2,
+  "candidates_seen": 4,
   "included_stories": [
     {
+      "story_id": "gaza-story-2026-05-25-001",
+      "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
       "story_id": "gaza-story-2026-05-25-002",
+      "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-25-004",
       "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
       "classification": "new",
       "material_update": true,
@@ -15,7 +35,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-003",
+      "story_id": "gaza-story-2026-05-25-005",
       "title": "Gaza flotilla activists return to Australia, describing abuse",
       "classification": "new",
       "material_update": true,
@@ -28,12 +48,65 @@
   ],
   "duplicate_skipped": [],
   "continuing_developments": [],
-  "major_updates": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-05-25-001",
+      "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-25-002",
+      "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-22-003",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
   "merged_sources": 0,
   "duplicate_groups": [],
   "reasons": [
     {
+      "story_id": "gaza-story-2026-05-25-001",
+      "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
       "story_id": "gaza-story-2026-05-25-002",
+      "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-22-003",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-25-004",
       "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
       "classification": "new",
       "material_update": true,
@@ -47,7 +120,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-25-003",
+      "story_id": "gaza-story-2026-05-25-005",
       "title": "Gaza flotilla activists return to Australia, describing abuse",
       "classification": "new",
       "material_update": true,

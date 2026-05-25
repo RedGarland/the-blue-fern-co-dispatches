@@ -1,5 +1,97 @@
 [
   {
+    "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9",
+    "source_id": "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9",
+    "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
+    "url": "https://www.aljazeera.com/news/2026/5/25/israel-escalates-gaza-attacks-as-netanyahu-stalls-ceasefire-for-polls?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/25/israel-escalates-gaza-attacks-as-netanyahu-stalls-ceasefire-for-polls?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-25T17:46:09+00:00",
+    "retrieved_at": "2026-05-25T19:19:40.393052+00:00",
+    "summary_or_snippet": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-25",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-25-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israel escalates gaza attacks as netanyahu stalls ceasefire for polls",
+    "title_fingerprint": "israel escalates gaza attacks as netanyahu stalls ceasefire for polls",
+    "claim_fingerprint": "al jazeera|israel escalates gaza attacks as netanyahu stalls ceasefire for polls|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a",
+    "source_id": "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a",
+    "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+    "url": "https://www.aljazeera.com/news/2026/5/25/australian-gaza-aid-flotilla-activists-allege-abuse-after-israeli-abduction?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/25/australian-gaza-aid-flotilla-activists-allege-abuse-after-israeli-abduction?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-25T14:33:35+00:00",
+    "retrieved_at": "2026-05-25T19:19:40.393052+00:00",
+    "summary_or_snippet": "Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-25",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-25-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|australian gaza aid flotilla activists allege abuse after israeli abduction",
+    "title_fingerprint": "australian gaza aid flotilla activists allege abuse after israeli abduction",
+    "claim_fingerprint": "al jazeera|australian gaza aid flotilla activists allege abuse after israeli abduction|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-25-guardian-world-4584a4efb294",
     "source_id": "gaza-2026-05-25-guardian-world-4584a4efb294",
     "title": "Liberal MP is first to be suspended from lower house in five years - as it happened",
@@ -19,7 +111,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-002"
+      "gaza-story-2026-05-25-004"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -63,7 +155,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-003"
+      "gaza-story-2026-05-25-005"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -108,7 +200,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-004"
+      "gaza-story-2026-05-25-006"
     ],
     "claim_ids": [],
     "candidate_score": 44,

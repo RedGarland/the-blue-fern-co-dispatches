@@ -1,6 +1,110 @@
 [
   {
+    "story_id": "gaza-story-2026-05-25-001",
+    "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
+    "summary": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9"
+    ],
+    "source_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-06642b63eff9"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/25/israel-escalates-gaza-attacks-as-netanyahu-stalls-ceasefire-for-polls?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-18-005",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
     "story_id": "gaza-story-2026-05-25-002",
+    "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
+    "summary": "Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 54,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-25-aljazeera-middle-east-5a318a2fff0a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/25/australian-gaza-aid-flotilla-activists-allege-abuse-after-israeli-abduction?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-25T19:19:41.636218+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 54,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-22-003",
+    "prior_edition_date": "2026-05-22",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-25-004",
     "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
     "summary": "A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
     "category": "conflict",
@@ -36,7 +140,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:11:20.656547+00:00",
+    "generated_at": "2026-05-25T19:19:41.636218+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -51,7 +155,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-003",
+    "story_id": "gaza-story-2026-05-25-005",
     "title": "Gaza flotilla activists return to Australia, describing abuse",
     "summary": "Australian activists from the Gaza-bound aid flotilla have arrived back in Sydney, reuniting with loved ones.",
     "category": "conflict",
@@ -87,7 +191,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T19:11:20.656547+00:00",
+    "generated_at": "2026-05-25T19:19:41.636218+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

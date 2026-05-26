@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-25",
-  "generated_at": "2026-05-26T00:39:10.511636+00:00",
+  "generated_at": "2026-05-26T00:54:32.632937+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-25/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-25",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-25",
@@ -25,7 +25,7 @@
   "public_exposed": true,
   "warnings": [
     "suppressed 1 repeated/stale candidate sources via cross-edition dedupe",
-    "source diversity warning: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": []
 }

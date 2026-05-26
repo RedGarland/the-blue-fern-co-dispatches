@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-26",
-  "generated_at": "2026-05-26T13:00:40.016726+00:00",
+  "generated_at": "2026-05-26T20:45:47.239295+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-26/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-26",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-26",
@@ -10,6 +10,16 @@
   "template_version": "gaza-source-record-v1",
   "source_count": 4,
   "story_count": 4,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 1,
+  "publishers": [
+    "Al Jazeera"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 4 saved source records from 1 publisher(s). It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera."
+  ],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-26\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-26\\curation_manifest.json",
   "free_public_artifacts": [
@@ -25,6 +35,9 @@
   "public_exposed": true,
   "warnings": [
     "suppressed 2 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 4 saved source records from 1 publisher(s). It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera.",
+    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-05-26\\manual_sources.template.json",
     "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": []

@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-05-25-001",
+    "story_id": "gaza-story-2026-05-25-002",
     "title": "Father mourns daughter killed in Israeli strike on Gaza",
     "summary": "A six-year-old Palestinian girl was killed by an Israeli strike on a displacement camp in Khan Younis.",
     "category": "conflict",
@@ -37,7 +37,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza",
       "khan younis",
@@ -54,7 +54,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-003",
+    "story_id": "gaza-story-2026-05-25-004",
     "title": "In Beirut, refugee girls and women learn more than self-defense in martial arts class",
     "summary": "In the male-dominated world of Palestinian refugee camps in Lebanon, a martial arts teacher offers women a way to empowerment.",
     "category": "palestinian_development",
@@ -91,7 +91,7 @@
     "publisher_names": [
       "NPR"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -107,7 +107,59 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-002",
+    "story_id": "gaza-story-2026-05-25-001",
+    "title": "Displaced in Gaza: From home comforts to the shattering horror of war",
+    "summary": "In front of a simple tent in Gaza that offers no protection from the cold or the heat, in a crowded camp where tents lack privacy and basic services, Umm Ahmad sat down to speak to UN News about her life in Gaza before the war and what it has become now.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-25-un-news-middle-east-019f549cdbfe"
+    ],
+    "source_ids": [
+      "gaza-2026-05-25-un-news-middle-east-019f549cdbfe"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/05/1167574"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-25-003",
     "title": "Israel escalates Gaza attacks as Netanyahu stalls ceasefire for polls",
     "summary": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
     "category": "conflict",
@@ -144,7 +196,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -159,7 +211,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-004",
+    "story_id": "gaza-story-2026-05-25-005",
     "title": "Australian Gaza aid flotilla activists allege abuse after Israeli abduction",
     "summary": "Activists allege assaults and torture during Israeli detention after flotilla intercepted in international waters.",
     "category": "conflict",
@@ -196,7 +248,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -211,7 +263,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-007",
+    "story_id": "gaza-story-2026-05-25-008",
     "title": "Gaza flotilla activists return to Australia, describing abuse",
     "summary": "Australian activists from the Gaza-bound aid flotilla have arrived back in Sydney, reuniting with loved ones.",
     "category": "conflict",
@@ -247,7 +299,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -262,7 +314,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-25-006",
+    "story_id": "gaza-story-2026-05-25-007",
     "title": "Abandoned flotilla boat washes ashore in Egypt with Gaza aid",
     "summary": "A small boat believed to be part of the Global Sumud Flotilla that was carrying aid for Gaza has washed ashore in Egypt",
     "category": "conflict",
@@ -298,7 +350,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-25T23:54:28.295307+00:00",
+    "generated_at": "2026-05-26T00:39:10.511636+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

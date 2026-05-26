@@ -1,5 +1,51 @@
 [
   {
+    "source_record_id": "gaza-2026-05-25-un-news-middle-east-019f549cdbfe",
+    "source_id": "gaza-2026-05-25-un-news-middle-east-019f549cdbfe",
+    "title": "Displaced in Gaza: From home comforts to the shattering horror of war",
+    "url": "https://news.un.org/feed/view/en/story/2026/05/1167574",
+    "canonical_url": "https://news.un.org/feed/view/en/story/2026/05/1167574",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "UN News",
+    "published_at": "2026-05-24T12:00:00+00:00",
+    "retrieved_at": "2026-05-26T00:39:07.964290+00:00",
+    "summary_or_snippet": "In front of a simple tent in Gaza that offers no protection from the cold or the heat, in a crowded camp where tents lack privacy and basic services, Umm Ahmad sat down to speak to UN News about her life in Gaza before the war and what it has become now.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "official-humanitarian-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-25",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-25-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 50,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "un|displaced in gaza from home comforts to the shattering horror of war",
+    "title_fingerprint": "displaced in gaza from home comforts to the shattering horror of war",
+    "claim_fingerprint": "un|displaced in gaza from home comforts to the shattering horror of war|humanitarian"
+  },
+  {
     "source_record_id": "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6",
     "source_id": "gaza-2026-05-25-aljazeera-middle-east-0d4f1d7078b6",
     "title": "Father mourns daughter killed in Israeli strike on Gaza",
@@ -10,7 +56,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-25T19:12:58+00:00",
-    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
+    "retrieved_at": "2026-05-26T00:39:07.964290+00:00",
     "summary_or_snippet": "A six-year-old Palestinian girl was killed by an Israeli strike on a displacement camp in Khan Younis.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -19,7 +65,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-002"
+      "gaza-story-2026-05-25-003"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -56,7 +102,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-25T17:46:09+00:00",
-    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
+    "retrieved_at": "2026-05-26T00:39:07.964290+00:00",
     "summary_or_snippet": "Analysts warn Netanyahu is exploiting a failing \"ceasefire\" to prolong the destruction of Gaza ahead of Israeli election",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -65,7 +111,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-003"
+      "gaza-story-2026-05-25-004"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -102,7 +148,7 @@
     "wrapper_url": null,
     "publisher": "NPR",
     "published_at": "2026-05-25T10:00:00+00:00",
-    "retrieved_at": "2026-05-25T23:54:26.384895+00:00",
+    "retrieved_at": "2026-05-26T00:39:07.964290+00:00",
     "summary_or_snippet": "In the male-dominated world of Palestinian refugee camps in Lebanon, a martial arts teacher offers women a way to empowerment.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -111,7 +157,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-004"
+      "gaza-story-2026-05-25-005"
     ],
     "claim_ids": [],
     "candidate_score": 48,
@@ -157,7 +203,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-005"
+      "gaza-story-2026-05-25-006"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -203,7 +249,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-006"
+      "gaza-story-2026-05-25-007"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -247,7 +293,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-007"
+      "gaza-story-2026-05-25-008"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -292,7 +338,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-25",
     "used_in_story_ids": [
-      "gaza-story-2026-05-25-008"
+      "gaza-story-2026-05-25-009"
     ],
     "claim_ids": [],
     "candidate_score": 44,

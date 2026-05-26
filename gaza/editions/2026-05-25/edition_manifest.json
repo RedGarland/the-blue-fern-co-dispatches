@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-25",
-  "generated_at": "2026-05-25T23:54:28.295307+00:00",
+  "generated_at": "2026-05-26T00:39:10.511636+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-25/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-25",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-25",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-05-25",
   "template_version": "gaza-source-record-v1",
-  "source_count": 7,
-  "story_count": 6,
+  "source_count": 8,
+  "story_count": 7,
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-25\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-25\\curation_manifest.json",
   "free_public_artifacts": [
@@ -25,7 +25,7 @@
   "public_exposed": true,
   "warnings": [
     "suppressed 1 repeated/stale candidate sources via cross-edition dedupe",
-    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    "source diversity warning: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": []
 }

@@ -1,0 +1,34 @@
+[
+  {
+    "source_id": "src-ice-facility-page",
+    "title": "ICE detention facilities listing",
+    "url": "https://www.ice.gov/detention-facilities",
+    "source_type": "official_record",
+    "publisher": "U.S. Immigration and Customs Enforcement",
+    "published_at": "2026-05-26"
+  },
+  {
+    "source_id": "src-geo-facility-page",
+    "title": "Facility page: Northwest ICE Processing Center",
+    "url": "https://www.geogroup.com/FacilityDetail/FacilityID/11",
+    "source_type": "operator_record",
+    "publisher": "GEO Group",
+    "published_at": "2026-05-26"
+  },
+  {
+    "source_id": "src-courtlistener-tacoma",
+    "title": "Court records search: Tacoma immigration detention references",
+    "url": "https://www.courtlistener.com/",
+    "source_type": "court_record",
+    "publisher": "CourtListener",
+    "published_at": "2026-05-26"
+  },
+  {
+    "source_id": "src-nijc-reporting",
+    "title": "Immigration detention issue page",
+    "url": "https://immigrantjustice.org/issues/immigration-detention",
+    "source_type": "advocacy_legal_report",
+    "publisher": "National Immigrant Justice Center",
+    "published_at": "2026-05-26"
+  }
+]

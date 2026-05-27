@@ -87,6 +87,12 @@ nav a {
   margin-bottom: 0;
   image-rendering: -webkit-optimize-contrast;
 }
+.detention-watch-logo {
+  display: block;
+  max-width: min(520px, 90%);
+  height: auto;
+  margin: 0 auto 1.5rem;
+}
 .hero h1 {
   margin: 0;
   color: var(--navy);

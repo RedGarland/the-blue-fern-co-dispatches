@@ -208,6 +208,14 @@ li + li { margin-top: 0.35rem; }
   font-size: 1.35rem;
   line-height: 1.25;
 }
+.dispatch-subresource {
+  margin: 0.5rem 1rem 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+.dispatch-subresource p {
+  margin: 0.3rem 0;
+}
 .edition-list li {
   padding: 14px 0;
   border-top: 1px solid var(--border);

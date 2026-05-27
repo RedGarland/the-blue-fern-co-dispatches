@@ -87,6 +87,12 @@ nav a {
   margin-bottom: 0;
   image-rendering: -webkit-optimize-contrast;
 }
+.detention-watch-logo {
+  display: block;
+  max-width: min(520px, 90%);
+  height: auto;
+  margin: 0 auto 1.5rem;
+}
 .hero h1 {
   margin: 0;
   color: var(--navy);
@@ -201,6 +207,14 @@ li + li { margin-top: 0.35rem; }
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.35rem;
   line-height: 1.25;
+}
+.dispatch-subresource {
+  margin: 0.5rem 1rem 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+.dispatch-subresource p {
+  margin: 0.3rem 0;
 }
 .edition-list li {
   padding: 14px 0;

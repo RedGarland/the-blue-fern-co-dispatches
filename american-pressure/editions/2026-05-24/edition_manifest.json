@@ -1,0 +1,134 @@
+{
+  "dispatch_name": "The American Pressure Dispatch",
+  "dispatch_slug": "american-pressure",
+  "edition_date": "2026-05-24",
+  "week_start_date": "2026-05-18",
+  "week_end_date": "2026-05-24",
+  "display_date_range": "May 18\u2013May 24, 2026",
+  "generated_at": "2026-05-24T20:56:58.135761+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-05-24/",
+  "source_count": 443,
+  "story_count": 8,
+  "pillars_present": [
+    "food_pressure",
+    "housing_household_cost_pressure",
+    "health_access_pressure",
+    "labor_income_pressure",
+    "financial_distress_pressure",
+    "local_system_strain",
+    "environmental_pressure",
+    "policy_implementation"
+  ],
+  "pillars_missing": [
+    "transportation_daily_access_pressure",
+    "childcare_school_family_pressure"
+  ],
+  "source_count_by_pillar": {
+    "food_pressure": 78,
+    "housing_household_cost_pressure": 79,
+    "health_access_pressure": 62,
+    "labor_income_pressure": 26,
+    "financial_distress_pressure": 13,
+    "local_system_strain": 61,
+    "environmental_pressure": 60,
+    "policy_implementation": 64,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
+  },
+  "story_count_by_pillar": {
+    "food_pressure": 1,
+    "housing_household_cost_pressure": 1,
+    "health_access_pressure": 1,
+    "labor_income_pressure": 1,
+    "financial_distress_pressure": 1,
+    "local_system_strain": 1,
+    "environmental_pressure": 1,
+    "policy_implementation": 1,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
+  },
+  "rejected_no_public_pressure_angle": 2,
+  "rejected_investor_only": 0,
+  "rejected_duplicate_or_stale": 92,
+  "rejected_missing_required_fields": 0,
+  "is_free_public": true,
+  "public_exposed": true,
+  "has_detail_tier": false,
+  "source_mode": "both",
+  "item_type_counts": {
+    "baseline_gauge": 0,
+    "current_week_development": 8,
+    "watchlist_item": 0
+  },
+  "source_role_counts": {
+    "human_story": 187,
+    "data_anchor": 256,
+    "watchlist_signal": 0
+  },
+  "brief_quality_counts": {
+    "story_plus_data": 8,
+    "official_release_only": 0,
+    "baseline_only": 0,
+    "watchlist_only": 0
+  },
+  "searched_pillars": [
+    "financial_distress_pressure",
+    "food_pressure",
+    "health_access_pressure",
+    "housing_household_cost_pressure",
+    "labor_income_pressure",
+    "local_system_strain",
+    "policy_implementation"
+  ],
+  "required_current_development_search_targets": {
+    "food_pressure": "food bank demand / SNAP / grocery pressure",
+    "financial_distress_pressure": "bankruptcy / Chapter 11 / Chapter 7 / business closure / employer bankruptcy / hospital bankruptcy / nursing home bankruptcy / retail closure / debt distress / foreclosure",
+    "housing_household_cost_pressure": "eviction filings / rent increases / utility shutoffs / utility rate hikes / energy burden / homelessness shelter demand / housing authority waitlist / insurance premium increases / mobile home park rent / property tax pressure",
+    "health_access_pressure": "clinic / hospital / pharmacy / health access",
+    "labor_income_pressure": "layoffs / WARN / employer cuts",
+    "local_system_strain": "disaster / drought / flood / heat / local service strain",
+    "policy_implementation": "benefit or policy implementation problems"
+  },
+  "current_development_count_by_pillar": {
+    "food_pressure": 24,
+    "housing_household_cost_pressure": 27,
+    "health_access_pressure": 30,
+    "labor_income_pressure": 25,
+    "financial_distress_pressure": 12,
+    "local_system_strain": 30,
+    "environmental_pressure": 58,
+    "policy_implementation": 13,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
+  },
+  "human_story_count_by_pillar": {
+    "food_pressure": 24,
+    "housing_household_cost_pressure": 27,
+    "health_access_pressure": 30,
+    "labor_income_pressure": 25,
+    "financial_distress_pressure": 11,
+    "local_system_strain": 29,
+    "environmental_pressure": 28,
+    "policy_implementation": 13,
+    "transportation_daily_access_pressure": 0,
+    "childcare_school_family_pressure": 0
+  },
+  "missing_required_current_development_pillars": [],
+  "collection_gap_pillars": [],
+  "story_plus_data_count": 8,
+  "baseline_only_count": 0,
+  "briefs_with_human_story": 8,
+  "briefs_with_data_anchor": 8,
+  "baseline_only_briefs": 0,
+  "missing_human_story_pillars": [],
+  "baseline_only_edition": false,
+  "low_quality_story_ids": [],
+  "future_enhancements": {
+    "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
+  },
+  "warnings": [
+    "manual sources not found for 2026-05-24; continuing with auto baseline sources only",
+    "curation_diagnostics={\"candidates_accepted\": 443, \"candidates_found\": 537, \"rejected_duplicate_or_stale\": 92, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 2, \"sources_attempted\": 537}"
+  ],
+  "errors": []
+}

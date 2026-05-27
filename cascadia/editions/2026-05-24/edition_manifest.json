@@ -34,7 +34,7 @@
     "https://www.publicalerts.org/flooding-and-land-movement",
     "https://www.publicalerts.org/wildfire"
   ],
-  "generated_at": "2026-05-27T01:50:45.108020+00:00",
+  "generated_at": "2026-05-27T02:25:02.912229+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-24/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24",
   "local_backup_path": null,
@@ -72,7 +72,7 @@
     "gdelt",
     "registry"
   ],
-  "query_count": 3,
+  "query_count": 1,
   "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-18_2026-05-24\\historical_search_report.json",
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24\\curation_manifest.json",
@@ -86,7 +86,7 @@
   "warnings": [
     "provider rate-limit events: 3",
     "registry fetch errors: 9",
-    "gdelt guardrails: min_len=40, max_len=450, requests=3",
+    "gdelt guardrails: min_len=40, max_len=450, requests=1",
     "registry fetch failures by source (deduped): crosscut-rss:1, idaho-commerce-news:1, kuow-rss:1, nws-idaho-alerts:1, nws-oregon-alerts:1, nws-seattle-alerts:1, opb-news-feed:1, or-agriculture-news:1, pierce-county-alerts:1",
     "weak date basis warnings (deduped): 3724 item(s)",
     "seattle-alerts item has weak date basis; published_at unavailable or unparseable",
@@ -96,9 +96,7 @@
     "registry source fetch error: HTTP Error 403: Forbidden",
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR utility OR utilities OR \"power outage\" OR outage OR power OR \"water system\" OR water OR bridge OR \"road closure\"): <urlopen error timed out>",
-    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): <urlopen error _ssl.c:1015: The handshake operation timed out>",
-    "historical provider gdelt rate limited for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): HTTP 429 Too Many Requests after max retries"
+    "historical provider gdelt rate limited for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (infrastructure OR utility OR utilities OR \"power outage\" OR outage OR power OR \"water system\" OR water OR bridge OR \"road closure\"): HTTP 429 Too Many Requests after max retries"
   ],
   "errors": []
 }

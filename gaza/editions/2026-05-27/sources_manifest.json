@@ -1,53 +1,140 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-05-27T00:24:46.555928+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-05-27-un-news-middle-east-f9789ea8d1aa",
+    "source_id": "gaza-2026-05-27-un-news-middle-east-f9789ea8d1aa",
+    "title": "Middle East update: Airstrikes and evacuation orders in Lebanon, aid restrictions in Gaza",
+    "url": "https://news.un.org/feed/view/en/story/2026/05/1167590",
+    "canonical_url": "https://news.un.org/feed/view/en/story/2026/05/1167590",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "UN News",
+    "published_at": "2026-05-26T12:00:00+00:00",
+    "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
+    "summary_or_snippet": "Intensified Israeli airstrikes overnight in Lebanon forced people to again flee their homes, while humanitarians in the Gaza Strip report continued restrictions in bringing aid into the enclave, the United Nations said on Tuesday.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "official-humanitarian-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-27"
+    "edition_date": "2026-05-27",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-27-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 62,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "un|middle east update airstrikes and evacuation orders in lebanon aid restrictions in gaza",
+    "title_fingerprint": "middle east update airstrikes and evacuation orders in lebanon aid restrictions in gaza",
+    "claim_fingerprint": "un|middle east update airstrikes and evacuation orders in lebanon aid restrictions in gaza|humanitarian"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-05-27T00:24:46.555928+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
+    "source_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
+    "title": "Israel claims head of Hamas military wing killed in Gaza strike",
+    "url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-27T08:51:25+00:00",
+    "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
+    "summary_or_snippet": "There was no immediate response from the Palestinian group after Israel claimed Mohammed Odeh killed.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-27"
+    "edition_date": "2026-05-27",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-27-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israel claims head of hamas military wing killed in gaza strike",
+    "title_fingerprint": "israel claims head of hamas military wing killed in gaza strike",
+    "claim_fingerprint": "al jazeera|israel claims head of hamas military wing killed in gaza strike|conflict"
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-05-27T00:24:46.555928+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
+    "source_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
+    "title": "Israeli strike in Gaza City kills new head of Hamas's military wing",
+    "url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-27T09:55:11+00:00",
+    "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
+    "summary_or_snippet": "At least three people were killed in the attack, which came despite a ceasefire with Hamas being in place.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-27"
+    "edition_date": "2026-05-27",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-27-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "bbc|israeli strike in gaza city kills new head of hamas s military wing",
+    "title_fingerprint": "israeli strike in gaza city kills new head of hamas s military wing",
+    "claim_fingerprint": "bbc|israeli strike in gaza city kills new head of hamas s military wing|conflict"
   }
 ]

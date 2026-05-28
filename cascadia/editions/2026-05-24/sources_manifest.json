@@ -1,50 +1,12 @@
 [
   {
-    "source_record_id": "src-21e1ab7216fc8d2d",
-    "source_id": "washington-state-standard-feed",
-    "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
-    "url": "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation",
-    "publisher": "Washington State Standard Feed",
-    "published_at": "2026-05-19T19:34:13Z",
-    "retrieved_at": "2026-05-28T19:43:12.561094+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-491d7b3f3269"
-    ],
-    "claim_ids": [
-      "story-491d7b3f3269"
-    ],
-    "dispatch_slug": "cascadia",
-    "public_name": "The Cascadia Briefing",
-    "briefing_type": "weekly",
-    "run_date": "2026-05-25",
-    "edition_date": "2026-05-24",
-    "coverage_start": "2026-05-18",
-    "coverage_end": "2026-05-24",
-    "coverage_label": "May 18\u201324, 2026",
-    "region_scope": "WA",
-    "category_hint": "housing",
-    "source_type": "rss",
-    "provider_id": "registry",
-    "provider_name": "Cascadia source registry",
-    "query_used": "https://washingtonstatestandard.com/feed/",
-    "search_start_date": "2026-05-18",
-    "search_end_date": "2026-05-24",
-    "region_terms_matched": [
-      "washington"
-    ],
-    "state_hint": "WA",
-    "reliability_tier": "reputable-regional-media",
-    "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied."
-  },
-  {
     "source_record_id": "src-52c251702deda66b",
     "source_id": "washington-state-standard-feed",
     "title": "Washington\u2019s largest utility moves to add more wind power",
     "url": "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-21T22:22:48Z",
-    "retrieved_at": "2026-05-28T19:43:12.561094+00:00",
+    "retrieved_at": "2026-05-28T20:00:46.161187+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-0a341d401b1c"
@@ -83,7 +45,7 @@
     "url": "https://idahocapitalsun.com/2026/05/20/six-idaho-republican-lawmakers-lose-primary-election-two-more-are-trailing",
     "publisher": "Idaho Capital Sun Feed",
     "published_at": "2026-05-20T08:35:07Z",
-    "retrieved_at": "2026-05-28T19:43:12.561094+00:00",
+    "retrieved_at": "2026-05-28T20:00:46.161187+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-c29bdf1d3dd9"
@@ -121,7 +83,7 @@
     "url": "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-20T22:38:56Z",
-    "retrieved_at": "2026-05-28T19:43:12.561094+00:00",
+    "retrieved_at": "2026-05-28T20:00:46.161187+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-cb40ce4a0ae4"
@@ -159,7 +121,7 @@
     "url": "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow",
     "publisher": "City of Seattle Alerts",
     "published_at": null,
-    "retrieved_at": "2026-05-28T19:43:12.561094+00:00",
+    "retrieved_at": "2026-05-28T20:00:46.161187+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-97fc4fc48372"

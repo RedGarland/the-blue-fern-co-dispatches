@@ -743,16 +743,18 @@
     "source_urls": [
       "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation"
     ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "unsupported_category_or_weak_category_match",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "wa",
       "washington"
     ],
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
-    "eligibility_diagnostics": [],
+    "eligibility_diagnostics": [
+      "category_not_supported_by_content"
+    ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",

@@ -60,31 +60,6 @@
       "coordinate_basis": "source_default"
     },
     {
-      "story_id": "story-491d7b3f3269",
-      "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
-      "category": "Housing and homelessness",
-      "pressure_type": "Housing and utility pressure",
-      "place": "WA",
-      "state": "WA",
-      "state_or_region": "WA",
-      "region_label": "Puget Sound",
-      "regional_area": "Puget Sound",
-      "publisher": "Washington State Standard Feed",
-      "published_at": "2026-05-19T19:34:13Z",
-      "source_url": "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation",
-      "what_we_found": "The Trump administration on Tuesday launched an investigation into Washington state\u2019s practice of housing transgender women in its women\u2019s prison. In a letter to Gov.",
-      "why_it_matters": "Housing-cost and shelter strain can force tradeoffs in household stability and local service demand.",
-      "read_more": "/cascadia/editions/2026-05-24/",
-      "read_more_label": "WA\u2019s transgender prisoner policy is target of new federal investigation",
-      "location_label": "WA",
-      "address": null,
-      "location_precision": "statewide",
-      "precision_note": "Statewide report.",
-      "lat": 47.0379,
-      "lon": -122.9007,
-      "coordinate_basis": "source_default"
-    },
-    {
       "story_id": "story-c29bdf1d3dd9",
       "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
       "category": "Government and public services",
@@ -375,7 +350,7 @@
       "lat": 47.0379,
       "lon": -122.9007,
       "coordinate_basis": "source_default",
-      "group_count": 2,
+      "group_count": 1,
       "group_id": "puget-sound-470--1229",
       "reports": [
         {
@@ -386,20 +361,10 @@
           "source_url": "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
           "read_more": "/cascadia/editions/2026-05-24/",
           "read_more_label": "Only a fraction of Washington\u2019s state flood aid has made it to victims"
-        },
-        {
-          "headline": "WA\u2019s transgender prisoner policy is target of new federal investigation",
-          "summary": "The Trump administration on Tuesday launched an investigation into Washington state\u2019s practice of housing transgender women in its women\u2019s prison. In a letter to Gov.",
-          "pressure_type": "Housing and utility pressure",
-          "publisher": "Washington State Standard Feed",
-          "source_url": "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation",
-          "read_more": "/cascadia/editions/2026-05-24/",
-          "read_more_label": "WA\u2019s transgender prisoner policy is target of new federal investigation"
         }
       ],
       "pressure_areas": [
-        "Wildfire, drought, flood, and recovery",
-        "Housing and utility pressure"
+        "Wildfire, drought, flood, and recovery"
       ]
     },
     {
@@ -640,35 +605,35 @@
     }
   ],
   "diagnostics": {
-    "raw_candidate_count": 25,
+    "raw_candidate_count": 24,
     "accepted_local_marker_count": 1,
-    "regional_statewide_report_count": 11,
-    "excluded_count": 24,
+    "regional_statewide_report_count": 10,
+    "excluded_count": 23,
     "excluded_reasons": {
       "no_source_date": 13,
-      "statewide_not_default_layer": 11
+      "statewide_not_default_layer": 10
     },
-    "category_corrections_applied": 17,
+    "category_corrections_applied": 16,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
     "local_extraction_success_count": 15,
-    "local_extraction_failure_count": 10,
-    "local_extraction_success_rate": 0.6,
+    "local_extraction_failure_count": 9,
+    "local_extraction_success_rate": 0.625,
     "unresolved_category_count": 0,
-    "category_resolution_success_count": 5,
+    "category_resolution_success_count": 4,
     "extraction_fields_success": {
       "city_hint": 11,
       "pattern": 4
     },
     "extraction_fields_failed": {
-      "none": 10
+      "none": 9
     },
-    "place_extraction_attempted": 25,
+    "place_extraction_attempted": 24,
     "place_extraction_succeeded": 15,
     "place_match_by_type": {
       "city_hint": 11,
       "pattern": 4,
-      "none": 10
+      "none": 9
     },
     "candidate_diagnostics_rows": [
       {
@@ -706,21 +671,6 @@
         "source_url": "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
         "publisher": "Washington State Standard Feed",
         "detected_pressure_category": "Wildfire, drought, flood, and recovery",
-        "detected_place_candidates": [
-          "WA",
-          ""
-        ],
-        "selected_place": "WA",
-        "selected_precision": "statewide",
-        "coordinate_basis": "source_default",
-        "inclusion_decision": "regional_report",
-        "excluded_reason": ""
-      },
-      {
-        "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
-        "source_url": "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation",
-        "publisher": "Washington State Standard Feed",
-        "detected_pressure_category": "Housing and utility pressure",
         "detected_place_candidates": [
           "WA",
           ""
@@ -1056,7 +1006,7 @@
     "excluded_backfill_records": 20,
     "default_view_mode": "sparse_local_plus_regional",
     "local_marker_count": 1,
-    "regional_report_count": 11,
+    "regional_report_count": 10,
     "default_show_regional": true,
     "initial_render_layer": "local_plus_regional",
     "initial_visible_count": 5,
@@ -1098,15 +1048,15 @@
         "non_local_reports": 3
       },
       {
-        "source": "Washington State Standard Feed",
-        "non_local_reports": 2
-      },
-      {
         "source": "Marion County",
         "non_local_reports": 2
       },
       {
         "source": "City of Seattle Alerts",
+        "non_local_reports": 1
+      },
+      {
+        "source": "Washington State Standard Feed",
         "non_local_reports": 1
       },
       {
@@ -1117,7 +1067,7 @@
     "top_missing_place_reasons": [
       {
         "reason": "statewide_not_default_layer",
-        "count": 11
+        "count": 10
       }
     ],
     "recommended_source_additions": [

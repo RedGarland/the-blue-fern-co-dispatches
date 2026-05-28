@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T11:18:21+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "Six were killed in Remal on Eid night. Minutes later, the stalls reopened.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -55,7 +55,7 @@
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-05-28T09:00:02+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "Human rights groups and lawyers say policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -101,7 +101,7 @@
     "wrapper_url": null,
     "publisher": "PBS NewsHour",
     "published_at": "2026-05-28T00:06:19+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "Strikes killed at least seven people in Gaza City on Wednesday as Hamas confirmed that Israeli airstrikes the day before had killed the new leader of its military wing, less than two weeks after his predecessor also was killed.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -146,7 +146,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T10:51:06+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "The West Bank's Youth Unemployment Crisis",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -180,52 +180,6 @@
     "claim_fingerprint": "al jazeera|the west bank s youth unemployment crisis|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
-    "source_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
-    "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
-    "url": "https://www.theguardian.com/news/audio/2026/may/28/human-rights-lawyer-francesca-albanese-on-life-under-us-sanctions-podcast",
-    "canonical_url": "https://www.theguardian.com/news/audio/2026/may/28/human-rights-lawyer-francesca-albanese-on-life-under-us-sanctions-podcast",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "The Guardian",
-    "published_at": "2026-05-28T02:00:51+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
-    "summary_or_snippet": "The UN's special rapporteur for Palestine, Francesca Albanese, on the war in Gaza, living under US sanctions and accusations of antisemitism For a brief period this month, the human rights lawyer Francesca Albanese seemed to have some relief. In an extraordinary move in July last year, the Trump administration placed sanctions on the UN's special rapporteur for Palestine - placing her alongside figures such as Vladimir Putin and Bashir al-Assad - over her engagement with the international criminal court.",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-28",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-28-007"
-    ],
-    "claim_ids": [],
-    "candidate_score": 52,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 8,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "humanitarian_impact",
-      "accountability_legal",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "core",
-    "dedupe_key": "guardian|human rights lawyer francesca albanese on life under us sanctions podcast",
-    "title_fingerprint": "human rights lawyer francesca albanese on life under us sanctions podcast",
-    "claim_fingerprint": "guardian|human rights lawyer francesca albanese on life under us sanctions podcast|conflict"
-  },
-  {
     "source_record_id": "gaza-2026-05-28-aljazeera-middle-east-6251bc74dd5b",
     "source_id": "gaza-2026-05-28-aljazeera-middle-east-6251bc74dd5b",
     "title": "Israel kills children in strikes on Gaza as fear taints Eid joy",
@@ -236,7 +190,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T10:47:19+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "As Muslims around the world celebrate Eid, Palestinians in Gaza are facing fear, grief, and deadly attacks.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -245,7 +199,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-28",
     "used_in_story_ids": [
-      "gaza-story-2026-05-28-008"
+      "gaza-story-2026-05-28-007"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -281,7 +235,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T09:35:55+00:00",
-    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
     "summary_or_snippet": "Children with Down syndrome struggle with devastation of war in Gaza",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -290,7 +244,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-28",
     "used_in_story_ids": [
-      "gaza-story-2026-05-28-009"
+      "gaza-story-2026-05-28-008"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -313,6 +267,52 @@
     "dedupe_key": "al jazeera|children with down syndrome struggle with devastation of war in gaza",
     "title_fingerprint": "children with down syndrome struggle with devastation of war in gaza",
     "claim_fingerprint": "al jazeera|children with down syndrome struggle with devastation of war in gaza|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
+    "source_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
+    "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
+    "url": "https://www.theguardian.com/news/audio/2026/may/28/human-rights-lawyer-francesca-albanese-on-life-under-us-sanctions-podcast",
+    "canonical_url": "https://www.theguardian.com/news/audio/2026/may/28/human-rights-lawyer-francesca-albanese-on-life-under-us-sanctions-podcast",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-28T02:00:51+00:00",
+    "retrieved_at": "2026-05-28T13:00:35.643995+00:00",
+    "summary_or_snippet": "The UN's special rapporteur for Palestine, Francesca Albanese, on the war in Gaza, living under US sanctions and accusations of antisemitism For a brief period this month, the human rights lawyer Francesca Albanese seemed to have some relief. In an extraordinary move in July last year, the Trump administration placed sanctions on the UN's special rapporteur for Palestine - placing her alongside figures such as Vladimir Putin and Bashir al-Assad - over her engagement with the international criminal court.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-28",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-28-009"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|human rights lawyer francesca albanese on life under us sanctions podcast",
+    "title_fingerprint": "human rights lawyer francesca albanese on life under us sanctions podcast",
+    "claim_fingerprint": "guardian|human rights lawyer francesca albanese on life under us sanctions podcast|conflict"
   },
   {
     "source_record_id": "gaza-2026-05-28-aljazeera-middle-east-be38b09687bb",

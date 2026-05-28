@@ -125,7 +125,7 @@
         <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
         <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
         <p class="date-range" id="dateRangeDesktop">Reports shown: 2026-05-24</p>
-        <p class="source-note" id="reportCountDesktop">Report count: 11</p>
+        <p class="source-note" id="reportCountDesktop">Report count: 12</p>
         <p class="source-note">Sources: public regional reporting and official/public sources</p>
         <div class="header-actions">
           <button id="resetMapDesktop">Reset Map</button>
@@ -141,7 +141,7 @@
           <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="mobileHeaderDetails">More</button>
         </div>
         <p class="date-range" id="dateRangeMobile">Reports shown: 2026-05-24</p>
-        <p class="source-note" id="reportCountMobile">Report count: 11</p>
+        <p class="source-note" id="reportCountMobile">Report count: 12</p>
         <div id="mobileHeaderDetails" class="mobile-header-details">
           <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
           <p class="source-note">Sources: public regional reporting and official/public sources</p>
@@ -162,8 +162,8 @@
         <label for="viewMode">Map view</label><select id="viewMode"><option value="grouped">Grouped places</option><option value="individual">Individual reports</option></select>
         <label class="checkbox-label" for="showRegional"><input type="checkbox" id="showRegional"> Show regional/statewide reports</label>
       </div></div></details>
-      <div id="emptyState" class="empty-state" hidden>No reports match the current map filters. Reset Map to restore the default view.</div>
-      <div id="renderWarning" class="empty-state" hidden>Some map markers could not be displayed.</div>
+      <div id="emptyState" class="empty-state" hidden>No matching reports for the active filters. Reset Map to restore the default view.</div>
+      <div id="renderWarning" class="empty-state" hidden>Some map markers are temporarily unavailable.</div>
       <div id="map"></div>
     </div>
     <div id="mobileFilterSheet" class="mobile-filter-sheet" data-state="closed" aria-hidden="true">
@@ -193,7 +193,7 @@
       const regional = payload.regional_reports || [];
       const fallbackNote = "No local reports met the mapping rules for this week. Showing regional/statewide reports instead.";
       const sparseNote = "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context.";
-      const noResultsNote = "No reports match the current map filters. Reset Map to restore the default view.";
+      const noResultsNote = "No matching reports for the active filters. Reset Map to restore the default view.";
       const showRegionalDefault = Boolean(payload.show_regional_default);
       const defaultViewMode = String(payload.default_view_mode || 'local');
       const localMarkerCount = Number((payload.diagnostics && payload.diagnostics.local_marker_count) || (markers || []).length || 0);

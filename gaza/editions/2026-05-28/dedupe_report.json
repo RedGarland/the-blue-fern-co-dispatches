@@ -1,11 +1,11 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-28",
-  "candidates_seen": 8,
+  "candidates_seen": 9,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-05-28-002",
-      "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+      "title": "Israeli minister confirms goal of large-scale expulsion of Palestinians from Gaza",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -26,7 +26,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-007",
+      "story_id": "gaza-story-2026-05-28-008",
       "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
       "classification": "new",
       "material_update": true,
@@ -48,7 +48,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-008",
+      "story_id": "gaza-story-2026-05-28-009",
       "title": "Israeli attack on Gaza City kills at least 10, including four children",
       "classification": "new",
       "material_update": true,
@@ -70,7 +70,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-009",
+      "story_id": "gaza-story-2026-05-28-010",
       "title": "Palestinian graduates in the West Bank enter a collapsed job market",
       "classification": "new",
       "material_update": true,
@@ -90,7 +90,22 @@
       "public_rendered": true
     }
   ],
-  "duplicate_skipped": [],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-05-28-007",
+      "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-28-002",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
   "continuing_developments": [],
   "major_updates": [
     {
@@ -107,11 +122,40 @@
     }
   ],
   "merged_sources": 0,
-  "duplicate_groups": [],
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-05-28-002",
+      "merged_story_ids": [
+        "gaza-story-2026-05-28-007"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-05-28-guardian-world-8fdf07b2ff81"
+      ],
+      "duplicate_reason": "within_edition_duplicate",
+      "normalized_event_key": "",
+      "reasons": [
+        "within_edition_source_url"
+      ]
+    }
+  ],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-05-28-002",
+      "story_id": "gaza-story-2026-05-28-007",
       "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": "gaza-story-2026-05-28-002",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-002",
+      "title": "Israeli minister confirms goal of large-scale expulsion of Palestinians from Gaza",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -138,7 +182,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-007",
+      "story_id": "gaza-story-2026-05-28-008",
       "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
       "classification": "new",
       "material_update": true,
@@ -166,7 +210,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-008",
+      "story_id": "gaza-story-2026-05-28-009",
       "title": "Israeli attack on Gaza City kills at least 10, including four children",
       "classification": "new",
       "material_update": true,
@@ -194,7 +238,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-28-009",
+      "story_id": "gaza-story-2026-05-28-010",
       "title": "Palestinian graduates in the West Bank enter a collapsed job market",
       "classification": "new",
       "material_update": true,

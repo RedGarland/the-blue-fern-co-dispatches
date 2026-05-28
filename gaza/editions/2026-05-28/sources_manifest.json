@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T11:18:21+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
     "summary_or_snippet": "Six were killed in Remal on Eid night. Minutes later, the stalls reopened.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -45,9 +45,9 @@
     "claim_fingerprint": "al jazeera|for gaza eid joy is now a form of resistance|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-28-guardian-world-8fdf07b2ff81",
-    "source_id": "gaza-2026-05-28-guardian-world-8fdf07b2ff81",
-    "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+    "source_record_id": "gaza-2026-05-28-guardian-world-4c8a9795e07e",
+    "source_id": "gaza-2026-05-28-guardian-world-4c8a9795e07e",
+    "title": "Israeli minister confirms goal of large-scale expulsion of Palestinians from Gaza",
     "url": "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead",
     "canonical_url": "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead",
     "canonical_url_attempted": false,
@@ -55,8 +55,8 @@
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-05-28T09:00:02+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
-    "summary_or_snippet": "Human rights groups and lawyers say policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
+    "summary_or_snippet": "Human rights groups and lawyers say 'voluntary migration' policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -86,9 +86,9 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "guardian|israel s defence minister says large scale palestinian migration from gaza will go ahead",
-    "title_fingerprint": "israel s defence minister says large scale palestinian migration from gaza will go ahead",
-    "claim_fingerprint": "guardian|israel s defence minister says large scale palestinian migration from gaza will go ahead|conflict"
+    "dedupe_key": "guardian|israeli minister confirms goal of large scale expulsion of palestinians from gaza",
+    "title_fingerprint": "israeli minister confirms goal of large scale expulsion of palestinians from gaza",
+    "claim_fingerprint": "guardian|israeli minister confirms goal of large scale expulsion of palestinians from gaza|conflict"
   },
   {
     "source_record_id": "gaza-2026-05-28-pbs-newshour-world-5a9302c0ec8a",
@@ -101,7 +101,7 @@
     "wrapper_url": null,
     "publisher": "PBS NewsHour",
     "published_at": "2026-05-28T00:06:19+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
     "summary_or_snippet": "Strikes killed at least seven people in Gaza City on Wednesday as Hamas confirmed that Israeli airstrikes the day before had killed the new leader of its military wing, less than two weeks after his predecessor also was killed.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -146,7 +146,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T10:51:06+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
     "summary_or_snippet": "The West Bank's Youth Unemployment Crisis",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -190,7 +190,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T10:47:19+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
     "summary_or_snippet": "As Muslims around the world celebrate Eid, Palestinians in Gaza are facing fear, grief, and deadly attacks.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -235,7 +235,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-05-28T09:35:55+00:00",
-    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "retrieved_at": "2026-05-28T15:28:41.308420+00:00",
     "summary_or_snippet": "Children with Down syndrome struggle with devastation of war in Gaza",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -269,6 +269,52 @@
     "claim_fingerprint": "al jazeera|children with down syndrome struggle with devastation of war in gaza|conflict"
   },
   {
+    "source_record_id": "gaza-2026-05-28-guardian-world-8fdf07b2ff81",
+    "source_id": "gaza-2026-05-28-guardian-world-8fdf07b2ff81",
+    "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+    "url": "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead",
+    "canonical_url": "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-28T09:00:02+00:00",
+    "retrieved_at": "2026-05-28T15:17:12.240509+00:00",
+    "summary_or_snippet": "Human rights groups and lawyers say policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-28",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-28-009"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|israel s defence minister says large scale palestinian migration from gaza will go ahead",
+    "title_fingerprint": "israel s defence minister says large scale palestinian migration from gaza will go ahead",
+    "claim_fingerprint": "guardian|israel s defence minister says large scale palestinian migration from gaza will go ahead|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
     "source_id": "gaza-2026-05-28-guardian-world-d66bd45f7866",
     "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
@@ -288,7 +334,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-28",
     "used_in_story_ids": [
-      "gaza-story-2026-05-28-009"
+      "gaza-story-2026-05-28-010"
     ],
     "claim_ids": [],
     "candidate_score": 52,
@@ -334,7 +380,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-28",
     "used_in_story_ids": [
-      "gaza-story-2026-05-28-010"
+      "gaza-story-2026-05-28-011"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -379,7 +425,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-28",
     "used_in_story_ids": [
-      "gaza-story-2026-05-28-011"
+      "gaza-story-2026-05-28-012"
     ],
     "claim_ids": [],
     "candidate_score": 32,

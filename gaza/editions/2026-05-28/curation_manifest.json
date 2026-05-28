@@ -1,8 +1,8 @@
 [
   {
-    "story_id": "gaza-story-2026-05-28-002",
+    "story_id": "gaza-story-2026-05-28-007",
     "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
-    "summary": "Human rights groups and lawyers say policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
+    "summary": "Human rights groups and lawyers say policy amounts to ethnic cleansing. Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of. Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 67,
@@ -37,7 +37,62 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-05-28-002",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_source_url"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-002",
+    "title": "Israeli minister confirms goal of large-scale expulsion of Palestinians from Gaza",
+    "summary": "Human rights groups and lawyers say 'voluntary migration' policy amounts to ethnic cleansing. Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of. Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-guardian-world-4c8a9795e07e"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-guardian-world-4c8a9795e07e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -89,7 +144,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -105,9 +160,9 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-28-007",
+    "story_id": "gaza-story-2026-05-28-008",
     "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
-    "summary": "The UN's special rapporteur for Palestine, Francesca Albanese, on the war in Gaza, living under US sanctions and accusations of antisemitism For a brief period this month, the human rights lawyer Francesca Albanese seemed to have some relief. In an extraordinary move in July last year, the Trump administration placed sanctions on the UN's special rapporteur for Palestine - placing her alongside figures such as Vladimir Putin and Bashir al-Assad - over her engagement with the international criminal court.",
+    "summary": "The UN's special rapporteur for Palestine, Francesca Albanese, on the war in Gaza, living under US sanctions and accusations of antisemitism. For a brief period this month, the human rights lawyer Francesca Albanese seemed to have some relief. In an extraordinary move in July last year, the Trump administration placed sanctions on the UN's special rapporteur for Palestine - placing her alongside figures such as Vladimir Putin and Bashir al-Assad - over her engagement with the international criminal court.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 64,
@@ -142,7 +197,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -194,7 +249,7 @@
     "publisher_names": [
       "PBS NewsHour"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -209,7 +264,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-28-008",
+    "story_id": "gaza-story-2026-05-28-009",
     "title": "Israeli attack on Gaza City kills at least 10, including four children",
     "summary": "More than 20 others were injured in the attack, which came hours after the funeral of the head of Hamas's armed wing.",
     "category": "conflict",
@@ -245,7 +300,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -296,7 +351,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -311,7 +366,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-28-009",
+    "story_id": "gaza-story-2026-05-28-010",
     "title": "Palestinian graduates in the West Bank enter a collapsed job market",
     "summary": "Youth joblessness among West Bank graduates has nearly hit 40 percent. Many wonder what the degrees are worth.",
     "category": "palestinian_development",
@@ -346,7 +401,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -365,7 +420,7 @@
   {
     "story_id": "gaza-story-2026-05-28-004",
     "title": "The West Bank's Youth Unemployment Crisis",
-    "summary": "The West Bank's Youth Unemployment Crisis",
+    "summary": "",
     "category": "palestinian_development",
     "story_scope": "palestinian_development",
     "score": 44,
@@ -398,7 +453,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-28T15:17:15.829727+00:00",
+    "generated_at": "2026-05-28T15:28:43.556214+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"

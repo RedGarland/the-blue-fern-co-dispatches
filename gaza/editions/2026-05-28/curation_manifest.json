@@ -1,21 +1,416 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-05-28",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-05-28-002",
+    "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+    "summary": "Human rights groups and lawyers say policy amounts to ethnic cleansing Israel's defence minister has said he is committed to the ethnic cleansing of Gaza through large-scale migration of Palestinians as part of Israel's long-term plans for the territory. Israel Katz said the government would implement a plan for large numbers of Palestinians to leave Gaza \"at the right time and in the right manner\", in a statement on Wednesday marking the targeted killing of Mohammed Odeh, Hamas's most recent military commander.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-05-28-guardian-world-8fdf07b2ff81"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-05-28-guardian-world-8fdf07b2ff81"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/28/israels-defence-minister-says-large-scale-palestinian-migration-from-gaza-will-go-ahead"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-006",
+    "title": "Israel kills children in strikes on Gaza as fear taints Eid joy",
+    "summary": "As Muslims around the world celebrate Eid, Palestinians in Gaza are facing fear, grief, and deadly attacks.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-6251bc74dd5b"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-6251bc74dd5b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/28/israel-kills-children-in-strikes-on-gaza-as-fear-taints-eid-joy?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-005",
+    "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
+    "summary": "The UN's special rapporteur for Palestine, Francesca Albanese, on the war in Gaza, living under US sanctions and accusations of antisemitism For a brief period this month, the human rights lawyer Francesca Albanese seemed to have some relief. In an extraordinary move in July last year, the Trump administration placed sanctions on the UN's special rapporteur for Palestine - placing her alongside figures such as Vladimir Putin and Bashir al-Assad - over her engagement with the international criminal court.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-guardian-world-d66bd45f7866"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-guardian-world-d66bd45f7866"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/news/audio/2026/may/28/human-rights-lawyer-francesca-albanese-on-life-under-us-sanctions-podcast"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-003",
+    "title": "Hamas confirms that Israeli strikes killed its new military leader in Gaza City",
+    "summary": "Strikes killed at least seven people in Gaza City on Wednesday as Hamas confirmed that Israeli airstrikes the day before had killed the new leader of its military wing, less than two weeks after his predecessor also was killed.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-pbs-newshour-world-5a9302c0ec8a"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-pbs-newshour-world-5a9302c0ec8a"
+    ],
+    "source_urls": [
+      "https://www.pbs.org/newshour/world/hamas-confirms-that-israeli-strikes-killed-its-new-military-leader-in-gaza-city"
+    ],
+    "publisher_names": [
+      "PBS NewsHour"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-008",
+    "title": "Israeli attack on Gaza City kills at least 10, including four children",
+    "summary": "More than 20 others were injured in the attack, which came hours after the funeral of the head of Hamas's armed wing.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-be38b09687bb"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-be38b09687bb"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/28/israeli-attack-on-gaza-city-kills-at-least-10-including-four-children?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-001",
+    "title": "For Gaza, Eid joy is now a form of resistance",
+    "summary": "Six were killed in Remal on Eid night. Minutes later, the stalls reopened.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-f20024fbb2e6"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-f20024fbb2e6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/opinions/2026/5/28/for-gaza-eid-joy-is-now-a-form-of-resistance?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-009",
+    "title": "Palestinian graduates in the West Bank enter a collapsed job market",
+    "summary": "Youth joblessness among West Bank graduates has nearly hit 40 percent. Many wonder what the degrees are worth.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-8b72b620ad3d"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-8b72b620ad3d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/economy/2026/5/28/palestinian-graduates-in-the-west-bank-enter-a-collapsed-job-market?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-28-004",
+    "title": "The West Bank's Youth Unemployment Crisis",
+    "summary": "The West Bank's Youth Unemployment Crisis",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-cd9966482e80"
+    ],
+    "source_ids": [
+      "gaza-2026-05-28-aljazeera-middle-east-cd9966482e80"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/5/28/the-west-banks-youth-unemployment-crisis?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-28T13:00:37.896743+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-22-009",
+    "prior_edition_date": "2026-05-22",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
   }
 ]

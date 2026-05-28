@@ -1,0 +1,250 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-28",
+  "candidates_seen": 8,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-05-28-002",
+      "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-006",
+      "title": "Israel kills children in strikes on Gaza as fear taints Eid joy",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-005",
+      "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-003",
+      "title": "Hamas confirms that Israeli strikes killed its new military leader in Gaza City",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-008",
+      "title": "Israeli attack on Gaza City kills at least 10, including four children",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-001",
+      "title": "For Gaza, Eid joy is now a form of resistance",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-009",
+      "title": "Palestinian graduates in the West Bank enter a collapsed job market",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-004",
+      "title": "The West Bank's Youth Unemployment Crisis",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-05-28-004",
+      "title": "The West Bank's Youth Unemployment Crisis",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-22-009",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-05-28-002",
+      "title": "Israel's defence minister says large-scale Palestinian migration from Gaza will go ahead",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-006",
+      "title": "Israel kills children in strikes on Gaza as fear taints Eid joy",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-005",
+      "title": "Human rights lawyer Francesca Albanese on life under US sanctions - podcast",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-003",
+      "title": "Hamas confirms that Israeli strikes killed its new military leader in Gaza City",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-008",
+      "title": "Israeli attack on Gaza City kills at least 10, including four children",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-001",
+      "title": "For Gaza, Eid joy is now a form of resistance",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-009",
+      "title": "Palestinian graduates in the West Bank enter a collapsed job market",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-28-004",
+      "title": "The West Bank's Youth Unemployment Crisis",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-22-009",
+      "prior_edition_date": "2026-05-22",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

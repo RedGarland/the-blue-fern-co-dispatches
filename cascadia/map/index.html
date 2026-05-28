@@ -125,6 +125,7 @@
         <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
         <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
         <p class="date-range" id="dateRangeDesktop">Reports shown: 2026-05-24</p>
+        <p class="source-note" id="reportCountDesktop">Report count: loading</p>
         <p class="source-note">Sources: public regional reporting and official/public sources</p>
         <div class="header-actions">
           <button id="resetMapDesktop">Reset Map</button>
@@ -140,6 +141,7 @@
           <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="mobileHeaderDetails">More</button>
         </div>
         <p class="date-range" id="dateRangeMobile">Reports shown: 2026-05-24</p>
+        <p class="source-note" id="reportCountMobile">Report count: loading</p>
         <div id="mobileHeaderDetails" class="mobile-header-details">
           <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
           <p class="source-note">Sources: public regional reporting and official/public sources</p>
@@ -285,8 +287,13 @@
       optionize('regionFilter', [...new Set(markers.map((m) => m.region_label).filter(Boolean))].sort());
       const dateRangeDesktop = document.getElementById('dateRangeDesktop');
       const dateRangeMobile = document.getElementById('dateRangeMobile');
+      const reportCountDesktop = document.getElementById('reportCountDesktop');
+      const reportCountMobile = document.getElementById('reportCountMobile');
       const formatDate = (value) => { const dt = new Date(String(value || '')); if (Number.isNaN(dt.getTime())) return null; return dt.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}); };
       if (payload.coverage_start && payload.coverage_end) { const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) { if (dateRangeDesktop) dateRangeDesktop.textContent = `Reports shown: ${start}-${end}`; if (dateRangeMobile) dateRangeMobile.textContent = `Reports shown: ${start}-${end}`; } }
+      const totalReports = markers.length + regional.length;
+      if (reportCountDesktop) reportCountDesktop.textContent = `Report count: ${totalReports}`;
+      if (reportCountMobile) reportCountMobile.textContent = `Report count: ${totalReports}`;
       function defaultNoteText() { if (defaultViewMode === 'regional_fallback') return fallbackNote; if (defaultViewMode === 'sparse_local_plus_regional') return sparseNote; return noResultsNote; }
       function defaultRows() { const modeEl = getEl('viewMode'); const regionalEl = getEl('showRegional'); const mode = modeEl ? modeEl.value : 'grouped'; const includeRegional = regionalEl ? regionalEl.checked : showRegionalDefault; const baseLocal = mode === 'grouped' && grouped.length ? grouped : markers; const baseRegional = mode === 'grouped' && groupedRegional.length ? groupedRegional : regional; return includeRegional ? baseLocal.concat(baseRegional) : baseLocal; }
       function applyFilters() { const pressureEl = getEl('pressureFilter'); const stateEl = getEl('stateFilter'); const regionEl = getEl('regionFilter'); const timeEl = getEl('timeFilter'); const note = getEl('emptyState'); if (note) note.textContent = defaultNoteText(); const pressure = pressureEl ? pressureEl.value : ''; const state = stateEl ? stateEl.value : ''; const region = regionEl ? regionEl.value : ''; const time = timeEl ? timeEl.value : 'all'; const base = defaultRows(); const now = new Date(); const filtered = base.filter((item) => { if (pressure && item.pressure_type !== pressure) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') { const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; } return true; }); const wrap = getEl('mapWrap'); if (wrap) wrap.setAttribute('data-post-filter-count', String(filtered.length)); draw(filtered); }

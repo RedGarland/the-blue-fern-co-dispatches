@@ -17,8 +17,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-73e63f4d92cc2b46"
@@ -63,8 +62,7 @@
     "scoring_reasons": [
       "category=Environment and climate",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-26f27ca81c02cae5"
@@ -110,8 +108,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-c36c66999332d3e7"
@@ -119,9 +116,9 @@
     "source_urls": [
       "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow"
     ],
-    "included_in_public_summary": false,
+    "included_in_public_summary": true,
     "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "excluded_reason": null,
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -156,8 +153,7 @@
     "scoring_reasons": [
       "category=Environment and climate",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-7ea7cbc37cd02b79"
@@ -202,8 +198,7 @@
     "scoring_reasons": [
       "category=Environment and climate",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-3146ec08373abb32"
@@ -249,8 +244,7 @@
     "scoring_reasons": [
       "category=Environment and climate",
       "region_scope=WA",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-f33f42fa2580268f"
@@ -304,7 +298,7 @@
     "source_urls": [
       "https://www.publicalerts.org/wildfire"
     ],
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
@@ -340,8 +334,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=OR",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-7a7b82bc50600603"
@@ -394,7 +387,7 @@
     "source_urls": [
       "https://www.publicalerts.org/flooding-and-land-movement"
     ],
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
@@ -430,8 +423,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=OR",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-1d7766b32b2d8f2a"
@@ -475,8 +467,7 @@
     "scoring_reasons": [
       "category=Housing and homelessness",
       "region_scope=OR",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-384b0b363e7dd13d"
@@ -518,8 +509,7 @@
     "scoring_reasons": [
       "category=Housing and homelessness",
       "region_scope=OR",
-      "source_reliability=official-public",
-      "public_balance=held_for_detail"
+      "source_reliability=official-public"
     ],
     "source_record_ids": [
       "src-d2ade19587162598"
@@ -700,8 +690,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=WA",
-      "source_reliability=reputable-regional-media",
-      "public_balance=held_for_detail"
+      "source_reliability=reputable-regional-media"
     ],
     "source_record_ids": [
       "src-68654221f6b9ad53"
@@ -799,9 +788,9 @@
     "source_urls": [
       "https://idahocapitalsun.com/2026/05/22/repub/governor-declares-drought-emergency-as-utah-dips-into-reservoir-savings"
     ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "out_of_region_state_story_without_cascadia_impact",
     "scope_label": "Regional context",
     "geography_linkage_terms": [
       "idaho",
@@ -836,8 +825,7 @@
     "scoring_reasons": [
       "category=Public safety",
       "region_scope=ID",
-      "source_reliability=reputable-regional-media",
-      "public_balance=held_for_detail"
+      "source_reliability=reputable-regional-media"
     ],
     "source_record_ids": [
       "src-99aaa3e6c4d206f3"
@@ -847,7 +835,7 @@
     ],
     "included_in_public_summary": false,
     "included_in_detail_dataset": false,
-    "excluded_reason": "out_of_region_without_cascadia_impact",
+    "excluded_reason": "out_of_region_state_story_without_cascadia_impact",
     "scope_label": "Regional context",
     "geography_linkage_terms": [
       "idaho"

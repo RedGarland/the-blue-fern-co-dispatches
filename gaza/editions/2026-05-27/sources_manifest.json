@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "UN News",
     "published_at": "2026-05-26T12:00:00+00:00",
-    "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
+    "retrieved_at": "2026-05-28T00:38:58.405824+00:00",
     "summary_or_snippet": "Intensified Israeli airstrikes overnight in Lebanon forced people to again flee their homes, while humanitarians in the Gaza Strip report continued restrictions in bringing aid into the enclave, the United Nations said on Tuesday.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -47,18 +47,18 @@
     "claim_fingerprint": "un|middle east update airstrikes and evacuation orders in lebanon aid restrictions in gaza|humanitarian"
   },
   {
-    "source_record_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
-    "source_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
-    "title": "Israel claims head of Hamas military wing killed in Gaza strike",
-    "url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
+    "source_record_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
+    "source_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
+    "title": "Israeli strike in Gaza City kills new head of Hamas's military wing",
+    "url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-27T08:51:25+00:00",
-    "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
-    "summary_or_snippet": "There was no immediate response from the Palestinian group after Israel claimed Mohammed Odeh killed.",
+    "publisher": "BBC News",
+    "published_at": "2026-05-27T13:15:26+00:00",
+    "retrieved_at": "2026-05-28T00:38:58.405824+00:00",
+    "summary_or_snippet": "Hamas says Mohammed Odeh was killed alongside his wife and two children in a strike on a residential building.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -87,23 +87,23 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "al jazeera|israel claims head of hamas military wing killed in gaza strike",
-    "title_fingerprint": "israel claims head of hamas military wing killed in gaza strike",
-    "claim_fingerprint": "al jazeera|israel claims head of hamas military wing killed in gaza strike|conflict"
+    "dedupe_key": "bbc|israeli strike in gaza city kills new head of hamas s military wing",
+    "title_fingerprint": "israeli strike in gaza city kills new head of hamas s military wing",
+    "claim_fingerprint": "bbc|israeli strike in gaza city kills new head of hamas s military wing|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
-    "source_id": "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5",
-    "title": "Israeli strike in Gaza City kills new head of Hamas's military wing",
-    "url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
-    "canonical_url": "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss",
+    "source_record_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
+    "source_id": "gaza-2026-05-27-aljazeera-middle-east-88a58776a5ee",
+    "title": "Israel claims head of Hamas military wing killed in Gaza strike",
+    "url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/27/israel-claims-head-of-hamas-military-wing-killed-in-gaza-strike?traffic_source=rss",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "BBC News",
-    "published_at": "2026-05-27T09:55:11+00:00",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-27T08:51:25+00:00",
     "retrieved_at": "2026-05-27T13:00:36.681633+00:00",
-    "summary_or_snippet": "At least three people were killed in the attack, which came despite a ceasefire with Hamas being in place.",
+    "summary_or_snippet": "There was no immediate response from the Palestinian group after Israel claimed Mohammed Odeh killed.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -114,11 +114,11 @@
       "gaza-story-2026-05-27-003"
     ],
     "claim_ids": [],
-    "candidate_score": 52,
+    "candidate_score": 44,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
-      "ceasefire_diplomacy": 8,
+      "ceasefire_diplomacy": 0,
       "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
@@ -127,14 +127,13 @@
       "date_confidence": 18
     },
     "ranking_reasons": [
-      "ceasefire_diplomacy",
       "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "bbc|israeli strike in gaza city kills new head of hamas s military wing",
-    "title_fingerprint": "israeli strike in gaza city kills new head of hamas s military wing",
-    "claim_fingerprint": "bbc|israeli strike in gaza city kills new head of hamas s military wing|conflict"
+    "dedupe_key": "al jazeera|israel claims head of hamas military wing killed in gaza strike",
+    "title_fingerprint": "israel claims head of hamas military wing killed in gaza strike",
+    "claim_fingerprint": "al jazeera|israel claims head of hamas military wing killed in gaza strike|conflict"
   }
 ]

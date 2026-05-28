@@ -38,7 +38,7 @@
     "publisher_names": [
       "UN News"
     ],
-    "generated_at": "2026-05-27T13:00:40.431549+00:00",
+    "generated_at": "2026-05-28T00:39:02.171874+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -54,58 +54,6 @@
   },
   {
     "story_id": "gaza-story-2026-05-27-003",
-    "title": "Israeli strike in Gaza City kills new head of Hamas's military wing",
-    "summary": "At least three people were killed in the attack, which came despite a ceasefire with Hamas being in place.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 67,
-    "scoring_reasons": [
-      "ceasefire_diplomacy",
-      "civilian_harm",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 12,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5"
-    ],
-    "source_ids": [
-      "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5"
-    ],
-    "source_urls": [
-      "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss"
-    ],
-    "publisher_names": [
-      "BBC News"
-    ],
-    "generated_at": "2026-05-27T13:00:40.431549+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 67,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-05-27-002",
     "title": "Israel claims head of Hamas military wing killed in Gaza strike",
     "summary": "There was no immediate response from the Palestinian group after Israel claimed Mohammed Odeh killed.",
     "category": "conflict",
@@ -141,12 +89,63 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-27T13:00:40.431549+00:00",
+    "generated_at": "2026-05-28T00:39:02.171874+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
     ],
     "top_story_relevance_score": 62,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-27-002",
+    "title": "Israeli strike in Gaza City kills new head of Hamas's military wing",
+    "summary": "Hamas says Mohammed Odeh was killed alongside his wife and two children in a strike on a residential building.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5"
+    ],
+    "source_ids": [
+      "gaza-2026-05-27-bbc-middle-east-42a4b3738ca5"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/cjwppj1yn7go?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-05-28T00:39:02.171874+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 56,
     "substantive_ground": true,
     "flotilla_only": false,
     "include_decision": "include",

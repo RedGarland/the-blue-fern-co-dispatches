@@ -1,18 +1,18 @@
 [
   {
-    "source_record_id": "src-0e5968259184711f",
+    "source_record_id": "src-21e1ab7216fc8d2d",
     "source_id": "washington-state-standard-feed",
-    "title": "US House passes sweeping \u2018gender ideology\u2019 bill aimed at trans kids in schools",
-    "url": "https://washingtonstatestandard.com/2026/05/20/repub/us-house-passes-sweeping-gender-ideology-bill-aimed-at-trans-kids-in-schools",
+    "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
+    "url": "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation",
     "publisher": "Washington State Standard Feed",
-    "published_at": "2026-05-20T22:47:48Z",
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "published_at": "2026-05-19T19:34:13Z",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
-      "story-9c7fd29082be"
+      "story-491d7b3f3269"
     ],
     "claim_ids": [
-      "story-9c7fd29082be"
+      "story-491d7b3f3269"
     ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
@@ -23,7 +23,7 @@
     "coverage_end": "2026-05-24",
     "coverage_label": "May 18\u201324, 2026",
     "region_scope": "WA",
-    "category_hint": "government",
+    "category_hint": "housing",
     "source_type": "rss",
     "provider_id": "registry",
     "provider_name": "Cascadia source registry",
@@ -31,7 +31,6 @@
     "search_start_date": "2026-05-18",
     "search_end_date": "2026-05-24",
     "region_terms_matched": [
-      "or",
       "washington"
     ],
     "state_hint": "WA",
@@ -45,7 +44,7 @@
     "url": "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-21T22:22:48Z",
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-0a341d401b1c"
@@ -84,7 +83,7 @@
     "url": "https://idahocapitalsun.com/2026/05/20/six-idaho-republican-lawmakers-lose-primary-election-two-more-are-trailing",
     "publisher": "Idaho Capital Sun Feed",
     "published_at": "2026-05-20T08:35:07Z",
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-c29bdf1d3dd9"
@@ -122,7 +121,7 @@
     "url": "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
     "publisher": "Washington State Standard Feed",
     "published_at": "2026-05-20T22:38:56Z",
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-cb40ce4a0ae4"
@@ -160,7 +159,7 @@
     "url": "https://www.publicalerts.org/flooding-and-land-movement",
     "publisher": "Portland Public Alerts",
     "published_at": null,
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-15f927fd0944"
@@ -198,7 +197,7 @@
     "url": "https://www.publicalerts.org/wildfire",
     "publisher": "Portland Public Alerts",
     "published_at": null,
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-7dfd23c0456d"
@@ -236,7 +235,7 @@
     "url": "https://idahocapitalsun.com/2026/05/22/repub/governor-declares-drought-emergency-as-utah-dips-into-reservoir-savings",
     "publisher": "Idaho Capital Sun Feed",
     "published_at": "2026-05-22T20:54:41Z",
-    "retrieved_at": "2026-05-28T17:29:10.700917+00:00",
+    "retrieved_at": "2026-05-28T18:17:38.445852+00:00",
     "archive_path": null,
     "used_in_story_ids": [
       "story-f1255e4fc801"

@@ -4,7 +4,7 @@
     "title": "Public Safety",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Public safety",
-    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -27,8 +27,8 @@
       "https://alert.seattle.gov/category/public-safety"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -50,7 +50,7 @@
     "title": "OEM \u2013 Wildfire Smoke and Air Quality Guidance",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Environment and climate",
-    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -73,8 +73,8 @@
       "https://alert.seattle.gov/2023/08/19/oem-wildfire-smoke-and-air-quality-guidance-2"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -97,7 +97,7 @@
     "title": "Seattle City Light providing assistance as Sourdough wildfire continues to grow",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Public safety",
-    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -143,7 +143,7 @@
     "title": "Winter Storm: High Winds and Flooding due to King Tides and Rainfall",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Environment and climate",
-    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -166,8 +166,8 @@
       "https://alert.seattle.gov/2022/12/27/storms"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -189,7 +189,7 @@
     "title": "Wildfire Smoke Alert: Unhealthy Air Quality",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Environment and climate",
-    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -212,8 +212,8 @@
       "https://alert.seattle.gov/2022/10/18/wildfire-smoke-10-18-22"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -236,7 +236,7 @@
     "title": "Wildfire Smoke is Impacting Air Quality",
     "summary": "This source was flagged as a public safety signal for Washington based on its title and source metadata.",
     "category": "Environment and climate",
-    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -259,8 +259,8 @@
       "https://alert.seattle.gov/2022/09/09/wildfire-smoke-09-09-22"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "seattle",
@@ -283,7 +283,7 @@
     "title": "Wildfire",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Public safety",
-    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -305,8 +305,8 @@
       "https://www.publicalerts.org/wildfire"
     ],
     "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "portland"
@@ -327,7 +327,7 @@
     "title": "Wildfire Smoke",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Public safety",
-    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -350,8 +350,8 @@
       "https://www.publicalerts.org/wildfire-smoke"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "portland",
@@ -373,7 +373,7 @@
     "title": "Flooding and Land Movement",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Environment and climate",
-    "why_it_matters": "In Oregon, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -395,8 +395,8 @@
       "https://www.publicalerts.org/flooding-and-land-movement"
     ],
     "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "portland"
@@ -417,7 +417,7 @@
     "title": "Wildfire Recovery",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Public safety",
-    "why_it_matters": "In Oregon, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -440,8 +440,8 @@
       "https://www.publicalerts.org/wildfire-recovery"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "portland"
@@ -462,7 +462,7 @@
     "title": "Affordable Housing Information",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Housing and homelessness",
-    "why_it_matters": "In Oregon, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "why_it_matters": "Housing-cost and shelter strain can force tradeoffs in household stability and local service demand.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -505,7 +505,7 @@
     "title": "Alerts & Emergencies Currently selected",
     "summary": "This source was flagged as a public safety signal for Oregon based on its title and source metadata.",
     "category": "Housing and homelessness",
-    "why_it_matters": "In Oregon, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "why_it_matters": "Housing-cost and shelter strain can force tradeoffs in household stability and local service demand.",
     "score": 63,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -548,7 +548,7 @@
     "title": "Washington\u2019s largest utility moves to add more wind power",
     "summary": "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, the latest move in the utility\u2019s transition to become greenhouse gas neutral by 2030, as state law mandates. On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind.",
     "category": "Energy and utilities",
-    "why_it_matters": "In Washington, Public systems signals can affect public services, local planning, and regional resilience.",
+    "why_it_matters": "Utility-supply changes can affect grid planning, ratepayer exposure, and local energy resilience.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -594,7 +594,7 @@
     "title": "US House passes sweeping \u2018gender ideology\u2019 bill aimed at trans kids in schools",
     "summary": "WASHINGTON \u2014 The U.S. House passed a bill Wednesday that would require parental consent before a public elementary or middle school can update a student\u2019s pronouns, gender markers or preferred name on records in order to receive federal funding.",
     "category": "Housing and homelessness",
-    "why_it_matters": "In Washington, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "why_it_matters": "Housing-cost and shelter strain can force tradeoffs in household stability and local service demand.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -615,9 +615,9 @@
     "source_urls": [
       "https://washingtonstatestandard.com/2026/05/20/repub/us-house-passes-sweeping-gender-ideology-bill-aimed-at-trans-kids-in-schools"
     ],
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": true,
-    "excluded_reason": null,
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "excluded_reason": "unsupported_category_or_weak_category_match",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "or",
@@ -625,7 +625,9 @@
       "washington"
     ],
     "traceability_note": "Retrieved from curated free Cascadia source registry; URL, title, publisher, and date metadata preserved when supplied.",
-    "eligibility_diagnostics": [],
+    "eligibility_diagnostics": [
+      "category_not_supported_by_content"
+    ],
     "dispatch_slug": "cascadia",
     "public_name": "The Cascadia Briefing",
     "briefing_type": "weekly",
@@ -640,7 +642,7 @@
     "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
     "summary": "During the height of December\u2019s severe flooding, Washington made $3.5 million available to those in need. Five months later, most of that funding has gone unused.",
     "category": "Environment and climate",
-    "why_it_matters": "In Washington, Environmental and climate signals can affect public safety, infrastructure planning, and regional resilience.",
+    "why_it_matters": "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -685,7 +687,7 @@
     "title": "Minnesota becomes first state to outlaw prediction markets, immediately sued by federal regulators",
     "summary": "Minnesota became the first state to outlaw prediction markets \u2014 online platforms where people can bet on the outcomes of events \u2014 after Gov. Tim Walz signed a public safety bill (SF4760) into law Monday.",
     "category": "Public safety",
-    "why_it_matters": "In Washington, Public safety signals can affect emergency response, household stability, and local service coordination.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -708,8 +710,8 @@
       "https://washingtonstatestandard.com/2026/05/19/repub/minnesota-becomes-first-state-to-outlaw-prediction-markets-immediately-sued-by-federal-regulators"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "geography_state_inferred_only_from_feed",
     "scope_label": "Local",
     "geography_linkage_terms": [
       "wa",
@@ -731,7 +733,7 @@
     "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
     "summary": "The Trump administration on Tuesday launched an investigation into Washington state\u2019s practice of housing transgender women in its women\u2019s prison. In a letter to Gov.",
     "category": "Housing and homelessness",
-    "why_it_matters": "In Washington, Housing signals can affect household stability, local services, and public-sector capacity.",
+    "why_it_matters": "Housing-cost and shelter strain can force tradeoffs in household stability and local service demand.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -744,8 +746,7 @@
     "scoring_reasons": [
       "category=Housing and homelessness",
       "region_scope=WA",
-      "source_reliability=reputable-regional-media",
-      "public_balance=held_for_detail"
+      "source_reliability=reputable-regional-media"
     ],
     "source_record_ids": [
       "src-21e1ab7216fc8d2d"
@@ -753,9 +754,9 @@
     "source_urls": [
       "https://washingtonstatestandard.com/2026/05/19/was-transgender-prison-policy-is-target-of-new-federal-investigation"
     ],
-    "included_in_public_summary": false,
+    "included_in_public_summary": true,
     "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "excluded_reason": null,
     "scope_label": "Local",
     "geography_linkage_terms": [
       "wa",
@@ -777,7 +778,7 @@
     "title": "Governor declares drought emergency as Utah dips into reservoir \u2018savings\u2019",
     "summary": "Gov. Spencer Cox declared a state of emergency Thursday, noting every county is in a state of severe or extreme drought after a dry winter marked by record warmth robbed Utah of its snowpack and left rivers and streams running low.",
     "category": "Public safety",
-    "why_it_matters": "Across Cascadia, Public safety signals can affect emergency response, household stability, and local service coordination. This source explicitly links via idaho, or.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -822,7 +823,7 @@
     "title": "This wildfire season could be hotter, drier and pricier, Utah officials say",
     "summary": "The 2026 wildfire season is shaping up to be not just hotter and drier but also more expensive after the cost of gasoline soared in the three months since the Iran war began. Usually, when state officials refer to \u201cfuel\u201d in wildland firefighting, they\u2019re talking about grass, brush and trees at risk of burning in [\u2026]",
     "category": "Public safety",
-    "why_it_matters": "Across Cascadia, Public safety signals can affect emergency response, household stability, and local service coordination. This source explicitly links via idaho.",
+    "why_it_matters": "Emergency alerts matter when they affect evacuation, road access, or local response capacity.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,
@@ -845,8 +846,8 @@
       "https://idahocapitalsun.com/2026/05/21/repub/this-wildfire-season-could-be-hotter-drier-and-pricer-utah-officials-say"
     ],
     "included_in_public_summary": false,
-    "included_in_detail_dataset": true,
-    "excluded_reason": "quality_weekly_balance_limit",
+    "included_in_detail_dataset": false,
+    "excluded_reason": "out_of_region_without_cascadia_impact",
     "scope_label": "Regional context",
     "geography_linkage_terms": [
       "idaho"
@@ -867,7 +868,7 @@
     "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
     "summary": "Correction: This story has been corrected to accurately reflect how many incumbent legislators lost re-election bids, and to correct which Gang of Eight members won their primaries. Nine incumbent Idaho Republican legislators lost their re-election bids in the primary election Tuesday, including several who pushed to.",
     "category": "Government and public services",
-    "why_it_matters": "In Idaho, Public systems signals can affect public services, local planning, and regional resilience.",
+    "why_it_matters": "Budget and staffing shifts can change the capacity of local agencies to deliver services.",
     "score": 68,
     "regional_relevance_score": 15,
     "systems_impact_score": 20,

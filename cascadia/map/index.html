@@ -193,8 +193,8 @@
       const regional = payload.regional_reports || [];
       const fallbackNote = "No local reports met the mapping rules for this week. Showing regional/statewide reports instead.";
       const sparseNote = "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context.";
-      const noResultsNote = ["No matching reports", "for the active filters.", "Reset Map to restore the default view."].join(" ");
-      const markerWarningNote = ["Some map markers", "are temporarily unavailable."].join(" ");
+      const noResultsNote = ["No reports match the current filters.", "Reset map to the default view."].join(" ");
+      const markerWarningNote = ["Some markers could not be rendered right now."].join(" ");
       const showRegionalDefault = Boolean(payload.show_regional_default);
       const defaultViewMode = String(payload.default_view_mode || 'local');
       const localMarkerCount = Number((payload.diagnostics && payload.diagnostics.local_marker_count) || (markers || []).length || 0);

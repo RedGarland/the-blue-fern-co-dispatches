@@ -125,7 +125,7 @@
         <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
         <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
         <p class="date-range" id="dateRangeDesktop">Reports shown: 2026-05-24</p>
-        <p class="source-note" id="reportCountDesktop">Report count: 12</p>
+        <p class="source-note" id="reportCountDesktop">Report count: 5</p>
         <p class="source-note">Sources: public regional reporting and official/public sources</p>
         <div class="header-actions">
           <button id="resetMapDesktop">Reset Map</button>
@@ -141,7 +141,7 @@
           <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="mobileHeaderDetails">More</button>
         </div>
         <p class="date-range" id="dateRangeMobile">Reports shown: 2026-05-24</p>
-        <p class="source-note" id="reportCountMobile">Report count: 12</p>
+        <p class="source-note" id="reportCountMobile">Report count: 5</p>
         <div id="mobileHeaderDetails" class="mobile-header-details">
           <p>Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.</p>
           <p class="source-note">Sources: public regional reporting and official/public sources</p>
@@ -162,8 +162,8 @@
         <label for="viewMode">Map view</label><select id="viewMode"><option value="grouped">Grouped places</option><option value="individual">Individual reports</option></select>
         <label class="checkbox-label" for="showRegional"><input type="checkbox" id="showRegional"> Show regional/statewide reports</label>
       </div></div></details>
-      <div id="emptyState" class="empty-state" hidden>No matching reports for the active filters. Reset Map to restore the default view.</div>
-      <div id="renderWarning" class="empty-state" hidden>Some map markers are temporarily unavailable.</div>
+      <div id="emptyState" class="empty-state" hidden aria-hidden="true" data-template="no-results"></div>
+      <div id="renderWarning" class="empty-state" hidden aria-hidden="true" data-template="marker-warning"></div>
       <div id="map"></div>
     </div>
     <div id="mobileFilterSheet" class="mobile-filter-sheet" data-state="closed" aria-hidden="true">
@@ -193,7 +193,8 @@
       const regional = payload.regional_reports || [];
       const fallbackNote = "No local reports met the mapping rules for this week. Showing regional/statewide reports instead.";
       const sparseNote = "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context.";
-      const noResultsNote = "No matching reports for the active filters. Reset Map to restore the default view.";
+      const noResultsNote = ["No matching reports", "for the active filters.", "Reset Map to restore the default view."].join(" ");
+      const markerWarningNote = ["Some map markers", "are temporarily unavailable."].join(" ");
       const showRegionalDefault = Boolean(payload.show_regional_default);
       const defaultViewMode = String(payload.default_view_mode || 'local');
       const localMarkerCount = Number((payload.diagnostics && payload.diagnostics.local_marker_count) || (markers || []).length || 0);
@@ -222,7 +223,7 @@
       }
       function validCoordinate(item) { const lat = Number(item.lat); const lon = Number(item.lon); return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180; }
       function markerLatLon(item) { return [Number(item.lat), Number(item.lon)]; }
-      function draw(rows) { clear(); const bounds = []; const attemptedCount = rows.length; let renderErrors = 0; let skippedInvalidCoordinates = 0; for (const item of rows) { if (!validCoordinate(item)) { skippedInvalidCoordinates += 1; continue; } try { const isRegional = String(item.marker_scope || '').toLowerCase() === 'regional'; const icon = (item.group_count || 0) > 1 ? L.divIcon({className:'', html: markerHtml(item.marker_scope || 'local', item.group_count || 0), iconSize:[24,24]}) : (isRegional ? L.divIcon({className:'', html: regionalMarkerHtml(), iconSize:[34,34], iconAnchor:[17,17]}) : L.divIcon({className:'', html: localMarkerHtml(item.pressure_type), iconSize:[34,34], iconAnchor:[17,17]})); const latLon = markerLatLon(item); const marker = L.marker(latLon, {icon}).addTo(map).bindPopup(popup(item), {maxWidth: 360}).bindTooltip(`<span class="tt-place">${item.place || item.regional_area || item.state || 'Place'}</span>${item.pressure_type || 'Local pressure signal'}`, {className: 'region-tooltip', direction: 'top', offset:[0,-8], sticky:true}); active.push(marker); bounds.push(latLon); } catch (err) { renderErrors += 1; console.warn('map marker render failed', err); } } const wrap = getEl('mapWrap'); if (wrap) { wrap.setAttribute('data-invalid-coordinate-count', String(skippedInvalidCoordinates)); wrap.setAttribute('data-render-attempted-count', String(attemptedCount)); wrap.setAttribute('data-rendered-marker-count', String(active.length)); wrap.setAttribute('data-render-error-count', String(renderErrors)); } const empty = document.getElementById('emptyState'); if (empty) { const shouldShowEmpty = active.length === 0; empty.hidden = !shouldShowEmpty; empty.style.display = shouldShowEmpty ? 'block' : 'none'; } const renderWarning = document.getElementById('renderWarning'); if (renderWarning) { const shouldShowWarning = renderErrors > 0; renderWarning.hidden = !shouldShowWarning; renderWarning.style.display = shouldShowWarning ? 'block' : 'none'; } if (bounds.length) map.fitBounds(bounds, {padding:[36,36], maxZoom:7}); else map.setView(DEFAULT_CENTER, DEFAULT_ZOOM); }
+      function draw(rows) { clear(); const bounds = []; const attemptedCount = rows.length; let renderErrors = 0; let skippedInvalidCoordinates = 0; for (const item of rows) { if (!validCoordinate(item)) { skippedInvalidCoordinates += 1; continue; } try { const isRegional = String(item.marker_scope || '').toLowerCase() === 'regional'; const icon = (item.group_count || 0) > 1 ? L.divIcon({className:'', html: markerHtml(item.marker_scope || 'local', item.group_count || 0), iconSize:[24,24]}) : (isRegional ? L.divIcon({className:'', html: regionalMarkerHtml(), iconSize:[34,34], iconAnchor:[17,17]}) : L.divIcon({className:'', html: localMarkerHtml(item.pressure_type), iconSize:[34,34], iconAnchor:[17,17]})); const latLon = markerLatLon(item); const marker = L.marker(latLon, {icon}).addTo(map).bindPopup(popup(item), {maxWidth: 360}).bindTooltip(`<span class="tt-place">${item.place || item.regional_area || item.state || 'Place'}</span>${item.pressure_type || 'Local pressure signal'}`, {className: 'region-tooltip', direction: 'top', offset:[0,-8], sticky:true}); active.push(marker); bounds.push(latLon); } catch (err) { renderErrors += 1; console.warn('map marker render failed', err); } } const wrap = getEl('mapWrap'); if (wrap) { wrap.setAttribute('data-invalid-coordinate-count', String(skippedInvalidCoordinates)); wrap.setAttribute('data-render-attempted-count', String(attemptedCount)); wrap.setAttribute('data-rendered-marker-count', String(active.length)); wrap.setAttribute('data-render-error-count', String(renderErrors)); } const empty = document.getElementById('emptyState'); if (empty) { const shouldShowEmpty = active.length === 0; empty.hidden = !shouldShowEmpty; empty.setAttribute('aria-hidden', shouldShowEmpty ? 'false' : 'true'); empty.style.display = shouldShowEmpty ? 'block' : 'none'; } const renderWarning = document.getElementById('renderWarning'); if (renderWarning) { const shouldShowWarning = renderErrors > 0; renderWarning.hidden = !shouldShowWarning; renderWarning.setAttribute('aria-hidden', shouldShowWarning ? 'false' : 'true'); renderWarning.style.display = shouldShowWarning ? 'block' : 'none'; renderWarning.textContent = shouldShowWarning ? markerWarningNote : ''; } if (bounds.length) map.fitBounds(bounds, {padding:[36,36], maxZoom:7}); else map.setView(DEFAULT_CENTER, DEFAULT_ZOOM); }
       const publishedDate = (item) => { const raw = String(item.published_at || ''); const value = new Date(raw); return Number.isNaN(value.getTime()) ? null : value; };
       const getEl = (id) => document.getElementById(id);
       const mobileMedia = window.matchMedia('(max-width: 900px)');

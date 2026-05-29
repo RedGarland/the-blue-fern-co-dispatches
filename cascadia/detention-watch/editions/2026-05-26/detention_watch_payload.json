@@ -103,11 +103,13 @@
   "open_questions": [
     {
       "text": "What current official records identify contract structure and operator responsibilities for the Tacoma facility?",
-      "label": "open_question"
+      "label": "open_question",
+      "source_refs": []
     },
     {
       "text": "What recent court records materially changed detention procedures affecting Washington, Oregon, or Idaho residents?",
-      "label": "open_question"
+      "label": "open_question",
+      "source_refs": []
     }
   ],
   "method_note": "We separate what is documented, what is reported by cited sources, and what remains unknown. Claims without a source are left out or listed as open questions.",
@@ -146,6 +148,7 @@
     }
   ],
   "_source_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-26.json",
-  "last_checked": "2026-05-29T18:24:50.954923+00:00",
-  "generated_at": "2026-05-29T18:24:50.954923+00:00"
+  "last_checked": "2026-05-29T19:21:39.775949+00:00",
+  "generated_at": "2026-05-29T19:21:39.775949+00:00",
+  "expected_next_review": "2026-06-02"
 }

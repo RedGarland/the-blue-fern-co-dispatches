@@ -15,29 +15,18 @@
       "story-c7a4b5528a8c"
     ],
     "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-04",
     "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026",
     "region_scope": "WA",
-    "category_hint": "Transportation"
-  },
-  {
-    "source_record_id": "src-b9754106373f837f",
-    "source_id": "cascadia-manual",
-    "title": "Local college team wins postseason game",
-    "url": "https://example.com/cascadia-sports-placeholder",
-    "publisher": "Blue Fern Cascadia Manual Source File",
-    "published_at": "2026-05-03T10:00:00Z",
-    "retrieved_at": "2026-05-05T03:37:19.976342+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "story-d53365c68a09"
-    ],
-    "claim_ids": [
-      "story-d53365c68a09"
-    ],
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-03",
-    "region_scope": "regional",
-    "category_hint": "sports"
+    "category_hint": "Transportation",
+    "public_category": "Transportation",
+    "category_id": "transportation",
+    "category_label": "Transportation"
   },
   {
     "source_record_id": "src-f6381af1da25bfb2",
@@ -55,8 +44,17 @@
       "story-b5a2f0ce428f"
     ],
     "dispatch_slug": "cascadia",
+    "public_name": "The Cascadia Briefing",
+    "briefing_type": "weekly",
+    "run_date": "2026-05-04",
     "edition_date": "2026-05-03",
+    "coverage_start": "2026-04-27",
+    "coverage_end": "2026-05-03",
+    "coverage_label": "Apr 27\u2013May 3, 2026",
     "region_scope": "OR",
-    "category_hint": "Public safety"
+    "category_hint": "Public safety",
+    "public_category": "Public safety",
+    "category_id": "public_safety",
+    "category_label": "Public safety"
   }
 ]

@@ -1,53 +1,225 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-05-29T02:30:01.085180+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-05-29-aljazeera-middle-east-20e70e0043de",
+    "source_id": "gaza-2026-05-29-aljazeera-middle-east-20e70e0043de",
+    "title": "'Dangerous colonial occupation': Israel's digital West Bank land register",
+    "url": "https://www.aljazeera.com/news/2026/5/29/dangerous-colonial-occupation-israels-digital-west-bank-land-register?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/29/dangerous-colonial-occupation-israels-digital-west-bank-land-register?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-29T10:28:18+00:00",
+    "retrieved_at": "2026-05-29T13:00:36.387895+00:00",
+    "summary_or_snippet": "A digital register of land ownership in the West Bank is seen as an escalation of Israel's occupation.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-29"
+    "edition_date": "2026-05-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-29-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|dangerous colonial occupation israel s digital west bank land register",
+    "title_fingerprint": "dangerous colonial occupation israel s digital west bank land register",
+    "claim_fingerprint": "al jazeera|dangerous colonial occupation israel s digital west bank land register|conflict"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-05-29T02:30:01.085180+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-05-29-bbc-middle-east-bc338e08298f",
+    "source_id": "gaza-2026-05-29-bbc-middle-east-bc338e08298f",
+    "title": "Netanyahu says he has directed IDF to increase control of Gaza to 70%",
+    "url": "https://www.bbc.com/news/articles/ceqpelq5reqo?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/ceqpelq5reqo?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-05-29T02:24:52+00:00",
+    "retrieved_at": "2026-05-29T13:00:36.387895+00:00",
+    "summary_or_snippet": "The expansion in control by Israel would contradict the terms of the ceasefire Israel and Hamas agreed to in October 2025.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-29"
+    "edition_date": "2026-05-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-29-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "bbc|netanyahu says he has directed idf to increase control of gaza to 70",
+    "title_fingerprint": "netanyahu says he has directed idf to increase control of gaza to 70",
+    "claim_fingerprint": "bbc|netanyahu says he has directed idf to increase control of gaza to 70|conflict"
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-05-29T02:30:01.085180+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-05-29-guardian-world-a6ef43dd4caf",
+    "source_id": "gaza-2026-05-29-guardian-world-a6ef43dd4caf",
+    "title": "Netanyahu orders Israeli army to seize '70% of Gaza Strip', violating ceasefire deal",
+    "url": "https://www.theguardian.com/world/2026/may/28/netanyahu-orders-israeli-army-seize-70-gaza-strip-violating-ceasefire-deal",
+    "canonical_url": "https://www.theguardian.com/world/2026/may/28/netanyahu-orders-israeli-army-seize-70-gaza-strip-violating-ceasefire-deal",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-28T18:14:28+00:00",
+    "retrieved_at": "2026-05-29T13:00:36.387895+00:00",
+    "summary_or_snippet": "Speaking in West Bank settlement, Israeli PM, who is fighting for political survival before elections, says 'we are squeezing Hamas' Middle East crisis - live updates Benjamin Netanyahu has said he has given orders to the Israeli army to seize control of 70% of the Gaza Strip in a move that threatens to torpedo an already fragile ceasefire and create catastrophic humanitarian conditions in the already devastated territory. Under the US-brokered ceasefire in October, the Israeli army withdrew to a demarcation line which gave Israel direct control of 53% of the occupied territory. Since then, Israeli forces have steadily advanced their positions westward into the Hamas-controlled half of the strip, and declared an ever-expanded no man's land west of that, within which they claim the right to decide who can enter and open fire on anyone perceived as a threat.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-29"
+    "edition_date": "2026-05-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-29-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|netanyahu orders israeli army to seize 70 of gaza strip violating ceasefire deal",
+    "title_fingerprint": "netanyahu orders israeli army to seize 70 of gaza strip violating ceasefire deal",
+    "claim_fingerprint": "guardian|netanyahu orders israeli army to seize 70 of gaza strip violating ceasefire deal|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-29-aljazeera-middle-east-26350d5d508e",
+    "source_id": "gaza-2026-05-29-aljazeera-middle-east-26350d5d508e",
+    "title": "Gaza parents brave dental dilemma: Costly treatment or food on the table?",
+    "url": "https://www.aljazeera.com/economy/2026/5/29/gaza-parents-brave-dental-dilemma-costly-treatment-or-food-on-the-table?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/economy/2026/5/29/gaza-parents-brave-dental-dilemma-costly-treatment-or-food-on-the-table?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-29T08:13:57+00:00",
+    "retrieved_at": "2026-05-29T13:00:36.387895+00:00",
+    "summary_or_snippet": "Many Palestinians in Gaza are forgoing expensive dental treatment, at a detriment to their health.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-29-005"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|gaza parents brave dental dilemma costly treatment or food on the table",
+    "title_fingerprint": "gaza parents brave dental dilemma costly treatment or food on the table",
+    "claim_fingerprint": "al jazeera|gaza parents brave dental dilemma costly treatment or food on the table|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-29-aljazeera-middle-east-2ae6dd72b870",
+    "source_id": "gaza-2026-05-29-aljazeera-middle-east-2ae6dd72b870",
+    "title": "Israel football dispute to 'heat up' after protest in Ireland-Qatar match",
+    "url": "https://www.aljazeera.com/sports/2026/5/29/israel-football-dispute-to-heat-up-further-from-ireland-qatar-protests?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/sports/2026/5/29/israel-football-dispute-to-heat-up-further-from-ireland-qatar-protests?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-29T07:39:09+00:00",
+    "retrieved_at": "2026-05-29T13:00:36.387895+00:00",
+    "summary_or_snippet": "Ireland's football match against Qatar was stalled by pro-Palestinian protests over upcoming games against Israel.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-29-007"
+    ],
+    "claim_ids": [],
+    "candidate_score": 12,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "low",
+    "dedupe_key": "al jazeera|israel football dispute to heat up after protest in ireland qatar match",
+    "title_fingerprint": "israel football dispute to heat up after protest in ireland qatar match",
+    "claim_fingerprint": "al jazeera|israel football dispute to heat up after protest in ireland qatar match|conflict"
   }
 ]

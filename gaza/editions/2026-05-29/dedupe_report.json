@@ -6,11 +6,10 @@
     {
       "story_id": "gaza-story-2026-05-29-003",
       "title": "Netanyahu orders Israeli army to seize '70% of Gaza Strip', violating ceasefire deal",
-      "classification": "major_update",
+      "classification": "new",
       "material_update": true,
       "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
+        "new_story"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -73,21 +72,6 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-05-29-003",
-      "title": "Netanyahu orders Israeli army to seize '70% of Gaza Strip', violating ceasefire deal",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-18-005",
-      "prior_edition_date": "2026-05-18",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-05-29-002",
       "title": "Netanyahu says he has directed IDF to increase control of Gaza to 70%",
       "classification": "major_update",
@@ -120,15 +104,14 @@
     {
       "story_id": "gaza-story-2026-05-29-003",
       "title": "Netanyahu orders Israeli army to seize '70% of Gaza Strip', violating ceasefire deal",
-      "classification": "major_update",
+      "classification": "new",
       "material_update": true,
       "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
+        "new_story"
       ],
       "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-18-005",
-      "prior_edition_date": "2026-05-18",
+      "prior_story_matched": null,
+      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     },

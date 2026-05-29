@@ -9,6 +9,8 @@
       "story_id": "story-0a341d401b1c",
       "title": "Washington\u2019s largest utility moves to add more wind power",
       "category": "Energy and utilities",
+      "category_id": "energy_utilities",
+      "category_label": "Energy and utilities",
       "pressure_type": "Housing and utility pressure",
       "place": "Klickitat County",
       "state": "WA",
@@ -38,6 +40,8 @@
       "story_id": "story-cb40ce4a0ae4",
       "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
       "category": "Environment and climate",
+      "category_id": "environment_climate",
+      "category_label": "Environment and climate",
       "pressure_type": "Wildfire, drought, flood, and recovery",
       "place": "WA",
       "state": "WA",
@@ -63,6 +67,8 @@
       "story_id": "story-491d7b3f3269",
       "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
       "category": "Government and public services",
+      "category_id": "government_public_services",
+      "category_label": "Government and public services",
       "pressure_type": "Housing and utility pressure",
       "place": "WA",
       "state": "WA",
@@ -88,6 +94,8 @@
       "story_id": "story-c29bdf1d3dd9",
       "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
       "category": "Government and public services",
+      "category_id": "government_public_services",
+      "category_label": "Government and public services",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -113,6 +121,8 @@
       "story_id": "map-registry-5694bd7399024506",
       "title": "Washington\u2019s largest utility moves to add more wind power",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "Klickitat County",
       "state": "WA",
@@ -143,6 +153,8 @@
       "story_id": "map-registry-624dc574c93e17a0",
       "title": "US House passes sweeping \u2018gender ideology\u2019 bill aimed at trans kids in schools",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "WA",
       "state": "WA",
@@ -173,6 +185,8 @@
       "story_id": "map-registry-ed9b7ad55727c22a",
       "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "WA",
       "state": "WA",
@@ -203,6 +217,8 @@
       "story_id": "map-registry-d18d7f6b0191ffd6",
       "title": "Minnesota becomes first state to outlaw prediction markets, immediately sued by federal regulators",
       "category": "public_safety",
+      "category_id": "public_safety",
+      "category_label": "Public safety",
       "pressure_type": "Public safety and emergency services",
       "place": "WA",
       "state": "WA",
@@ -233,6 +249,8 @@
       "story_id": "map-registry-c632dbeac2a93b61",
       "title": "WA\u2019s transgender prisoner policy is target of new federal investigation",
       "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
       "pressure_type": "Housing and utility pressure",
       "place": "WA",
       "state": "WA",
@@ -263,6 +281,8 @@
       "story_id": "map-registry-a3dc061c78b48ef0",
       "title": "Governor declares drought emergency as Utah dips into reservoir \u2018savings\u2019",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -293,6 +313,8 @@
       "story_id": "map-registry-5d29a7eb58f97e47",
       "title": "This wildfire season could be hotter, drier and pricier, Utah officials say",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -323,6 +345,8 @@
       "story_id": "map-registry-165528a3366ec331",
       "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -355,6 +379,8 @@
       "story_id": "story-cb40ce4a0ae4",
       "title": "Only a fraction of Washington\u2019s state flood aid has made it to victims",
       "category": "Environment and climate",
+      "category_id": "environment_climate",
+      "category_label": "Environment and climate",
       "pressure_type": "Wildfire, drought, flood, and recovery",
       "place": "WA",
       "state": "WA",
@@ -406,6 +432,8 @@
       "story_id": "story-c29bdf1d3dd9",
       "title": "Nine Idaho Republican lawmakers lose primary election, including some who pushed for budget cuts",
       "category": "Government and public services",
+      "category_id": "government_public_services",
+      "category_label": "Government and public services",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -447,6 +475,8 @@
       "story_id": "map-registry-5694bd7399024506",
       "title": "Washington\u2019s largest utility moves to add more wind power",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "Klickitat County",
       "state": "WA",
@@ -531,6 +561,8 @@
       "story_id": "map-registry-a3dc061c78b48ef0",
       "title": "Governor declares drought emergency as Utah dips into reservoir \u2018savings\u2019",
       "category": "government",
+      "category_id": null,
+      "category_label": "government",
       "pressure_type": "Schools and local government services",
       "place": "ID",
       "state": "ID",
@@ -599,6 +631,8 @@
       "story_id": "story-0a341d401b1c",
       "title": "Washington\u2019s largest utility moves to add more wind power",
       "category": "Energy and utilities",
+      "category_id": "energy_utilities",
+      "category_label": "Energy and utilities",
       "pressure_type": "Housing and utility pressure",
       "place": "Klickitat County",
       "state": "WA",
@@ -648,7 +682,7 @@
       "no_source_date": 13,
       "statewide_not_default_layer": 11
     },
-    "category_corrections_applied": 17,
+    "category_corrections_applied": 4,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
     "local_extraction_success_count": 15,
@@ -765,7 +799,7 @@
         "title": "OEM \u2013 Wildfire Smoke and Air Quality Guidance",
         "source_url": "https://alert.seattle.gov/2023/08/19/oem-wildfire-smoke-and-air-quality-guidance-2/",
         "publisher": "City of Seattle",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Seattle",
           ""
@@ -780,7 +814,7 @@
         "title": "Seattle City Light providing assistance as Sourdough wildfire continues to grow",
         "source_url": "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow/",
         "publisher": "City of Seattle",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Seattle",
           ""
@@ -795,7 +829,7 @@
         "title": "Winter Storm: High Winds and Flooding due to King Tides and Rainfall",
         "source_url": "https://alert.seattle.gov/2022/12/27/storms/",
         "publisher": "City of Seattle",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Seattle",
           ""
@@ -810,7 +844,7 @@
         "title": "Wildfire Smoke Alert: Unhealthy Air Quality",
         "source_url": "https://alert.seattle.gov/2022/10/18/wildfire-smoke-10-18-22/",
         "publisher": "City of Seattle",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Seattle",
           ""
@@ -825,7 +859,7 @@
         "title": "Wildfire Smoke is Impacting Air Quality",
         "source_url": "https://alert.seattle.gov/2022/09/09/wildfire-smoke-09-09-22/",
         "publisher": "City of Seattle",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Seattle",
           ""
@@ -840,7 +874,7 @@
         "title": "Wildfire",
         "source_url": "https://www.publicalerts.org/wildfire",
         "publisher": "Portland PublicAlerts",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Portland",
           ""
@@ -855,7 +889,7 @@
         "title": "Wildfire Smoke",
         "source_url": "https://www.publicalerts.org/wildfire-smoke",
         "publisher": "Portland PublicAlerts",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Portland",
           ""
@@ -870,7 +904,7 @@
         "title": "Flooding and Land Movement",
         "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
         "publisher": "Portland PublicAlerts",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Portland",
           ""
@@ -885,7 +919,7 @@
         "title": "Wildfire Recovery",
         "source_url": "https://www.publicalerts.org/wildfire-recovery",
         "publisher": "Portland PublicAlerts",
-        "detected_pressure_category": "Wildfire, drought, flood, and recovery",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Portland",
           ""
@@ -900,7 +934,7 @@
         "title": "Affordable Housing Information",
         "source_url": "https://www.co.marion.or.us/HA/Pages/default.aspx",
         "publisher": "Marion County",
-        "detected_pressure_category": "Housing and utility pressure",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Affordable Housing Information Marion County",
           ""
@@ -915,7 +949,7 @@
         "title": "Alerts & Emergencies Currently selected",
         "source_url": "https://www.co.marion.or.us/PW/EmergencyManagement/Pages/alerts.aspx",
         "publisher": "Marion County",
-        "detected_pressure_category": "Housing and utility pressure",
+        "detected_pressure_category": "Public safety and emergency services",
         "detected_place_candidates": [
           "Marion County",
           ""

@@ -30,7 +30,7 @@
     "https://washingtonstatestandard.com/2026/05/20/only-a-fraction-of-washingtons-state-flood-aid-has-made-it-to-victims",
     "https://washingtonstatestandard.com/2026/05/21/washingtons-largest-utility-puget-sound-energy-moves-to-add-more-wind-power"
   ],
-  "generated_at": "2026-05-28T21:26:57.810032+00:00",
+  "generated_at": "2026-05-29T02:26:46.544686+00:00",
   "public_url": "https://dispatches.thebluefernco.com/cascadia/editions/2026-05-24/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24",
   "local_backup_path": null,
@@ -66,7 +66,37 @@
     "gdelt",
     "registry"
   ],
-  "query_count": 2,
+  "query_count": 8,
+  "provider_diagnostics": [
+    {
+      "provider_id": "gdelt",
+      "provider_family": "historical_search",
+      "ingest_success": false,
+      "records_seen": 0,
+      "records_accepted": 0,
+      "records_rejected": 0,
+      "failure_count": 7,
+      "failure_reason": "<urlopen error timed out>",
+      "last_success_at": null,
+      "retrieved_at": "2026-05-29T02:21:13.280339+00:00",
+      "coverage_gap_warning": true,
+      "coverage_gap_reason": "zero_records_returned"
+    },
+    {
+      "provider_id": "registry",
+      "provider_family": "registry",
+      "ingest_success": false,
+      "records_seen": 3914,
+      "records_accepted": 26,
+      "records_rejected": 3888,
+      "failure_count": 10,
+      "failure_reason": "registry_fetch_error",
+      "last_success_at": "2026-05-29T02:21:13.280339+00:00",
+      "retrieved_at": "2026-05-29T02:21:13.280339+00:00",
+      "coverage_gap_warning": false,
+      "coverage_gap_reason": null
+    }
+  ],
   "historical_search_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\sources\\2026-05-18_2026-05-24\\historical_search_report.json",
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24\\curation_manifest.json",
@@ -78,10 +108,10 @@
   "paid_or_detail_artifacts": [],
   "detail_artifacts_publicly_exposed": false,
   "warnings": [
-    "provider rate-limit events: 5",
+    "provider rate-limit events: 3",
     "provider invalid JSON responses: 1",
     "registry fetch errors: 10",
-    "gdelt guardrails: min_len=40, max_len=450, requests=2",
+    "gdelt guardrails: min_len=40, max_len=450, requests=8",
     "registry fetch failures by source (deduped): crosscut-rss:1, idaho-commerce-news:1, kuow-rss:1, nws-idaho-alerts:1, nws-oregon-alerts:1, nws-seattle-alerts:1, opb-news-feed:1, or-agriculture-news:1, pierce-county-alerts:1, wa-ecology-news:1",
     "weak date basis warnings (deduped): 3701 item(s)",
     "seattle-alerts item has weak date basis; published_at unavailable or unparseable",
@@ -92,7 +122,13 @@
     "registry source fetch error: HTTP Error 404: Not Found",
     "registry source fetch error: <urlopen error [Errno 11001] getaddrinfo failed>",
     "invalid JSON response: Expecting value: line 1 column 1 (char 0)",
-    "historical provider gdelt rate limited for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): HTTP 429 Too Many Requests after max retries"
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (ferry OR transit OR port OR freight OR rail OR \"supply chain\" OR transportation): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (\"public health\" OR hospital OR \"emergency medical services\" OR \"emergency services\" OR healthcare OR Medicaid OR clinic): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (wildfire OR fire OR smoke OR \"air quality\" OR drought OR flood OR landslide OR earthquake OR climate): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (housing OR homelessness OR shelter OR rent OR eviction): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (layoffs OR unemployment OR \"budget cuts\" OR \"school closure\" OR \"public services\" OR workforce): <urlopen error timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (crime OR \"public safety\" OR \"emergency declaration\" OR evacuation OR \"emergency management\"): <urlopen error _ssl.c:1015: The handshake operation timed out>",
+    "historical provider gdelt failed for query (Washington OR \"Washington state\" OR \"WA\" OR Oregon OR \"OR\" OR Idaho OR \"ID\" OR \"Pacific Northwest\" OR Cascadia OR \"Puget Sound\" OR \"Willamette Valley\" OR \"Treasure Valley\" OR Seattle OR Portland OR Spokane OR Boise OR Tacoma OR Eugene OR Salem OR \"King County\") AND (agriculture OR \"food assistance\" OR SNAP OR \"food bank\" OR \"food insecurity\"): <urlopen error timed out>"
   ],
   "errors": []
 }

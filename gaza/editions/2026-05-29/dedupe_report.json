@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-29",
-  "candidates_seen": 5,
+  "candidates_seen": 6,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-05-29-003",
@@ -27,7 +27,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-004",
+      "story_id": "gaza-story-2026-05-29-005",
       "title": "Gaza parents brave dental dilemma: Costly treatment or food on the table?",
       "classification": "new",
       "material_update": true,
@@ -38,7 +38,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-001",
+      "story_id": "gaza-story-2026-05-29-004",
       "title": "'Dangerous colonial occupation': Israel's digital West Bank land register",
       "classification": "major_update",
       "material_update": false,
@@ -47,7 +47,18 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-005",
+      "story_id": "gaza-story-2026-05-29-001",
+      "title": "Israeli plan to extend control in Gaza provokes German concern",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-29-006",
       "title": "Israel football dispute to 'heat up' after protest in Ireland-Qatar match",
       "classification": "new",
       "material_update": true,
@@ -91,7 +102,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-001",
+      "story_id": "gaza-story-2026-05-29-004",
       "title": "'Dangerous colonial occupation': Israel's digital West Bank land register",
       "classification": "major_update",
       "material_update": false,
@@ -136,7 +147,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-004",
+      "story_id": "gaza-story-2026-05-29-005",
       "title": "Gaza parents brave dental dilemma: Costly treatment or food on the table?",
       "classification": "new",
       "material_update": true,
@@ -150,7 +161,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-001",
+      "story_id": "gaza-story-2026-05-29-004",
       "title": "'Dangerous colonial occupation': Israel's digital West Bank land register",
       "classification": "major_update",
       "material_update": false,
@@ -162,7 +173,21 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-29-005",
+      "story_id": "gaza-story-2026-05-29-001",
+      "title": "Israeli plan to extend control in Gaza provokes German concern",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-29-006",
       "title": "Israel football dispute to 'heat up' after protest in Ireland-Qatar match",
       "classification": "new",
       "material_update": true,

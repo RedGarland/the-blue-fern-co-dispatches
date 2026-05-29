@@ -37,7 +37,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -55,7 +55,7 @@
   {
     "story_id": "gaza-story-2026-05-29-002",
     "title": "Netanyahu says he has directed IDF to increase control of Gaza to 70%",
-    "summary": "The expansion in control by Israel would contradict the terms of the ceasefire. Israel and Hamas agreed to in October 2025.",
+    "summary": "The expansion in Israeli control would contradict the terms of the ceasefire Israel and Hamas agreed to in October 2025.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 49,
@@ -89,7 +89,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -139,7 +139,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -190,7 +190,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -241,7 +241,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -291,7 +291,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-29T20:33:13.289011+00:00",
+    "generated_at": "2026-05-29T20:55:25.745834+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"

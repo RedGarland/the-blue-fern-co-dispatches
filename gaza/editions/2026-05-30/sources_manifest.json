@@ -1,53 +1,188 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-05-30T03:37:23.296790+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-05-30-un-news-middle-east-f8fec2ab5b4e",
+    "source_id": "gaza-2026-05-30-un-news-middle-east-f8fec2ab5b4e",
+    "title": "Gaza: 26 killed over Eid holiday, UN rights investigators report",
+    "url": "https://news.un.org/feed/view/en/story/2026/05/1167610",
+    "canonical_url": "https://news.un.org/feed/view/en/story/2026/05/1167610",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "UN News",
+    "published_at": "2026-05-29T12:00:00+00:00",
+    "retrieved_at": "2026-05-30T13:00:35.924467+00:00",
+    "summary_or_snippet": "At least 26 Palestinians were killed in the Gaza Strip since Tuesday - the eve of one of the most important holidays in Islam - the UN human rights office, OHCHR, reported on Friday.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "official-humanitarian-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-30"
+    "edition_date": "2026-05-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-30-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 62,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "un|gaza 26 killed over eid holiday un rights investigators report",
+    "title_fingerprint": "gaza 26 killed over eid holiday un rights investigators report",
+    "claim_fingerprint": "un|gaza 26 killed over eid holiday un rights investigators report|humanitarian"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-05-30T03:37:23.296790+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-05-30-aljazeera-middle-east-d786b3276b3b",
+    "source_id": "gaza-2026-05-30-aljazeera-middle-east-d786b3276b3b",
+    "title": "Egypt warns Israel that dangerous Gaza escalations threaten ceasefire",
+    "url": "https://www.aljazeera.com/news/2026/5/30/egypt-warns-israel-that-dangerous-gaza-escalations-threaten-ceasefire?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/5/30/egypt-warns-israel-that-dangerous-gaza-escalations-threaten-ceasefire?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-05-30T12:04:35+00:00",
+    "retrieved_at": "2026-05-30T13:00:35.924467+00:00",
+    "summary_or_snippet": "Egypt races to salvage Gaza ceasefire as Israeli attacks and displacement threats push deal to the brink of collapse.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-30"
+    "edition_date": "2026-05-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-30-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|egypt warns israel that dangerous gaza escalations threaten ceasefire",
+    "title_fingerprint": "egypt warns israel that dangerous gaza escalations threaten ceasefire",
+    "claim_fingerprint": "al jazeera|egypt warns israel that dangerous gaza escalations threaten ceasefire|conflict"
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-05-30T03:37:23.296790+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-05-30-guardian-world-f051fb8a0f36",
+    "source_id": "gaza-2026-05-30-guardian-world-f051fb8a0f36",
+    "title": "UN adds Israel and Russia to blacklist for sexual violence in conflict",
+    "url": "https://www.theguardian.com/world/2026/may/29/un-israel-russia-blacklist-sexual-violence-conflict",
+    "canonical_url": "https://www.theguardian.com/world/2026/may/29/un-israel-russia-blacklist-sexual-violence-conflict",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-05-29T17:37:33+00:00",
+    "retrieved_at": "2026-05-30T13:00:35.924467+00:00",
+    "summary_or_snippet": "Organisation cites abuse, including rape of male detainees, by security forces of governments which have blocked UN investigators The UN has added Israel and Russia to a blacklist for sexual violence in conflict, citing abuse by security forces, including the rape of male detainees. The UN verified sexual abuse of 31 Palestinian men, women and children from the Gaza Strip and the occupied West Bank between 2023 and 2025. Israeli attacks included repeated gang-rapes and the use of sexual violence as a form of torture, the report said.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-05-30"
+    "edition_date": "2026-05-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-30-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 48,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|un adds israel and russia to blacklist for sexual violence in conflict",
+    "title_fingerprint": "un adds israel and russia to blacklist for sexual violence in conflict",
+    "claim_fingerprint": "guardian|un adds israel and russia to blacklist for sexual violence in conflict|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-30-un-news-middle-east-750d70544e6e",
+    "source_id": "gaza-2026-05-30-un-news-middle-east-750d70544e6e",
+    "title": "Gaza children trapped 'in an endless cycle of suffering': UNICEF",
+    "url": "https://news.un.org/feed/view/en/story/2026/05/1167604",
+    "canonical_url": "https://news.un.org/feed/view/en/story/2026/05/1167604",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "UN News",
+    "published_at": "2026-05-29T12:00:00+00:00",
+    "retrieved_at": "2026-05-30T13:00:35.924467+00:00",
+    "summary_or_snippet": "The dire conditions in the Gaza Strip are trapping children \"in an endless cycle of suffering\" and their heartbroken parents can only look on, an official with the UN child rights agency UNICEF said on Friday in a fresh appeal for greater humanitarian access to support families in the war-ravaged enclave.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "official-humanitarian-source",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-30",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-30-005"
+    ],
+    "claim_ids": [],
+    "candidate_score": 62,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "un|gaza children trapped in an endless cycle of suffering unicef",
+    "title_fingerprint": "gaza children trapped in an endless cycle of suffering unicef",
+    "claim_fingerprint": "un|gaza children trapped in an endless cycle of suffering unicef|humanitarian"
   }
 ]

@@ -1,27 +1,43 @@
 {
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
-  "public_visible": true,
   "edition_date": "2026-05-30",
-  "generated_at": "2026-05-30T03:37:23.296790+00:00",
+  "generated_at": "2026-05-30T13:00:39.493261+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-30/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30",
-  "local_backup_path": "output\\tmp-backups-pages\\gaza\\2026-05-30",
-  "template_version": "dispatches-static-v1",
-  "source_count": 3,
-  "story_count": 1,
+  "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-05-30",
+  "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-05-30",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 4,
+  "story_count": 4,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "The Guardian",
+    "UN News"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\curation_manifest.json",
   "free_public_artifacts": [
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\edition_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\sources_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-05-30\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
-  "future_paid_fields_todo": [],
   "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
   "warnings": [
-    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-24.json"
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-05-30\\manual_sources.template.json"
   ],
   "errors": []
 }

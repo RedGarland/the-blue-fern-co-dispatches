@@ -1,21 +1,215 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-05-30",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
+    "story_id": "gaza-story-2026-05-30-004",
+    "title": "Gaza children trapped 'in an endless cycle of suffering': UNICEF",
+    "summary": "The dire conditions in the Gaza Strip are trapping children \"in an endless cycle of suffering\" and their heartbroken parents can only look on, an official with the UN child rights agency UNICEF said on Friday in a fresh appeal for greater humanitarian access to support families in the war-ravaged enclave.",
     "category": "humanitarian",
-    "score": 100,
+    "story_scope": "core_gaza",
+    "score": 71,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-05-30-un-news-middle-east-750d70544e6e"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-05-30-un-news-middle-east-750d70544e6e"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/05/1167604"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-05-30T13:00:39.493261+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-30-003",
+    "title": "UN adds Israel and Russia to blacklist for sexual violence in conflict",
+    "summary": "Organisation cites abuse, including rape of male detainees, by security forces of governments which have blocked UN investigators. The UN has added. Israel and Russia to a blacklist for sexual violence in conflict, citing abuse by security forces, including the rape of male detainees. The UN verified sexual abuse of 31 Palestinian men, women and children from the Gaza Strip and the occupied West Bank between 2023 and 2025. Israeli attacks included repeated gang-rapes and the use of sexual violence as a form of torture, the report said.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 69,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-30-guardian-world-f051fb8a0f36"
+    ],
+    "source_ids": [
+      "gaza-2026-05-30-guardian-world-f051fb8a0f36"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/may/29/un-israel-russia-blacklist-sexual-violence-conflict"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-05-30T13:00:39.493261+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 69,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-30-002",
+    "title": "Egypt warns Israel that dangerous Gaza escalations threaten ceasefire",
+    "summary": "Egypt races to salvage Gaza ceasefire as Israeli attacks and displacement threats push deal to the brink of collapse.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-30-aljazeera-middle-east-d786b3276b3b"
+    ],
+    "source_ids": [
+      "gaza-2026-05-30-aljazeera-middle-east-d786b3276b3b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/30/egypt-warns-israel-that-dangerous-gaza-escalations-threaten-ceasefire?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-30T13:00:39.493261+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-30-001",
+    "title": "Gaza: 26 killed over Eid holiday, UN rights investigators report",
+    "summary": "At least 26 Palestinians were killed in the Gaza Strip since Tuesday - the eve of one of the most important holidays in Islam - the UN human rights office, OHCHR, reported on Friday.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-30-un-news-middle-east-f8fec2ab5b4e"
+    ],
+    "source_ids": [
+      "gaza-2026-05-30-un-news-middle-east-f8fec2ab5b4e"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/05/1167610"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-05-30T13:00:39.493261+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

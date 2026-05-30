@@ -5,8 +5,7 @@
   "source_table_row_count": 5,
   "map_report_count": 5,
   "failures": [
-    "rejected story leaked to map payload",
-    "rejected story leaked to public artifact: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\cascadia\\editions\\2026-05-24\\map.html"
+    "rejected story leaked to map payload"
   ],
   "warnings": [
     "story missing coverage_week (legacy-compatible warning): story-97fc4fc48372"

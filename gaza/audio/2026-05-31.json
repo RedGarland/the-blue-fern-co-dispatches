@@ -1,0 +1,55 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-05-31",
+  "generated_at": "2026-05-31T19:51:13.136867Z",
+  "audio_status": "script_ready_no_audio_file",
+  "audio_file": null,
+  "audio_url": null,
+  "audio_mime_type": null,
+  "tts_provider": "none",
+  "tts_model": null,
+  "tts_voice": null,
+  "tts_error": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-05-31-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-31/",
+  "script_text": "This is the Gaza Dispatch audio briefing for May 31, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 6 Palestinians injured in Israeli airstrikes across Gaza Strip. Child, woman among victims as Israeli forces bomb house, refugee camp. This was reported by Anadolu Agency.\n\n2. Borrowed boots, borrowed joy: Football thrives in Gaza camps. Matches organised by a former professional player are providing a brief respite from the harsh reality of life for the thousands living in overcrowded tents, schools or damaged buildings in the shattered Occupied Palestinian Territory of Gaza. This was reported by UN News.\n\n3. Palestinian worker killed by Israeli gunfire in occupied West Bank. 27-year-old worker succumbed to his injuries after being shot by Israeli forces near town of al-Ram, according to Jerusalem Governorate. This was reported by Anadolu Agency.\n\n4. Israeli drone strikes injure several Palestinians in Gaza. Israel has launched a drone strike at a family home in the Al-Bureij camp in central Gaza, injuring at least four people. This was reported by The New Arab.\n\n5. Israeli forces kill Palestinian man trying to climb over barrier. A Palestinian man in his twenties who tried to climb over the separation wall into. Israel for work was shot dead by Israeli forces on Sunday. This was reported by The New Arab.\n\n6. Israeli siege driving Gaza hospital towards shutdown. Gaza's Al-Aqsa Martyrs Hospital says generator failures and. Israel's refusal to allow fuel and supplies threaten a complete shutdown of critical services. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the May 31, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-05-31-anadolu-middle-east-b2ca3c083e8c",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-injured-in-israeli-airstrikes-across-gaza-strip/3952450",
+      "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip"
+    },
+    {
+      "source_record_id": "gaza-2026-05-31-un-news-middle-east-c311bf92f548",
+      "publisher": "UN News",
+      "url": "https://news.un.org/feed/view/en/story/2026/05/1167606",
+      "title": "Borrowed boots, borrowed joy: Football thrives in Gaza camps"
+    },
+    {
+      "source_record_id": "gaza-2026-05-31-anadolu-middle-east-5d852270d849",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475",
+      "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-05-31-the-new-arab-3ebf2d3b8908",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-drone-strikes-injure-several-palestinians-gaza",
+      "title": "Israeli drone strikes injure several Palestinians in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-05-31-the-new-arab-315b54ac8db9",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-forces-kill-palestinian-man-trying-climb-over-barrier",
+      "title": "Israeli forces kill Palestinian man trying to climb over barrier"
+    },
+    {
+      "source_record_id": "gaza-2026-05-31-the-new-arab-a7670b08f789",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-siege-driving-gaza-hospital-towards-shutdown",
+      "title": "Israeli siege driving Gaza hospital towards shutdown"
+    }
+  ]
+}

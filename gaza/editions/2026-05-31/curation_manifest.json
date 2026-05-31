@@ -1,0 +1,392 @@
+[
+  {
+    "story_id": "gaza-story-2026-05-31-005",
+    "title": "Israeli drone strike injures Palestinians in Al-Bureij camp in Gaza",
+    "summary": "The New Arab reported injuries after an Israeli drone strike in Al-Bureij, citing local and medical reporting.",
+    "category": "airstrikes_and_civilian_harm",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "newarab-2026-05-31-al-bureij-drone-strike-injuries"
+    ],
+    "source_ids": [
+      "newarab-2026-05-31-al-bureij-drone-strike-injuries"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-drone-strike-injures-palestinians-al-bureij-camp-gaza"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-007",
+    "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
+    "summary": "Jerusalem Post reported that a Gaza-bound aid convoy was dissolved in Libya after arrests by local authorities.",
+    "category": "humanitarian_access_context",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "jpost-2026-05-31-libya-gaza-bound-convoy-dissolved"
+    ],
+    "source_ids": [
+      "jpost-2026-05-31-libya-gaza-bound-convoy-dissolved"
+    ],
+    "source_urls": [
+      "https://www.jpost.com/middle-east/article-855919"
+    ],
+    "publisher_names": [
+      "Jerusalem Post"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-003",
+    "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
+    "summary": "Anadolu Agency reported that six Palestinians, including a child and a woman, were injured in Israeli airstrikes across Gaza, citing medical sources and witnesses.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "aa-2026-05-31-gaza-airstrikes-injuries"
+    ],
+    "source_ids": [
+      "aa-2026-05-31-gaza-airstrikes-injuries"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/6-palestinians-injured-in-israeli-airstrikes-across-gaza-strip/3952450"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-001",
+    "title": "Borrowed boots, borrowed joy: Football thrives in Gaza camps",
+    "summary": "Matches organised by a former professional player are providing a brief respite from the harsh reality of life for the thousands living in overcrowded tents, schools or damaged buildings in the shattered Occupied Palestinian Territory of Gaza.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-un-news-middle-east-c311bf92f548"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-un-news-middle-east-c311bf92f548"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/05/1167606"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-002",
+    "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
+    "summary": "A controversial law allows Israel to hold Palestinians in prison without charge or trial. Israel says it's a necessary for security, but rights groups say it leaves detainees in a legal limbo.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-npr-world-f4dfbff987c3"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-npr-world-f4dfbff987c3"
+    ],
+    "source_urls": [
+      "https://www.npr.org/2026/05/30/nx-s1-5831351/over-a-thousand-palestinians-from-gaza-held-in-israeli-detention-without-charge"
+    ],
+    "publisher_names": [
+      "NPR"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-006",
+    "title": "IDF says it destroyed Hamas weapons storage facilities in Gaza",
+    "summary": "i24NEWS reported an IDF statement saying Israeli forces destroyed Hamas weapons storage facilities in Gaza.",
+    "category": "military_operations",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "i24-2026-05-31-idf-weapons-storage-destruction"
+    ],
+    "source_ids": [
+      "i24-2026-05-31-idf-weapons-storage-destruction"
+    ],
+    "source_urls": [
+      "https://www.i24news.tv/en/news/israel-at-war/artc-idf-says-it-destroyed-hamas-weapons-storage-facilities-in-gaza"
+    ],
+    "publisher_names": [
+      "i24NEWS"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "military_claim_reported",
+    "claim_status": "military_claim_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-004",
+    "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+    "summary": "Al Jazeera reported satellite imagery indicating extensive destruction in southern Gaza as Israeli control expanded.",
+    "category": "territorial_control_and_destruction",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "alj-2026-05-31-gaza-satellite-erasure-control"
+    ],
+    "source_ids": [
+      "alj-2026-05-31-gaza-satellite-erasure-control"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/5/31/satellite-imagery-shows-erasure-of-southern-gaza-as-israel-expands-control"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

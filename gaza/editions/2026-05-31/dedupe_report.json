@@ -1,32 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-05-31",
-  "candidates_seen": 7,
+  "candidates_seen": 9,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-05-31-005",
-      "title": "Israeli drone strike injures Palestinians in Al-Bureij camp in Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-31-007",
-      "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-05-31-003",
+      "story_id": "gaza-story-2026-05-31-008",
       "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
       "classification": "new",
       "material_update": true,
@@ -37,7 +15,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-001",
+      "story_id": "gaza-story-2026-05-31-002",
       "title": "Borrowed boots, borrowed joy: Football thrives in Gaza camps",
       "classification": "new",
       "material_update": true,
@@ -48,8 +26,30 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-002",
-      "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
+      "story_id": "gaza-story-2026-05-31-004",
+      "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-001",
+      "title": "Israeli drone strikes injure several Palestinians in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-009",
+      "title": "Israeli forces kill Palestinian man trying to climb over barrier",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -60,7 +60,7 @@
     },
     {
       "story_id": "gaza-story-2026-05-31-006",
-      "title": "IDF says it destroyed Hamas weapons storage facilities in Gaza",
+      "title": "Israeli siege driving Gaza hospital towards shutdown",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -70,12 +70,34 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-004",
-      "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+      "story_id": "gaza-story-2026-05-31-003",
+      "title": "Not just the US: How 51 countries armed Israel during Gaza war",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
         "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-005",
+      "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-007",
+      "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -83,40 +105,41 @@
   ],
   "duplicate_skipped": [],
   "continuing_developments": [],
-  "major_updates": [],
-  "merged_sources": 0,
-  "duplicate_groups": [],
-  "reasons": [
+  "major_updates": [
     {
-      "story_id": "gaza-story-2026-05-31-005",
-      "title": "Israeli drone strike injures Palestinians in Al-Bureij camp in Gaza",
-      "classification": "new",
+      "story_id": "gaza-story-2026-05-31-004",
+      "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
+      "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_story"
+        "new_source_url_different_publisher"
       ],
       "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
       "include_decision": "include",
       "public_rendered": true
     },
     {
       "story_id": "gaza-story-2026-05-31-007",
-      "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
-      "classification": "new",
+      "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+      "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_story"
+        "update_term_in_title_or_snippet"
       ],
       "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
       "include_decision": "include",
       "public_rendered": true
-    },
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
     {
-      "story_id": "gaza-story-2026-05-31-003",
+      "story_id": "gaza-story-2026-05-31-008",
       "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
       "classification": "new",
       "material_update": true,
@@ -130,7 +153,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-001",
+      "story_id": "gaza-story-2026-05-31-002",
       "title": "Borrowed boots, borrowed joy: Football thrives in Gaza camps",
       "classification": "new",
       "material_update": true,
@@ -144,8 +167,36 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-002",
-      "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
+      "story_id": "gaza-story-2026-05-31-004",
+      "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-001",
+      "title": "Israeli drone strikes injure several Palestinians in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-009",
+      "title": "Israeli forces kill Palestinian man trying to climb over barrier",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -159,7 +210,7 @@
     },
     {
       "story_id": "gaza-story-2026-05-31-006",
-      "title": "IDF says it destroyed Hamas weapons storage facilities in Gaza",
+      "title": "Israeli siege driving Gaza hospital towards shutdown",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -172,8 +223,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-05-31-004",
-      "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+      "story_id": "gaza-story-2026-05-31-003",
+      "title": "Not just the US: How 51 countries armed Israel during Gaza war",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -182,6 +233,34 @@
       "duplicate_reasons": [],
       "prior_story_matched": null,
       "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-005",
+      "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-05-31-007",
+      "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
       "include_decision": "include",
       "public_rendered": true
     }

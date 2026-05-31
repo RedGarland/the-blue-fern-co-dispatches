@@ -1,11 +1,11 @@
 [
   {
-    "story_id": "gaza-story-2026-05-31-005",
-    "title": "Israeli drone strike injures Palestinians in Al-Bureij camp in Gaza",
-    "summary": "The New Arab reported injuries after an Israeli drone strike in Al-Bureij, citing local and medical reporting.",
-    "category": "airstrikes_and_civilian_harm",
+    "story_id": "gaza-story-2026-05-31-008",
+    "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
+    "summary": "Child, woman among victims as Israeli forces bomb house, refugee camp.",
+    "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 70,
+    "score": 73,
     "scoring_reasons": [
       "civilian_harm",
       "displacement",
@@ -26,122 +26,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "newarab-2026-05-31-al-bureij-drone-strike-injuries"
+      "gaza-2026-05-31-anadolu-middle-east-b2ca3c083e8c"
     ],
     "source_ids": [
-      "newarab-2026-05-31-al-bureij-drone-strike-injuries"
-    ],
-    "source_urls": [
-      "https://www.newarab.com/news/israeli-drone-strike-injures-palestinians-al-bureij-camp-gaza"
-    ],
-    "publisher_names": [
-      "The New Arab"
-    ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin"
-    ],
-    "top_story_relevance_score": 70,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-05-31-007",
-    "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
-    "summary": "Jerusalem Post reported that a Gaza-bound aid convoy was dissolved in Libya after arrests by local authorities.",
-    "category": "humanitarian_access_context",
-    "story_scope": "core_gaza",
-    "score": 65,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "aid_access",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 12,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "jpost-2026-05-31-libya-gaza-bound-convoy-dissolved"
-    ],
-    "source_ids": [
-      "jpost-2026-05-31-libya-gaza-bound-convoy-dissolved"
-    ],
-    "source_urls": [
-      "https://www.jpost.com/middle-east/article-855919"
-    ],
-    "publisher_names": [
-      "Jerusalem Post"
-    ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 65,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "gaza_adjacent_context",
-    "claim_status": "gaza_adjacent_context",
-    "context_only": true,
-    "core_ground_development": false,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-05-31-003",
-    "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
-    "summary": "Anadolu Agency reported that six Palestinians, including a child and a woman, were injured in Israeli airstrikes across Gaza, citing medical sources and witnesses.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 65,
-    "scoring_reasons": [
-      "civilian_harm",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 12,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "aa-2026-05-31-gaza-airstrikes-injuries"
-    ],
-    "source_ids": [
-      "aa-2026-05-31-gaza-airstrikes-injuries"
+      "gaza-2026-05-31-anadolu-middle-east-b2ca3c083e8c"
     ],
     "source_urls": [
       "https://www.aa.com.tr/en/middle-east/6-palestinians-injured-in-israeli-airstrikes-across-gaza-strip/3952450"
@@ -149,12 +37,12 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
     ],
-    "top_story_relevance_score": 65,
+    "top_story_relevance_score": 73,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -169,7 +57,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-31-001",
+    "story_id": "gaza-story-2026-05-31-002",
     "title": "Borrowed boots, borrowed joy: Football thrives in Gaza camps",
     "summary": "Matches organised by a former professional player are providing a brief respite from the harsh reality of life for the thousands living in overcrowded tents, schools or damaged buildings in the shattered Occupied Palestinian Territory of Gaza.",
     "category": "humanitarian",
@@ -206,7 +94,7 @@
     "publisher_names": [
       "UN News"
     ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -226,7 +114,287 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-31-002",
+    "story_id": "gaza-story-2026-05-31-004",
+    "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
+    "summary": "27-year-old worker succumbed to his injuries after being shot by Israeli forces near town of al-Ram, according to Jerusalem Governorate.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-anadolu-middle-east-5d852270d849"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-anadolu-middle-east-5d852270d849"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-001",
+    "title": "Israeli drone strikes injure several Palestinians in Gaza",
+    "summary": "Israel has launched a drone strike at a family home in the Al-Bureij camp in central Gaza, injuring at least four people.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 57,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-the-new-arab-3ebf2d3b8908"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-the-new-arab-3ebf2d3b8908"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-drone-strikes-injure-several-palestinians-gaza"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-009",
+    "title": "Israeli forces kill Palestinian man trying to climb over barrier",
+    "summary": "A Palestinian man in his twenties who tried to climb over the separation wall into. Israel for work was shot dead by Israeli forces on Sunday.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-the-new-arab-315b54ac8db9"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-the-new-arab-315b54ac8db9"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-forces-kill-palestinian-man-trying-climb-over-barrier"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-006",
+    "title": "Israeli siege driving Gaza hospital towards shutdown",
+    "summary": "Gaza's Al-Aqsa Martyrs Hospital says generator failures and. Israel's refusal to allow fuel and supplies threaten a complete shutdown of critical services.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-the-new-arab-a7670b08f789"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-the-new-arab-a7670b08f789"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-siege-driving-gaza-hospital-towards-shutdown"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-003",
+    "title": "Not just the US: How 51 countries armed Israel during Gaza war",
+    "summary": "An Al Jazeera investigation has found that military-related goods from at least 51 countries and territories continued e.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-05-31-aljazeera-middle-east-6b9d3f0b43f0"
+    ],
+    "source_ids": [
+      "gaza-2026-05-31-aljazeera-middle-east-6b9d3f0b43f0"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/2026/5/31/not-just-the-us-how-51-countries-armed-israel-during-gaza-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-05-31-005",
     "title": "Over a thousand Palestinians from Gaza held in Israeli detention without charge",
     "summary": "A controversial law allows Israel to hold Palestinians in prison without charge or trial. Israel says it's a necessary for security, but rights groups say it leaves detainees in a legal limbo.",
     "category": "conflict",
@@ -262,7 +430,7 @@
     "publisher_names": [
       "NPR"
     ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -282,64 +450,10 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-05-31-006",
-    "title": "IDF says it destroyed Hamas weapons storage facilities in Gaza",
-    "summary": "i24NEWS reported an IDF statement saying Israeli forces destroyed Hamas weapons storage facilities in Gaza.",
-    "category": "military_operations",
-    "story_scope": "core_gaza",
-    "score": 38,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "i24-2026-05-31-idf-weapons-storage-destruction"
-    ],
-    "source_ids": [
-      "i24-2026-05-31-idf-weapons-storage-destruction"
-    ],
-    "source_urls": [
-      "https://www.i24news.tv/en/news/israel-at-war/artc-idf-says-it-destroyed-hamas-weapons-storage-facilities-in-gaza"
-    ],
-    "publisher_names": [
-      "i24NEWS"
-    ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 38,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "military_claim_reported",
-    "claim_status": "military_claim_reported",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-05-31-004",
+    "story_id": "gaza-story-2026-05-31-007",
     "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
-    "summary": "Al Jazeera reported satellite imagery indicating extensive destruction in southern Gaza as Israeli control expanded.",
-    "category": "territorial_control_and_destruction",
+    "summary": "Satellite images show transformation as Netanyahu orders military to occupy 70 percent of Gaza.",
+    "category": "conflict",
     "story_scope": "core_gaza",
     "score": 38,
     "scoring_reasons": [
@@ -360,18 +474,18 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "alj-2026-05-31-gaza-satellite-erasure-control"
+      "gaza-2026-05-31-aljazeera-middle-east-49d426c20641"
     ],
     "source_ids": [
-      "alj-2026-05-31-gaza-satellite-erasure-control"
+      "gaza-2026-05-31-aljazeera-middle-east-49d426c20641"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/news/2026/5/31/satellite-imagery-shows-erasure-of-southern-gaza-as-israel-expands-control"
+      "https://www.aljazeera.com/news/2026/5/31/satellite-imagery-shows-erasure-of-southern-gaza-as-israel-expands-control?traffic_source=rss"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-05-31T18:18:38.628186+00:00",
+    "generated_at": "2026-05-31T18:26:28.862125+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -384,9 +498,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-05-18-005",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

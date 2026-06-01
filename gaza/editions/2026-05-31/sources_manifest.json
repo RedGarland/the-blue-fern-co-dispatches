@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "The New Arab",
     "published_at": "2026-05-31T16:50:35+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
     "summary_or_snippet": "Israel has launched a drone strike at a family home in the Al-Bureij camp in central Gaza, injuring at least four people",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -60,7 +60,7 @@
     "wrapper_url": null,
     "publisher": "UN News",
     "published_at": "2026-05-30T12:00:00+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
     "summary_or_snippet": "Matches organised by a former professional player are providing a brief respite from the harsh reality of life for the thousands living in overcrowded tents, schools or damaged buildings in the shattered Occupied Palestinian Territory of Gaza.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -100,67 +100,18 @@
     "claim_fingerprint": "un|borrowed boots borrowed joy football thrives in gaza camps|humanitarian"
   },
   {
-    "source_record_id": "gaza-2026-05-31-aljazeera-middle-east-6b9d3f0b43f0",
-    "source_id": "gaza-2026-05-31-aljazeera-middle-east-6b9d3f0b43f0",
-    "title": "Not just the US: How 51 countries armed Israel during Gaza war",
-    "url": "https://www.aljazeera.com/video/2026/5/31/not-just-the-us-how-51-countries-armed-israel-during-gaza-war?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/video/2026/5/31/not-just-the-us-how-51-countries-armed-israel-during-gaza-war?traffic_source=rss",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-31T14:41:14+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
-    "summary_or_snippet": "An Al Jazeera investigation has found that military-related goods from at least 51 countries and territories continued e",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "provider_id": "aljazeera-middle-east",
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "traceability_note": "",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-31",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-31-003"
-    ],
-    "claim_ids": [],
-    "candidate_score": 40,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 8,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "accountability_legal",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "core",
-    "dedupe_key": "al jazeera|not just the us how 51 countries armed israel during gaza war",
-    "title_fingerprint": "not just the us how 51 countries armed israel during gaza war",
-    "claim_fingerprint": "al jazeera|not just the us how 51 countries armed israel during gaza war|conflict"
-  },
-  {
-    "source_record_id": "gaza-2026-05-31-anadolu-middle-east-5d852270d849",
-    "source_id": "gaza-2026-05-31-anadolu-middle-east-5d852270d849",
-    "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
-    "url": "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475",
-    "canonical_url": "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475",
+    "source_record_id": "gaza-2026-05-31-anadolu-middle-east-050b32f3d8c7",
+    "source_id": "gaza-2026-05-31-anadolu-middle-east-050b32f3d8c7",
+    "title": "Israeli forces kill Palestinian who allegedly carried out car-ramming attack in occupied West Bank",
+    "url": "https://www.aa.com.tr/en/middle-east/israeli-forces-kill-palestinian-who-allegedly-carried-out-car-ramming-attack-in-occupied-west-bank/3952565",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/israeli-forces-kill-palestinian-who-allegedly-carried-out-car-ramming-attack-in-occupied-west-bank/3952565",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
     "publisher": "Anadolu Agency",
-    "published_at": "2026-05-31T16:51:40+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
-    "summary_or_snippet": "27-year-old worker succumbed to his injuries after being shot by Israeli forces near town of al-Ram, according to Jerusalem Governorate",
+    "published_at": "2026-05-31T21:56:38+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
+    "summary_or_snippet": "Suspected attacker shot dead at scene, Israeli media reports",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -172,12 +123,12 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-31",
     "used_in_story_ids": [
-      "gaza-story-2026-05-31-004"
+      "gaza-story-2026-05-31-003"
     ],
     "claim_ids": [],
-    "candidate_score": 44,
+    "candidate_score": 56,
     "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
+      "humanitarian_impact": 12,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 12,
@@ -188,14 +139,15 @@
       "date_confidence": 18
     },
     "ranking_reasons": [
+      "humanitarian_impact",
       "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
-    "relevance_band": "peripheral",
-    "dedupe_key": "anadolu|palestinian worker killed by israeli gunfire in occupied west bank",
-    "title_fingerprint": "palestinian worker killed by israeli gunfire in occupied west bank",
-    "claim_fingerprint": "anadolu|palestinian worker killed by israeli gunfire in occupied west bank|conflict"
+    "relevance_band": "core",
+    "dedupe_key": "anadolu|israeli forces kill palestinian who allegedly carried out car ramming attack in occupied west bank",
+    "title_fingerprint": "israeli forces kill palestinian who allegedly carried out car ramming attack in occupied west bank",
+    "claim_fingerprint": "anadolu|israeli forces kill palestinian who allegedly carried out car ramming attack in occupied west bank|conflict"
   },
   {
     "source_record_id": "gaza-2026-05-31-npr-world-f4dfbff987c3",
@@ -208,7 +160,7 @@
     "wrapper_url": null,
     "publisher": "NPR",
     "published_at": "2026-05-30T21:08:42+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
     "summary_or_snippet": "A controversial law allows Israel to hold Palestinians in prison without charge or trial. Israel says it's a necessary for security, but rights groups say it leaves detainees in a legal limbo.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -221,7 +173,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-31",
     "used_in_story_ids": [
-      "gaza-story-2026-05-31-006"
+      "gaza-story-2026-05-31-005"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -257,7 +209,7 @@
     "wrapper_url": null,
     "publisher": "The New Arab",
     "published_at": "2026-05-31T16:25:56+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
     "summary_or_snippet": "Gaza's Al-Aqsa Martyrs Hospital says generator failures and Israel's refusal to allow fuel and supplies threaten a complete shutdown of critical services",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -270,7 +222,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-31",
     "used_in_story_ids": [
-      "gaza-story-2026-05-31-007"
+      "gaza-story-2026-05-31-006"
     ],
     "claim_ids": [],
     "candidate_score": 40,
@@ -296,30 +248,30 @@
     "claim_fingerprint": "new arab|israeli siege driving gaza hospital towards shutdown|conflict"
   },
   {
-    "source_record_id": "gaza-2026-05-31-aljazeera-middle-east-49d426c20641",
-    "source_id": "gaza-2026-05-31-aljazeera-middle-east-49d426c20641",
-    "title": "Satellite imagery shows erasure of southern Gaza as Israel expands control",
-    "url": "https://www.aljazeera.com/news/2026/5/31/satellite-imagery-shows-erasure-of-southern-gaza-as-israel-expands-control?traffic_source=rss",
-    "canonical_url": "https://www.aljazeera.com/news/2026/5/31/satellite-imagery-shows-erasure-of-southern-gaza-as-israel-expands-control?traffic_source=rss",
+    "source_record_id": "gaza-2026-05-31-anadolu-middle-east-1fb56a13e31e",
+    "source_id": "gaza-2026-05-31-anadolu-middle-east-1fb56a13e31e",
+    "title": "Israel must be held accountable for sexual violence against prisoners: Palestinian group",
+    "url": "https://www.aa.com.tr/en/middle-east/israel-must-be-held-accountable-for-sexual-violence-against-prisoners-palestinian-group/3952521",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/israel-must-be-held-accountable-for-sexual-violence-against-prisoners-palestinian-group/3952521",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
-    "publisher": "Al Jazeera",
-    "published_at": "2026-05-31T13:28:26+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
-    "summary_or_snippet": "Satellite images show transformation as Netanyahu orders military to occupy 70 percent of Gaza.",
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-05-31T19:07:00+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
+    "summary_or_snippet": "UN report verified 31 cases of sexual violence perpetrated by Israeli forces against Palestinians",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
     "reliability_tier": "reported-public-source",
-    "provider_id": "aljazeera-middle-east",
+    "provider_id": "anadolu-middle-east",
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-31",
     "used_in_story_ids": [
-      "gaza-story-2026-05-31-009"
+      "gaza-story-2026-05-31-008"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -339,59 +291,9 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "al jazeera|satellite imagery shows erasure of southern gaza as israel expands control",
-    "title_fingerprint": "satellite imagery shows erasure of southern gaza as israel expands control",
-    "claim_fingerprint": "al jazeera|satellite imagery shows erasure of southern gaza as israel expands control|conflict"
-  },
-  {
-    "source_record_id": "gaza-2026-05-31-anadolu-middle-east-b2ca3c083e8c",
-    "source_id": "gaza-2026-05-31-anadolu-middle-east-b2ca3c083e8c",
-    "title": "6 Palestinians injured in Israeli airstrikes across Gaza Strip",
-    "url": "https://www.aa.com.tr/en/middle-east/6-palestinians-injured-in-israeli-airstrikes-across-gaza-strip/3952450",
-    "canonical_url": "https://www.aa.com.tr/en/middle-east/6-palestinians-injured-in-israeli-airstrikes-across-gaza-strip/3952450",
-    "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
-    "wrapper_url": null,
-    "publisher": "Anadolu Agency",
-    "published_at": "2026-05-31T15:53:38+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
-    "summary_or_snippet": "Child, woman among victims as Israeli forces bomb house, refugee camp",
-    "source_type": "rss",
-    "region_scope": "Gaza",
-    "category_hint": "conflict",
-    "reliability_tier": "reported-public-source",
-    "provider_id": "anadolu-middle-east",
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "traceability_note": "",
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-31",
-    "used_in_story_ids": [
-      "gaza-story-2026-05-31-010"
-    ],
-    "claim_ids": [],
-    "candidate_score": 52,
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 12,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "ranking_reasons": [
-      "civilian_harm",
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "relevance_band": "core",
-    "dedupe_key": "anadolu|6 palestinians injured in israeli airstrikes across gaza strip",
-    "title_fingerprint": "6 palestinians injured in israeli airstrikes across gaza strip",
-    "claim_fingerprint": "anadolu|6 palestinians injured in israeli airstrikes across gaza strip|conflict"
+    "dedupe_key": "anadolu|israel must be held accountable for sexual violence against prisoners palestinian group",
+    "title_fingerprint": "israel must be held accountable for sexual violence against prisoners palestinian group",
+    "claim_fingerprint": "anadolu|israel must be held accountable for sexual violence against prisoners palestinian group|conflict"
   },
   {
     "source_record_id": "gaza-2026-05-31-the-new-arab-315b54ac8db9",
@@ -404,7 +306,7 @@
     "wrapper_url": null,
     "publisher": "The New Arab",
     "published_at": "2026-05-31T15:37:51+00:00",
-    "retrieved_at": "2026-05-31T18:58:54.338095+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
     "summary_or_snippet": "A Palestinian man in his twenties who tried to climb over the separation wall into Israel for work was shot dead by Israeli forces on Sunday.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -417,7 +319,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-05-31",
     "used_in_story_ids": [
-      "gaza-story-2026-05-31-011"
+      "gaza-story-2026-05-31-009"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -441,5 +343,103 @@
     "dedupe_key": "new arab|israeli forces kill palestinian man trying to climb over barrier",
     "title_fingerprint": "israeli forces kill palestinian man trying to climb over barrier",
     "claim_fingerprint": "new arab|israeli forces kill palestinian man trying to climb over barrier|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-31-anadolu-middle-east-5d852270d849",
+    "source_id": "gaza-2026-05-31-anadolu-middle-east-5d852270d849",
+    "title": "Palestinian worker killed by Israeli gunfire in occupied West Bank",
+    "url": "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/palestinian-worker-killed-by-israeli-gunfire-in-occupied-west-bank/3952475",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-05-31T16:51:40+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
+    "summary_or_snippet": "27-year-old worker succumbed to his injuries after being shot by Israeli forces near town of al-Ram, according to Jerusalem Governorate",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-31",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-31-011"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "anadolu|palestinian worker killed by israeli gunfire in occupied west bank",
+    "title_fingerprint": "palestinian worker killed by israeli gunfire in occupied west bank",
+    "claim_fingerprint": "anadolu|palestinian worker killed by israeli gunfire in occupied west bank|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-05-31-the-new-arab-d5068782e8b7",
+    "source_id": "gaza-2026-05-31-the-new-arab-d5068782e8b7",
+    "title": "France refers Gaza flotilla abuse allegations to court",
+    "url": "https://www.newarab.com/news/france-refers-gaza-flotilla-abuse-allegations-court",
+    "canonical_url": "https://www.newarab.com/news/france-refers-gaza-flotilla-abuse-allegations-court",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The New Arab",
+    "published_at": "2026-05-30T14:44:06+00:00",
+    "retrieved_at": "2026-06-01T00:37:58.746377+00:00",
+    "summary_or_snippet": "France has referred allegations of abuse against Gaza flotilla activists by Israel to prosecutors as lawyers accuse Paris of acting too late.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "the-new-arab",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-31",
+    "used_in_story_ids": [
+      "gaza-story-2026-05-31-012"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "new arab|france refers gaza flotilla abuse allegations to court",
+    "title_fingerprint": "france refers gaza flotilla abuse allegations to court",
+    "claim_fingerprint": "new arab|france refers gaza flotilla abuse allegations to court|conflict"
   }
 ]

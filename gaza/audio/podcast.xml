@@ -18,19 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 31 May 2026 23:08:49 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 01 Jun 2026 00:38:23 +0000</lastBuildDate>
   <item>
-    <title>Gaza Dispatch Audio Briefing - 2026-05-31</title>
+    <title>Gaza Briefing for May 31, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-05-31-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-05-31-transcript.html</guid>
     <pubDate>Sun, 31 May 2026 00:00:00 +0000</pubDate>
-    <description>This is the Gaza Dispatch audio briefing for May 31, 2026.
-
-Here are the key source-backed developments from today's edition.
-
-1. 6 Palestinians injured in Israeli airstrikes across Gaza Strip. Child, woman among victims as Israeli forces bomb house, refugee camp. This was reported by Anadolu Agency.
-
-2. Borrowed boots, borrowed joy: Football thrives in Gaza camps. Matches organised by a former professional player are providing a brief respite from the harsh reality of life for the thousands living in overcrowded tents, schools or damaged buildings in the shattered Occupied Palestinian</description>
+    <description>This is the Gaza Dispatch audio briefing for May 31, 2026. Here are the key source-backed developments from today's edition. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-05-31.mp3" length="1780224" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

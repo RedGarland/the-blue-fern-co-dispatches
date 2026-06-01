@@ -4,13 +4,15 @@ import csv
 import html
 import json
 import re
+import shutil
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from bluefern_dispatches.cascadia_curate import why_it_matters
+from bluefern_dispatches.cascadia_curate import evaluate_cascadia_geography, why_it_matters
+from bluefern_dispatches.cascadia_categories import CATEGORY_REGISTRY, canonical_category_id, category_label_for
 from bluefern_dispatches.cascadia_ingest import CASCADE_DATA_ROOT
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_weekly import containing_week, format_coverage_label, week_label
@@ -27,6 +29,7 @@ from bluefern_dispatches.generator import (
     page,
     render_archive_for_dates,
     render_dispatch_index_for_dates,
+    render_edition_list_item,
     render_rss_for_dates,
     write_text as generator_write_text,
 )
@@ -38,25 +41,18 @@ INTERNAL_PRODUCT_NAME = "Cascadia Signal"
 DISPATCH_SLUG = "cascadia"
 SHORT_PUBLIC_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
 MAP_NOTE = "Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho."
-PRESSURE_LABELS = {
-    "food": "Food and household support",
-    "food_pressure": "Food and household support",
-    "health": "Health care access",
-    "health_access_pressure": "Health care access",
-    "labor": "Jobs and local economy",
-    "labor_income_pressure": "Jobs and local economy",
-    "housing": "Housing and utility pressure",
-    "housing_household_cost_pressure": "Housing and utility pressure",
-    "transportation": "Transportation and access",
-    "policy": "Schools and local government services",
-    "government": "Schools and local government services",
-    "safety": "Public safety and emergency services",
-    "public safety": "Public safety and emergency services",
-    "emergency": "Public safety and emergency services",
-    "wildfire": "Wildfire, drought, flood, and recovery",
-    "drought": "Wildfire, drought, flood, and recovery",
-    "flood": "Wildfire, drought, flood, and recovery",
-    "recovery": "Wildfire, drought, flood, and recovery",
+CATEGORY_STYLE_MAP: dict[str, dict[str, str]] = {
+    "government_public_services": {"color": "#6D6287", "icon": "G"},
+    "energy_utilities": {"color": "#B08A57", "icon": "E"},
+    "environment_climate": {"color": "#B6784F", "icon": "C"},
+    "public_safety": {"color": "#9A5A4A", "icon": "!"},
+    "housing_homelessness": {"color": "#5D7F62", "icon": "H"},
+    "transportation": {"color": "#5B6F8A", "icon": "T"},
+    "healthcare": {"color": "#5D8793", "icon": "+"},
+    "infrastructure": {"color": "#3F5878", "icon": "I"},
+    "economy_labor": {"color": "#3F5878", "icon": "J"},
+    "food_agriculture": {"color": "#5D7F62", "icon": "F"},
+    "corrections_detention": {"color": "#6D6287", "icon": "D"},
 }
 REGIONAL_AREAS = {
     "WA": "Puget Sound",
@@ -72,14 +68,15 @@ LOCATION_PRECISION_NOTES = {
     "regional": "Regional report.",
 }
 PRESSURE_KEYWORDS: dict[str, tuple[str, ...]] = {
-    "Wildfire, drought, flood, and recovery": ("wildfire", "smoke", "drought", "flood", "water shortage", "burn ban", "disaster recovery", "landslide", "fire"),
-    "Housing and utility pressure": ("housing", "rent", "homeless", "shelter", "eviction", "utility bill", "cooling bills", "power shutoff", "water bill", "utilities"),
-    "Health care access": ("hospital", "clinic", "patients", "insurance", "medicaid", "provider", "behavioral health", "opioid treatment", "health care"),
-    "Public safety and emergency services": ("public safety", "emergency response", "fire department", "police staffing", "911", "ems", "ambulance"),
-    "Schools and local government services": ("school district", "public schools", "local government", "city services", "county services", "budget cuts", "service reduction"),
-    "Jobs and local economy": ("layoff", "layoffs", "wages", "unemployment", "business closure", "local economy", "workforce", "job cuts"),
-    "Food and household support": ("food bank", "snap", "meal", "pantry", "grocery affordability", "food insecurity"),
-    "Transportation and access": ("ferry", "transit", "bus", "road closure", "highway", "bridge", "airport", "mobility", "rail"),
+    "environment_climate": ("wildfire", "smoke", "drought", "flood", "water shortage", "burn ban", "disaster recovery", "landslide", "fire", "climate"),
+    "housing_homelessness": ("housing", "rent", "homeless", "shelter", "eviction", "utility bill", "cooling bills", "power shutoff", "water bill", "utilities"),
+    "healthcare": ("hospital", "clinic", "patients", "insurance", "medicaid", "provider", "behavioral health", "opioid treatment", "health care"),
+    "public_safety": ("public safety", "emergency response", "fire department", "police staffing", "911", "ems", "ambulance"),
+    "government_public_services": ("school district", "public schools", "local government", "city services", "county services", "budget cuts", "service reduction", "government"),
+    "economy_labor": ("layoff", "layoffs", "wages", "unemployment", "business closure", "local economy", "workforce", "job cuts"),
+    "food_agriculture": ("food bank", "snap", "meal", "pantry", "grocery affordability", "food insecurity", "agriculture"),
+    "transportation": ("ferry", "transit", "bus", "road closure", "highway", "bridge", "airport", "mobility", "rail"),
+    "energy_utilities": ("grid", "electric", "energy", "utility", "power"),
 }
 PLACE_STOPWORDS = {"washington", "oregon", "idaho", "pacific northwest", "cascadia", "statewide", "regional"}
 LOCAL_CITY_HINTS: tuple[str, ...] = (
@@ -199,7 +196,17 @@ DEFAULT_MAP_LOCATIONS: dict[str, Any] = {
 
 
 def public_stories(curated: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [story for story in curated if story.get("included_in_public_summary")]
+    stories: list[dict[str, Any]] = []
+    for story in curated:
+        if not story.get("included_in_public_summary"):
+            continue
+        records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
+        record = records[0] if records else {}
+        geo = evaluate_cascadia_geography(record)
+        if not geo["allowed_public"]:
+            continue
+        stories.append(story)
+    return stories
 
 
 def validate_public_stories(stories: list[dict[str, Any]]) -> list[str]:
@@ -244,7 +251,10 @@ def sources_manifest_from_curated(
                 "coverage_end": coverage_end,
                 "coverage_label": coverage_label,
                 "region_scope": record.get("region_scope"),
-                "category_hint": record.get("category_hint"),
+                "category_hint": story.get("category") or record.get("category_hint"),
+                "public_category": story.get("category_label") or story.get("category") or record.get("category_hint"),
+                "category_id": story.get("category_id") or canonical_category_id(story.get("category")) or canonical_category_id(record.get("category_hint")),
+                "category_label": story.get("category_label") or story.get("category") or category_label_for(canonical_category_id(record.get("category_hint")), fallback=str(record.get("category_hint") or "")),
             }
             for field in [
                 "source_type",
@@ -264,6 +274,15 @@ def sources_manifest_from_curated(
                 "source_title",
                 "weekly_date_basis",
                 "traceability_note",
+                "event_date",
+                "event_ts",
+                "source_published_at",
+                "coverage_week",
+                "coverage_start_date",
+                "coverage_end_date",
+                "raw_date_text",
+                "date_quality",
+                "date_quality_reason",
                 "address",
                 "address_line",
                 "facility_name",
@@ -314,10 +333,12 @@ def render_story_group(category: str, stories: list[dict[str, Any]]) -> str:
         source_records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
         source_blocks = "\n".join(render_source_metadata(url, source_records, story.get("category")) for url in story.get("source_urls", []))
         why = story_why_it_matters(story)
+        summary = clean_public_summary_sentences(str(story.get("summary") or ""), max_sentences=2)
+        summary_html = f"\n<p>{html.escape(summary)}</p>" if summary else ""
         items.append(
             f"""<article class="dispatch-story">
 <h3>{html.escape(story["title"])}</h3>
-<p>{html.escape(story["summary"])}</p>
+{summary_html}
 <p><strong>Why it matters:</strong> {html.escape(why)}</p>
 {source_blocks}
 </article>"""
@@ -331,6 +352,154 @@ def story_why_it_matters(story: dict[str, Any]) -> str:
         return value
     records = [record for record in story.get("source_records", []) if isinstance(record, dict)]
     return why_it_matters(records[0] if records else {}, story.get("category"))
+
+
+def clean_summary_sentence(value: str) -> str:
+    text = " ".join(value.split()).strip()
+    if not text:
+        return "Source-backed regional systems update."
+    if text[-1] in ".!?":
+        return text
+    trimmed = text.rstrip(" ,;:-")
+    if not trimmed:
+        return "Source-backed regional systems update."
+    cut = re.split(r"(?<=[.!?])\s+", trimmed)
+    if len(cut) > 1:
+        return cut[0].strip()
+    return f"{trimmed}."
+
+
+def _has_dateline_join(text: str) -> bool:
+    return bool(re.search(r"\b[A-Z]{3,}\s+[—-]\s", text))
+
+
+def is_complete_public_sentence(text: str) -> bool:
+    value = " ".join(str(text or "").split()).strip()
+    if not value:
+        return False
+    if not value.endswith((".", "!", "?")):
+        return False
+    lower = value.lower()
+    weak_fragment_endings = (
+        "from a wind.",
+        "from a solar.",
+        "from a project.",
+        "from a facility.",
+        "from a plant.",
+        "from a site.",
+        "from a development.",
+        "from a program.",
+        "to.",
+        "from.",
+        "in.",
+        "at.",
+        "of.",
+        "by.",
+        "with.",
+        "for.",
+        "gov.",
+        "sen.",
+        "rep.",
+    )
+    if any(lower.endswith(ending) for ending in weak_fragment_endings):
+        return False
+    if _has_dateline_join(value):
+        return False
+    return True
+
+
+def clean_public_summary_sentences(text: str, max_sentences: int = 2) -> str:
+    raw = " ".join(str(text or "").split()).strip()
+    if not raw:
+        return ""
+    raw = re.sub(
+        r"^correction:\s*this story has been corrected[^.?!]*[.?!]\s*",
+        "",
+        raw,
+        flags=re.IGNORECASE,
+    )
+    raw = re.sub(r"^correction:\s*", "", raw, flags=re.IGNORECASE)
+    sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+", raw) if part.strip()]
+    kept: list[str] = []
+    for sentence in sentences:
+        if is_complete_public_sentence(sentence):
+            kept.append(sentence)
+        if len(kept) >= max_sentences:
+            break
+    return " ".join(kept)
+
+
+def _regional_read_story_eligible(story: dict[str, Any]) -> bool:
+    if story.get("excluded_reason"):
+        return False
+    diagnostics = [str(item).strip().lower() for item in story.get("eligibility_diagnostics", []) if str(item).strip()]
+    blocked = {
+        "category_not_supported_by_content",
+        "geography=geography_state_inferred_only_from_feed",
+        "geography=geography_national_without_local_impact",
+    }
+    if any(item in blocked for item in diagnostics):
+        return False
+    cleaned = clean_public_summary_sentences(str(story.get("summary") or ""), max_sentences=2)
+    return bool(cleaned)
+
+
+def build_regional_read(stories: list[dict[str, Any]]) -> str:
+    eligible = [story for story in stories if _regional_read_story_eligible(story)]
+    if not eligible:
+        return "This week’s qualifying source-backed records point to limited regional systems signals. Coverage remains partial."
+    top = sorted(eligible, key=lambda item: item.get("score", 0), reverse=True)[:3]
+    snippets: list[str] = []
+    for story in top:
+        cleaned = clean_public_summary_sentences(str(story.get("summary") or ""), max_sentences=2)
+        if cleaned and cleaned not in snippets:
+            snippets.append(cleaned)
+    if not snippets:
+        return "This week’s qualifying source-backed records point to limited regional systems signals. Coverage remains partial."
+    return " ".join(snippets[:2])
+
+
+def build_coverage_quality(
+    stories: list[dict[str, Any]],
+    map_diagnostics: dict[str, Any] | None = None,
+    provider_diagnostics: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    source_ids: set[str] = set()
+    publishers: set[str] = set()
+    states: set[str] = set()
+    categories: set[str] = set()
+    for story in stories:
+        categories.add(str(story.get("category") or "").strip())
+        source_ids.update(str(item) for item in story.get("source_record_ids", []) if item)
+        for record in story.get("source_records", []) or []:
+            if not isinstance(record, dict):
+                continue
+            publisher = str(record.get("publisher") or record.get("source_name") or "").strip()
+            if publisher:
+                publishers.add(publisher)
+            state = str(record.get("state_hint") or "").strip()
+            if state in {"WA", "OR", "ID"}:
+                states.add(state)
+    known_gaps = []
+    excluded = (map_diagnostics or {}).get("excluded_reasons") or {}
+    if excluded.get("no_specific_place", 0):
+        known_gaps.append("Some records lacked specific place detail for local mapping.")
+    if excluded.get("outside_report_window", 0):
+        known_gaps.append("Some records were excluded because they fell outside the weekly window.")
+    missing_states = sorted({"WA", "OR", "ID"} - states)
+    collection_notes: list[str] = []
+    provider_rows = [row for row in (provider_diagnostics or []) if isinstance(row, dict)]
+    if any(bool(row.get("coverage_gap_warning")) for row in provider_rows):
+        collection_notes.append("One upstream provider returned no usable records, so this edition relies more heavily on local/regional feeds.")
+    return {
+        "source_count": len(source_ids),
+        "publisher_count": len(publishers),
+        "states_covered": sorted(states),
+        "pressure_categories": sorted(cat for cat in categories if cat),
+        "known_gaps": known_gaps,
+        "missing_states": missing_states,
+        "collection_notes": collection_notes,
+    }
 
 
 def matching_source_record(url: str, source_records: list[dict[str, Any]]) -> dict[str, Any]:
@@ -590,15 +759,16 @@ def normalize_public_pressure(
     category_hint: Any,
     title: Any,
     summary: Any,
-) -> tuple[str | None, bool]:
+) -> tuple[str | None, str | None, bool]:
+    category_id = canonical_category_id(category_hint)
+    if category_id:
+        return category_id, category_label_for(category_id), False
     category_text = str(category_hint or "").strip().lower()
-    if category_text in PRESSURE_LABELS:
-        return PRESSURE_LABELS[category_text], False
     haystack = f"{str(title or '').lower()} {str(summary or '').lower()} {category_text}"
-    for label, terms in PRESSURE_KEYWORDS.items():
+    for inferred_category_id, terms in PRESSURE_KEYWORDS.items():
         if any(term in haystack for term in terms):
-            return label, True
-    return None, False
+            return inferred_category_id, category_label_for(inferred_category_id), True
+    return None, None, False
 
 
 def infer_state_code(source: dict[str, Any]) -> str:
@@ -617,7 +787,10 @@ def extract_local_location(source: dict[str, Any], story: dict[str, Any] | None 
     facility = str(source.get("facility_name") or source.get("location_name") or "").strip()
     place = str(source.get("geography") or source.get("place") or "").strip()
     title = str((story or {}).get("title") or source.get("title") or source.get("source_title") or "").strip()
-    summary = str((story or {}).get("summary") or source.get("summary_or_snippet") or source.get("text") or "").strip()
+    summary = clean_public_summary_sentences(
+        str((story or {}).get("summary") or source.get("summary_or_snippet") or source.get("text") or ""),
+        max_sentences=2,
+    )
     body = str(source.get("article_text") or source.get("body_text") or source.get("content") or "").strip()
     source_meta = str(source.get("publisher") or source.get("source_name") or source.get("source_id") or "").strip()
     source_url = str(source.get("url") or source.get("source_url") or "").strip()
@@ -793,6 +966,24 @@ def build_cascadia_map_markers(
             warnings.append(f"map skipped story with no linked source records: {story.get('story_id')}")
             continue
         source = linked_sources[0]
+        geo = evaluate_cascadia_geography(source)
+        if not geo["allowed_public"]:
+            excluded_reasons["geography_sanity_mismatch"] += 1
+            diagnostics["candidate_diagnostics_rows"].append(
+                {
+                    "title": str(story.get("title") or source.get("title") or ""),
+                    "source_url": str(source.get("url") or source.get("source_url") or ""),
+                    "publisher": str(source.get("publisher") or ""),
+                    "detected_pressure_category": str(story.get("category") or source.get("category_hint") or ""),
+                    "detected_place_candidates": [str(source.get("geography") or ""), str(source.get("place") or "")],
+                    "selected_place": "",
+                    "selected_precision": "",
+                    "coordinate_basis": "",
+                    "inclusion_decision": "excluded",
+                    "excluded_reason": "geography_sanity_mismatch",
+                }
+            )
+            continue
         diagnostics["raw_candidate_count"] += 1
         source_url = str(source.get("url") or source.get("source_url") or "").strip()
         if not source_url or not source_url.startswith(("http://", "https://")):
@@ -840,15 +1031,15 @@ def build_cascadia_map_markers(
             )
             continue
         category_text = str(story.get("category") or source.get("category_hint") or "").strip()
-        public_pressure_label, corrected = normalize_public_pressure(category_text, story.get("title"), story.get("summary"))
+        public_category_id, public_pressure_label, corrected = normalize_public_pressure(category_text, story.get("title"), story.get("summary"))
         if corrected:
             diagnostics["category_corrections_applied"] += 1
-        if not public_pressure_label:
+        if not public_pressure_label or not public_category_id:
             excluded_reasons["unresolved_pressure_category"] += 1
             diagnostics["unresolved_category_count"] += 1
             continue
         diagnostics["category_resolution_success_count"] += 1
-        what_found = str(story.get("summary") or "").strip() or "Source-backed local development."
+        what_found = clean_public_summary_sentences(str(story.get("summary") or ""), max_sentences=2)
         marker_scope = "statewide" if coordinate_basis == "state_centroid" else "local"
         if coordinate_basis == "source_default":
             marker_scope = "county"
@@ -942,7 +1133,9 @@ def build_cascadia_map_markers(
                 {
                     "story_id": story.get("story_id"),
                     "title": source_title or story.get("title"),
-                    "category": story.get("category") or public_pressure_label,
+                    "category": story.get("category_label") or public_pressure_label,
+                    "category_id": story.get("category_id") or canonical_category_id(story.get("category")) or public_category_id,
+                    "category_label": story.get("category_label") or category_label_for(story.get("category_id") or canonical_category_id(story.get("category")) or public_category_id, fallback=public_pressure_label),
                     "pressure_type": public_pressure_label,
                     "place": place,
                     "state": state,
@@ -989,7 +1182,9 @@ def build_cascadia_map_markers(
             {
                 "story_id": story.get("story_id"),
                 "title": source_title or story.get("title"),
-                "category": story.get("category"),
+                "category": story.get("category_label") or public_pressure_label,
+                "category_id": story.get("category_id") or canonical_category_id(story.get("category")) or public_category_id,
+                "category_label": story.get("category_label") or category_label_for(story.get("category_id") or canonical_category_id(story.get("category")) or public_category_id, fallback=public_pressure_label),
                 "pressure_type": public_pressure_label,
                 "place": place,
                 "state": state,
@@ -1067,6 +1262,24 @@ def build_backfill_map_markers(
         if not source_url.startswith(("http://", "https://")):
             continue
         state = infer_state_code(record)
+        geo = evaluate_cascadia_geography(record)
+        if not geo["allowed_public"]:
+            excluded_reasons["geography_sanity_mismatch"] += 1
+            candidate_rows.append(
+                {
+                    "title": str(record.get("title") or ""),
+                    "source_url": source_url,
+                    "publisher": str(record.get("publisher") or ""),
+                    "detected_pressure_category": str(record.get("category_hint") or ""),
+                    "detected_place_candidates": [str(record.get("geography") or ""), str(record.get("place") or "")],
+                    "selected_place": "",
+                    "selected_precision": "",
+                    "coordinate_basis": "",
+                    "inclusion_decision": "excluded",
+                    "excluded_reason": "geography_sanity_mismatch",
+                }
+            )
+            continue
         if state not in {"WA", "OR", "ID"}:
             warnings.append(f"map excluded backfill record with unknown state: {record.get('source_record_id')}")
             continue
@@ -1104,10 +1317,10 @@ def build_backfill_map_markers(
             continue
         marker_scope = "statewide" if coordinate_basis == "state_centroid" else ("county" if coordinate_basis == "source_default" else "local")
         category_text = str(record.get("category_hint") or "").strip()
-        pressure_label, corrected = normalize_public_pressure(category_text, record.get("title"), record.get("summary_or_snippet"))
+        pressure_category_id, pressure_label, corrected = normalize_public_pressure(category_text, record.get("title"), record.get("summary_or_snippet"))
         if corrected:
             category_corrections_applied += 1
-        if not pressure_label:
+        if not pressure_label or not pressure_category_id:
             excluded_reasons["unresolved_pressure_category"] += 1
             candidate_rows.append(
                 {
@@ -1126,7 +1339,7 @@ def build_backfill_map_markers(
             continue
         place = str(extracted.get("place") or record.get("geography") or record.get("place") or state).strip() or state
         title = str(record.get("title") or record.get("source_title") or "Source-backed pressure record").strip()
-        summary = str(record.get("summary_or_snippet") or title).strip()
+        summary = clean_public_summary_sentences(str(record.get("summary_or_snippet") or title), max_sentences=2)
         exclusion = map_exclusion_reason_for_record(
             source_url=source_url,
             title=title,
@@ -1227,6 +1440,8 @@ def build_backfill_map_markers(
                     "story_id": f"map-{record.get('source_record_id') or (source_url + title).encode('utf-8').hex()[:16]}",
                     "title": title,
                     "category": record.get("category_hint") or pressure_label,
+                    "category_id": canonical_category_id(record.get("category_id") or record.get("category_hint")) or pressure_category_id,
+                    "category_label": category_label_for(canonical_category_id(record.get("category_id") or record.get("category_hint")) or pressure_category_id, fallback=pressure_label),
                     "pressure_type": pressure_label,
                     "place": place,
                     "state": state,
@@ -1274,6 +1489,8 @@ def build_backfill_map_markers(
                 "story_id": f"map-{record.get('source_record_id') or (source_url + title).encode('utf-8').hex()[:16]}",
                 "title": title,
                 "category": record.get("category_hint") or pressure_label,
+                "category_id": canonical_category_id(record.get("category_id") or record.get("category_hint")) or pressure_category_id,
+                "category_label": category_label_for(canonical_category_id(record.get("category_id") or record.get("category_hint")) or pressure_category_id, fallback=pressure_label),
                 "pressure_type": pressure_label,
                 "place": place,
                 "state": state,
@@ -1420,7 +1637,47 @@ def build_source_density_diagnostics(
     }
 
 
-def render_map_html(edition_date: str, note: str, source_table_href: str) -> str:
+def _category_style(category_id: str | None) -> dict[str, str]:
+    if category_id and category_id in CATEGORY_STYLE_MAP:
+        return CATEGORY_STYLE_MAP[category_id]
+    return {"color": "#5D8793", "icon": "P"}
+
+
+def render_map_html(
+    edition_date: str,
+    note: str,
+    source_table_href: str,
+    initial_report_count: int = 0,
+    map_payload: dict[str, Any] | None = None,
+) -> str:
+    payload = map_payload if isinstance(map_payload, dict) else {}
+    payload_markers = [row for row in list(payload.get("markers") or []) if isinstance(row, dict)]
+    payload_regional = [row for row in list(payload.get("regional_reports") or []) if isinstance(row, dict)]
+    legend_category_ids = sorted(
+        {
+            str(row.get("category_id") or "").strip()
+            for row in (payload_markers + payload_regional)
+            if str(row.get("category_id") or "").strip()
+        }
+    )
+    legend_categories = [
+        {"category_id": category_id, "category_label": category_label_for(category_id, fallback=category_id.replace("_", " "))}
+        for category_id in legend_category_ids
+        if category_id in CATEGORY_REGISTRY
+    ]
+    legend_rows = []
+    for item in legend_categories or []:
+        category_id = str(item.get("category_id") or "").strip()
+        category_label = str(item.get("category_label") or "").strip()
+        if not category_id or not category_label:
+            continue
+        style = _category_style(category_id)
+        legend_rows.append(
+            f'<li class="legend-item"><span class="legend-dot" style="background:{html.escape(style["color"])};"></span>{html.escape(category_label)}</li>'
+        )
+    legend_html = "".join(legend_rows) or '<li class="legend-item">No mapped categories in this view.</li>'
+    category_style_payload = {key: {"color": value["color"], "icon": value["icon"]} for key, value in CATEGORY_STYLE_MAP.items()}
+    category_style_json = json.dumps(category_style_payload, sort_keys=True)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -1434,13 +1691,19 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
     html, body {{ height: 100%; margin: 0; font: 15px/1.45 "Segoe UI", Tahoma, sans-serif; background: #e8eff1; color:#13252f; }}
     .shell {{ height: 100%; display: flex; flex-direction: column; }}
     .resource-header {{ background:var(--header-bg); color:var(--header-secondary); padding:8px 12px 10px; border-bottom:1px solid #355564; text-align:center; }}
+    .desktop-map-header {{ display:block; }}
+    .mobile-map-header {{ display:none; }}
     .resource-branding {{ margin-top:2px; display:flex; flex-direction:column; align-items:center; gap:4px; }}
     .bluefern-icon-link img {{ width:30px; height:30px; border-radius:6px; display:block; }}
+    .header-topline {{ display:flex; align-items:center; justify-content:center; gap:10px; }}
+    .mobile-header-toggle {{ display:none; border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; min-height:44px; padding:8px 12px; font-size:13px; font-weight:700; cursor:pointer; }}
+    .mobile-header-toggle:hover {{ background:#e9f6ff; }}
     .resource-header h1 {{ margin:2px 0 0; font-size:1rem; }}
     .map-title-accent {{ color:var(--header-primary); }}
     .resource-header p {{ margin:.16rem 0 0; color:var(--header-secondary); font-size:.8rem; }}
     .resource-header .date-range {{ margin-top:.2rem; font-size:.82rem; font-weight:700; color:var(--header-primary); }}
     .resource-header .source-note {{ color:var(--header-secondary); }}
+    .mobile-header-details {{ display:block; }}
     .header-actions {{ margin-top:8px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }}
     .header-actions a,
     #resetMap {{ border:1px solid #7ea2b3; background:#f4fbff; color:#12384b; border-radius:8px; padding:8px 12px; cursor:pointer; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; min-height:44px; box-sizing:border-box; }}
@@ -1501,9 +1764,19 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
       .resource-header {{ padding:8px 10px; }}
       .resource-header h1 {{ font-size:.95rem; margin:0; }}
       .resource-header p {{ font-size:.76rem; }}
+      .desktop-map-header {{ display:none; }}
+      .mobile-map-header {{ display:block; }}
+      .mobile-header-toggle {{ display:inline-flex; align-items:center; justify-content:center; }}
+      .mobile-map-header .resource-branding {{ display:none; }}
+      .mobile-map-header .mobile-header-details {{ display:none; }}
+      body.map-header-expanded .mobile-map-header .resource-branding {{ display:flex; }}
+      body.map-header-expanded .mobile-map-header .mobile-header-details {{ display:block; }}
+      body:not(.map-header-expanded) .resource-header {{ padding-top:6px; padding-bottom:8px; }}
       #mapWrap {{ height:72vh; min-height:420px; }}
-      details.filters {{ display:none; }}
+      details.filters {{ display:none !important; }}
       .mobile-filter-fab {{ display:inline-flex; align-items:center; justify-content:center; }}
+      .mobile-filter-sheet[data-state="closed"] {{ display:none !important; }}
+      .mobile-filter-sheet[data-state="open"] {{ display:flex !important; }}
       .controls {{ grid-template-columns:1fr; }}
       .empty-state {{ left:10px; right:10px; bottom:72px; max-width:none; }}
       .leaflet-control-attribution {{ margin-bottom:64px; }}
@@ -1521,16 +1794,38 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
 <body>
   <div class="shell">
     <header class="resource-header">
-      <div class="resource-branding">
-        <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
+      <div class="desktop-map-header">
+        <div class="resource-branding">
+          <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
+        </div>
+        <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
+        <p>{html.escape(note)}</p>
+        <p class="date-range" id="dateRangeDesktop">Reports shown: {html.escape(edition_date)}</p>
+        <p class="source-note" id="reportCountDesktop">Report count: {initial_report_count}</p>
+        <p class="source-note">Sources: public regional reporting and official/public sources</p>
+        <div class="header-actions">
+          <button id="resetMapDesktop">Reset Map</button>
+          <a href="{html.escape(source_table_href)}">Open Source Table</a>
+        </div>
       </div>
-      <h1 class="map-title-accent">Cascadia Public Pressure Map</h1>
-      <p>{html.escape(note)}</p>
-      <p class="date-range" id="dateRange">Reports shown: {html.escape(edition_date)}</p>
-      <p class="source-note">Sources: public regional reporting and official/public sources</p>
-      <div class="header-actions">
-        <button id="resetMap">Reset Map</button>
-        <a href="{html.escape(source_table_href)}">Open Source Table</a>
+      <div class="mobile-map-header">
+        <div class="resource-branding" id="mapHeaderBranding">
+          <a class="bluefern-icon-link" href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img src="/assets/bluefern.ico" alt="Blue Fern icon"></a>
+        </div>
+        <div class="header-topline">
+          <h1 class="map-title-accent">Cascadia Map</h1>
+          <button id="mobileHeaderToggle" class="mobile-header-toggle" type="button" aria-expanded="false" aria-controls="mobileHeaderDetails">More</button>
+        </div>
+        <p class="date-range" id="dateRangeMobile">Reports shown: {html.escape(edition_date)}</p>
+        <p class="source-note" id="reportCountMobile">Report count: {initial_report_count}</p>
+        <div id="mobileHeaderDetails" class="mobile-header-details">
+          <p>{html.escape(note)}</p>
+          <p class="source-note">Sources: public regional reporting and official/public sources</p>
+        </div>
+        <div class="header-actions">
+          <button id="resetMap">Reset Map</button>
+          <a href="{html.escape(source_table_href)}">Open Source Table</a>
+        </div>
       </div>
     </header>
     <div id="mapWrap">
@@ -1543,8 +1838,8 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
         <label for="viewMode">Map view</label><select id="viewMode"><option value="grouped">Grouped places</option><option value="individual">Individual reports</option></select>
         <label class="checkbox-label" for="showRegional"><input type="checkbox" id="showRegional"> Show regional/statewide reports</label>
       </div></div></details>
-      <div id="emptyState" class="empty-state">No reports match the current map filters. Reset Map to restore the default view.</div>
-      <div id="renderWarning" class="empty-state">Some map markers could not be displayed.</div>
+      <div id="emptyState" class="empty-state" hidden aria-hidden="true" data-template="no-results"></div>
+      <div id="renderWarning" class="empty-state" hidden aria-hidden="true" data-template="marker-warning"></div>
       <div id="map"></div>
     </div>
     <div id="mobileFilterSheet" class="mobile-filter-sheet" data-state="closed" aria-hidden="true">
@@ -1558,13 +1853,14 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
     </div>
     <section class="map-support">
       <details class="panel howto mobile-collapsible"><summary>How to read this map</summary><p class="tip">This is a regional systems weather map. Markers are source-backed public reports, not predictions.</p><p class="tip">Color and letter show pressure category. Grouped circles show multiple reports in one place.</p><p class="tip">Local markers are place-specific reports. Regional/statewide reports are a separate context layer.</p><p class="tip">This map is not a complete census or disaster map. It shows traceable weekly signals.</p></details>
-      <details class="panel legend mobile-collapsible"><summary>Legend</summary><p class="tip">Icon markers show pressure categories. Grouped circles show multiple reports in one place.</p><ul class="legend-list"><li class="legend-item"><span class="legend-dot" style="background:#B08A57;"></span>Housing and utility pressure</li><li class="legend-item"><span class="legend-dot" style="background:#5D8793;"></span>Health care access</li><li class="legend-item"><span class="legend-dot" style="background:#3F5878;"></span>Jobs and local economy</li><li class="legend-item"><span class="legend-dot" style="background:#5D7F62;"></span>Food and household support</li><li class="legend-item"><span class="legend-dot" style="background:#5B6F8A;"></span>Transportation and access</li><li class="legend-item"><span class="legend-dot" style="background:#9A5A4A;"></span>Public safety and emergency services</li><li class="legend-item"><span class="legend-dot" style="background:#B6784F;"></span>Wildfire, drought, flood, and recovery</li><li class="legend-item"><span class="legend-dot" style="background:#6D6287;"></span>Schools and local government services</li></ul></details>
+      <details class="panel legend mobile-collapsible"><summary>Legend</summary><p class="tip">Icon markers show pressure categories. Grouped circles show multiple reports in one place.</p><ul class="legend-list">{legend_html}</ul></details>
     </section>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const DEFAULT_CENTER = [45.8, -120.5];
     const DEFAULT_ZOOM = 5;
+    const CATEGORY_STYLE = {category_style_json};
     const map = L.map('map').setView(DEFAULT_CENTER, DEFAULT_ZOOM);
     L.tileLayer('https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{ maxZoom: 18, attribution: '&copy; OpenStreetMap contributors' }}).addTo(map);
     fetch('./map_data.json').then((r) => r.json()).then((payload) => {{
@@ -1574,15 +1870,16 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
       const regional = payload.regional_reports || [];
       const fallbackNote = "No local reports met the mapping rules for this week. Showing regional/statewide reports instead.";
       const sparseNote = "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context.";
-      const noResultsNote = "No reports match the current map filters. Reset Map to restore the default view.";
+      const noResultsNote = ["No reports match the current filters.", "Reset map to the default view."].join(" ");
+      const markerWarningNote = ["Some markers could not be rendered right now."].join(" ");
       const showRegionalDefault = Boolean(payload.show_regional_default);
       const defaultViewMode = String(payload.default_view_mode || 'local');
       const localMarkerCount = Number((payload.diagnostics && payload.diagnostics.local_marker_count) || (markers || []).length || 0);
       let active = [];
       function clear() {{ active.forEach((m) => map.removeLayer(m)); active = []; }}
-      function categoryIcon(category) {{ const c = String(category || '').toLowerCase(); if (c.includes('housing') || c.includes('utility')) return 'H'; if (c.includes('health')) return '+'; if (c.includes('jobs') || c.includes('economy') || c.includes('labor')) return 'J'; if (c.includes('food')) return 'F'; if (c.includes('transport')) return 'T'; if (c.includes('safety') || c.includes('emergency')) return '!'; if (c.includes('wildfire') || c.includes('flood') || c.includes('recovery')) return 'W'; if (c.includes('school') || c.includes('government') || c.includes('policy')) return 'S'; return 'P'; }}
-      function categoryColor(category) {{ const c = String(category || '').toLowerCase(); if (c.includes('housing') || c.includes('utility')) return '#B08A57'; if (c.includes('health')) return '#5D8793'; if (c.includes('jobs') || c.includes('economy') || c.includes('labor')) return '#3F5878'; if (c.includes('food')) return '#5D7F62'; if (c.includes('transport')) return '#5B6F8A'; if (c.includes('safety') || c.includes('emergency')) return '#9A5A4A'; if (c.includes('wildfire') || c.includes('flood') || c.includes('recovery')) return '#B6784F'; if (c.includes('school') || c.includes('government') || c.includes('policy')) return '#6D6287'; return '#5D8793'; }}
-      function localMarkerHtml(category) {{ const label = categoryIcon(category); const color = categoryColor(category); return `<div class="local-pill" style="background:${{color}};">${{label}}</div>`; }}
+      function categoryIcon(categoryId) {{ const key = String(categoryId || ''); const style = CATEGORY_STYLE[key] || {{icon: 'P'}}; return style.icon || 'P'; }}
+      function categoryColor(categoryId) {{ const key = String(categoryId || ''); const style = CATEGORY_STYLE[key] || {{color: '#5D8793'}}; return style.color || '#5D8793'; }}
+      function localMarkerHtml(categoryId) {{ const label = categoryIcon(categoryId); const color = categoryColor(categoryId); return `<div class="local-pill" style="background:${{color}};">${{label}}</div>`; }}
       function markerHtml(scope, count) {{ const size = Math.min(52, 30 + (count * 2)); return `<div class="group-count" style="width:${{size}}px;height:${{size}}px;">${{count}}</div>`; }}
       function regionalMarkerHtml() {{ return '<div class="regional-pill">REG</div>'; }}
       function truncateSummary(text) {{ const value = String(text || '').trim(); if (!value) return 'Source-backed local systems pressure signal.'; return value.length > 140 ? `${{value.slice(0, 137)}}...` : value; }}
@@ -1603,7 +1900,7 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
       }}
       function validCoordinate(item) {{ const lat = Number(item.lat); const lon = Number(item.lon); return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180; }}
       function markerLatLon(item) {{ return [Number(item.lat), Number(item.lon)]; }}
-      function draw(rows) {{ clear(); const bounds = []; const attemptedCount = rows.length; let renderErrors = 0; let skippedInvalidCoordinates = 0; for (const item of rows) {{ if (!validCoordinate(item)) {{ skippedInvalidCoordinates += 1; continue; }} try {{ const isRegional = String(item.marker_scope || '').toLowerCase() === 'regional'; const icon = (item.group_count || 0) > 1 ? L.divIcon({{className:'', html: markerHtml(item.marker_scope || 'local', item.group_count || 0), iconSize:[24,24]}}) : (isRegional ? L.divIcon({{className:'', html: regionalMarkerHtml(), iconSize:[34,34], iconAnchor:[17,17]}}) : L.divIcon({{className:'', html: localMarkerHtml(item.pressure_type), iconSize:[34,34], iconAnchor:[17,17]}})); const latLon = markerLatLon(item); const marker = L.marker(latLon, {{icon}}).addTo(map).bindPopup(popup(item), {{maxWidth: 360}}).bindTooltip(`<span class="tt-place">${{item.place || item.regional_area || item.state || 'Place'}}</span>${{item.pressure_type || 'Local pressure signal'}}`, {{className: 'region-tooltip', direction: 'top', offset:[0,-8], sticky:true}}); active.push(marker); bounds.push(latLon); }} catch (err) {{ renderErrors += 1; console.warn('map marker render failed', err); }} }} const wrap = getEl('mapWrap'); if (wrap) {{ wrap.setAttribute('data-invalid-coordinate-count', String(skippedInvalidCoordinates)); wrap.setAttribute('data-render-attempted-count', String(attemptedCount)); wrap.setAttribute('data-rendered-marker-count', String(active.length)); wrap.setAttribute('data-render-error-count', String(renderErrors)); }} const empty = document.getElementById('emptyState'); if (empty) empty.style.display = active.length ? 'none' : 'block'; const renderWarning = document.getElementById('renderWarning'); if (renderWarning) renderWarning.style.display = renderErrors > 0 ? 'block' : 'none'; if (bounds.length) map.fitBounds(bounds, {{padding:[36,36], maxZoom:7}}); else map.setView(DEFAULT_CENTER, DEFAULT_ZOOM); }}
+      function draw(rows) {{ clear(); const bounds = []; const attemptedCount = rows.length; let renderErrors = 0; let skippedInvalidCoordinates = 0; for (const item of rows) {{ if (!validCoordinate(item)) {{ skippedInvalidCoordinates += 1; continue; }} try {{ const isRegional = String(item.marker_scope || '').toLowerCase() === 'regional'; const icon = (item.group_count || 0) > 1 ? L.divIcon({{className:'', html: markerHtml(item.marker_scope || 'local', item.group_count || 0), iconSize:[24,24]}}) : (isRegional ? L.divIcon({{className:'', html: regionalMarkerHtml(), iconSize:[34,34], iconAnchor:[17,17]}}) : L.divIcon({{className:'', html: localMarkerHtml(item.category_id), iconSize:[34,34], iconAnchor:[17,17]}})); const latLon = markerLatLon(item); const marker = L.marker(latLon, {{icon}}).addTo(map).bindPopup(popup(item), {{maxWidth: 360}}).bindTooltip(`<span class="tt-place">${{item.place || item.regional_area || item.state || 'Place'}}</span>${{item.pressure_type || 'Local pressure signal'}}`, {{className: 'region-tooltip', direction: 'top', offset:[0,-8], sticky:true}}); active.push(marker); bounds.push(latLon); }} catch (err) {{ renderErrors += 1; console.warn('map marker render failed', err); }} }} const wrap = getEl('mapWrap'); if (wrap) {{ wrap.setAttribute('data-invalid-coordinate-count', String(skippedInvalidCoordinates)); wrap.setAttribute('data-render-attempted-count', String(attemptedCount)); wrap.setAttribute('data-rendered-marker-count', String(active.length)); wrap.setAttribute('data-render-error-count', String(renderErrors)); }} const empty = document.getElementById('emptyState'); if (empty) {{ const shouldShowEmpty = active.length === 0; empty.hidden = !shouldShowEmpty; empty.setAttribute('aria-hidden', shouldShowEmpty ? 'false' : 'true'); empty.style.display = shouldShowEmpty ? 'block' : 'none'; }} const renderWarning = document.getElementById('renderWarning'); if (renderWarning) {{ const shouldShowWarning = renderErrors > 0; renderWarning.hidden = !shouldShowWarning; renderWarning.setAttribute('aria-hidden', shouldShowWarning ? 'false' : 'true'); renderWarning.style.display = shouldShowWarning ? 'block' : 'none'; renderWarning.textContent = shouldShowWarning ? markerWarningNote : ''; }} if (bounds.length) map.fitBounds(bounds, {{padding:[36,36], maxZoom:7}}); else map.setView(DEFAULT_CENTER, DEFAULT_ZOOM); }}
       const publishedDate = (item) => {{ const raw = String(item.published_at || ''); const value = new Date(raw); return Number.isNaN(value.getTime()) ? null : value; }};
       const getEl = (id) => document.getElementById(id);
       const mobileMedia = window.matchMedia('(max-width: 900px)');
@@ -1613,6 +1910,7 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
       const mobileSheet = getEl('mobileFilterSheet');
       const mobileToggle = getEl('mobileFiltersToggle');
       const mobileClose = getEl('mobileFiltersClose');
+      const mobileHeaderToggle = getEl('mobileHeaderToggle');
       function closeMobileFilters() {{
         if (!mobileSheet) return;
         document.body.classList.remove('filters-open');
@@ -1636,23 +1934,47 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
           if (filterControls.parentElement !== desktopFiltersHost) desktopFiltersHost.appendChild(filterControls);
         }}
       }}
+      function setMobileHeaderExpanded(expanded) {{
+        if (!mobileHeaderToggle) return;
+        if (!mobileMedia.matches) {{
+          document.body.classList.remove('map-header-expanded');
+          mobileHeaderToggle.setAttribute('aria-expanded', 'false');
+          mobileHeaderToggle.textContent = 'More';
+          return;
+        }}
+        if (expanded) {{
+          document.body.classList.add('map-header-expanded');
+        }} else {{
+          document.body.classList.remove('map-header-expanded');
+        }}
+        mobileHeaderToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        mobileHeaderToggle.textContent = expanded ? 'Less' : 'More';
+      }}
       syncFilterHost();
-      mobileMedia.addEventListener('change', syncFilterHost);
+      setMobileHeaderExpanded(false);
+      mobileMedia.addEventListener('change', () => {{ syncFilterHost(); setMobileHeaderExpanded(false); }});
+      if (mobileHeaderToggle) mobileHeaderToggle.addEventListener('click', () => setMobileHeaderExpanded(!document.body.classList.contains('map-header-expanded')));
       if (mobileToggle) mobileToggle.addEventListener('click', () => {{ if (document.body.classList.contains('filters-open')) closeMobileFilters(); else openMobileFilters(); }});
       if (mobileClose) mobileClose.addEventListener('click', closeMobileFilters);
       if (mobileSheet) mobileSheet.addEventListener('click', (event) => {{ if (event.target === mobileSheet) closeMobileFilters(); }});
       document.addEventListener('keydown', (event) => {{ if (event.key === 'Escape') closeMobileFilters(); }});
-      const controlsReady = () => ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional','resetMap'].every((id) => Boolean(getEl(id)));
-      function optionize(id, values) {{ const el = document.getElementById(id); for (const value of values) {{ const option = document.createElement('option'); option.value = value; option.textContent = value; el.appendChild(option); }} }}
-      optionize('pressureFilter', [...new Set(markers.map((m) => m.pressure_type).filter(Boolean))].sort());
+      const controlsReady = () => ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].every((id) => Boolean(getEl(id)));
+      function optionize(id, values, labelFn) {{ const el = document.getElementById(id); for (const value of values) {{ const option = document.createElement('option'); option.value = value; option.textContent = labelFn ? labelFn(value) : value; el.appendChild(option); }} }}
+      optionize('pressureFilter', [...new Set(markers.map((m) => m.category_id).filter(Boolean))].sort(), (value) => ((markers.find((m) => m.category_id === value) || {{}}).category_label || value));
       optionize('stateFilter', [...new Set(markers.map((m) => m.state).filter(Boolean))].sort());
       optionize('regionFilter', [...new Set(markers.map((m) => m.region_label).filter(Boolean))].sort());
-      const dateRange = document.getElementById('dateRange');
+      const dateRangeDesktop = document.getElementById('dateRangeDesktop');
+      const dateRangeMobile = document.getElementById('dateRangeMobile');
+      const reportCountDesktop = document.getElementById('reportCountDesktop');
+      const reportCountMobile = document.getElementById('reportCountMobile');
       const formatDate = (value) => {{ const dt = new Date(String(value || '')); if (Number.isNaN(dt.getTime())) return null; return dt.toLocaleDateString('en-US', {{month:'long', day:'numeric', year:'numeric'}}); }};
-      if (payload.coverage_start && payload.coverage_end) {{ const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) dateRange.textContent = `Reports shown: ${{start}}-${{end}}`; }}
+      if (payload.coverage_start && payload.coverage_end) {{ const start = formatDate(payload.coverage_start); const end = formatDate(payload.coverage_end); if (start && end) {{ if (dateRangeDesktop) dateRangeDesktop.textContent = `Reports shown: ${{start}}-${{end}}`; if (dateRangeMobile) dateRangeMobile.textContent = `Reports shown: ${{start}}-${{end}}`; }} }}
+      const totalReports = markers.length + regional.length;
+      if (reportCountDesktop) reportCountDesktop.textContent = `Report count: ${{totalReports}}`;
+      if (reportCountMobile) reportCountMobile.textContent = `Report count: ${{totalReports}}`;
       function defaultNoteText() {{ if (defaultViewMode === 'regional_fallback') return fallbackNote; if (defaultViewMode === 'sparse_local_plus_regional') return sparseNote; return noResultsNote; }}
       function defaultRows() {{ const modeEl = getEl('viewMode'); const regionalEl = getEl('showRegional'); const mode = modeEl ? modeEl.value : 'grouped'; const includeRegional = regionalEl ? regionalEl.checked : showRegionalDefault; const baseLocal = mode === 'grouped' && grouped.length ? grouped : markers; const baseRegional = mode === 'grouped' && groupedRegional.length ? groupedRegional : regional; return includeRegional ? baseLocal.concat(baseRegional) : baseLocal; }}
-      function applyFilters() {{ const pressureEl = getEl('pressureFilter'); const stateEl = getEl('stateFilter'); const regionEl = getEl('regionFilter'); const timeEl = getEl('timeFilter'); const note = getEl('emptyState'); if (note) note.textContent = defaultNoteText(); const pressure = pressureEl ? pressureEl.value : ''; const state = stateEl ? stateEl.value : ''; const region = regionEl ? regionEl.value : ''; const time = timeEl ? timeEl.value : 'all'; const base = defaultRows(); const now = new Date(); const filtered = base.filter((item) => {{ if (pressure && item.pressure_type !== pressure) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') {{ const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; }} return true; }}); const wrap = getEl('mapWrap'); if (wrap) wrap.setAttribute('data-post-filter-count', String(filtered.length)); draw(filtered); }}
+      function applyFilters() {{ const pressureEl = getEl('pressureFilter'); const stateEl = getEl('stateFilter'); const regionEl = getEl('regionFilter'); const timeEl = getEl('timeFilter'); const note = getEl('emptyState'); if (note) note.textContent = defaultNoteText(); const pressure = pressureEl ? pressureEl.value : ''; const state = stateEl ? stateEl.value : ''; const region = regionEl ? regionEl.value : ''; const time = timeEl ? timeEl.value : 'all'; const base = defaultRows(); const now = new Date(); const filtered = base.filter((item) => {{ const categoryMatch = !pressure || item.category_id === pressure || (Array.isArray(item.category_ids) && item.category_ids.includes(pressure)); if (!categoryMatch) return false; if (state && item.state !== state) return false; if (region && item.region_label !== region) return false; if (time !== 'all') {{ const days = Number(time); const dt = publishedDate(item); if (!dt) return false; const diff = (now.getTime() - dt.getTime()) / (1000 * 60 * 60 * 24); if (diff > days) return false; }} return true; }}); const wrap = getEl('mapWrap'); if (wrap) wrap.setAttribute('data-post-filter-count', String(filtered.length)); draw(filtered); }}
       function resetToDefaultView() {{ if (!controlsReady()) return; getEl('pressureFilter').value = ''; getEl('stateFilter').value = ''; getEl('regionFilter').value = ''; getEl('timeFilter').value = 'all'; getEl('viewMode').value = 'grouped'; getEl('showRegional').checked = showRegionalDefault; applyFilters(); }}
       if (controlsReady()) {{ getEl('showRegional').checked = showRegionalDefault; }}
       const initialRows = defaultRows();
@@ -1661,7 +1983,7 @@ def render_map_html(edition_date: str, note: str, source_table_href: str) -> str
       draw(defaultRows());
       resetToDefaultView();
       map.on('popupopen', (event) => {{ const root = event.popup && event.popup.getElement ? event.popup.getElement() : null; if (!root) return; root.querySelectorAll('.js-toggle-reports').forEach((button) => {{ button.addEventListener('click', () => {{ const target = String(button.getAttribute('data-target') || ''); if (!target) return; const panel = root.querySelector(`#reports-${{target}}`); if (!panel) return; panel.classList.toggle('open'); button.textContent = panel.classList.contains('open') ? 'Hide reports' : 'View individual reports'; }}); }}); }});
-      if (controlsReady()) {{ ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].forEach((id) => {{ const el = getEl(id); if (el) el.addEventListener('change', applyFilters); }}); const resetBtn = getEl('resetMap'); if (resetBtn) resetBtn.addEventListener('click', resetToDefaultView); }}
+      if (controlsReady()) {{ ['pressureFilter','stateFilter','regionFilter','timeFilter','viewMode','showRegional'].forEach((id) => {{ const el = getEl(id); if (el) el.addEventListener('change', applyFilters); }}); ['resetMap','resetMapDesktop'].forEach((id) => {{ const resetBtn = getEl(id); if (resetBtn) resetBtn.addEventListener('click', resetToDefaultView); }}); }}
     }});
   </script>
 </body>
@@ -1674,25 +1996,57 @@ def render_cascadia_source_table_html(
     coverage_label: str | None,
     sources_manifest: list[dict[str, Any]],
 ) -> str:
+    def pressure_area(source: dict[str, Any]) -> str:
+        raw = str(source.get("public_category") or source.get("category_hint") or "").strip()
+        if not raw:
+            return "Not specified"
+        return raw.replace("_", " ")
+
+    def state_scope(source: dict[str, Any]) -> str:
+        state = str(source.get("state_hint") or "").strip()
+        if state in {"WA", "OR", "ID"}:
+            return state
+        scope = str(source.get("region_scope") or "").strip()
+        return scope or "Not specified"
+
+    def location_confidence(source: dict[str, Any]) -> str:
+        precision = str(source.get("location_precision") or source.get("precision") or "").strip().lower()
+        if precision in {"address", "facility"}:
+            return "High"
+        if precision in {"city", "county"}:
+            return "Medium"
+        if precision in {"regional", "statewide"}:
+            return "Low"
+        return "Not specified"
+
     rows = []
     for source in sources_manifest:
+        geo = evaluate_cascadia_geography(source)
+        if not geo["allowed_public"]:
+            continue
         source_id = html.escape(str(source.get("source_record_id") or ""))
         title = html.escape(str(source.get("title") or "Untitled source"))
         publisher = html.escape(str(source.get("publisher") or "Source"))
         published_at = html.escape(str(source.get("published_at") or ""))
+        pressure = html.escape(pressure_area(source))
+        scope = html.escape(state_scope(source))
+        used_in = html.escape(", ".join(str(item) for item in source.get("used_in_story_ids", []) if item) or "Not listed")
+        technical = html.escape(f"id: {source.get('source_record_id') or 'unknown'}")
         url = str(source.get("url") or "").strip()
         link = f'<a href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">Open source</a>' if url else ""
         rows.append(
             "<tr>"
-            f"<td>{source_id}</td>"
-            f"<td>{title}</td>"
+            f"<td><strong>{title}</strong><div class=\"technical\">{technical}</div></td>"
+            f"<td>{scope}</td>"
+            f"<td>{pressure}</td>"
             f"<td>{publisher}</td>"
             f"<td>{published_at}</td>"
+            f"<td>{used_in}</td>"
             f"<td>{link}</td>"
             "</tr>"
         )
     if not rows:
-        rows.append("<tr><td colspan=\"5\">No source records available for this edition.</td></tr>")
+        rows.append("<tr><td colspan=\"7\">No source records available for this edition.</td></tr>")
     label = coverage_label or edition_date
     return f"""<!doctype html>
 <html lang="en">
@@ -1721,10 +2075,9 @@ def render_cascadia_source_table_html(
     <div class="actions">
       <a href="/cascadia/editions/{html.escape(edition_date)}/">Back to edition</a>
       <a href="/cascadia/editions/{html.escape(edition_date)}/map.html">Back to edition map</a>
-      <a href="/cascadia/map/">Open latest Cascadia map</a>
     </div>
     <table>
-      <thead><tr><th>Source ID</th><th>Title</th><th>Publisher</th><th>Published</th><th>Link</th></tr></thead>
+      <thead><tr><th>Story</th><th>State / Region</th><th>Pressure Area</th><th>Publisher</th><th>Published</th><th>Used In</th><th>Open Source</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
     </table>
   </main>
@@ -1742,7 +2095,6 @@ def render_map_embed_html(
         links.append('<a href="map.html">Open this week\'s interactive map</a>')
     if include_source_table_link:
         links.append('<a href="source_table.html">Open this week\'s source table</a>')
-    links.append('<a href="/cascadia/map/" target="_blank" rel="noopener noreferrer">Open latest Cascadia map</a>')
     links_html = " | ".join(links)
     return f"<section class=\"cascadia-map-link\"><p>{links_html}</p></section>"
 
@@ -1761,11 +2113,14 @@ def build_grouped_markers(markers: list[dict[str, Any]]) -> list[dict[str, Any]]
             grouped[key]["group_id"] = f"{key[0]}-{key[1]}-{key[2]}".lower().replace(" ", "-")
             grouped[key]["reports"] = []
             grouped[key]["pressure_areas"] = []
+            grouped[key]["category_ids"] = []
         grouped[key]["group_count"] += 1
         report = {
             "headline": str(marker.get("title") or "").strip() or "Source-backed report",
             "summary": str(marker.get("what_we_found") or "").strip() or "Source-backed local development.",
             "pressure_type": str(marker.get("pressure_type") or "").strip() or "Local pressure signal",
+            "category_id": str(marker.get("category_id") or "").strip(),
+            "category_label": str(marker.get("category_label") or marker.get("pressure_type") or "").strip(),
             "publisher": str(marker.get("publisher") or "").strip() or "Source",
             "source_url": str(marker.get("source_url") or "").strip(),
             "read_more": str(marker.get("read_more") or "").strip() or "/cascadia/",
@@ -1775,6 +2130,9 @@ def build_grouped_markers(markers: list[dict[str, Any]]) -> list[dict[str, Any]]
         pressure_area = report["pressure_type"]
         if pressure_area and pressure_area not in grouped[key]["pressure_areas"]:
             grouped[key]["pressure_areas"].append(pressure_area)
+        category_id = report["category_id"]
+        if category_id and category_id not in grouped[key]["category_ids"]:
+            grouped[key]["category_ids"].append(category_id)
     return list(grouped.values())
 
 
@@ -1825,6 +2183,8 @@ def render_cascadia_html(
     coverage_end: str | None = None,
     briefing_type: str = "weekly",
     map_embed_html: str = "",
+    coverage_quality: dict[str, Any] | None = None,
+    compared_with_last_week: str = "",
 ) -> str:
     coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else edition_date
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -1833,6 +2193,31 @@ def render_cascadia_html(
     groups = "\n".join(render_story_group(category, items) for category, items in sorted(grouped.items()))
     weekly_bullets = build_weekly_summary_bullets(stories)
     weekly_summary = render_weekly_summary(weekly_bullets)
+    regional_read = build_regional_read(stories)
+    quality = coverage_quality or {}
+    states_for_line = quality.get("states_covered", [])
+    states_line = sentence_join(
+        [{"WA": "Washington", "OR": "Oregon", "ID": "Idaho"}.get(state, state) for state in states_for_line]
+    ) if states_for_line else "None"
+    missing_states = quality.get("missing_states", [])
+    missing_names = [{"WA": "Washington", "OR": "Oregon", "ID": "Idaho"}.get(state, state) for state in missing_states]
+    quality_level = "Partial" if missing_states else "Broad"
+    known_gaps_parts = list(quality.get("known_gaps", []))
+    if missing_names:
+        known_gaps_parts.append(f"No {sentence_join(missing_names)} stories met the current public-systems criteria this week.")
+    collection_notes_html = "".join(
+        f"<p>Collection note: {html.escape(str(note))}</p>"
+        for note in (quality.get("collection_notes") or [])
+    )
+    quality_box = (
+        "<section><h2>Coverage Quality</h2>"
+        f"<p>Coverage quality: {quality_level}</p>"
+        f"<p>This edition includes {int(quality.get('source_count', 0))} public source-backed {'story' if int(quality.get('source_count', 0)) == 1 else 'stories'} from {int(quality.get('publisher_count', 0))} publishers.</p>"
+        f"<p>States represented: {states_line}.</p>"
+        f"<p>Known gaps: {'; '.join(known_gaps_parts) if known_gaps_parts else 'No major source-coverage gaps were flagged in this run.'}</p>"
+        f"{collection_notes_html}"
+        "</section>"
+    )
     if not groups:
         if coverage_start and coverage_end and briefing_type == "weekly":
             groups = (
@@ -1856,7 +2241,11 @@ def render_cascadia_html(
     <p class="eyebrow">{coverage_line}</p>{run_line}
     <p><strong>{DISPATCH_NAME}</strong></p>
     <p>{html.escape(CASCADIA_PUBLIC_DESCRIPTION)}</p>
-    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>
+    <p><strong>Cascadia Signal Pack</strong><br>Coming soon.</p>
+    <p><a href="/cascadia/detention-watch/">Latest Detention Watch</a></p>
+    <section><h2>Regional Read</h2><p>{html.escape(regional_read)}</p></section>
+    {quality_box}
+    {compared_with_last_week}
     {weekly_summary}
     {map_embed_html}
     {groups}
@@ -1975,9 +2364,54 @@ def refresh_cascadia_archive_pages(root: Path, dry_run: bool, written: list[str]
             stories=[],
         )
     public_root = site_root / DISPATCH_SLUG
-    generator_write_text(public_root / "index.html", render_dispatch_index_for_dates(dispatch, dates, site_root), dry_run, written)
+    latest = dates[0] if dates else ""
+    recent = "\n".join(render_edition_list_item(site_root, dispatch, date) for date in dates[:10])
+    signal_pack_ready = (site_root / "cascadia" / "signal-pack").exists()
+    signal_pack_label = "Open Signal Pack" if signal_pack_ready else "Coming soon"
+    latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+    landing_body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="home">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="lede">A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>
+    <section><h2>Latest Briefing</h2>{latest_link}</section>
+    <section><h2>Pressure Map</h2><p><a href="map/">Open latest Cascadia pressure map</a></p></section>
+    <section><h2>Detention Watch</h2><p><a href="/cascadia/detention-watch/">Open Detention Watch</a></p></section>
+    <section><h2>Signal Pack</h2><p>{signal_pack_label}</p></section>
+    <section><h2>Recent Editions</h2><ul class="edition-list">{recent}</ul></section>
+  </main>
+{footer("")}"""
+    generator_write_text(public_root / "index.html", page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", landing_body, dispatch.name), dry_run, written)
     generator_write_text(public_root / "archive.html", render_archive_for_dates(dispatch, dates, site_root), dry_run, written)
     generator_write_text(public_root / "rss.xml", render_rss_for_dates(dispatch, dates, site_root), dry_run, written)
+
+
+def build_last_week_comparison(root: Path, edition_date: str, story_count: int) -> str:
+    editions_root = root / "output" / "site" / "cascadia" / "editions"
+    if not editions_root.exists():
+        return ""
+    prior_dates = sorted(
+        [path.name for path in editions_root.iterdir() if path.is_dir() and re.match(r"^\d{4}-\d{2}-\d{2}$", path.name) and path.name < edition_date],
+        reverse=True,
+    )
+    for prior_date in prior_dates:
+        manifest_path = editions_root / prior_date / "edition_manifest.json"
+        if not manifest_path.exists():
+            continue
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        prior_count = int(manifest.get("public_story_count", 0))
+        delta = story_count - prior_count
+        delta_label = "no change" if delta == 0 else (f"+{delta}" if delta > 0 else str(delta))
+        return (
+            "<section><h2>Compared with last week</h2>"
+            f"<p>Prior edition: {html.escape(prior_date)} | stories: {prior_count} | change: {delta_label}</p>"
+            "</section>"
+        )
+    return ""
 
 
 def render_cascadia_edition(
@@ -2001,22 +2435,52 @@ def render_cascadia_edition(
     warnings: list[str] = []
     errors: list[str] = []
     written: list[str] = []
+    if not dry_run:
+        stale_targets = [
+            root / "output" / "site" / "cascadia" / "map",
+            root / "output" / "site" / "cascadia" / "editions" / edition_date / "map.html",
+            root / "output" / "site" / "cascadia" / "editions" / edition_date / "source_table.html",
+        ]
+        for target in stale_targets:
+            if not target.exists():
+                continue
+            if target.is_dir():
+                shutil.rmtree(target)
+            else:
+                target.unlink()
     if not curated_path.exists():
         errors.append(f"curation manifest not found: {curated_path}")
         return {"ok": False, "written": written, "warnings": warnings, "errors": errors}
     curated = json.loads(curated_path.read_text(encoding="utf-8"))
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, public_stories(curated), dry_run=dry_run, written=written)
-    stories = dedupe_result.stories
-    included_ids = {story.get("story_id") for story in stories}
-    curated_for_public = [
-        {**story, "included_in_public_summary": story.get("story_id") in included_ids}
-        for story in curated
+    stories = [
+        story
+        for story in dedupe_result.stories
+        if not story.get("excluded_reason")
     ]
+    included_ids = {story.get("story_id") for story in stories}
+    curated_for_public = []
+    for story in curated:
+        include = story.get("story_id") in included_ids and not story.get("excluded_reason")
+        curated_for_public.append({**story, "included_in_public_summary": include})
     errors.extend(validate_public_stories(stories))
     coverage_label = format_coverage_label(coverage_start, coverage_end) if coverage_start and coverage_end else None
+    historical_report_path = None
+    historical_report: dict[str, Any] = {}
+    provider_diagnostics: list[dict[str, Any]] = []
+    if coverage_start and coverage_end:
+        candidate = root / CASCADE_DATA_ROOT / "sources" / f"{coverage_start}_{coverage_end}" / "historical_search_report.json"
+        if candidate.exists():
+            historical_report_path = str(candidate)
+            historical_report = json.loads(candidate.read_text(encoding="utf-8"))
+            provider_diagnostics = [row for row in (historical_report.get("provider_diagnostics") or []) if isinstance(row, dict)]
     sources_manifest = sources_manifest_from_curated(stories, edition_date, run_date, coverage_start, coverage_end, briefing_type, coverage_label)
     curation_manifest = public_curation_manifest(curated_for_public, run_date, edition_date, coverage_start, coverage_end, briefing_type, coverage_label)
-    public_curation = [item for item in curation_manifest if item.get("included_in_public_summary")]
+    public_curation = [
+        item
+        for item in curation_manifest
+        if item.get("included_in_public_summary") and not item.get("excluded_reason")
+    ]
     map_locations = load_map_locations(root)
     curated_map_markers, curated_regional_reports, map_warnings, curated_map_diagnostics = build_cascadia_map_markers(
         public_curation, sources_manifest, map_locations, coverage_start=coverage_start, coverage_end=coverage_end
@@ -2063,6 +2527,11 @@ def render_cascadia_edition(
     place_extraction_attempted = int(curated_map_diagnostics.get("place_extraction_attempted", 0)) + backfill_place_extraction_attempted
     place_extraction_succeeded = int(curated_map_diagnostics.get("place_extraction_succeeded", 0)) + backfill_place_extraction_succeeded
     candidate_diagnostics_rows = list(curated_map_diagnostics.get("candidate_diagnostics_rows") or []) + backfill_candidate_rows
+    public_candidate_diagnostics_rows = [
+        row
+        for row in candidate_diagnostics_rows
+        if isinstance(row, dict) and str(row.get("inclusion_decision") or "") in {"local_marker", "regional_report"}
+    ]
     map_diagnostics = {
         "raw_candidate_count": int(curated_map_diagnostics.get("raw_candidate_count", 0)) + len(backfill_records),
         "accepted_local_marker_count": len(merged_markers),
@@ -2084,7 +2553,7 @@ def render_cascadia_edition(
         "place_extraction_attempted": place_extraction_attempted,
         "place_extraction_succeeded": place_extraction_succeeded,
         "place_match_by_type": dict(combined_place_match_by_type),
-        "candidate_diagnostics_rows": candidate_diagnostics_rows,
+        "candidate_diagnostics_rows": public_candidate_diagnostics_rows,
         "curated_story_marker_candidates": len(curated_map_markers),
         "backfill_record_candidates": len(backfill_records),
         "backfill_marker_candidates": len(backfill_map_markers),
@@ -2138,14 +2607,39 @@ def render_cascadia_edition(
         "grouped_markers": grouped_markers,
         "diagnostics": map_diagnostics,
     }
-    edition_map_html = render_map_html(edition_date, MAP_NOTE, "source_table.html")
-    latest_map_html = render_map_html(edition_date, MAP_NOTE, "/cascadia/map/source_table.html")
+    initial_report_count = len(stories)
+    edition_map_html = render_map_html(
+        edition_date,
+        MAP_NOTE,
+        "source_table.html",
+        initial_report_count=initial_report_count,
+        map_payload=map_data,
+    )
+    latest_map_html = render_map_html(
+        edition_date,
+        MAP_NOTE,
+        "/cascadia/map/source_table.html",
+        initial_report_count=initial_report_count,
+        map_payload=map_data,
+    )
     source_table_html = render_cascadia_source_table_html(edition_date, coverage_label, sources_manifest)
     map_embed_html = render_map_embed_html(
         include_edition_map_link=True,
         include_source_table_link=True,
     )
-    html_text = render_cascadia_html(edition_date, stories, run_date, coverage_start, coverage_end, briefing_type, map_embed_html=map_embed_html)
+    coverage_quality = build_coverage_quality(stories, map_diagnostics, provider_diagnostics=provider_diagnostics)
+    compared_with_last_week = build_last_week_comparison(root, edition_date, len(stories))
+    html_text = render_cascadia_html(
+        edition_date,
+        stories,
+        run_date,
+        coverage_start,
+        coverage_end,
+        briefing_type,
+        map_embed_html=map_embed_html,
+        coverage_quality=coverage_quality,
+        compared_with_last_week=compared_with_last_week,
+    )
     weekly_summary_bullets = build_weekly_summary_bullets(stories)
     public_categories = public_story_categories(stories)
     public_state_hints = public_story_states(stories)
@@ -2161,6 +2655,7 @@ def render_cascadia_edition(
     excluded_source_count = sum(1 for story in curated if story.get("excluded_reason"))
     historical_report_path = None
     historical_report: dict[str, Any] = {}
+    provider_diagnostics: list[dict[str, Any]] = []
     if coverage_start and coverage_end:
         candidate = root / CASCADE_DATA_ROOT / "sources" / f"{coverage_start}_{coverage_end}" / "historical_search_report.json"
         if candidate.exists():
@@ -2169,6 +2664,7 @@ def render_cascadia_edition(
             historical_search = True
             providers_used = sorted(set(providers_used) | set(historical_report.get("providers_used") or []))
             query_count = len(historical_report.get("queries_run") or []) or query_count
+            provider_diagnostics = [row for row in (historical_report.get("provider_diagnostics") or []) if isinstance(row, dict)]
             excluded_source_count = int(historical_report.get("records_excluded", excluded_source_count))
             warnings.extend(historical_report.get("warnings") or [])
             errors.extend(historical_report.get("errors") or [])
@@ -2210,6 +2706,7 @@ def render_cascadia_edition(
         "historical_search": historical_search,
         "providers_used": providers_used,
         "query_count": query_count,
+        "provider_diagnostics": provider_diagnostics,
         "historical_search_report_path": historical_report_path,
         "source_manifest_path": str(public_dir / "sources_manifest.json"),
         "curation_manifest_path": str(public_dir / "curation_manifest.json"),

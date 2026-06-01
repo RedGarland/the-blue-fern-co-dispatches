@@ -1,4 +1,5 @@
 import json
+import importlib
 import re
 import urllib.error
 import shutil
@@ -10,21 +11,24 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.cascadia_curate import curate_sources, deterministic_summary, why_it_matters
+from bluefern_dispatches.cascadia_categories import canonical_category_id, category_label_for
+from bluefern_dispatches.cascadia_dates import canonical_date_fields
 from bluefern_dispatches.cascadia_fetch import curl_command, fetch_public_url
 from bluefern_dispatches.cascadia_historical_search import PROVIDER_BACKOFF_UNTIL, GDELTProvider, HistoricalProviderRateLimited, build_queries, create_manual_source_template, dedupe_records, exclusion_reason, load_historical_config, retrieve_historical_sources, validate_manual_sources
 from bluefern_dispatches.cascadia_ingest import ingest_sources, load_sources
 from bluefern_dispatches.cascadia_normalize import normalize_sources
-from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages
+from bluefern_dispatches.cascadia_render import editorial_checklist, render_cascadia_edition, refresh_cascadia_archive_pages, render_map_html
 from bluefern_dispatches.cascadia_signal import write_cascadia_signal_package
 from bluefern_dispatches.cascadia_source_registry import collect_registry_sources, load_source_registry, source_operational_state
 from bluefern_dispatches.cascadia_weekly import aggregate_weekly_curation, containing_week, explicit_week, format_coverage_label, previous_completed_week
-from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, publish_pages
+from bluefern_dispatches.generator import CASCADIA_LOGO_ASSET, build_site, discover_public_edition_dates, publish_pages
 from bluefern_dispatches.shared_records import update_shared_records
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPT_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPT_ROOT))
 from run_cascadia_dispatch import completed_week_windows, run_pipeline, run_source_gap_report, write_zero_week_gap_report
+import run_cascadia_dispatch
 import backfill_cascadia_pressure
 from bluefern_dispatches import cascadia_fetch
 
@@ -1577,10 +1581,21 @@ def test_why_it_matters_is_category_and_region_grounded():
 
     line = why_it_matters(record, "Transportation")
 
-    assert line == "In Washington, Transportation signals can affect mobility, emergency access, freight movement, and infrastructure maintenance."
+    assert line == "Transportation disruptions can limit work, school, and emergency access across connected communities."
     assert "deaths" not in line.lower()
     assert "closure" not in line.lower()
     assert "cost" not in line.lower()
+
+
+def test_why_it_matters_uses_corrections_specific_language():
+    record = {
+        "category_hint": "Government and public services",
+        "title": "WA’s transgender prisoner policy is target of new federal investigation",
+        "summary_or_snippet": "Federal oversight review addresses correctional policy and legal exposure in state custody.",
+        "text": "The investigation focuses on detention oversight and treatment standards.",
+    }
+    line = why_it_matters(record, "Government and public services")
+    assert line == "Corrections and detention policy changes can affect state oversight, legal exposure, and the treatment of people in state custody."
 
 
 def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_work_root):
@@ -1599,6 +1614,10 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     html = (public_dir / "index.html").read_text(encoding="utf-8")
     assert "The Cascadia Briefing" in html
     assert "Cascadia Signal Pack" in html
+    assert "Regional Read" in html
+    assert "Coverage Quality" in html
+    assert "Coverage quality:" in html
+    assert "States represented:" in html
     assert 'target="_blank" rel="noopener noreferrer"' in html
     assert "Score:" not in html
     assert "Signal strength" not in html
@@ -1734,7 +1753,7 @@ def test_weekly_aggregation_filters_dedupes_and_renders(cascadia_work_root):
     assert "This week's signals" in html
     assert "Transportation appeared in WA source records." in html
     assert "Why it matters:" in html
-    assert "In Washington, Transportation signals can affect mobility" in html
+    assert "Transportation disruptions can limit work, school, and emergency access across connected communities." in html
     assert "https://example.com/weekly" in html
     assert "https://example.com/outside" not in html
     assert "Score:" not in html
@@ -2112,7 +2131,7 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     html = (site_edition / "index.html").read_text(encoding="utf-8")
     assert 'src="/cascadia/map/"' not in html
     assert "Open this week's interactive map" in html
-    assert "Open latest Cascadia map" in html
+    assert "Open latest Cascadia map" not in html
 
     map_data = read_json(site_edition / "map_data.json")
     assert map_data["markers"] or map_data["regional_reports"]
@@ -2155,6 +2174,23 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert not (cascadia_work_root / "output" / "site" / "paid").exists()
     map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "index.html").read_text(encoding="utf-8")
     assert "resource-header" in map_html
+    assert "desktop-map-header" in map_html
+    assert "mobile-map-header" in map_html
+    assert "mobile-header-details" in map_html
+    assert "id=\"mobileHeaderToggle\"" in map_html
+    assert "aria-controls=\"mobileHeaderDetails\"" in map_html
+    assert "mobile-header-toggle" in map_html
+    assert ".desktop-map-header { display:none; }" in map_html
+    assert ".mobile-map-header { display:block; }" in map_html
+    assert ".mobile-map-header .mobile-header-details { display:none; }" in map_html
+    assert "body.map-header-expanded .mobile-map-header .mobile-header-details { display:block; }" in map_html
+    assert ".mobile-map-header .resource-branding { display:none; }" in map_html
+    assert "body.map-header-expanded .mobile-map-header .resource-branding { display:flex; }" in map_html
+    assert "setMobileHeaderExpanded(false);" in map_html
+    assert "document.body.classList.add('map-header-expanded')" in map_html
+    assert "document.body.classList.remove('map-header-expanded')" in map_html
+    assert "mobileHeaderToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');" in map_html
+    assert "mobileHeaderToggle.textContent = expanded ? 'Less' : 'More';" in map_html
     assert '<meta name="viewport" content="width=device-width, initial-scale=1">' in map_html
     assert "text-align:center" in map_html
     assert "--header-bg:#1E3F4F" in map_html
@@ -2173,6 +2209,8 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "mobile-filter-sheet" in map_html
     assert "id=\"mobileFiltersClose\"" in map_html
     assert "data-state=\"closed\"" in map_html
+    assert ".mobile-filter-sheet[data-state=\"closed\"] { display:none !important; }" in map_html
+    assert ".mobile-filter-sheet[data-state=\"open\"] { display:flex !important; }" in map_html
     assert "State" in map_html
     assert "Region" in map_html
     assert "Report window" in map_html
@@ -2184,13 +2222,14 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "details class=\"panel legend mobile-collapsible\"" in map_html
     assert "Reports shown:" in map_html
     assert "Sources: public regional reporting and official/public sources" in map_html
+    assert ">More</button>" in map_html
     assert "Map view" in map_html
     assert "Show regional/statewide reports" in map_html
     assert "min-height:44px" in map_html
     assert "@media (max-width: 900px)" in map_html
     assert "@media (max-width: 430px)" in map_html
     assert "height:72vh" in map_html
-    assert "details.filters { display:none; }" in map_html
+    assert "details.filters { display:none !important; }" in map_html
     assert ".mobile-filter-fab { display:inline-flex;" in map_html
     assert "body.filters-open .mobile-filter-sheet { display:flex; }" in map_html
     assert "leaflet-control-attribution" in map_html
@@ -2214,8 +2253,14 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     assert "data-invalid-coordinate-count" in map_html
     assert "categoryIcon" in map_html
     assert "legend-list" in map_html
-    assert "Housing and utility pressure" in map_html
-    assert "Health care access" in map_html
+    assert "Housing and utility pressure" not in map_html
+    assert "Health care access" not in map_html
+    assert "Jobs and local economy" not in map_html
+    assert "Food and household support" not in map_html
+    assert "Transportation and access" not in map_html
+    assert "Public safety and emergency services" not in map_html
+    assert "Wildfire, drought, flood, and recovery" not in map_html
+    assert "Schools and local government services" not in map_html
     assert "Pressure type:" in map_html
     assert "Location:" in map_html
     assert "Date:" in map_html
@@ -2246,6 +2291,10 @@ def test_weekly_render_generates_public_map_files_and_link(cascadia_work_root):
     edition_map_html = (site_edition / "map.html").read_text(encoding="utf-8")
     assert "source_table.html" in edition_map_html
     edition_index_html = (site_edition / "index.html").read_text(encoding="utf-8")
+    assert "Open this week's interactive map" in edition_index_html
+    assert "Open this week's source table" in edition_index_html
+    assert "Open latest Cascadia map" not in edition_index_html
+    assert edition_index_html.count("Open this week's interactive map") == 1
     assert "source_table.html" in edition_index_html
 
 
@@ -2313,6 +2362,360 @@ def test_cascadia_source_table_links_resolve_to_generated_public_files(cascadia_
                 target = (html_path.parent / href).resolve()
             assert target.exists(), f"missing target for {href} in {html_path}"
 
+
+def _write_min_cascadia_public_edition(site_root: Path, edition_date: str, coverage_start: str, coverage_end: str):
+    edition_dir = site_root / "cascadia" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "dispatch_slug": "cascadia",
+        "edition_date": edition_date,
+        "briefing_type": "weekly",
+        "cadence": "weekly",
+        "edition_type": "weekly",
+        "coverage_start": coverage_start,
+        "coverage_end": coverage_end,
+        "coverage_label": f"{coverage_start} to {coverage_end}",
+        "source_count": 1,
+        "story_count": 1,
+        "public_story_count": 1,
+    }
+    source_row = [{
+        "source_record_id": f"src-{edition_date}",
+        "title": "Source title",
+        "url": "https://example.com/source",
+        "publisher": "Example Publisher",
+        "published_at": f"{coverage_end}T12:00:00Z",
+        "category_hint": "Public safety",
+        "state_hint": "WA",
+        "location_precision": "city",
+    }]
+    curation = [{"story_id": f"story-{edition_date}", "included_in_public_summary": True}]
+    edition_dir.joinpath("edition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    edition_dir.joinpath("sources_manifest.json").write_text(json.dumps(source_row, indent=2), encoding="utf-8")
+    edition_dir.joinpath("curation_manifest.json").write_text(json.dumps(curation, indent=2), encoding="utf-8")
+    edition_dir.joinpath("index.html").write_text('<a href="source_table.html">Sources</a>', encoding="utf-8")
+    edition_dir.joinpath("map.html").write_text('<a href="source_table.html">Source table</a>', encoding="utf-8")
+
+
+def test_cascadia_index_uses_newest_valid_weekly_edition_and_lists_it(cascadia_work_root):
+    site_root = cascadia_work_root / "output" / "site"
+    _write_min_cascadia_public_edition(site_root, "2026-05-10", "2026-05-04", "2026-05-10")
+    _write_min_cascadia_public_edition(site_root, "2026-05-24", "2026-05-18", "2026-05-24")
+
+    refresh_cascadia_archive_pages(cascadia_work_root, dry_run=False, written=[])
+    index_html = (site_root / "cascadia" / "index.html").read_text(encoding="utf-8")
+    assert 'href="editions/2026-05-24/"' in index_html
+    assert "2026-05-24" in index_html
+
+
+def test_every_public_cascadia_edition_source_table_link_resolves(cascadia_work_root):
+    site_root = cascadia_work_root / "output" / "site"
+    _write_min_cascadia_public_edition(site_root, "2026-05-10", "2026-05-04", "2026-05-10")
+    _write_min_cascadia_public_edition(site_root, "2026-05-24", "2026-05-18", "2026-05-24")
+    build_site(cascadia_work_root, dry_run=False, only_dispatches=("cascadia",))
+
+    dates = discover_public_edition_dates(site_root, "cascadia")
+    assert dates
+    for edition_date in dates:
+        edition_dir = site_root / "cascadia" / "editions" / edition_date
+        for html_name in ("index.html", "map.html"):
+            html_path = edition_dir / html_name
+            html_text = html_path.read_text(encoding="utf-8")
+            hrefs = re.findall(r'href="([^"]*source_table\.html)"', html_text)
+            assert hrefs, f"no source table link in {html_path}"
+            for href in hrefs:
+                target = (html_path.parent / href).resolve() if not href.startswith("/") else (site_root / href.lstrip("/"))
+                assert target.exists(), f"missing source table target {target}"
+
+
+def test_cascadia_map_messages_hidden_by_default_and_header_not_duplicated(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert 'id="emptyState" class="empty-state" hidden' in map_html
+    assert 'id="renderWarning" class="empty-state" hidden' in map_html
+    assert "empty.hidden = !shouldShowEmpty;" in map_html
+    assert "renderWarning.hidden = !shouldShowWarning;" in map_html
+    assert map_html.count('class="desktop-map-header"') == 1
+    assert map_html.count('class="mobile-map-header"') == 1
+
+
+def test_category_sanity_mismatch_is_not_published(cascadia_work_root, monkeypatch):
+    def fake_score_record(record, reliability_tier="unknown", duplicate_count=1):
+        return {
+            "category": "Transportation",
+            "regional_relevance_score": 15,
+            "systems_impact_score": 20,
+            "public_consequence_score": 15,
+            "recency_score": 10,
+            "source_reliability_score": 14,
+            "multi_source_score": 0,
+            "duplicate_penalty": 0,
+            "low_signal_penalty": 0,
+            "total_score": 74,
+            "scoring_reasons": ["category=Transportation"],
+        }
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_curate.score_record", fake_score_record)
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    normalized_dir.joinpath("normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-mismatch-001",
+                    "source_id": "cascadia-manual",
+                    "title": "Regional policy meeting update",
+                    "text": "Council discussed meeting process and agenda updates.",
+                    "summary_or_snippet": "Administrative meeting update.",
+                    "canonical_url": "https://example.com/meeting",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "region_scope": "WA",
+                    "category_hint": "government",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = curate_sources(cascadia_work_root, "2026-05-03")
+    assert result["ok"] is True
+    curated_path = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json"
+    curated = json.loads(curated_path.read_text(encoding="utf-8"))
+    assert curated[0]["included_in_public_summary"] is False
+    assert curated[0]["excluded_reason"] == "unsupported_category_or_weak_category_match"
+
+
+
+def test_utah_only_story_is_excluded_from_public_cascadia_output(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    normalized_dir.joinpath("normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-utah-001",
+                    "source_id": "cascadia-manual",
+                    "title": "Governor declares drought emergency as Utah dips into reservoir savings",
+                    "summary_or_snippet": "Utah drought conditions worsened as reservoir storage fell.",
+                    "text": "Utah drought emergency and Utah reservoir savings measures.",
+                    "canonical_url": "https://example.com/utah-drought",
+                    "url": "https://example.com/utah-drought",
+                    "publisher": "Idaho Capital Sun Feed",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Public safety",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = curate_sources(cascadia_work_root, "2026-05-03")
+    assert result["ok"] is True
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["included_in_public_summary"] is False
+    assert curated[0]["excluded_reason"] == "out_of_region_state_story_without_cascadia_impact"
+
+
+def test_utah_only_story_is_excluded_from_map_marker_output(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-utah-001",
+                    "title": "Utah drought emergency update",
+                    "summary": "Utah drought emergency details.",
+                    "category": "Public safety",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": None,
+                    "source_record_ids": ["src-utah-001"],
+                    "source_urls": ["https://example.com/utah-drought"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-utah-001",
+                            "source_url": "https://example.com/utah-drought",
+                            "url": "https://example.com/utah-drought",
+                            "publisher": "Idaho Capital Sun Feed",
+                            "title": "Utah drought emergency update",
+                            "summary_or_snippet": "Utah drought emergency details.",
+                            "state_hint": "UT",
+                            "category_hint": "Public safety",
+                            "published_at": "2026-05-02T10:00:00Z",
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert not any("utah" in str(marker.get("title", "")).lower() for marker in map_data["markers"])
+    assert not any("utah" in str(marker.get("title", "")).lower() for marker in map_data["regional_reports"])
+
+
+def test_publisher_name_alone_does_not_make_utah_story_cascadia_relevant(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    normalized_dir.joinpath("normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-utah-002",
+                    "source_id": "cascadia-manual",
+                    "title": "Utah reservoir emergency guidance",
+                    "summary_or_snippet": "Utah reservoir updates and local restrictions.",
+                    "canonical_url": "https://example.com/utah-reservoir",
+                    "publisher": "Idaho Capital Sun Feed",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Environment and climate",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["included_in_public_summary"] is False
+    assert curated[0]["excluded_reason"] == "out_of_region_state_story_without_cascadia_impact"
+
+
+def test_utah_story_with_snake_river_linkage_is_allowed_as_regional_context(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    normalized_dir.joinpath("normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-utah-003",
+                    "source_id": "cascadia-manual",
+                    "title": "Utah drought pressures raise Snake River Basin agriculture concerns",
+                    "summary_or_snippet": "The report describes Snake River Basin and Idaho agriculture impacts.",
+                    "canonical_url": "https://example.com/utah-snake-river",
+                    "publisher": "Idaho Capital Sun Feed",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Environment and climate",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["excluded_reason"] != "out_of_region_state_story_without_cascadia_impact"
+    assert curated[0]["scope_label"] == "Regional context"
+    assert "snake river basin" in [item.lower() for item in curated[0].get("geography_linkage_terms", [])]
+
+
+def test_cross_region_item_does_not_render_in_idaho_without_explicit_idaho_support():
+    record = {
+        "title": "Utah drought pressures raise Snake River Basin concerns",
+        "summary_or_snippet": "Snake River Basin effects are discussed for the wider region.",
+        "category_hint": "Environment and climate",
+        "state_hint": "UT",
+        "publisher": "Idaho Capital Sun Feed",
+    }
+    line = why_it_matters(record, "Environment and climate")
+    assert line == "Flood and drought recovery gaps can leave households and local governments carrying costs after the immediate emergency."
+
+
+def test_public_outputs_exclude_geography_sanity_mismatch_records(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-geography-mismatch",
+                    "title": "Utah drought emergency update",
+                    "summary": "Utah-only drought emergency details.",
+                    "category": "Environment and climate",
+                    "score": 80,
+                    "included_in_public_summary": False,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": "geography_sanity_mismatch",
+                    "source_record_ids": ["src-utah-x"],
+                    "source_urls": ["https://example.com/utah-only"],
+                    "source_records": [{"source_record_id": "src-utah-x", "url": "https://example.com/utah-only", "publisher": "Example"}],
+                },
+                {
+                    "story_id": "story-wa-valid",
+                    "title": "Washington wildfire preparedness planning expands",
+                    "summary": "Washington planning update.",
+                    "category": "Public safety",
+                    "score": 81,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": None,
+                    "source_record_ids": ["src-wa-valid"],
+                    "source_urls": ["https://example.com/wa-valid"],
+                    "source_records": [{"source_record_id": "src-wa-valid", "url": "https://example.com/wa-valid", "publisher": "Example", "state_hint": "WA", "published_at": "2026-05-02T10:00:00Z", "category_hint": "Public safety"}],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    site_curation = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "curation_manifest.json")
+    assert not any(item.get("included_in_public_summary") and item.get("excluded_reason") == "geography_sanity_mismatch" for item in site_curation)
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert not any(marker.get("excluded_reason") == "geography_sanity_mismatch" for marker in map_data["markers"])
+    source_table = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "source_table.html").read_text(encoding="utf-8").lower()
+    assert "utah-only" not in source_table
+    assert "state / region" in source_table
+    assert "pressure area" in source_table
+    assert "open source" in source_table
+
+
+def test_existing_wa_or_id_story_still_renders_normally(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    assert map_data["markers"] or map_data["regional_reports"]
 
 
 def test_map_dedupes_duplicate_url_place_category(cascadia_work_root):
@@ -2845,7 +3248,7 @@ def test_map_separates_statewide_reports_from_default_local_layer(cascadia_work_
     assert "No local reports met the mapping rules for this week. Showing regional/statewide reports instead." in map_html
     assert "function defaultNoteText()" in map_html
     assert "if (defaultViewMode === 'regional_fallback') return fallbackNote;" in map_html
-    assert map_data["regional_reports"][0]["pressure_type"] == "Wildfire, drought, flood, and recovery"
+    assert map_data["regional_reports"][0]["pressure_type"] == "Environment and climate"
 
 
 def test_map_keeps_local_default_when_local_markers_are_three_or_more(cascadia_work_root):
@@ -2999,7 +3402,9 @@ def test_map_sparse_local_plus_regional_default_mode(cascadia_work_root):
     assert "recommended_source_additions" in diagnostics
     map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
     assert "Only a small number of local reports met the mapping rules this week. Regional/statewide reports are shown for context." in map_html
-    assert "No reports match the current map filters. Reset Map to restore the default view." in map_html
+    assert 'id="emptyState"' in map_html
+    assert "hidden" in map_html
+    assert "Report count:" in map_html
     assert "function defaultNoteText()" in map_html
     assert "if (defaultViewMode === 'sparse_local_plus_regional') return sparseNote;" in map_html
     assert "function defaultRows()" in map_html
@@ -3095,12 +3500,559 @@ def test_map_pressure_category_corrections_and_precision_alignment(cascadia_work
     assert result["ok"] is True
     map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
     labels = {marker["title"]: marker["pressure_type"] for marker in map_data["markers"]}
-    assert labels["Clinic provider cuts reduce appointment access"] == "Health care access"
-    assert labels["Rent and utility burden grows in county"] == "Housing and utility pressure"
+    assert labels["Clinic provider cuts reduce appointment access"] == "Healthcare"
+    assert labels["Rent and utility burden grows in county"] == "Housing and homelessness"
     for marker in map_data["markers"]:
         if marker["coordinate_basis"] == "state_centroid":
             assert marker["location_precision"] in {"statewide", "regional"}
             assert marker["precision_note"] in {"Statewide report.", "Regional report."}
+
+
+def test_category_and_state_sanity_reject_weak_or_misclassified_records(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    records = [
+        {
+            "source_record_id": "nat-school-1",
+            "canonical_url": "https://example.com/national-bill",
+            "title": "National school gender bill advances",
+            "summary_or_snippet": "National coverage update.",
+            "text": "National legislation update with no housing relevance described.",
+            "publisher": "Example National",
+            "source_id": "cascadia-manual",
+            "state_hint": "WA",
+            "category_hint": "Housing and homelessness",
+        },
+        {
+            "source_record_id": "utah-drought-1",
+            "canonical_url": "https://example.com/utah-drought",
+            "title": "Utah drought worsens",
+            "summary_or_snippet": "Utah drought update only.",
+            "text": "Utah drought coverage without Idaho linkage.",
+            "publisher": "Example",
+            "source_id": "cascadia-manual",
+            "state_hint": "ID",
+            "category_hint": "Environment and climate",
+        },
+    ]
+    (normalized_dir / "normalized_sources.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
+    result = curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    reasons = {item["source_record_ids"][0]: item.get("excluded_reason") for item in curated}
+    assert reasons["nat-school-1"] in {"unsupported_category_or_weak_category_match", "geography_state_inferred_only_from_feed"}
+    assert reasons["utah-drought-1"] in {"out_of_region_state_story_without_cascadia_impact", "geography_state_inferred_only_from_feed"}
+    assert result.get("rejected_reasons")
+
+
+def test_utah_story_rejected_without_explicit_cascadia_impact(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    records = [
+        {
+            "source_record_id": "utah-plain-1",
+            "canonical_url": "https://example.com/utah-drought-plain",
+            "title": "Governor declares drought emergency in Utah",
+            "summary_or_snippet": "Utah reservoir levels continue to decline.",
+            "text": "Utah emergency declaration with no Washington, Oregon, or Idaho impact details.",
+            "publisher": "Example",
+            "source_id": "cascadia-manual",
+            "state_hint": "ID",
+            "category_hint": "Environment and climate",
+        }
+    ]
+    (normalized_dir / "normalized_sources.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["excluded_reason"] == "out_of_region_state_story_without_cascadia_impact"
+
+
+def test_regional_read_excludes_weak_and_dateline_joined_summaries(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-weak",
+                    "title": "Weak national policy item",
+                    "summary": "WASHINGTON — The U.S. House passes a national education policy bill.",
+                    "category": "Government and public services",
+                    "score": 90,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": None,
+                    "eligibility_diagnostics": ["category_not_supported_by_content"],
+                    "source_record_ids": ["src-weak"],
+                    "source_urls": ["https://example.com/weak"],
+                    "source_records": [{"source_record_id": "src-weak", "source_url": "https://example.com/weak", "url": "https://example.com/weak", "publisher": "Example", "published_at": "2026-05-02T12:00:00Z", "state_hint": "WA", "category_hint": "government"}],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    render_cascadia_edition(cascadia_work_root, "2026-05-03", run_date="2026-05-04", coverage_start="2026-04-27", coverage_end="2026-05-03", briefing_type="weekly")
+    html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
+    assert "This week’s qualifying source-backed records point to limited regional systems signals. Coverage remains partial." in html
+    regional_block = html.split("<h2>Regional Read</h2>", 1)[1].split("</section>", 1)[0]
+    assert "WASHINGTON —" not in regional_block
+    assert "move nearly 200 megawatts of power from a wind." not in regional_block
+
+
+def test_is_complete_public_sentence_rejects_truncated_wind_fragment():
+    from bluefern_dispatches.cascadia_render import is_complete_public_sentence
+
+    assert is_complete_public_sentence("On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind.") is False
+    assert is_complete_public_sentence("Washington agencies published a utility restoration planning update affecting local outage readiness.") is True
+    assert is_complete_public_sentence("The utility expanded output from a solar.") is False
+    assert is_complete_public_sentence("The utility expanded output from a project.") is False
+    assert is_complete_public_sentence("The utility expanded output from a facility.") is False
+    assert is_complete_public_sentence("In a letter to Gov.") is False
+    assert is_complete_public_sentence("including several who pushed to.") is False
+
+
+def test_clean_public_summary_sentences_drops_truncated_second_sentence():
+    from bluefern_dispatches.cascadia_render import clean_public_summary_sentences
+
+    text = (
+        "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, "
+        "the latest move in the utility’s transition to become greenhouse gas neutral by 2030, as state law mandates. "
+        "On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind."
+    )
+    cleaned = clean_public_summary_sentences(text, max_sentences=2)
+    assert cleaned == (
+        "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, "
+        "the latest move in the utility’s transition to become greenhouse gas neutral by 2030, as state law mandates."
+    )
+
+def test_clean_public_summary_sentences_strips_correction_lead_and_trailing_fragments():
+    from bluefern_dispatches.cascadia_render import clean_public_summary_sentences
+
+    text = (
+        "Correction: This story has been corrected to fix an earlier attribution. "
+        "Idaho county officials published updated voter-operations guidance for this cycle. "
+        "including several who pushed to."
+    )
+    assert clean_public_summary_sentences(text, max_sentences=2) == (
+        "Idaho county officials published updated voter-operations guidance for this cycle."
+    )
+
+
+def test_rendered_output_omits_old_generic_public_systems_phrase(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(cascadia_work_root, "2026-05-03", run_date="2026-05-04", coverage_start="2026-04-27", coverage_end="2026-05-03", briefing_type="weekly")
+    html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
+    assert "Public systems signals can affect" not in html
+
+
+def test_2026_05_24_live_defects_are_blocked_from_rendered_outputs(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-24"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    records = [
+        {
+            "source_record_id": "src-utah-live-defect",
+            "source_id": "cascadia-manual",
+            "title": "Governor declares drought emergency as Utah dips into reservoir ‘savings’",
+            "summary_or_snippet": "Gov. Spencer Cox declared a state of emergency Thursday, noting every county is in a state of severe or extreme drought.",
+            "text": "Utah counties are listed under severe and extreme drought conditions.",
+            "canonical_url": "https://example.com/utah-live-defect",
+            "publisher": "Idaho Capital Sun Feed",
+            "published_at": "2026-05-24T12:00:00Z",
+            "category_hint": "Environment and climate",
+            "state_hint": "ID",
+        },
+        {
+            "source_record_id": "src-wind-fragment",
+            "source_id": "cascadia-manual",
+            "title": "Regional utility contract update",
+            "summary_or_snippet": "On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind.",
+            "text": "On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind.",
+            "canonical_url": "https://example.com/wind-fragment",
+            "publisher": "Example",
+            "published_at": "2026-05-24T11:00:00Z",
+            "category_hint": "Energy and utilities",
+            "state_hint": "OR",
+        },
+        {
+            "source_record_id": "src-valid-wa",
+            "source_id": "cascadia-manual",
+            "title": "Washington utility restoration planning expands",
+            "summary_or_snippet": "Washington agencies published a utility restoration planning update affecting local outage readiness.",
+            "text": "Washington agencies published a utility restoration planning update affecting local outage readiness.",
+            "canonical_url": "https://example.com/wa-valid",
+            "publisher": "Example WA",
+            "published_at": "2026-05-24T10:00:00Z",
+            "category_hint": "Energy and utilities",
+            "state_hint": "WA",
+        },
+    ]
+    (normalized_dir / "normalized_sources.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
+    curate_sources(cascadia_work_root, "2026-05-24")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-24",
+        run_date="2026-05-25",
+        coverage_start="2026-05-18",
+        coverage_end="2026-05-24",
+        briefing_type="weekly",
+    )
+    html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "index.html").read_text(encoding="utf-8")
+    source_table = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "source_table.html").read_text(encoding="utf-8")
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "map.html").read_text(encoding="utf-8")
+    manifest = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "edition_manifest.json")
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "map_data.json")
+    assert "Governor declares drought emergency as Utah" not in html
+    assert "Spencer Cox" not in html
+    regional_block = html.split("<h2>Regional Read</h2>", 1)[1].split("</section>", 1)[0]
+    assert "from a wind." not in regional_block
+    assert "Public systems signals can affect" not in html
+    assert "from a wind." not in html
+    assert "from a solar." not in html
+    assert "from a project." not in html
+    assert "from a facility." not in html
+    assert "from a plant." not in html
+    assert "from a site." not in html
+    assert "Governor declares drought emergency as Utah" not in source_table
+    assert "Spencer Cox" not in source_table
+    assert "Open latest Cascadia map" not in source_table
+    assert "Correction:" not in html
+    assert "In a letter to Gov." not in html
+    assert "including several who pushed to." not in html
+    assert "from a wind." not in source_table
+    assert "from a solar." not in source_table
+    assert "from a project." not in source_table
+    assert "from a facility." not in source_table
+    assert "from a plant." not in source_table
+    assert "from a site." not in source_table
+    map_payload_text = json.dumps(map_data)
+    assert "from a wind." not in map_payload_text
+    assert "from a solar." not in map_payload_text
+    assert "from a project." not in map_payload_text
+    assert "from a facility." not in map_payload_text
+    assert "from a plant." not in map_payload_text
+    assert "from a site." not in map_payload_text
+    assert not any("utah" in str(item.get("title", "")).lower() for item in map_data.get("markers", []))
+    assert not any("utah" in str(item.get("title", "")).lower() for item in map_data.get("regional_reports", []))
+    assert f"Report count: {manifest['public_story_count']}" in map_html
+    public_source_rows = max(0, source_table.count("<tr>") - 1)
+    assert manifest["public_story_count"] == 1
+    assert manifest["public_story_count"] == public_source_rows
+    assert manifest["public_story_count"] == len(map_data.get("markers", [])) + len(map_data.get("regional_reports", []))
+    map_source_table = (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "source_table.html").read_text(encoding="utf-8")
+    assert "Governor declares drought emergency as Utah" not in map_source_table
+    assert "gender ideology" not in map_source_table.lower()
+
+
+def test_rendered_story_summary_keeps_complete_first_sentence_and_drops_truncated_second(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-24"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    title = "Puget Sound Energy adds a large wind farm in south-central Washington to its portfolio"
+    summary = (
+        "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, "
+        "the latest move in the utility’s transition to become greenhouse gas neutral by 2030, as state law mandates. "
+        "On Tuesday, the company signed a long-term contract with Avangrid to move nearly 200 megawatts of power from a wind."
+    )
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-pse-wind",
+                    "title": title,
+                    "summary": summary,
+                    "category": "Energy and utilities",
+                    "score": 91,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": None,
+                    "source_record_ids": ["src-pse-wind"],
+                    "source_urls": ["https://example.com/pse-wind"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-pse-wind",
+                            "source_url": "https://example.com/pse-wind",
+                            "url": "https://example.com/pse-wind",
+                            "publisher": "Example WA",
+                            "published_at": "2026-05-24T10:00:00Z",
+                            "state_hint": "WA",
+                            "category_hint": "Energy and utilities",
+                            "summary_or_snippet": summary,
+                            "title": title,
+                        }
+                    ],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-24",
+        run_date="2026-05-25",
+        coverage_start="2026-05-18",
+        coverage_end="2026-05-24",
+        briefing_type="weekly",
+    )
+    html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-24" / "index.html").read_text(encoding="utf-8")
+    expected = (
+        "Puget Sound Energy is adding a wind farm in Klickitat County to its clean energy portfolio, "
+        "the latest move in the utility’s transition to become greenhouse gas neutral by 2030, as state law mandates."
+    )
+    assert expected in html
+    assert "move nearly 200 megawatts of power from a wind." not in html
+
+
+def test_map_page_uses_server_rendered_report_count_and_hidden_initial_warnings(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert "Report count: loading" not in map_html
+    assert "No matching reports" not in map_html
+    assert "Some map markers are temporarily unavailable" not in map_html
+    assert 'id="emptyState" class="empty-state" hidden' in map_html
+    assert 'id="renderWarning" class="empty-state" hidden' in map_html
+
+
+def test_edition_and_latest_map_source_tables_use_same_renderer(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    edition_table = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "source_table.html").read_text(encoding="utf-8")
+    map_table = (cascadia_work_root / "output" / "site" / "cascadia" / "map" / "source_table.html").read_text(encoding="utf-8")
+    assert edition_table == map_table
+
+
+def test_render_cleans_stale_cascadia_map_artifacts_before_write(cascadia_work_root):
+    stale_map_dir = cascadia_work_root / "output" / "site" / "cascadia" / "map"
+    stale_map_dir.mkdir(parents=True, exist_ok=True)
+    (stale_map_dir / "index.html").write_text("<html><body>Report count: 11</body></html>", encoding="utf-8")
+    (stale_map_dir / "source_table.html").write_text(
+        "<html><body>Open latest Cascadia map WA government ID government</body></html>",
+        encoding="utf-8",
+    )
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    map_html = (stale_map_dir / "index.html").read_text(encoding="utf-8")
+    map_table = (stale_map_dir / "source_table.html").read_text(encoding="utf-8")
+    assert "Report count: 11" not in map_html
+    assert "Open latest Cascadia map" not in map_table
+    assert "WA government" not in map_table
+    assert "ID government" not in map_table
+
+
+def test_landing_recent_metadata_uses_same_public_story_count_as_edition_manifest(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    manifest = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "edition_manifest.json")
+    landing = (cascadia_work_root / "output" / "site" / "cascadia" / "index.html").read_text(encoding="utf-8")
+    assert str(manifest.get("public_archive_subtitle") or "") in landing
+
+
+def test_category_labels_match_across_edition_source_table_and_map(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    curation = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "curation_manifest.json")
+    source_table = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "source_table.html").read_text(encoding="utf-8")
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    public_categories = {str(item.get("category") or "") for item in curation if item.get("included_in_public_summary") and not item.get("excluded_reason")}
+    map_categories = {str(item.get("category") or "") for item in map_data.get("markers", [])} | {str(item.get("category") or "") for item in map_data.get("regional_reports", [])}
+    assert public_categories
+    assert map_categories.issubset(public_categories)
+    for category in public_categories:
+        assert category in source_table
+
+
+def test_map_legend_uses_registry_labels_from_final_map_payload(cascadia_work_root):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    category_pairs = {
+        (str(row.get("category_id") or ""), str(row.get("category_label") or ""))
+        for row in (map_data.get("markers") or []) + (map_data.get("regional_reports") or [])
+        if str(row.get("category_id") or "") and str(row.get("category_label") or "")
+    }
+    assert category_pairs
+    for _category_id, category_label in category_pairs:
+        assert category_label in map_html
+    legacy = [
+        "Housing and utility pressure",
+        "Health care access",
+        "Jobs and local economy",
+        "Food and household support",
+        "Transportation and access",
+        "Public safety and emergency services",
+        "Wildfire, drought, flood, and recovery",
+        "Schools and local government services",
+    ]
+    for label in legacy:
+        assert label not in map_html
+
+
+def test_map_legend_excludes_registry_categories_not_present_in_payload():
+    map_payload = {
+        "markers": [
+            {"category_id": "government_public_services", "category_label": "Government and public services"},
+            {"category_id": "energy_utilities", "category_label": "Energy and utilities"},
+            {"category_id": "public_safety", "category_label": "Public safety"},
+        ],
+        "regional_reports": [
+            {"category_id": "environment_climate", "category_label": "Environment and climate"},
+        ],
+    }
+    map_html = render_map_html(
+        "2026-05-24",
+        "note",
+        "source_table.html",
+        initial_report_count=5,
+        map_payload=map_payload,
+    )
+    assert "Government and public services" in map_html
+    assert "Energy and utilities" in map_html
+    assert "Environment and climate" in map_html
+    assert "Public safety" in map_html
+    assert "Housing and homelessness" not in map_html
+    assert "optionize('pressureFilter', [...new Set(markers.map((m) => m.category_id).filter(Boolean))].sort()" in map_html
+
+
+def test_transgender_prisoner_policy_story_not_housing(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    (normalized_dir / "normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-prison-trans-1",
+                    "source_id": "cascadia-manual",
+                    "title": "WA’s transgender prisoner policy is target of new federal investigation",
+                    "summary_or_snippet": "Federal investigators requested records on correctional policy and detention oversight.",
+                    "text": "The inquiry focuses on correctional administration and legal oversight in Washington state agencies.",
+                    "canonical_url": "https://example.com/trans-prison-policy",
+                    "publisher": "Example WA",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Housing and homelessness",
+                    "state_hint": "WA",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["category"] != "Housing and homelessness"
+
+
+def test_prison_story_is_not_classified_as_housing(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    (normalized_dir / "normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-prison-1",
+                    "source_id": "cascadia-manual",
+                    "title": "State correctional housing unit policy update",
+                    "summary_or_snippet": "Prison housing unit changes affect inmate assignment.",
+                    "text": "Correctional detention and prison staffing update.",
+                    "canonical_url": "https://example.com/prison-housing",
+                    "publisher": "Example",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Housing and homelessness",
+                    "state_hint": "WA",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["category"] != "Housing and homelessness"
+    assert curated[0]["included_in_public_summary"] is False
+
+
+def test_election_story_requires_service_or_budget_relevance(cascadia_work_root):
+    normalized_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "normalized" / "2026-05-03"
+    normalized_dir.mkdir(parents=True, exist_ok=True)
+    (normalized_dir / "normalized_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "src-election-1",
+                    "source_id": "cascadia-manual",
+                    "title": "County election campaign heats up",
+                    "summary_or_snippet": "Candidates debated polling trends and endorsements.",
+                    "text": "Election campaign coverage focused on candidate messaging.",
+                    "canonical_url": "https://example.com/election-campaign",
+                    "publisher": "Example",
+                    "published_at": "2026-05-02T10:00:00Z",
+                    "category_hint": "Government and public services",
+                    "state_hint": "OR",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    curate_sources(cascadia_work_root, "2026-05-03")
+    curated = read_json(cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03" / "curation_manifest.json")
+    assert curated[0]["excluded_reason"] == "unsupported_category_or_weak_category_match"
 
 
 def test_map_extracts_local_place_from_title_and_emits_extraction_diagnostics(cascadia_work_root):
@@ -3487,3 +4439,252 @@ def test_historical_warning_summary_dedupes_repeated_provider_warnings(cascadia_
     assert result["warnings"].count("invalid JSON response: Expecting value: line 1 column 1 (char 0)") == 1
     assert result["warnings"].count("registry source fetch error: HTTP Error 404: Not Found") == 1
     assert "warnings_detailed" in result
+
+
+def test_canonical_date_fields_normalize_mixed_inputs():
+    fields = canonical_date_fields(
+        published_at="Tue, 28 Apr 2026 12:00:00 GMT",
+        retrieved_at="2026-04-29T01:02:03Z",
+        coverage_start_date="2026-04-27",
+        coverage_end_date="2026-05-03",
+    )
+    assert fields["event_date"] == "2026-04-28"
+    assert str(fields["event_ts"]).startswith("2026-04-28T")
+    assert fields["coverage_week"]
+    bad = canonical_date_fields(published_at="not-a-date", retrieved_at="2026-04-29T01:02:03Z")
+    assert bad["event_date"] is None
+    assert bad["date_quality_reason"]
+
+
+def test_cascadia_dates_falls_back_when_zoneinfo_data_missing(monkeypatch):
+    import bluefern_dispatches.cascadia_dates as cascadia_dates
+    import zoneinfo
+
+    class MissingZone:
+        def __init__(self, key):
+            raise zoneinfo.ZoneInfoNotFoundError(key)
+
+    monkeypatch.setattr(zoneinfo, "ZoneInfo", MissingZone)
+    reloaded = importlib.reload(cascadia_dates)
+    fields = reloaded.canonical_date_fields(
+        published_at="2026-05-03T12:30:00Z",
+        retrieved_at="2026-05-03T13:00:00Z",
+        coverage_start_date="2026-04-27",
+        coverage_end_date="2026-05-03",
+    )
+    assert fields["event_date"] == "2026-05-03"
+    assert fields["event_ts"] is not None
+    assert fields["coverage_week"] is not None
+    importlib.reload(cascadia_dates)
+
+
+def test_category_registry_maps_legacy_labels_to_ids():
+    assert canonical_category_id("Environment and climate") == "environment_climate"
+    assert canonical_category_id("government_public_services") == "government_public_services"
+    assert category_label_for("energy_utilities") == "Energy and utilities"
+
+
+def test_provider_diagnostics_present_on_failure(cascadia_work_root, monkeypatch):
+    class FailingGDELT:
+        provider_id = "gdelt"
+        provider_name = "Failing GDELT"
+        last_diagnostics = {"provider_id": "gdelt", "warnings": [], "errors": ["forced failure"]}
+
+        def __init__(self, config, root=None, refresh_cache=False):
+            pass
+
+        def search(self, *args, **kwargs):
+            raise RuntimeError("forced")
+
+    monkeypatch.setattr("bluefern_dispatches.cascadia_historical_search.GDELTProvider", FailingGDELT)
+    result = retrieve_historical_sources(cascadia_work_root, *containing_week("2026-04-28"), edition_date="2026-05-03", run_date="2026-05-11")
+    assert "provider_diagnostics" in result["report"]
+    gdelt_rows = [row for row in result["report"]["provider_diagnostics"] if row.get("provider_id") == "gdelt"]
+    assert gdelt_rows
+    assert gdelt_rows[0]["coverage_gap_warning"] is True
+
+
+def test_artifact_validation_writes_reports_and_blocks_without_override(cascadia_work_root, monkeypatch):
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    source_table = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "source_table.html"
+    source_table.write_text(source_table.read_text(encoding="utf-8") + "<!-- No matching reports -->", encoding="utf-8")
+    report = run_cascadia_dispatch.validate_cascadia_artifacts(cascadia_work_root, "2026-05-03", dry_run=False)
+    assert report["ok"] is False
+    report_path = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "artifact_validation.json"
+    md_path = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "artifact_validation.md"
+    assert report_path.exists()
+    assert md_path.exists()
+    saved = read_json(report_path)
+    assert saved["ok"] is False
+
+
+def test_artifact_validation_rejected_titles_do_not_leak_into_public_map_payload(cascadia_work_root):
+    curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
+    curated_dir.mkdir(parents=True, exist_ok=True)
+    rejected_title = "Rejected Backfill Story"
+    curated_dir.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "story-public",
+                    "title": "Accepted Public Story",
+                    "summary": "A source-backed local update for Cascadia households.",
+                    "category": "transportation",
+                    "score": 85,
+                    "included_in_public_summary": True,
+                    "included_in_detail_dataset": True,
+                    "excluded_reason": None,
+                    "source_record_ids": ["src-public"],
+                    "source_urls": ["https://example.com/public-story"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-public",
+                            "source_url": "https://example.com/public-story",
+                            "url": "https://example.com/public-story",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T12:00:00Z",
+                            "state_hint": "WA",
+                            "category_hint": "transportation",
+                        }
+                    ],
+                },
+                {
+                    "story_id": "story-rejected",
+                    "title": rejected_title,
+                    "summary": "This item was rejected for public output.",
+                    "category": "public safety",
+                    "score": 40,
+                    "included_in_public_summary": False,
+                    "included_in_detail_dataset": False,
+                    "excluded_reason": "geography_state_inferred_only_from_feed",
+                    "source_record_ids": ["src-rejected"],
+                    "source_urls": ["https://example.com/rejected-story"],
+                    "source_records": [
+                        {
+                            "source_record_id": "src-rejected",
+                            "source_url": "https://example.com/rejected-story",
+                            "url": "https://example.com/rejected-story",
+                            "publisher": "Example",
+                            "published_at": "2026-05-02T13:00:00Z",
+                            "state_hint": "WA",
+                            "category_hint": "public safety",
+                        }
+                    ],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    weekly_sources_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "sources" / "2026-04-27_2026-05-03"
+    weekly_sources_dir.mkdir(parents=True, exist_ok=True)
+    weekly_sources_dir.joinpath("historical_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": rejected_title,
+                    "url": "https://example.com/rejected-backfill",
+                    "publisher": "Example",
+                    "published_at": None,
+                    "summary": "Rejected candidate that should not appear in public map payload diagnostics.",
+                    "state_hint": "WA",
+                    "category_hint": "public safety",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = render_cascadia_edition(
+        cascadia_work_root,
+        "2026-05-03",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    report = run_cascadia_dispatch.validate_cascadia_artifacts(cascadia_work_root, "2026-05-03", dry_run=False)
+    assert "rejected story leaked to map payload" not in report.get("failures", [])
+
+    map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
+    map_payload_text = json.dumps(map_data)
+    assert rejected_title not in map_payload_text
+    accepted_titles = {str(row.get("title") or "") for row in map_data.get("markers", []) + map_data.get("regional_reports", [])}
+    assert "Accepted Public Story" in accepted_titles
+
+    site_edition = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
+    assert (site_edition / "curation_manifest.json").exists()
+    assert (site_edition / "sources_manifest.json").exists()
+
+
+def test_artifact_validation_override_allows_run(cascadia_work_root, monkeypatch):
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    monkeypatch.setattr(
+        run_cascadia_dispatch,
+        "validate_cascadia_artifacts",
+        lambda root, edition_date, dry_run=False: {
+            "ok": False,
+            "edition_date": edition_date,
+            "failures": ["forced artifact failure"],
+            "warnings": [],
+        },
+    )
+    code_without = run_cascadia_dispatch.main(["--archive-week", "2026-05-03", "--weekly-public"])
+    code_with = run_cascadia_dispatch.main(["--archive-week", "2026-05-03", "--weekly-public", "--allow-validation-failures"])
+    assert code_without == 1
+    assert code_with == 0
+
+
+def test_weekly_run_pipeline_writes_new_detention_watch_site_artifacts(cascadia_work_root, monkeypatch):
+    monkeypatch.setattr(run_cascadia_dispatch, "ROOT", cascadia_work_root)
+    repo = Path(__file__).resolve().parents[1]
+    baseline_src = repo / "data" / "dispatches" / "cascadia" / "detention_watch" / "baseline_2026-05-26.json"
+    baseline_dst = cascadia_work_root / "data" / "dispatches" / "cascadia" / "detention_watch" / "baseline_2026-05-26.json"
+    baseline_dst.parent.mkdir(parents=True, exist_ok=True)
+    baseline_dst.write_text(baseline_src.read_text(encoding="utf-8"), encoding="utf-8")
+    ingest_sources(cascadia_work_root, "2026-05-03")
+    normalize_sources(cascadia_work_root, "2026-05-03")
+    curate_sources(cascadia_work_root, "2026-05-03")
+    result = run_pipeline(
+        "2026-05-03",
+        ingest=False,
+        normalize=False,
+        curate=False,
+        render=True,
+        dry_run=False,
+        mode="weekly-public",
+        run_date="2026-05-04",
+        coverage_start="2026-04-27",
+        coverage_end="2026-05-03",
+        briefing_type="weekly",
+    )
+    assert result["ok"] is True
+    watch_root = cascadia_work_root / "output" / "site" / "cascadia" / "detention-watch"
+    landing = (watch_root / "index.html").read_text(encoding="utf-8")
+    edition = (watch_root / "editions" / "2026-05-26" / "index.html").read_text(encoding="utf-8")
+    source_table = (watch_root / "editions" / "2026-05-26" / "source_table.html").read_text(encoding="utf-8")
+    assert "rss.xml" not in landing
+    assert "Open latest starting record" not in landing
+    assert "Current indicators" not in edition
+    assert "Record status" in edition
+    assert "Monitoring checklist" in edition
+    assert "Facility profile" in edition
+    assert (watch_root / "archive.html").exists()
+    assert '<th scope="col">Source type</th>' in source_table
+    assert '<th scope="col">Publisher / agency</th>' in source_table
+    assert '<th scope="col">What this source supports</th>' in source_table
+    assert '<th scope="col">Verification status</th>' in source_table
+    assert '<th scope="col">Last checked</th>' in source_table

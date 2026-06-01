@@ -1,53 +1,248 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-06-01T00:38:48.631956+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-06-01-the-new-arab-7b05c982d861",
+    "source_id": "gaza-2026-06-01-the-new-arab-7b05c982d861",
+    "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress",
+    "url": "https://www.newarab.com/news/hamawy-doctor-who-worked-gaza-leading-race-us-congress",
+    "canonical_url": "https://www.newarab.com/news/hamawy-doctor-who-worked-gaza-leading-race-us-congress",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The New Arab",
+    "published_at": "2026-06-01T08:17:45+00:00",
+    "retrieved_at": "2026-06-01T13:00:35.684374+00:00",
+    "summary_or_snippet": "Adam Hamawy has treated some of Gaza's most critical patients, an experience he hopes to bring to the US Congress if he wins the New Jersey primary on Tuesday.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "the-new-arab",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-01"
+    "edition_date": "2026-06-01",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-01-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "new arab|hamawy a doctor who worked in gaza leading race for us congress",
+    "title_fingerprint": "hamawy a doctor who worked in gaza leading race for us congress",
+    "claim_fingerprint": "new arab|hamawy a doctor who worked in gaza leading race for us congress|conflict"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-06-01T00:38:48.631956+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-06-01-aljazeera-middle-east-9a5d21ec27b2",
+    "source_id": "gaza-2026-06-01-aljazeera-middle-east-9a5d21ec27b2",
+    "title": "Israel airstrike kills at least two Palestinians at Gaza port",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/6/1/israel-airstrike-kills-at-least-two-palestinians-at-gaza-port?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/6/1/israel-airstrike-kills-at-least-two-palestinians-at-gaza-port?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-01T05:16:51+00:00",
+    "retrieved_at": "2026-06-01T13:00:35.684374+00:00",
+    "summary_or_snippet": "At least two Palestinians were killed and around a dozen wounded when an Israeli air strike hit a crowded cafe.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-01"
+    "edition_date": "2026-06-01",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-01-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israel airstrike kills at least two palestinians at gaza port",
+    "title_fingerprint": "israel airstrike kills at least two palestinians at gaza port",
+    "claim_fingerprint": "al jazeera|israel airstrike kills at least two palestinians at gaza port|conflict"
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-06-01T00:38:48.631956+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e",
+    "source_id": "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e",
+    "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
+    "url": "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-06-01T02:58:42+00:00",
+    "retrieved_at": "2026-06-01T13:00:35.684374+00:00",
+    "summary_or_snippet": "Palestinian body says Israeli planning council set to discuss new settlement projects on Wednesday",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-01"
+    "edition_date": "2026-06-01",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-01-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "anadolu|israel advancing plans for over 2 700 illegal settlement units in occupied west bank",
+    "title_fingerprint": "israel advancing plans for over 2 700 illegal settlement units in occupied west bank",
+    "claim_fingerprint": "anadolu|israel advancing plans for over 2 700 illegal settlement units in occupied west bank|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534",
+    "source_id": "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534",
+    "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
+    "url": "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-06-01T02:59:05+00:00",
+    "retrieved_at": "2026-06-01T13:00:35.684374+00:00",
+    "summary_or_snippet": "Tulkarem governor says operation, launched in January 2025, will continue until July 31",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-01",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-01-006"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "anadolu|israel extends military operation in tulkarem and nur shams refugee camps in west bank",
+    "title_fingerprint": "israel extends military operation in tulkarem and nur shams refugee camps in west bank",
+    "claim_fingerprint": "anadolu|israel extends military operation in tulkarem and nur shams refugee camps in west bank|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-06-01-the-new-arab-5a5c7f22040c",
+    "source_id": "gaza-2026-06-01-the-new-arab-5a5c7f22040c",
+    "title": "Brooklyn shop backs Israel boycott after years-long fight",
+    "url": "https://www.newarab.com/news/brooklyn-shop-backs-israel-boycott-after-years-long-fight",
+    "canonical_url": "https://www.newarab.com/news/brooklyn-shop-backs-israel-boycott-after-years-long-fight",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The New Arab",
+    "published_at": "2026-05-30T07:44:29+00:00",
+    "retrieved_at": "2026-06-01T13:00:35.684374+00:00",
+    "summary_or_snippet": "Brooklyn's landmark Park Slope Food Coop voted to pull Israeli products from its shelves after a campaign over Israel's war on Gaza and Palestinian rights.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "the-new-arab",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-01",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-01-012"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "displacement",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "new arab|brooklyn shop backs israel boycott after years long fight",
+    "title_fingerprint": "brooklyn shop backs israel boycott after years long fight",
+    "claim_fingerprint": "new arab|brooklyn shop backs israel boycott after years long fight|conflict"
   }
 ]

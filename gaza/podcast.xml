@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 01 Jun 2026 01:04:02 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 01 Jun 2026 13:00:56 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for June 1, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-01-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-01-transcript.html</guid>
+    <pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Israel airstrike kills at least two Palestinians at Gaza port. At least two Palestinians were killed and around a dozen wounded when an Israeli air strike hit a crowded cafe. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-01.mp3" length="1470720" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for May 31, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-05-31-transcript.html</link>

@@ -1,12 +1,13 @@
 [
   {
     "story_id": "gaza-story-2026-06-01-002",
-    "title": "Israel airstrike kills at least two Palestinians at Gaza port",
-    "summary": "At least two Palestinians were killed and around a dozen wounded when an Israeli air strike hit a crowded cafe.",
+    "title": "Palestinian killed in Israeli drone strike in Gaza despite ceasefire",
+    "summary": "- Israel has killed 932, injured 2,859 in Gaza since ceasefire, according to local authorities.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 65,
+    "score": 76,
     "scoring_reasons": [
+      "ceasefire_diplomacy",
       "civilian_harm",
       "source_reliability",
       "date_confidence"
@@ -14,7 +15,7 @@
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
-      "ceasefire_diplomacy": 0,
+      "ceasefire_diplomacy": 8,
       "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
@@ -25,23 +26,23 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-01-aljazeera-middle-east-9a5d21ec27b2"
+      "gaza-2026-06-01-anadolu-middle-east-d81c539d6ae4"
     ],
     "source_ids": [
-      "gaza-2026-06-01-aljazeera-middle-east-9a5d21ec27b2"
+      "gaza-2026-06-01-anadolu-middle-east-d81c539d6ae4"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/6/1/israel-airstrike-kills-at-least-two-palestinians-at-gaza-port?traffic_source=rss"
+      "https://www.aa.com.tr/en/middle-east/palestinian-killed-in-israeli-drone-strike-in-gaza-despite-ceasefire/3953313"
     ],
     "publisher_names": [
-      "Al Jazeera"
+      "Anadolu Agency"
     ],
-    "generated_at": "2026-06-01T13:00:42.018852+00:00",
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
     ],
-    "top_story_relevance_score": 65,
+    "top_story_relevance_score": 76,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -56,64 +57,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-01-003",
-    "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
-    "summary": "Palestinian body says Israeli planning council set to discuss new settlement projects on Wednesday.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 58,
-    "scoring_reasons": [
-      "accountability_legal",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 8,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e"
-    ],
-    "source_ids": [
-      "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e"
-    ],
-    "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582"
-    ],
-    "publisher_names": [
-      "Anadolu Agency"
-    ],
-    "generated_at": "2026-06-01T13:00:42.018852+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "west bank"
-    ],
-    "top_story_relevance_score": 58,
-    "substantive_ground": false,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-05-28-004",
-    "prior_edition_date": "2026-05-28",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-06-01-005",
+    "story_id": "gaza-story-2026-06-01-007",
     "title": "Brooklyn shop backs Israel boycott after years-long fight",
     "summary": "Brooklyn's landmark Park Slope Food Coop voted to pull Israeli products from its shelves after a campaign over. Israel's war on Gaza and Palestinian rights.",
     "category": "conflict",
@@ -150,7 +94,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-01T13:00:42.018852+00:00",
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -170,14 +114,14 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-01-004",
-    "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
-    "summary": "Tulkarem governor says operation, launched in January 2025, will continue until July 31.",
+    "story_id": "gaza-story-2026-06-01-005",
+    "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
+    "summary": "Palestinian body says Israeli planning council set to discuss new settlement projects on Wednesday.",
     "category": "palestinian_development",
     "story_scope": "palestinian_development",
-    "score": 52,
+    "score": 58,
     "scoring_reasons": [
-      "displacement",
+      "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
@@ -186,38 +130,39 @@
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
-      "displacement": 8,
+      "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
+      "accountability_legal": 8,
       "source_reliability": 14,
       "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534"
+      "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e"
     ],
     "source_ids": [
-      "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534"
+      "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585"
+      "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582"
     ],
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-01T13:00:42.018852+00:00",
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
     "relevance_terms_matched": [
       "gaza",
+      "palestin",
       "west bank"
     ],
-    "top_story_relevance_score": 52,
-    "substantive_ground": true,
+    "top_story_relevance_score": 58,
+    "substantive_ground": false,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
-    "core_ground_development": true,
+    "core_ground_development": false,
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": "gaza-story-2026-05-28-004",
@@ -226,7 +171,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-01-001",
+    "story_id": "gaza-story-2026-06-01-003",
     "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress",
     "summary": "Adam Hamawy has treated some of Gaza's most critical patients, an experience he hopes to bring to the US Congress if he wins the New Jersey primary on Tuesday.",
     "category": "conflict",
@@ -262,7 +207,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-01T13:00:42.018852+00:00",
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -278,6 +223,171 @@
     "prior_story_matched": null,
     "prior_edition_date": null,
     "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-01-006",
+    "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
+    "summary": "Tulkarem governor says operation, launched in January 2025, will continue until July 31.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534"
+    ],
+    "source_ids": [
+      "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-01-004",
+    "title": "Iran suspends indirect exchanges with US over Israeli attacks in Lebanon: Iranian media",
+    "summary": "Tehran will not resume indirect contacts until Israeli military operations in Gaza and Lebanon stop, Tasnim news reports.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-01-anadolu-middle-east-f19071c4c8b6"
+    ],
+    "source_ids": [
+      "gaza-2026-06-01-anadolu-middle-east-f19071c4c8b6"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/iran-suspends-indirect-exchanges-with-us-over-israeli-attacks-in-lebanon-iranian-media/3953254"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-01-001",
+    "title": "Will Israel reoccupy Gaza or is Netanyahu playing politics?",
+    "summary": "With no endgame and elections looming, ordering the seizure of 70% of Gaza puts pressure on Hamas while managing Netanyahu's domestic political pressures.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-01-the-new-arab-7b29688f5bb1"
+    ],
+    "source_ids": [
+      "gaza-2026-06-01-the-new-arab-7b29688f5bb1"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/analysis/will-israel-reoccupy-gaza-or-netanyahu-playing-politics"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-01T15:27:17.926672+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-18-005",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

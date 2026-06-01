@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-01",
-  "generated_at": "2026-06-01T13:00:56.313686Z",
+  "generated_at": "2026-06-01T15:27:34.106735Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-06-01.mp3",
   "audio_url": "/gaza/audio/2026-06-01.mp3",
@@ -21,36 +21,30 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1408,
-  "tts_input_word_count": 229,
-  "tts_story_count": 5,
+  "tts_input_character_count": 1655,
+  "tts_input_word_count": 262,
+  "tts_story_count": 6,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1470720,
+  "audio_file_size_bytes": 1745664,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-06-01T13:00:56.313665Z",
+  "cost_logged_at": "2026-06-01T15:27:34.106708Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-01-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-01/",
-  "script_text": "This is the Gaza Dispatch audio briefing for June 1, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel airstrike kills at least two Palestinians at Gaza port. At least two Palestinians were killed and around a dozen wounded when an Israeli air strike hit a crowded cafe. This was reported by Al Jazeera.\n\n2. Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank. Palestinian body says Israeli planning council set to discuss new settlement projects on Wednesday. This was reported by Anadolu Agency.\n\n3. Brooklyn shop backs Israel boycott after years-long fight. Brooklyn's landmark Park Slope Food Coop voted to pull Israeli products from its shelves after a campaign over. Israel's war on Gaza and Palestinian rights. This was reported by The New Arab.\n\n4. Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank. Tulkarem governor says operation, launched in January 2025, will continue until July 31. This was reported by Anadolu Agency.\n\n5. Hamawy, a doctor who worked in Gaza leading race for US Congress. Adam Hamawy has treated some of Gaza's most critical patients, an experience he hopes to bring to the US Congress if he wins the New Jersey primary on Tuesday. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 1, 2026 Gaza edition at dispatches.thebluefernco.com.",
-  "source_count": 5,
+  "script_text": "This is the Gaza Dispatch audio briefing for June 1, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian killed in Israeli drone strike in Gaza despite ceasefire. - Israel has killed 932, injured 2,859 in Gaza since ceasefire, according to local authorities. This was reported by Anadolu Agency.\n\n2. Brooklyn shop backs Israel boycott after years-long fight. Brooklyn's landmark Park Slope Food Coop voted to pull Israeli products from its shelves after a campaign over. Israel's war on Gaza and Palestinian rights. This was reported by The New Arab.\n\n3. Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank. Palestinian body says Israeli planning council set to discuss new settlement projects on Wednesday. This was reported by Anadolu Agency.\n\n4. Hamawy, a doctor who worked in Gaza leading race for US Congress. Adam Hamawy has treated some of Gaza's most critical patients, an experience he hopes to bring to the US Congress if he wins the New Jersey primary on Tuesday. This was reported by The New Arab.\n\n5. Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank. Tulkarem governor says operation, launched in January 2025, will continue until July 31. This was reported by Anadolu Agency.\n\n6. Iran suspends indirect exchanges with US over Israeli attacks in Lebanon: Iranian media. Tehran will not resume indirect contacts until Israeli military operations in Gaza and Lebanon stop, Tasnim news reports. This was reported by Anadolu Agency.\n\nFor the full source-backed dispatch, read the June 1, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
   "sources": [
     {
-      "source_record_id": "gaza-2026-06-01-aljazeera-middle-east-9a5d21ec27b2",
-      "publisher": "Al Jazeera",
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/6/1/israel-airstrike-kills-at-least-two-palestinians-at-gaza-port?traffic_source=rss",
-      "title": "Israel airstrike kills at least two Palestinians at Gaza port"
-    },
-    {
-      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e",
+      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-d81c539d6ae4",
       "publisher": "Anadolu Agency",
-      "url": "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582",
-      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank"
+      "url": "https://www.aa.com.tr/en/middle-east/palestinian-killed-in-israeli-drone-strike-in-gaza-despite-ceasefire/3953313",
+      "title": "Palestinian killed in Israeli drone strike in Gaza despite ceasefire"
     },
     {
       "source_record_id": "gaza-2026-06-01-the-new-arab-5a5c7f22040c",
@@ -59,16 +53,28 @@
       "title": "Brooklyn shop backs Israel boycott after years-long fight"
     },
     {
-      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534",
+      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-7bf93ca3e32e",
       "publisher": "Anadolu Agency",
-      "url": "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585",
-      "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank"
+      "url": "https://www.aa.com.tr/en/middle-east/israel-advancing-plans-for-over-2-700-illegal-settlement-units-in-occupied-west-bank/3952582",
+      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank"
     },
     {
       "source_record_id": "gaza-2026-06-01-the-new-arab-7b05c982d861",
       "publisher": "The New Arab",
       "url": "https://www.newarab.com/news/hamawy-doctor-who-worked-gaza-leading-race-us-congress",
       "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress"
+    },
+    {
+      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-3d0ea49d7534",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israel-extends-military-operation-in-tulkarem-and-nur-shams-refugee-camps-in-west-bank/3952585",
+      "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-06-01-anadolu-middle-east-f19071c4c8b6",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/iran-suspends-indirect-exchanges-with-us-over-israeli-attacks-in-lebanon-iranian-media/3953254",
+      "title": "Iran suspends indirect exchanges with US over Israeli attacks in Lebanon: Iranian media"
     }
   ]
 }

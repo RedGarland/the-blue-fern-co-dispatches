@@ -1,11 +1,11 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-01",
-  "candidates_seen": 5,
+  "candidates_seen": 7,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-06-01-002",
-      "title": "Israel airstrike kills at least two Palestinians at Gaza port",
+      "title": "Palestinian killed in Israeli drone strike in Gaza despite ceasefire",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -15,18 +15,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-01-003",
-      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-01-005",
+      "story_id": "gaza-story-2026-06-01-007",
       "title": "Brooklyn shop backs Israel boycott after years-long fight",
       "classification": "new",
       "material_update": true,
@@ -37,7 +26,29 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-01-004",
+      "story_id": "gaza-story-2026-06-01-005",
+      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-003",
+      "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-006",
       "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
       "classification": "major_update",
       "material_update": true,
@@ -48,12 +59,23 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-01-001",
-      "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress",
+      "story_id": "gaza-story-2026-06-01-004",
+      "title": "Iran suspends indirect exchanges with US over Israeli attacks in Lebanon: Iranian media",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
         "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-001",
+      "title": "Will Israel reoccupy Gaza or is Netanyahu playing politics?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -63,81 +85,21 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-06-01-003",
-      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
-      "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-01-004",
-      "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
-      "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    }
-  ],
-  "merged_sources": 0,
-  "duplicate_groups": [],
-  "reasons": [
-    {
-      "story_id": "gaza-story-2026-06-01-002",
-      "title": "Israel airstrike kills at least two Palestinians at Gaza port",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-01-003",
-      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
-      "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-06-01-005",
-      "title": "Brooklyn shop backs Israel boycott after years-long fight",
-      "classification": "new",
+      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
+      "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_story"
+        "new_source_url_different_publisher"
       ],
       "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
       "include_decision": "include",
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-01-004",
+      "story_id": "gaza-story-2026-06-01-006",
       "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
       "classification": "major_update",
       "material_update": true,
@@ -152,6 +114,66 @@
     },
     {
       "story_id": "gaza-story-2026-06-01-001",
+      "title": "Will Israel reoccupy Gaza or is Netanyahu playing politics?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-06-01-002",
+      "title": "Palestinian killed in Israeli drone strike in Gaza despite ceasefire",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-007",
+      "title": "Brooklyn shop backs Israel boycott after years-long fight",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-005",
+      "title": "Israel advancing plans for over 2,700 illegal settlement units in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-003",
       "title": "Hamawy, a doctor who worked in Gaza leading race for US Congress",
       "classification": "new",
       "material_update": true,
@@ -161,6 +183,48 @@
       "duplicate_reasons": [],
       "prior_story_matched": null,
       "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-006",
+      "title": "Israel extends military operation in Tulkarem and Nur Shams refugee camps in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-004",
+      "title": "Iran suspends indirect exchanges with US over Israeli attacks in Lebanon: Iranian media",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-01-001",
+      "title": "Will Israel reoccupy Gaza or is Netanyahu playing politics?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-18-005",
+      "prior_edition_date": "2026-05-18",
       "include_decision": "include",
       "public_rendered": true
     }

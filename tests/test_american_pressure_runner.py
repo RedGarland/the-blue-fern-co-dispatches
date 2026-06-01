@@ -1249,6 +1249,47 @@ def test_data_anchor_does_not_rescue_non_us_only_housing_story(work_root):
     assert housing_story.get("source_role_counts", {}).get("human_story", 0) == 0
 
 
+def test_rendered_public_html_excludes_known_bad_phrase_locations(work_root):
+    records = [
+        _record("food-bad", "food_pressure", "Schools Out Food Drive to help Napanee’s Morningstar, Salvation Army", "Schools Out Food Drive to help Napanee’s Morningstar, Salvation Army", "https://example.com/food-bad", source_type="news_report", source_role="human_story"),
+        _record("housing-bad", "housing_household_cost_pressure", "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos", "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos", "https://example.com/housing-bad", source_type="news_report", source_role="human_story"),
+        _record("health-bad", "health_access_pressure", "Trump Squeezes Immigrants by Cutting Them Off From Jobs, Health Care and Housing", "Trump Squeezes Immigrants by Cutting Them Off From Jobs, Health Care and Housing", "https://example.com/health-bad", source_type="news_report", source_role="human_story"),
+        _record("labor-bad", "labor_income_pressure", "Oilfield Services Co. Closing Southwest PA Office, Cutting 75 Jobs", "Oilfield Services Co. Closing Southwest PA Office, Cutting 75 Jobs", "https://example.com/labor-bad", source_type="news_report", source_role="human_story"),
+        _record("fin-bad", "financial_distress_pressure", "SAP Powers TCS’s LargeScale Payroll Transformation, Supporting Its CloudFirst Strategy", "SAP Powers TCS’s LargeScale Payroll Transformation, Supporting Its CloudFirst Strategy", "https://example.com/fin-bad", source_type="news_report", source_role="human_story"),
+        _record("env-bad", "environmental_pressure", "Flooding slams Bat Cave, Chimney Rock and Henderson County", "Flooding slams Bat Cave, Chimney Rock and Henderson County", "https://example.com/env-bad", source_type="news_report", source_role="human_story"),
+        _record("bls", "housing_household_cost_pressure", "BLS CPI Shelter Index", "Official baseline indicator source.", "https://www.bls.gov/cpi/", source_role="data_anchor"),
+    ]
+    records[0]["location"] = "Morningstar, Salvation"
+    records[1]["location"] = "Estate, House"
+    records[1]["geography"] = "Nigeria"
+    records[2]["location"] = "Jobs, Health"
+    records[3]["location"] = "Office, Cutting"
+    records[4]["location"] = "Transformation, Supporting"
+    records[5]["location"] = "Cave, Chimney"
+    _write_manual_sources(work_root, "2026-05-30", records)
+
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-30",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-30" / "index.html").read_text(encoding="utf-8")
+    for phrase in [
+        "Estate, House",
+        "Lagos",
+        "Morningstar, Salvation",
+        "Jobs, Health",
+        "Office, Cutting",
+        "Transformation, Supporting",
+        "Cave, Chimney",
+    ]:
+        assert phrase not in html
+
+
 def test_map_can_include_records_outside_written_weekly_selection(work_root):
     prior_week = [
         _record("older-map-only", "food_pressure", "Older local signal", "In Sacramento, California pantry demand rose.", "https://example.com/older", source_type="news_report", source_role="human_story"),

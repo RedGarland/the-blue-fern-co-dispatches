@@ -480,6 +480,28 @@ def _is_valid_public_location_label(value: str) -> bool:
     return False
 
 
+def _headline_has_invalid_location_phrase(headline: str) -> bool:
+    text = _safe_text(headline)
+    if not text:
+        return False
+    m = re.search(r"\bin\s+([A-Z][A-Za-z .'-]+?,\s*[A-Z][A-Za-z .'-]+)\b", text)
+    if not m:
+        return False
+    return not _is_valid_public_location_label(m.group(1).strip())
+
+
+def _sanitize_reader_headline(value: Any, publisher: Any) -> str:
+    cleaned = clean_google_rss_title(value, publisher)
+    if not cleaned:
+        return ""
+    lowered = cleaned.lower()
+    if any(term in lowered for term in NON_US_GEO_TERMS):
+        return ""
+    if _headline_has_invalid_location_phrase(cleaned):
+        return ""
+    return cleaned
+
+
 def _is_non_us_source_without_context_allowance(source: dict[str, Any]) -> bool:
     if bool(source.get("allow_non_us_context")):
         return False
@@ -498,6 +520,27 @@ def _is_non_us_source_without_context_allowance(source: dict[str, Any]) -> bool:
         ]
     ).lower()
     if any(term in text_blob for term in NON_US_GEO_TERMS):
+        return True
+    return False
+
+
+def _has_valid_public_location_signal(
+    record: dict[str, Any], *, manual_location: str, location_scope: str
+) -> bool:
+    if manual_location or location_scope:
+        return True
+    city = _safe_text(record.get("city"))
+    county = _safe_text(record.get("county"))
+    state = _normalize_state_token(_safe_text(record.get("state") or record.get("state_code") or record.get("state_hint")))
+    if state and (city or county):
+        return True
+    place_name = _safe_text(record.get("place_name"))
+    if place_name and state:
+        return True
+    region_scope = _safe_text(record.get("region_scope") or record.get("geography"))
+    if _is_valid_public_location_label(region_scope):
+        return True
+    if region_scope.lower() in {"us", "u.s.", "united states", "national", "nationally"}:
         return True
     return False
 
@@ -1931,6 +1974,8 @@ def normalize_sources(
         "candidates_found": 0,
         "candidates_accepted": 0,
         "rejected_non_us_source": 0,
+        "rejected_invalid_location_only": 0,
+        "neutralized_invalid_location_phrase": 0,
         "rejected_investor_only": 0,
         "rejected_no_public_pressure_angle": 0,
         "rejected_duplicate_or_stale": 0,
@@ -1970,6 +2015,30 @@ def normalize_sources(
         title = clean_google_rss_title(record.get("title"), record.get("publisher"))
         summary = clean_candidate_text(record.get("summary_or_snippet"))
         publisher = clean_candidate_text(record.get("publisher"))
+        raw_location = clean_candidate_text(record.get("location"))
+        raw_location_scope = _safe_text(record.get("location_scope"))
+        manual_location = raw_location if _is_valid_public_location_label(raw_location) else ""
+        location_scope = raw_location_scope if _is_valid_public_location_label(raw_location_scope) else ""
+        if raw_location and not manual_location:
+            diagnostics["neutralized_invalid_location_phrase"] += 1
+        if raw_location_scope and not location_scope:
+            diagnostics["neutralized_invalid_location_phrase"] += 1
+        role = _classify_source_role(record)
+        has_valid_location_signal = _has_valid_public_location_signal(
+            record, manual_location=manual_location, location_scope=location_scope
+        )
+        has_invalid_location_only = bool((raw_location and not manual_location) or (raw_location_scope and not location_scope))
+        invalid_location_fragment_in_title = bool(
+            raw_location
+            and not manual_location
+            and raw_location.lower() in title.lower()
+        )
+        if role == "human_story" and (
+            (has_invalid_location_only and not has_valid_location_signal)
+            or invalid_location_fragment_in_title
+        ):
+            diagnostics["rejected_invalid_location_only"] += 1
+            continue
         combined_text = f"{title} {summary}".lower()
         host = (urlsplit(url).netloc or "").lower()
         dedupe_key = (host, title.lower())
@@ -1996,12 +2065,12 @@ def normalize_sources(
                     "edition_date": edition_date,
                     "dispatch_slug": DISPATCH_SLUG,
                     "is_baseline_auto": bool(record.get("is_baseline_auto")),
-                    "reader_headline": clean_google_rss_title(record.get("reader_headline"), publisher),
+                    "reader_headline": _sanitize_reader_headline(record.get("reader_headline"), publisher),
                     "manual_what_happened": clean_candidate_text(record.get("what_happened")),
                     "manual_potential_relevance": clean_candidate_text(record.get("potential_relevance")),
                     "manual_who_may_feel_it": clean_candidate_text(record.get("who_may_feel_it")),
                     "manual_what_to_watch_next": clean_candidate_text(record.get("what_to_watch_next")),
-                    "location_scope": _safe_text(record.get("location_scope")),
+                    "location_scope": location_scope,
                     "city": _safe_text(record.get("city")),
                     "state": _safe_text(record.get("state")),
                     "state_code": _safe_text(record.get("state_code")),
@@ -2012,7 +2081,7 @@ def normalize_sources(
                     "pressure_direction": _safe_text(record.get("pressure_direction")),
                     "public_pressure_angle": clean_candidate_text(record.get("public_pressure_angle")),
                     "manual_human_story_summary": clean_candidate_text(record.get("human_story_summary")),
-                    "manual_location": clean_candidate_text(record.get("location")),
+                    "manual_location": manual_location,
                     "manual_pressure_area": _safe_text(record.get("pressure_area")),
                     "manual_source_role": _safe_text(record.get("source_role")).lower(),
                     "latitude": _safe_float(record.get("latitude") if record.get("latitude") is not None else record.get("lat")),
@@ -2074,12 +2143,12 @@ def normalize_sources(
                 "edition_date": edition_date,
                 "dispatch_slug": DISPATCH_SLUG,
                 "is_baseline_auto": bool(record.get("is_baseline_auto")),
-                "reader_headline": clean_google_rss_title(record.get("reader_headline"), publisher),
+                "reader_headline": _sanitize_reader_headline(record.get("reader_headline"), publisher),
                 "manual_what_happened": clean_candidate_text(record.get("what_happened")),
                 "manual_potential_relevance": clean_candidate_text(record.get("potential_relevance")),
                 "manual_who_may_feel_it": clean_candidate_text(record.get("who_may_feel_it")),
                 "manual_what_to_watch_next": clean_candidate_text(record.get("what_to_watch_next")),
-                "location_scope": _safe_text(record.get("location_scope")),
+                "location_scope": location_scope,
                 "city": _safe_text(record.get("city")),
                 "state": _safe_text(record.get("state")),
                 "state_code": _safe_text(record.get("state_code")),
@@ -2090,7 +2159,7 @@ def normalize_sources(
                 "pressure_direction": _safe_text(record.get("pressure_direction")),
                 "public_pressure_angle": clean_candidate_text(record.get("public_pressure_angle")),
                 "manual_human_story_summary": clean_candidate_text(record.get("human_story_summary")),
-                "manual_location": clean_candidate_text(record.get("location")),
+                "manual_location": manual_location,
                 "manual_pressure_area": _safe_text(record.get("pressure_area")),
                 "manual_source_role": _safe_text(record.get("source_role")).lower(),
                 "latitude": _safe_float(record.get("latitude") if record.get("latitude") is not None else record.get("lat")),
@@ -2313,7 +2382,7 @@ def _locationized_current_development(source: dict[str, Any]) -> str:
 
 
 def _reader_facing_headline(source: dict[str, Any]) -> str:
-    manual = clean_google_rss_title(source.get("reader_headline"), source.get("publisher"))
+    manual = _sanitize_reader_headline(source.get("reader_headline"), source.get("publisher"))
     if manual:
         words = [w for w in re.findall(r"[A-Za-z]+", manual)]
         title_case_words = sum(1 for w in words if len(w) > 2 and w[:1].isupper() and w[1:].islower())
@@ -2322,9 +2391,9 @@ def _reader_facing_headline(source: dict[str, Any]) -> str:
             return manual
     text = f"{source.get('title', '')} {source.get('summary_or_snippet', '')}".lower()
     pillar = _safe_text(source.get("pillar"))
-    location = _safe_text(source.get("manual_location") or source.get("location_scope"))
+    location = _location_phrase(source)
     if location.lower() in {"us", "u.s.", "united states"}:
-        location = "nationally"
+        location = "Nationally"
     location_phrase = f" in {location}" if location and location.lower() != "nationally" else (" nationally" if location else "")
     if pillar == "food_pressure":
         return f"Food support networks{location_phrase} report rising demand".strip()

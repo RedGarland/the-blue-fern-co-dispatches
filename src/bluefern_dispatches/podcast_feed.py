@@ -94,6 +94,11 @@ def _sentence_chunks(text: str) -> list[str]:
         chunk = part.strip()
         if not chunk:
             continue
+        chunk = re.sub(r"^\s*(?:[-•]\s+|\d+[\.\)]\s+)", "", chunk).strip()
+        if not chunk:
+            continue
+        if re.fullmatch(r"\d+[\.\)]?", chunk):
+            continue
         if chunk[-1] not in ".!?":
             chunk = f"{chunk}."
         out.append(chunk)
@@ -132,7 +137,18 @@ def _episode_description(row: dict[str, Any], edition_date: str) -> str:
     else:
         script_text = _normalize_spaces(str(row.get("script_text") or ""))
         if script_text:
-            base = _sentence_chunks(script_text)[:2]
+            script_sentences = _sentence_chunks(script_text)
+            filtered: list[str] = []
+            for sentence in script_sentences:
+                lower = sentence.lower()
+                if lower.startswith("this is the gaza dispatch audio briefing for "):
+                    continue
+                if lower.startswith("here are the key source-backed developments from today's edition."):
+                    continue
+                if lower.startswith("for the full source-backed dispatch, read the "):
+                    continue
+                filtered.append(sentence)
+            base = (filtered or script_sentences)[:2]
         else:
             fallback = _headline_fallback(row)
             base = _sentence_chunks(fallback)[:1] if fallback else []

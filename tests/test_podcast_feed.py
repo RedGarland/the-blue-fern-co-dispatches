@@ -75,6 +75,52 @@ def test_podcast_episode_description_is_episode_specific(tmp_path: Path):
     assert "Text-first Gaza audio briefing transcripts derived from source-backed daily editions." not in xml.split("<item>", 1)[1]
 
 
+def test_podcast_description_prefers_story_sentences_over_script_boilerplate(tmp_path: Path):
+    _write_audio_metadata(
+        tmp_path,
+        "2026-05-31",
+        {
+            "script_text": (
+                "This is the Gaza Dispatch audio briefing for May 31, 2026. "
+                "Here are the key source-backed developments from today's edition. "
+                "Reports described new aid access pressures and worsening conditions for displaced families. "
+                "For the full source-backed dispatch, read the May 31, 2026 Gaza edition at dispatches.thebluefernco.com."
+            ),
+        },
+    )
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+    xml = build_gaza_podcast_xml(tmp_path)
+    item_block = xml.split("<item>", 1)[1]
+    assert "aid access pressures" in item_block
+    assert "This is the Gaza Dispatch audio briefing for May 31, 2026." not in item_block
+    assert "Here are the key source-backed developments from today's edition." not in item_block
+
+
+def test_podcast_description_strips_leading_list_prefixes(tmp_path: Path):
+    _write_audio_metadata(
+        tmp_path,
+        "2026-05-31",
+        {
+            "script_text": (
+                "1. Israeli forces kill Palestinian who allegedly carried out car-ramming attack in occupied West Bank. "
+                "- Aid convoys faced delays at crossings. "
+                "• Hospitals reported urgent supply shortages."
+            ),
+        },
+    )
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+    xml = build_gaza_podcast_xml(tmp_path)
+    item_block = xml.split("<item>", 1)[1]
+    assert "Israeli forces kill Palestinian who allegedly carried out car-ramming attack in occupied West Bank." in item_block
+    assert "1. Israeli forces kill Palestinian" not in item_block
+    assert "<description>- " not in item_block
+    assert "<description>• " not in item_block
+
+
 def test_podcast_episode_description_fallback_is_safe_when_story_content_unavailable(tmp_path: Path):
     _write_audio_metadata(
         tmp_path,

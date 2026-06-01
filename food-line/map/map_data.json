@@ -1,20 +1,32 @@
 {
   "dispatch_slug": "food-line",
-  "edition_date": "2026-06-01",
+  "edition_date": "2026-06-02",
   "markers": [
     {
       "location_name": "United States",
       "state": "US",
       "category": "summer meal / child nutrition",
       "issue_tags": [
-        "child hunger",
         "summer meals",
+        "child hunger",
         "school meals"
       ],
-      "source_title": "USDA summer meals program information",
+      "source_title": "USDA FNS Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
-      "note": "USDA summer meal programs are a key food-access support when schools are closed for summer.",
-      "dispatch_date": "2026-06-01"
+      "note": "USDA summer meal programs and guidance.",
+      "dispatch_date": "2026-06-02"
+    },
+    {
+      "location_name": "United States",
+      "state": "US",
+      "category": "context / monitoring only",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "source_title": "USDA ERS Food Security",
+      "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
+      "note": "National food security context and trend information.",
+      "dispatch_date": "2026-06-02"
     },
     {
       "location_name": "United States",
@@ -22,13 +34,12 @@
       "category": "elevated demand",
       "issue_tags": [
         "food banks",
-        "pantry capacity",
-        "household hardship"
+        "pantry capacity"
       ],
-      "source_title": "Feeding America food insecurity context",
+      "source_title": "Feeding America Hunger in America",
       "source_url": "https://www.feedingamerica.org/hunger-in-america",
-      "note": "Food banks and charitable food providers remain part of the emergency food-access network for households facing food hardship.",
-      "dispatch_date": "2026-06-01"
+      "note": "Food bank and pantry demand context.",
+      "dispatch_date": "2026-06-02"
     },
     {
       "location_name": "United States",
@@ -36,26 +47,12 @@
       "category": "benefit disruption",
       "issue_tags": [
         "SNAP",
-        "benefits",
-        "federal policy"
+        "benefits"
       ],
-      "source_title": "FRAC SNAP and hunger policy context",
+      "source_title": "FRAC SNAP Policy",
       "source_url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
-      "note": "SNAP remains a central federal nutrition program for households facing food insecurity.",
-      "dispatch_date": "2026-06-01"
-    },
-    {
-      "location_name": "United States",
-      "state": "US",
-      "category": "context / monitoring only",
-      "issue_tags": [
-        "household food insecurity",
-        "economic pressure"
-      ],
-      "source_title": "USDA ERS food security statistics",
-      "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
-      "note": "USDA ERS food security data provides national context for household food hardship.",
-      "dispatch_date": "2026-06-01"
+      "note": "SNAP policy and implementation context.",
+      "dispatch_date": "2026-06-02"
     },
     {
       "location_name": "United States",
@@ -63,13 +60,12 @@
       "category": "senior hunger",
       "issue_tags": [
         "senior hunger",
-        "fixed income",
         "meal delivery"
       ],
-      "source_title": "Meals on Wheels senior hunger context",
+      "source_title": "Meals on Wheels Facts and Resources",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
-      "note": "Senior meal providers are part of the food-access safety net for older adults, especially those with limited mobility or fixed incomes.",
-      "dispatch_date": "2026-06-01"
+      "note": "Senior meal and food access context.",
+      "dispatch_date": "2026-06-02"
     }
   ],
   "diagnostics": {
@@ -84,14 +80,29 @@
       "state": "US",
       "category": "summer meal / child nutrition",
       "issue_tags": [
-        "child hunger",
         "summer meals",
+        "child hunger",
         "school meals"
       ],
-      "source_title": "USDA summer meals program information",
+      "source_title": "USDA FNS Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
-      "note": "USDA summer meal programs are a key food-access support when schools are closed for summer.",
-      "dispatch_date": "2026-06-01",
+      "note": "USDA summer meal programs and guidance.",
+      "dispatch_date": "2026-06-02",
+      "latitude": 39.8283,
+      "longitude": -98.5795,
+      "coordinate_basis": "national_centroid"
+    },
+    {
+      "location_name": "United States",
+      "state": "US",
+      "category": "context / monitoring only",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "source_title": "USDA ERS Food Security",
+      "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
+      "note": "National food security context and trend information.",
+      "dispatch_date": "2026-06-02",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national_centroid"
@@ -102,13 +113,12 @@
       "category": "elevated demand",
       "issue_tags": [
         "food banks",
-        "pantry capacity",
-        "household hardship"
+        "pantry capacity"
       ],
-      "source_title": "Feeding America food insecurity context",
+      "source_title": "Feeding America Hunger in America",
       "source_url": "https://www.feedingamerica.org/hunger-in-america",
-      "note": "Food banks and charitable food providers remain part of the emergency food-access network for households facing food hardship.",
-      "dispatch_date": "2026-06-01",
+      "note": "Food bank and pantry demand context.",
+      "dispatch_date": "2026-06-02",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national_centroid"
@@ -119,29 +129,12 @@
       "category": "benefit disruption",
       "issue_tags": [
         "SNAP",
-        "benefits",
-        "federal policy"
+        "benefits"
       ],
-      "source_title": "FRAC SNAP and hunger policy context",
+      "source_title": "FRAC SNAP Policy",
       "source_url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
-      "note": "SNAP remains a central federal nutrition program for households facing food insecurity.",
-      "dispatch_date": "2026-06-01",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national_centroid"
-    },
-    {
-      "location_name": "United States",
-      "state": "US",
-      "category": "context / monitoring only",
-      "issue_tags": [
-        "household food insecurity",
-        "economic pressure"
-      ],
-      "source_title": "USDA ERS food security statistics",
-      "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
-      "note": "USDA ERS food security data provides national context for household food hardship.",
-      "dispatch_date": "2026-06-01",
+      "note": "SNAP policy and implementation context.",
+      "dispatch_date": "2026-06-02",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national_centroid"
@@ -152,13 +145,12 @@
       "category": "senior hunger",
       "issue_tags": [
         "senior hunger",
-        "fixed income",
         "meal delivery"
       ],
-      "source_title": "Meals on Wheels senior hunger context",
+      "source_title": "Meals on Wheels Facts and Resources",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
-      "note": "Senior meal providers are part of the food-access safety net for older adults, especially those with limited mobility or fixed incomes.",
-      "dispatch_date": "2026-06-01",
+      "note": "Senior meal and food access context.",
+      "dispatch_date": "2026-06-02",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national_centroid"

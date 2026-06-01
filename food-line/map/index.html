@@ -1,1 +1,88 @@
-<html><body><h1>Food Line Map</h1><p>Latest mapped signals for 2026-06-01.</p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food Line Pressure Map</title>
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    .fl-map-wrap { display:grid; gap:14px; }
+    .fl-map { height:520px; border:1px solid #d5e1e5; border-radius:12px; }
+    .fl-panel { border:1px solid #d5e1e5; border-radius:12px; background:#f5fafc; padding:12px; }
+    .fl-legend { margin:0; padding-left:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:6px 10px; }
+    .fl-legend li { display:flex; align-items:center; gap:8px; }
+    .fl-dot { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #1b2f39; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html">Food Line Pressure Map</a>
+    <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Pressure Map</a><a href="../archive.html">Archive</a><a href="../rss.xml">RSS</a></nav>
+  </header>
+<main class="home">
+  <section class="hero"><h1>Food Line Pressure Map</h1><p>Latest dispatch date: 2026-06-01</p><p><a href="/food-line/editions/2026-06-01/">Open latest Food Line edition</a></p></section>
+  <section class="fl-map-wrap">
+    <div id="foodLineMap" class="fl-map" data-rendered-marker-count="5" data-skipped-marker-count="0"></div>
+    <div class="fl-panel">
+      <h2>Legend</h2>
+      <ul class="fl-legend"><li><span class="fl-dot" style="background:#9a4b4b;"></span>acute strain / service disruption</li><li><span class="fl-dot" style="background:#b6784f;"></span>elevated demand</li><li><span class="fl-dot" style="background:#5d7f62;"></span>summer meal / child nutrition</li><li><span class="fl-dot" style="background:#6d6287;"></span>senior hunger</li><li><span class="fl-dot" style="background:#3f5878;"></span>rural access</li><li><span class="fl-dot" style="background:#5b6f8a;"></span>benefit disruption</li><li><span class="fl-dot" style="background:#61717c;"></span>context / monitoring only</li></ul>
+      <p><strong>Plotted markers:</strong> 5 | <strong>Skipped markers:</strong> 0</p>
+      <p>Locations are source-backed pressure signals, not a complete census of food insecurity.</p>
+    </div>
+  </section>
+</main>
+<script>
+const CATEGORY_COLORS = {"acute strain / service disruption": "#9a4b4b", "elevated demand": "#b6784f", "summer meal / child nutrition": "#5d7f62", "senior hunger": "#6d6287", "rural access": "#3f5878", "benefit disruption": "#5b6f8a", "context / monitoring only": "#61717c"};
+const FALLBACK_MARKERS = [{"location_name": "United States", "state": "US", "category": "summer meal / child nutrition", "issue_tags": ["child hunger", "summer meals", "school meals"], "source_title": "USDA summer meals program information", "source_url": "https://www.fns.usda.gov/summer", "note": "USDA summer meal programs are a key food-access support when schools are closed for summer.", "dispatch_date": "2026-06-01", "latitude": 39.8283, "longitude": -98.5795, "coordinate_basis": "national_centroid"}, {"location_name": "United States", "state": "US", "category": "elevated demand", "issue_tags": ["food banks", "pantry capacity", "household hardship"], "source_title": "Feeding America food insecurity context", "source_url": "https://www.feedingamerica.org/hunger-in-america", "note": "Food banks and charitable food providers remain part of the emergency food-access network for households facing food hardship.", "dispatch_date": "2026-06-01", "latitude": 39.8283, "longitude": -98.5795, "coordinate_basis": "national_centroid"}, {"location_name": "United States", "state": "US", "category": "benefit disruption", "issue_tags": ["SNAP", "benefits", "federal policy"], "source_title": "FRAC SNAP and hunger policy context", "source_url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap", "note": "SNAP remains a central federal nutrition program for households facing food insecurity.", "dispatch_date": "2026-06-01", "latitude": 39.8283, "longitude": -98.5795, "coordinate_basis": "national_centroid"}, {"location_name": "United States", "state": "US", "category": "context / monitoring only", "issue_tags": ["household food insecurity", "economic pressure"], "source_title": "USDA ERS food security statistics", "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us", "note": "USDA ERS food security data provides national context for household food hardship.", "dispatch_date": "2026-06-01", "latitude": 39.8283, "longitude": -98.5795, "coordinate_basis": "national_centroid"}, {"location_name": "United States", "state": "US", "category": "senior hunger", "issue_tags": ["senior hunger", "fixed income", "meal delivery"], "source_title": "Meals on Wheels senior hunger context", "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources", "note": "Senior meal providers are part of the food-access safety net for older adults, especially those with limited mobility or fixed incomes.", "dispatch_date": "2026-06-01", "latitude": 39.8283, "longitude": -98.5795, "coordinate_basis": "national_centroid"}];
+const MAP_DATA_URL = "map_data.json";
+function esc(value) {
+  return String(value || "").replace(/[&<>"]/g, function(c) { return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c] || c; });
+}
+const map = L.map("foodLineMap").setView([39.8283, -98.5795], 4);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 18,
+  attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
+const layers = [];
+function draw(rows) {
+rows.forEach((item) => {
+  const color = CATEGORY_COLORS[item.category] || "#61717c";
+  const icon = L.divIcon({
+    className: "",
+    html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:1px solid #1b2f39;"></div>`,
+    iconSize: [14,14],
+    iconAnchor: [7,7]
+  });
+  const tags = Array.isArray(item.issue_tags) ? item.issue_tags.join(", ") : "";
+  const popup = `<div class="map-popup">
+    <div><strong>${esc(item.location_name)}</strong> (${esc(item.state)})</div>
+    <div><strong>Category:</strong> ${esc(item.category)}</div>
+    <div><strong>Issue tags:</strong> ${esc(tags)}</div>
+    <div><strong>Source:</strong> <a href="${esc(item.source_url)}" target="_blank" rel="noopener noreferrer">${esc(item.source_title)}</a></div>
+    <div><strong>Note:</strong> ${esc(item.note)}</div>
+    <div><strong>Dispatch date:</strong> ${esc(item.dispatch_date)}</div>
+    <div><strong>Coordinate basis:</strong> ${esc(item.coordinate_basis)}</div>
+  </div>`;
+  const marker = L.marker([Number(item.latitude), Number(item.longitude)], {icon}).addTo(map).bindPopup(popup);
+  layers.push(marker);
+});
+if (layers.length) {
+  map.fitBounds(L.featureGroup(layers).getBounds(), {padding:[24,24], maxZoom:7});
+}
+}
+fetch(MAP_DATA_URL)
+  .then((resp) => resp.ok ? resp.json() : null)
+  .then((payload) => {
+    const mapped = payload && Array.isArray(payload.mapped_markers) ? payload.mapped_markers : FALLBACK_MARKERS;
+    draw(mapped);
+  })
+  .catch(() => draw(FALLBACK_MARKERS));
+</script>
+</body>
+</html>

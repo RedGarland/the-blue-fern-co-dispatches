@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-02",
-  "generated_at": "2026-06-01T23:37:54.124625+00:00",
+  "generated_at": "2026-06-01T23:50:13.101524+00:00",
   "source_count": 5,
   "story_count": 5,
   "source_adequacy": {
@@ -18,5 +18,20 @@
     ],
     "local_signal_count": 5
   },
+  "lead_source_record_id": "food-line-auto-da9d9b6ba64d5506",
+  "lead_issue_tags": [
+    "food banks",
+    "pantry capacity"
+  ],
+  "source_roles_count": {
+    "daily_signal": 0,
+    "background_context": 1,
+    "policy_context": 1,
+    "provider_signal": 3,
+    "local_signal": 0,
+    "map_signal": 0
+  },
+  "editorial_status": "daily_signal",
+  "why_this_lead": "selected for highest priority role/category mix (provider_signal, elevated demand)",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-02/"
 }

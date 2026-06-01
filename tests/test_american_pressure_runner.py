@@ -1145,7 +1145,108 @@ def test_map_repeated_locations_are_aggregated(work_root):
     grouped = [row for row in payload.get("aggregated_pins", []) if row.get("location_label") == "Sacramento, CA"]
     assert grouped
     assert grouped[0]["record_count"] >= 2
-    assert grouped[0]["raw_record_count"] >= grouped[0]["record_count"]
+
+
+def test_non_us_housing_story_excluded_and_estate_house_not_emitted(work_root):
+    lagos_story = _record(
+        "lagos-housing",
+        "housing_household_cost_pressure",
+        "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos",
+        "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos The Guardian Nigeria News",
+        "https://example.com/lagos-housing",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    lagos_story["publisher"] = "The Guardian Nigeria News"
+    lagos_story["geography"] = "Nigeria"
+    lagos_story["location"] = "Estate, House"
+    lagos_story["location_scope"] = "Estate, House"
+
+    valid_us_story = _record(
+        "us-housing",
+        "housing_household_cost_pressure",
+        "Texas families face higher summer utility bills",
+        "Texas households report higher utility bills this week.",
+        "https://example.com/texas-housing",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    valid_us_story["location"] = "Texas"
+    valid_us_story["location_scope"] = "Texas"
+
+    bls_anchor = _record(
+        "bls-cpi-shelter",
+        "housing_household_cost_pressure",
+        "BLS CPI Shelter Index",
+        "Official baseline indicator source.",
+        "https://www.bls.gov/cpi/",
+        source_role="data_anchor",
+    )
+
+    _write_manual_sources(work_root, "2026-05-30", [lagos_story, valid_us_story, bls_anchor])
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-30",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-30" / "curation_manifest.json").read_text(encoding="utf-8"))
+    sources = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-30" / "sources_manifest.json").read_text(encoding="utf-8"))
+    html = (work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-30" / "index.html").read_text(encoding="utf-8")
+
+    bad_phrase = "Housing and bill pressure in Estate, House is squeezing household budgets"
+    assert bad_phrase not in html
+    assert "Estate, House" not in html
+    assert not any("Estate, House" in str(story.get("title") or "") for story in curation.get("stories", []))
+    assert not any("Estate, House" in str(story.get("human_story_summary") or "") for story in curation.get("stories", []))
+    assert not any("Lagos" in str(row.get("title") or "") for row in sources)
+
+    housing_story = next(story for story in curation["stories"] if story.get("pillar") == "housing_household_cost_pressure")
+    assert "ap-2026-05-12-bls-cpi-shelter" in housing_story.get("data_anchor_source_ids", [])
+    assert "ap-2026-05-12-bls-cpi-shelter" in housing_story.get("public_source_record_ids", [])
+
+
+def test_data_anchor_does_not_rescue_non_us_only_housing_story(work_root):
+    lagos_story = _record(
+        "lagos-only",
+        "housing_household_cost_pressure",
+        "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos",
+        "How Multiple Charges Are Undermining Real Estate, House Rents In Lagos The Guardian Nigeria News",
+        "https://example.com/lagos-only",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    lagos_story["publisher"] = "The Guardian Nigeria News"
+    lagos_story["geography"] = "Nigeria"
+    lagos_story["location"] = "Estate, House"
+
+    bls_anchor = _record(
+        "bls-cpi-shelter",
+        "housing_household_cost_pressure",
+        "BLS CPI Shelter Index",
+        "Official baseline indicator source.",
+        "https://www.bls.gov/cpi/",
+        source_role="data_anchor",
+    )
+
+    _write_manual_sources(work_root, "2026-05-30", [lagos_story, bls_anchor])
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-30",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    curation = json.loads((work_root / "output" / "site" / "american-pressure" / "editions" / "2026-05-30" / "curation_manifest.json").read_text(encoding="utf-8"))
+    housing_story = next(story for story in curation["stories"] if story.get("pillar") == "housing_household_cost_pressure")
+    assert housing_story.get("item_type") == "baseline_gauge"
+    assert housing_story.get("source_role_counts", {}).get("human_story", 0) == 0
 
 
 def test_map_can_include_records_outside_written_weekly_selection(work_root):

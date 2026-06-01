@@ -449,6 +449,59 @@ def _normalize_state_token(value: str) -> str:
     return ""
 
 
+def _looks_like_generic_location_fragment(value: str) -> bool:
+    words = [w.lower() for w in re.findall(r"[A-Za-z]+", _safe_text(value))]
+    if not words:
+        return True
+    if all(word in GENERIC_LOCATION_TERMS for word in words):
+        return True
+    return False
+
+
+def _is_valid_public_location_label(value: str) -> bool:
+    text = _safe_text(value)
+    if not text:
+        return False
+    lowered = text.lower()
+    if lowered in {"nationally", "national", "united states", "us", "u.s.", "usa"}:
+        return True
+    if re.match(r"(?i)^us-[a-z]{2}$", text):
+        return True
+    if re.match(r"(?i)^multiple counties in [a-z][a-z .'-]+$", text):
+        return True
+    city_or_county, state = _split_city_state(text)
+    state_abbr = _normalize_state_token(state)
+    if city_or_county and state_abbr:
+        if _looks_like_generic_location_fragment(city_or_county):
+            return False
+        return True
+    if _normalize_state_token(text):
+        return True
+    return False
+
+
+def _is_non_us_source_without_context_allowance(source: dict[str, Any]) -> bool:
+    if bool(source.get("allow_non_us_context")):
+        return False
+    if _safe_text(source.get("allow_non_us_context")).lower() in {"1", "true", "yes"}:
+        return False
+    text_blob = " ".join(
+        [
+            _safe_text(source.get("title")),
+            _safe_text(source.get("summary_or_snippet")),
+            _safe_text(source.get("publisher")),
+            _safe_text(source.get("region_scope")),
+            _safe_text(source.get("geography")),
+            _safe_text(source.get("location_scope")),
+            _safe_text(source.get("location")),
+            _safe_text(source.get("manual_location")),
+        ]
+    ).lower()
+    if any(term in text_blob for term in NON_US_GEO_TERMS):
+        return True
+    return False
+
+
 _CITY_STATE_PATTERNS = [
     re.compile(r"\b([A-Z][A-Za-z .'-]+?),\s*([A-Z]{2})\b"),
     re.compile(r"\b([A-Z][A-Za-z .'-]+?),\s*(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b", re.IGNORECASE),
@@ -457,6 +510,52 @@ _COUNTY_STATE_PATTERNS = [
     re.compile(r"\b([A-Z][A-Za-z .'-]+? County),\s*([A-Z]{2})\b"),
     re.compile(r"\b([A-Z][A-Za-z .'-]+? County),\s*(Alabama|Alaska|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|District of Columbia|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New Hampshire|New Jersey|New Mexico|New York|North Carolina|North Dakota|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Vermont|Virginia|Washington|West Virginia|Wisconsin|Wyoming)\b", re.IGNORECASE),
 ]
+
+GENERIC_LOCATION_TERMS = {
+    "real",
+    "estate",
+    "house",
+    "houses",
+    "rents",
+    "office",
+    "cutting",
+    "jobs",
+    "job",
+    "health",
+    "transformation",
+    "supporting",
+    "support",
+    "transit",
+    "amtrak",
+    "morningstar",
+    "salvation",
+    "cave",
+    "chimney",
+}
+
+NON_US_GEO_TERMS = {
+    "nigeria",
+    "lagos",
+    "canada",
+    "ontario",
+    "toronto",
+    "uk",
+    "united kingdom",
+    "england",
+    "scotland",
+    "wales",
+    "ireland",
+    "australia",
+    "germany",
+    "france",
+    "india",
+    "pakistan",
+    "china",
+    "japan",
+    "mexico",
+    "brazil",
+    "south africa",
+}
 
 
 def _extract_state_only(text: str) -> str | None:
@@ -553,6 +652,8 @@ def _clean_city_candidate_text(raw_city: str) -> str:
     city = re.sub(r"^[^A-Za-z]*", "", city).strip()
     city = re.sub(r"\s+", " ", city).strip()
     if not city or len(city) < 2:
+        return ""
+    if _looks_like_generic_location_fragment(city):
         return ""
     return city
 
@@ -1829,6 +1930,7 @@ def normalize_sources(
         "sources_attempted": len(records),
         "candidates_found": 0,
         "candidates_accepted": 0,
+        "rejected_non_us_source": 0,
         "rejected_investor_only": 0,
         "rejected_no_public_pressure_angle": 0,
         "rejected_duplicate_or_stale": 0,
@@ -1841,6 +1943,9 @@ def normalize_sources(
             errors.append(f"source record {index} missing required fields: {', '.join(missing)}")
             continue
         diagnostics["candidates_found"] += 1
+        if _is_non_us_source_without_context_allowance(record):
+            diagnostics["rejected_non_us_source"] += 1
+            continue
         source_record_id = str(record.get("source_record_id") or "").strip()
         source_id = str(record.get("source_id") or source_record_id).strip()
         if not source_id:
@@ -2068,15 +2173,17 @@ def _reader_facing_summary(source: dict[str, Any]) -> str:
 
 def _location_phrase(source: dict[str, Any]) -> str:
     explicit = _safe_text(source.get("manual_location") or source.get("location"))
-    if explicit:
+    if explicit and _is_valid_public_location_label(explicit):
         return explicit
     scope = _safe_text(source.get("location_scope"))
-    if scope and scope not in {"local", "regional", "national"}:
+    if scope and scope not in {"local", "regional", "national"} and _is_valid_public_location_label(scope):
         return scope
     region_scope = _safe_text(source.get("region_scope"))
     if region_scope.lower() in {"us", "u.s.", "united states"}:
         return "Nationally"
-    return region_scope
+    if _is_valid_public_location_label(region_scope):
+        return region_scope
+    return ""
 
 
 def _normalize_location_intro(place: str) -> tuple[str, str]:
@@ -2509,6 +2616,40 @@ def _validate_manual_human_story_records(sources: list[dict[str, Any]], root: Pa
     return warnings, errors
 
 
+def _source_domain_key(source: dict[str, Any]) -> str:
+    url = _safe_text(source.get("url"))
+    host = (urlsplit(url).netloc or "").lower()
+    if host in {"news.google.com", "www.news.google.com"}:
+        return _safe_text(source.get("publisher")).lower()
+    return host
+
+
+def _topic_tokens(text: str) -> set[str]:
+    stop = {
+        "the", "and", "for", "with", "from", "this", "that", "into", "over", "under",
+        "household", "households", "pressure", "local", "news", "report", "reported",
+    }
+    out = {tok.lower() for tok in re.findall(r"[A-Za-z]{4,}", text)}
+    return {tok for tok in out if tok not in stop}
+
+
+def _filter_human_story_bundle(human_story_sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if len(human_story_sources) <= 1:
+        return human_story_sources
+    primary = human_story_sources[0]
+    primary_domain = _source_domain_key(primary)
+    primary_tokens = _topic_tokens(f"{_safe_text(primary.get('title'))} {_safe_text(primary.get('summary_or_snippet'))}")
+    kept = [primary]
+    for source in human_story_sources[1:]:
+        domain = _source_domain_key(source)
+        tokens = _topic_tokens(f"{_safe_text(source.get('title'))} {_safe_text(source.get('summary_or_snippet'))}")
+        same_domain = bool(primary_domain and domain and primary_domain == domain)
+        related_topic = bool(primary_tokens and tokens and len(primary_tokens.intersection(tokens)) >= 2)
+        if same_domain or related_topic:
+            kept.append(source)
+    return kept
+
+
 def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_at: str) -> list[dict[str, Any]]:
     stories: list[dict[str, Any]] = []
     source_by_id = {str(source["source_record_id"]): source for source in sources}
@@ -2532,6 +2673,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, generated_a
             ),
             reverse=True,
         )[:3]
+        human_story_sources = _filter_human_story_bundle(human_story_sources)
         data_anchor_sources = [s for s in bucket if _classify_source_role(s) == "data_anchor"]
         watchlist_sources = [s for s in bucket if _classify_source_role(s) == "watchlist_signal"]
 

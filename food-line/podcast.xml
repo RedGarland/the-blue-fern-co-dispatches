@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<channel>
+  <title>Food Line Dispatch</title>
+  <link>https://dispatches.thebluefernco.com/food-line/audio/</link>
+  <description>Daily source-backed public briefing on U.S. food insecurity signals.</description>
+  <language>en-us</language>
+  <itunes:image href="https://dispatches.thebluefernco.com/food-line/audio/podcast-artwork.png" />
+  <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/food-line/audio/podcast.xml" rel="self" type="application/rss+xml" />
+  <lastBuildDate>Mon, 01 Jun 2026 22:42:17 +0000</lastBuildDate>
+  <item>
+    <title>Summer Meal Pressure Builds - June 1, 2026</title>
+    <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-01-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-01-transcript.html</guid>
+    <pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+    <description>This is the Food Line Dispatch for June 1, 2026. Today’s briefing tracks source-backed food insecurity signals across U.S. Transcript and source links are available from The Blue Fern Co.</description>
+  </item>
+</channel>
+</rss>

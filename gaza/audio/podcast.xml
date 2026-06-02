@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
 <channel>
   <title>The Gaza Dispatch from The Blue Fern Co.</title>
   <link>https://dispatches.thebluefernco.com/gaza/audio/</link>
   <description>Text-first Gaza audio briefing transcripts derived from source-backed daily editions.</description>
   <language>en-us</language>
-  <copyright>© 2026 The Blue Fern Co.</copyright>
+  <copyright>Copyright 2026 The Blue Fern Co.</copyright>
   <managingEditor>bluefernco@thebluefernco.com (The Blue Fern Co.)</managingEditor>
   <webMaster>bluefernco@thebluefernco.com (The Blue Fern Co.)</webMaster>
   <itunes:author>The Blue Fern Co.</itunes:author>
@@ -45,3 +45,4 @@
   </item>
 </channel>
 </rss>
+

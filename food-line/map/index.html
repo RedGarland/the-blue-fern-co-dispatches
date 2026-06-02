@@ -62,7 +62,7 @@ rows.forEach((item) => {
   const popup = `<div class="map-popup">
     <div><strong>${esc(item.location_name)}</strong> (${esc(item.state)})</div>
     <div><strong>Pressure summary:</strong> ${esc(item.pressure_summary)}</div>
-    <div><strong>Affected groups:</strong> ${esc(Array.isArray(item.affected_groups) ? item.affected_groups.join(", ") : "")}</div>
+    <div><strong>Affected groups:</strong> ${esc(Array.isArray(item.affected_groups) && item.affected_groups.length ? item.affected_groups.join(", ") : "Not clearly isolated by source")}</div>
     <div><strong>Pressure type:</strong> ${esc(item.pressure_type)}</div>
     <div><strong>Evidence level:</strong> ${esc(item.evidence_level)}</div>
     <div><strong>Freshness role:</strong> ${esc(item.freshness_role)}</div>

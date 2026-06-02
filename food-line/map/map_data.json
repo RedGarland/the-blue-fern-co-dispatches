@@ -12,6 +12,11 @@
         "child hunger",
         "school meals"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "USDA FNS Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "USDA summer meal programs and guidance.",
@@ -28,6 +33,11 @@
         "household food insecurity",
         "economic pressure"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "National food security context and trend information.",
@@ -45,6 +55,11 @@
         "pantry capacity",
         "household hardship"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Feeding America Hunger in America",
       "source_url": "https://www.feedingamerica.org/hunger-in-america",
       "note": "Food bank and pantry demand context.",
@@ -62,6 +77,11 @@
         "benefits",
         "federal policy"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "FRAC SNAP Policy",
       "source_url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
       "note": "SNAP policy and implementation context.",
@@ -79,6 +99,11 @@
         "meal delivery",
         "fixed income"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Meals on Wheels Facts and Resources",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "Senior meal and food access context.",
@@ -97,6 +122,11 @@
         "service access",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Food Lifeline Updates",
       "source_url": "https://foodlifeline.org/",
       "note": "Source-backed food insecurity context signal.",
@@ -114,6 +144,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "Source-backed food insecurity context signal.",
@@ -131,6 +166,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Idaho SNAP Program",
       "source_url": "https://healthandwelfare.idaho.gov/services-programs/food-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
@@ -149,6 +189,11 @@
         "household hardship",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "California CalFresh",
       "source_url": "https://www.cdss.ca.gov/food-nutrition/calfresh",
       "note": "Source-backed food insecurity context signal.",
@@ -166,6 +211,11 @@
         "benefits",
         "household hardship"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Texas SNAP Program",
       "source_url": "https://www.hhs.texas.gov/services/food/snap-food-benefits",
       "note": "Source-backed food insecurity context signal.",
@@ -183,6 +233,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Florida ACCESS Food Assistance",
       "source_url": "https://www.myflfamilies.com/services/public-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
@@ -200,6 +255,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "New York SNAP",
       "source_url": "https://otda.ny.gov/programs/snap/",
       "note": "Source-backed food insecurity context signal.",
@@ -217,6 +277,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Pennsylvania SNAP",
       "source_url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
       "note": "Source-backed food insecurity context signal.",
@@ -234,6 +299,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Ohio SNAP",
       "source_url": "https://jfs.ohio.gov/food-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
@@ -251,6 +321,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Mississippi SNAP",
       "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
       "note": "Source-backed food insecurity context signal.",
@@ -268,6 +343,11 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Kentucky SNAP",
       "source_url": "https://chfs.ky.gov/agencies/dcbs/dfs/nab/Pages/default.aspx",
       "note": "Source-backed food insecurity context signal.",
@@ -285,6 +365,11 @@
         "pantry capacity",
         "service access"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "Source-backed food insecurity context signal.",
@@ -303,6 +388,11 @@
         "service access",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "Source-backed food insecurity context signal.",
@@ -311,13 +401,8 @@
       "longitude": null
     }
   ],
-  "diagnostics": {
-    "marker_count": 18,
-    "plotted_marker_count": 18,
-    "skipped_marker_count": 0,
-    "skipped_markers": []
-  },
-  "mapped_markers": [
+  "pressure_markers": [],
+  "context_records": [
     {
       "location_name": "United States",
       "state": "US",
@@ -328,13 +413,17 @@
         "child hunger",
         "school meals"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "USDA FNS Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "USDA summer meal programs and guidance.",
       "dispatch_date": "2026-06-03",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "United States",
@@ -345,13 +434,17 @@
         "household food insecurity",
         "economic pressure"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "National food security context and trend information.",
       "dispatch_date": "2026-06-03",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "United States",
@@ -363,13 +456,17 @@
         "pantry capacity",
         "household hardship"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Feeding America Hunger in America",
       "source_url": "https://www.feedingamerica.org/hunger-in-america",
       "note": "Food bank and pantry demand context.",
       "dispatch_date": "2026-06-03",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "United States",
@@ -381,13 +478,17 @@
         "benefits",
         "federal policy"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "FRAC SNAP Policy",
       "source_url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
       "note": "SNAP policy and implementation context.",
       "dispatch_date": "2026-06-03",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "United States",
@@ -399,13 +500,17 @@
         "meal delivery",
         "fixed income"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Meals on Wheels Facts and Resources",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "Senior meal and food access context.",
       "dispatch_date": "2026-06-03",
-      "latitude": 39.8283,
-      "longitude": -98.5795,
-      "coordinate_basis": "national centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Seattle, WA",
@@ -418,13 +523,17 @@
         "service access",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Food Lifeline Updates",
       "source_url": "https://foodlifeline.org/",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 47.6062,
-      "longitude": -122.3321,
-      "coordinate_basis": "city fallback"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Oregon",
@@ -436,13 +545,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 43.804133,
-      "longitude": -120.554201,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Idaho",
@@ -454,13 +567,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Idaho SNAP Program",
       "source_url": "https://healthandwelfare.idaho.gov/services-programs/food-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 44.068202,
-      "longitude": -114.742041,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "California",
@@ -473,13 +590,17 @@
         "household hardship",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "California CalFresh",
       "source_url": "https://www.cdss.ca.gov/food-nutrition/calfresh",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 36.778259,
-      "longitude": -119.417931,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Texas",
@@ -491,13 +612,17 @@
         "benefits",
         "household hardship"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Texas SNAP Program",
       "source_url": "https://www.hhs.texas.gov/services/food/snap-food-benefits",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 31.968599,
-      "longitude": -99.901813,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Florida",
@@ -509,13 +634,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Florida ACCESS Food Assistance",
       "source_url": "https://www.myflfamilies.com/services/public-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 27.664827,
-      "longitude": -81.515754,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "New York",
@@ -527,13 +656,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "New York SNAP",
       "source_url": "https://otda.ny.gov/programs/snap/",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 43.299428,
-      "longitude": -74.217933,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Pennsylvania",
@@ -545,13 +678,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Pennsylvania SNAP",
       "source_url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 41.203322,
-      "longitude": -77.194525,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Ohio",
@@ -563,13 +700,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Ohio SNAP",
       "source_url": "https://jfs.ohio.gov/food-assistance/supplemental-nutrition-assistance-program-snap",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 40.417287,
-      "longitude": -82.907123,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Mississippi",
@@ -581,13 +722,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Mississippi SNAP",
       "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 32.354668,
-      "longitude": -89.398528,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Kentucky",
@@ -599,13 +744,17 @@
         "benefits",
         "state administration"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "Kentucky SNAP",
       "source_url": "https://chfs.ky.gov/agencies/dcbs/dfs/nab/Pages/default.aspx",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 37.839333,
-      "longitude": -84.270018,
-      "coordinate_basis": "state centroid"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "Dallas, TX",
@@ -617,13 +766,17 @@
         "pantry capacity",
         "service access"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 32.7767,
-      "longitude": -96.797,
-      "coordinate_basis": "city fallback"
+      "latitude": null,
+      "longitude": null
     },
     {
       "location_name": "New York City, NY",
@@ -636,13 +789,57 @@
         "service access",
         "household food insecurity"
       ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
       "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "Source-backed food insecurity context signal.",
       "dispatch_date": "2026-06-03",
-      "latitude": 40.7128,
-      "longitude": -74.006,
-      "coordinate_basis": "city fallback"
+      "latitude": null,
+      "longitude": null
     }
-  ]
+  ],
+  "baseline_records": [
+    {
+      "location_name": "United States",
+      "state": "US",
+      "county_name": "",
+      "category": "context / monitoring only",
+      "issue_tags": [
+        "household food insecurity",
+        "economic pressure"
+      ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "pressure_reason": "no concrete pressure evidence terms matched",
+      "source_title": "USDA ERS Food Security",
+      "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
+      "note": "National food security context and trend information.",
+      "dispatch_date": "2026-06-03",
+      "latitude": null,
+      "longitude": null
+    }
+  ],
+  "diagnostics": {
+    "total_source_count": 18,
+    "pressure_signal_count": 0,
+    "pressure_marker_count": 0,
+    "baseline_record_count": 1,
+    "context_record_count": 18,
+    "excluded_context_count": 18,
+    "unmapped_pressure_count": 0,
+    "exclusion_reasons": {
+      "excluded_context_or_not_map_eligible": 18
+    },
+    "marker_count": 0,
+    "plotted_marker_count": 0,
+    "skipped_marker_count": 0,
+    "skipped_markers": []
+  },
+  "mapped_markers": []
 }

@@ -2,12 +2,12 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-03",
-  "generated_at": "2026-06-02T00:17:07.091790+00:00",
+  "generated_at": "2026-06-02T00:40:44.716591+00:00",
   "source_count": 18,
   "story_count": 6,
   "source_adequacy": {
-    "status": "daily",
-    "label": "Daily edition",
+    "status": "monitoring_context",
+    "label": "Monitoring/context edition",
     "source_count": 18,
     "source_families": [
       "economic_data",
@@ -38,7 +38,11 @@
   "local_signal_count": 13,
   "state_signal_count": 13,
   "national_context_count": 5,
-  "editorial_status": "daily_signal",
+  "editorial_status": "monitoring/context",
+  "pressure_status": "monitoring_context_only",
   "why_this_lead": "selected for highest priority role/category mix (local_signal, benefit disruption)",
+  "selected_lead_source_role": "policy_context",
+  "selected_lead_pressure_type": "context only",
+  "selected_lead_affected_groups": [],
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-03/"
 }

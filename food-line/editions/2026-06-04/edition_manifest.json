@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-04",
-  "generated_at": "2026-06-02T01:45:02.648488+00:00",
+  "generated_at": "2026-06-02T01:46:50.796956+00:00",
   "source_count": 8,
   "story_count": 6,
   "source_adequacy": {
@@ -21,7 +21,7 @@
     "state_signal_count": 4,
     "national_context_count": 4
   },
-  "lead_source_record_id": "food-line-auto-d4f9617242acfd19",
+  "lead_source_record_id": "food-line-auto-e048ac5f21ac1015",
   "lead_issue_tags": [
     "SNAP",
     "benefits"

@@ -32,7 +32,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-49baab8dd3d96167",
+      "source_record_id": "food-line-auto-8704bd55c7c44a88",
       "location_name": "Seattle, WA",
       "state": "WA",
       "county_name": "",
@@ -53,7 +53,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "foodlifeline-pressure-updates",
+      "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
       "dispatch_date": "2026-06-04",
@@ -61,7 +61,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-e47157eaccf0bb7e",
+      "source_record_id": "food-line-auto-47541dab25f44777",
       "location_name": "Dallas, TX",
       "state": "TX",
       "county_name": "",
@@ -82,7 +82,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "north-texas-food-bank-pressure-updates",
+      "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
       "dispatch_date": "2026-06-04",
@@ -90,7 +90,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-e721fc32fea36504",
+      "source_record_id": "food-line-auto-ee9dee3fe0d1be78",
       "location_name": "New York City, NY",
       "state": "NY",
       "county_name": "",
@@ -113,7 +113,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "city-harvest-pressure-updates",
+      "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
       "dispatch_date": "2026-06-04",
@@ -121,7 +121,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-d4f9617242acfd19",
+      "source_record_id": "food-line-auto-e048ac5f21ac1015",
       "location_name": "Oregon",
       "state": "OR",
       "county_name": "",
@@ -144,7 +144,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched benefit disruption",
-      "source_title": "oregon-snap-pressure-updates",
+      "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
       "dispatch_date": "2026-06-04",
@@ -152,7 +152,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-4c866f733848b332",
+      "source_record_id": "food-line-auto-d0cc33ff8ae5af74",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -176,7 +176,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched child meal gap",
-      "source_title": "usda-summer-meal-pressure-updates",
+      "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
       "dispatch_date": "2026-06-04",
@@ -184,7 +184,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-d97cd2ed1eb25e03",
+      "source_record_id": "food-line-auto-88e41c3f07604f27",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -207,7 +207,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched senior meal strain",
-      "source_title": "meals-on-wheels-pressure-updates",
+      "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
       "dispatch_date": "2026-06-04",
@@ -215,7 +215,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-438dc1979173ba36",
+      "source_record_id": "food-line-auto-cfa35a3d9d6f0828",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -241,7 +241,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched disaster disruption",
-      "source_title": "disaster-food-assistance-pressure-updates",
+      "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
       "dispatch_date": "2026-06-04",
@@ -251,7 +251,7 @@
   ],
   "pressure_markers": [
     {
-      "source_record_id": "food-line-auto-49baab8dd3d96167",
+      "source_record_id": "food-line-auto-8704bd55c7c44a88",
       "location_name": "Seattle, WA",
       "state": "WA",
       "county_name": "",
@@ -272,7 +272,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "foodlifeline-pressure-updates",
+      "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
       "dispatch_date": "2026-06-04",
@@ -280,7 +280,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-e47157eaccf0bb7e",
+      "source_record_id": "food-line-auto-47541dab25f44777",
       "location_name": "Dallas, TX",
       "state": "TX",
       "county_name": "",
@@ -301,7 +301,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "north-texas-food-bank-pressure-updates",
+      "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
       "dispatch_date": "2026-06-04",
@@ -309,7 +309,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-e721fc32fea36504",
+      "source_record_id": "food-line-auto-ee9dee3fe0d1be78",
       "location_name": "New York City, NY",
       "state": "NY",
       "county_name": "",
@@ -332,7 +332,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "city-harvest-pressure-updates",
+      "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
       "dispatch_date": "2026-06-04",
@@ -340,7 +340,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-d4f9617242acfd19",
+      "source_record_id": "food-line-auto-e048ac5f21ac1015",
       "location_name": "Oregon",
       "state": "OR",
       "county_name": "",
@@ -363,7 +363,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched benefit disruption",
-      "source_title": "oregon-snap-pressure-updates",
+      "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
       "dispatch_date": "2026-06-04",
@@ -371,7 +371,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-4c866f733848b332",
+      "source_record_id": "food-line-auto-d0cc33ff8ae5af74",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -395,7 +395,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched child meal gap",
-      "source_title": "usda-summer-meal-pressure-updates",
+      "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
       "dispatch_date": "2026-06-04",
@@ -403,7 +403,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-d97cd2ed1eb25e03",
+      "source_record_id": "food-line-auto-88e41c3f07604f27",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -426,7 +426,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched senior meal strain",
-      "source_title": "meals-on-wheels-pressure-updates",
+      "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
       "dispatch_date": "2026-06-04",
@@ -434,7 +434,7 @@
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-438dc1979173ba36",
+      "source_record_id": "food-line-auto-cfa35a3d9d6f0828",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -460,7 +460,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched disaster disruption",
-      "source_title": "disaster-food-assistance-pressure-updates",
+      "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
       "dispatch_date": "2026-06-04",
@@ -581,7 +581,7 @@
   },
   "mapped_markers": [
     {
-      "source_record_id": "food-line-auto-49baab8dd3d96167",
+      "source_record_id": "food-line-auto-8704bd55c7c44a88",
       "location_name": "Seattle, WA",
       "state": "WA",
       "county_name": "",
@@ -602,7 +602,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "foodlifeline-pressure-updates",
+      "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
       "dispatch_date": "2026-06-04",
@@ -611,7 +611,7 @@
       "coordinate_basis": "city fallback"
     },
     {
-      "source_record_id": "food-line-auto-e47157eaccf0bb7e",
+      "source_record_id": "food-line-auto-47541dab25f44777",
       "location_name": "Dallas, TX",
       "state": "TX",
       "county_name": "",
@@ -632,7 +632,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "north-texas-food-bank-pressure-updates",
+      "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
       "dispatch_date": "2026-06-04",
@@ -641,7 +641,7 @@
       "coordinate_basis": "city fallback"
     },
     {
-      "source_record_id": "food-line-auto-e721fc32fea36504",
+      "source_record_id": "food-line-auto-ee9dee3fe0d1be78",
       "location_name": "New York City, NY",
       "state": "NY",
       "county_name": "",
@@ -664,7 +664,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched demand strain",
-      "source_title": "city-harvest-pressure-updates",
+      "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
       "dispatch_date": "2026-06-04",
@@ -673,7 +673,7 @@
       "coordinate_basis": "city fallback"
     },
     {
-      "source_record_id": "food-line-auto-d4f9617242acfd19",
+      "source_record_id": "food-line-auto-e048ac5f21ac1015",
       "location_name": "Oregon",
       "state": "OR",
       "county_name": "",
@@ -696,7 +696,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched benefit disruption",
-      "source_title": "oregon-snap-pressure-updates",
+      "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
       "dispatch_date": "2026-06-04",
@@ -705,7 +705,7 @@
       "coordinate_basis": "state centroid"
     },
     {
-      "source_record_id": "food-line-auto-4c866f733848b332",
+      "source_record_id": "food-line-auto-d0cc33ff8ae5af74",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -729,7 +729,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched child meal gap",
-      "source_title": "usda-summer-meal-pressure-updates",
+      "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
       "dispatch_date": "2026-06-04",
@@ -738,7 +738,7 @@
       "coordinate_basis": "national centroid"
     },
     {
-      "source_record_id": "food-line-auto-d97cd2ed1eb25e03",
+      "source_record_id": "food-line-auto-88e41c3f07604f27",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -761,7 +761,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched senior meal strain",
-      "source_title": "meals-on-wheels-pressure-updates",
+      "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
       "dispatch_date": "2026-06-04",
@@ -770,7 +770,7 @@
       "coordinate_basis": "national centroid"
     },
     {
-      "source_record_id": "food-line-auto-438dc1979173ba36",
+      "source_record_id": "food-line-auto-cfa35a3d9d6f0828",
       "location_name": "United States",
       "state": "US",
       "county_name": "",
@@ -796,7 +796,7 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "matched disaster disruption",
-      "source_title": "disaster-food-assistance-pressure-updates",
+      "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
       "dispatch_date": "2026-06-04",

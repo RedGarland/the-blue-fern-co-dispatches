@@ -1,6 +1,6 @@
 {
   "dispatch_slug": "food-line",
-  "edition_date": "2026-06-07",
+  "edition_date": "2026-06-08",
   "markers": [
     {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
@@ -35,7 +35,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -71,7 +71,7 @@
       "source_title": "Food Security in the U.S. | Economic Research Service",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -111,7 +111,7 @@
       "source_title": "Supplemental Nutrition Assistance Program (SNAP) | Commonwealth of Pennsylvania",
       "source_url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -157,7 +157,7 @@
       "source_title": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services",
       "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -204,7 +204,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -250,7 +250,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -287,7 +287,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -325,7 +325,7 @@
       "source_title": "Disaster Assistance | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -361,12 +361,12 @@
       "source_title": "USDA set to cut $1B for food programs. WA food banks are worried | Cascade PBS",
       "source_url": "https://www.cascadepbs.org/politics/2025/04/usda-set-cut-1b-food-programs-wa-food-banks-are-worried",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
     {
-      "source_record_id": "food-line-auto-eaca418865f7e95d",
+      "source_record_id": "food-line-auto-33ac84b4b97d6dac",
       "location_name": "Austin",
       "state": "TX",
       "county_name": "",
@@ -379,7 +379,7 @@
       "extraction_quality": "high",
       "expected_text_basis": "rss_summary",
       "pressure_verification_required": true,
-      "evidence_text": "Father arrested after San Marcos traffic stop released from ICE detention Gerardo Reyes, who spent more than two months in detention, was reunited with his family Monday night.",
+      "evidence_text": "Father who was arrested after San Marcos traffic stop is released from ICE detention Gerardo Reyes, who spent more than two months in detention, was reunited with his family Monday night.",
       "evidence_text_basis": "rss_item_text",
       "pressure_match_terms": [],
       "pressure_verification_status": "demoted_context",
@@ -393,10 +393,10 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Father arrested after San Marcos traffic stop released from ICE detention",
+      "source_title": "Father who was arrested after San Marcos traffic stop is released from ICE detention",
       "source_url": "https://www.kut.org/crime-justice/2026-06-02/deportation-san-marcos-hays-county-ice-detention-immigration",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -431,7 +431,7 @@
       "source_title": "This Is My Thing: Crochet!",
       "source_url": "https://www.kut.org/life-arts/2026-06-02/this-is-my-thing-crochet",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -468,7 +468,7 @@
       "source_title": "More of Texas\u2019 youngest kids are becoming uninsured, new research shows",
       "source_url": "https://www.kut.org/health/2026-06-01/texas-kids-uninsured-research-health-insurance-children",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -503,7 +503,7 @@
       "source_title": "KUT News expands investigative, breaking news and community reporting team",
       "source_url": "https://www.kut.org/station-information/2026-06-01/kut-news-expands-investigative-breaking-news-and-community-reporting-team",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -538,13 +538,13 @@
       "source_title": "Austin ISD librarian cuts spark backlash after district reverses course",
       "source_url": "https://www.kut.org/education/2026-06-01/austin-isd-librarian-cuts-spark-backlash-after-district-reverses-course",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
     {
       "source_record_id": "food-line-auto-73ffb7d625c24e4c",
-      "location_name": "East Texas",
+      "location_name": "East Texas, TX",
       "state": "TX",
       "county_name": "",
       "category": "benefit disruption",
@@ -552,7 +552,7 @@
       "source_family": "local_news",
       "source_role": "local_signal",
       "pressure_signal": true,
-      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
@@ -579,8 +579,8 @@
       "pressure_reason": "matched demand strain",
       "source_title": "The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.",
       "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
-      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
-      "dispatch_date": "2026-06-07",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -615,7 +615,7 @@
       "source_title": "Canyon County EMS adds life-saving blood to ambulances",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/canyon-county-ems-life-saving-blood-transfusions-ambulances",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -653,7 +653,7 @@
       "source_title": "Idaho Public Television marks 50 years since Teton Dam collapse with new documentary",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/50-years-since-teton-dam-collapse",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -688,7 +688,7 @@
       "source_title": "Idaho Matters revisits award-winning interview with NPR's Mary Louise Kelly",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/award-winning-interview-nprs-mary-louise-kelly",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -726,7 +726,7 @@
       "source_title": "America 250: Short Histories of Boise - Ustick Road",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/america-250-short-histories-of-boise-ustick-road",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -761,7 +761,7 @@
       "source_title": "Idaho Matters Reporter Roundtable: May 29, 2026",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-29/reporter-roundtable-driggs-idaho-josh-ritter-boise-river",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -798,7 +798,7 @@
       "source_title": "Sewage spike, odors worsen in San Diego's South Bay after Tijuana pipeline collapse",
       "source_url": "https://www.kpbs.org/news/environment/2026/06/01/pipeline-collapse-in-tijuana-sends-millions-of-gallons-of-sewage-into-tijuana-river-worsening-air-quality",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -833,7 +833,7 @@
       "source_title": "New CalFresh work requirements could affect more than 90,000 San Diegans",
       "source_url": "https://www.kpbs.org/news/health/2026/06/01/new-calfresh-work-requirements-could-affect-more-than-90-000-san-diegans",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -868,7 +868,7 @@
       "source_title": "New Chula Vista to San Diego ferry service officially launches",
       "source_url": "https://www.kpbs.org/news/living/2026/06/01/new-chula-vista-to-san-diego-ferry-service-officially-launches",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -905,7 +905,7 @@
       "source_title": "The price of keeping dogs healthy in San Diego: Rising costs reshape pet care decisions",
       "source_url": "https://www.kpbs.org/news/economy/2026/06/01/the-price-of-keeping-dogs-healthy-in-san-diego-rising-costs-reshape-pet-care-decisions",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -940,7 +940,42 @@
       "source_title": "San Diego author Madhushree Ghosh shares stories of food, identity and immigration in 'Safar'",
       "source_url": "https://www.kpbs.org/news/arts-culture/2026/05/29/san-diego-author-madhushree-ghosh-shares-stories-of-food-identity-and-immigration-in-safar",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-c7d36cbb7c3e2d51",
+      "location_name": "Palm Beach County",
+      "state": "FL",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "WPTV",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": false,
+      "pressure_summary": "",
+      "extraction_quality": "high",
+      "expected_text_basis": "rss_summary",
+      "pressure_verification_required": true,
+      "evidence_text": "Florida lawmakers approve property tax cut proposal, measure heads to November ballot Florida lawmakers on Tuesday passed a property tax cut proposal that would create a $250,000 homestead exemption, securing it on the November ballot.",
+      "evidence_text_basis": "rss_item_text",
+      "pressure_match_terms": [],
+      "pressure_verification_status": "demoted_context",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "dated_recent_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "insufficient specific pressure evidence",
+      "source_title": "Florida lawmakers approve property tax cut proposal, measure heads to November ballot",
+      "source_url": "https://www.wptv.com/money/real-estate-news/florida-lawmakers-approved-property-tax-cut-proposal-measure-heads-to-november-ballot",
+      "note": "",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -975,7 +1010,7 @@
       "source_title": "England national football team holds fan training session in Palm Beach Gardens",
       "source_url": "https://www.wptv.com/sports/soccer/england-national-football-team-holds-fan-training-session-in-palm-beach-gardens",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1010,7 +1045,7 @@
       "source_title": "Operation Hammer Time: Martin County Sheriff's Office to hold press conference on hardware store thefts",
       "source_url": "https://www.wptv.com/news/treasure-coast/region-martin-county/operation-hammer-time-martin-county-sheriffs-office-to-hold-press-conference-on-hardware-store-arrests",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1045,7 +1080,7 @@
       "source_title": "Black bear spotted swimming in Port St. Lucie neighborhood",
       "source_url": "https://www.wptv.com/news/local-news/our-community/port-st-lucie/black-bear-spotted-swimming-in-port-st-lucie-neighborhood",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1080,42 +1115,7 @@
       "source_title": "Oceana Coffee becomes community cornerstone through major expansion",
       "source_url": "https://www.wptv.com/news/palm-beach-county/oceana-coffee-uses-major-expansion-to-become-a-community-cornerstone",
       "note": "",
-      "dispatch_date": "2026-06-07",
-      "latitude": null,
-      "longitude": null
-    },
-    {
-      "source_record_id": "food-line-auto-46b8cca63536862c",
-      "location_name": "Palm Beach County",
-      "state": "FL",
-      "county_name": "",
-      "category": "elevated demand",
-      "publisher": "WPTV",
-      "source_family": "local_news",
-      "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
-      "extraction_quality": "high",
-      "expected_text_basis": "rss_summary",
-      "pressure_verification_required": true,
-      "evidence_text": "'Breath of fresh air': Historic Fort Pierce landmark gets new life as downtown dining destination Each room in the Boston House offers a distinct experience rooted in local history, blending preservation with a modern dining atmosphere",
-      "evidence_text_basis": "rss_item_text",
-      "pressure_match_terms": [],
-      "pressure_verification_status": "demoted_context",
-      "issue_tags": [
-        "household food insecurity"
-      ],
-      "affected_groups": [],
-      "pressure_type": "context only",
-      "evidence_level": "background context",
-      "freshness_role": "dated_recent_signal",
-      "source_role_allowed": "context_only",
-      "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "'Breath of fresh air': Historic Fort Pierce landmark gets new life as downtown dining destination",
-      "source_url": "https://www.wptv.com/news/local-news/our-community/fort-pierce/breath-of-fresh-air-historic-fort-pierce-landmark-gets-new-life-as-downtown-dining-destination",
-      "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1151,7 +1151,7 @@
       "source_title": "The Regional Food Bank expects to lose more than 7 million pounds of food this year as a result of federal cuts | WAMC",
       "source_url": "https://www.wamc.org/news/2025-09-14/the-regional-food-bank-expects-to-lose-more-than-7-million-pounds-of-food-this-year-as-a-result-of-federal-cuts",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1189,7 +1189,7 @@
       "source_title": "Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause",
       "source_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1227,7 +1227,7 @@
       "source_title": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com",
       "source_url": "https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     }
@@ -1235,7 +1235,7 @@
   "pressure_markers": [
     {
       "source_record_id": "food-line-auto-73ffb7d625c24e4c",
-      "location_name": "East Texas",
+      "location_name": "East Texas, TX",
       "state": "TX",
       "county_name": "",
       "category": "benefit disruption",
@@ -1243,7 +1243,7 @@
       "source_family": "local_news",
       "source_role": "local_signal",
       "pressure_signal": true,
-      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
@@ -1270,8 +1270,8 @@
       "pressure_reason": "matched demand strain",
       "source_title": "The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.",
       "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
-      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
-      "dispatch_date": "2026-06-07",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     }
@@ -1310,7 +1310,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1346,7 +1346,7 @@
       "source_title": "Food Security in the U.S. | Economic Research Service",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1393,7 +1393,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1439,7 +1439,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1476,7 +1476,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     },
@@ -1514,7 +1514,7 @@
       "source_title": "Disaster Assistance | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     }
@@ -1552,7 +1552,7 @@
       "source_title": "Food Security in the U.S. | Economic Research Service",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null
     }
@@ -1591,7 +1591,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1628,7 +1628,7 @@
       "source_title": "Food Security in the U.S. | Economic Research Service",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "baseline_condition"
@@ -1669,7 +1669,7 @@
       "source_title": "Supplemental Nutrition Assistance Program (SNAP) | Commonwealth of Pennsylvania",
       "source_url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1716,7 +1716,7 @@
       "source_title": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services",
       "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1764,7 +1764,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1811,7 +1811,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1849,7 +1849,7 @@
       "source_title": "Summer Nutrition Programs | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1888,7 +1888,7 @@
       "source_title": "Disaster Assistance | Food and Nutrition Administration",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1925,13 +1925,13 @@
       "source_title": "USDA set to cut $1B for food programs. WA food banks are worried | Cascade PBS",
       "source_url": "https://www.cascadepbs.org/politics/2025/04/usda-set-cut-1b-food-programs-wa-food-banks-are-worried",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
     },
     {
-      "source_record_id": "food-line-auto-eaca418865f7e95d",
+      "source_record_id": "food-line-auto-33ac84b4b97d6dac",
       "location_name": "Austin",
       "state": "TX",
       "county_name": "",
@@ -1944,7 +1944,7 @@
       "extraction_quality": "high",
       "expected_text_basis": "rss_summary",
       "pressure_verification_required": true,
-      "evidence_text": "Father arrested after San Marcos traffic stop released from ICE detention Gerardo Reyes, who spent more than two months in detention, was reunited with his family Monday night.",
+      "evidence_text": "Father who was arrested after San Marcos traffic stop is released from ICE detention Gerardo Reyes, who spent more than two months in detention, was reunited with his family Monday night.",
       "evidence_text_basis": "rss_item_text",
       "pressure_match_terms": [],
       "pressure_verification_status": "demoted_context",
@@ -1958,10 +1958,10 @@
       "source_role_allowed": "context_only",
       "pressure_required": false,
       "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Father arrested after San Marcos traffic stop released from ICE detention",
+      "source_title": "Father who was arrested after San Marcos traffic stop is released from ICE detention",
       "source_url": "https://www.kut.org/crime-justice/2026-06-02/deportation-san-marcos-hays-county-ice-detention-immigration",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -1997,7 +1997,7 @@
       "source_title": "This Is My Thing: Crochet!",
       "source_url": "https://www.kut.org/life-arts/2026-06-02/this-is-my-thing-crochet",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2035,7 +2035,7 @@
       "source_title": "More of Texas\u2019 youngest kids are becoming uninsured, new research shows",
       "source_url": "https://www.kut.org/health/2026-06-01/texas-kids-uninsured-research-health-insurance-children",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2071,7 +2071,7 @@
       "source_title": "KUT News expands investigative, breaking news and community reporting team",
       "source_url": "https://www.kut.org/station-information/2026-06-01/kut-news-expands-investigative-breaking-news-and-community-reporting-team",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2107,7 +2107,7 @@
       "source_title": "Austin ISD librarian cuts spark backlash after district reverses course",
       "source_url": "https://www.kut.org/education/2026-06-01/austin-isd-librarian-cuts-spark-backlash-after-district-reverses-course",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2143,7 +2143,7 @@
       "source_title": "Canyon County EMS adds life-saving blood to ambulances",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/canyon-county-ems-life-saving-blood-transfusions-ambulances",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2182,7 +2182,7 @@
       "source_title": "Idaho Public Television marks 50 years since Teton Dam collapse with new documentary",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/50-years-since-teton-dam-collapse",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2218,7 +2218,7 @@
       "source_title": "Idaho Matters revisits award-winning interview with NPR's Mary Louise Kelly",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/award-winning-interview-nprs-mary-louise-kelly",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2257,7 +2257,7 @@
       "source_title": "America 250: Short Histories of Boise - Ustick Road",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-06-01/america-250-short-histories-of-boise-ustick-road",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2293,7 +2293,7 @@
       "source_title": "Idaho Matters Reporter Roundtable: May 29, 2026",
       "source_url": "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-29/reporter-roundtable-driggs-idaho-josh-ritter-boise-river",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2331,7 +2331,7 @@
       "source_title": "Sewage spike, odors worsen in San Diego's South Bay after Tijuana pipeline collapse",
       "source_url": "https://www.kpbs.org/news/environment/2026/06/01/pipeline-collapse-in-tijuana-sends-millions-of-gallons-of-sewage-into-tijuana-river-worsening-air-quality",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2367,7 +2367,7 @@
       "source_title": "New CalFresh work requirements could affect more than 90,000 San Diegans",
       "source_url": "https://www.kpbs.org/news/health/2026/06/01/new-calfresh-work-requirements-could-affect-more-than-90-000-san-diegans",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2403,7 +2403,7 @@
       "source_title": "New Chula Vista to San Diego ferry service officially launches",
       "source_url": "https://www.kpbs.org/news/living/2026/06/01/new-chula-vista-to-san-diego-ferry-service-officially-launches",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2441,7 +2441,7 @@
       "source_title": "The price of keeping dogs healthy in San Diego: Rising costs reshape pet care decisions",
       "source_url": "https://www.kpbs.org/news/economy/2026/06/01/the-price-of-keeping-dogs-healthy-in-san-diego-rising-costs-reshape-pet-care-decisions",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2477,7 +2477,43 @@
       "source_title": "San Diego author Madhushree Ghosh shares stories of food, identity and immigration in 'Safar'",
       "source_url": "https://www.kpbs.org/news/arts-culture/2026/05/29/san-diego-author-madhushree-ghosh-shares-stories-of-food-identity-and-immigration-in-safar",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
+      "latitude": null,
+      "longitude": null,
+      "reason": "context_only_or_no_pressure_evidence"
+    },
+    {
+      "source_record_id": "food-line-auto-c7d36cbb7c3e2d51",
+      "location_name": "Palm Beach County",
+      "state": "FL",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "WPTV",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": false,
+      "pressure_summary": "",
+      "extraction_quality": "high",
+      "expected_text_basis": "rss_summary",
+      "pressure_verification_required": true,
+      "evidence_text": "Florida lawmakers approve property tax cut proposal, measure heads to November ballot Florida lawmakers on Tuesday passed a property tax cut proposal that would create a $250,000 homestead exemption, securing it on the November ballot.",
+      "evidence_text_basis": "rss_item_text",
+      "pressure_match_terms": [],
+      "pressure_verification_status": "demoted_context",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "affected_groups": [],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "dated_recent_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "insufficient specific pressure evidence",
+      "source_title": "Florida lawmakers approve property tax cut proposal, measure heads to November ballot",
+      "source_url": "https://www.wptv.com/money/real-estate-news/florida-lawmakers-approved-property-tax-cut-proposal-measure-heads-to-november-ballot",
+      "note": "",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2513,7 +2549,7 @@
       "source_title": "England national football team holds fan training session in Palm Beach Gardens",
       "source_url": "https://www.wptv.com/sports/soccer/england-national-football-team-holds-fan-training-session-in-palm-beach-gardens",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2549,7 +2585,7 @@
       "source_title": "Operation Hammer Time: Martin County Sheriff's Office to hold press conference on hardware store thefts",
       "source_url": "https://www.wptv.com/news/treasure-coast/region-martin-county/operation-hammer-time-martin-county-sheriffs-office-to-hold-press-conference-on-hardware-store-arrests",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2585,7 +2621,7 @@
       "source_title": "Black bear spotted swimming in Port St. Lucie neighborhood",
       "source_url": "https://www.wptv.com/news/local-news/our-community/port-st-lucie/black-bear-spotted-swimming-in-port-st-lucie-neighborhood",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2621,43 +2657,7 @@
       "source_title": "Oceana Coffee becomes community cornerstone through major expansion",
       "source_url": "https://www.wptv.com/news/palm-beach-county/oceana-coffee-uses-major-expansion-to-become-a-community-cornerstone",
       "note": "",
-      "dispatch_date": "2026-06-07",
-      "latitude": null,
-      "longitude": null,
-      "reason": "context_only_or_no_pressure_evidence"
-    },
-    {
-      "source_record_id": "food-line-auto-46b8cca63536862c",
-      "location_name": "Palm Beach County",
-      "state": "FL",
-      "county_name": "",
-      "category": "elevated demand",
-      "publisher": "WPTV",
-      "source_family": "local_news",
-      "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
-      "extraction_quality": "high",
-      "expected_text_basis": "rss_summary",
-      "pressure_verification_required": true,
-      "evidence_text": "'Breath of fresh air': Historic Fort Pierce landmark gets new life as downtown dining destination Each room in the Boston House offers a distinct experience rooted in local history, blending preservation with a modern dining atmosphere",
-      "evidence_text_basis": "rss_item_text",
-      "pressure_match_terms": [],
-      "pressure_verification_status": "demoted_context",
-      "issue_tags": [
-        "household food insecurity"
-      ],
-      "affected_groups": [],
-      "pressure_type": "context only",
-      "evidence_level": "background context",
-      "freshness_role": "dated_recent_signal",
-      "source_role_allowed": "context_only",
-      "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "'Breath of fresh air': Historic Fort Pierce landmark gets new life as downtown dining destination",
-      "source_url": "https://www.wptv.com/news/local-news/our-community/fort-pierce/breath-of-fresh-air-historic-fort-pierce-landmark-gets-new-life-as-downtown-dining-destination",
-      "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2694,7 +2694,7 @@
       "source_title": "The Regional Food Bank expects to lose more than 7 million pounds of food this year as a result of federal cuts | WAMC",
       "source_url": "https://www.wamc.org/news/2025-09-14/the-regional-food-bank-expects-to-lose-more-than-7-million-pounds-of-food-this-year-as-a-result-of-federal-cuts",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2733,7 +2733,7 @@
       "source_title": "Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause",
       "source_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2772,7 +2772,7 @@
       "source_title": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com",
       "source_url": "https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html",
       "note": "",
-      "dispatch_date": "2026-06-07",
+      "dispatch_date": "2026-06-08",
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
@@ -2817,7 +2817,7 @@
   "mapped_markers": [
     {
       "source_record_id": "food-line-auto-73ffb7d625c24e4c",
-      "location_name": "East Texas",
+      "location_name": "East Texas, TX",
       "state": "TX",
       "county_name": "",
       "category": "benefit disruption",
@@ -2825,7 +2825,7 @@
       "source_family": "local_news",
       "source_role": "local_signal",
       "pressure_signal": true,
-      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
@@ -2852,8 +2852,8 @@
       "pressure_reason": "matched demand strain",
       "source_title": "The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.",
       "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
-      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
-      "dispatch_date": "2026-06-07",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.",
+      "dispatch_date": "2026-06-08",
       "latitude": 31.968599,
       "longitude": -99.901813,
       "coordinate_basis": "state centroid"

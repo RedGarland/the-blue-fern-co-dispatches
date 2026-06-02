@@ -1,0 +1,44 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-06-03",
+  "generated_at": "2026-06-02T00:14:22.599974+00:00",
+  "source_count": 18,
+  "story_count": 6,
+  "source_adequacy": {
+    "status": "daily",
+    "label": "Daily edition",
+    "source_count": 18,
+    "source_families": [
+      "economic_data",
+      "food_bank_provider",
+      "policy_research",
+      "school_meals_child_nutrition",
+      "senior_meals",
+      "state_official"
+    ],
+    "local_signal_count": 13,
+    "state_signal_count": 13,
+    "national_context_count": 5
+  },
+  "lead_source_record_id": "food-line-auto-fb50f6f7322ef51b",
+  "lead_issue_tags": [
+    "SNAP",
+    "benefits",
+    "state administration"
+  ],
+  "source_roles_count": {
+    "daily_signal": 0,
+    "background_context": 1,
+    "policy_context": 1,
+    "provider_signal": 3,
+    "local_signal": 13,
+    "map_signal": 0
+  },
+  "local_signal_count": 13,
+  "state_signal_count": 13,
+  "national_context_count": 5,
+  "editorial_status": "daily_signal",
+  "why_this_lead": "selected for highest priority role/category mix (local_signal, benefit disruption)",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-03/"
+}

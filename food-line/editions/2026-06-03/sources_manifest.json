@@ -1,0 +1,364 @@
+[
+  {
+    "source_record_id": "food-line-auto-f410c5c2d4c8aec0",
+    "title": "USDA FNS Summer Meals",
+    "url": "https://www.fns.usda.gov/summer",
+    "publisher": "USDA FNS",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "USDA summer meal programs and guidance.",
+    "source_type": "auto",
+    "source_family": "school_meals_child_nutrition",
+    "state": "US",
+    "issue_tags": [
+      "summer meals",
+      "child hunger",
+      "school meals"
+    ],
+    "map_category": "summer meal / child nutrition",
+    "location_name": "United States",
+    "source_role": "provider_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-d40eed7a27cba29e",
+    "title": "USDA ERS Food Security",
+    "url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
+    "publisher": "USDA ERS",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "National food security context and trend information.",
+    "source_type": "auto",
+    "source_family": "economic_data",
+    "state": "US",
+    "issue_tags": [
+      "household food insecurity",
+      "economic pressure"
+    ],
+    "map_category": "context / monitoring only",
+    "location_name": "United States",
+    "source_role": "background_context"
+  },
+  {
+    "source_record_id": "food-line-auto-da9d9b6ba64d5506",
+    "title": "Feeding America Hunger in America",
+    "url": "https://www.feedingamerica.org/hunger-in-america",
+    "publisher": "Feeding America",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Food bank and pantry demand context.",
+    "source_type": "auto",
+    "source_family": "food_bank_provider",
+    "state": "US",
+    "issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "household hardship"
+    ],
+    "map_category": "elevated demand",
+    "location_name": "United States",
+    "source_role": "provider_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-9f919b69aa7ce467",
+    "title": "FRAC SNAP Policy",
+    "url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
+    "publisher": "FRAC",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "SNAP policy and implementation context.",
+    "source_type": "auto",
+    "source_family": "policy_research",
+    "state": "US",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "federal policy"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "United States",
+    "source_role": "policy_context"
+  },
+  {
+    "source_record_id": "food-line-auto-87d356839c578168",
+    "title": "Meals on Wheels Facts and Resources",
+    "url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
+    "publisher": "Meals on Wheels America",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Senior meal and food access context.",
+    "source_type": "auto",
+    "source_family": "senior_meals",
+    "state": "US",
+    "issue_tags": [
+      "senior hunger",
+      "meal delivery",
+      "fixed income"
+    ],
+    "map_category": "senior hunger",
+    "location_name": "United States",
+    "source_role": "provider_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-eea1f152a51cabdb",
+    "title": "Food Lifeline Updates",
+    "url": "https://foodlifeline.org/",
+    "publisher": "Food Lifeline",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "food_bank_provider",
+    "state": "WA",
+    "issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "service access",
+      "household food insecurity"
+    ],
+    "map_category": "elevated demand",
+    "location_name": "Seattle, WA",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-001277f2f228bdaf",
+    "title": "Oregon ODHS SNAP",
+    "url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
+    "publisher": "Oregon Department of Human Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "OR",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Oregon",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-cdffa449a352f0cf",
+    "title": "Idaho SNAP Program",
+    "url": "https://healthandwelfare.idaho.gov/services-programs/food-assistance/supplemental-nutrition-assistance-program-snap",
+    "publisher": "Idaho Department of Health and Welfare",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "ID",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Idaho",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-6674f8a439e5ebbf",
+    "title": "California CalFresh",
+    "url": "https://www.cdss.ca.gov/food-nutrition/calfresh",
+    "publisher": "California Department of Social Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "CA",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "household hardship",
+      "household food insecurity"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "California",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-2f0fb7b95570e0ef",
+    "title": "Texas SNAP Program",
+    "url": "https://www.hhs.texas.gov/services/food/snap-food-benefits",
+    "publisher": "Texas Health and Human Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "TX",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "household hardship"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Texas",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-11d49deb07fb2e93",
+    "title": "Florida ACCESS Food Assistance",
+    "url": "https://www.myflfamilies.com/services/public-assistance/supplemental-nutrition-assistance-program-snap",
+    "publisher": "Florida Department of Children and Families",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "FL",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Florida",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-5c4412f15fadcec3",
+    "title": "New York SNAP",
+    "url": "https://otda.ny.gov/programs/snap/",
+    "publisher": "New York OTDA",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "NY",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "New York",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-8593e44ecb1e5e9d",
+    "title": "Pennsylvania SNAP",
+    "url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
+    "publisher": "Pennsylvania Department of Human Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "PA",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Pennsylvania",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-76782e0ff3d0780e",
+    "title": "Ohio SNAP",
+    "url": "https://jfs.ohio.gov/food-assistance/supplemental-nutrition-assistance-program-snap",
+    "publisher": "Ohio Department of Job and Family Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "OH",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Ohio",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-fb50f6f7322ef51b",
+    "title": "Mississippi SNAP",
+    "url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
+    "publisher": "Mississippi Department of Human Services",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "MS",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Mississippi",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-e3123d0f490294bf",
+    "title": "Kentucky SNAP",
+    "url": "https://chfs.ky.gov/agencies/dcbs/dfs/nab/Pages/default.aspx",
+    "publisher": "Kentucky CHFS",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "state_official",
+    "state": "KY",
+    "issue_tags": [
+      "SNAP",
+      "benefits",
+      "state administration"
+    ],
+    "map_category": "benefit disruption",
+    "location_name": "Kentucky",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-1f24f9c3039306e7",
+    "title": "North Texas Food Bank",
+    "url": "https://ntfb.org/",
+    "publisher": "North Texas Food Bank",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "food_bank_provider",
+    "state": "TX",
+    "issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "service access"
+    ],
+    "map_category": "elevated demand",
+    "location_name": "Dallas, TX",
+    "source_role": "local_signal"
+  },
+  {
+    "source_record_id": "food-line-auto-eac684548e2786ea",
+    "title": "City Harvest",
+    "url": "https://www.cityharvest.org/",
+    "publisher": "City Harvest",
+    "published_at": "2026-06-03T00:00:00+00:00",
+    "retrieved_at": "2026-06-02T00:14:22.597002+00:00",
+    "summary_or_snippet": "Source-backed food insecurity context signal.",
+    "source_type": "auto",
+    "source_family": "food_bank_provider",
+    "state": "NY",
+    "issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "service access",
+      "household food insecurity"
+    ],
+    "map_category": "elevated demand",
+    "location_name": "New York City, NY",
+    "source_role": "local_signal"
+  }
+]

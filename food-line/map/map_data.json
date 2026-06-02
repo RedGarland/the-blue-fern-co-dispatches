@@ -1192,44 +1192,6 @@
       "dispatch_date": "2026-06-06",
       "latitude": null,
       "longitude": null
-    },
-    {
-      "source_record_id": "food-line-auto-e462771c0fa756eb",
-      "location_name": "Kentucky",
-      "state": "KY",
-      "county_name": "",
-      "category": "elevated demand",
-      "publisher": "WDRB",
-      "source_family": "local_news",
-      "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
-      "extraction_quality": "medium",
-      "expected_text_basis": "page_text",
-      "pressure_verification_required": true,
-      "evidence_text": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com Food pantries, like the one at St. Vincent de Paul, have been a lifeline for those who typically rely on federal SNAP benefits. Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com Skip to main content You are the owner of this article. Edit Article Add New Article Close You have permission to edit this article. Edit Close Sign Up Log In Dashboard Logout My Account Dashboard Profile Saved items Logout Home News Kentucky News Indiana News Business Crime Reports Education Politics WDRB Investigates National News WDRB Mornings WDRB News Team Submit a Photo or Video Contract With Viewers Weather Forecast Radar Weather Blog Weather Cams WDRB Traffic Closings Allergies Weather Team Share Photos & Video Sports Eric Crawford U of",
-      "evidence_text_basis": "page_text_excerpt",
-      "pressure_match_terms": [],
-      "pressure_verification_status": "demoted_context",
-      "issue_tags": [
-        "food banks",
-        "pantry capacity"
-      ],
-      "affected_groups": [
-        "SNAP households"
-      ],
-      "pressure_type": "context only",
-      "evidence_level": "background context",
-      "freshness_role": "fresh_daily_signal",
-      "source_role_allowed": "context_only",
-      "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com",
-      "source_url": "https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html",
-      "note": "",
-      "dispatch_date": "2026-06-06",
-      "latitude": null,
-      "longitude": null
     }
   ],
   "pressure_markers": [
@@ -2737,77 +2699,38 @@
       "latitude": null,
       "longitude": null,
       "reason": "context_only_or_no_pressure_evidence"
-    },
-    {
-      "source_record_id": "food-line-auto-e462771c0fa756eb",
-      "location_name": "Kentucky",
-      "state": "KY",
-      "county_name": "",
-      "category": "elevated demand",
-      "publisher": "WDRB",
-      "source_family": "local_news",
-      "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
-      "extraction_quality": "medium",
-      "expected_text_basis": "page_text",
-      "pressure_verification_required": true,
-      "evidence_text": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com Food pantries, like the one at St. Vincent de Paul, have been a lifeline for those who typically rely on federal SNAP benefits. Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com Skip to main content You are the owner of this article. Edit Article Add New Article Close You have permission to edit this article. Edit Close Sign Up Log In Dashboard Logout My Account Dashboard Profile Saved items Logout Home News Kentucky News Indiana News Business Crime Reports Education Politics WDRB Investigates National News WDRB Mornings WDRB News Team Submit a Photo or Video Contract With Viewers Weather Forecast Radar Weather Blog Weather Cams WDRB Traffic Closings Allergies Weather Team Share Photos & Video Sports Eric Crawford U of",
-      "evidence_text_basis": "page_text_excerpt",
-      "pressure_match_terms": [],
-      "pressure_verification_status": "demoted_context",
-      "issue_tags": [
-        "food banks",
-        "pantry capacity"
-      ],
-      "affected_groups": [
-        "SNAP households"
-      ],
-      "pressure_type": "context only",
-      "evidence_level": "background context",
-      "freshness_role": "fresh_daily_signal",
-      "source_role_allowed": "context_only",
-      "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com",
-      "source_url": "https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html",
-      "note": "",
-      "dispatch_date": "2026-06-06",
-      "latitude": null,
-      "longitude": null,
-      "reason": "context_only_or_no_pressure_evidence"
     }
   ],
   "diagnostics": {
-    "total_source_count": 33,
+    "total_source_count": 32,
     "pressure_signal_count": 1,
     "pressure_marker_count": 1,
     "baseline_record_count": 1,
     "context_record_count": 6,
     "excluded_context_count": 6,
-    "excluded_record_count": 32,
+    "excluded_record_count": 31,
     "unmapped_pressure_count": 0,
     "exclusion_reasons": {
-      "context_only_or_no_pressure_evidence": 31,
+      "context_only_or_no_pressure_evidence": 30,
       "baseline_condition": 1
     },
     "pressure_verified_count": 1,
-    "pressure_demoted_unverified_count": 32,
+    "pressure_demoted_unverified_count": 31,
     "pressure_registry_only_count": 0,
     "pressure_evidence_basis_counts": {
-      "page_text_excerpt": 13,
+      "page_text_excerpt": 12,
       "rss_item_text": 20
     },
     "collected_count_by_extraction_quality": {
       "high": 20,
-      "medium": 13
+      "medium": 12
     },
     "verified_pressure_count_by_extraction_quality": {
       "medium": 1
     },
     "demoted_count_by_extraction_quality": {
       "high": 20,
-      "medium": 12
+      "medium": 11
     },
     "marker_count": 1,
     "plotted_marker_count": 1,

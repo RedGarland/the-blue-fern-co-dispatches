@@ -1,0 +1,83 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-06-04",
+  "generated_at": "2026-06-02T01:57:30.889070+00:00",
+  "source_count": 8,
+  "story_count": 6,
+  "source_adequacy": {
+    "status": "daily",
+    "label": "Daily edition",
+    "source_count": 8,
+    "source_families": [
+      "disaster_emergency",
+      "economic_data",
+      "food_bank_provider",
+      "school_meals_child_nutrition",
+      "senior_meals",
+      "state_official"
+    ],
+    "local_signal_count": 1,
+    "state_signal_count": 4,
+    "national_context_count": 4
+  },
+  "lead_source_record_id": "food-line-auto-e048ac5f21ac1015",
+  "lead_issue_tags": [
+    "SNAP",
+    "benefits"
+  ],
+  "source_roles_count": {
+    "daily_signal": 0,
+    "background_context": 0,
+    "policy_context": 0,
+    "provider_signal": 3,
+    "local_signal": 1,
+    "map_signal": 0,
+    "baseline_condition": 1,
+    "pressure_evidence": 3
+  },
+  "local_signal_count": 1,
+  "state_signal_count": 4,
+  "national_context_count": 4,
+  "editorial_status": "daily_signal",
+  "pressure_status": "pressure_detected",
+  "why_this_lead": "selected for highest priority role/category mix (local_signal, benefit disruption)",
+  "selected_lead_source_role": "local_signal",
+  "selected_lead_pressure_type": "benefit disruption",
+  "selected_lead_affected_groups": [
+    "SNAP households"
+  ],
+  "pressure_source_count_by_family": {
+    "disaster_emergency": 1,
+    "economic_data": 0,
+    "food_bank_provider": 3,
+    "school_meals_child_nutrition": 1,
+    "senior_meals": 1,
+    "state_official": 1
+  },
+  "pressure_source_count_by_state": {
+    "NY": 1,
+    "OR": 1,
+    "TX": 1,
+    "US": 3,
+    "WA": 1
+  },
+  "news_item_count": 0,
+  "provider_pressure_count": 3,
+  "official_pressure_count": 1,
+  "baseline_source_count": 1,
+  "rejected_news_count": 17,
+  "rejected_news_reasons": [
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence",
+    "insufficient specific pressure evidence"
+  ],
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
+}

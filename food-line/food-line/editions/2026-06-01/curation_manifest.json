@@ -1,0 +1,98 @@
+{
+  "stories": [
+    {
+      "source_record_id": "usda-fns-summer-meals-2026-06-01",
+      "title": "USDA summer meals program information",
+      "url": "https://www.fns.usda.gov/summer",
+      "publisher": "Unknown publisher",
+      "published_at": "2026-06-01",
+      "retrieved_at": "2026-06-01",
+      "summary_or_snippet": "USDA summer meal programs are a key food-access support when schools are closed for summer.",
+      "source_type": "manual",
+      "source_family": "federal_official",
+      "state": "US",
+      "issue_tags": [
+        "child hunger",
+        "summer meals",
+        "school meals"
+      ],
+      "map_category": "summer meal / child nutrition",
+      "location_name": "United States"
+    },
+    {
+      "source_record_id": "feeding-america-food-insecurity-context-2026-06-01",
+      "title": "Feeding America food insecurity context",
+      "url": "https://www.feedingamerica.org/hunger-in-america",
+      "publisher": "Unknown publisher",
+      "published_at": "2026-06-01",
+      "retrieved_at": "2026-06-01",
+      "summary_or_snippet": "Food banks and charitable food providers remain part of the emergency food-access network for households facing food hardship.",
+      "source_type": "manual",
+      "source_family": "food_bank_provider",
+      "state": "US",
+      "issue_tags": [
+        "food banks",
+        "pantry capacity",
+        "household hardship"
+      ],
+      "map_category": "elevated demand",
+      "location_name": "United States"
+    },
+    {
+      "source_record_id": "frac-snap-context-2026-06-01",
+      "title": "FRAC SNAP and hunger policy context",
+      "url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
+      "publisher": "Unknown publisher",
+      "published_at": "2026-06-01",
+      "retrieved_at": "2026-06-01",
+      "summary_or_snippet": "SNAP remains a central federal nutrition program for households facing food insecurity.",
+      "source_type": "manual",
+      "source_family": "policy_research",
+      "state": "US",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "federal policy"
+      ],
+      "map_category": "benefit disruption",
+      "location_name": "United States"
+    },
+    {
+      "source_record_id": "ers-food-security-context-2026-06-01",
+      "title": "USDA ERS food security statistics",
+      "url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
+      "publisher": "Unknown publisher",
+      "published_at": "2026-06-01",
+      "retrieved_at": "2026-06-01",
+      "summary_or_snippet": "USDA ERS food security data provides national context for household food hardship.",
+      "source_type": "manual",
+      "source_family": "federal_official",
+      "state": "US",
+      "issue_tags": [
+        "household food insecurity",
+        "economic pressure"
+      ],
+      "map_category": "context / monitoring only",
+      "location_name": "United States"
+    },
+    {
+      "source_record_id": "meals-on-wheels-senior-hunger-context-2026-06-01",
+      "title": "Meals on Wheels senior hunger context",
+      "url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
+      "publisher": "Unknown publisher",
+      "published_at": "2026-06-01",
+      "retrieved_at": "2026-06-01",
+      "summary_or_snippet": "Senior meal providers are part of the food-access safety net for older adults, especially those with limited mobility or fixed incomes.",
+      "source_type": "manual",
+      "source_family": "senior_meals",
+      "state": "US",
+      "issue_tags": [
+        "senior hunger",
+        "fixed income",
+        "meal delivery"
+      ],
+      "map_category": "senior hunger",
+      "location_name": "United States"
+    }
+  ]
+}

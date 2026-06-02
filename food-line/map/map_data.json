@@ -1,6 +1,6 @@
 {
   "dispatch_slug": "food-line",
-  "edition_date": "2026-06-04",
+  "edition_date": "2026-06-05",
   "markers": [
     {
       "source_record_id": "food-line-auto-d40eed7a27cba29e",
@@ -27,7 +27,7 @@
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -56,7 +56,7 @@
       "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -85,7 +85,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -116,7 +116,7 @@
       "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -147,7 +147,7 @@
       "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -179,7 +179,7 @@
       "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -210,7 +210,7 @@
       "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -244,7 +244,161 @@
       "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-7cf0d50ef149b276",
+      "location_name": "United States",
+      "state": "US",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Associated Press",
+      "source_family": "national_news",
+      "source_role": "daily_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "issue_tags": [
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+      "source_url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+      "note": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-8433352bbc9069c5",
+      "location_name": "Austin",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KUT",
+      "source_family": "public_radio",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Austin-area food bank demand doubles amid SNAP delays",
+      "source_url": "https://www.kut.org/austin/2025-11-12/austin-tx-central-tx-food-bank-stamps-snap-delays",
+      "note": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-5a3a4f20e1a248c7",
+      "location_name": "East Texas",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KLTV",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Food pantries struggle to keep up with rising demand due to government shutdown, SNAP benefits delays",
+      "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-9013087c4ebc5f32",
+      "location_name": "Toledo",
+      "state": "OH",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "13abc",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "disaster disruption",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched disaster disruption",
+      "source_title": "Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause",
+      "source_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/",
+      "note": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-ca30d52613b31eec",
+      "location_name": "Mississippi",
+      "state": "MS",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Mississippi Today",
+      "source_family": "nonprofit_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Households are reporting food hardship in Mississippi.",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "affected_groups": [],
+      "pressure_type": "household hardship",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched household hardship",
+      "source_title": "Advocates call for funding, collaboration as more Mississippians are expected to struggle with food insecurity",
+      "source_url": "https://mississippitoday.org/2026/02/25/mississippians-food-insecurity/",
+      "note": "Households are reporting food hardship in Mississippi.",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     }
@@ -275,7 +429,7 @@
       "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -304,7 +458,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -335,7 +489,7 @@
       "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -366,7 +520,7 @@
       "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -398,7 +552,7 @@
       "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -429,7 +583,7 @@
       "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     },
@@ -463,7 +617,161 @@
       "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-7cf0d50ef149b276",
+      "location_name": "United States",
+      "state": "US",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Associated Press",
+      "source_family": "national_news",
+      "source_role": "daily_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "issue_tags": [
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+      "source_url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+      "note": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-8433352bbc9069c5",
+      "location_name": "Austin",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KUT",
+      "source_family": "public_radio",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Austin-area food bank demand doubles amid SNAP delays",
+      "source_url": "https://www.kut.org/austin/2025-11-12/austin-tx-central-tx-food-bank-stamps-snap-delays",
+      "note": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-5a3a4f20e1a248c7",
+      "location_name": "East Texas",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KLTV",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Food pantries struggle to keep up with rising demand due to government shutdown, SNAP benefits delays",
+      "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-9013087c4ebc5f32",
+      "location_name": "Toledo",
+      "state": "OH",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "13abc",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "disaster disruption",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched disaster disruption",
+      "source_title": "Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause",
+      "source_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/",
+      "note": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": null,
+      "longitude": null
+    },
+    {
+      "source_record_id": "food-line-auto-ca30d52613b31eec",
+      "location_name": "Mississippi",
+      "state": "MS",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Mississippi Today",
+      "source_family": "nonprofit_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Households are reporting food hardship in Mississippi.",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "affected_groups": [],
+      "pressure_type": "household hardship",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched household hardship",
+      "source_title": "Advocates call for funding, collaboration as more Mississippians are expected to struggle with food insecurity",
+      "source_url": "https://mississippitoday.org/2026/02/25/mississippians-food-insecurity/",
+      "note": "Households are reporting food hardship in Mississippi.",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     }
@@ -494,7 +802,7 @@
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     }
@@ -525,7 +833,7 @@
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null
     }
@@ -556,16 +864,16 @@
       "source_title": "USDA ERS Food Security",
       "source_url": "https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us",
       "note": "",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": null,
       "longitude": null,
       "reason": "baseline_condition"
     }
   ],
   "diagnostics": {
-    "total_source_count": 8,
-    "pressure_signal_count": 7,
-    "pressure_marker_count": 7,
+    "total_source_count": 13,
+    "pressure_signal_count": 12,
+    "pressure_marker_count": 12,
     "baseline_record_count": 1,
     "context_record_count": 1,
     "excluded_context_count": 1,
@@ -574,8 +882,8 @@
     "exclusion_reasons": {
       "baseline_condition": 1
     },
-    "marker_count": 7,
-    "plotted_marker_count": 7,
+    "marker_count": 12,
+    "plotted_marker_count": 12,
     "skipped_marker_count": 0,
     "skipped_markers": []
   },
@@ -605,7 +913,7 @@
       "source_title": "Food Lifeline",
       "source_url": "https://foodlifeline.org/",
       "note": "Food Lifeline reported rising food-assistance demand across its service area in Seattle, WA.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 47.6062,
       "longitude": -122.3321,
       "coordinate_basis": "city fallback"
@@ -635,7 +943,7 @@
       "source_title": "North Texas Food Bank",
       "source_url": "https://ntfb.org/",
       "note": "North Texas Food Bank reported rising food-assistance demand across its service area in Dallas, TX.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 32.7767,
       "longitude": -96.797,
       "coordinate_basis": "city fallback"
@@ -667,7 +975,7 @@
       "source_title": "City Harvest",
       "source_url": "https://www.cityharvest.org/",
       "note": "City Harvest reported rising food-assistance demand across its service area in New York City, NY.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 40.7128,
       "longitude": -74.006,
       "coordinate_basis": "city fallback"
@@ -699,7 +1007,7 @@
       "source_title": "Oregon ODHS SNAP",
       "source_url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
       "note": "State officials reported a SNAP benefit delay affecting households in Oregon, affecting SNAP households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 43.804133,
       "longitude": -120.554201,
       "coordinate_basis": "state centroid"
@@ -732,7 +1040,7 @@
       "source_title": "USDA Summer Meals",
       "source_url": "https://www.fns.usda.gov/summer",
       "note": "A summer meal site closure is leaving children without meals.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national centroid"
@@ -764,7 +1072,7 @@
       "source_title": "Meals on Wheels America",
       "source_url": "https://www.mealsonwheelsamerica.org/learn-more/research/facts-resources",
       "note": "A senior meal provider reported a waitlist for home-delivered meals, affecting seniors.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national centroid"
@@ -799,10 +1107,169 @@
       "source_title": "USDA Disaster Assistance",
       "source_url": "https://www.fns.usda.gov/disaster/disaster-assistance",
       "note": "Emergency food distribution and disaster assistance are responding to disruption, affecting SNAP households, disaster-affected households.",
-      "dispatch_date": "2026-06-04",
+      "dispatch_date": "2026-06-05",
       "latitude": 39.8283,
       "longitude": -98.5795,
       "coordinate_basis": "national centroid"
+    },
+    {
+      "source_record_id": "food-line-auto-7cf0d50ef149b276",
+      "location_name": "United States",
+      "state": "US",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Associated Press",
+      "source_family": "national_news",
+      "source_role": "daily_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "issue_tags": [
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+      "source_url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+      "note": "Associated Press reported rising food-assistance demand across its service area, affecting low-income households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": 39.8283,
+      "longitude": -98.5795,
+      "coordinate_basis": "national centroid"
+    },
+    {
+      "source_record_id": "food-line-auto-8433352bbc9069c5",
+      "location_name": "Austin",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KUT",
+      "source_family": "public_radio",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "food banks",
+        "pantry capacity"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Austin-area food bank demand doubles amid SNAP delays",
+      "source_url": "https://www.kut.org/austin/2025-11-12/austin-tx-central-tx-food-bank-stamps-snap-delays",
+      "note": "KUT reported rising food-assistance demand across its service area in Austin, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": 31.968599,
+      "longitude": -99.901813,
+      "coordinate_basis": "state centroid"
+    },
+    {
+      "source_record_id": "food-line-auto-5a3a4f20e1a248c7",
+      "location_name": "East Texas",
+      "state": "TX",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "KLTV",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Food pantries struggle to keep up with rising demand due to government shutdown, SNAP benefits delays",
+      "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/",
+      "note": "KLTV reported rising food-assistance demand across its service area in East Texas, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": 31.968599,
+      "longitude": -99.901813,
+      "coordinate_basis": "state centroid"
+    },
+    {
+      "source_record_id": "food-line-auto-9013087c4ebc5f32",
+      "location_name": "Toledo",
+      "state": "OH",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "13abc",
+      "source_family": "local_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "issue_tags": [
+        "SNAP",
+        "benefits"
+      ],
+      "affected_groups": [
+        "SNAP households"
+      ],
+      "pressure_type": "disaster disruption",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched disaster disruption",
+      "source_title": "Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause",
+      "source_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/",
+      "note": "Emergency food distribution and disaster assistance are responding to disruption in Toledo, affecting SNAP households.",
+      "dispatch_date": "2026-06-05",
+      "latitude": 40.417287,
+      "longitude": -82.907123,
+      "coordinate_basis": "state centroid"
+    },
+    {
+      "source_record_id": "food-line-auto-ca30d52613b31eec",
+      "location_name": "Mississippi",
+      "state": "MS",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "Mississippi Today",
+      "source_family": "nonprofit_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "Households are reporting food hardship in Mississippi.",
+      "issue_tags": [
+        "household food insecurity"
+      ],
+      "affected_groups": [],
+      "pressure_type": "household hardship",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched household hardship",
+      "source_title": "Advocates call for funding, collaboration as more Mississippians are expected to struggle with food insecurity",
+      "source_url": "https://mississippitoday.org/2026/02/25/mississippians-food-insecurity/",
+      "note": "Households are reporting food hardship in Mississippi.",
+      "dispatch_date": "2026-06-05",
+      "latitude": 32.354668,
+      "longitude": -89.398528,
+      "coordinate_basis": "state centroid"
     }
   ]
 }

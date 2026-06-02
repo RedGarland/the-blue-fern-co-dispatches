@@ -1,0 +1,389 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-02-005",
+    "title": "3 Gazans killed by Israeli fire in latest ceasefire violations",
+    "summary": "\u2060Israeli army continues its daily violations of ceasefire in Palestinian enclave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-anadolu-middle-east-864fc759da4a"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-anadolu-middle-east-864fc759da4a"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/3-gazans-killed-by-israeli-fire-in-latest-ceasefire-violations/3954056"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-006",
+    "title": "The Zionist false narratives are beginning to unravel",
+    "summary": "Former Dutch ambassador Nikolaos van Dam recounts how political pressure and bias shaped Western policy on. Israel's occupation of Palestine.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-the-new-arab-dd1fd6bd05b5"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-the-new-arab-dd1fd6bd05b5"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/opinion/zionist-false-narratives-are-beginning-unravel"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-004",
+    "title": "How Francois Burgat became a target of France's Gaza crackdown",
+    "summary": "Veteran French scholar Fran\u00e7ois Burgat says his conviction over Gaza-related social media posts reflects a broader crackdown on pro-Palestinian speech in France.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-the-new-arab-a007f483070d"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-the-new-arab-a007f483070d"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/how-francois-burgat-became-target-frances-gaza-crackdown"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-003",
+    "title": "Iran halts talks with U.S. over Israeli actions in Lebanon, Gaza",
+    "summary": "Trumps says. Israel and Hezbollah will stop fighting after Iran stops talks with U.S. over Israeli operations in southern Lebanon, Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-npr-world-5776c57dcd9d"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-npr-world-5776c57dcd9d"
+    ],
+    "source_urls": [
+      "https://www.npr.org/2026/06/01/g-s1-125285/iran-israel-us-lebanon-gaza"
+    ],
+    "publisher_names": [
+      "NPR"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-002",
+    "title": "EU considers sanctions on Israeli ministers over Gaza aid flotilla treatment: Report",
+    "summary": "France and Italy previously called for stronger response from bloc.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-anadolu-middle-east-b3dc1e248d9d"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-anadolu-middle-east-b3dc1e248d9d"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/europe/eu-considers-sanctions-on-israeli-ministers-over-gaza-aid-flotilla-treatment-report/3954191"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-001",
+    "title": "Can mediators rescue Gaza 'ceasefire' as Israel covets war?",
+    "summary": "\"The gap is significant, but mediation by Egypt, Qatar, Turkey, and contacts with Washington show regional efforts to prevent the process's collapse.\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 39,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-the-new-arab-b06496bfa248"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-the-new-arab-b06496bfa248"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/can-mediators-rescue-gaza-ceasefire-israel-covets-war"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 39,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-02-007",
+    "title": "Israeli troops halt Marian festival in W. Bank Christian village",
+    "summary": "Palestinian Christians say an Israeli military intervention at a Marian festival reflects growing pressure on Taybeh and other communities.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-02-the-new-arab-6dad1f012dd4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-02-the-new-arab-6dad1f012dd4"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-troops-halt-marian-festival-w-bank-christian-village"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-02T13:00:49.056928+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

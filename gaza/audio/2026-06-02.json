@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-02",
+  "generated_at": "2026-06-02T13:01:04.977980Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-02.mp3",
+  "audio_url": "/gaza/audio/2026-06-02.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1599,
+  "tts_input_word_count": 244,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1639296,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-02T13:01:04.977943Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-02-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-02/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 2, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 3 Gazans killed by Israeli fire in latest ceasefire violations. \u2060Israeli army continues its daily violations of ceasefire in Palestinian enclave. This was reported by Anadolu Agency.\n\n2. The Zionist false narratives are beginning to unravel. Former Dutch ambassador Nikolaos van Dam recounts how political pressure and bias shaped Western policy on. Israel's occupation of Palestine. This was reported by The New Arab.\n\n3. How Francois Burgat became a target of France's Gaza crackdown. Veteran French scholar Fran\u00e7ois Burgat says his conviction over Gaza-related social media posts reflects a broader crackdown on pro-Palestinian speech in France. This was reported by The New Arab.\n\n4. Iran halts talks with U.S. over Israeli actions in Lebanon, Gaza. Trumps says. Israel and Hezbollah will stop fighting after Iran stops talks with U.S. over Israeli operations in southern Lebanon, Gaza. This was reported by NPR.\n\n5. EU considers sanctions on Israeli ministers over Gaza aid flotilla treatment: Report. France and Italy previously called for stronger response from bloc. This was reported by Anadolu Agency.\n\n6. Can mediators rescue Gaza 'ceasefire' as Israel covets war?. \"The gap is significant, but mediation by Egypt, Qatar, Turkey, and contacts with Washington show regional efforts to prevent the process's collapse.\". This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 2, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-02-anadolu-middle-east-864fc759da4a",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/3-gazans-killed-by-israeli-fire-in-latest-ceasefire-violations/3954056",
+      "title": "3 Gazans killed by Israeli fire in latest ceasefire violations"
+    },
+    {
+      "source_record_id": "gaza-2026-06-02-the-new-arab-dd1fd6bd05b5",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/opinion/zionist-false-narratives-are-beginning-unravel",
+      "title": "The Zionist false narratives are beginning to unravel"
+    },
+    {
+      "source_record_id": "gaza-2026-06-02-the-new-arab-a007f483070d",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/how-francois-burgat-became-target-frances-gaza-crackdown",
+      "title": "How Francois Burgat became a target of France's Gaza crackdown"
+    },
+    {
+      "source_record_id": "gaza-2026-06-02-npr-world-5776c57dcd9d",
+      "publisher": "NPR",
+      "url": "https://www.npr.org/2026/06/01/g-s1-125285/iran-israel-us-lebanon-gaza",
+      "title": "Iran halts talks with U.S. over Israeli actions in Lebanon, Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-06-02-anadolu-middle-east-b3dc1e248d9d",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/europe/eu-considers-sanctions-on-israeli-ministers-over-gaza-aid-flotilla-treatment-report/3954191",
+      "title": "EU considers sanctions on Israeli ministers over Gaza aid flotilla treatment: Report"
+    },
+    {
+      "source_record_id": "gaza-2026-06-02-the-new-arab-b06496bfa248",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/can-mediators-rescue-gaza-ceasefire-israel-covets-war",
+      "title": "Can mediators rescue Gaza 'ceasefire' as Israel covets war?"
+    }
+  ]
+}

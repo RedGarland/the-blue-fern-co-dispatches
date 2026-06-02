@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
 <channel>
-  <title>The Gaza Dispatch from The Blue Fern Co.</title>
+  <title>Dispatches from Gaza by The Blue Fern Co.</title>
   <link>https://dispatches.thebluefernco.com/gaza/audio/</link>
   <description>Text-first Gaza audio briefing transcripts derived from source-backed daily editions.</description>
   <language>en-us</language>
-  <copyright>Copyright 2026 The Blue Fern Co.</copyright>
+  <copyright>© 2026 The Blue Fern Co.</copyright>
   <managingEditor>bluefernco@thebluefernco.com (The Blue Fern Co.)</managingEditor>
   <webMaster>bluefernco@thebluefernco.com (The Blue Fern Co.)</webMaster>
   <itunes:author>The Blue Fern Co.</itunes:author>
@@ -18,7 +18,7 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 02 Jun 2026 14:54:54 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 02 Jun 2026 17:48:01 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing: June 2, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-02-transcript.html</link>
@@ -45,5 +45,3 @@
   </item>
 </channel>
 </rss>
-
-

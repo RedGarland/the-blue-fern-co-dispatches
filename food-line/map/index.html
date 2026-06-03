@@ -12,31 +12,197 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
-    .fl-map-wrap { display:grid; gap:14px; }
-    .fl-map { height:520px; border:1px solid #d5e1e5; border-radius:12px; }
-    .fl-panel { border:1px solid #d5e1e5; border-radius:12px; background:#f5fafc; padding:12px; }
-    .fl-legend { margin:0; padding-left:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:6px 10px; }
-    .fl-legend li { display:flex; align-items:center; gap:8px; }
-    .fl-dot { width:12px; height:12px; border-radius:50%; display:inline-block; border:1px solid #1b2f39; }
-  </style>
+:root {
+  --ink: #1E3F4F;
+  --navy: #1E3F4F;
+  --blue-fern: #4E6B79;
+  --soft-blue: #EFE7DA;
+  --fern-green: #4E6B79;
+  --paper: #FBF7EF;
+  --border: #D2C5B4;
+  --panel: #FFFDF8;
+  --muted: #4E6B79;
+}
+.food-line-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+.food-line-hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.food-line-hero .eyebrow,
+.food-line-hero p {
+  margin: 0;
+}
+.food-line-logo {
+  display: block;
+  height: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.food-line-logo--home {
+  width: min(360px, 90vw);
+}
+.food-line-logo--edition {
+  width: min(460px, 90vw);
+}
+.food-line-logo--map {
+  width: min(520px, 90vw);
+}
+.food-line-logo--audio {
+  width: min(360px, 90vw);
+}
+.food-line-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 18px 42px rgba(30, 63, 79, 0.08);
+}
+.food-line-panel h2:first-child,
+.food-line-panel h3:first-child {
+  margin-top: 0;
+}
+.food-line-source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.food-line-source-table th,
+.food-line-source-table td {
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  padding: 0.65rem 0.55rem;
+}
+.food-line-source-table th {
+  text-align: left;
+  color: var(--navy);
+  background: #F3EBDD;
+  position: sticky;
+  top: 0;
+}
+.food-line-source-table td:nth-child(9),
+.food-line-source-table td:nth-child(14) {
+  min-width: 16rem;
+}
+.food-line-source-table td:nth-child(10),
+.food-line-source-table td:nth-child(17) {
+  min-width: 10rem;
+}
+.food-line-map-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-map {
+  height: min(70vh, 640px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.food-line-map-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+.food-line-map-panel ul {
+  margin-top: 0.8rem;
+}
+.food-line-map-panel .fl-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.food-line-map-panel .fl-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.food-line-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid #1B2F39;
+  display: inline-block;
+}
+.food-line-map-popup {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+}
+.food-line-map-popup a {
+  word-break: break-word;
+}
+.food-line-audio-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-audio-list {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.food-line-audio-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.food-line-audio-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+@media (max-width: 640px) {
+  .food-line-logo--edition,
+  .food-line-logo--map,
+  .food-line-logo--audio,
+  .food-line-logo--home {
+    width: 90vw;
+  }
+  .food-line-source-table {
+    font-size: 0.9rem;
+  }
+}
+</style>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="../index.html">Food Line Pressure Map</a>
-    <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Pressure Map</a><a href="../archive.html">Archive</a><a href="../rss.xml">RSS</a></nav>
+    <a class="brand" href="../index.html">Food Line Dispatch</a>
+    <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Dispatch</a><a href="../archive.html">Archive</a><a href="../rss.xml">RSS</a></nav>
   </header>
-<main class="home">
-  <section class="hero"><h1>Food Line Pressure Map</h1><p>Latest dispatch date: 2026-06-03</p><p><a href="/food-line/editions/2026-06-03/">Open latest Food Line edition</a></p></section>
-  <section class="fl-map-wrap">
-    <div id="foodLineMap" class="fl-map" data-rendered-marker-count="1" data-skipped-marker-count="0"></div>
-    <div class="fl-panel">
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    <img class="hero-logo food-line-logo food-line-logo--map" src="../assets/food-line-logo.png" alt="The Food Line Dispatch">
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Pressure Map</h1>
+    <p>Latest dispatch date: 2026-06-03</p>
+    <p><a href="/food-line/editions/2026-06-03/">Open latest Food Line edition</a></p>
+  </section>
+  <section class="food-line-map-shell">
+    <div id="foodLineMap" class="food-line-map" data-rendered-marker-count="1" data-skipped-marker-count="0"></div>
+    <div class="food-line-map-panel">
       <h2>Legend</h2>
-      <ul class="fl-legend"><li><span class="fl-dot" style="background:#9a4b4b;"></span>acute strain / service disruption</li><li><span class="fl-dot" style="background:#b6784f;"></span>elevated demand</li><li><span class="fl-dot" style="background:#5d7f62;"></span>summer meal / child nutrition</li><li><span class="fl-dot" style="background:#6d6287;"></span>senior hunger</li><li><span class="fl-dot" style="background:#3f5878;"></span>rural access</li><li><span class="fl-dot" style="background:#5b6f8a;"></span>benefit disruption</li><li><span class="fl-dot" style="background:#61717c;"></span>context / monitoring only</li></ul>
+      <ul class="fl-legend"><li><span class="food-line-dot" style="background:#9a4b4b;"></span>acute strain / service disruption</li><li><span class="food-line-dot" style="background:#b6784f;"></span>elevated demand</li><li><span class="food-line-dot" style="background:#5d7f62;"></span>summer meal / child nutrition</li><li><span class="food-line-dot" style="background:#6d6287;"></span>senior hunger</li><li><span class="food-line-dot" style="background:#3f5878;"></span>rural access</li><li><span class="food-line-dot" style="background:#5b6f8a;"></span>benefit disruption</li><li><span class="food-line-dot" style="background:#61717c;"></span>context / monitoring only</li></ul>
       <p><strong>Plotted markers:</strong> 1 | <strong>Skipped markers:</strong> 0</p>
       <p>Locations are source-backed pressure signals, not a complete census of food insecurity.</p>
     </div>
   </section>
 </main>
+  <footer class="site-footer">
+    <div class="publisher">
+      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="../assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <p class="publisher-label">Published by <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
+    </div>
+  </footer>
 <script>
 const CATEGORY_COLORS = {"acute strain / service disruption": "#9a4b4b", "elevated demand": "#b6784f", "summer meal / child nutrition": "#5d7f62", "senior hunger": "#6d6287", "rural access": "#3f5878", "benefit disruption": "#5b6f8a", "context / monitoring only": "#61717c"};
 const FALLBACK_MARKERS = [{"source_record_id": "food-line-auto-c531de22a923a8d8", "location_name": "East Texas, TX", "state": "TX", "county_name": "", "category": "benefit disruption", "publisher": "KLTV", "source_family": "local_news", "source_purpose": "current_news", "source_role": "local_signal", "pressure_signal": true, "pressure_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.", "extraction_quality": "medium", "expected_text_basis": "page_text", "pressure_verification_required": true, "evidence_text": "The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand. Michael Close, Chief Operating Officer at Swan Food Pantry, has seen a 17% increase the past three weeks in people asking for food assistance. The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand. Skip to content Advertise With Us Teacher Tribute Health Update Aging Untold Local Watch Live News Video Weather Weather Extra Sports Community We the People Contests Reception Issues About Us KLTV.com - Channel 7 News, Weather, Sports for East Texas - KLTV.com - Tyler, Longview, Jacksonville | ETX News Watch East Texas Now Watch Live/Watch Newscasts Big Red Box See it, Snap it, Send it Election Results News Heroes Flight Politics Military National Crime State A Better East Texas East Texas Ag News East", "evidence_text_basis": "page_text_excerpt", "pressure_match_terms": ["rising demand"], "pressure_verification_status": "source_text_verified", "issue_tags": ["SNAP", "benefits", "food banks", "pantry capacity"], "affected_groups": ["SNAP households"], "pressure_type": "demand strain", "evidence_level": "news report", "freshness_role": "fresh_daily_signal", "source_role_allowed": "context_only", "pressure_required": false, "pressure_reason": "matched demand strain", "source_title": "The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.", "source_url": "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays", "note": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.", "dispatch_date": "2026-06-03", "latitude": 31.968599, "longitude": -99.901813, "coordinate_basis": "state centroid"}];
@@ -59,18 +225,17 @@ rows.forEach((item) => {
     iconSize: [14,14],
     iconAnchor: [7,7]
   });
-  const popup = `<div class="map-popup">
-    <div><strong>${esc(item.location_name)}</strong> (${esc(item.state)})</div>
+  const popup = `<div class="food-line-map-popup">
+    <div><strong>Location:</strong> ${esc(item.location_name)} (${esc(item.state)})</div>
     <div><strong>Pressure summary:</strong> ${esc(item.pressure_summary)}</div>
-    <div><strong>Evidence:</strong> ${esc(item.evidence_text || "")}</div>
-    <div><strong>Affected groups:</strong> ${esc(Array.isArray(item.affected_groups) && item.affected_groups.length ? item.affected_groups.join(", ") : "Not clearly isolated by source")}</div>
+    <div><strong>Evidence text:</strong> ${esc(item.evidence_text || "")}</div>
     <div><strong>Pressure type:</strong> ${esc(item.pressure_type)}</div>
     <div><strong>Evidence level:</strong> ${esc(item.evidence_level)}</div>
-    <div><strong>Source purpose:</strong> ${esc(item.source_purpose)}</div>
     <div><strong>Freshness role:</strong> ${esc(item.freshness_role)}</div>
-    <div><strong>Pressure signal:</strong> ${esc(String(item.pressure_signal))}</div>
-    <div><strong>Pressure reason:</strong> ${esc(item.pressure_reason)}</div>
-    <div><strong>Source:</strong> <a href="${esc(item.source_url)}" target="_blank" rel="noopener noreferrer">${esc(item.source_title)}</a></div>
+    <div><strong>Affected groups:</strong> ${esc(Array.isArray(item.affected_groups) && item.affected_groups.length ? item.affected_groups.join(", ") : "Not clearly isolated by source")}</div>
+    <div><strong>Source title:</strong> ${esc(item.source_title)}</div>
+    <div><strong>Source URL:</strong> <a href="${esc(item.source_url)}" target="_blank" rel="noopener noreferrer">${esc(item.source_url)}</a></div>
+    <div><strong>Verification status:</strong> ${esc(item.pressure_verification_status)}</div>
     <div><strong>Dispatch date:</strong> ${esc(item.dispatch_date)}</div>
     <div><strong>Coordinate basis:</strong> ${esc(item.coordinate_basis)}</div>
   </div>`;

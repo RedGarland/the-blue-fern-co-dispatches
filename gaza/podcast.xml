@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 02 Jun 2026 17:52:09 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 03 Jun 2026 13:00:59 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 3, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-03-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-03-transcript.html</guid>
+    <pubDate>Wed, 03 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Zak Khan on Israeli detention after Gaza aid mission. The New Arab Meets: Zak Khan to speak more on the Gaza flotilla, his abuse in Israeli detention, and running as a Green Party candidate in the UK. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-03.mp3" length="1733760" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 2, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-02-transcript.html</link>

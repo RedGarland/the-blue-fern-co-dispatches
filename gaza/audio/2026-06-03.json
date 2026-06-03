@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-03",
+  "generated_at": "2026-06-03T13:00:59.269732Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-03.mp3",
+  "audio_url": "/gaza/audio/2026-06-03.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1667,
+  "tts_input_word_count": 258,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1733760,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-03T13:00:59.269702Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-03-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-03/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 3, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Zak Khan on Israeli detention after Gaza aid mission. The New Arab Meets: Zak Khan to speak more on the Gaza flotilla, his abuse in Israeli detention, and running as a Green Party candidate in the UK. This was reported by The New Arab.\n\n2. Israel is building more military posts in Gaza, satellite imagery shows. An investigation by Al Jazeera has identified 40 distinct Israeli military outposts entrenched within Gaza. This was reported by Al Jazeera.\n\n3. Israeli forces detain Birzeit University students near Ramallah. The latest arrests have drawn condemnation from church officials amid concerns over targeting of students and expanding West Bank raids. This was reported by The New Arab.\n\n4. UK Lawyers for Israel face scrutiny over intimidation tactics. Since its creation, the group has employed what its critics describe as \"lawfare\" against Israel's opponents and critics, or supporters of Palestine. This was reported by The New Arab.\n\n5. Can mediators rescue Gaza 'ceasefire' as Israel pursues war?. Growing pressure to establish a post-war governing framework has exposed deep divisions over Gaza's political future. This was reported by The New Arab.\n\n6. Streeting hits back after Mandelson called Gaza criticism 'wild'. In the thousand-plus-page documents related to Peter Mandelson, text messages show the disgraced minister condemning Streeting over his comments against Israel. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 3, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-03-the-new-arab-73cfad71aff0",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/features/zak-khan-israeli-detention-after-gaza-aid-mission",
+      "title": "Zak Khan on Israeli detention after Gaza aid mission"
+    },
+    {
+      "source_record_id": "gaza-2026-06-03-aljazeera-middle-east-844c2331ca3f",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/3/israel-is-building-more-military-posts-in-gaza-satellite-imagery-shows?traffic_source=rss",
+      "title": "Israel is building more military posts in Gaza, satellite imagery shows"
+    },
+    {
+      "source_record_id": "gaza-2026-06-03-the-new-arab-9441c64b45db",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-forces-detain-birzeit-university-students-near-ramallah",
+      "title": "Israeli forces detain Birzeit University students near Ramallah"
+    },
+    {
+      "source_record_id": "gaza-2026-06-03-the-new-arab-4326a197e4df",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/uk-lawyers-israel-face-scrutiny-over-intimidation-tactics",
+      "title": "UK Lawyers for Israel face scrutiny over intimidation tactics"
+    },
+    {
+      "source_record_id": "gaza-2026-06-03-the-new-arab-4194b0c3193c",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/can-mediators-rescue-gaza-ceasefire-israel-pursues-war",
+      "title": "Can mediators rescue Gaza 'ceasefire' as Israel pursues war?"
+    },
+    {
+      "source_record_id": "gaza-2026-06-03-the-new-arab-81f43af440aa",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/streeting-hits-back-after-mandelson-called-gaza-criticism-wild",
+      "title": "Streeting hits back after Mandelson called Gaza criticism 'wild'"
+    }
+  ]
+}

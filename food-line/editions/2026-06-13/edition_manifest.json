@@ -2,13 +2,13 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-13",
-  "generated_at": "2026-06-03T03:00:48.836993+00:00",
-  "source_count": 28,
+  "generated_at": "2026-06-03T03:05:29.869942+00:00",
+  "source_count": 29,
   "story_count": 6,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
-    "source_count": 28,
+    "source_count": 29,
     "source_families": [
       "disaster_emergency",
       "economic_data",
@@ -17,8 +17,8 @@
       "school_meals_child_nutrition",
       "state_official"
     ],
-    "local_signal_count": 24,
-    "state_signal_count": 24,
+    "local_signal_count": 25,
+    "state_signal_count": 25,
     "national_context_count": 4
   },
   "lead_source_record_id": "food-line-auto-c531de22a923a8d8",
@@ -33,13 +33,13 @@
     "background_context": 0,
     "policy_context": 0,
     "provider_signal": 0,
-    "local_signal": 24,
+    "local_signal": 25,
     "map_signal": 0,
     "resource_context": 3,
     "baseline_condition": 1
   },
-  "local_signal_count": 24,
-  "state_signal_count": 24,
+  "local_signal_count": 25,
+  "state_signal_count": 25,
   "national_context_count": 4,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
@@ -61,6 +61,7 @@
     "CA": 0,
     "FL": 0,
     "ID": 0,
+    "MS": 0,
     "OH": 0,
     "PA": 0,
     "TX": 1,
@@ -105,6 +106,7 @@
     "disaster-food-assistance-pressure-updates": 1,
     "fl-wptv-food-surges-palm-beach": 5,
     "id-bspr-food-stamps-hold": 5,
+    "ms-mdhs-snap": 1,
     "oh-13abc-snap-pause-food-pantries": 1,
     "pa-dhs-snap": 1,
     "tx-kltv-food-pantries-rising-demand": 1,
@@ -115,16 +117,16 @@
     "wa-cascade-pbs-food-banks-cut-worried": 1
   },
   "pressure_verified_count": 1,
-  "pressure_demoted_unverified_count": 27,
+  "pressure_demoted_unverified_count": 28,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
-    "page_text_excerpt": 8,
+    "page_text_excerpt": 9,
     "rss_item_text": 20
   },
   "collected_count_by_extraction_quality": {
     "high": 27,
     "low": 7,
-    "medium": 8
+    "medium": 9
   },
   "verified_pressure_count_by_extraction_quality": {
     "high": 1
@@ -132,7 +134,7 @@
   "demoted_count_by_extraction_quality": {
     "high": 22,
     "low": 2,
-    "medium": 3
+    "medium": 4
   },
   "fetch_failure_count_by_source_id": {
     "ca-calfresh": 1,
@@ -140,7 +142,6 @@
     "id-iccp-snap": 1,
     "meals-on-wheels-facts": 1,
     "meals-on-wheels-pressure-updates": 1,
-    "ms-mdhs-snap": 1,
     "ms-mississippi-today-food-insecurity": 1,
     "ny-otda-snap": 1,
     "oh-jfs-snap": 1,

@@ -119,6 +119,53 @@
       "longitude": null
     },
     {
+      "source_record_id": "food-line-auto-8e0ce4668b9ad388",
+      "location_name": "Mississippi",
+      "state": "MS",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "Mississippi Department of Human Services",
+      "source_family": "state_official",
+      "source_purpose": "disaster_alert",
+      "source_role": "local_signal",
+      "pressure_signal": false,
+      "pressure_summary": "",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services SNAP provides food benefits to low-income families to supplement their grocery budget so they can afford nutritious food. SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services Skip to main content Quick Apply Report Fraud Document Upload SNAP & TANF Document Upload Child Support Document Upload English English Espa\u00f1ol Ti\u1ebfng Vi\u1ec7t Who We Are Divisions & Programs Economic Assistance Eligibility SNAP \u2013 Supplemental Nutrition Access Program TANF \u2013 Temporary Assistance for Needy Families The Emergency Food Assistance Program (TEFAP) Commodity Supplemental Food Program (CSFP) SNAP-Ed Aging & Adult Services Help Living in the Community for Older Adults Finding Services for Older Adults Caregiver Support Adult Protective Services Early Childhood Care & Development",
+      "evidence_text_basis": "page_text_excerpt",
+      "pressure_match_terms": [],
+      "pressure_verification_status": "demoted_context",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "state administration",
+        "senior hunger",
+        "meal delivery",
+        "disaster response",
+        "service disruption"
+      ],
+      "affected_groups": [
+        "children",
+        "seniors",
+        "SNAP households",
+        "low-income households"
+      ],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "insufficient specific pressure evidence",
+      "source_title": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services",
+      "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
+      "note": "",
+      "dispatch_date": "2026-06-13",
+      "latitude": null,
+      "longitude": null
+    },
+    {
       "source_record_id": "food-line-auto-401b6574ac0a6f35",
       "location_name": "United States",
       "state": "US",
@@ -1403,6 +1450,54 @@
       "reason": "context_only_or_no_pressure_evidence"
     },
     {
+      "source_record_id": "food-line-auto-8e0ce4668b9ad388",
+      "location_name": "Mississippi",
+      "state": "MS",
+      "county_name": "",
+      "category": "benefit disruption",
+      "publisher": "Mississippi Department of Human Services",
+      "source_family": "state_official",
+      "source_purpose": "disaster_alert",
+      "source_role": "local_signal",
+      "pressure_signal": false,
+      "pressure_summary": "",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services SNAP provides food benefits to low-income families to supplement their grocery budget so they can afford nutritious food. SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services Skip to main content Quick Apply Report Fraud Document Upload SNAP & TANF Document Upload Child Support Document Upload English English Espa\u00f1ol Ti\u1ebfng Vi\u1ec7t Who We Are Divisions & Programs Economic Assistance Eligibility SNAP \u2013 Supplemental Nutrition Access Program TANF \u2013 Temporary Assistance for Needy Families The Emergency Food Assistance Program (TEFAP) Commodity Supplemental Food Program (CSFP) SNAP-Ed Aging & Adult Services Help Living in the Community for Older Adults Finding Services for Older Adults Caregiver Support Adult Protective Services Early Childhood Care & Development",
+      "evidence_text_basis": "page_text_excerpt",
+      "pressure_match_terms": [],
+      "pressure_verification_status": "demoted_context",
+      "issue_tags": [
+        "SNAP",
+        "benefits",
+        "state administration",
+        "senior hunger",
+        "meal delivery",
+        "disaster response",
+        "service disruption"
+      ],
+      "affected_groups": [
+        "children",
+        "seniors",
+        "SNAP households",
+        "low-income households"
+      ],
+      "pressure_type": "context only",
+      "evidence_level": "background context",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "insufficient specific pressure evidence",
+      "source_title": "SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services",
+      "source_url": "https://www.mdhs.ms.gov/economic-assistance/snap/",
+      "note": "",
+      "dispatch_date": "2026-06-13",
+      "latitude": null,
+      "longitude": null,
+      "reason": "context_only_or_no_pressure_evidence"
+    },
+    {
       "source_record_id": "food-line-auto-401b6574ac0a6f35",
       "location_name": "United States",
       "state": "US",
@@ -2310,35 +2405,35 @@
     }
   ],
   "diagnostics": {
-    "total_source_count": 28,
+    "total_source_count": 29,
     "pressure_signal_count": 1,
     "pressure_marker_count": 1,
     "baseline_record_count": 1,
     "context_record_count": 4,
     "excluded_context_count": 4,
-    "excluded_record_count": 27,
+    "excluded_record_count": 28,
     "unmapped_pressure_count": 0,
     "exclusion_reasons": {
-      "context_only_or_no_pressure_evidence": 26,
+      "context_only_or_no_pressure_evidence": 27,
       "baseline_condition": 1
     },
     "pressure_verified_count": 1,
-    "pressure_demoted_unverified_count": 27,
+    "pressure_demoted_unverified_count": 28,
     "pressure_registry_only_count": 0,
     "pressure_evidence_basis_counts": {
-      "page_text_excerpt": 8,
+      "page_text_excerpt": 9,
       "rss_item_text": 20
     },
     "collected_count_by_extraction_quality": {
       "high": 20,
-      "medium": 8
+      "medium": 9
     },
     "verified_pressure_count_by_extraction_quality": {
       "medium": 1
     },
     "demoted_count_by_extraction_quality": {
       "high": 20,
-      "medium": 7
+      "medium": 8
     },
     "marker_count": 1,
     "plotted_marker_count": 1,

@@ -2,15 +2,14 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-03",
-  "generated_at": "2026-06-03T17:44:18.813737+00:00",
-  "source_count": 29,
+  "generated_at": "2026-06-03T17:51:32.306610+00:00",
+  "source_count": 28,
   "story_count": 6,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
-    "source_count": 29,
+    "source_count": 28,
     "source_families": [
-      "disaster_emergency",
       "economic_data",
       "local_news",
       "public_radio",
@@ -19,7 +18,7 @@
     ],
     "local_signal_count": 25,
     "state_signal_count": 25,
-    "national_context_count": 4
+    "national_context_count": 3
   },
   "lead_source_record_id": "food-line-auto-c531de22a923a8d8",
   "lead_issue_tags": [
@@ -35,12 +34,12 @@
     "provider_signal": 0,
     "local_signal": 25,
     "map_signal": 0,
-    "resource_context": 3,
+    "resource_context": 2,
     "baseline_condition": 1
   },
   "local_signal_count": 25,
   "state_signal_count": 25,
-  "national_context_count": 4,
+  "national_context_count": 3,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
   "why_this_lead": "selected for highest priority role/category mix (local_signal, benefit disruption)",
@@ -50,7 +49,6 @@
     "SNAP households"
   ],
   "pressure_source_count_by_family": {
-    "disaster_emergency": 0,
     "economic_data": 0,
     "local_news": 1,
     "public_radio": 0,
@@ -103,7 +101,6 @@
   },
   "collected_source_count_by_source_id": {
     "ca-kpbs-calfresh-delayed": 5,
-    "disaster-food-assistance-pressure-updates": 1,
     "fl-wptv-food-surges-palm-beach": 5,
     "id-bspr-food-stamps-hold": 5,
     "ms-mdhs-snap": 1,
@@ -117,16 +114,16 @@
     "wa-cascade-pbs-food-banks-cut-worried": 1
   },
   "pressure_verified_count": 1,
-  "pressure_demoted_unverified_count": 28,
+  "pressure_demoted_unverified_count": 27,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
-    "page_text_excerpt": 9,
+    "page_text_excerpt": 8,
     "rss_item_text": 20
   },
   "collected_count_by_extraction_quality": {
     "high": 27,
     "low": 7,
-    "medium": 9
+    "medium": 8
   },
   "verified_pressure_count_by_extraction_quality": {
     "high": 1
@@ -134,10 +131,11 @@
   "demoted_count_by_extraction_quality": {
     "high": 22,
     "low": 2,
-    "medium": 4
+    "medium": 3
   },
   "fetch_failure_count_by_source_id": {
     "ca-calfresh": 1,
+    "disaster-food-assistance-pressure-updates": 1,
     "foodlifeline-pressure-updates": 1,
     "id-iccp-snap": 1,
     "meals-on-wheels-facts": 1,

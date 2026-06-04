@@ -2,13 +2,13 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-04",
-  "generated_at": "2026-06-04T19:28:43.046830+00:00",
-  "source_count": 28,
+  "generated_at": "2026-06-04T20:53:29.775818+00:00",
+  "source_count": 29,
   "story_count": 6,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
-    "source_count": 28,
+    "source_count": 29,
     "source_families": [
       "disaster_emergency",
       "economic_data",
@@ -17,8 +17,8 @@
       "school_meals_child_nutrition",
       "state_official"
     ],
-    "local_signal_count": 24,
-    "state_signal_count": 24,
+    "local_signal_count": 25,
+    "state_signal_count": 25,
     "national_context_count": 4
   },
   "lead_source_record_id": "food-line-auto-c531de22a923a8d8",
@@ -33,13 +33,13 @@
     "background_context": 0,
     "policy_context": 0,
     "provider_signal": 0,
-    "local_signal": 24,
+    "local_signal": 25,
     "map_signal": 0,
     "resource_context": 3,
     "baseline_condition": 1
   },
-  "local_signal_count": 24,
-  "state_signal_count": 24,
+  "local_signal_count": 25,
+  "state_signal_count": 25,
   "national_context_count": 4,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
@@ -68,11 +68,11 @@
     "US": 0,
     "WA": 0
   },
-  "news_item_count": 19,
+  "news_item_count": 20,
   "provider_pressure_count": 0,
   "official_pressure_count": 0,
   "baseline_source_count": 1,
-  "rejected_news_count": 15,
+  "rejected_news_count": 14,
   "rejected_news_reasons": [
     "donation page is not current pressure evidence",
     "donation page is not current pressure evidence",
@@ -91,7 +91,6 @@
     "city-harvest-pressure-updates": 1,
     "feeding-america-hunger": 1,
     "fl-dcf-access": 1,
-    "fl-wptv-food-surges-palm-beach": 1,
     "frac-snap-context": 1,
     "ky-chfs-snap": 1,
     "north-texas-food-bank-pressure-updates": 1,
@@ -105,7 +104,7 @@
   "collected_source_count_by_source_id": {
     "ca-kpbs-calfresh-delayed": 5,
     "disaster-food-assistance-pressure-updates": 1,
-    "fl-wptv-food-surges-palm-beach": 4,
+    "fl-wptv-food-surges-palm-beach": 5,
     "id-bspr-food-stamps-hold": 5,
     "ms-mdhs-snap": 1,
     "oh-13abc-snap-pause-food-pantries": 1,
@@ -118,11 +117,11 @@
     "wa-cascade-pbs-food-banks-cut-worried": 1
   },
   "pressure_verified_count": 1,
-  "pressure_demoted_unverified_count": 27,
+  "pressure_demoted_unverified_count": 28,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
     "page_text_excerpt": 9,
-    "rss_item_text": 19
+    "rss_item_text": 20
   },
   "collected_count_by_extraction_quality": {
     "high": 27,
@@ -133,7 +132,7 @@
     "high": 1
   },
   "demoted_count_by_extraction_quality": {
-    "high": 21,
+    "high": 22,
     "low": 2,
     "medium": 4
   },

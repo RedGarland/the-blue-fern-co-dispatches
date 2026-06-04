@@ -1,0 +1,398 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-04",
+  "candidates_seen": 11,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-06-04-002",
+      "title": "Gaza's public servants systematically targeted in Israeli strikes",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-007",
+      "title": "Gaza aid volunteers enter fourth day of hunger strike in Libya",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-004",
+      "title": "Israel's Knesset approves tax breaks for dozens of illegal West Bank settlements",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-009",
+      "title": "Clashes test 'ceasefires' in Lebanon, Gaza, and the Gulf",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-011",
+      "title": "Israel plans big illegal occupied West Bank settlement push",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-005",
+      "title": "Israeli strikes kill 11 people in Gaza City, medics say",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-001",
+      "title": "How Israel is preparing the expulsion of Palestinians from E1",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-003",
+      "title": "Israel's Smotrich announces plan for 2,162 homes in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-006",
+      "title": "Penny Wong says she believes Israeli soldiers sexually assaulted and abused Australian women after Gaza flotilla",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-012",
+      "title": "PROFILE - From Gaza wounds, surgeries to Capitol Hill: Adam Hamawy's road to winning primaries in New Jersey",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-008",
+      "title": "German Social Democratic lawmakers urge tougher stance on Israel",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [
+    {
+      "story_id": "gaza-story-2026-06-04-005",
+      "title": "Israeli strikes kill 11 people in Gaza City, medics say",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-16-009",
+      "prior_edition_date": "2026-05-16",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-06-04-004",
+      "title": "Israel's Knesset approves tax breaks for dozens of illegal West Bank settlements",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-011",
+      "title": "Israel plans big illegal occupied West Bank settlement push",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-01-005",
+      "prior_edition_date": "2026-06-01",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-001",
+      "title": "How Israel is preparing the expulsion of Palestinians from E1",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-003",
+      "title": "Israel's Smotrich announces plan for 2,162 homes in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-06-04-002",
+      "title": "Gaza's public servants systematically targeted in Israeli strikes",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-007",
+      "title": "Gaza aid volunteers enter fourth day of hunger strike in Libya",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-004",
+      "title": "Israel's Knesset approves tax breaks for dozens of illegal West Bank settlements",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-009",
+      "title": "Clashes test 'ceasefires' in Lebanon, Gaza, and the Gulf",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-011",
+      "title": "Israel plans big illegal occupied West Bank settlement push",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-01-005",
+      "prior_edition_date": "2026-06-01",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-005",
+      "title": "Israeli strikes kill 11 people in Gaza City, medics say",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-16-009",
+      "prior_edition_date": "2026-05-16",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-001",
+      "title": "How Israel is preparing the expulsion of Palestinians from E1",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-003",
+      "title": "Israel's Smotrich announces plan for 2,162 homes in occupied West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-006",
+      "title": "Penny Wong says she believes Israeli soldiers sexually assaulted and abused Australian women after Gaza flotilla",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-012",
+      "title": "PROFILE - From Gaza wounds, surgeries to Capitol Hill: Adam Hamawy's road to winning primaries in New Jersey",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-04-008",
+      "title": "German Social Democratic lawmakers urge tougher stance on Israel",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

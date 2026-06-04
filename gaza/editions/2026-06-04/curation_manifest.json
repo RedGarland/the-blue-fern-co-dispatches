@@ -1,0 +1,616 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-04-002",
+    "title": "Gaza's public servants systematically targeted in Israeli strikes",
+    "summary": "Months since Gaza's nominal ceasefire began, Palestinians continue to be killed and maimed in drone and airstrikes, including the enclave's police force which is crucial to peace and reconstruction efforts, the UN human rights office (OHCHR) said on Wednesday.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 97,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-un-news-middle-east-c5f00498ff3b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-un-news-middle-east-c5f00498ff3b"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/06/1167631"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 97,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-007",
+    "title": "Gaza aid volunteers enter fourth day of hunger strike in Libya",
+    "summary": "What began as a journey to deliver aid to Gaza has left ten international volunteers detained and on hunger strike in Libya.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-the-new-arab-054312a0cf94"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-the-new-arab-054312a0cf94"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-aid-volunteers-enter-fourth-day-hunger-strike-libya"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-004",
+    "title": "Israel's Knesset approves tax breaks for dozens of illegal West Bank settlements",
+    "summary": "International community considers settlements built in occupied Palestinian territory illegal under international law and major obstacle to 2-state solution.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 58,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-0cd2541f2dca"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-0cd2541f2dca"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-s-knesset-approves-tax-breaks-for-dozens-of-illegal-west-bank-settlements/3956558"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-009",
+    "title": "Clashes test 'ceasefires' in Lebanon, Gaza, and the Gulf",
+    "summary": "Throughout the region, 'ceasefire' agreements are being put under immense strain, notably by Israeli attacks.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-the-new-arab-4f9bef6be5d4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-the-new-arab-4f9bef6be5d4"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/clashes-test-ceasefires-lebanon-gaza-and-gulf"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-011",
+    "title": "Israel plans big illegal occupied West Bank settlement push",
+    "summary": "The new homes would \"strengthen our hold on the land, reinforce. Israel's security, and establish clear facts on the ground...\" said Smotrich.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-the-new-arab-fac2eb6ecc53"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-the-new-arab-fac2eb6ecc53"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-plans-big-illegal-occupied-west-bank-settlement-push"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-01-005",
+    "prior_edition_date": "2026-06-01",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-005",
+    "title": "Israeli strikes kill 11 people in Gaza City, medics say",
+    "summary": "Women and children were among those killed when Israeli aircraft struck at least four residential buildings in several areas.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-bbc-middle-east-fae217629ca2"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-bbc-middle-east-fae217629ca2"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/cg5prr9gr1ro?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-16-009",
+    "prior_edition_date": "2026-05-16",
+    "dedupe_classification": "continuing_development",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-001",
+    "title": "How Israel is preparing the expulsion of Palestinians from E1",
+    "summary": "Israel has advanced plans to expel Bedouin communities from the E1 area, paving the way for settlement construction that will split the West Bank in two.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-the-new-arab-e632768f735d"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-the-new-arab-e632768f735d"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/analysis/how-israel-preparing-expulsion-palestinians-e1"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-003",
+    "title": "Israel's Smotrich announces plan for 2,162 homes in occupied West Bank",
+    "summary": "The far-right finance minister says the new houses will 'strengthen our hold on the land'.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-aljazeera-middle-east-a38d61f9a1a0"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-aljazeera-middle-east-a38d61f9a1a0"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/4/israels-smotrich-announces-plan-for-2162-homes-in-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-006",
+    "title": "Penny Wong says she believes Israeli soldiers sexually assaulted and abused Australian women after Gaza flotilla",
+    "summary": "Foreign affairs minister says her position is to 'always believe women' when sexual assault allegations are made Get our breaking news email , free app or daily news podcast. The foreign affairs minister, Penny Wong, says she believes the Australian women who have alleged they were sexually assaulted and beaten by Israeli soldiers after being detained as part of a humanitarian flotilla attempting to bring aid to Gaza. Appearing at Senate estimates, Wong said the treatment of the Australian women was \"unacceptable\", and the allegations they had subsequently made were \"distressing\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 33,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-guardian-world-de0286b1ea70"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-guardian-world-de0286b1ea70"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/australia-news/2026/jun/04/gaza-flotilla-australian-women-assaulted-abused-israeli-detention-penny-wong-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 33,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-012",
+    "title": "PROFILE - From Gaza wounds, surgeries to Capitol Hill: Adam Hamawy's road to winning primaries in New Jersey",
+    "summary": "Born in Egypt and raised in US, Democrat Hamawy has emerged as favorite for November race in mid-term US election after Gaza war shaped his decision to enter politics.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-c2ae33207300"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-c2ae33207300"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/profile-from-gaza-wounds-surgeries-to-capitol-hill-adam-hamawys-road-to-winning-primaries-in-new-jersey/3956344"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-04-008",
+    "title": "German Social Democratic lawmakers urge tougher stance on Israel",
+    "summary": "Israel is responsible for tens of thousands of deaths in Gaza Strip, says Adis Ahmetovic, foreign policy spokesperson for SDP.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-4979e0e32b6b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-04-anadolu-middle-east-4979e0e32b6b"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/-german-social-democratic-lawmakers-urge-tougher-stance-on-israel/3956539"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-04T13:00:41.611258+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

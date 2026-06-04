@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 03 Jun 2026 13:00:59 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 04 Jun 2026 13:01:01 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 4, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-04-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-04-transcript.html</guid>
+    <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Gaza's public servants systematically targeted in Israeli strikes. Months since Gaza's nominal ceasefire began, Palestinians continue to be killed and maimed in drone and airstrikes, including the enclave's police force which is crucial to peace and reconstruction efforts, the UN human rights office (OHCHR) said on Wednesday. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-04.mp3" length="1880064" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 3, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-03-transcript.html</link>

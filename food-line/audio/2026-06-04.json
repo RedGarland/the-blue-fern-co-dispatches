@@ -6,7 +6,7 @@
   "episode_summary": "KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households. Review summary: 27 records reviewed; 1 verified pressure record; 26 excluded as context, baseline, or insufficient pressure evidence. This edition is based on verified pressure records. Cleaned transcripts and source tables preserve traceability.",
   "audio_generated": false,
   "audio_required": false,
-  "audio_status": "transcript_only",
+  "audio_status": "openai_tts_request_failed",
   "audio_mp3_path": null,
   "audio_mp3_url": null,
   "podcast_enclosure_present": false,
@@ -14,7 +14,7 @@
   "audio_file": null,
   "audio_url": null,
   "audio_mime_type": null,
-  "audio_model": null,
-  "audio_voice": null,
-  "audio_provider": "none"
+  "audio_model": "gpt-4o-mini-tts",
+  "audio_voice": "alloy",
+  "audio_provider": "openai"
 }

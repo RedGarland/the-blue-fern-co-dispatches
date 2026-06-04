@@ -16,5 +16,42 @@
   "audio_mime_type": null,
   "audio_model": "gpt-4o-mini-tts",
   "audio_voice": "alloy",
-  "audio_provider": "openai"
+  "audio_provider": "openai",
+  "audio_timeout_seconds": 90.0,
+  "tts_diagnostics": {
+    "provider": "openai",
+    "model_requested": "gpt-4o-mini-tts",
+    "voice_requested": "alloy",
+    "narration_char_count": 594,
+    "output_path_attempted": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\food-line\\audio\\2026-06-04.mp3",
+    "api_key_present": true,
+    "output_dir_exists": true,
+    "partial_mp3_exists": false,
+    "elapsed_seconds": 0.070148,
+    "exception_type": "URLError",
+    "exception_message_sanitized": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+    "timeout_seconds": 90.0,
+    "audio_format": "mp3"
+  },
+  "tts_provider": "openai",
+  "tts_model_requested": "gpt-4o-mini-tts",
+  "tts_voice_requested": "alloy",
+  "tts_narration_char_count": 594,
+  "tts_output_path_attempted": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\food-line\\audio\\2026-06-04.mp3",
+  "tts_api_key_present": true,
+  "tts_output_dir_exists": true,
+  "tts_partial_mp3_exists": false,
+  "tts_elapsed_seconds": 0.070148,
+  "tts_exception_type": "URLError",
+  "tts_exception_message_sanitized": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+  "tts_error_type": "URLError",
+  "tts_error_message_sanitized": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1032)>",
+  "tts_timeout_seconds": 90.0,
+  "tts_audio_format": "mp3",
+  "tts_file_write_exception_type": null,
+  "tts_file_write_exception_message_sanitized": null,
+  "warnings": [
+    "Food Line audio narration was not generated: openai_tts_request_failed"
+  ],
+  "errors": []
 }

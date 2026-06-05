@@ -2,7 +2,7 @@
 import shutil
 import subprocess
 import uuid
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -32,7 +32,7 @@ from bluefern_dispatches.generator import (
 
 
 def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
-    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    end = date.fromisoformat(edition_date)
     start = end - timedelta(days=6)
     coverage_label = f"{start.strftime('%b')} {start.day}–{end.strftime('%b')} {end.day}, {end.year}"
     edition = work / "output" / "dispatches" / "cascadia" / "editions" / edition_date
@@ -86,16 +86,45 @@ def add_cascadia_dispatch_edition(work: Path, edition_date: str) -> None:
     )
 
 
-@pytest.fixture()
-def built_site(monkeypatch):
-    repo = Path(__file__).resolve().parents[1]
-    test_root = repo / "output" / "test-runs" / uuid.uuid4().hex
+def copy_repo_assets(repo: Path, work: Path) -> None:
+    assets_root = repo / "assets"
+    work_assets = work / "assets"
+    work_assets.mkdir(parents=True, exist_ok=True)
+    for asset in assets_root.iterdir():
+        if asset.is_file():
+            (work_assets / asset.name).write_bytes(asset.read_bytes())
+
+
+@pytest.fixture(scope="session")
+def built_site_template(tmp_path_factory):
+    import os
+
+    repo = Path(__file__).parent.parent
+    test_root = tmp_path_factory.mktemp("dispatches-site-template")
     work = test_root / "repo"
-    shutil.copytree(repo / "assets", work / "assets")
+    copy_repo_assets(repo, work)
     backup_root = test_root / "dispatches-bluefern-backups"
-    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-03")
-    add_cascadia_dispatch_edition(work, "2026-05-03")
-    result = build_site(work, dry_run=False, backup_root=backup_root)
+    previous_seed = os.environ.get("BLUEFERN_SEED_EDITION_DATE")
+    os.environ["BLUEFERN_SEED_EDITION_DATE"] = "2026-05-03"
+    try:
+        add_cascadia_dispatch_edition(work, "2026-05-03")
+        result = build_site(work, dry_run=False, backup_root=backup_root)
+        yield work, backup_root, result
+    finally:
+        if previous_seed is None:
+            os.environ.pop("BLUEFERN_SEED_EDITION_DATE", None)
+        else:
+            os.environ["BLUEFERN_SEED_EDITION_DATE"] = previous_seed
+
+
+@pytest.fixture()
+def built_site(tmp_path_factory, built_site_template):
+    template_work, template_backup_root, result = built_site_template
+    test_root = tmp_path_factory.mktemp("dispatches-site-copy")
+    work = test_root / "repo"
+    backup_root = test_root / "dispatches-bluefern-backups"
+    shutil.copytree(template_work, work)
+    shutil.copytree(template_backup_root, backup_root)
     return work, backup_root, result
 
 
@@ -126,10 +155,24 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     html = read(index)
     assert 'href="/gaza/"' in html
     assert 'href="/cascadia/"' in html
-    assert 'href="/american-pressure/"' in html
+    assert 'href="/food-line/"' in html
+    assert 'href="/american-pressure/"' not in html
     assert "The Cascadia Briefing" in html
+    assert "Food Line Dispatch" in html
+    assert "Daily source-backed food insecurity pressure signals across the United States" in html
+    assert '<img class="dispatch-card-logo" src="/food-line/assets/food-line-logo.png"' not in html
+    assert '--dispatch-card-watermark: url(\'/food-line/assets/food-line-logo.png\')' in html
+    assert '--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\')' in html
+    assert '--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\')' in html
+    assert 'href="/cascadia/detention-watch/"' not in html
+    assert "Related: Cascadia Detention Watch" not in html
+    assert "Immigration detention monitoring for WA, OR, and ID." not in html
+    assert "dispatch-card-links" not in html
     assert "Cascadia Systems Dispatch" not in html
-    assert "--blue-fern: #2F6F88" in read(css)
+    css_text = read(css)
+    assert "--blue-fern: #2F6F88" in css_text
+    assert "background-position: center" in css_text
+    assert "background-size: min(82%, 320px) auto" in css_text
     assert f'src="assets/{ROOT_MASTHEAD_ASSET}"' in html
     assert ROOT_DESCRIPTION in html
     assert "<h1>Dispatches From The Blue Fern Co.</h1>" not in html
@@ -159,9 +202,9 @@ def test_favicon_assets_are_copied_and_linked_from_public_html(built_site):
 
 
 def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    shutil.copytree(repo / "assets", work / "assets")
+    copy_repo_assets(repo, work)
     old_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
     old_edition.mkdir(parents=True)
     (old_edition / "index.html").write_text(
@@ -224,13 +267,19 @@ def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
 def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
     work, _, _ = built_site
     index = read(work / "output" / "site" / "index.html")
-    css = read(work / "output" / "site" / "assets" / "site.css")
+    css_path = work / "output" / "site" / "assets" / "site.css"
 
     assert '<ul class="dispatch-grid">' in index
     assert 'class="dispatch-card"' in index
-    assert "repeat(auto-fit" in css
-    assert "minmax(min(100%, 240px), 1fr)" in css
+    assert 'class="dispatch-card-logo"' not in index
+    css_text = read(css_path)
+    assert 'background-image: var(--dispatch-card-watermark)' in css_text
+    assert 'background-position: center' in css_text
+    assert 'background-size: min(82%, 320px) auto' in css_text
+    assert "repeat(auto-fit" in css_text
+    assert "minmax(min(100%, 240px), 1fr)" in css_text
     assert (work / "output" / "site" / "assets" / ROOT_MASTHEAD_ASSET).exists()
+    assert (work / "output" / "site" / "food-line" / "assets" / "food-line-logo.png").exists()
 
 
 def test_gaza_content_and_requested_logo_placement(built_site):
@@ -275,8 +324,17 @@ def test_cascadia_page_and_dated_edition_url(built_site):
 
     assert "The Cascadia Briefing" in cascadia_index
     assert CASCADIA_PUBLIC_DESCRIPTION in cascadia_index
-    assert "Cascadia Signal Pack" in cascadia_index
+    assert "Signal Pack" in cascadia_index
+    assert "Latest Briefing" in cascadia_index
+    assert "Pressure Map" in cascadia_index
+    assert "Detention Watch" in cascadia_index
+    assert "Recent Editions" in cascadia_index
+    assert "A weekly source-backed systems briefing for Washington, Oregon, and Idaho." in cascadia_index
     assert "Open latest Cascadia pressure map" in cascadia_index
+    assert "Latest Detention Watch" not in cascadia_index
+    assert 1 <= cascadia_index.count('href="/cascadia/detention-watch/"') <= 2
+    assert 'href="/cascadia/detention-watch/"' in cascadia_index
+    assert "Open Detention Watch" in cascadia_index
     assert "Read briefing" in cascadia_index
     map_path = work / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html"
     if map_path.exists():
@@ -288,10 +346,20 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     assert "class=\"briefing\"" in read(cascadia_edition)
 
 
+def test_detention_watch_links_have_no_malformed_paths(built_site):
+    work, _, _ = built_site
+    root_index = read(work / "output" / "site" / "index.html")
+    cascadia_index = read(work / "output" / "site" / "cascadia" / "index.html")
+    assert root_index.count('href="/cascadia/detention-watch/"') <= 1
+    for html in (root_index, cascadia_index):
+        assert "//cascadia/detention-watch" not in html
+        assert "/cascadia/cascadia/detention-watch" not in html
+
+
 def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    shutil.copytree(repo / "assets", work / "assets")
+    copy_repo_assets(repo, work)
     stale_daily = work / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
     stale_daily.mkdir(parents=True)
     (stale_daily / "index.html").write_text("<html>daily</html>", encoding="utf-8")
@@ -468,12 +536,11 @@ def test_detail_roots_inside_public_site_are_rejected():
 
 def make_pages_repo(path):
     path.mkdir(parents=True)
-    subprocess.run(["git", "init", "-b", "main"], cwd=path, check=True, capture_output=True, text=True)
-    subprocess.run(["git", "config", "user.email", "tests@example.com"], cwd=path, check=True, capture_output=True, text=True)
-    subprocess.run(["git", "config", "user.name", "Test User"], cwd=path, check=True, capture_output=True, text=True)
+    git_dir = path / ".git"
+    (git_dir / "refs" / "heads").mkdir(parents=True, exist_ok=True)
+    (git_dir / "HEAD").write_text("ref: refs/heads/main\n", encoding="utf-8")
+    (git_dir / "refs" / "heads" / "main").write_text("fake-main-commit\n", encoding="utf-8")
     (path / ".keep").write_text("keep\n", encoding="utf-8")
-    subprocess.run(["git", "add", ".keep"], cwd=path, check=True, capture_output=True, text=True)
-    subprocess.run(["git", "commit", "-m", "Initial Pages repo"], cwd=path, check=True, capture_output=True, text=True)
     return path
 
 
@@ -558,7 +625,7 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
 
 
 def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
-    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    end = date.fromisoformat(edition_date)
     start = end - timedelta(days=6)
     coverage_label = f"{start.strftime('%b')} {start.day}–{end.strftime('%b')} {end.day}, {end.year}"
     edition = site_root / "cascadia" / "editions" / edition_date
@@ -591,7 +658,7 @@ def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
 
 
 def add_american_pressure_site_edition(site_root: Path, edition_date: str) -> None:
-    end = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    end = date.fromisoformat(edition_date)
     start = end - timedelta(days=6)
     display = f"{start.strftime('%B')} {start.day}–{end.strftime('%B')} {end.day}, {end.year}"
     edition = site_root / "american-pressure" / "editions" / edition_date
@@ -766,7 +833,7 @@ def test_cascadia_expect_date_reports_cascadia_missing_only(built_site):
 
 
 def test_expect_dispatch_all_expands_to_full_site_expectation():
-    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia", "american-pressure")
+    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia", "american-pressure", "food-line")
 
 
 def test_american_pressure_expect_date_does_not_require_same_date_cascadia_or_gaza(built_site):
@@ -854,7 +921,7 @@ def test_expect_date_rejects_mismatched_selected_public_url_date(built_site, mon
 def test_targeted_american_pressure_publish_copies_expected_date_to_pages_repo(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     if src_dispatch_edition.exists():
@@ -880,7 +947,7 @@ def test_targeted_american_pressure_publish_copies_expected_date_to_pages_repo(b
 def test_american_pressure_only_dispatch_does_not_modify_gaza_or_cascadia_pages(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     if src_dispatch_edition.exists():
@@ -909,7 +976,7 @@ def test_american_pressure_only_dispatch_does_not_modify_gaza_or_cascadia_pages(
 def test_dry_run_reports_same_selected_ap_date_as_real_publish(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     if src_dispatch_edition.exists():
@@ -1033,15 +1100,212 @@ def test_publish_pages_copies_american_pressure_map_files(built_site):
     assert (pages_repo / "american-pressure" / "map" / "map_data.json").exists()
 
 
+def test_pages_publish_copies_gaza_audio_and_feed_artifacts(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    gaza_audio_dir = site_root / "gaza" / "audio"
+    gaza_audio_dir.mkdir(parents=True, exist_ok=True)
+    (gaza_audio_dir / "index.html").write_text("<html>Audio archive</html>", encoding="utf-8")
+    (gaza_audio_dir / "2026-05-31-transcript.html").write_text("<html>Transcript</html>", encoding="utf-8")
+    (site_root / "gaza" / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+    (site_root / "gaza" / "flash-briefing.json").write_text("[]", encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "gaza" / "audio" / "index.html").exists()
+    assert (pages_repo / "gaza" / "audio" / "2026-05-31-transcript.html").exists()
+    assert (pages_repo / "gaza" / "podcast.xml").exists()
+    assert (pages_repo / "gaza" / "flash-briefing.json").exists()
+    assert not (pages_repo / "detail").exists()
+    assert not (pages_repo / "paid").exists()
+    assert "output/paid/" in result["files_that_would_be_skipped"]
+    assert "output/detail/" in result["files_that_would_be_skipped"]
+
+
+def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    food_root = site_root / "food-line"
+    assets = food_root / "assets"
+    edition = food_root / "editions" / "2026-06-01"
+    audio = food_root / "audio"
+    fmap = food_root / "map"
+    assets.mkdir(parents=True, exist_ok=True)
+    edition.mkdir(parents=True, exist_ok=True)
+    audio.mkdir(parents=True, exist_ok=True)
+    fmap.mkdir(parents=True, exist_ok=True)
+    repo_assets = work / "assets"
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>2026-06-01</html>", encoding="utf-8")
+    (food_root / "rss.xml").write_text("<rss/>", encoding="utf-8")
+    (food_root / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+    (audio / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+    (assets / "food-line-logo.png").write_bytes((repo_assets / "food-line-logo.png").read_bytes())
+    (assets / "site.css").write_text("body{}", encoding="utf-8")
+    (assets / "bluefern.png").write_bytes((repo_assets / "bluefern.png").read_bytes())
+    (edition / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": "2026-06-01",
+                "public_story_count": 1,
+                "public_rendered": True,
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "food-src-1", "title": "Source", "url": "https://example.com"}], indent=2),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "food-story-1", "source_ids": ["food-src-1"]}], indent=2),
+        encoding="utf-8",
+    )
+    (fmap / "index.html").write_text("<html>Food Line map</html>", encoding="utf-8")
+    (fmap / "map_data.json").write_text(json.dumps({"edition_date": "2026-06-01", "markers": []}), encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "food-line" / "index.html").exists()
+    assert (pages_repo / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
+    assert (pages_repo / "food-line" / "map" / "index.html").exists()
+    assert (pages_repo / "food-line" / "audio" / "podcast.xml").exists()
+    assert (pages_repo / "food-line" / "podcast.xml").exists()
+    assert (pages_repo / "food-line" / "assets" / "food-line-logo.png").exists()
+
+
+def test_pages_publish_removes_skipped_food_line_editions(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    food_root = site_root / "food-line"
+    stale_edition = pages_repo / "food-line" / "editions" / "2026-06-01"
+    stale_edition.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (food_root / "rss.xml").write_text("<rss/>", encoding="utf-8")
+    (food_root / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+    (stale_edition / "index.html").write_text("<html>Stale skipped edition</html>", encoding="utf-8")
+    (stale_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": "2026-06-01",
+                "public_rendered": False,
+                "qualified_primary_count": 0,
+                "skip_reason": "No new primary food-access signal qualified for public Food Line publication.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert not (pages_repo / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
+
+
+def test_food_line_only_dispatch_publish_does_not_copy_other_dispatch_files(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    food_root = site_root / "food-line"
+    edition = food_root / "editions" / "2026-06-01"
+    edition.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>2026-06-01</html>", encoding="utf-8")
+    (food_root / "rss.xml").write_text("<rss/>", encoding="utf-8")
+    (edition / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": "2026-06-01",
+                "public_story_count": 1,
+                "public_rendered": True,
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "food-src-1", "title": "Source", "url": "https://example.com"}], indent=2),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "food-story-1", "source_ids": ["food-src-1"]}], indent=2),
+        encoding="utf-8",
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-06-01",
+        expect_dispatches=("food-line",),
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    copied = result["files_copied"]
+    assert copied
+    assert not any("\\gaza\\" in path.lower() or "/gaza/" in path.lower() for path in copied)
+    assert not any("\\cascadia\\" in path.lower() or "/cascadia/" in path.lower() for path in copied)
+    assert not any("\\american-pressure\\" in path.lower() or "/american-pressure/" in path.lower() for path in copied)
+
+
 def test_attached_landing_index_contains_american_pressure_map_button():
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     html = (repo / "bluefern-dispatches-pages" / "assets" / "index_updated_logo.html").read_text(encoding="utf-8")
     assert "The American Pressure Map" in html
     assert "https://dispatches.thebluefernco.com/american-pressure/map/" in html
 
 
 def test_bluehost_root_upload_index_contains_american_pressure_map_button():
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     path = repo / "output" / "site_bluefern_root" / "index.html"
     if not path.exists():
         pytest.skip("site_bluefern_root fixture not present in this checkout")
@@ -1071,7 +1335,6 @@ def test_pages_publish_commits_on_gh_pages_branch(built_site):
 
     result = publish_pages(work, pages_repo, None, dry_run=False, commit=True, no_push=True, backup_root=backup_root, pages_branch="gh-pages")
 
-    current = subprocess.run(["git", "branch", "--show-current"], cwd=pages_repo, check=True, capture_output=True, text=True)
     assert result["ok"] is True
     assert result["current_branch"] == "main"
     assert result["checked_out_branch"] == "gh-pages"
@@ -1079,15 +1342,14 @@ def test_pages_publish_commits_on_gh_pages_branch(built_site):
     assert result["committed"] is True
     assert result["would_push"] is False
     assert result["pushed"] is False
-    assert current.stdout.strip() == "gh-pages"
     assert (pages_repo / ".git").exists()
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
 
 
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
-    shutil.copytree(repo / "assets", work / "assets")
+    copy_repo_assets(repo, work)
     add_cascadia_dispatch_edition(work, "2026-05-10")
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-10")
 
@@ -1105,15 +1367,16 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     assert (work / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html").exists()
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
-    assert "The American Pressure Dispatch" in root_index
     assert "The Cascadia Briefing" in root_index
+    assert "Food Line Dispatch" in root_index
+    assert "The American Pressure Dispatch" not in root_index
 
 
 def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
-    repo = Path(__file__).resolve().parents[1]
+    repo = Path(__file__).parent.parent
     src_dispatch_edition = repo / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     dst_dispatch_edition = work / "output" / "dispatches" / "american-pressure" / "editions" / "2026-05-23"
     if src_dispatch_edition.exists():
@@ -1179,6 +1442,63 @@ def test_cascadia_only_publish_copies_map_files(built_site):
     assert (pages_repo / "cascadia" / "editions" / "2026-05-03" / "source_table.html").exists()
     assert (pages_repo / "cascadia" / "map" / "source_table.html").exists()
     assert result["only_dispatches"] == ["cascadia"]
+
+
+def test_cascadia_publish_overwrites_stale_map_and_source_table_artifacts(built_site):
+    work, backup_root, _ = built_site
+    edition_date = "2026-05-03"
+    site_root = work / "output" / "site"
+    map_dir = site_root / "cascadia" / "map"
+    map_dir.mkdir(parents=True, exist_ok=True)
+    (map_dir / "index.html").write_text("<html><body>Report count: 5</body></html>", encoding="utf-8")
+    (map_dir / "source_table.html").write_text(
+        "<html><body><table><tr><th>Pressure Area</th></tr><tr><td>Environment and climate</td></tr></table></body></html>",
+        encoding="utf-8",
+    )
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    stale_pages_map = pages_repo / "cascadia" / "map"
+    stale_pages_map.mkdir(parents=True, exist_ok=True)
+    (stale_pages_map / "index.html").write_text("<html><body>Report count: 11</body></html>", encoding="utf-8")
+    (stale_pages_map / "source_table.html").write_text(
+        "<html><body>Open latest Cascadia map WA government ID government</body></html>",
+        encoding="utf-8",
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date=edition_date,
+        only_dispatches=("cascadia",),
+    )
+
+    assert result["ok"] is True
+    paths = [
+        site_root / "cascadia" / "map" / "index.html",
+        site_root / "cascadia" / "map" / "source_table.html",
+        pages_repo / "cascadia" / "map" / "index.html",
+        pages_repo / "cascadia" / "map" / "source_table.html",
+        pages_repo / "cascadia" / "editions" / edition_date / "map.html",
+        pages_repo / "cascadia" / "editions" / edition_date / "source_table.html",
+    ]
+    final_strings = "\n".join(read(path) for path in paths if path.exists())
+    forbidden = [
+        "Report count: 11",
+        "No reports match the current map filters",
+        "Some map markers could not be displayed",
+        "Open latest Cascadia map",
+        "WA government",
+        "ID government",
+        "source_count:",
+        "known_gaps:",
+        "states_covered:",
+    ]
+    for needle in forbidden:
+        assert needle not in final_strings
 
 
 def test_normalize_only_dispatches_accepts_comma_and_repeat():

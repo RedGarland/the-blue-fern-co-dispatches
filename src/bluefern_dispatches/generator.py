@@ -14,6 +14,7 @@ from typing import Any
 
 from bluefern_dispatches.cascadia_weekly import format_coverage_label
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
+from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -50,15 +51,16 @@ AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_IDENTIFIED = "Reviewed week | No qualifying source-backed regional signals identified"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying source-backed regional signals surfaced"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
-EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "all")
-ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure")
+EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "all")
+ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line")
 DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
     "gaza": {"label": "Gaza", "public_visible": True},
     "cascadia": {"label": "Cascadia", "public_visible": True},
     "american-pressure": {"label": "American Pressure", "public_visible": True},
+    "food-line": {"label": "Food Line Dispatch", "public_visible": True},
 }
 DISPATCH_LABELS = {slug: str(meta.get("label") or slug) for slug, meta in DISPATCH_CATALOG.items()}
-ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure")
+ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line")
 
 
 def dispatch_public_visible(slug: str) -> bool:
@@ -555,9 +557,16 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
 """
 
 
-def header(brand: str, root_prefix: str, archive_href: str | None = None, section_href: str | None = None) -> str:
+def header(
+    brand: str,
+    root_prefix: str,
+    archive_href: str | None = None,
+    section_href: str | None = None,
+    *,
+    nav_slugs: tuple[str, ...] | None = None,
+) -> str:
     root_links = []
-    for slug in ("gaza", "cascadia", "american-pressure"):
+    for slug in nav_slugs or ("gaza", "cascadia", "american-pressure", "food-line"):
         if not dispatch_public_visible(slug):
             continue
         root_links.append(f'<a href="/{slug}/">{html.escape(DISPATCH_LABELS.get(slug, slug.title()))}</a>')
@@ -581,17 +590,37 @@ def footer(asset_prefix: str) -> str:
 
 
 def render_root(dispatches: list[DispatchConfig]) -> str:
-    cards = "\n".join(
-        f"""      <li class="dispatch-card">
+    card_rows: list[str] = []
+    summaries = {
+        "gaza": "Daily source-backed briefings from Gaza.",
+        "cascadia": "Weekly source-backed regional briefings for Washington, Oregon, and Idaho.",
+        "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
+    }
+    for dispatch in dispatches:
+        if dispatch.slug not in {"gaza", "cascadia"}:
+            continue
+        card_style = ""
+        if dispatch.slug == "cascadia":
+            card_style = ' style="--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\');"'
+        else:
+            card_style = ' style="--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\');"'
+        card_rows.append(
+            f"""      <li class="dispatch-card"{card_style}>
         <a href="/{dispatch.slug}/">
-          <span class="edition-date">{html.escape(dispatch.tagline)}</span>
+          <span class="edition-date">{html.escape(summaries.get(dispatch.slug, dispatch.tagline))}</span>
           <strong>{html.escape(dispatch.name)}</strong>
         </a>
       </li>"""
-        for dispatch in dispatches
-        if dispatch_public_visible(dispatch.slug)
-    )
-    body = f"""{header("Dispatches From The Blue Fern Co.", "")}
+        )
+    food_line_card = f"""      <li class="dispatch-card" style="--dispatch-card-watermark: url('/food-line/assets/food-line-logo.png');">
+        <a href="/food-line/">
+          <span class="edition-date">{html.escape(summaries["food-line"])}</span>
+          <strong>Food Line Dispatch</strong>
+        </a>
+      </li>"""
+    card_rows.append(food_line_card)
+    cards = "\n".join(card_rows)
+    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "cascadia", "food-line"))}
   <main class="home">
     <section class="hero root-hero">
       <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">
@@ -608,7 +637,11 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
 def render_dispatch_index(dispatch: DispatchConfig) -> str:
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
-        signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
+        signal_pack_note = (
+            "\n    <section><h2>Signal Pack / Coming Soon</h2>"
+            "<p><strong>Cascadia Signal Pack</strong><br>Coming soon.</p></section>"
+            '\n    <section><h2>Detention Watch</h2><p><a href="/cascadia/detention-watch/">Open Detention Watch</a></p></section>'
+        )
     description = (
         CASCADIA_PUBLIC_DESCRIPTION
         if dispatch.slug == "cascadia"
@@ -707,6 +740,34 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
             input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
             kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
             if input_count > 0 and kept_count == 0:
+                return False
+        return True
+    if slug == "food-line":
+        edition_dir = site_root / slug / "editions" / edition_date
+        manifest_path = edition_dir / "edition_manifest.json"
+        index_path = edition_dir / "index.html"
+        if not manifest_path.exists() or not index_path.exists():
+            return False
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if not isinstance(manifest, dict):
+            return False
+        if manifest.get("dispatch_slug") != "food-line":
+            return False
+        if manifest.get("edition_date") and manifest.get("edition_date") != edition_date:
+            return False
+        has_public_fields = any(key in manifest for key in ("public_rendered", "qualified_primary_count", "skip_reason"))
+        if has_public_fields:
+            if manifest.get("public_rendered") is not True:
+                return False
+            if int(manifest.get("qualified_primary_count") or 0) <= 0:
+                return False
+            if str(manifest.get("skip_reason") or "").strip():
+                return False
+        else:
+            if int(manifest.get("source_count") or 0) <= 0 and int(manifest.get("story_count") or 0) <= 0:
                 return False
         return True
     if slug == "american-pressure":
@@ -892,6 +953,21 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
+    if slug == "cascadia":
+        dated: list[tuple[str, str]] = []
+        for path in editions_root.iterdir():
+            if not path.is_dir() or len(path.name) != 10:
+                continue
+            edition_date = path.name
+            if max_edition_date and edition_date > max_edition_date:
+                continue
+            if not public_edition_is_listable(site_root, slug, edition_date):
+                continue
+            manifest = public_edition_manifest(site_root, slug, edition_date)
+            coverage_end = str(manifest.get("coverage_end") or "").strip() or edition_date
+            dated.append((edition_date, coverage_end))
+        # For Cascadia, sort by weekly coverage_end (newest first), then by edition folder date.
+        return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
     return sorted(
         (
             path.name
@@ -905,6 +981,187 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
         ),
         reverse=True,
     )
+
+
+def discover_edition_dirs(root: Path, slug: str) -> list[Path]:
+    editions_root = root / slug / "editions"
+    if not editions_root.exists():
+        return []
+    return sorted(
+        [
+            path
+            for path in editions_root.iterdir()
+            if path.is_dir() and len(path.name) == 10
+        ],
+        key=lambda item: item.name,
+    )
+
+
+def _copytree_if_missing(source_dir: Path, target_dir: Path, dry_run: bool, wrote: list[str]) -> bool:
+    if target_dir.exists():
+        return False
+    if dry_run:
+        wrote.append(str(target_dir))
+        return True
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(source_dir, target_dir)
+    wrote.append(str(target_dir))
+    return True
+
+
+def backfill_public_editions_from_dispatch_output(
+    root: Path,
+    site_root: Path,
+    dry_run: bool,
+    wrote: list[str],
+    only_dispatches: tuple[str, ...] = (),
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    backfilled: list[dict[str, str]] = []
+    skipped: list[dict[str, str]] = []
+    eligible_dispatches = list(ONLY_DISPATCH_CHOICES) if not only_dispatches else list(only_dispatches)
+    for slug in eligible_dispatches:
+        source_dirs = discover_edition_dirs(root / "output" / "dispatches", slug)
+        for source_dir in source_dirs:
+            edition_date = source_dir.name
+            target_dir = site_root / slug / "editions" / edition_date
+            if target_dir.exists():
+                continue
+            index_path = source_dir / "index.html"
+            manifest_path = source_dir / "edition_manifest.json"
+            sources_path = source_dir / "sources_manifest.json"
+            curation_path = source_dir / "curation_manifest.json"
+            if not (index_path.exists() and manifest_path.exists() and sources_path.exists() and curation_path.exists()):
+                skipped.append(
+                    {
+                        "dispatch": slug,
+                        "edition_date": edition_date,
+                        "reason": "missing_required_public_artifacts_in_output_dispatches",
+                        "source": str(source_dir),
+                    }
+                )
+                continue
+            prose_violations = html_contains_public_prose_violations(index_path.read_text(encoding="utf-8"))
+            if prose_violations:
+                skipped.append(
+                    {
+                        "dispatch": slug,
+                        "edition_date": edition_date,
+                        "reason": "public_prose_quality_violation",
+                        "source": str(source_dir),
+                    }
+                )
+                continue
+            if not _copytree_if_missing(source_dir, target_dir, dry_run=dry_run, wrote=wrote):
+                continue
+            if public_edition_is_listable(site_root, slug, edition_date):
+                backfilled.append(
+                    {
+                        "dispatch": slug,
+                        "edition_date": edition_date,
+                        "source": str(source_dir),
+                        "target": str(target_dir),
+                    }
+                )
+                continue
+            skipped.append(
+                {
+                    "dispatch": slug,
+                    "edition_date": edition_date,
+                    "reason": "non_publishable_or_failed_listability_rules",
+                    "source": str(source_dir),
+                }
+            )
+            if not dry_run and target_dir.exists():
+                shutil.rmtree(target_dir)
+    return backfilled, skipped
+
+
+def _edition_has_required_public_artifacts(edition_dir: Path) -> bool:
+    required = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
+    return all((edition_dir / name).exists() for name in required)
+
+
+def reconcile_gaza_public_editions(
+    root: Path,
+    site_root: Path,
+    dry_run: bool,
+    wrote: list[str],
+    pages_repo: Path | None = None,
+) -> dict[str, list[dict[str, str]]]:
+    discovered: list[dict[str, str]] = []
+    backfilled: list[dict[str, str]] = []
+    skipped: list[dict[str, str]] = []
+    editions_by_date: dict[str, list[tuple[str, Path]]] = {}
+
+    candidates = [
+        ("output_dispatches", root / "output" / "dispatches" / "gaza" / "editions"),
+        ("output_site", site_root / "gaza" / "editions"),
+    ]
+    if pages_repo is not None:
+        candidates.append(("pages_repo", pages_repo / "gaza" / "editions"))
+
+    for source_name, base in candidates:
+        if not base.exists():
+            continue
+        for edition_dir in sorted([path for path in base.iterdir() if path.is_dir() and len(path.name) == 10], key=lambda item: item.name):
+            date = edition_dir.name
+            discovered.append({"edition_date": date, "source": source_name, "path": str(edition_dir)})
+            editions_by_date.setdefault(date, []).append((source_name, edition_dir))
+
+    for edition_date in sorted(editions_by_date.keys()):
+        target_dir = site_root / "gaza" / "editions" / edition_date
+        if target_dir.exists():
+            continue
+        chosen: tuple[str, Path] | None = None
+        for source_name in ("output_dispatches", "output_site", "pages_repo"):
+            for candidate_source, candidate_dir in editions_by_date[edition_date]:
+                if candidate_source != source_name:
+                    continue
+                if not _edition_has_required_public_artifacts(candidate_dir):
+                    continue
+                chosen = (candidate_source, candidate_dir)
+                break
+            if chosen:
+                break
+        if not chosen:
+            skipped.append(
+                {
+                    "edition_date": edition_date,
+                    "reason": "missing_required_public_artifacts",
+                }
+            )
+            continue
+        source_name, source_dir = chosen
+        _copytree_if_missing(source_dir, target_dir, dry_run=dry_run, wrote=wrote)
+        if public_edition_is_listable(site_root, "gaza", edition_date):
+            backfilled.append(
+                {
+                    "edition_date": edition_date,
+                    "source": source_name,
+                    "source_path": str(source_dir),
+                    "target_path": str(target_dir),
+                }
+            )
+        else:
+            skipped.append(
+                {
+                    "edition_date": edition_date,
+                    "reason": "non_publishable_or_failed_listability_rules",
+                }
+            )
+            if not dry_run and target_dir.exists():
+                shutil.rmtree(target_dir)
+
+    archive_entries = [
+        {"edition_date": date}
+        for date in discover_public_edition_dates(site_root, "gaza")
+    ]
+    return {
+        "discovered": discovered,
+        "backfilled": backfilled,
+        "skipped": skipped,
+        "archive_entries": archive_entries,
+    }
 
 
 def _display_date_range_for_week(edition_date: str) -> str:
@@ -987,6 +1244,14 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
         signal_pack_note = "\n    <p><strong>Cascadia Signal Pack</strong><br>Detailed downloadable records are being prepared for future release.</p>"
+        signal_pack_note += (
+            '\n    <div class="dispatch-subresource">'
+            '<p><a href="/cascadia/detention-watch/">Cascadia Detention Watch</a></p>'
+            '<p class="edition-date">Tracking immigration detention issues connected to Washington, Oregon, and Idaho, beginning with the Tacoma facility.</p>'
+            '<p><a href="/cascadia/detention-watch/">Open Detention Watch</a></p>'
+            '<p><a href="/cascadia/detention-watch/editions/2026-05-26/">Open the May 26, 2026 starting record</a></p>'
+            "</div>"
+        )
     description = (
         CASCADIA_PUBLIC_DESCRIPTION
         if dispatch.slug == "cascadia"
@@ -1016,14 +1281,24 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     elif dispatch.slug == "cascadia":
         map_link = '\n    <p><a href="map/">Open latest Cascadia pressure map</a></p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+    gaza_audio_link = ""
+    if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
+        gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
+    cascadia_intro = ""
+    if dispatch.slug == "cascadia":
+        cascadia_intro = "<p>A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>"
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>
     <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
+    {cascadia_intro}
     <p class="lede">{html.escape(description)}</p>
+    <h2>Latest Briefing</h2>
     {latest_link}
+    {gaza_audio_link}
+    <h2>Pressure Map</h2>
     {map_link}
     {dashboard_link}
     {explainer_block}
@@ -1035,6 +1310,35 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
   </main>
 {footer("")}"""
     return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
+
+
+def ensure_cascadia_source_tables(site_root: Path, dry_run: bool, wrote: list[str], warnings: list[str]) -> None:
+    editions_root = site_root / "cascadia" / "editions"
+    if not editions_root.exists():
+        return
+    try:
+        from bluefern_dispatches.cascadia_render import render_cascadia_source_table_html
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        warnings.append(f"could not import Cascadia source-table renderer: {exc}")
+        return
+    for edition_dir in sorted(path for path in editions_root.iterdir() if path.is_dir() and len(path.name) == 10):
+        edition_date = edition_dir.name
+        if not public_edition_is_listable(site_root, "cascadia", edition_date):
+            continue
+        sources_manifest_path = edition_dir / "sources_manifest.json"
+        if not sources_manifest_path.exists():
+            continue
+        try:
+            sources_manifest = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            warnings.append(f"could not parse Cascadia sources manifest for source table: {sources_manifest_path}")
+            continue
+        if not isinstance(sources_manifest, list):
+            continue
+        manifest = public_edition_manifest(site_root, "cascadia", edition_date)
+        coverage_label = str(manifest.get("coverage_label") or manifest.get("public_coverage_label") or "").strip() or None
+        source_table_html = render_cascadia_source_table_html(edition_date, coverage_label, sources_manifest)
+        write_text(edition_dir / "source_table.html", source_table_html, dry_run, wrote)
 
 
 def render_archive(dispatch: DispatchConfig) -> str:
@@ -1055,6 +1359,9 @@ def render_archive(dispatch: DispatchConfig) -> str:
 
 def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
     site_root = site_root or Path("output") / "site"
+    gaza_audio_link = ""
+    if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
+        gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
     items = "\n".join(
         render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates
@@ -1066,6 +1373,7 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str],
     </section>
     <p class="eyebrow">Archive</p>
     <h1>Edition Archive</h1>
+    {gaza_audio_link}
     <ul class="edition-list">
 {items}
     </ul>
@@ -1253,6 +1561,7 @@ def build_site(
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
     dispatch_seed_dates: dict[str, str] | None = None,
+    pages_repo: Path | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     site_root = root / "output" / "site"
@@ -1268,9 +1577,49 @@ def build_site(
     errors.extend(ensure_public_detail_separation(site_root, detail_roots))
     wrote: list[str] = []
     public_urls = [f"{BASE_URL}/"]
+    backfilled_public_editions: list[dict[str, str]] = []
+    skipped_backfill_editions: list[dict[str, str]] = []
+    gaza_reconcile: dict[str, list[dict[str, str]]] = {
+        "discovered": [],
+        "backfilled": [],
+        "skipped": [],
+        "archive_entries": [],
+    }
 
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "food-line-logo.png", site_root / "food-line" / "assets" / "food-line-logo.png", dry_run, wrote, warnings)
+
+    try:
+        from bluefern_dispatches.cascadia_detention_watch import build_detention_watch
+
+        cascadia_dates = discover_public_edition_dates(site_root, "cascadia")
+        detention_date = cascadia_dates[0] if cascadia_dates else datetime.now(timezone.utc).date().isoformat()
+        detention_result = build_detention_watch(root, edition_date=detention_date, dry_run=dry_run)
+        if detention_result.get("ok"):
+            detention_paths = detention_result.get("paths") if isinstance(detention_result.get("paths"), dict) else {}
+            for _label, path in detention_paths.items():
+                if path:
+                    wrote.append(str(path))
+        else:
+            warnings.extend([f"detention watch generation skipped: {msg}" for msg in detention_result.get("errors", [])])
+    except Exception as exc:
+        warnings.append(f"detention watch generation failed: {exc}")
+
+    backfilled_public_editions, skipped_backfill_editions = backfill_public_editions_from_dispatch_output(
+        root,
+        site_root,
+        dry_run=dry_run,
+        wrote=wrote,
+        only_dispatches=only_dispatches,
+    )
+    gaza_reconcile = reconcile_gaza_public_editions(
+        root,
+        site_root,
+        dry_run=dry_run,
+        wrote=wrote,
+        pages_repo=pages_repo.resolve() if pages_repo is not None else None,
+    )
 
     # Keep root landing cards stable across scoped publishes.
     write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
@@ -1289,7 +1638,7 @@ def build_site(
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = (
             (
-                dispatch.slug in {"cascadia", "gaza", "american-pressure"}
+                dispatch.slug in {"cascadia", "gaza", "american-pressure", "food-line"}
                 and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
             )
             if not skip_current_edition
@@ -1349,7 +1698,7 @@ def build_site(
             write_text(dispatch_public_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
-            if dispatch.slug in {"gaza", "american-pressure"}:
+            if dispatch.slug in {"gaza", "american-pressure", "food-line"}:
                 dispatch_output_edition = root / "output" / "dispatches" / dispatch.slug / "editions" / dispatch.edition_date
                 write_text(dispatch_output_edition / "index.html", edition_html, dry_run, wrote)
                 if dispatch.slug == "american-pressure":
@@ -1363,9 +1712,10 @@ def build_site(
             write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
-        if dispatch.slug in {"gaza", "cascadia", "american-pressure"}:
+        if dispatch.slug in {"gaza", "cascadia", "american-pressure", "food-line"}:
             if dispatch.slug == "cascadia":
                 remove_unlistable_public_cascadia_editions(site_root, dry_run, wrote)
+                ensure_cascadia_source_tables(site_root, dry_run, wrote, warnings)
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
@@ -1384,6 +1734,12 @@ def build_site(
         "public_urls": public_urls,
         "backup_root": str(backup_root),
         "wrote": wrote,
+        "backfilled_public_editions": backfilled_public_editions,
+        "skipped_backfill_editions": skipped_backfill_editions,
+        "gaza_editions_discovered": gaza_reconcile.get("discovered", []),
+        "gaza_editions_backfilled": gaza_reconcile.get("backfilled", []),
+        "gaza_editions_skipped": gaza_reconcile.get("skipped", []),
+        "gaza_archive_entries_written": gaza_reconcile.get("archive_entries", []),
         "warnings": warnings,
         "errors": errors,
         "paid_detail_excluded_from_public": True,
@@ -1398,7 +1754,7 @@ def _expected_dispatches_for_date_checks(
     if expect_dispatches:
         dispatches_to_check = expect_dispatches
     elif expect_date and only_dispatches:
-        dispatches_to_check = tuple(slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure"})
+        dispatches_to_check = tuple(slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure", "food-line"})
     else:
         dispatches_to_check = ALL_EXPECT_DISPATCHES
     if only_dispatches:
@@ -1480,7 +1836,7 @@ def collect_public_site_files(
         relative_parts = path.relative_to(site_root).parts
         if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
-        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure"} and relative_parts[1] == "editions":
+        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line"} and relative_parts[1] == "editions":
             slug = relative_parts[0]
             edition_date = relative_parts[2]
             max_public_date = public_max_dates.get(slug)
@@ -1528,6 +1884,9 @@ def validate_pages_publish(
     if ((not only_dispatches) or ("american-pressure" in only_dispatches)) and not planning_mode:
         if not (site_root / "american-pressure" / "archive.html").exists():
             errors.append(f"American Pressure archive does not exist: {site_root / 'american-pressure' / 'archive.html'}")
+    if ("food-line" in only_dispatches or "food-line" in expect_dispatches) and not planning_mode:
+        if not (site_root / "food-line" / "archive.html").exists():
+            errors.append(f"Food Line archive does not exist: {site_root / 'food-line' / 'archive.html'}")
     detail_files = public_site_contains_detail_artifacts(site_root)
     if detail_files:
         errors.append(f"paid/detail artifacts are present in public output: {', '.join(detail_files)}")
@@ -1588,37 +1947,55 @@ def copy_public_site_to_pages(
     return copied, skipped
 
 
-def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[str]:
-    editions_root = pages_repo / "cascadia" / "editions"
-    if not editions_root.exists():
+def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
+    tracked_slugs = ("cascadia", "food-line")
+    if not any((pages_repo / slug / "editions").exists() for slug in tracked_slugs):
         return []
-    removed: list[str] = []
-    for edition_dir in sorted(editions_root.iterdir()):
-        if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+    removed: list[dict[str, str]] = []
+    for slug in tracked_slugs:
+        editions_root = pages_repo / slug / "editions"
+        if not editions_root.exists():
             continue
-        if public_edition_is_listable(site_root, "cascadia", edition_dir.name):
-            continue
-        removed.append(str(edition_dir))
-        if not dry_run:
-            shutil.rmtree(edition_dir)
+        for edition_dir in sorted(editions_root.iterdir()):
+            if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+                continue
+            if public_edition_is_listable(site_root, slug, edition_dir.name):
+                continue
+            removed.append(
+                {
+                    "dispatch": slug,
+                    "edition_date": edition_dir.name,
+                    "path": str(edition_dir),
+                    "reason": f"non_publishable_or_transitional_{slug}_edition",
+                }
+            )
+            if not dry_run:
+                shutil.rmtree(edition_dir)
     return removed
 
 
 def remove_pages_editions_above_date(
     pages_repo: Path, slug: str, max_edition_date: str | None, dry_run: bool
-) -> list[str]:
+) -> list[dict[str, str]]:
     if not max_edition_date:
         return []
     editions_root = pages_repo / slug / "editions"
     if not editions_root.exists():
         return []
-    removed: list[str] = []
+    removed: list[dict[str, str]] = []
     for edition_dir in sorted(editions_root.iterdir()):
         if not edition_dir.is_dir() or len(edition_dir.name) != 10:
             continue
         if edition_dir.name <= max_edition_date:
             continue
-        removed.append(str(edition_dir))
+        removed.append(
+            {
+                "dispatch": slug,
+                "edition_date": edition_dir.name,
+                "path": str(edition_dir),
+                "reason": f"edition_date_above_max_public_date_{max_edition_date}",
+            }
+        )
         if not dry_run:
             shutil.rmtree(edition_dir)
     return removed
@@ -1633,6 +2010,19 @@ def remove_pages_path(path: Path, dry_run: bool) -> list[str]:
             shutil.rmtree(path)
         else:
             path.unlink()
+    return removed
+
+
+def remove_stale_cascadia_pages_artifacts(site_root: Path, pages_repo: Path, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    removed.extend(remove_pages_path(pages_repo / "cascadia" / "map", dry_run))
+    source_editions_root = site_root / "cascadia" / "editions"
+    if source_editions_root.exists():
+        for edition_dir in sorted(source_editions_root.iterdir()):
+            if not edition_dir.is_dir() or len(edition_dir.name) != 10:
+                continue
+            for name in ("map.html", "source_table.html", "map_data.json", "artifact_validation.json", "artifact_validation.md"):
+                removed.extend(remove_pages_path(pages_repo / "cascadia" / "editions" / edition_dir.name / name, dry_run))
     return removed
 
 
@@ -1723,6 +2113,9 @@ def validate_pages_repo_after_copy(
     if (not only_dispatches) or ("gaza" in only_dispatches):
         if not (pages_repo / "gaza" / "archive.html").exists():
             errors.append(f"Pages repo Gaza archive does not exist: {pages_repo / 'gaza' / 'archive.html'}")
+    if ("food-line" in only_dispatches) or ("food-line" in expect_dispatches):
+        if not (pages_repo / "food-line" / "archive.html").exists():
+            errors.append(f"Pages repo Food Line archive does not exist: {pages_repo / 'food-line' / 'archive.html'}")
     if (pages_repo / "detail").exists() or (pages_repo / "paid").exists():
         errors.append("paid/detail artifacts were copied into the Pages repo")
     blocked_text = public_site_contains_blocked_public_text(pages_repo)
@@ -1739,7 +2132,80 @@ def validate_pages_repo_after_copy(
         if "american-pressure" in dispatches_to_check and public_edition_is_listable(site_root, "american-pressure", expect_date):
             if not (pages_repo / "american-pressure" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected American Pressure edition missing: {expect_date}")
+        if "food-line" in dispatches_to_check and public_edition_is_listable(site_root, "food-line", expect_date):
+            if not (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected Food Line edition missing: {expect_date}")
+        if "food-line" in dispatches_to_check and not public_edition_is_listable(site_root, "food-line", expect_date):
+            if (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
+                errors.append(f"unexpected Food Line edition present for skipped day: {expect_date}")
     return errors
+
+
+def validate_cascadia_pages_copy_consistency(
+    pages_repo: Path,
+    edition_date: str,
+) -> list[str]:
+    failures: list[str] = []
+    cascadia_root = pages_repo / "cascadia"
+    edition_dir = cascadia_root / "editions" / edition_date
+    map_dir = cascadia_root / "map"
+    manifest_path = edition_dir / "edition_manifest.json"
+    source_table_path = edition_dir / "source_table.html"
+    map_source_table_path = map_dir / "source_table.html"
+    map_html_path = edition_dir / "map.html"
+    if not manifest_path.exists() or not source_table_path.exists() or not map_html_path.exists() or not map_source_table_path.exists():
+        return failures
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ["pages copy Cascadia edition manifest is missing or invalid JSON"]
+    public_story_count = int(manifest.get("public_story_count") or 0)
+    source_rows = max(0, source_table_path.read_text(encoding="utf-8").count("<tr>") - 1)
+    map_html_text = map_html_path.read_text(encoding="utf-8")
+    m = re.search(r"Report count:\s*(\d+)", map_html_text)
+    map_count = int(m.group(1)) if m else -1
+    if public_story_count > 0 and public_story_count != source_rows:
+        failures.append(f"pages copy count mismatch: public_story_count {public_story_count} != source_table rows {source_rows}")
+    if map_count >= 0 and public_story_count != map_count:
+        failures.append(f"pages copy count mismatch: public_story_count {public_story_count} != map report count {map_count}")
+    if source_table_path.read_text(encoding="utf-8") != map_source_table_path.read_text(encoding="utf-8"):
+        failures.append("pages copy mismatch: edition source table and map source table differ")
+    forbidden = [
+        "Report count: 11",
+        "No reports match the current map filters",
+        "Some map markers could not be displayed",
+        "Open latest Cascadia map",
+        "WA government",
+        "ID government",
+        "source_count:",
+        "known_gaps:",
+        "states_covered:",
+    ]
+    check_paths = [
+        cascadia_root / "index.html",
+        edition_dir / "index.html",
+        source_table_path,
+        map_source_table_path,
+        map_html_path,
+        map_dir / "index.html",
+    ]
+    for path in check_paths:
+        if not path.exists():
+            continue
+        content = path.read_text(encoding="utf-8")
+        for needle in forbidden:
+            if needle in content:
+                failures.append(f"pages copy forbidden text in {path}: {needle}")
+    return sorted(set(failures))
+
+
+def list_pages_public_edition_folders(pages_repo: Path, only_dispatches: tuple[str, ...] = ()) -> set[tuple[str, str]]:
+    dispatches = list(ONLY_DISPATCH_CHOICES) if not only_dispatches else list(only_dispatches)
+    found: set[tuple[str, str]] = set()
+    for slug in dispatches:
+        for edition_dir in discover_edition_dirs(pages_repo, slug):
+            found.add((slug, edition_dir.name))
+    return found
 
 
 def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str) -> dict[str, Any]:
@@ -1799,6 +2265,7 @@ def publish_pages(
         only_dispatches=only_dispatches,
         public_max_dates=public_max_dates,
         dispatch_seed_dates=dispatch_seed_dates,
+        pages_repo=pages_repo,
     )
     root = root.resolve()
     site_root = root / "output" / "site"
@@ -1843,11 +2310,15 @@ def publish_pages(
     would_copy = not errors
     copied: list[str] = []
     skipped: list[str] = []
-    removed_non_publishable: list[str] = []
+    removed_non_publishable: list[dict[str, str]] = []
+    removed_stale_artifacts: list[str] = []
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
+    preserved_pages_editions: list[dict[str, str]] = []
+    pages_editions_before = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
+    backfilled_build_editions = [dict(item) for item in build.get("backfilled_public_editions", [])]
 
     if not errors:
-        if not only_dispatches or "cascadia" in only_dispatches:
+        if not only_dispatches or "cascadia" in only_dispatches or "food-line" in only_dispatches:
             removed_non_publishable = remove_non_publishable_pages_editions(site_root, pages_repo, dry_run=dry_run)
         if "american-pressure" in public_max_dates and (not only_dispatches or "american-pressure" in only_dispatches):
             removed_non_publishable.extend(
@@ -1858,6 +2329,8 @@ def publish_pages(
                     dry_run=dry_run,
                 )
             )
+        if (not only_dispatches) or ("cascadia" in only_dispatches):
+            removed_stale_artifacts = remove_stale_cascadia_pages_artifacts(site_root, pages_repo, dry_run=dry_run)
         copied, skipped = copy_public_site_to_pages(
             site_root,
             pages_repo,
@@ -1866,6 +2339,8 @@ def publish_pages(
             public_max_dates=public_max_dates,
         )
         if not dry_run:
+            if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
+                errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
             errors.extend(
                 validate_pages_repo_after_copy(
                     pages_repo,
@@ -1878,6 +2353,19 @@ def publish_pages(
         commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
         if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
             errors.append(commit_result["message"])
+        pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
+        removed_keys = {(item.get("dispatch", ""), item.get("edition_date", "")) for item in removed_non_publishable}
+        for slug, edition_date in sorted(pages_editions_before):
+            if (slug, edition_date) in removed_keys:
+                continue
+            if (slug, edition_date) in pages_editions_after:
+                preserved_pages_editions.append(
+                    {
+                        "dispatch": slug,
+                        "edition_date": edition_date,
+                        "reason": "preexisting_pages_public_edition_preserved",
+                    }
+                )
 
     return {
         "ok": not errors,
@@ -1892,8 +2380,17 @@ def publish_pages(
         "dry_run": dry_run,
         "files_that_would_be_copied": copied if dry_run else [],
         "files_copied": [] if dry_run else copied,
-        "non_publishable_pages_editions_removed": [] if dry_run else removed_non_publishable,
-        "non_publishable_pages_editions_that_would_be_removed": removed_non_publishable if dry_run else [],
+        "public_pages_editions_preserved": preserved_pages_editions,
+        "public_editions_backfilled": backfilled_build_editions,
+        "gaza_editions_discovered": build.get("gaza_editions_discovered", []),
+        "gaza_archive_entries_written": build.get("gaza_archive_entries_written", []),
+        "gaza_editions_skipped": build.get("gaza_editions_skipped", []),
+        "public_pages_editions_removed": [] if dry_run else removed_non_publishable,
+        "public_pages_editions_that_would_be_removed": removed_non_publishable if dry_run else [],
+        "non_publishable_pages_editions_removed": [] if dry_run else [item["path"] for item in removed_non_publishable],
+        "non_publishable_pages_editions_that_would_be_removed": [item["path"] for item in removed_non_publishable] if dry_run else [],
+        "stale_pages_artifacts_removed": [] if dry_run else removed_stale_artifacts,
+        "stale_pages_artifacts_that_would_be_removed": removed_stale_artifacts if dry_run else [],
         "files_that_would_be_skipped": skipped,
         "would_copy": would_copy,
         "copied": bool(copied) and not dry_run,
@@ -1961,7 +2458,7 @@ def main(argv: list[str] | None = None) -> int:
         "--only-dispatch",
         action="append",
         default=[],
-        help="Build/copy only selected dispatches (repeat or comma-separate): gaza, cascadia, american-pressure.",
+        help="Build/copy only selected dispatches (repeat or comma-separate): gaza, cascadia, american-pressure, food-line.",
     )
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")

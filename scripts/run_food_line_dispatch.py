@@ -1,0 +1,2498 @@
+﻿from __future__ import annotations
+
+import argparse
+import csv
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from bluefern_dispatches.generator import BASE_URL, discover_public_edition_dates, footer, header, page
+from bluefern_dispatches.food_line_sources import (
+    FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK,
+    clean_food_line_public_evidence_excerpt,
+    collect_food_line_auto_sources,
+    canonical_url,
+    classify_food_line_source_purpose,
+    evaluate_food_line_pressure,
+    normalize_title,
+    refresh_food_line_pressure_registry_source_purpose,
+)
+from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
+from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
+
+PAGES_REPO = ROOT / "bluefern-dispatches-pages"
+PAGES_BRANCH = "gh-pages"
+DISPATCH_SLUG = "food-line"
+DISPATCH_NAME = "Food Line Dispatch"
+DISPATCH_DISPLAY_NAME = "The Food Line Dispatch"
+FOOD_LINE_LOGO_ASSET = "food-line-logo.png"
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+MIN_ITEMS = 5
+MIN_FAMILIES = 2
+MIN_LOCAL = 3
+MIN_USABLE = 3
+FOOD_LINE_CATEGORY_COLORS: dict[str, str] = {
+    "acute strain / service disruption": "#9a4b4b",
+    "elevated demand": "#b6784f",
+    "summer meal / child nutrition": "#5d7f62",
+    "senior hunger": "#6d6287",
+    "rural access": "#3f5878",
+    "benefit disruption": "#5b6f8a",
+    "context / monitoring only": "#61717c",
+}
+US_STATE_CENTROIDS: dict[str, tuple[float, float]] = {
+    "AL": (32.806671, -86.79113),
+    "AK": (64.200841, -149.493673),
+    "AZ": (34.048928, -111.093731),
+    "AR": (34.969704, -92.373123),
+    "CA": (36.778259, -119.417931),
+    "CO": (39.550051, -105.782067),
+    "CT": (41.603221, -73.087749),
+    "DE": (38.910832, -75.52767),
+    "FL": (27.664827, -81.515754),
+    "GA": (32.157435, -82.907123),
+    "HI": (19.898682, -155.665857),
+    "IA": (41.878003, -93.097702),
+    "ID": (44.068202, -114.742041),
+    "IL": (40.633125, -89.398528),
+    "IN": (40.551217, -85.602364),
+    "KS": (39.011902, -98.484246),
+    "KY": (37.839333, -84.270018),
+    "LA": (30.984298, -91.962333),
+    "MA": (42.407211, -71.382437),
+    "MD": (39.045755, -76.641271),
+    "ME": (45.253783, -69.445469),
+    "MI": (44.314844, -85.602364),
+    "MN": (46.729553, -94.6859),
+    "MO": (37.964253, -91.831833),
+    "MS": (32.354668, -89.398528),
+    "MT": (46.879682, -110.362566),
+    "NC": (35.759573, -79.0193),
+    "ND": (47.551493, -101.002012),
+    "NE": (41.492537, -99.901813),
+    "NH": (43.193852, -71.572395),
+    "NJ": (40.058324, -74.405661),
+    "NM": (34.51994, -105.87009),
+    "NV": (38.80261, -116.419389),
+    "NY": (43.299428, -74.217933),
+    "OH": (40.417287, -82.907123),
+    "OK": (35.46756, -97.516428),
+    "OR": (43.804133, -120.554201),
+    "PA": (41.203322, -77.194525),
+    "RI": (41.580095, -71.477429),
+    "SC": (33.836081, -81.163725),
+    "SD": (43.969515, -99.901813),
+    "TN": (35.517491, -86.580447),
+    "TX": (31.968599, -99.901813),
+    "UT": (39.32098, -111.093731),
+    "VA": (37.431573, -78.656894),
+    "VT": (44.558803, -72.577841),
+    "WA": (47.751074, -120.740139),
+    "WI": (43.78444, -88.787868),
+    "WV": (38.597626, -80.454903),
+    "WY": (43.075968, -107.290284),
+    "DC": (38.907192, -77.036871),
+}
+US_NATIONAL_CENTER = (39.8283, -98.5795)
+CITY_CENTROIDS: dict[str, tuple[float, float]] = {
+    "seattle, wa": (47.6062, -122.3321),
+    "dallas, tx": (32.7767, -96.797),
+    "new york city, ny": (40.7128, -74.006),
+}
+COUNTY_CENTROIDS: dict[str, tuple[float, float]] = {}
+DAILY_PRIORITY_CATEGORIES = {
+    "acute strain / service disruption": 50,
+    "benefit disruption": 45,
+    "elevated demand": 40,
+    "summer meal / child nutrition": 35,
+    "senior hunger": 30,
+    "rural access": 25,
+    "context / monitoring only": 10,
+}
+DAILY_PRIORITY_FAMILIES = {
+    "local_reporting": 20,
+    "state_official": 18,
+    "provider_signal": 16,
+    "food_bank_provider": 15,
+    "school_meals_child_nutrition": 14,
+    "senior_meals": 12,
+    "federal_official": 10,
+    "policy_research": 8,
+    "economic_data": 6,
+}
+LOCAL_SIGNAL_FAMILIES = {"local_reporting", "state_official", "food_bank_provider", "school_meals_child_nutrition", "disaster_emergency", "rural_access", "senior_meals"}
+BASELINE_FAMILIES = {"economic_data"}
+POLICY_FAMILIES = {"policy_research", "federal_official", "state_official"}
+RESOURCE_FAMILIES = {"food_bank_provider", "school_meals_child_nutrition", "senior_meals"}
+PRESSURE_KEYWORDS = {
+    "demand strain": ("demand increase", "increased demand", "demand surge", "long lines", "higher demand"),
+    "benefit disruption": ("benefit delay", "benefit disruption", "ebt outage", "snap delay", "wic delay"),
+    "service reduction": ("reduced hours", "capacity cut", "closed site", "service reduction", "short staffed"),
+    "access gap": ("access gap", "no nearby", "transport barrier", "unserved"),
+    "funding risk": ("funding cut", "budget cut", "grant loss"),
+    "price pressure": ("food price", "grocery prices", "price increase", "inflation"),
+    "child meal gap": ("summer meal gap", "child meal", "school meal gap"),
+    "senior meal strain": ("senior waitlist", "meals on wheels waitlist"),
+    "rural grocery access": ("rural grocery", "store closure", "food desert"),
+    "disaster disruption": ("wildfire", "hurricane", "flood", "disaster"),
+    "household hardship": ("skipping meals", "food hardship", "cannot afford food"),
+}
+GROUP_KEYWORDS = {
+    "children": ("child", "children", "students"),
+    "seniors": ("senior", "older adult"),
+    "SNAP households": ("snap household", "snap recipient"),
+    "WIC households": ("wic"),
+    "low-income households": ("low-income household", "poverty"),
+    "rural residents": ("rural"),
+    "disaster-affected households": ("disaster", "hurricane", "flood", "wildfire"),
+}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def validate_date(value: str) -> str:
+    if not DATE_RE.match(value):
+        raise ValueError(f"date must use YYYY-MM-DD: {value}")
+    datetime.strptime(value, "%Y-%m-%d")
+    return value
+
+
+def _read_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid JSON in {path}: {exc}") from exc
+
+
+def _write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _copy_asset(src: Path, dst: Path, warnings: list[str], wrote: list[str]) -> None:
+    if not src.exists():
+        warnings.append(f"Missing asset: {src}")
+        return
+    wrote.append(str(dst))
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+
+
+def _food_line_theme_styles() -> str:
+    return """
+<style>
+:root {
+  --ink: #1E3F4F;
+  --navy: #1E3F4F;
+  --blue-fern: #4E6B79;
+  --soft-blue: #EFE7DA;
+  --fern-green: #4E6B79;
+  --paper: #FBF7EF;
+  --border: #D2C5B4;
+  --panel: #FFFDF8;
+  --muted: #4E6B79;
+}
+.food-line-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+.food-line-hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.food-line-hero .eyebrow,
+.food-line-hero p {
+  margin: 0;
+}
+.food-line-logo {
+  display: block;
+  height: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.food-line-logo--home {
+  width: min(360px, 90vw);
+}
+.food-line-logo--edition {
+  width: min(460px, 90vw);
+}
+.food-line-logo--map {
+  width: min(520px, 90vw);
+}
+.food-line-logo--audio {
+  width: min(360px, 90vw);
+}
+.food-line-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 18px 42px rgba(30, 63, 79, 0.08);
+}
+.food-line-panel h2:first-child,
+.food-line-panel h3:first-child {
+  margin-top: 0;
+}
+.food-line-source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.food-line-source-table th,
+.food-line-source-table td {
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  padding: 0.65rem 0.55rem;
+}
+.food-line-source-table th {
+  text-align: left;
+  color: var(--navy);
+  background: #F3EBDD;
+  position: sticky;
+  top: 0;
+}
+.food-line-source-table td:nth-child(9),
+.food-line-source-table td:nth-child(14) {
+  min-width: 16rem;
+}
+.food-line-source-table td:nth-child(10),
+.food-line-source-table td:nth-child(17) {
+  min-width: 10rem;
+}
+.food-line-map-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-map {
+  height: min(70vh, 640px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.food-line-map-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+.food-line-map-panel ul {
+  margin-top: 0.8rem;
+}
+.food-line-map-panel .fl-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.food-line-map-panel .fl-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.food-line-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid #1B2F39;
+  display: inline-block;
+}
+.food-line-map-popup {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+}
+.food-line-map-popup a {
+  word-break: break-word;
+}
+.food-line-audio-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-audio-list {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.food-line-audio-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.food-line-audio-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-source-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1rem 0.9rem;
+  background: #FFFDF9;
+  box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
+}
+.food-line-source-card h3 {
+  margin-top: 0;
+}
+.food-line-source-card p {
+  margin: 0.35rem 0;
+}
+@media (max-width: 640px) {
+  .food-line-logo--edition,
+  .food-line-logo--map,
+  .food-line-logo--audio,
+  .food-line-logo--home {
+    width: 90vw;
+  }
+  .food-line-source-table {
+    font-size: 0.9rem;
+  }
+}
+</style>
+""".strip()
+
+
+def _food_line_assets(root: Path, warnings: list[str], wrote: list[str]) -> None:
+    source_root = root / "assets"
+    site_assets = root / "output" / "site" / "assets"
+    food_assets = root / "output" / "site" / DISPATCH_SLUG / "assets"
+    for asset in ("site.css", "bluefern.png", "favicon.ico", "favicon-32x32.png", "favicon-16x16.png", "apple-touch-icon.png"):
+        _copy_asset(source_root / asset, site_assets / asset, warnings, wrote)
+    for asset in ("site.css", "bluefern.png", FOOD_LINE_LOGO_ASSET):
+        _copy_asset(source_root / asset, food_assets / asset, warnings, wrote)
+
+
+def _food_line_logo_html(size_class: str, asset_prefix: str) -> str:
+    return f'<img class="hero-logo food-line-logo {size_class}" src="{asset_prefix}{FOOD_LINE_LOGO_ASSET}" alt="{html.escape(DISPATCH_DISPLAY_NAME)}">'
+
+
+def _write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def _run_cmd(args: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(args, cwd=str(cwd or ROOT), check=False, capture_output=True, text=True, encoding="utf-8")
+
+
+def _parse_json_stdout(text: str) -> dict[str, Any]:
+    raw = (text or "").strip()
+    if not raw:
+        return {}
+    return json.loads(raw)
+
+
+def _manual_source_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "manual_sources.json"
+
+
+def _auto_source_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "auto_sources.json"
+
+
+def _as_text(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def _source_evidence_text(row: dict[str, Any]) -> str:
+    evidence = _as_text(row.get("evidence_text"))
+    if evidence:
+        return evidence
+    return _as_text(row.get("summary_or_snippet") or row.get("title"))
+
+
+def _as_tags(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        return [part.strip() for part in value.split(",") if part.strip()]
+    return []
+
+
+def _affected_groups_display(value: Any) -> str:
+    groups = [str(item).strip() for item in (value or []) if str(item).strip()]
+    return ", ".join(groups) if groups else "Not clearly isolated by source"
+
+
+def _public_review_summary(total_count: int, verified_count: int) -> str:
+    excluded_count = max(0, total_count - verified_count)
+    verified_label = "verified pressure record" if verified_count == 1 else "verified pressure records"
+    excluded_label = "excluded as context, baseline, or insufficient pressure evidence"
+    return f"Review summary: {total_count} records reviewed; {verified_count} {verified_label}; {excluded_count} {excluded_label}."
+
+
+def _public_source_rows(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [row for row in sources if bool(row.get("pressure_signal"))]
+
+
+def _public_audit_summary(sources: list[dict[str, Any]]) -> str:
+    return _public_review_summary(len(sources), len(_public_source_rows(sources)))
+
+
+def _public_evidence_excerpt(row: dict[str, Any]) -> str:
+    excerpt = clean_food_line_public_evidence_excerpt(
+        str(row.get("evidence_text") or ""),
+        title=str(row.get("title") or ""),
+        limit=420,
+    )
+    if excerpt == FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
+        return excerpt
+    return excerpt or FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK
+
+
+def _public_source_table_rows_html(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "<tr><td colspan='12'>No verified pressure sources were published today.</td></tr>"
+    return "".join(
+        "<tr>"
+        f"<td>{html.escape(str(s.get('source_record_id') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('title') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('publisher') or ''))}</td>"
+        f"<td><a href=\"{html.escape(str(s.get('url') or ''))}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(str(s.get('url') or ''))}</a></td>"
+        f"<td>{html.escape(str(s.get('source_family') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('source_purpose') or classify_food_line_source_purpose(s).get('source_purpose') or ''))}</td>"
+        f"<td>{html.escape(str(bool(s.get('pressure_signal'))).lower())}</td>"
+        f"<td>{html.escape(str(s.get('pressure_summary') or ''))}</td>"
+        f"<td>{html.escape(_public_evidence_excerpt(s))}</td>"
+        f"<td>{html.escape(str(s.get('pressure_verification_status') or ''))}</td>"
+        f"<td>{html.escape(_affected_groups_display(s.get('affected_groups')))}</td>"
+        f"<td>{html.escape(str(s.get('pressure_type') or ''))}</td>"
+        "</tr>"
+        for s in rows
+    )
+
+
+def _public_source_cards_html(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "<li>No verified pressure sources were published today.</li>"
+    return "".join(
+        "<li class='food-line-source-card'>"
+        f"<h3>{html.escape(str(s.get('title') or ''))}</h3>"
+        f"<p><strong>Pressure summary:</strong> {html.escape(str(s.get('pressure_summary') or ''))}</p>"
+        f"<p><strong>Evidence excerpt:</strong> {html.escape(_public_evidence_excerpt(s))}</p>"
+        f"<p><strong>Publisher:</strong> {html.escape(str(s.get('publisher') or ''))}</p>"
+        f"<p><strong>Source URL:</strong> <a href=\"{html.escape(str(s.get('url') or ''))}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(str(s.get('url') or ''))}</a></p>"
+        f"<p><strong>Verification status:</strong> {html.escape(str(s.get('pressure_verification_status') or ''))}</p>"
+        f"<p><strong>Affected groups:</strong> {html.escape(_affected_groups_display(s.get('affected_groups')))}</p>"
+        f"<p><strong>Pressure type:</strong> {html.escape(str(s.get('pressure_type') or ''))}</p>"
+        f"<p><strong>Source record ID:</strong> {html.escape(str(s.get('source_record_id') or ''))}</p>"
+        "</li>"
+        for s in rows
+    )
+
+
+def _source_role(row: dict[str, Any]) -> str:
+    explicit = str(row.get("source_role") or "").strip()
+    if explicit:
+        return explicit
+    family = str(row.get("source_family") or "").strip().lower()
+    category = str(row.get("map_category") or "").strip().lower()
+    state = str(row.get("state") or "").strip().upper()
+    tags = " ".join(str(tag).lower() for tag in (row.get("issue_tags") or []))
+    text = _source_evidence_text(row).lower()
+    combined = f"{tags} {text}"
+    pressure_signal = bool(row.get("pressure_signal"))
+    has_concrete_signal = any(token in combined for token in ("benefit", "snap", "food bank", "pantry", "meal", "service", "access", "disruption", "hunger", "demand", "waitlist", "delay"))
+    if pressure_signal and state not in {"", "US"} and family in LOCAL_SIGNAL_FAMILIES and has_concrete_signal:
+        if str(row.get("published_date_basis") or "") == "retrieved_at_fallback" and str(row.get("collector_source_type") or "").lower() not in {"rss", "feed", "live_update"}:
+            return "provider_signal"
+        return "local_signal"
+    if "context / monitoring only" in category or family in {"economic_data"}:
+        return "background_context"
+    if family in {"policy_research", "federal_official"} or "policy" in tags or "snap" in tags or "benefits" in tags:
+        return "policy_context"
+    if family in {"food_bank_provider", "school_meals_child_nutrition", "senior_meals", "rural_access"}:
+        if pressure_signal:
+            return "provider_signal"
+        return "resource_context"
+    if category in {"acute strain / service disruption", "benefit disruption", "elevated demand"}:
+        if pressure_signal:
+            return "daily_signal"
+        return "map_signal"
+    return "map_signal"
+
+
+def _contains_pressure_evidence(row: dict[str, Any]) -> tuple[bool, str, str]:
+    text = _source_evidence_text(row).lower()
+    for pressure_type, needles in PRESSURE_KEYWORDS.items():
+        if any(needle in text for needle in needles):
+            return True, pressure_type, f"matched pressure terms for {pressure_type}"
+    return False, "context only", "no concrete pressure evidence terms matched"
+
+
+def _affected_groups(row: dict[str, Any], *, pressure_signal: bool) -> list[str]:
+    if not pressure_signal:
+        return []
+    text = _source_evidence_text(row).lower()
+    return [group for group, tokens in GROUP_KEYWORDS.items() if any(token in text for token in tokens)]
+
+
+def _evidence_level(row: dict[str, Any], pressure_signal: bool) -> str:
+    if not pressure_signal:
+        return "background context"
+    family = str(row.get("source_family") or "").lower()
+    if family == "food_bank_provider":
+        return "provider reported strain"
+    if family in {"state_official", "federal_official"}:
+        return "policy/benefit change"
+    if family == "local_reporting":
+        return "local reporting"
+    if family == "economic_data":
+        return "official data/statistic"
+    return "direct reported hardship"
+
+
+def _freshness_role(row: dict[str, Any]) -> str:
+    basis = str(row.get("published_date_basis") or row.get("date_basis") or "source_published")
+    if basis == "source_published":
+        return "fresh_daily_signal"
+    if basis == "retrieved_at_fallback":
+        return "current_monitoring"
+    return "stable_context"
+
+
+def _source_role_refined(row: dict[str, Any], pressure_signal: bool) -> str:
+    family = str(row.get("source_family") or "").lower()
+    if family in BASELINE_FAMILIES:
+        return "baseline_condition"
+    if family in POLICY_FAMILIES:
+        return "pressure_evidence" if pressure_signal else "policy_context"
+    if family in RESOURCE_FAMILIES and not pressure_signal:
+        return "resource_context"
+    if pressure_signal:
+        return "pressure_evidence"
+    return "resource_context"
+
+
+def _lead_score(row: dict[str, Any], edition_date: str) -> int:
+    role = _source_role(row)
+    score = 0
+    score += DAILY_PRIORITY_CATEGORIES.get(str(row.get("map_category") or "").strip().lower(), 0)
+    score += DAILY_PRIORITY_FAMILIES.get(str(row.get("source_family") or "").strip().lower(), 0)
+    score += {"daily_signal": 24, "local_signal": 22, "provider_signal": 16, "policy_context": 10, "map_signal": 6, "background_context": 0}.get(role, 0)
+    if str(row.get("state") or "").strip().upper() not in {"", "US"}:
+        score += 6
+    text = _source_evidence_text(row).lower()
+    if any(token in text for token in ("delay", "closure", "closed", "wait", "suspension", "disruption", "reduced", "cut")):
+        score += 8
+    if "context" in text and role == "background_context":
+        score -= 4
+    if str(row.get("published_date_basis") or "") == "retrieved_at_fallback" and str(row.get("collector_source_type") or "").lower() not in {"rss", "feed", "live_update"}:
+        score -= 6
+    if bool(row.get("pressure_signal")):
+        score += 30
+    if str(row.get("source_role") or "") == "pressure_evidence":
+        score += 20
+    if str(row.get("source_role") or "") in {"resource_context", "baseline_condition"}:
+        score -= 20
+    score += int(edition_date.replace("-", "")) % 3
+    return score
+
+
+def _role_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    out = {"daily_signal": 0, "background_context": 0, "policy_context": 0, "provider_signal": 0, "local_signal": 0, "map_signal": 0, "resource_context": 0}
+    for row in rows:
+        out[_source_role(row)] = int(out.get(_source_role(row), 0)) + 1
+    return out
+
+
+def _choose_lead(rows: list[dict[str, Any]], edition_date: str) -> tuple[dict[str, Any] | None, str]:
+    if not rows:
+        return None, "no_sources_available"
+    best = sorted(rows, key=lambda r: (_lead_score(r, edition_date), str(r.get("source_record_id") or "")), reverse=True)[0]
+    role = _source_role(best)
+    why = f"selected for highest priority role/category mix ({role}, {best.get('map_category')})"
+    return best, why
+
+
+def _edition_history_root(root: Path) -> Path:
+    return root / "output" / "site" / DISPATCH_SLUG / "editions"
+
+
+def _previous_edition_date(root: Path, edition_date: str) -> str | None:
+    editions_root = _edition_history_root(root)
+    if not editions_root.exists():
+        return None
+    prior_dates = sorted(
+        path.name
+        for path in editions_root.iterdir()
+        if path.is_dir() and DATE_RE.match(path.name) and path.name < edition_date
+    )
+    return prior_dates[-1] if prior_dates else None
+
+
+def _load_previous_edition_context(root: Path, edition_date: str) -> dict[str, Any]:
+    previous_date = _previous_edition_date(root, edition_date)
+    if not previous_date:
+        return {}
+    edition_dir = _edition_history_root(root) / previous_date
+    manifest_path = edition_dir / "edition_manifest.json"
+    sources_path = edition_dir / "sources_manifest.json"
+    manifest = _read_json(manifest_path) if manifest_path.exists() else {}
+    sources = _read_json(sources_path) if sources_path.exists() else []
+    if not isinstance(manifest, dict):
+        manifest = {}
+    if not isinstance(sources, list):
+        sources = []
+    lead_source_record_id = str(manifest.get("lead_source_record_id") or "").strip()
+    lead_row = next((row for row in sources if str(row.get("source_record_id") or "").strip() == lead_source_record_id), None)
+    if lead_row is None:
+        lead_row = next((row for row in sources if bool(row.get("pressure_signal"))), None)
+    if not lead_row:
+        return {"previous_edition_date": previous_date}
+    return {
+        "previous_edition_date": previous_date,
+        "lead_source_record_id": str(lead_row.get("source_record_id") or "").strip(),
+        "lead_canonical_url": canonical_url(str(lead_row.get("url") or "")),
+        "lead_title": str(lead_row.get("title") or "").strip(),
+        "lead_publisher": str(lead_row.get("publisher") or "").strip(),
+        "lead_location_name": str(lead_row.get("location_name") or "").strip(),
+        "lead_pressure_type": str(lead_row.get("pressure_type") or "").strip(),
+        "lead_summary_or_snippet": str(lead_row.get("summary_or_snippet") or "").strip(),
+    }
+
+
+def _is_reused_previous_lead(row: dict[str, Any], previous_context: dict[str, Any]) -> bool:
+    if not previous_context:
+        return False
+    previous_source_record_id = str(previous_context.get("lead_source_record_id") or "").strip()
+    previous_canonical_url = str(previous_context.get("lead_canonical_url") or "").strip()
+    current_source_record_id = str(row.get("source_record_id") or "").strip()
+    current_canonical_url = canonical_url(str(row.get("url") or ""))
+    if previous_source_record_id and current_source_record_id == previous_source_record_id:
+        return True
+    if previous_canonical_url and current_canonical_url and current_canonical_url == previous_canonical_url:
+        return True
+    return False
+
+
+def _select_primary_pressure_signal(
+    rows: list[dict[str, Any]],
+    edition_date: str,
+    previous_context: dict[str, Any],
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]], str, str]:
+    pressure_rows = [row for row in rows if bool(row.get("pressure_signal"))]
+    reused_rows = [row for row in pressure_rows if _is_reused_previous_lead(row, previous_context)]
+    current_rows = [row for row in pressure_rows if row not in reused_rows]
+    if current_rows:
+        primary = sorted(current_rows, key=lambda r: (_lead_score(r, edition_date), str(r.get("source_record_id") or "")), reverse=True)[0]
+        role = _source_role(primary)
+        why = f"selected new primary pressure signal ({role}, {primary.get('map_category')})"
+        return primary, reused_rows, why, "new_primary"
+    if reused_rows:
+        reused_rows = sorted(reused_rows, key=lambda r: (_lead_score(r, edition_date), str(r.get("source_record_id") or "")), reverse=True)
+        if previous_context.get("previous_edition_date"):
+            why = f"no new primary pressure signal qualified today; prior lead from {previous_context['previous_edition_date']} remains under continuing pressure"
+        else:
+            why = "no new primary pressure signal qualified today; continuing pressure remains under review"
+        return None, reused_rows, why, "continuing_only"
+    return None, [], "no pressure signal qualified today", "none"
+
+
+def _editorial_status(rows: list[dict[str, Any]]) -> str:
+    if len(rows) < MIN_USABLE:
+        return "sparse"
+    if sum(1 for row in rows if bool(row.get("pressure_signal"))) == 0:
+        return "monitoring/context"
+    return "daily_signal"
+
+
+def _scope_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    local_signal_count = sum(1 for row in rows if _source_role(row) == "local_signal")
+    state_signal_count = sum(1 for row in rows if str(row.get("state") or "").strip().upper() not in {"", "US"})
+    national_context_count = sum(1 for row in rows if str(row.get("state") or "").strip().upper() == "US")
+    return {
+        "local_signal_count": local_signal_count,
+        "state_signal_count": state_signal_count,
+        "national_context_count": national_context_count,
+    }
+
+
+def _pressure_status(rows: list[dict[str, Any]]) -> str:
+    if len(rows) < MIN_USABLE:
+        return "sparse"
+    if any(bool(row.get("pressure_signal")) for row in rows):
+        return "pressure_detected"
+    return "monitoring_context_only"
+
+
+def _normalize_source_row(row: dict[str, Any], index: int) -> tuple[dict[str, Any] | None, list[str]]:
+    reasons: list[str] = []
+    if not isinstance(row, dict):
+        return None, ["invalid field type: record is not an object"]
+    normalized = {
+        "source_record_id": _as_text(row.get("source_record_id") or row.get("id")),
+        "title": _as_text(row.get("title")),
+        "url": _as_text(row.get("url") or row.get("source_url")),
+        "publisher": _as_text(row.get("publisher") or "Unknown publisher"),
+        "published_at": _as_text(row.get("published_at") or row.get("published_date")),
+        "retrieved_at": _as_text(row.get("retrieved_at") or row.get("published_at") or row.get("published_date")),
+        "summary_or_snippet": _as_text(row.get("summary_or_snippet") or row.get("summary") or row.get("text") or row.get("note")),
+        "evidence_text": _as_text(row.get("evidence_text")),
+        "evidence_text_basis": _as_text(row.get("evidence_text_basis")),
+        "pressure_match_terms": [str(item).strip() for item in (row.get("pressure_match_terms") or []) if str(item).strip()],
+        "pressure_verification_status": _as_text(row.get("pressure_verification_status")),
+        "source_type": _as_text(row.get("source_type") or "manual"),
+        "source_family": _as_text(row.get("source_family") or row.get("family")),
+        "state": _as_text(row.get("state")),
+        "issue_tags": _as_tags(row.get("issue_tags") or row.get("tags")),
+        "map_category": _as_text(row.get("map_category") or row.get("category") or row.get("signal_category")),
+        "location_name": _as_text(row.get("location_name") or row.get("location")),
+    }
+    for key in ("source_record_id", "title", "url", "published_at", "summary_or_snippet", "source_family", "state", "map_category", "location_name"):
+        if not _as_text(normalized.get(key)):
+            reasons.append(f"missing required field: {key}")
+    if not isinstance(normalized["issue_tags"], list):
+        reasons.append("invalid field type: issue_tags/tags must be list or comma-separated string")
+    if normalized["url"] and not normalized["url"].startswith(("http://", "https://")):
+        reasons.append("missing required field: url")
+    if reasons:
+        return None, reasons
+    if not normalized["retrieved_at"]:
+        normalized["retrieved_at"] = utc_now()
+    return normalized, []
+
+
+def _load_source_file(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+    if not path.exists():
+        return [], [], []
+    payload = _read_json(path)
+    if isinstance(payload, list):
+        rows = payload
+    elif isinstance(payload, dict):
+        rows = payload.get("sources")
+        if not isinstance(rows, list):
+            raise ValueError("unsupported wrapper shape: object must contain a 'sources' list")
+    else:
+        raise ValueError("unsupported wrapper shape: root must be a list or object with a 'sources' list")
+    valid: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    for index, row in enumerate(rows, start=1):
+        normalized, reasons = _normalize_source_row(row, index)
+        if normalized is None:
+            rejected.append({"record_index": index, "record_id": _as_text(row.get("source_record_id") or row.get("id")) if isinstance(row, dict) else "", "reasons": reasons})
+            continue
+        valid.append(normalized)
+    return valid, rejected, []
+
+
+def _merged_sources(root: Path, date: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+    manual_path = _manual_source_path(root, date)
+    auto_path = _auto_source_path(root, date)
+    manual_rows, manual_rejected, diagnostics = _load_source_file(manual_path) if manual_path.exists() else ([], [], [])
+    auto_rows, auto_rejected, _ = _load_source_file(auto_path) if auto_path.exists() else ([], [], [])
+    seen_urls = {canonical_url(str(row.get("url") or "")) for row in manual_rows}
+    seen_titles = {normalize_title(str(row.get("title") or "")) for row in manual_rows}
+    merged = list(manual_rows)
+    for row in auto_rows:
+        url_key = canonical_url(str(row.get("url") or ""))
+        title_key = normalize_title(str(row.get("title") or ""))
+        if url_key in seen_urls or title_key in seen_titles:
+            diagnostics.append(f"auto record skipped due to manual duplicate override: {row.get('source_record_id') or row.get('title')}")
+            continue
+        merged.append(row)
+    return merged, [*manual_rejected, *auto_rejected], diagnostics
+
+
+def source_adequacy(sources: list[dict[str, Any]]) -> dict[str, Any]:
+    families = sorted({str(r.get("source_family") or "").strip() for r in sources if str(r.get("source_family") or "").strip()})
+    local = [r for r in sources if str(r.get("state") or "").strip()]
+    status = "daily"
+    label = "Daily edition"
+    editorial = _editorial_status(sources)
+    if editorial == "sparse":
+        status = "limited"
+        label = "Limited / sparse source day"
+    elif editorial == "monitoring/context":
+        status = "monitoring_context"
+        label = "Monitoring/context edition"
+    elif len(sources) < MIN_ITEMS or len(families) < MIN_FAMILIES or len(local) < MIN_LOCAL:
+        status = "limited"
+        label = "Limited / sparse source day"
+    scopes = _scope_counts(sources)
+    return {
+        "status": status,
+        "label": label,
+        "source_count": len(sources),
+        "source_families": families,
+        "local_signal_count": scopes["local_signal_count"],
+        "state_signal_count": scopes["state_signal_count"],
+        "national_context_count": scopes["national_context_count"],
+    }
+
+
+def _human_date(date: str) -> str:
+    dt = datetime.strptime(date, "%Y-%m-%d")
+    return f"{dt.strftime('%B')} {dt.day}, {dt.year}"
+
+
+def _episode_title(date: str) -> str:
+    return f"Food Line Dispatch - {_human_date(date)}"
+
+
+def _audio_episode_title(date: str) -> str:
+    return _episode_title(date)
+
+
+def _audio_review_summary(sources: list[dict[str, Any]]) -> str:
+    return _public_audit_summary(sources)
+
+
+def _audio_lead_summary(lead: dict[str, Any] | None) -> str:
+    return str((lead or {}).get("pressure_summary") or "").strip()
+
+
+def _food_line_public_pressure_point(lead: dict[str, Any] | None) -> str:
+    lead = lead or {}
+    pressure_summary = _audio_lead_summary(lead)
+    if not pressure_summary:
+        return "Source-backed pressure was limited."
+    sentences = [pressure_summary.rstrip(".") + "."]
+    title = str(lead.get("title") or "")
+    evidence_text = str(lead.get("evidence_text") or "")
+    evidence_excerpt = clean_food_line_public_evidence_excerpt(
+        evidence_text,
+        title=title,
+        limit=360,
+    )
+    if evidence_excerpt and evidence_excerpt != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
+        if evidence_excerpt.lower() not in pressure_summary.lower():
+            sentences.append(evidence_excerpt.rstrip(".") + ".")
+    else:
+        figure_match = re.search(r"(\d+)\s*(?:percent|%)\s+increase", evidence_text, flags=re.IGNORECASE)
+        if figure_match:
+            percent = figure_match.group(1)
+            sentences.append(
+                f"One East Texas pantry operator described a {percent} percent increase over three weeks in people asking for food assistance."
+            )
+            return " ".join(sentences[:2])
+        publisher = str(lead.get("publisher") or lead.get("source_name") or "the source").strip()
+        location = str(lead.get("location_name") or "").strip()
+        pressure_type = str(lead.get("pressure_type") or "").strip() or "pressure evidence"
+        affected_groups = _affected_groups_display(list(lead.get("affected_groups") or []))
+        fallback = f"{publisher} reported rising demand"
+        if location:
+            fallback += f" in {location}"
+        fallback += f", with {pressure_type}"
+        if affected_groups:
+            fallback += f" affecting {affected_groups}"
+        sentences.append(fallback.rstrip(".") + ".")
+    return " ".join(sentences[:2])
+
+
+def _food_line_why_it_matters(lead: dict[str, Any] | None) -> str:
+    lead = lead or {}
+    pressure_type = str(lead.get("pressure_type") or "").strip()
+    location = str(lead.get("location_name") or "").strip()
+    affected_groups = _affected_groups_display(list(lead.get("affected_groups") or []))
+    if pressure_type == "demand strain":
+        core = "rising demand is putting pantry capacity under pressure"
+    elif pressure_type == "benefit disruption":
+        core = "benefit disruptions affecting households"
+    elif pressure_type == "service reduction":
+        core = "reduced service capacity"
+    elif pressure_type == "child meal gap":
+        core = "meal access gaps for children"
+    elif pressure_type == "senior meal strain":
+        core = "senior meal strain"
+    elif pressure_type == "access gap":
+        core = "food access gaps"
+    elif pressure_type == "household hardship":
+        core = "household food hardship"
+    elif pressure_type == "disaster disruption":
+        core = "disaster-related food strain"
+    else:
+        core = pressure_type or "pressure"
+    sentence = "When benefit delays hit, local food pantries can become the first backup for households trying to cover meals"
+    followup = f"in {location}, {core}" if location else core
+    if affected_groups:
+        followup += f", with {affected_groups} among those affected"
+    return f"{sentence}; {followup.rstrip('.')}".rstrip(".") + "."
+
+
+def _count_word(count: int) -> str:
+    return "one" if count == 1 else str(count)
+
+
+def _food_line_publishing_note(sources: list[dict[str, Any]], lead: dict[str, Any] | None = None) -> str:
+    total_count = len(sources)
+    verified_count = len(_public_source_rows(sources))
+    excluded_count = max(0, total_count - verified_count)
+    publisher = str((lead or {}).get("publisher") or (lead or {}).get("source_name") or "").strip()
+    verified_phrase = f"{_count_word(verified_count)} verified Food Line pressure record"
+    if verified_count != 1:
+        verified_phrase += "s"
+    if publisher:
+        first_sentence = f"This dispatch is based on {verified_phrase} from {publisher}."
+    else:
+        first_sentence = f"This dispatch is based on {verified_phrase}."
+    reviewed_phrase = "one record" if total_count == 1 else f"{total_count} records"
+    if excluded_count == 0:
+        second_sentence = f"Food Line reviewed {reviewed_phrase} for this edition; no records were excluded as context, baseline, or insufficient pressure evidence."
+    elif excluded_count == 1:
+        second_sentence = f"Food Line reviewed {reviewed_phrase} for this edition; one was excluded as context, baseline, or insufficient pressure evidence."
+    else:
+        second_sentence = f"Food Line reviewed {reviewed_phrase} for this edition; {excluded_count} were excluded as context, baseline, or insufficient pressure evidence."
+    return f"{first_sentence} {second_sentence} Source details and review records are preserved for traceability."
+
+
+def _food_line_source_note() -> str:
+    return "Verification details are preserved in the public source table and review records."
+
+
+def _food_line_accountability_note(sources: list[dict[str, Any]], lead: dict[str, Any] | None = None) -> str:
+    return _food_line_publishing_note(sources, lead)
+
+
+def _food_line_transcript_source_links_html(date: str) -> str:
+    return f"""
+    <p><a href="{date}-transcript.html">Open the transcript</a></p>
+    <p><a href="../editions/{date}/source_table.html">Open the public source table for {html.escape(date)}</a></p>
+    <p><a href="../editions/{date}/">Open the public edition</a></p>
+    <p><a href="podcast.xml">Open the podcast feed</a></p>
+    """
+
+
+def _food_line_source_card_html(
+    row: dict[str, Any],
+    *,
+    label: str | None = None,
+    heading_prefix: str | None = None,
+) -> str:
+    title = html.escape(str(row.get("title") or ""))
+    publisher = html.escape(str(row.get("publisher") or ""))
+    location = html.escape(str(row.get("location_name") or row.get("state") or ""))
+    source_url = html.escape(str(row.get("url") or ""))
+    source_record_id = html.escape(str(row.get("source_record_id") or ""))
+    pressure_type = html.escape(str(row.get("pressure_type") or ""))
+    pressure_summary = html.escape(str(row.get("pressure_summary") or ""))
+    evidence_excerpt = html.escape(_public_evidence_excerpt(row))
+    affected_groups = html.escape(_affected_groups_display(row.get("affected_groups")))
+    if heading_prefix:
+        heading = f"{html.escape(heading_prefix)} {title}".strip()
+    else:
+        heading = title
+    parts = ["<li class='food-line-source-card'>", f"<h3>{heading}</h3>"]
+    if label:
+        parts.append(f"<p><strong>{html.escape(label)}</strong></p>")
+    if publisher:
+        location_part = f" - {location}" if location else ""
+        parts.append(f"<p>{publisher}{location_part}</p>")
+    parts.extend(
+        [
+            f"<p><strong>Pressure summary:</strong> {pressure_summary}</p>",
+            f"<p><strong>Evidence excerpt:</strong> {evidence_excerpt}</p>",
+            f"<p><strong>Pressure type:</strong> {pressure_type}</p>",
+            f"<p><strong>Affected groups:</strong> {affected_groups}</p>",
+            f"<p><strong>Source URL:</strong> <a href=\"{source_url}\" target=\"_blank\" rel=\"noopener noreferrer\">{source_url}</a></p>",
+            f"<p><strong>Source record ID:</strong> {source_record_id}</p>",
+            "</li>",
+        ]
+    )
+    return "".join(parts)
+
+
+def _food_line_at_a_glance_items(
+    sources: list[dict[str, Any]],
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    primary_signal_status: str,
+) -> str:
+    verified_rows = _public_source_rows(sources)
+    reviewed_count = len(sources)
+    excluded_count = max(0, reviewed_count - len(verified_rows))
+    items: list[str] = []
+    if primary_row:
+        items.append(
+            "<li>"
+            f"Primary signal: {html.escape(str(primary_row.get('title') or ''))} "
+            f"from {html.escape(str(primary_row.get('publisher') or ''))}"
+            "</li>"
+        )
+    elif primary_signal_status == "continuing_only" and continuing_rows:
+        continuing = continuing_rows[0]
+        location = str(continuing.get("location_name") or continuing.get("state") or "").strip()
+        topic = "pantry-demand item"
+        if location:
+            topic = f"{location} pantry-demand item"
+        items.append(
+            "<li>"
+            "No new primary pressure signal qualified today."
+            "</li>"
+        )
+        items.append(
+            "<li>"
+            f"Continuing watch: {html.escape(str(continuing.get('publisher') or ''))} {html.escape(topic)}"
+            "</li>"
+        )
+    else:
+        items.append("<li>No new primary pressure signal qualified today.</li>")
+    items.append(f"<li>Records reviewed: {reviewed_count}; records excluded: {excluded_count}</li>")
+    items.append(f"<li>Verified public items: {len(verified_rows)} from {len({str(row.get('publisher') or '').strip() for row in verified_rows if str(row.get('publisher') or '').strip()})} publisher(s)</li>")
+    return "".join(items)
+
+
+def _food_line_today_read_html(
+    date: str,
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    primary_signal_status: str,
+    previous_context: dict[str, Any],
+    review_counts: tuple[int, int],
+) -> str:
+    reviewed_count, excluded_count = review_counts
+    human_date = _human_date(date)
+    if primary_row:
+        publisher = str(primary_row.get("publisher") or primary_row.get("source_name") or "the source").strip()
+        location = str(primary_row.get("location_name") or primary_row.get("state") or "").strip()
+        lead_summary = str(primary_row.get("pressure_summary") or "").strip()
+        why_it_matters = _food_line_why_it_matters(primary_row)
+        paragraph_one = f"The {human_date} Food Line briefing leads with {publisher}"
+        if location:
+            paragraph_one += f" in {location}"
+        paragraph_one += "."
+        paragraph_two = lead_summary or "A verified pressure signal was selected as today's lead."
+        paragraphs = [paragraph_one, paragraph_two, why_it_matters]
+    elif primary_signal_status == "continuing_only" and continuing_rows:
+        continuing = continuing_rows[0]
+        publisher = str(continuing.get("publisher") or continuing.get("source_name") or "the source").strip()
+        location = str(continuing.get("location_name") or continuing.get("state") or "").strip()
+        previous_date = str(previous_context.get("previous_edition_date") or "").strip()
+        paragraph_one = "No new primary pressure signal qualified today."
+        paragraph_two = f"The {human_date} Food Line review continues to monitor the prior {publisher} pantry-demand item"
+        if location:
+            paragraph_two += f" in {location}"
+        paragraph_two += " as background while new records are reviewed."
+        if previous_date:
+            paragraph_two += f" It was the lead in the {previous_date} edition."
+        paragraphs = [paragraph_one, paragraph_two]
+        if reviewed_count:
+            paragraphs.append(
+                f"Records reviewed: {reviewed_count}; {excluded_count} were excluded as context, baseline, or insufficient pressure evidence."
+            )
+    else:
+        paragraphs = [
+            "No new primary pressure signal qualified today.",
+            "The edition remains a traceable source check on food access pressure while new records are reviewed.",
+        ]
+    return "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in paragraphs[:3])
+
+
+def _food_line_context_rows(sources: list[dict[str, Any]], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    blocked_ids = {
+        str(row.get("source_record_id") or "").strip()
+        for row in ([primary_row] if primary_row else []) + list(continuing_rows)
+        if row
+    }
+    context_rows = [
+        row
+        for row in sources
+        if str(row.get("source_record_id") or "").strip() not in blocked_ids
+        and not bool(row.get("pressure_signal"))
+        and str(row.get("source_role") or "") in {"background_context", "policy_context", "resource_context", "baseline_condition"}
+    ]
+    return context_rows[:2]
+
+
+def _food_line_source_mix_html(sources: list[dict[str, Any]], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]], primary_signal_status: str) -> str:
+    verified_rows = _public_source_rows(sources)
+    publisher_count = len({str(row.get("publisher") or "").strip() for row in verified_rows if str(row.get("publisher") or "").strip()})
+    reviewed_count = len(sources)
+    excluded_count = max(0, reviewed_count - len(verified_rows))
+    if primary_row:
+        coverage_note = "Coverage remains thin but the page has a new primary pressure lead."
+    elif primary_signal_status == "continuing_only" and continuing_rows:
+        coverage_note = "Coverage is thin today, so the prior lead remains in continuing pressure while new records are reviewed."
+    else:
+        coverage_note = "Coverage is thin today and no new primary pressure signal qualified."
+    source_table_link = "<p><a href=\"./source_table.html\">Open the public source table for traceability fields and cleaned evidence excerpts.</a></p>"
+    return (
+        f"<p>Source mix: {len(verified_rows)} public item(s) from {publisher_count} publisher(s). "
+        f"Records reviewed: {reviewed_count}; records excluded: {excluded_count}.</p>"
+        f"<p>{html.escape(coverage_note)}</p>"
+        f"{source_table_link}"
+    )
+
+
+def _food_line_source_note_html() -> str:
+    return (
+        "<p>This edition is generated only from saved Food Line source records available at publish time. "
+        "Source coverage may be uneven; items are included only when a traceable source record exists.</p>"
+    )
+
+
+def _food_line_skip_reason() -> str:
+    return "No new primary food-access signal qualified for public Food Line publication."
+
+
+def _food_line_diagnostics_paths(root: Path, date: str) -> list[Path]:
+    return [
+        root / "output" / "review" / DISPATCH_SLUG / date / "run_manifest.json",
+        root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / date / "run_manifest.json",
+        root / "output" / "review" / DISPATCH_SLUG / date / "map_data.json",
+    ]
+
+
+def _write_food_line_diagnostics_manifest(root: Path, date: str, manifest: dict[str, Any], map_data: dict[str, Any] | None = None) -> None:
+    for path in _food_line_diagnostics_paths(root, date):
+        if path.name == "map_data.json":
+            if map_data is not None:
+                _write_json(path, map_data)
+            continue
+        _write_json(path, manifest)
+
+
+def _remove_food_line_public_edition(root: Path, date: str) -> None:
+    for path in (
+        root / "output" / "site" / DISPATCH_SLUG / "editions" / date,
+        root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / date,
+    ):
+        if path.exists():
+            shutil.rmtree(path)
+
+
+def _remove_food_line_audio_artifacts(root: Path, date: str) -> None:
+    audio_root = root / "output" / "site" / DISPATCH_SLUG / "audio"
+    if not audio_root.exists():
+        return
+    for path in audio_root.glob(f"{date}*"):
+        if path.is_file():
+            path.unlink()
+
+
+def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str) -> None:
+    audio_root = root / "output" / "site" / DISPATCH_SLUG / "audio"
+    audio_root.mkdir(parents=True, exist_ok=True)
+    body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--audio", "../assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Audio</h1>
+    <p>No public audio episode was published for {_human_date(date)}.</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Status</h2>
+    <p>{html.escape(skip_reason)}</p>
+    <p>The podcast feed remains available for previously published public episodes.</p>
+    <p><a href="podcast.xml">Open the podcast feed</a></p>
+    <p><a href="../archive.html">Back to the Food Line archive</a></p>
+  </section>
+</main>
+{footer("../")}"""
+    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/", "../assets/site.css", body, DISPATCH_NAME))
+
+
+def _food_line_edition_navigation_html(previous_date: str | None) -> str:
+    previous_link = ""
+    if previous_date:
+        previous_link = f'<a href="../{previous_date}/">Previous edition</a>'
+    else:
+        previous_link = "<span>Previous edition unavailable</span>"
+    return (
+        "<nav class='food-line-edition-nav'>"
+        '<a href="../../archive.html">Archive</a>'
+        '<a href="../../index.html">Dispatches home</a>'
+        f"{previous_link}"
+        "</nav>"
+    )
+
+
+def _audio_script(date: str, sources: list[dict[str, Any]], adequacy: dict[str, Any], lead: dict[str, Any] | None, editorial_status: str) -> str:
+    pressure_point = _food_line_public_pressure_point(lead)
+    why_it_matters = _food_line_why_it_matters(lead)
+    lines = [
+        f"This is the Food Line Dispatch for {_human_date(date)}.",
+        f"Today's pressure point: {pressure_point}",
+        f"Why it matters: {why_it_matters}",
+    ]
+    if editorial_status == "monitoring/context":
+        lines.append("This edition is monitoring and context only, with no verified daily pressure record.")
+    elif editorial_status == "sparse":
+        lines.append("This edition is limited because the source set is sparse.")
+    return "\n\n".join(lines)
+
+
+def _what_changed_text(status: str, lead: dict[str, Any] | None, role_counts: dict[str, int]) -> str:
+    if status == "monitoring/context":
+        return "What changed today: this edition is a monitoring/context check-in, with no new local daily-signal records in today’s source set."
+    if status == "sparse":
+        return "What changed today: source coverage is limited, so this update only reports partial source-backed signals."
+    if not lead:
+        return "What changed today: source-backed signal selection was limited."
+    summary = str(lead.get("pressure_summary") or "").strip()
+    if summary:
+        return f"What changed today: {summary}"
+    return f"What changed today: source-backed signal selection was limited. (traceable to {lead.get('source_record_id')})."
+
+
+def render_edition(
+    date: str,
+    sources: list[dict[str, Any]],
+    adequacy: dict[str, Any],
+    primary_row: dict[str, Any] | None,
+    editorial_status: str,
+    role_counts: dict[str, int],
+    scope_counts: dict[str, int],
+    previous_context: dict[str, Any],
+    primary_signal_status: str,
+    continuing_rows: list[dict[str, Any]],
+) -> str:
+    pressure_rows = _public_source_rows(sources)
+    pressure_count = len(pressure_rows)
+    reviewed_count = len(sources)
+    excluded_count = max(0, reviewed_count - pressure_count)
+    context_rows = _food_line_context_rows(sources, primary_row, continuing_rows)
+    glance_html = _food_line_at_a_glance_items(sources, primary_row, continuing_rows, primary_signal_status)
+    today_read_html = _food_line_today_read_html(date, primary_row, continuing_rows, primary_signal_status, previous_context, (reviewed_count, excluded_count))
+    source_mix_html = _food_line_source_mix_html(sources, primary_row, continuing_rows, primary_signal_status)
+    source_note_html = _food_line_source_note_html()
+    edition_nav_html = _food_line_edition_navigation_html(str(previous_context.get("previous_edition_date") or "").strip() or None)
+    primary_section_html = ""
+    if primary_row:
+        primary_section_html = (
+            "<h2>Primary Food Access Signal</h2>"
+            f"<ul>{_food_line_source_card_html(primary_row, label='Today’s pressure point', heading_prefix='Lead:')}</ul>"
+        )
+    continuing_section_html = ""
+    if continuing_rows:
+        continuing_cards = "".join(
+            _food_line_source_card_html(
+                row,
+                label="Continuing pressure being monitored",
+                heading_prefix="Background:",
+            )
+            for row in continuing_rows
+        )
+        continuing_section_html = f"<h2>Continuing Pressure</h2><ul>{continuing_cards}</ul>"
+    elif primary_signal_status == "continuing_only":
+        continuing_section_html = "<h2>Continuing Pressure</h2><p>No continuing pressure item was carried forward.</p>"
+    context_section_html = ""
+    if context_rows:
+        context_section_html = (
+            "<h2>Context and Watch Items</h2>"
+            "<p>Background records remain traceable here when they help explain the pressure picture without changing the lead.</p>"
+            f"<ul>{''.join(_food_line_source_card_html(row, label='Context record', heading_prefix='Context:') for row in context_rows)}</ul>"
+        )
+    body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
+<main class="container food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--edition", "../../assets/")}
+    <p class="eyebrow">Daily briefing / {_human_date(date)}</p>
+    <h1>{DISPATCH_NAME}</h1>
+    <p>Generated from saved Food Line source records available for {_human_date(date)}.</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Today’s Read</h2>
+    {today_read_html}
+    <h2>At A Glance</h2>
+    <ul>{glance_html}</ul>
+    {primary_section_html}
+    {continuing_section_html}
+    {context_section_html}
+    <h2>Source Mix</h2>
+    {source_mix_html}
+    <h2>Source Note</h2>
+    {source_note_html}
+    {edition_nav_html}
+  </section>
+</main>
+{footer("../../")}"""
+    return page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body, DISPATCH_NAME)
+
+
+def _source_table_html(date: str, sources: list[dict[str, Any]]) -> str:
+    public_rows = _public_source_rows(sources)
+    rows = _public_source_table_rows_html(public_rows)
+    audit_summary = _public_review_summary(len(sources), len(public_rows))
+    body = (
+        f"{_food_line_theme_styles()}"
+        f"{header(DISPATCH_NAME, '../../', '../../archive.html', '/food-line/')}"
+        f"<main class='container food-line-shell'>"
+        f"<section class='food-line-panel'>"
+        f"<div class='food-line-hero'>"
+        f"{_food_line_logo_html('food-line-logo--edition', '../../assets/')}"
+        f"<p class='eyebrow'>The Blue Fern Co.</p>"
+        f"<h1>Food Line Source Table {date}</h1>"
+        f"</div>"
+        f"<p>{html.escape(audit_summary)}</p>"
+        f"<table class='food-line-source-table'>"
+        "<tr>"
+        "<th>Source Record ID</th><th>Title</th><th>Publisher</th><th>Source URL</th><th>Source Family</th><th>Source Purpose</th><th>pressure_signal</th><th>Pressure Summary</th><th>Evidence Excerpt</th><th>pressure_verification_status</th><th>affected_groups</th><th>Pressure Type</th>"
+        "</tr>"
+        f"{rows}</table></section></main>{footer('../../')}"
+    )
+    return page(f"Food Line Source Table {date}", f"{BASE_URL}/food-line/editions/{date}/source_table.html", "../../assets/site.css", body, DISPATCH_NAME)
+
+
+def _build_map_data(date: str, sources: list[dict[str, Any]]) -> dict[str, Any]:
+    markers = []
+    pressure_markers = []
+    context_records = []
+    baseline_records = []
+    excluded_records = []
+    exclusion_reasons: dict[str, int] = {}
+    for s in sources:
+        cleaned_excerpt = _public_evidence_excerpt(s)
+        row = {
+            "source_record_id": s.get("source_record_id"),
+            "location_name": s["location_name"],
+            "state": s["state"],
+            "county_name": s.get("county_name") or "",
+            "category": s["map_category"],
+            "publisher": s.get("publisher") or "",
+            "source_family": s.get("source_family") or "",
+            "source_purpose": s.get("source_purpose") or classify_food_line_source_purpose(s).get("source_purpose") or "",
+            "source_role": s.get("source_role") or "",
+            "pressure_signal": bool(s.get("pressure_signal")),
+            "pressure_summary": s.get("pressure_summary") or "",
+            "extraction_quality": s.get("extraction_quality") or "",
+            "expected_text_basis": s.get("expected_text_basis") or "",
+            "pressure_verification_required": bool(s.get("pressure_verification_required")),
+            "evidence_text": cleaned_excerpt,
+            "evidence_excerpt": cleaned_excerpt,
+            "evidence_text_basis": s.get("evidence_text_basis") or "",
+            "pressure_match_terms": s.get("pressure_match_terms") or [],
+            "pressure_verification_status": s.get("pressure_verification_status") or "",
+            "issue_tags": s.get("issue_tags") or [],
+            "affected_groups": s.get("affected_groups") or [],
+            "pressure_type": s.get("pressure_type") or "context only",
+            "evidence_level": s.get("evidence_level") or "background context",
+            "freshness_role": s.get("freshness_role") or "stable_context",
+            "source_role_allowed": s.get("source_role_allowed") or "",
+            "pressure_required": bool(s.get("pressure_required")),
+            "pressure_reason": s.get("pressure_reason") or "",
+            "source_title": s["title"],
+            "source_url": s["url"],
+            "note": s.get("pressure_summary") or "",
+            "dispatch_date": date,
+            "latitude": s.get("latitude"),
+            "longitude": s.get("longitude"),
+        }
+        markers.append(row)
+        role = str(s.get("source_role") or "")
+        if role == "baseline_condition":
+            baseline_records.append(row)
+        if role in {"resource_context", "policy_context", "baseline_condition"}:
+            context_records.append(row)
+        if bool(s.get("pressure_signal")) and bool(s.get("map_eligible")):
+            pressure_markers.append(row)
+        else:
+            reason = "baseline_condition" if role == "baseline_condition" else ("context_only_or_no_pressure_evidence" if not bool(s.get("pressure_signal")) else "not_map_eligible")
+            exclusion_reasons[reason] = int(exclusion_reasons.get(reason, 0)) + 1
+            excluded_records.append({**row, "reason": reason})
+    pressure_count = sum(1 for s in sources if bool(s.get("pressure_signal")))
+    return {
+        "dispatch_slug": DISPATCH_SLUG,
+        "edition_date": date,
+        "markers": markers,
+        "pressure_markers": pressure_markers,
+        "context_records": context_records,
+        "baseline_records": baseline_records,
+        "excluded_records": excluded_records,
+        "diagnostics": {
+            "total_source_count": len(sources),
+            "pressure_signal_count": pressure_count,
+            "pressure_marker_count": len(pressure_markers),
+            "baseline_record_count": len(baseline_records),
+            "context_record_count": len(context_records),
+            "excluded_context_count": len(context_records),
+            "excluded_record_count": len(excluded_records),
+            "unmapped_pressure_count": max(0, pressure_count - len(pressure_markers)),
+            "exclusion_reasons": exclusion_reasons,
+            "pressure_verified_count": sum(1 for s in sources if str(s.get("pressure_verification_status") or "") == "source_text_verified"),
+            "pressure_demoted_unverified_count": sum(1 for s in sources if str(s.get("pressure_verification_status") or "") == "demoted_context"),
+            "pressure_registry_only_count": sum(1 for s in sources if str(s.get("pressure_verification_status") or "") == "registry_summary_only"),
+            "pressure_evidence_basis_counts": dict(sorted(Counter(str(s.get("evidence_text_basis") or "insufficient_evidence") for s in sources).items())),
+            "collected_count_by_extraction_quality": dict(sorted(Counter(str(s.get("extraction_quality") or "unknown") for s in sources).items())),
+            "verified_pressure_count_by_extraction_quality": dict(sorted(Counter(str(s.get("extraction_quality") or "unknown") for s in sources if str(s.get("pressure_verification_status") or "") == "source_text_verified").items())),
+            "demoted_count_by_extraction_quality": dict(sorted(Counter(str(s.get("extraction_quality") or "unknown") for s in sources if str(s.get("pressure_verification_status") or "") == "demoted_context").items())),
+        },
+    }
+
+
+def _write_food_line_review_csv(root: Path, date: str, sources: list[dict[str, Any]]) -> Path:
+    review_path = root / "output" / "review" / DISPATCH_SLUG / date / "pressure_review.csv"
+    fieldnames = [
+        "source_record_id",
+        "pressure_signal",
+        "pressure_verification_status",
+        "pressure_type",
+        "affected_groups",
+        "location_name",
+        "state",
+        "pressure_summary",
+        "evidence_text",
+        "pressure_match_terms",
+        "source_title",
+        "source_url",
+        "source_family",
+        "source_id",
+    ]
+    rows = []
+    for s in sources:
+        rows.append(
+            {
+                "source_record_id": s.get("source_record_id") or "",
+                "pressure_signal": str(bool(s.get("pressure_signal"))).lower(),
+                "pressure_verification_status": s.get("pressure_verification_status") or "",
+                "pressure_type": s.get("pressure_type") or "",
+                "affected_groups": ", ".join(str(item).strip() for item in (s.get("affected_groups") or []) if str(item).strip()),
+                "location_name": s.get("location_name") or "",
+                "state": s.get("state") or "",
+                "pressure_summary": s.get("pressure_summary") or "",
+                "evidence_text": s.get("evidence_text") or "",
+                "pressure_match_terms": ", ".join(str(term) for term in (s.get("pressure_match_terms") or [])),
+                "source_title": s.get("title") or "",
+                "source_url": s.get("url") or "",
+                "source_family": s.get("source_family") or "",
+                "source_id": s.get("source_id") or "",
+            }
+        )
+    _write_csv(review_path, fieldnames, rows)
+    return review_path
+
+
+def _resolve_marker_coordinates(marker: dict[str, Any]) -> tuple[float, float, str] | None:
+    lat_raw = marker.get("latitude")
+    lon_raw = marker.get("longitude")
+    if lat_raw is not None and lon_raw is not None:
+        try:
+            return float(lat_raw), float(lon_raw), "exact/source-provided"
+        except (TypeError, ValueError):
+            return None
+    location_key = str(marker.get("location_name") or "").strip().lower()
+    if location_key in CITY_CENTROIDS:
+        lat, lon = CITY_CENTROIDS[location_key]
+        return lat, lon, "city fallback"
+    county_name = str(marker.get("county_name") or "").strip().lower()
+    if county_name and county_name in COUNTY_CENTROIDS:
+        lat, lon = COUNTY_CENTROIDS[county_name]
+        return lat, lon, "county fallback"
+    state = str(marker.get("state") or "").strip().upper()
+    if state == "US":
+        return US_NATIONAL_CENTER[0], US_NATIONAL_CENTER[1], "national centroid"
+    if state in US_STATE_CENTROIDS:
+        lat, lon = US_STATE_CENTROIDS[state]
+        return lat, lon, "state centroid"
+    return None
+
+
+def _render_map_index(date: str, map_data: dict[str, Any]) -> str:
+    markers = list(map_data.get("pressure_markers") or [])
+    plotted: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for marker in markers:
+        coords = _resolve_marker_coordinates(marker)
+        if not coords:
+            skipped.append(
+                {
+                    "source_title": marker.get("source_title"),
+                    "location_name": marker.get("location_name"),
+                    "state": marker.get("state"),
+                    "reason": "missing_coordinates_and_no_supported_state_fallback",
+                }
+            )
+            continue
+        lat, lon, basis = coords
+        row = dict(marker)
+        row["latitude"] = lat
+        row["longitude"] = lon
+        row["coordinate_basis"] = basis
+        plotted.append(row)
+    map_data.setdefault("diagnostics", {})
+    map_data["diagnostics"]["marker_count"] = len(markers)
+    map_data["diagnostics"]["plotted_marker_count"] = len(plotted)
+    map_data["diagnostics"]["skipped_marker_count"] = len(skipped)
+    map_data["diagnostics"]["skipped_markers"] = skipped
+    map_data["mapped_markers"] = plotted
+    legend_items = "".join(
+        f'<li><span class="food-line-dot" style="background:{html.escape(color)};"></span>{html.escape(cat)}</li>'
+        for cat, color in FOOD_LINE_CATEGORY_COLORS.items()
+    )
+    category_colors_json = json.dumps(FOOD_LINE_CATEGORY_COLORS)
+    plotted_json = json.dumps(plotted)
+    latest_edition_url = f"/food-line/editions/{date}/"
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food Line Pressure Map</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  {_food_line_theme_styles()}
+</head>
+<body>
+{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--map", "../assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Pressure Map</h1>
+    <p>Latest dispatch date: {html.escape(date)}</p>
+    <p><a href="{latest_edition_url}">Open latest Food Line edition</a></p>
+  </section>
+  <section class="food-line-map-shell">
+    <div id="foodLineMap" class="food-line-map" data-rendered-marker-count="{len(plotted)}" data-skipped-marker-count="{len(skipped)}"></div>
+    <div class="food-line-map-panel">
+      <h2>Legend</h2>
+      <ul class="fl-legend">{legend_items}</ul>
+      <p><strong>Plotted markers:</strong> {len(plotted)} | <strong>Skipped markers:</strong> {len(skipped)}</p>
+      <p>Locations are source-backed pressure signals, not a complete census of food insecurity.</p>
+    </div>
+  </section>
+</main>
+{footer("../")}
+<script>
+const CATEGORY_COLORS = {category_colors_json};
+const FALLBACK_MARKERS = {plotted_json};
+const MAP_DATA_URL = "map_data.json";
+function esc(value) {{
+  return String(value || "").replace(/[&<>"]/g, function(c) {{ return ({{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}})[c] || c; }});
+}}
+const map = L.map("foodLineMap").setView([39.8283, -98.5795], 4);
+L.tileLayer("https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png", {{
+  maxZoom: 18,
+  attribution: "&copy; OpenStreetMap contributors"
+}}).addTo(map);
+const layers = [];
+function draw(rows) {{
+rows.forEach((item) => {{
+  const color = CATEGORY_COLORS[item.category] || "#61717c";
+  const icon = L.divIcon({{
+    className: "",
+    html: `<div style="width:14px;height:14px;border-radius:50%;background:${{color}};border:1px solid #1b2f39;"></div>`,
+    iconSize: [14,14],
+    iconAnchor: [7,7]
+  }});
+  const popup = `<div class="food-line-map-popup">
+    <div><strong>Location:</strong> ${{esc(item.location_name)}} (${{esc(item.state)}})</div>
+    <div><strong>Pressure signal:</strong> ${{esc(String(Boolean(item.pressure_signal)))}}</div>
+    <div><strong>Pressure summary:</strong> ${{esc(item.pressure_summary)}}</div>
+    <div><strong>Source record ID:</strong> ${{esc(item.source_record_id)}}</div>
+    <div><strong>Publisher:</strong> ${{esc(item.publisher)}}</div>
+    <div><strong>Source family:</strong> ${{esc(item.source_family)}}</div>
+    <div><strong>Source purpose:</strong> ${{esc(item.source_purpose || "")}}</div>
+    <div><strong>Evidence excerpt:</strong> ${{esc(item.evidence_excerpt || item.evidence_text || "")}}</div>
+    <div><strong>Pressure type:</strong> ${{esc(item.pressure_type)}}</div>
+    <div><strong>Evidence level:</strong> ${{esc(item.evidence_level)}}</div>
+    <div><strong>Freshness role:</strong> ${{esc(item.freshness_role)}}</div>
+    <div><strong>Affected groups:</strong> ${{esc(Array.isArray(item.affected_groups) && item.affected_groups.length ? item.affected_groups.join(", ") : "Not clearly isolated by source")}}</div>
+    <div><strong>Source:</strong> ${{esc(item.source_title)}}</div>
+    <div><strong>Source title:</strong> ${{esc(item.source_title)}}</div>
+    <div><strong>Source URL:</strong> <a href="${{esc(item.source_url)}}" target="_blank" rel="noopener noreferrer">${{esc(item.source_url)}}</a></div>
+    <div><strong>Verification status:</strong> ${{esc(item.pressure_verification_status)}}</div>
+    <div><strong>Dispatch date:</strong> ${{esc(item.dispatch_date)}}</div>
+    <div><strong>Coordinate basis:</strong> ${{esc(item.coordinate_basis)}}</div>
+  </div>`;
+  const marker = L.marker([Number(item.latitude), Number(item.longitude)], {{icon}}).addTo(map).bindPopup(popup);
+  layers.push(marker);
+}});
+if (layers.length) {{
+  map.fitBounds(L.featureGroup(layers).getBounds(), {{padding:[24,24], maxZoom:7}});
+}}
+}}
+fetch(MAP_DATA_URL)
+  .then((resp) => resp.ok ? resp.json() : null)
+  .then((payload) => {{
+    const mapped = payload && Array.isArray(payload.mapped_markers) ? payload.mapped_markers : FALLBACK_MARKERS;
+    draw(mapped);
+  }})
+  .catch(() => draw(FALLBACK_MARKERS));
+</script>
+</body>
+</html>"""
+
+
+def _podcast_description(lead: dict[str, Any] | None, sources: list[dict[str, Any]], editorial_status: str) -> str:
+    pressure_point = _food_line_public_pressure_point(lead)
+    why_it_matters = _food_line_why_it_matters(lead)
+    publishing_note = _food_line_publishing_note(sources, lead)
+    source_note = _food_line_source_note()
+    if editorial_status == "monitoring/context":
+        mode_text = "This edition is monitoring and context only."
+    elif editorial_status == "sparse":
+        mode_text = "This edition is limited because the source set is sparse."
+    else:
+        mode_text = ""
+    parts = [pressure_point, why_it_matters, f"Publishing note: {publishing_note}", f"Source note: {source_note}"]
+    if mode_text:
+        parts.append(mode_text)
+    parts.append("Cleaned transcripts and source tables preserve traceability.")
+    return " ".join(part for part in parts if part)
+
+
+def write_food_line_audio(
+    root: Path,
+    date: str,
+    sources: list[dict[str, Any]],
+    adequacy: dict[str, Any],
+    lead: dict[str, Any] | None,
+    editorial_status: str,
+    *,
+    generate_audio: bool = False,
+    require_audio: bool = False,
+    force_audio_regenerate: bool = False,
+    tts_provider: str = "none",
+    audio_model: str = "gpt-4o-mini-tts",
+    audio_voice: str = "alloy",
+    audio_format: str = "mp3",
+    audio_timeout_seconds: float = 90.0,
+) -> dict[str, Any]:
+    audio_root = root / "output" / "site" / "food-line" / "audio"
+    script = _audio_script(date, sources, adequacy, lead, editorial_status)
+    episode_title = _audio_episode_title(date)
+    description = _podcast_description(lead, sources, editorial_status)
+    chosen_provider = "none"
+    if generate_audio:
+        chosen_provider = str(tts_provider or "openai").strip().lower() or "openai"
+        if chosen_provider == "none":
+            chosen_provider = "openai"
+    audio_filename = f"{date}.{audio_format}"
+    audio_path = audio_root / audio_filename
+    audio_temp_path = audio_root / f"{date}.tmp.{audio_format}"
+    existing_audio_mp3_size = audio_path.stat().st_size if audio_path.exists() else None
+    existing_audio_mp3_path = str(audio_path) if audio_path.exists() else None
+    audio_available = bool(existing_audio_mp3_size and existing_audio_mp3_size > 0)
+    audio_reused_existing = bool(audio_available)
+    audio_replacement_performed = False
+    audio_generated = False
+    audio_status = "transcript_only"
+    audio_mp3_path: str | None = existing_audio_mp3_path
+    audio_mp3_url: str | None = f"/food-line/audio/{audio_filename}" if existing_audio_mp3_path else None
+    warnings: list[str] = []
+    errors: list[str] = []
+    generation_attempted = False
+    tts_diagnostics: dict[str, Any] = {
+        "provider": chosen_provider if generate_audio else "none",
+        "model_requested": audio_model if generate_audio else None,
+        "voice_requested": audio_voice if generate_audio else None,
+        "narration_char_count": len(script),
+        "output_path_attempted": str(audio_temp_path if generate_audio and (force_audio_regenerate or not audio_available) else audio_path),
+        "api_key_present": bool(str(os.getenv("OPENAI_API_KEY", "")).strip()),
+        "output_dir_exists": audio_root.exists(),
+        "partial_mp3_exists": audio_temp_path.exists() or audio_path.exists(),
+        "elapsed_seconds": 0.0,
+        "exception_type": None,
+        "exception_message_sanitized": None,
+        "timeout_seconds": audio_timeout_seconds,
+        "audio_format": audio_format,
+    }
+    if generate_audio:
+        if audio_available and not force_audio_regenerate:
+            audio_status = "audio_file_reused_existing"
+            audio_mp3_path = existing_audio_mp3_path
+            audio_mp3_url = f"/food-line/audio/{audio_filename}"
+            audio_generated = False
+            audio_reused_existing = True
+        else:
+            generation_attempted = True
+            tts_result, tts_diag = synthesize_speech_with_diagnostics(
+                text=script,
+                provider=chosen_provider,
+                model=audio_model,
+                voice=audio_voice,
+                audio_format=audio_format,
+                timeout=audio_timeout_seconds,
+                output_path=audio_temp_path,
+            )
+            tts_diagnostics.update(vars(tts_diag))
+            if tts_result.ok and tts_result.audio_bytes:
+                try:
+                    audio_root.mkdir(parents=True, exist_ok=True)
+                    audio_temp_path.write_bytes(tts_result.audio_bytes)
+                    temp_size = audio_temp_path.stat().st_size
+                    if temp_size <= 0:
+                        raise IOError("temporary audio file was empty")
+                    audio_temp_path.replace(audio_path)
+                    audio_generated = True
+                    audio_available = True
+                    audio_reused_existing = False
+                    audio_replacement_performed = bool(existing_audio_mp3_path)
+                    audio_status = "audio_file_ready"
+                    audio_mp3_path = str(audio_path)
+                    audio_mp3_url = f"/food-line/audio/{audio_filename}"
+                except Exception as exc:  # noqa: BLE001
+                    if audio_temp_path.exists():
+                        try:
+                            audio_temp_path.unlink()
+                        except Exception:  # noqa: BLE001
+                            pass
+                    tts_diagnostics["file_write_exception_type"] = exc.__class__.__name__
+                    tts_diagnostics["file_write_exception_message_sanitized"] = re.sub(r"\s+", " ", str(exc)).strip()[:500]
+                    warning = f"Food Line audio narration file write failed: {exc.__class__.__name__}"
+                    if existing_audio_mp3_path:
+                        audio_available = True
+                        audio_reused_existing = True
+                        audio_mp3_path = existing_audio_mp3_path
+                        audio_mp3_url = f"/food-line/audio/{audio_filename}"
+                        audio_status = "audio_file_reused_existing_after_failed_regeneration"
+                        warnings.append("Food Line audio narration regeneration failed; existing MP3 was preserved.")
+                    elif require_audio:
+                        audio_status = "audio_file_write_failed"
+                        warnings.append(warning)
+                        errors.append(warning)
+                    else:
+                        audio_status = "audio_file_write_failed"
+                        warnings.append(warning)
+            else:
+                failure_reason = tts_result.error_reason or "audio_generation_failed"
+                warning = f"Food Line audio narration was not generated: {failure_reason}"
+                if existing_audio_mp3_path:
+                    audio_available = True
+                    audio_reused_existing = True
+                    audio_mp3_path = existing_audio_mp3_path
+                    audio_mp3_url = f"/food-line/audio/{audio_filename}"
+                    audio_status = "audio_file_reused_existing_after_failed_regeneration"
+                    warnings.append("Food Line audio narration regeneration failed; existing MP3 was preserved.")
+                elif require_audio:
+                    audio_status = failure_reason
+                    warnings.append(warning)
+                    errors.append(warning)
+                else:
+                    audio_status = failure_reason
+                    warnings.append(warning)
+    elif require_audio:
+        warning = "--require-audio requires --generate-audio"
+        warnings.append(warning)
+        errors.append(warning)
+    elif existing_audio_mp3_path:
+        audio_available = True
+        audio_reused_existing = True
+        audio_mp3_path = existing_audio_mp3_path
+        audio_mp3_url = f"/food-line/audio/{audio_filename}"
+        audio_status = "audio_file_reused_existing"
+    metadata = {
+        "dispatch_slug": DISPATCH_SLUG,
+        "edition_date": date,
+        "episode_title": episode_title,
+        "script_text": script,
+        "episode_summary": description,
+        "audio_generated": audio_generated,
+        "audio_available": audio_available,
+        "audio_reused_existing": audio_reused_existing,
+        "audio_required": bool(require_audio),
+        "force_audio_regenerate": bool(force_audio_regenerate),
+        "audio_status": audio_status,
+        "audio_mp3_path": audio_mp3_path,
+        "audio_mp3_url": audio_mp3_url,
+        "podcast_enclosure_present": audio_available,
+        "transcript_url": f"{BASE_URL}/food-line/audio/{date}-transcript.html",
+        "audio_file": audio_filename if audio_available else None,
+        "audio_url": audio_mp3_url,
+        "audio_mime_type": "audio/mpeg" if audio_available else None,
+        "audio_model": audio_model if generate_audio else None,
+        "audio_voice": audio_voice if generate_audio else None,
+        "audio_provider": chosen_provider if generate_audio else "none",
+        "audio_timeout_seconds": audio_timeout_seconds if generate_audio else None,
+        "audio_temp_path": str(audio_temp_path) if generate_audio and (force_audio_regenerate or not audio_available) else None,
+        "audio_replacement_performed": audio_replacement_performed,
+        "existing_audio_mp3_path": existing_audio_mp3_path,
+        "existing_audio_mp3_size": existing_audio_mp3_size,
+        "tts_diagnostics": tts_diagnostics,
+        "tts_provider": tts_diagnostics.get("provider"),
+        "tts_model_requested": tts_diagnostics.get("model_requested"),
+        "tts_voice_requested": tts_diagnostics.get("voice_requested"),
+        "tts_narration_char_count": tts_diagnostics.get("narration_char_count"),
+        "tts_output_path_attempted": tts_diagnostics.get("output_path_attempted"),
+        "tts_api_key_present": tts_diagnostics.get("api_key_present"),
+        "tts_output_dir_exists": tts_diagnostics.get("output_dir_exists"),
+        "tts_partial_mp3_exists": tts_diagnostics.get("partial_mp3_exists"),
+        "tts_elapsed_seconds": tts_diagnostics.get("elapsed_seconds"),
+        "tts_exception_type": tts_diagnostics.get("exception_type"),
+        "tts_exception_message_sanitized": tts_diagnostics.get("exception_message_sanitized"),
+        "tts_error_type": tts_diagnostics.get("exception_type"),
+        "tts_error_message_sanitized": tts_diagnostics.get("exception_message_sanitized"),
+        "tts_timeout_seconds": tts_diagnostics.get("timeout_seconds"),
+        "tts_audio_format": tts_diagnostics.get("audio_format"),
+        "tls_verify": tts_diagnostics.get("tls_verify"),
+        "ca_file_used": tts_diagnostics.get("ca_file_used"),
+        "ca_source": tts_diagnostics.get("ca_source"),
+        "truststore_requested": tts_diagnostics.get("truststore_requested"),
+        "truststore_available": tts_diagnostics.get("truststore_available"),
+        "ssl_cert_file_env": tts_diagnostics.get("ssl_cert_file_env"),
+        "requests_ca_bundle_env": tts_diagnostics.get("requests_ca_bundle_env"),
+        "bluefern_tts_ca_file_env": tts_diagnostics.get("bluefern_tts_ca_file_env"),
+        "tls_workaround_warning": tts_diagnostics.get("tls_workaround_warning"),
+        "tts_file_write_exception_type": tts_diagnostics.get("file_write_exception_type"),
+        "tts_file_write_exception_message_sanitized": tts_diagnostics.get("file_write_exception_message_sanitized"),
+        "warnings": warnings,
+        "errors": errors,
+    }
+    podcast_enclosure_text = "present" if audio_available else "not generated"
+    transcript_parts = [
+        "<!doctype html>",
+        '<html lang="en">',
+        "<head>",
+        '  <meta charset="utf-8" />',
+        '  <meta name="viewport" content="width=device-width, initial-scale=1" />',
+        f"  <title>{html.escape(metadata['episode_title'])}</title>",
+        '  <link rel="stylesheet" href="../assets/site.css" />',
+        "</head>",
+        "<body>",
+        '  <main class="container food-line-audio-shell">',
+        f"    <h1>{html.escape(metadata['episode_title'])}</h1>",
+    ]
+    transcript_parts.append(f"    <h2>Today&apos;s pressure point</h2>")
+    transcript_parts.append(f"    <p>{html.escape(_food_line_public_pressure_point(lead))}</p>")
+    transcript_parts.append("    <h2>Why it matters</h2>")
+    transcript_parts.append(f"    <p>{html.escape(_food_line_why_it_matters(lead))}</p>")
+    transcript_parts.append("    <h2>Publishing note</h2>")
+    transcript_parts.append(f"    <p>{html.escape(_food_line_publishing_note(sources, lead))}</p>")
+    transcript_parts.append("    <h2>Source note</h2>")
+    transcript_parts.append(f"    <p>{html.escape(_food_line_source_note())}</p>")
+    if audio_available and audio_mp3_url:
+        transcript_parts.append(f'    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>')
+    transcript_parts.append("    <h2>Transcript</h2>")
+    transcript_parts.extend(f"    <p>{html.escape(p)}</p>" for p in script.split("\n\n"))
+    transcript_parts.append("    <h2>Transcript and source links</h2>")
+    transcript_parts.append(_food_line_transcript_source_links_html(date))
+    transcript_parts.append(f"    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>")
+    transcript_parts.append("  </main>")
+    transcript_parts.append("</body>")
+    transcript_parts.append("</html>")
+    transcript = "".join(transcript_parts)
+    _write_text(audio_root / f"{date}-transcript.html", transcript)
+    _write_json(audio_root / f"{date}.json", metadata)
+    audio_index = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
+<main class="home food-line-audio-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--audio", "../assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Audio - {_human_date(date)}</h1>
+    <p>{html.escape(_food_line_public_pressure_point(lead))}</p>
+    <p><a href="podcast.xml">Open the podcast feed</a></p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Why it matters</h2>
+    <p>{html.escape(_food_line_why_it_matters(lead))}</p>
+    <h2>Publishing note</h2>
+    <p>{html.escape(_food_line_publishing_note(sources, lead))}</p>
+    <h2>Source note</h2>
+    <p>{html.escape(_food_line_source_note())}</p>
+    <h2>Transcript and source links</h2>
+    {_food_line_transcript_source_links_html(date)}
+    <h2>Podcast enclosure status</h2>
+    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>
+    {"<p><audio controls preload=\"none\" src=\"%s\"></audio></p>" % html.escape(audio_mp3_url) if audio_available and audio_mp3_url else ""}
+    <h2>Publishing note</h2>
+    <p>Artwork uses the official Food Line logo when it is available.</p>
+  </section>
+</main>
+{footer("../")}"""
+    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/", "../assets/site.css", audio_index, DISPATCH_NAME))
+    write_food_line_podcast_feed(project_root=root, dry_run=False)
+    return {
+        "audio_generated": audio_generated,
+        "audio_available": audio_available,
+        "audio_reused_existing": audio_reused_existing,
+        "audio_required": bool(require_audio),
+        "force_audio_regenerate": bool(force_audio_regenerate),
+        "audio_mp3_path": audio_mp3_path,
+        "audio_mp3_url": audio_mp3_url,
+        "podcast_enclosure_present": audio_available,
+        "audio_status": audio_status,
+        "audio_timeout_seconds": audio_timeout_seconds if generate_audio else None,
+        "audio_temp_path": str(audio_temp_path) if generate_audio and (force_audio_regenerate or not audio_available) else None,
+        "audio_replacement_performed": audio_replacement_performed,
+        "existing_audio_mp3_path": existing_audio_mp3_path,
+        "existing_audio_mp3_size": existing_audio_mp3_size,
+        "tts_diagnostics": tts_diagnostics,
+        "tts_provider": tts_diagnostics.get("provider"),
+        "tts_model_requested": tts_diagnostics.get("model_requested"),
+        "tts_voice_requested": tts_diagnostics.get("voice_requested"),
+        "tts_narration_char_count": tts_diagnostics.get("narration_char_count"),
+        "tts_output_path_attempted": tts_diagnostics.get("output_path_attempted"),
+        "tts_api_key_present": tts_diagnostics.get("api_key_present"),
+        "tts_output_dir_exists": tts_diagnostics.get("output_dir_exists"),
+        "tts_partial_mp3_exists": tts_diagnostics.get("partial_mp3_exists"),
+        "tts_elapsed_seconds": tts_diagnostics.get("elapsed_seconds"),
+        "tts_exception_type": tts_diagnostics.get("exception_type"),
+        "tts_exception_message_sanitized": tts_diagnostics.get("exception_message_sanitized"),
+        "tts_error_type": tts_diagnostics.get("exception_type"),
+        "tts_error_message_sanitized": tts_diagnostics.get("exception_message_sanitized"),
+        "tts_timeout_seconds": tts_diagnostics.get("timeout_seconds"),
+        "tts_audio_format": tts_diagnostics.get("audio_format"),
+        "tts_file_write_exception_type": tts_diagnostics.get("file_write_exception_type"),
+        "tts_file_write_exception_message_sanitized": tts_diagnostics.get("file_write_exception_message_sanitized"),
+        "warnings": warnings,
+        "errors": errors,
+        "episode_title": episode_title,
+        "episode_summary": description,
+        "transcript_path": str(audio_root / f"{date}-transcript.html"),
+        "metadata_path": str(audio_root / f"{date}.json"),
+        "podcast_path": str(audio_root / "podcast.xml"),
+    }
+
+
+def _update_index_archive(root: Path, date: str, mission: str) -> None:
+    dispatch_root = root / "output" / "site" / DISPATCH_SLUG
+    public_dates = discover_public_edition_dates(root / "output" / "site", DISPATCH_SLUG)
+    latest_public_date = public_dates[0] if public_dates else ""
+    idx_body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "", None, None)}
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--home", "assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>{DISPATCH_NAME}</h1>
+    <p>{html.escape(mission)}</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Current coverage</h2>
+    {"<p><a href=\"editions/{0}/\">Latest edition</a></p>".format(latest_public_date) if latest_public_date else "<p>No public editions have been published yet.</p>"}
+    <p><a href="audio/">Audio and podcast feed</a></p>
+    <p><a href="map/">Pressure map</a></p>
+    <p>This dispatch is source-backed and uses verified pressure signals only.</p>
+  </section>
+</main>
+{footer("")}"""
+    archive_body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "", "archive.html", "/food-line/")}
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--home", "assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Archive</h1>
+    <p>Chronological archive of source-backed Food Line editions.</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Latest edition</h2>
+    {"<p><a href=\"editions/{0}/\">{0}</a></p>".format(latest_public_date) if latest_public_date else "<p>No public editions have been published yet.</p>"}
+    <p><a href="index.html">Back to the Food Line home page</a></p>
+  </section>
+</main>
+{footer("")}"""
+    _write_text(dispatch_root / "index.html", page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body, DISPATCH_NAME))
+    _write_text(dispatch_root / "archive.html", page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body, DISPATCH_NAME))
+
+
+def _refresh_food_line_source_tables(root: Path) -> None:
+    site_editions_root = root / "output" / "site" / DISPATCH_SLUG / "editions"
+    dispatch_editions_root = root / "output" / "dispatches" / DISPATCH_SLUG / "editions"
+    if not site_editions_root.exists():
+        return
+    for edition_dir in sorted(path for path in site_editions_root.iterdir() if path.is_dir()):
+        sources_path = edition_dir / "sources_manifest.json"
+        if not sources_path.exists():
+            continue
+        payload = _read_json(sources_path)
+        sources = payload if isinstance(payload, list) else []
+        source_table_html = _source_table_html(edition_dir.name, sources)
+        _write_text(edition_dir / "source_table.html", source_table_html)
+        dispatch_edition_dir = dispatch_editions_root / edition_dir.name
+        if dispatch_edition_dir.exists():
+            _write_text(dispatch_edition_dir / "source_table.html", source_table_html)
+
+
+def run_food_line_dispatch(
+    root: Path,
+    date: str,
+    *,
+    collect: bool = False,
+    collect_fetcher: Any | None = None,
+    generate_audio: bool = False,
+    require_audio: bool = False,
+    force_audio_regenerate: bool = False,
+    tts_provider: str = "none",
+    audio_model: str = "gpt-4o-mini-tts",
+    audio_voice: str = "alloy",
+    audio_format: str = "mp3",
+    audio_timeout_seconds: float = 90.0,
+) -> dict[str, Any]:
+    date = validate_date(date)
+    collect_result: dict[str, Any] | None = None
+    registry_purpose_refresh = refresh_food_line_pressure_registry_source_purpose(root)
+    if collect:
+        try:
+            collect_result = collect_food_line_auto_sources(root, date, fetcher=collect_fetcher)
+        except Exception as exc:  # noqa: BLE001
+            collect_result = {"ok": False, "source_count": 0, "failed_sources": [{"source_id": "collector", "reason": str(exc)}]}
+    sources, rejected_records, source_diagnostics = _merged_sources(root, date)
+    for row in sources:
+        pressure_eval = evaluate_food_line_pressure(
+            row,
+            edition_date=date,
+            pressure_required=bool(row.get("pressure_required")),
+            max_age_days=int(row.get("max_age_days") or 14),
+            positive_keywords=row.get("positive_keywords") or [],
+            negative_keywords=row.get("negative_keywords") or [],
+        )
+        row.update(pressure_eval)
+        source_kind = str(row.get("collector_source_type") or row.get("source_type") or "").strip().lower()
+        row["extraction_quality"] = str(row.get("extraction_quality") or ("high" if source_kind in {"rss", "feed", "api"} else "medium")).strip().lower()
+        row["expected_text_basis"] = str(row.get("expected_text_basis") or ("rss_summary" if source_kind in {"rss", "feed"} else "page_text")).strip().lower()
+        row["pressure_verification_required"] = bool(row.get("pressure_verification_required", True))
+        row["location_scope"] = pressure_eval.get("location_scope") or ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
+        row["date_basis"] = str(row.get("published_date_basis") or "source_published")
+        row["map_eligible"] = bool(pressure_eval.get("pressure_signal"))
+        row["coordinate_basis"] = ""
+    adequacy = source_adequacy(sources)
+    previous_context = _load_previous_edition_context(root, date)
+    lead_row, continuing_rows, why_lead, primary_signal_status = _select_primary_pressure_signal(sources, date, previous_context)
+    lead_tags = list((lead_row or {}).get("issue_tags") or [])
+    role_counts = _role_counts(sources)
+    scope_counts = _scope_counts(sources)
+    editorial_status = _editorial_status(sources)
+    pressure_status = _pressure_status(sources)
+    edition_dir_site = root / "output" / "site" / DISPATCH_SLUG / "editions" / date
+    edition_dir_dispatch = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / date
+    review_dir = root / "output" / "review" / DISPATCH_SLUG / date
+    diagnostics_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / date
+    mission = "The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting."
+    _food_line_assets(root, source_diagnostics, [])
+    source_table = _source_table_html(date, sources)
+    map_data = _build_map_data(date, sources)
+    for marker in map_data.get("pressure_markers") or []:
+        if isinstance(marker, dict):
+            coords = _resolve_marker_coordinates(marker)
+            marker["coordinate_basis"] = coords[2] if coords else ""
+    pressure_source_count_by_family = {
+        family: sum(1 for row in sources if str(row.get("source_family") or "") == family and bool(row.get("pressure_signal")))
+        for family in sorted({str(row.get("source_family") or "") for row in sources if str(row.get("source_family") or "")})
+    }
+    pressure_source_count_by_state = {
+        state: sum(1 for row in sources if str(row.get("state") or "") == state and bool(row.get("pressure_signal")))
+        for state in sorted({str(row.get("state") or "") for row in sources if str(row.get("state") or "")})
+    }
+    news_item_count = sum(1 for row in sources if str(row.get("collector_source_type") or row.get("source_type") or "").lower() == "rss")
+    provider_pressure_count = sum(1 for row in sources if str(row.get("source_family") or "") == "food_bank_provider" and bool(row.get("pressure_signal")))
+    official_pressure_count = sum(1 for row in sources if str(row.get("source_family") or "") in {"state_official", "federal_official", "state_policy_news"} and bool(row.get("pressure_signal")))
+    baseline_source_count = sum(1 for row in sources if str(row.get("source_role") or "") == "baseline_condition")
+    rejected_news_count = int((collect_result or {}).get("rejected_news_count") or 0)
+    rejected_news_reasons = list((collect_result or {}).get("rejected_news_reasons") or [])
+    rejected_news_by_source = dict((collect_result or {}).get("rejected_news_by_source") or {})
+    collected_source_count_by_source_id = dict((collect_result or {}).get("collected_source_count_by_source_id") or {})
+    pressure_verified_count = int((collect_result or {}).get("pressure_verified_count") or sum(1 for row in sources if str(row.get("pressure_verification_status") or "") == "source_text_verified"))
+    pressure_demoted_unverified_count = int((collect_result or {}).get("pressure_demoted_unverified_count") or sum(1 for row in sources if str(row.get("pressure_verification_status") or "") == "demoted_context"))
+    pressure_registry_only_count = int((collect_result or {}).get("pressure_registry_only_count") or sum(1 for row in sources if str(row.get("pressure_verification_status") or "") == "registry_summary_only"))
+    pressure_evidence_basis_counts = dict((collect_result or {}).get("pressure_evidence_basis_counts") or Counter(str(row.get("evidence_text_basis") or "insufficient_evidence") for row in sources))
+    collected_count_by_extraction_quality = dict((collect_result or {}).get("collected_count_by_extraction_quality") or Counter(str(row.get("extraction_quality") or "unknown") for row in sources))
+    verified_pressure_count_by_extraction_quality = dict((collect_result or {}).get("verified_pressure_count_by_extraction_quality") or Counter(str(row.get("extraction_quality") or "unknown") for row in sources if str(row.get("pressure_verification_status") or "") == "source_text_verified"))
+    demoted_count_by_extraction_quality = dict((collect_result or {}).get("demoted_count_by_extraction_quality") or Counter(str(row.get("extraction_quality") or "unknown") for row in sources if str(row.get("pressure_verification_status") or "") == "demoted_context"))
+    fetch_failure_count_by_source_id = dict((collect_result or {}).get("fetch_failure_count_by_source_id") or {})
+    no_evidence_count_by_source_id = dict((collect_result or {}).get("no_evidence_count_by_source_id") or {})
+    rejected_by_source_purpose_count = int((collect_result or {}).get("rejected_by_source_purpose_count") or sum(1 for row in sources if str(row.get("source_purpose") or "") in {"donation_page", "evergreen_context", "resource_page", "program_description"} and str(row.get("pressure_verification_status") or "") == "demoted_context"))
+    demoted_by_source_purpose_count = int((collect_result or {}).get("demoted_by_source_purpose_count") or sum(1 for row in sources if str(row.get("source_purpose") or "") in {"donation_page", "evergreen_context", "resource_page", "program_description"} and str(row.get("pressure_verification_status") or "") == "demoted_context"))
+    collector_audit_path = str((collect_result or {}).get("collector_audit_path") or "")
+    pressure_review_path = _write_food_line_review_csv(root, date, sources)
+    context_rows = _food_line_context_rows(sources, lead_row, continuing_rows)
+    continuing_source_record_ids = [str(row.get("source_record_id") or "").strip() for row in continuing_rows if str(row.get("source_record_id") or "").strip()]
+    continuing_source_urls = [str(row.get("url") or "").strip() for row in continuing_rows if str(row.get("url") or "").strip()]
+    public_rendered = bool(lead_row)
+    qualified_primary_count = 1 if lead_row else 0
+    continuing_pressure_count = len(continuing_rows)
+    continuing_context_count = continuing_pressure_count + len(context_rows)
+    excluded_count = max(0, len(sources) - len(map_data.get("pressure_markers") or []))
+    skip_reason = "" if public_rendered else _food_line_skip_reason()
+    manifest = {
+        "dispatch_slug": DISPATCH_SLUG,
+        "dispatch_name": DISPATCH_NAME,
+        "edition_date": date,
+        "generated_at": utc_now(),
+        "source_count": len(sources),
+        "story_count": qualified_primary_count,
+        "source_adequacy": adequacy,
+        "lead_source_record_id": (lead_row or {}).get("source_record_id"),
+        "lead_source_canonical_url": canonical_url(str((lead_row or {}).get("url") or "")) if lead_row else "",
+        "previous_edition_date": previous_context.get("previous_edition_date"),
+        "primary_signal_status": primary_signal_status,
+        "public_rendered": public_rendered,
+        "qualified_primary_count": qualified_primary_count,
+        "continuing_context_count": continuing_context_count,
+        "continuing_pressure_count": continuing_pressure_count,
+        "context_count": len(context_rows),
+        "excluded_count": excluded_count,
+        "skip_reason": skip_reason,
+        "continuing_pressure_source_record_ids": continuing_source_record_ids,
+        "continuing_pressure_source_urls": continuing_source_urls,
+        "lead_issue_tags": lead_tags,
+        "source_roles_count": role_counts,
+        "local_signal_count": scope_counts["local_signal_count"],
+        "state_signal_count": scope_counts["state_signal_count"],
+        "national_context_count": scope_counts["national_context_count"],
+        "editorial_status": editorial_status,
+        "pressure_status": pressure_status,
+        "why_this_lead": why_lead,
+        "selected_lead_source_role": (lead_row or {}).get("source_role"),
+        "selected_lead_pressure_type": (lead_row or {}).get("pressure_type"),
+        "selected_lead_affected_groups": (lead_row or {}).get("affected_groups") or [],
+        "pressure_source_count_by_family": pressure_source_count_by_family,
+        "pressure_source_count_by_state": pressure_source_count_by_state,
+        "news_item_count": news_item_count,
+        "provider_pressure_count": provider_pressure_count,
+        "official_pressure_count": official_pressure_count,
+        "baseline_source_count": baseline_source_count,
+        "rejected_news_count": rejected_news_count,
+        "rejected_news_reasons": rejected_news_reasons,
+        "rejected_news_by_source": rejected_news_by_source,
+        "collected_source_count_by_source_id": collected_source_count_by_source_id,
+        "pressure_verified_count": pressure_verified_count,
+        "pressure_demoted_unverified_count": pressure_demoted_unverified_count,
+        "pressure_registry_only_count": pressure_registry_only_count,
+        "pressure_evidence_basis_counts": dict(sorted(pressure_evidence_basis_counts.items())),
+        "collected_count_by_extraction_quality": dict(sorted(collected_count_by_extraction_quality.items())),
+        "verified_pressure_count_by_extraction_quality": dict(sorted(verified_pressure_count_by_extraction_quality.items())),
+        "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
+        "fetch_failure_count_by_source_id": dict(sorted(fetch_failure_count_by_source_id.items())),
+        "no_evidence_count_by_source_id": dict(sorted(no_evidence_count_by_source_id.items())),
+        "rejected_by_source_purpose_count": rejected_by_source_purpose_count,
+        "demoted_by_source_purpose_count": demoted_by_source_purpose_count,
+        "registry_source_purpose_refresh": registry_purpose_refresh,
+        "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
+    }
+
+    audio_result: dict[str, Any] = {
+        "audio_generated": False,
+        "audio_available": False,
+        "audio_reused_existing": False,
+        "audio_required": require_audio,
+        "force_audio_regenerate": bool(force_audio_regenerate),
+        "audio_mp3_path": None,
+        "audio_mp3_url": None,
+        "podcast_enclosure_present": False,
+        "existing_audio_mp3_path": None,
+        "existing_audio_mp3_size": None,
+        "audio_temp_path": None,
+        "audio_replacement_performed": False,
+        "audio_status": "skipped",
+        "warnings": [],
+        "errors": [],
+    }
+    if public_rendered:
+        html_page = render_edition(
+            date,
+            sources,
+            adequacy,
+            lead_row,
+            editorial_status,
+            role_counts,
+            scope_counts,
+            previous_context,
+            primary_signal_status,
+            continuing_rows,
+        )
+        for d in (edition_dir_site, edition_dir_dispatch):
+            _write_text(d / "index.html", html_page)
+            _write_text(d / "source_table.html", source_table)
+            _write_json(d / "sources_manifest.json", sources)
+            _write_json(d / "curation_manifest.json", {"stories": sources[:6]})
+            _write_json(d / "edition_manifest.json", manifest)
+        map_html = _render_map_index(date, map_data)
+        _write_json(root / "output" / "site" / DISPATCH_SLUG / "map" / "map_data.json", map_data)
+        _write_text(root / "output" / "site" / DISPATCH_SLUG / "map" / "index.html", map_html)
+        _update_index_archive(root, date, mission)
+        _refresh_food_line_source_tables(root)
+        audio_result = write_food_line_audio(
+            root,
+            date,
+            sources,
+            adequacy,
+            lead_row,
+            editorial_status,
+            generate_audio=generate_audio,
+            require_audio=require_audio,
+            force_audio_regenerate=force_audio_regenerate,
+            tts_provider=tts_provider,
+            audio_model=audio_model,
+            audio_voice=audio_voice,
+            audio_format=audio_format,
+            audio_timeout_seconds=audio_timeout_seconds,
+        )
+    else:
+        _remove_food_line_public_edition(root, date)
+        _remove_food_line_audio_artifacts(root, date)
+        _write_food_line_audio_status_page(root, date, skip_reason)
+        _write_food_line_diagnostics_manifest(root, date, manifest, map_data)
+        _update_index_archive(root, date, mission)
+        write_food_line_podcast_feed(project_root=root, dry_run=False)
+    audio_generated = bool(audio_result.get("audio_generated"))
+    audio_available = bool(audio_result.get("audio_available"))
+    audio_reused_existing = bool(audio_result.get("audio_reused_existing"))
+    audio_required = bool(audio_result.get("audio_required"))
+    force_audio_regenerate = bool(audio_result.get("force_audio_regenerate"))
+    audio_mp3_path = audio_result.get("audio_mp3_path")
+    audio_mp3_url = audio_result.get("audio_mp3_url")
+    podcast_enclosure_present = bool(audio_result.get("podcast_enclosure_present"))
+    existing_audio_mp3_path = audio_result.get("existing_audio_mp3_path")
+    existing_audio_mp3_size = audio_result.get("existing_audio_mp3_size")
+    audio_temp_path = audio_result.get("audio_temp_path")
+    audio_replacement_performed = bool(audio_result.get("audio_replacement_performed"))
+    audio_warnings = list(audio_result.get("warnings") or [])
+    audio_errors = list(audio_result.get("errors") or [])
+    ok = not audio_errors
+    return {
+        "ok": ok,
+        "dispatch_slug": DISPATCH_SLUG,
+        "edition_date": date,
+        "source_count": len(sources),
+        "source_adequacy": adequacy,
+        "lead_source_record_id": (lead_row or {}).get("source_record_id"),
+        "lead_source_canonical_url": canonical_url(str((lead_row or {}).get("url") or "")) if lead_row else "",
+        "previous_edition_date": previous_context.get("previous_edition_date"),
+        "primary_signal_status": primary_signal_status,
+        "continuing_pressure_source_record_ids": continuing_source_record_ids,
+        "continuing_pressure_source_urls": continuing_source_urls,
+        "lead_issue_tags": lead_tags,
+        "source_roles_count": role_counts,
+        "local_signal_count": scope_counts["local_signal_count"],
+        "state_signal_count": scope_counts["state_signal_count"],
+        "national_context_count": scope_counts["national_context_count"],
+        "editorial_status": editorial_status,
+        "pressure_status": pressure_status,
+        "why_this_lead": why_lead,
+        "selected_lead_source_role": (lead_row or {}).get("source_role"),
+        "selected_lead_pressure_type": (lead_row or {}).get("pressure_type"),
+        "selected_lead_affected_groups": (lead_row or {}).get("affected_groups") or [],
+        "pressure_source_count_by_family": pressure_source_count_by_family,
+        "pressure_source_count_by_state": pressure_source_count_by_state,
+        "news_item_count": news_item_count,
+        "provider_pressure_count": provider_pressure_count,
+        "official_pressure_count": official_pressure_count,
+        "baseline_source_count": baseline_source_count,
+        "rejected_news_count": rejected_news_count,
+        "rejected_news_reasons": rejected_news_reasons,
+        "rejected_news_by_source": rejected_news_by_source,
+        "collected_source_count_by_source_id": collected_source_count_by_source_id,
+        "pressure_verified_count": pressure_verified_count,
+        "pressure_demoted_unverified_count": pressure_demoted_unverified_count,
+        "pressure_registry_only_count": pressure_registry_only_count,
+        "pressure_evidence_basis_counts": dict(sorted(pressure_evidence_basis_counts.items())),
+        "collected_count_by_extraction_quality": dict(sorted(collected_count_by_extraction_quality.items())),
+        "verified_pressure_count_by_extraction_quality": dict(sorted(verified_pressure_count_by_extraction_quality.items())),
+        "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
+        "fetch_failure_count_by_source_id": dict(sorted(fetch_failure_count_by_source_id.items())),
+        "no_evidence_count_by_source_id": dict(sorted(no_evidence_count_by_source_id.items())),
+        "rejected_by_source_purpose_count": rejected_by_source_purpose_count,
+        "demoted_by_source_purpose_count": demoted_by_source_purpose_count,
+        "registry_source_purpose_refresh": registry_purpose_refresh,
+        "collector_audit_path": collector_audit_path,
+        "pressure_review_path": str(pressure_review_path),
+        "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),
+        "pressure_marker_count": sum(1 for row in sources if bool(row.get("pressure_signal")) and bool(row.get("map_eligible"))),
+        "affected_group_counts": {group: sum(1 for row in sources if group in (row.get("affected_groups") or [])) for group in sorted({g for row in sources for g in (row.get("affected_groups") or [])})},
+        "location_pressure_counts": {
+            str(row.get("location_name")): int(
+                sum(1 for s in sources if bool(s.get("pressure_signal")) and str(s.get("location_name")) == str(row.get("location_name")))
+            )
+            for row in sources
+            if bool(row.get("pressure_signal"))
+        },
+        "baseline_record_count": sum(1 for row in sources if str(row.get("source_role")) == "baseline_condition"),
+        "context_record_count": sum(1 for row in sources if str(row.get("source_role")) in {"resource_context", "policy_context", "baseline_condition"}),
+        "excluded_context_count": sum(1 for row in sources if str(row.get("source_role")) in {"resource_context", "policy_context", "baseline_condition"}),
+        "public_rendered": public_rendered,
+        "qualified_primary_count": qualified_primary_count,
+        "continuing_pressure_count": continuing_pressure_count,
+        "continuing_context_count": continuing_context_count,
+        "excluded_count": excluded_count,
+        "skip_reason": skip_reason,
+        "rejected_source_records": rejected_records,
+        "source_diagnostics": source_diagnostics,
+        "collector_result": collect_result,
+        "generated_output_path": str(root / "output" / "site" / DISPATCH_SLUG if public_rendered else review_dir),
+        "diagnostics_output_path": str(diagnostics_dir),
+        "diagnostics_manifest_path": str(diagnostics_dir / "run_manifest.json"),
+        "audio_generated": audio_generated,
+        "audio_available": audio_available,
+        "audio_reused_existing": audio_reused_existing,
+        "audio_required": audio_required,
+        "force_audio_regenerate": bool(force_audio_regenerate),
+        "audio_mp3_path": audio_mp3_path,
+        "audio_mp3_url": audio_mp3_url,
+        "podcast_enclosure_present": podcast_enclosure_present,
+        "existing_audio_mp3_path": existing_audio_mp3_path,
+        "existing_audio_mp3_size": existing_audio_mp3_size,
+        "audio_temp_path": audio_temp_path,
+        "audio_replacement_performed": audio_replacement_performed,
+        "audio_status": audio_result.get("audio_status"),
+        "audio_timeout_seconds": audio_timeout_seconds,
+        "tts_provider": audio_result.get("tts_provider"),
+        "tts_model_requested": audio_result.get("tts_model_requested"),
+        "tts_voice_requested": audio_result.get("tts_voice_requested"),
+        "tts_narration_char_count": audio_result.get("tts_narration_char_count"),
+        "tts_output_path_attempted": audio_result.get("tts_output_path_attempted"),
+        "tts_api_key_present": audio_result.get("tts_api_key_present"),
+        "tts_output_dir_exists": audio_result.get("tts_output_dir_exists"),
+        "tts_partial_mp3_exists": audio_result.get("tts_partial_mp3_exists"),
+        "tts_elapsed_seconds": audio_result.get("tts_elapsed_seconds"),
+        "tts_exception_type": audio_result.get("tts_exception_type"),
+        "tts_exception_message_sanitized": audio_result.get("tts_exception_message_sanitized"),
+        "tts_error_type": audio_result.get("tts_error_type"),
+        "tts_error_message_sanitized": audio_result.get("tts_error_message_sanitized"),
+        "tts_timeout_seconds": audio_result.get("tts_timeout_seconds"),
+        "tts_audio_format": audio_result.get("tts_audio_format"),
+        "tls_verify": audio_result.get("tls_verify"),
+        "ca_file_used": audio_result.get("ca_file_used"),
+        "ca_source": audio_result.get("ca_source"),
+        "truststore_requested": audio_result.get("truststore_requested"),
+        "truststore_available": audio_result.get("truststore_available"),
+        "ssl_cert_file_env": audio_result.get("ssl_cert_file_env"),
+        "requests_ca_bundle_env": audio_result.get("requests_ca_bundle_env"),
+        "bluefern_tts_ca_file_env": audio_result.get("bluefern_tts_ca_file_env"),
+        "tls_workaround_warning": audio_result.get("tls_workaround_warning"),
+        "tts_file_write_exception_type": audio_result.get("tts_file_write_exception_type"),
+        "tts_file_write_exception_message_sanitized": audio_result.get("tts_file_write_exception_message_sanitized"),
+        "warnings": audio_warnings,
+        "audio_warnings": audio_warnings,
+        "audio_errors": audio_errors,
+    }
+
+
+def publish_food_line_pages(root: Path, date: str) -> tuple[bool, list[str], dict[str, Any]]:
+    cmd = [
+        sys.executable,
+        "scripts\\publish_github_pages.py",
+        "--pages-repo",
+        str(PAGES_REPO),
+        "--pages-branch",
+        PAGES_BRANCH,
+        "--expect-date",
+        date,
+        "--expect-dispatch",
+        "food-line",
+        "--only-dispatch",
+        "food-line",
+        "--commit",
+        "--no-push",
+    ]
+    done = _run_cmd(cmd, cwd=root)
+    if done.returncode != 0:
+        return False, [done.stderr.strip() or done.stdout.strip() or "pages publish failed"], {}
+    payload = _parse_json_stdout(done.stdout)
+    errors = [str(item) for item in (payload.get("errors") or [])]
+    return payload.get("ok") is True and not errors, errors, payload
+
+
+def push_pages_repo() -> tuple[bool, str]:
+    if not PAGES_REPO.exists():
+        return False, f"pages repo does not exist: {PAGES_REPO}"
+    pushed = _run_cmd(["git", "push", "origin", PAGES_BRANCH], cwd=PAGES_REPO)
+    if pushed.returncode != 0:
+        return False, pushed.stderr.strip() or pushed.stdout.strip() or "git push failed"
+    return True, "live pages push completed"
+
+
+def run_range(root: Path, start_date: str, end_date: str, *, collect: bool = False) -> list[dict[str, Any]]:
+    start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
+    end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
+    if end < start:
+        raise ValueError("end date must be on or after start date")
+    out: list[dict[str, Any]] = []
+    day = start
+    while day <= end:
+        out.append(run_food_line_dispatch(root, day.isoformat(), collect=collect))
+        day += timedelta(days=1)
+    return out
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Generate Food Line Dispatch daily editions.")
+    p.add_argument("--date", help="Edition date YYYY-MM-DD")
+    p.add_argument("--start-date")
+    p.add_argument("--end-date")
+    p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
+    p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
+    p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
+    p.add_argument("--generate-audio", action="store_true", help="Generate Food Line audio narration and podcast MP3 artifacts.")
+    p.add_argument("--require-audio", action="store_true", help="Require the Food Line audio MP3 to be generated before the run can succeed.")
+    p.add_argument("--force-audio-regenerate", action="store_true", help="Regenerate Food Line audio even when an MP3 already exists; preserve the existing MP3 if regeneration fails.")
+    p.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="Optional TTS provider when --generate-audio is used.")
+    p.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model for Food Line audio generation.")
+    p.add_argument("--audio-voice", default="alloy", help="TTS voice for Food Line audio generation.")
+    p.add_argument("--audio-format", choices=("mp3",), default="mp3", help="Audio format for Food Line audio generation.")
+    p.add_argument("--audio-timeout-seconds", type=float, default=90.0, help="Timeout for Food Line TTS requests.")
+    return p.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    try:
+        if args.push and not args.publish:
+            raise ValueError("--push requires --publish")
+        if args.start_date or args.end_date:
+            if not args.start_date or not args.end_date:
+                raise ValueError("--start-date and --end-date are required together")
+            result = {"ok": True, "runs": run_range(Path.cwd(), args.start_date, args.end_date, collect=bool(args.collect))}
+        else:
+            if not args.date:
+                raise ValueError("--date is required")
+            result = run_food_line_dispatch(
+                Path.cwd(),
+                args.date,
+                collect=bool(args.collect),
+                generate_audio=bool(args.generate_audio),
+                require_audio=bool(args.require_audio),
+                force_audio_regenerate=bool(args.force_audio_regenerate),
+                tts_provider=str(args.tts_provider or "none"),
+                audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                audio_voice=str(args.audio_voice or "alloy"),
+                audio_format=str(args.audio_format or "mp3"),
+                audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
+            )
+            result["pages_publish_path"] = str(PAGES_REPO)
+            result["pages_publish_copied"] = False
+            result["pushed"] = False
+            if args.publish and result.get("ok"):
+                ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
+                result["pages_publish_copied"] = ok
+                result["pages_publish_result"] = publish_payload
+                if not ok:
+                    result["ok"] = False
+                    result["errors"] = errors
+                elif args.push:
+                    pushed, message = push_pages_repo()
+                    result["pushed"] = pushed
+                    if not pushed:
+                        result["ok"] = False
+                        result["errors"] = [message]
+                    else:
+                        result["push_message"] = message
+            elif args.publish and not result.get("ok"):
+                result["publish_skipped_reason"] = "generation failed"
+        result["push_requested"] = bool(args.push)
+        result["publish_requested"] = bool(args.publish)
+        result["git_push_occurred"] = bool(result.get("pushed"))
+    except Exception as exc:  # noqa: BLE001
+        result = {"ok": False, "errors": [str(exc)]}
+    print(json.dumps(result, indent=2))
+    return 0 if result.get("ok") else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

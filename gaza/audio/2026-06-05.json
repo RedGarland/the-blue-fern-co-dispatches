@@ -1,62 +1,42 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-05T13:01:19.842820Z",
-  "audio_status": "audio_file_ready",
+  "generated_at": "2026-06-05T15:50:59.141377Z",
+  "audio_status": "audio_file_ready_existing",
   "audio_file": "2026-06-05.mp3",
   "audio_url": "/gaza/audio/2026-06-05.mp3",
   "audio_mime_type": "audio/mpeg",
-  "tts_provider": "openai",
-  "tts_model": "gpt-4o-mini-tts",
-  "tts_voice": "alloy",
+  "tts_provider": "none",
+  "tts_model": null,
+  "tts_voice": null,
   "tts_error": null,
   "voice_mode": "single",
-  "tts_voices_used": [
-    "alloy"
-  ],
-  "segment_voice_map": [
-    {
-      "segment_index": 0,
-      "segment_type": "full",
-      "voice": "alloy"
-    }
-  ],
-  "tts_input_character_count": 3100,
-  "tts_input_word_count": 474,
+  "tts_voices_used": [],
+  "segment_voice_map": [],
+  "tts_input_character_count": 0,
+  "tts_input_word_count": 0,
   "tts_story_count": 6,
-  "tts_segment_count": 1,
+  "tts_segment_count": 0,
   "audio_duration_seconds": null,
   "audio_file_size_bytes": 2839296,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-06-05T13:01:19.842798Z",
+  "cost_logged_at": "2026-06-05T15:50:59.141361Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-05-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-05/",
-  "script_text": "This is the Gaza Dispatch audio briefing for June 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end. In today's newsletter: \u200bGlobal powers\u200b are focused on oil markets and elections\u200b but those living through conflict in the Middle East feel abandoned Good morning. It's been another week of brinkmanship via Truth Social and ceasefires broken before they've been announced. While US president Donald Trump claims an agreement with Iran could happen soon, for those living in the Middle East it does not feel like peace is anywhere near. People have seen more bombs dropped in Lebanon this week; and the death toll continues to rise, national economies falter, and displacement abounds. UK politics | Andy Burnham has signalled he would begin transforming the broken social care system this year if he became prime minister, he has said in an interview with the Guardian , accusing Westminster of \"flinching away\" from tackling difficult policy problems. Environment | Humanity can raise living standards, reduce inequality and keep global heating within a 2C rise, according to a sweeping vision for planetary survival . Ukraine | The Ukrainian president, Volodymyr Zelenskyy, has called for face-to-face negotiations in a public letter addressed directly to the Russian president, Vladimir Putin. England news | The poorest and most nature-deprived communities in England will be further left behind in their access to green spaces if proposed changes to planning laws go ahead, a report finds. UK news | Andrew Mountbatten-Windsor received private income from subletting three cottages on his Windsor Royal Lodge estate while paying a \"peppercorn rent\" to the crown estate, a report into royal property arrangements has revealed. This was reported by The Guardian.\n\n2. Israel Supreme Court strikes down ban on Red Cross prison visits. Following the court's overturning of the ban, the ICRC said it is 'ready to resume' its work in visiting Palestinian prisoners in held in Israeli detention. This was reported by The New Arab.\n\n3. UN agency says displacement in Lebanon rises despite ceasefire. More than 2,100 people sheltering in UNRWA facilities as hostilities continue despite truce, agency says. This was reported by Anadolu Agency.\n\n4. How the world failed a mother's children, killed in Israeli strikes on Gaza. This was reported by Al Jazeera.\n\n5. 59 years after 1967 war, Israel continues military campaigns in Gaza, West Bank, Lebanon. Palestinian official says anniversary comes amid broad Israeli offensive against Palestinians. This was reported by Anadolu Agency.\n\n6. Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report. Haaretz investigation cites archival documents, government correspondence and unpublished soldiers' accounts on displacement of Palestinians and Syrians. This was reported by Anadolu Agency.\n\nFor the full source-backed dispatch, read the June 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel Supreme Court strikes down ban on Red Cross prison visits. Following the court's overturning of the ban, the ICRC said it is 'ready to resume' its work in visiting Palestinian prisoners in held in Israeli detention. This was reported by The New Arab.\n\n2. How the world failed a mother's children, killed in Israeli strikes on Gaza. This was reported by Al Jazeera.\n\n3. 59 years after 1967 war, Israel continues military campaigns in Gaza, West Bank, Lebanon. Palestinian official says anniversary comes amid broad Israeli offensive against Palestinians. This was reported by Anadolu Agency.\n\n4. Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report. Haaretz investigation cites archival documents, government correspondence and unpublished soldiers' accounts on displacement of Palestinians and Syrians. This was reported by Anadolu Agency.\n\n5. Israeli strikes kill 11 people in Gaza City, medics say. Israel's military says killed four Hamas security officials. This was reported by BBC News.\n\n6. Hamas says won't surrender arms but only police will carry weapons in Gaza. Hamas official Husam Badran, in an exclusive interview, lays out what the group is ready to do ahead of Cairo talks. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
-    {
-      "source_record_id": "gaza-2026-06-05-guardian-world-929975f93ca2",
-      "publisher": "The Guardian",
-      "url": "https://www.theguardian.com/world/2026/jun/05/friday-briefing-how-gaza-lebanon-and-iran-have-found-themselves-caught-in-an-escalation-without-end",
-      "title": "Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end"
-    },
     {
       "source_record_id": "gaza-2026-06-05-the-new-arab-aea6d78a7b80",
       "publisher": "The New Arab",
       "url": "https://www.newarab.com/news/israel-supreme-court-strikes-down-ban-red-cross-prison-visits",
       "title": "Israel Supreme Court strikes down ban on Red Cross prison visits"
-    },
-    {
-      "source_record_id": "gaza-2026-06-05-anadolu-middle-east-6a93dfea03aa",
-      "publisher": "Anadolu Agency",
-      "url": "https://www.aa.com.tr/en/middle-east/un-agency-says-displacement-in-lebanon-rises-despite-ceasefire/3957441",
-      "title": "UN agency says displacement in Lebanon rises despite ceasefire"
     },
     {
       "source_record_id": "gaza-2026-06-05-aljazeera-middle-east-5c1e4d53de9d",
@@ -75,6 +55,18 @@
       "publisher": "Anadolu Agency",
       "url": "https://www.aa.com.tr/en/middle-east/newly-disclosed-israeli-testimonies-detail-expulsions-killings-during-1967-war-report/3957493",
       "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report"
+    },
+    {
+      "source_record_id": "gaza-2026-06-05-bbc-middle-east-fae217629ca2",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cg5prr9gr1ro?at_medium=RSS&at_campaign=rss",
+      "title": "Israeli strikes kill 11 people in Gaza City, medics say"
+    },
+    {
+      "source_record_id": "gaza-2026-06-05-aljazeera-middle-east-4058b3f90038",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/5/hamas-says-wont-surrender-arms-but-only-police-will-carry-weapons-in-gaza?traffic_source=rss",
+      "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza"
     }
   ]
 }

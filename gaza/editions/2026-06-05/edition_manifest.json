@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-05T13:00:43.280450+00:00",
+  "generated_at": "2026-06-05T15:55:55.758697+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-05/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-05",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-05",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-05",
   "template_version": "gaza-source-record-v1",
-  "source_count": 10,
-  "story_count": 10,
+  "source_count": 11,
+  "story_count": 8,
   "source_adequacy_status": "daily_briefing",
   "source_adequacy_label": "Daily briefing",
   "publisher_count": 5,
@@ -35,7 +35,7 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
-    "suppressed 2 repeated/stale candidate sources via cross-edition dedupe"
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe"
   ],
   "errors": []
 }

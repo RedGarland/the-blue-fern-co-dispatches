@@ -2,17 +2,17 @@
 
 - Status: **daily_briefing**
 - Recommendation: **publish normally**
-- Sources: 10 from 5 publishers
+- Sources: 11 from 5 publishers
 - Publishers: Al Jazeera, Anadolu Agency, BBC News, The Guardian, The New Arab
 - Categories: 1
 - All stories from one publisher: false
-- Core ground-development sources: 6
+- Core ground-development sources: 7
 - Context-only sources: 0
 - Claim-attributed sources: 0
 
 ## Source families
 - news_media: 3
-- other_public_media: 3
+- other_public_media: 4
 - regional_wire: 3
 - wire_international: 1
 

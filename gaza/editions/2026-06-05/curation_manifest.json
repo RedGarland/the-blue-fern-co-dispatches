@@ -26,7 +26,7 @@
       "source_reliability": 14,
       "date_confidence": 18
     },
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "source_record_ids": [
       "gaza-2026-06-05-guardian-world-929975f93ca2"
@@ -40,7 +40,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -51,15 +51,16 @@
     "claim_status": "independently_reported",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
+    "include_decision": "exclude_written_public_edition",
+    "public_rendered": false,
+    "excluded_reason": "excluded marker 'UK politics |'",
     "prior_story_matched": null,
     "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "dedupe_classification": null,
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-006",
+    "story_id": "gaza-story-2026-06-05-009",
     "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
     "summary": "Following the court's overturning of the ban, the ICRC said it is 'ready to resume' its work in visiting Palestinian prisoners in held in Israeli detention.",
     "category": "palestinian_development",
@@ -97,7 +98,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -117,7 +118,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-008",
+    "story_id": "gaza-story-2026-06-05-010",
     "title": "UN agency says displacement in Lebanon rises despite ceasefire",
     "summary": "More than 2,100 people sheltering in UNRWA facilities as hostilities continue despite truce, agency says.",
     "category": "palestinian_development",
@@ -141,7 +142,7 @@
       "source_reliability": 14,
       "date_confidence": 18
     },
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "source_record_ids": [
       "gaza-2026-06-05-anadolu-middle-east-6a93dfea03aa"
@@ -155,7 +156,7 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza",
       "unrwa"
@@ -167,29 +168,32 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
+    "include_decision": "exclude_written_public_edition",
+    "public_rendered": false,
+    "excluded_reason": "excluded marker 'Lebanon rises despite ceasefire'",
     "prior_story_matched": null,
     "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "dedupe_classification": null,
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-007",
-    "title": "How the world failed a mother's children, killed in Israeli strikes on Gaza",
-    "summary": "",
+    "story_id": "gaza-story-2026-06-05-002",
+    "title": "Gaza, Iran, Lebanon: If ceasefires are in place, why do strikes continue?",
+    "summary": "International law sets rules for ceasefires, but who enforces them when violations continue? Three experts explain.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 56,
+    "score": 76,
     "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
       "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
+      "humanitarian_impact": 12,
       "aid_access": 0,
-      "ceasefire_diplomacy": 0,
+      "ceasefire_diplomacy": 8,
       "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
@@ -200,85 +204,28 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-05-aljazeera-middle-east-5c1e4d53de9d"
+      "gaza-2026-06-05-aljazeera-middle-east-7e6302645b13"
     ],
     "source_ids": [
-      "gaza-2026-06-05-aljazeera-middle-east-5c1e4d53de9d"
+      "gaza-2026-06-05-aljazeera-middle-east-7e6302645b13"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/6/5/how-the-world-failed-a-mothers-children-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
+      "https://www.aljazeera.com/news/2026/6/5/gaza-iran-lebanon-if-ceasefires-are-in-place-why-do-strikes-continue?traffic_source=rss"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
-    "top_story_relevance_score": 56,
+    "top_story_relevance_score": 76,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-04-005",
-    "prior_edition_date": "2026-06-04",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-06-05-010",
-    "title": "59 years after 1967 war, Israel continues military campaigns in Gaza, West Bank, Lebanon",
-    "summary": "Palestinian official says anniversary comes amid broad Israeli offensive against Palestinians.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 58,
-    "scoring_reasons": [
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-06-05-anadolu-middle-east-4ff6584ddfba"
-    ],
-    "source_ids": [
-      "gaza-2026-06-05-anadolu-middle-east-4ff6584ddfba"
-    ],
-    "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/59-years-after-1967-war-israel-continues-military-campaigns-in-gaza-west-bank-lebanon/3957397"
-    ],
-    "publisher_names": [
-      "Anadolu Agency"
-    ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "west bank"
-    ],
-    "top_story_relevance_score": 58,
-    "substantive_ground": false,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,
@@ -288,6 +235,62 @@
   },
   {
     "story_id": "gaza-story-2026-06-05-003",
+    "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
+    "summary": "Along with food and water shortages, doctors fear outbreaks of serious diseases in Gaza, says Initiative Christian Orient.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-05-anadolu-middle-east-adfe3cd398d3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-05-anadolu-middle-east-adfe3cd398d3"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/austrian-ngo-denounces-unbearable-humanitarian-conditions-in-gaza/3957882"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-05-008",
     "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
     "summary": "Haaretz investigation cites archival documents, government correspondence and unpublished soldiers' accounts on displacement of Palestinians and Syrians.",
     "category": "conflict",
@@ -323,7 +326,7 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -379,7 +382,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -398,7 +401,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-002",
+    "story_id": "gaza-story-2026-06-05-007",
     "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza",
     "summary": "Hamas official Husam Badran, in an exclusive interview, lays out what the group is ready to do ahead of Cairo talks.",
     "category": "conflict",
@@ -434,7 +437,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -453,7 +456,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-001",
+    "story_id": "gaza-story-2026-06-05-006",
     "title": "The Jewish filmmaker trying to understand Israel after Gaza",
     "summary": "We speak to filmmaker Gillian Moseley about 'Planet. Israel', her new documentary exploring why so many Israelis support the genocide in Gaza.",
     "category": "conflict",
@@ -488,7 +491,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -507,7 +510,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-05-009",
+    "story_id": "gaza-story-2026-06-05-011",
     "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
     "summary": "A new poll suggests Labour members are far ahead of the party leadership on Gaza, with overwhelming support for sanctions on. Israel.",
     "category": "conflict",
@@ -542,7 +545,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-05T13:00:43.280450+00:00",
+    "generated_at": "2026-06-05T15:55:55.758697+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

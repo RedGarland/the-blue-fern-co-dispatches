@@ -357,12 +357,12 @@ li + li { margin-top: 0.35rem; }
 .dispatch-card::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -4%;
   background-image: var(--dispatch-card-watermark);
   background-repeat: no-repeat;
-  background-position: right 1rem top 1rem;
-  background-size: min(140px, 40%);
-  opacity: 0.08;
+  background-position: center;
+  background-size: min(82%, 320px) auto;
+  opacity: 0.09;
   pointer-events: none;
   z-index: 0;
 }
@@ -419,17 +419,9 @@ li + li { margin-top: 0.35rem; }
   }
 
   .dispatch-card::before {
-    background-position: right 0.75rem top 0.75rem;
-    background-size: min(110px, 34%);
-    opacity: 0.065;
-  }
-
-  .dispatch-card-links {
-    padding: 0 1rem 0.95rem;
-    gap: 0.25rem 0.7rem;
-  }
-
-  .dispatch-card-links a {
-    font-size: 0.92rem;
+    inset: -3%;
+    background-position: center;
+    background-size: min(88%, 260px) auto;
+    opacity: 0.075;
   }
 }

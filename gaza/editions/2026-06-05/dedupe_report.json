@@ -1,21 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "candidates_seen": 10,
+  "candidates_seen": 8,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-06-05-005",
-      "title": "Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-006",
+      "story_id": "gaza-story-2026-06-05-009",
       "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
       "classification": "new",
       "material_update": true,
@@ -26,30 +15,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-008",
-      "title": "UN agency says displacement in Lebanon rises despite ceasefire",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-007",
-      "title": "How the world failed a mother's children, killed in Israeli strikes on Gaza",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-010",
-      "title": "59 years after 1967 war, Israel continues military campaigns in Gaza, West Bank, Lebanon",
+      "story_id": "gaza-story-2026-06-05-002",
+      "title": "Gaza, Iran, Lebanon: If ceasefires are in place, why do strikes continue?",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -60,6 +27,17 @@
     },
     {
       "story_id": "gaza-story-2026-06-05-003",
+      "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-05-008",
       "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
       "classification": "new",
       "material_update": true,
@@ -79,7 +57,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-002",
+      "story_id": "gaza-story-2026-06-05-007",
       "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza",
       "classification": "new",
       "material_update": true,
@@ -90,7 +68,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-001",
+      "story_id": "gaza-story-2026-06-05-006",
       "title": "The Jewish filmmaker trying to understand Israel after Gaza",
       "classification": "new",
       "material_update": true,
@@ -101,7 +79,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-009",
+      "story_id": "gaza-story-2026-06-05-011",
       "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
       "classification": "new",
       "material_update": true,
@@ -115,20 +93,6 @@
   "duplicate_skipped": [],
   "continuing_developments": [],
   "major_updates": [
-    {
-      "story_id": "gaza-story-2026-06-05-007",
-      "title": "How the world failed a mother's children, killed in Israeli strikes on Gaza",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-06-04-005",
-      "prior_edition_date": "2026-06-04",
-      "include_decision": "include",
-      "public_rendered": true
-    },
     {
       "story_id": "gaza-story-2026-06-05-004",
       "title": "Israeli strikes kill 11 people in Gaza City, medics say",
@@ -146,21 +110,7 @@
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-06-05-005",
-      "title": "Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-006",
+      "story_id": "gaza-story-2026-06-05-009",
       "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
       "classification": "new",
       "material_update": true,
@@ -174,36 +124,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-008",
-      "title": "UN agency says displacement in Lebanon rises despite ceasefire",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-007",
-      "title": "How the world failed a mother's children, killed in Israeli strikes on Gaza",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-06-04-005",
-      "prior_edition_date": "2026-06-04",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-010",
-      "title": "59 years after 1967 war, Israel continues military campaigns in Gaza, West Bank, Lebanon",
+      "story_id": "gaza-story-2026-06-05-002",
+      "title": "Gaza, Iran, Lebanon: If ceasefires are in place, why do strikes continue?",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -217,6 +139,20 @@
     },
     {
       "story_id": "gaza-story-2026-06-05-003",
+      "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-05-008",
       "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
       "classification": "new",
       "material_update": true,
@@ -242,7 +178,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-002",
+      "story_id": "gaza-story-2026-06-05-007",
       "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza",
       "classification": "new",
       "material_update": true,
@@ -256,7 +192,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-001",
+      "story_id": "gaza-story-2026-06-05-006",
       "title": "The Jewish filmmaker trying to understand Israel after Gaza",
       "classification": "new",
       "material_update": true,
@@ -270,7 +206,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-009",
+      "story_id": "gaza-story-2026-06-05-011",
       "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
       "classification": "new",
       "material_update": true,

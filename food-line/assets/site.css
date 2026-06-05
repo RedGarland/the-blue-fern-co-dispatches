@@ -194,6 +194,7 @@ li + li { margin-top: 0.35rem; }
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 0.35rem;
   min-height: 132px;
   height: 100%;
   padding: 20px;
@@ -207,6 +208,13 @@ li + li { margin-top: 0.35rem; }
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.35rem;
   line-height: 1.25;
+}
+.dispatch-card-logo {
+  display: block;
+  width: min(132px, 100%);
+  height: auto;
+  margin: 0 0 0.1rem;
+  object-fit: contain;
 }
 .dispatch-subresource {
   margin: 0.5rem 1rem 1rem;
@@ -341,6 +349,50 @@ li + li { margin-top: 0.35rem; }
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.dispatch-card::before {
+  content: "";
+  position: absolute;
+  inset: -4%;
+  background-image: var(--dispatch-card-watermark);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(82%, 320px) auto;
+  opacity: 0.09;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dispatch-card > a {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  height: auto;
+}
+
+.dispatch-card-links {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  padding: 0 1.25rem 1rem;
+  margin-top: -0.15rem;
+  font-size: 0.95rem;
+}
+
+.dispatch-card-links a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.dispatch-card-links a:hover {
+  text-decoration: underline;
 }
 
 .dispatch-card .eyebrow,
@@ -364,5 +416,12 @@ li + li { margin-top: 0.35rem; }
 
   .dispatch-card {
     min-height: 145px;
+  }
+
+  .dispatch-card::before {
+    inset: -3%;
+    background-position: center;
+    background-size: min(88%, 260px) auto;
+    opacity: 0.075;
   }
 }

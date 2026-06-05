@@ -15,30 +15,212 @@
   <link rel="stylesheet" href="../../assets/site.css">
 </head>
 <body>
+<style>
+:root {
+  --ink: #1E3F4F;
+  --navy: #1E3F4F;
+  --blue-fern: #4E6B79;
+  --soft-blue: #EFE7DA;
+  --fern-green: #4E6B79;
+  --paper: #FBF7EF;
+  --border: #D2C5B4;
+  --panel: #FFFDF8;
+  --muted: #4E6B79;
+}
+.food-line-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+.food-line-hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.food-line-hero .eyebrow,
+.food-line-hero p {
+  margin: 0;
+}
+.food-line-logo {
+  display: block;
+  height: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.food-line-logo--home {
+  width: min(360px, 90vw);
+}
+.food-line-logo--edition {
+  width: min(460px, 90vw);
+}
+.food-line-logo--map {
+  width: min(520px, 90vw);
+}
+.food-line-logo--audio {
+  width: min(360px, 90vw);
+}
+.food-line-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 18px 42px rgba(30, 63, 79, 0.08);
+}
+.food-line-panel h2:first-child,
+.food-line-panel h3:first-child {
+  margin-top: 0;
+}
+.food-line-source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.food-line-source-table th,
+.food-line-source-table td {
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  padding: 0.65rem 0.55rem;
+}
+.food-line-source-table th {
+  text-align: left;
+  color: var(--navy);
+  background: #F3EBDD;
+  position: sticky;
+  top: 0;
+}
+.food-line-source-table td:nth-child(9),
+.food-line-source-table td:nth-child(14) {
+  min-width: 16rem;
+}
+.food-line-source-table td:nth-child(10),
+.food-line-source-table td:nth-child(17) {
+  min-width: 10rem;
+}
+.food-line-map-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-map {
+  height: min(70vh, 640px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.food-line-map-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+.food-line-map-panel ul {
+  margin-top: 0.8rem;
+}
+.food-line-map-panel .fl-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.food-line-map-panel .fl-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.food-line-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid #1B2F39;
+  display: inline-block;
+}
+.food-line-map-popup {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+}
+.food-line-map-popup a {
+  word-break: break-word;
+}
+.food-line-audio-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-audio-list {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.food-line-audio-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.food-line-audio-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-source-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1rem 0.9rem;
+  background: #FFFDF9;
+  box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
+}
+.food-line-source-card h3 {
+  margin-top: 0;
+}
+.food-line-source-card p {
+  margin: 0.35rem 0;
+}
+@media (max-width: 640px) {
+  .food-line-logo--edition,
+  .food-line-logo--map,
+  .food-line-logo--audio,
+  .food-line-logo--home {
+    width: 90vw;
+  }
+  .food-line-source-table {
+    font-size: 0.9rem;
+  }
+}
+</style>
   <header class="site-header">
     <a class="brand" href="../../index.html">Food Line Dispatch</a>
     <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Dispatch</a><a href="../../archive.html">Archive</a><a href="../../rss.xml">RSS</a></nav>
   </header>
-<main class="container">
-<h1>Food Line Dispatch</h1>
-<p><strong>Daily edition</strong></p>
-<h2>Today’s pressure point</h2>
-<p>Austin, TX: Austin-area food bank demand doubles amid SNAP delays | KUT Radio, Austin&#x27;s NPR Station Skip to main content Search Query Show Search News Austin Austin Signal Crime &amp; Justice Education En Español Energy &amp; Environment Field Guide to Austin Health Housing I-35 Expansion Politics Texas Transportation Austin Austin Signal Crime &amp; Justice Education En Español Energy &amp; Environment Field Guide to Austin Health Housing I-35 Expansion Politics Texas Transportation Austin Signal Arts Art Beat Arts Eclectic ATXplained Austin Cultura Community In Black America Pause/Play This Is My Thing Art Beat Arts Eclectic ATXplained Austin Cultura Community In Black America Pause/Play This Is My Thing Podcasts 24</p>
-<h2>What changed</h2>
-<p>What changed today: Austin-area food bank demand doubles amid SNAP delays | KUT Radio, Austin's NPR Station Skip to main content Search Query Show Search News Austin Austin Signal Crime & Justice Education En Español Energy & Environment Field Guide to Austin Health Housing I-35 Expansion Politics Texas Transportation Austin Austin Signal Crime & Justice Education En Español Energy & Environment Field Guide to Austin Health Housing I-35 Expansion Politics Texas Transportation Austin Signal Arts Art Beat Arts Eclectic ATXplained Austin Cultura Community In Black America Pause/Play This Is My Thing Art Beat Arts Eclectic ATXplained Austin Cultura Community In Black America Pause/Play This Is My Thing Podcasts 24 (traceable to food-line-auto-26267a716894920a).</p>
-<h2>Who is exposed</h2>
-<p>SNAP households, low-income households</p>
-<h2>Field signals</h2>
-<p>Signal mix today: daily=0, provider=0, local=8, background=0.</p>
-<h2>Where pressure is visible</h2>
-<ul><li>Austin (TX): demand strain</li><li>East Texas (TX): demand strain</li></ul>
-<h2>Map notes</h2>
-<p>Markers represent only source-backed records from this edition.</p>
-<p></p>
-<h2>What to watch tomorrow</h2>
-<p>Watch for benefit processing delays, pantry wait-time changes, and summer meal site continuity.</p>
-<h2>Source table</h2>
-<ul><li><a href="https://www.fns.usda.gov/summer" target="_blank" rel="noopener noreferrer">Summer Nutrition Programs | Food and Nutrition Administration</a> - USDA FNS</li><li><a href="https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us" target="_blank" rel="noopener noreferrer">Food Security in the U.S. | Economic Research Service</a> - USDA ERS</li><li><a href="https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html" target="_blank" rel="noopener noreferrer">Supplemental Nutrition Assistance Program (SNAP) | Commonwealth of Pennsylvania</a> - Pennsylvania Department of Human Services</li><li><a href="https://www.mdhs.ms.gov/economic-assistance/snap/" target="_blank" rel="noopener noreferrer">SNAP - Supplemental Nutrition Assistance Program - Mississippi Department of Human Services</a> - Mississippi Department of Human Services</li><li><a href="https://ntfb.org/" target="_blank" rel="noopener noreferrer">North Texas Food Bank</a> - North Texas Food Bank</li><li><a href="https://ntfb.org/" target="_blank" rel="noopener noreferrer">North Texas Food Bank</a> - North Texas Food Bank</li><li><a href="https://www.fns.usda.gov/summer" target="_blank" rel="noopener noreferrer">Summer Nutrition Programs | Food and Nutrition Administration</a> - USDA FNS</li><li><a href="https://www.fns.usda.gov/disaster/disaster-assistance" target="_blank" rel="noopener noreferrer">Disaster Assistance | Food and Nutrition Administration</a> - USDA FNS</li><li><a href="https://www.cascadepbs.org/politics/2025/04/usda-set-cut-1b-food-programs-wa-food-banks-are-worried" target="_blank" rel="noopener noreferrer">USDA set to cut $1B for food programs. WA food banks are worried | Cascade PBS</a> - Cascade PBS</li><li><a href="https://www.kut.org/austin/2025-11-12/austin-tx-central-tx-food-bank-stamps-snap-delays" target="_blank" rel="noopener noreferrer">Austin-area food bank demand doubles amid SNAP delays | KUT Radio, Austin&#x27;s NPR Station</a> - KUT</li><li><a href="https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays/" target="_blank" rel="noopener noreferrer">The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.</a> - KLTV</li><li><a href="https://www.boisestatepublicradio.org/news/2025-10-22/food-stamps-snap-benefits-shutdown-food-banks-idaho" target="_blank" rel="noopener noreferrer">Food stamps for 130k Idahoans on hold as shutdown drags on | Boise State Public Radio</a> - Boise State Public Radio</li><li><a href="https://www.wamc.org/news/2025-09-14/the-regional-food-bank-expects-to-lose-more-than-7-million-pounds-of-food-this-year-as-a-result-of-federal-cuts" target="_blank" rel="noopener noreferrer">The Regional Food Bank expects to lose more than 7 million pounds of food this year as a result of federal cuts | WAMC</a> - WAMC</li><li><a href="https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause/" target="_blank" rel="noopener noreferrer">Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause</a> - 13abc</li></ul>
+<main class="container food-line-shell">
+  <section class="food-line-hero">
+    <img class="hero-logo food-line-logo food-line-logo--edition" src="../../assets/food-line-logo.png" alt="The Food Line Dispatch">
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Dispatch</h1>
+    <p><strong>Daily edition</strong></p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Today’s pressure point</h2>
+    <p>KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.</p>
+    <h2>What changed</h2>
+    <p>What changed today: KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.</p>
+    <h2>Publishing note</h2>
+    <p>This dispatch is based on one verified Food Line pressure record from KLTV. Food Line reviewed 29 records for this edition; 28 were excluded as context, baseline, or insufficient pressure evidence. Source details and review records are preserved for traceability.</p>
+    <h2>Who is exposed</h2>
+    <p>SNAP households</p>
+    <h2>Where pressure is visible</h2>
+    <ul><li class='food-line-source-card'><h3>The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand.</h3><p><strong>Pressure summary:</strong> KLTV reported rising food-assistance demand across its service area in East Texas, TX, affecting SNAP households.</p><p><strong>Evidence excerpt:</strong> See source table and review record for evidence excerpt.</p><p><strong>Publisher:</strong> KLTV</p><p><strong>Source URL:</strong> <a href="https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays" target="_blank" rel="noopener noreferrer">https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays</a></p><p><strong>Verification status:</strong> source_text_verified</p><p><strong>Affected groups:</strong> SNAP households</p><p><strong>Pressure type:</strong> demand strain</p><p><strong>Source record ID:</strong> food-line-auto-c531de22a923a8d8</p></li></ul>
+    <h2>Map notes</h2>
+    <p>Markers represent verified pressure sources from this edition.</p>
+    <p></p>
+    <h2>What to watch tomorrow</h2>
+    <p>Watch for benefit processing delays, pantry wait-time changes, and summer meal site continuity.</p>
+    <h2>Public source table</h2>
+    <p>Source table entries are limited to verified pressure sources. See the linked table below for traceability fields and cleaned evidence excerpts.</p>
+    <p><a href="./source_table.html">Open the public source table for 2026-06-05</a></p>
+  </section>
 </main>
   <footer class="site-footer">
     <div class="publisher">

@@ -641,6 +641,67 @@ def test_food_line_what_changed_does_not_overstate_novelty_on_context_day(tmp_pa
     assert "What changed today" not in html_text
 
 
+def test_food_line_2026_06_13_kltv_excerpt_is_cleaned_before_rendering():
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    rows = json.loads(payload_path.read_text(encoding="utf-8"))
+    lead = next(row for row in rows if row.get("pressure_signal"))
+    excerpt = food_line.clean_food_line_public_evidence_excerpt(str(lead.get("evidence_text") or ""), title=str(lead.get("title") or ""))
+
+    assert excerpt != food_line.FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK
+    assert "Skip to content" not in excerpt
+    assert "Advertise With Us" not in excerpt
+    assert "Watch Live" not in excerpt
+    assert "Weather Extra" not in excerpt
+    assert "Reception Issues" not in excerpt
+    assert "Pet Project" not in excerpt
+    assert "food assistance" in excerpt.lower()
+    assert "17% increase" in excerpt
+
+
+def test_food_line_2026_06_13_skips_reused_kltv_lead_and_preserves_diagnostics(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+
+    date_a = "2026-06-12"
+    p_a = _manual_path(tmp_path, date_a)
+    p_a.parent.mkdir(parents=True, exist_ok=True)
+    p_a.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result_a = run_food_line_dispatch(tmp_path, date_a)
+    assert result_a["public_rendered"] is True
+    assert result_a["qualified_primary_count"] == 1
+
+    date_b = "2026-06-13"
+    p_b = _manual_path(tmp_path, date_b)
+    p_b.parent.mkdir(parents=True, exist_ok=True)
+    p_b.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result_b = run_food_line_dispatch(tmp_path, date_b)
+
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date_b
+    review_manifest = tmp_path / "output" / "review" / "food-line" / date_b / "run_manifest.json"
+    data_manifest = tmp_path / "data" / "dispatches" / "food-line" / "editions" / date_b / "run_manifest.json"
+    audio_index = tmp_path / "output" / "site" / "food-line" / "audio" / "index.html"
+    podcast_feed = tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml"
+
+    assert result_b["public_rendered"] is False
+    assert result_b["skip_reason"] == "No new primary food-access signal qualified for public Food Line publication."
+    assert result_b["primary_signal_status"] == "continuing_only"
+    assert result_b["lead_source_record_id"] is None
+    assert result_b["qualified_primary_count"] == 0
+    assert not site_edition.exists()
+    assert review_manifest.exists()
+    assert data_manifest.exists()
+    assert audio_index.exists()
+    assert podcast_feed.exists()
+
+    manifest = json.loads(data_manifest.read_text(encoding="utf-8"))
+    assert manifest["public_rendered"] is False
+    assert manifest["qualified_primary_count"] == 0
+    assert manifest["skip_reason"] == "No new primary food-access signal qualified for public Food Line publication."
+    assert manifest["continuing_pressure_source_record_ids"] == ["food-line-auto-c531de22a923a8d8"]
+    assert manifest["public_url"] is None
+
+
 def test_food_line_podcast_description_varies_by_pressure_summary(tmp_path: Path):
     _ensure_assets(tmp_path)
     date_a = "2026-06-02"
@@ -885,7 +946,7 @@ def test_food_line_public_evidence_excerpt_strips_kltv_site_chrome():
     assert "Reception Issues" not in cleaned
     assert "KLTV.com - Channel 7 News" not in cleaned
     assert "ETX News" not in cleaned
-    assert "17 percent increase" in cleaned
+    assert "Food bank demand increased and pantry lines grew" in cleaned
 
 
 def test_food_line_audio_transcript_only_omits_enclosure(tmp_path: Path):
@@ -1376,9 +1437,9 @@ def test_food_line_affected_groups_require_supporting_text_and_baseline_stays_ba
     date = "2026-06-04"
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
-    pressure = _pressure_row(1, "Food bank demand increased", "Food bank demand increased sharply.", family="food_bank_provider")
+    pressure = _pressure_row(1, "Food bank demand increased", "Food bank demand increased sharply.", family="food_bank_provider", state="TX")
     pressure["issue_tags"] = ["food banks", "pantry capacity"]
-    supported = _pressure_row(2, "SNAP benefits delayed for families", "SNAP benefits delayed for families and children.", family="state_official")
+    supported = _pressure_row(2, "SNAP benefits delayed for families", "SNAP benefits delayed for families and children.", family="state_official", state="TX")
     baseline = _row(3, family="economic_data", state="US", title="USDA context", summary="National food security context and trend information.")
     baseline["map_category"] = "context / monitoring only"
     p.write_text(json.dumps([pressure, supported, baseline], indent=2), encoding="utf-8")

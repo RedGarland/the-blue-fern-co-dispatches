@@ -13,6 +13,26 @@ BASE_URL = "https://dispatches.thebluefernco.com"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MAX_STORIES = 6
 MIN_STORIES = 3
+EXCLUDED_AUDIO_MARKERS = (
+    "UK politics |",
+    "Environment |",
+    "Ukraine |",
+    "England news |",
+    "UK news |",
+    "royal property",
+    "social care system",
+    "planning laws",
+    "Andrew Mountbatten-Windsor",
+    "Lebanon rises despite ceasefire",
+)
+GAZA_DIRECT_RE = re.compile(
+    r"\b(gaza|rafah|khan younis|deir al-balah|jabalia|beit lahia|beit hanoun)\b",
+    re.IGNORECASE,
+)
+PALESTINIAN_CONTEXT_RE = re.compile(r"\b(palestin\w*|west bank|occupied territories|occupation)\b", re.IGNORECASE)
+DETENTION_CONTEXT_RE = re.compile(r"\b(detention|detained|detainee|prison|red cross|icrc)\b", re.IGNORECASE)
+HISTORICAL_CONTEXT_RE = re.compile(r"\b(1967|expulsion|expulsions|killings?)\b", re.IGNORECASE)
+GAZA_ADJACENT_AID_RE = re.compile(r"\b(gaza-bound|flotilla|maritime aid|aid convoy|crossing|border)\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -147,8 +167,69 @@ def _story_rows(curation_payload: Any) -> list[dict[str, Any]]:
             continue
         if row.get("included_in_public_summary") is False:
             continue
+        if row.get("public_rendered") is False:
+            continue
         rows.append(row)
     return rows
+
+
+def _story_text(story: dict[str, Any]) -> str:
+    parts = [
+        str(story.get("title") or ""),
+        str(story.get("summary") or ""),
+        str(story.get("public_summary") or ""),
+        str(story.get("social_summary") or ""),
+        str(story.get("summary_or_snippet") or ""),
+        str(story.get("category") or ""),
+        str(story.get("story_scope") or ""),
+        str(story.get("region_scope") or ""),
+        " ".join(str(item) for item in story.get("relevance_terms_matched") or []),
+    ]
+    return " ".join(parts)
+
+
+def _story_excluded_markers(story: dict[str, Any]) -> list[str]:
+    text = _story_text(story).lower()
+    return [marker for marker in EXCLUDED_AUDIO_MARKERS if marker.lower() in text]
+
+
+def _audio_story_eligibility(story: dict[str, Any]) -> tuple[bool, str | None]:
+    text = _story_text(story)
+    lowered = text.lower()
+    markers = _story_excluded_markers(story)
+    if markers:
+        return False, f"excluded marker {markers[0]!r}"
+    if "newsletter" in lowered and "gaza" not in lowered:
+        return False, "multi-topic newsletter without Gaza-specific summary"
+    if "newsletter" in lowered and any(marker.lower() in lowered for marker in EXCLUDED_AUDIO_MARKERS):
+        return False, "multi-topic newsletter with unrelated sidebar markers"
+    if "lebanon rises despite ceasefire" in lowered:
+        return False, "Lebanon-only displacement story"
+    if "lebanon" in lowered and not (
+        GAZA_DIRECT_RE.search(text)
+        or (PALESTINIAN_CONTEXT_RE.search(text) and (DETENTION_CONTEXT_RE.search(text) or HISTORICAL_CONTEXT_RE.search(text)))
+    ):
+        return False, "Lebanon-only or broad regional story"
+    if any(term in lowered for term in ("ukraine", "uk politics", "england news", "royal property", "social care system", "planning laws")):
+        return False, "unrelated non-Gaza topic"
+    if GAZA_DIRECT_RE.search(text):
+        return True, None
+    if PALESTINIAN_CONTEXT_RE.search(text) and (DETENTION_CONTEXT_RE.search(text) or HISTORICAL_CONTEXT_RE.search(text)):
+        return True, None
+    if GAZA_ADJACENT_AID_RE.search(text) and ("gaza" in lowered or "palestin" in lowered):
+        return True, None
+    return False, "not clearly Gaza-focused or Palestinian-context audio material"
+
+
+def select_gaza_audio_stories(curation_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    selected: list[dict[str, Any]] = []
+    for story in curation_rows:
+        eligible, _reason = _audio_story_eligibility(story)
+        if eligible:
+            selected.append(story)
+        if len(selected) >= MAX_STORIES:
+            break
+    return selected
 
 
 def _source_map(sources_payload: Any) -> dict[str, dict[str, Any]]:
@@ -215,9 +296,9 @@ def build_gaza_audio_script(
     curation_rows: list[dict[str, Any]],
     sources_by_id: dict[str, dict[str, Any]],
 ) -> tuple[str, list[dict[str, Any]]]:
-    selected = curation_rows[:MAX_STORIES]
-    if len(selected) < MIN_STORIES:
-        selected = curation_rows[:MAX_STORIES]
+    selected = select_gaza_audio_stories(curation_rows)
+    if not selected:
+        raise ValueError(f"no Gaza-audio-eligible stories found for {edition_date}")
     script_sections: list[str] = []
     script_sections.append(f"This is the Gaza Dispatch audio briefing for {_format_date_human(edition_date)}.")
     script_sections.append("Here are the key source-backed developments from today's edition.")
@@ -246,6 +327,24 @@ def build_gaza_audio_script(
     )
     script = "\n\n".join(script_sections).strip()
     return script, list(used_sources.values())
+
+
+def _validate_gaza_audio_transcript(*, stories: list[dict[str, Any]], transcript_html: str) -> None:
+    transcript_text = html.unescape(str(transcript_html or ""))
+    for story in stories:
+        markers = _story_excluded_markers(story)
+        if markers:
+            title = str(story.get("title") or "Untitled update").strip()
+            raise ValueError(f"Gaza audio blocked by excluded marker {markers[0]!r} in story: {title}")
+    lowered = transcript_text.lower()
+    for marker in EXCLUDED_AUDIO_MARKERS:
+        if marker.lower() not in lowered:
+            continue
+        for story in stories:
+            if marker.lower() in _story_text(story).lower():
+                title = str(story.get("title") or "Untitled update").strip()
+                raise ValueError(f"Gaza audio blocked by transcript validator for marker {marker!r} in story: {title}")
+        raise ValueError(f"Gaza audio blocked by transcript validator for marker {marker!r}")
 
 
 def _script_segments(script_text: str, story_count: int) -> list[dict[str, str]]:
@@ -455,12 +554,15 @@ def write_gaza_audio_outputs(
 ) -> GazaAudioResult:
     date_text = _validate_date(edition_date)
     curation_rows, sources_by_id = load_gaza_audio_inputs(project_root, date_text)
+    selected_stories = select_gaza_audio_stories(curation_rows)
+    if not selected_stories:
+        raise ValueError(f"no Gaza-audio-eligible stories found for {date_text}")
     script_text, used_sources = build_gaza_audio_script(
         edition_date=date_text,
         curation_rows=curation_rows,
         sources_by_id=sources_by_id,
     )
-    segments = _script_segments(script_text, min(len(curation_rows), MAX_STORIES))
+    segments = _script_segments(script_text, len(selected_stories))
     audio_root = _audio_root(project_root)
     gaza_root = _gaza_public_root(project_root)
     audio_filename = f"{date_text}.{audio_format}"
@@ -580,7 +682,7 @@ def write_gaza_audio_outputs(
 
     tts_input_character_count = len(script_text) if chosen_provider != "none" else 0
     tts_input_word_count = _count_words(script_text) if chosen_provider != "none" else 0
-    tts_story_count = min(len(curation_rows), MAX_STORIES)
+    tts_story_count = len(selected_stories)
     tts_segment_count = len(segments) if alternate_voices else (1 if chosen_provider != "none" else 0)
     audio_size: int | None = None
     audio_duration_seconds: float | None = None
@@ -631,6 +733,7 @@ def write_gaza_audio_outputs(
         sources=used_sources,
         audio_url=audio_url_value,
     )
+    _validate_gaza_audio_transcript(stories=selected_stories, transcript_html=transcript_html)
     flash_item = build_flash_briefing_item(metadata)
 
     transcript_path = audio_root / f"{date_text}-transcript.html"
@@ -660,5 +763,5 @@ def write_gaza_audio_outputs(
         tts_model=chosen_model,
         tts_voice=chosen_voice,
         tts_error=tts_error,
-        story_count=min(len(curation_rows), MAX_STORIES),
+        story_count=len(selected_stories),
     )

@@ -99,6 +99,19 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
         command = " ".join(args)
         if "run_gaza_dispatch.py" in command:
             write_generated_output(root, "2026-05-07")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "warnings": [],
+                    "source_adequacy_status": "limited_source_update",
+                    "publisher_count": 1,
+                    "publishers": ["Example News"],
+                    "source_adequacy_warnings": [
+                        "This is a limited-source update generated from 4 saved source records from 1 publisher(s). It should be read as a partial update, not a full daily briefing."
+                    ],
+                },
+            )
         if "publish_github_pages.py" in command and "--dry-run" not in args:
             write_pages_output(root, "2026-05-07")
             return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"})
@@ -119,6 +132,10 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert summary["validation_profile"] == "gaza_daily"
     assert summary["skipped_unrelated_tests"] is True
     assert summary["pages_repo_updated"] is True
+    assert summary["source_adequacy_status"] == "limited_source_update"
+    assert summary["publisher_count"] == 1
+    assert summary["publishers"] == ["Example News"]
+    assert any("limited-source update generated" in warning for warning in summary["warnings"])
     assert summary["pages_branch"] == "gh-pages"
     assert summary["pushed"] is False
     assert "git push origin gh-pages" in summary["manual_push_command"]
@@ -394,6 +411,28 @@ def test_pages_publish_failure_is_not_classified_as_source_issue(isolated, monke
     assert "Pages publish failed: fatal: Unable to create .git/index.lock: Permission denied" in summary["errors"]
 
 
+def test_generation_warnings_are_carried_into_daily_summary(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True, "warnings": ["source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3)"]})
+        if "publish_github_pages.py" in command:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert any("source diversity warning" in warning for warning in summary["warnings"])
+
+
 def test_email_report_exit_2_when_email_fails_after_pipeline_failure(isolated, monkeypatch, capsys):
     root = isolated
     monkeypatch.setattr(
@@ -465,3 +504,235 @@ def test_pipeline_success_email_tls_failure_includes_safe_guidance(isolated, mon
 def test_no_old_gaza_project_path_is_referenced():
     forbidden = "Gaza " + "Dispatch V4"
     assert forbidden not in Path(daily.__file__).read_text(encoding="utf-8")
+
+
+def test_bluesky_not_attempted_when_pipeline_fails(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    called = {"count": 0}
+
+    def fake_bluesky(**kwargs):
+        _ = kwargs
+        called["count"] += 1
+        return {"status": "success", "post_uri": "at://example", "reason": None}
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            return completed(args, returncode=1, stdout="generation failed")
+        return completed(args)
+
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert called["count"] == 0
+    assert summary["bluesky_status"] == "skipped"
+
+
+def test_force_bluesky_post_flag_is_forwarded(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    captured = {"kwargs": None}
+
+    def fake_bluesky(**kwargs):
+        captured["kwargs"] = kwargs
+        return {"status": "skipped", "post_uri": None, "reason": "disabled_by_env"}
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--skip-tests",
+            "--post-bluesky",
+            "--force-bluesky-post",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+    _summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert captured["kwargs"] is not None
+    assert captured["kwargs"]["force_post"] is True
+
+
+def test_daily_summary_uses_existing_receipt_skip_result(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+
+    def fake_bluesky(**kwargs):
+        _ = kwargs
+        return {
+            "status": "skipped",
+            "post_uri": "at://did:plc:abc123/app.bsky.feed.post/existing",
+            "reason": "skipped_existing_receipt",
+            "embed_type": "app.bsky.embed.external",
+            "card_title": "Dispatches from Gaza - May 7, 2026",
+            "card_description": "Existing receipt description.",
+            "thumb_status": "uploaded",
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert summary["bluesky_status"] == "skipped"
+    assert summary["bluesky_reason"] == "skipped_existing_receipt"
+    assert summary["bluesky_post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/existing"
+    assert summary["bluesky_embed_type"] == "app.bsky.embed.external"
+
+
+def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    called = {"count": 0, "provider": None}
+
+    class DummyAudio:
+        edition_date = "2026-05-07"
+        transcript_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07-transcript.html"
+        metadata_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07.json"
+        podcast_path = root / "output" / "site" / "gaza" / "podcast.xml"
+        flash_briefing_path = root / "output" / "site" / "gaza" / "flash-briefing.json"
+        audio_status = "script_ready_no_audio_file"
+        audio_file = None
+        audio_url = None
+        tts_provider = "none"
+        tts_model = None
+        tts_voice = None
+        tts_error = None
+        story_count = 3
+
+    def fake_audio(*args, **kwargs):
+        _ = args
+        called["count"] += 1
+        called["provider"] = kwargs.get("tts_provider")
+        return DummyAudio()
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr("bluefern_dispatches.gaza_audio.write_gaza_audio_outputs", fake_audio)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--skip-tests",
+            "--generate-audio",
+            "--tts-provider",
+            "none",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert called["count"] == 1
+    assert called["provider"] == "none"
+    assert summary["ok"] is True
+
+
+def test_daily_audio_flags_are_forwarded_to_gaza_audio_writer(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    captured: dict[str, object] = {}
+
+    class DummyAudio:
+        edition_date = "2026-05-07"
+        transcript_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07-transcript.html"
+        metadata_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07.json"
+        podcast_path = root / "output" / "site" / "gaza" / "podcast.xml"
+        flash_briefing_path = root / "output" / "site" / "gaza" / "flash-briefing.json"
+        audio_status = "audio_file_ready"
+        audio_file = "2026-05-07.mp3"
+        audio_url = "/gaza/audio/2026-05-07.mp3"
+        tts_provider = "openai"
+        tts_model = "gpt-4o-mini-tts"
+        tts_voice = "alloy"
+        tts_error = None
+        story_count = 3
+
+    def fake_audio(*args, **kwargs):
+        _ = args
+        captured.update(kwargs)
+        return DummyAudio()
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr("bluefern_dispatches.gaza_audio.write_gaza_audio_outputs", fake_audio)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--skip-tests",
+            "--generate-audio",
+            "--tts-provider",
+            "openai",
+            "--audio-model",
+            "gpt-4o-mini-tts",
+            "--audio-voice",
+            "alloy",
+            "--audio-format",
+            "mp3",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert captured["tts_provider"] == "openai"
+    assert captured["tts_model"] == "gpt-4o-mini-tts"
+    assert captured["tts_voice"] == "alloy"
+    assert captured["audio_format"] == "mp3"
+    assert summary["ok"] is True

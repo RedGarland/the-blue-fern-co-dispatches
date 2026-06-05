@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.gaza_audio import build_gaza_audio_script, write_gaza_audio_outputs
+from bluefern_dispatches.gaza_audio import build_gaza_audio_script, select_gaza_audio_stories, write_gaza_audio_outputs
 
 
 def _write_edition(tmp_path: Path, edition_date: str, *, curation: list[dict], sources: list[dict]) -> None:
@@ -47,7 +47,7 @@ def test_audio_script_includes_source_attribution():
 
 
 def test_script_does_not_invent_sources_when_records_missing():
-    curation = [{"title": "Update", "summary": "Context.", "source_record_ids": ["missing"], "included_in_public_summary": True}]
+    curation = [{"title": "Gaza update", "summary": "Context from Gaza.", "source_record_ids": ["missing"], "included_in_public_summary": True}]
     script, used = build_gaza_audio_script(edition_date="2026-05-31", curation_rows=curation, sources_by_id={})
     assert "reported by public sources" in script
     assert used == []
@@ -59,24 +59,24 @@ def test_transcript_html_includes_source_links_and_flash_briefing_generated(tmp_
         tmp_path,
         date,
         curation=[
-            {
-                "title": "Strike and aid updates",
-                "summary": "Reports described strikes and aid pressure.",
-                "source_record_ids": ["s1", "s2"],
-                "included_in_public_summary": True,
-            },
-            {
-                "title": "Detention update",
-                "summary": "A report described detention without charge.",
-                "source_record_ids": ["s3"],
-                "included_in_public_summary": True,
-            },
-            {
-                "title": "Satellite analysis",
-                "summary": "Imagery showed changes on the ground.",
-                "source_record_ids": ["s4"],
-                "included_in_public_summary": True,
-            },
+                {
+                    "title": "Strike and aid updates in Gaza",
+                    "summary": "Reports described strikes in Gaza and aid pressure.",
+                    "source_record_ids": ["s1", "s2"],
+                    "included_in_public_summary": True,
+                },
+                {
+                    "title": "Palestinian detainee update",
+                    "summary": "A report described Palestinian detainees held without charge.",
+                    "source_record_ids": ["s3"],
+                    "included_in_public_summary": True,
+                },
+                {
+                    "title": "Satellite analysis of Gaza damage",
+                    "summary": "Imagery showed changes on the ground in Gaza.",
+                    "source_record_ids": ["s4"],
+                    "included_in_public_summary": True,
+                },
         ],
         sources=[
             {"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"},
@@ -94,6 +94,103 @@ def test_transcript_html_includes_source_links_and_flash_briefing_generated(tmp_
     assert flash[0]["redirectionUrl"].endswith(f"/gaza/audio/{date}-transcript.html")
 
 
+def test_gaza_audio_filters_newsletter_sidebar_and_lebanon_only_regressions(tmp_path: Path):
+    date = "2026-06-05"
+    guardian_summary = (
+        "In today's newsletter: Gaza is mentioned early. "
+        "UK politics | social care system update. "
+        "Environment | broad climate item. "
+        "Ukraine | negotiation item. "
+        "England news | planning laws debate. "
+        "UK news | Andrew Mountbatten-Windsor and royal property."
+    )
+    curation = [
+        {
+            "title": "Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end",
+            "summary": guardian_summary,
+            "source_record_ids": ["s1"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "UN agency says displacement in Lebanon rises despite ceasefire",
+            "summary": "More than 2,100 people sheltering in UNRWA facilities as hostilities continue despite truce, agency says.",
+            "source_record_ids": ["s2"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "Israeli strikes kill 11 people in Gaza City, medics say",
+            "summary": "Medics reported casualties after strikes in Gaza City.",
+            "source_record_ids": ["s3"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
+            "summary": "The ICRC said it was ready to resume visits to Palestinian detainees.",
+            "source_record_ids": ["s4"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
+            "summary": "Archival material documents expulsions and killings of Palestinians in 1967.",
+            "source_record_ids": ["s5"],
+            "included_in_public_summary": True,
+        },
+    ]
+    _write_edition(
+        tmp_path,
+        date,
+        curation=curation,
+        sources=[
+            {"source_record_id": "s1", "publisher": "The Guardian", "url": "https://example.com/s1", "title": "S1"},
+            {"source_record_id": "s2", "publisher": "Anadolu Agency", "url": "https://example.com/s2", "title": "S2"},
+            {"source_record_id": "s3", "publisher": "BBC News", "url": "https://example.com/s3", "title": "S3"},
+            {"source_record_id": "s4", "publisher": "The New Arab", "url": "https://example.com/s4", "title": "S4"},
+            {"source_record_id": "s5", "publisher": "Anadolu Agency", "url": "https://example.com/s5", "title": "S5"},
+        ],
+    )
+
+    selected = select_gaza_audio_stories(curation)
+    titles = [row["title"] for row in selected]
+    assert "Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end" not in titles
+    assert "UN agency says displacement in Lebanon rises despite ceasefire" not in titles
+    assert "Israeli strikes kill 11 people in Gaza City, medics say" in titles
+    assert "Israel Supreme Court strikes down ban on Red Cross prison visits" in titles
+    assert "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report" in titles
+
+    result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
+    transcript = result.transcript_path.read_text(encoding="utf-8")
+    assert "UK politics" not in transcript
+    assert "Environment" not in transcript
+    assert "Ukraine" not in transcript
+    assert "England news" not in transcript
+    assert "Andrew Mountbatten-Windsor" not in transcript
+    assert "Lebanon rises despite ceasefire" not in transcript
+    assert "social care system" not in transcript
+    assert "planning laws" not in transcript
+    assert "Israeli strikes kill 11 people in Gaza City, medics say" in transcript
+    assert "Israel Supreme Court strikes down ban on Red Cross prison visits" in transcript
+    assert transcript.count("<li><a href=") == 3
+
+
+def test_gaza_audio_validator_fails_on_excluded_marker_in_selected_story(tmp_path: Path):
+    date = "2026-06-05"
+    _write_edition(
+        tmp_path,
+        date,
+        curation=[
+            {
+                "title": "Gaza overview",
+                "summary": "UK politics | unrelated sidebar text should block the audio build.",
+                "source_record_ids": ["s1"],
+                "included_in_public_summary": True,
+            }
+        ],
+        sources=[{"source_record_id": "s1", "publisher": "Example", "url": "https://example.com/s1", "title": "S1"}],
+    )
+    with pytest.raises(ValueError, match="no Gaza-audio-eligible stories found"):
+        write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
+
+
 def test_missing_date_source_records_fails_safely(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
         write_gaza_audio_outputs(tmp_path, "2026-05-31", dry_run=False)
@@ -104,7 +201,7 @@ def test_output_paths_stay_under_public_audio_root(tmp_path: Path):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False)
@@ -128,7 +225,7 @@ def test_provider_none_keeps_script_only_behavior(tmp_path: Path):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
@@ -144,7 +241,7 @@ def test_provider_none_refresh_preserves_existing_mp3_enclosure(tmp_path: Path):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     existing_mp3 = tmp_path / "output" / "site" / "gaza" / "audio" / f"{date}.mp3"
@@ -165,7 +262,7 @@ def test_openai_provider_without_api_key_fails_safely(tmp_path: Path, monkeypatc
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="openai")
@@ -195,7 +292,7 @@ def test_mocked_tts_success_writes_mp3_and_updates_metadata(tmp_path: Path, monk
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="openai")
@@ -226,7 +323,7 @@ def test_cost_metadata_defaults_to_null_estimate(tmp_path: Path):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
@@ -246,7 +343,7 @@ def test_cost_metadata_uses_configured_price(tmp_path: Path, monkeypatch):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="openai", tts_price_per_1m_chars=20.0)
@@ -260,7 +357,7 @@ def test_alternate_voices_requires_two_voices(tmp_path: Path):
     _write_edition(
         tmp_path,
         date,
-        curation=[{"title": "Update", "summary": "Summary.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
         sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
     )
     with pytest.raises(ValueError, match="at least two voices"):
@@ -287,9 +384,9 @@ def test_alternating_voice_wav_with_gentle_chime_sets_metadata(tmp_path: Path, m
         tmp_path,
         date,
         curation=[
-            {"title": "Story One", "summary": "One.", "source_record_ids": ["s1"], "included_in_public_summary": True},
-            {"title": "Story Two", "summary": "Two.", "source_record_ids": ["s2"], "included_in_public_summary": True},
-            {"title": "Story Three", "summary": "Three.", "source_record_ids": ["s3"], "included_in_public_summary": True},
+            {"title": "Story One in Gaza", "summary": "One in Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True},
+            {"title": "Palestinian detainee story", "summary": "Two on Palestinian detainees.", "source_record_ids": ["s2"], "included_in_public_summary": True},
+            {"title": "1967 documentation story", "summary": "Three on Palestinians in 1967.", "source_record_ids": ["s3"], "included_in_public_summary": True},
         ],
         sources=[
             {"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"},

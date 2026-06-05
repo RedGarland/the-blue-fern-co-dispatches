@@ -1,10 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "candidates_seen": 8,
+  "candidates_seen": 6,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-06-05-009",
+      "story_id": "gaza-story-2026-06-05-007",
       "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
       "classification": "new",
       "material_update": true,
@@ -27,28 +27,6 @@
     },
     {
       "story_id": "gaza-story-2026-06-05-003",
-      "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-008",
-      "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-004",
       "title": "Israeli strikes kill 11 people in Gaza City, medics say",
       "classification": "major_update",
       "material_update": false,
@@ -57,7 +35,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-007",
+      "story_id": "gaza-story-2026-06-05-006",
       "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza",
       "classification": "new",
       "material_update": true,
@@ -68,7 +46,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-006",
+      "story_id": "gaza-story-2026-06-05-005",
       "title": "The Jewish filmmaker trying to understand Israel after Gaza",
       "classification": "new",
       "material_update": true,
@@ -79,7 +57,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-011",
+      "story_id": "gaza-story-2026-06-05-008",
       "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
       "classification": "new",
       "material_update": true,
@@ -94,7 +72,7 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-06-05-004",
+      "story_id": "gaza-story-2026-06-05-003",
       "title": "Israeli strikes kill 11 people in Gaza City, medics say",
       "classification": "major_update",
       "material_update": false,
@@ -110,7 +88,7 @@
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-06-05-009",
+      "story_id": "gaza-story-2026-06-05-007",
       "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
       "classification": "new",
       "material_update": true,
@@ -139,34 +117,6 @@
     },
     {
       "story_id": "gaza-story-2026-06-05-003",
-      "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-008",
-      "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-05-004",
       "title": "Israeli strikes kill 11 people in Gaza City, medics say",
       "classification": "major_update",
       "material_update": false,
@@ -178,7 +128,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-007",
+      "story_id": "gaza-story-2026-06-05-006",
       "title": "Hamas says won't surrender arms but only police will carry weapons in Gaza",
       "classification": "new",
       "material_update": true,
@@ -192,7 +142,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-006",
+      "story_id": "gaza-story-2026-06-05-005",
       "title": "The Jewish filmmaker trying to understand Israel after Gaza",
       "classification": "new",
       "material_update": true,
@@ -206,7 +156,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-05-011",
+      "story_id": "gaza-story-2026-06-05-008",
       "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
       "classification": "new",
       "material_update": true,

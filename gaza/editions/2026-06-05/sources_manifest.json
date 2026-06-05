@@ -1,17 +1,17 @@
 [
   {
-    "source_record_id": "gaza-2026-06-05-the-new-arab-b107a5cc9cb0",
-    "source_id": "gaza-2026-06-05-the-new-arab-b107a5cc9cb0",
-    "title": "Gaza's fishermen patch up dinghies with door frames to float",
-    "url": "https://www.newarab.com/news/gazas-fishermen-patch-dinghies-door-frames-float",
-    "canonical_url": "https://www.newarab.com/news/gazas-fishermen-patch-dinghies-door-frames-float",
+    "source_record_id": "gaza-2026-06-05-the-new-arab-0e1b8c1a3cc2",
+    "source_id": "gaza-2026-06-05-the-new-arab-0e1b8c1a3cc2",
+    "title": "The Jewish filmmaker trying to understand Israel after Gaza",
+    "url": "https://www.newarab.com/features/jewish-filmmaker-trying-understand-israel-after-gaza",
+    "canonical_url": "https://www.newarab.com/features/jewish-filmmaker-trying-understand-israel-after-gaza",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
     "publisher": "The New Arab",
-    "published_at": "2026-06-05T13:39:24+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
-    "summary_or_snippet": "The Gaza fishing industry's total catch has shrunk to less than 15 tons a month-the amount they used to take every day before Israel's genocidal war.",
+    "published_at": "2026-06-05T16:00:21+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
+    "summary_or_snippet": "We speak to filmmaker Gillian Moseley about 'Planet Israel', her new documentary exploring why so many Israelis support the genocide and destruction of Gaza",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -43,9 +43,9 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "new arab|gaza s fishermen patch up dinghies with door frames to float",
-    "title_fingerprint": "gaza s fishermen patch up dinghies with door frames to float",
-    "claim_fingerprint": "new arab|gaza s fishermen patch up dinghies with door frames to float|conflict"
+    "dedupe_key": "new arab|the jewish filmmaker trying to understand israel after gaza",
+    "title_fingerprint": "the jewish filmmaker trying to understand israel after gaza",
+    "claim_fingerprint": "new arab|the jewish filmmaker trying to understand israel after gaza|conflict"
   },
   {
     "source_record_id": "gaza-2026-06-05-aljazeera-middle-east-7e6302645b13",
@@ -58,7 +58,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-06-05T14:12:50+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "International law sets rules for ceasefires, but who enforces them when violations continue? Three experts explain.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -99,6 +99,56 @@
     "claim_fingerprint": "al jazeera|gaza iran lebanon if ceasefires are in place why do strikes continue|conflict"
   },
   {
+    "source_record_id": "gaza-2026-06-05-anadolu-middle-east-adfe3cd398d3",
+    "source_id": "gaza-2026-06-05-anadolu-middle-east-adfe3cd398d3",
+    "title": "Austrian NGO denounces 'unbearable' humanitarian conditions in Gaza",
+    "url": "https://www.aa.com.tr/en/middle-east/austrian-ngo-denounces-unbearable-humanitarian-conditions-in-gaza/3957882",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/austrian-ngo-denounces-unbearable-humanitarian-conditions-in-gaza/3957882",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-06-05T15:30:44+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
+    "summary_or_snippet": "Along with food and water shortages, doctors fear outbreaks of serious diseases in Gaza, says Initiative Christian Orient",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-05",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-05-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "anadolu|austrian ngo denounces unbearable humanitarian conditions in gaza",
+    "title_fingerprint": "austrian ngo denounces unbearable humanitarian conditions in gaza",
+    "claim_fingerprint": "anadolu|austrian ngo denounces unbearable humanitarian conditions in gaza|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-06-05-bbc-middle-east-fae217629ca2",
     "source_id": "gaza-2026-06-05-bbc-middle-east-fae217629ca2",
     "title": "Israeli strikes kill 11 people in Gaza City, medics say",
@@ -109,7 +159,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-06-04T17:50:20+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "Women and children were among those killed in the attacks on four residential buildings, which Israel's military says killed four Hamas security officials.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -122,7 +172,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-004"
+      "gaza-story-2026-06-05-005"
     ],
     "claim_ids": [],
     "candidate_score": 36,
@@ -158,7 +208,7 @@
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-06-05T05:48:40+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "In today's newsletter: \u200bGlobal powers\u200b are focused on oil markets and elections\u200b but those living through conflict in the Middle East feel abandoned Good morning. It's been another week of brinkmanship via Truth Social and ceasefires broken before they've been announced. While US president Donald Trump claims an agreement with Iran could happen soon, for those living in the Middle East it does not feel like peace is anywhere near. People have seen more bombs dropped in Lebanon this week; and the death toll continues to rise, national economies falter, and displacement abounds. UK politics | Andy Burnham has signalled he would begin transforming the broken social care system this year if he became prime minister, he has said in an interview with the Guardian , accusing Westminster of \"flinching away\" from tackling difficult policy problems. Environment | Humanity can raise living standards, reduce inequality and keep global heating within a 2C rise, according to a sweeping vision for planetary survival . Ukraine | The Ukrainian president, Volodymyr Zelenskyy, has called for face-to-face negotiations in a public letter addressed directly to the Russian president, Vladimir Putin. England news | The poorest and most nature-deprived communities in England will be further left behind in their access to green spaces if proposed changes to planning laws go ahead, a report finds. UK news | Andrew Mountbatten-Windsor received private income from subletting three cottages on his Windsor Royal Lodge estate while paying a \"peppercorn rent\" to the crown estate, a report into royal property arrangements has revealed.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -171,7 +221,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-005"
+      "gaza-story-2026-06-05-006"
     ],
     "claim_ids": [],
     "candidate_score": 84,
@@ -201,18 +251,18 @@
     "claim_fingerprint": "guardian|friday briefing how gaza lebanon and iran have found themselves caught in an escalation without end|conflict"
   },
   {
-    "source_record_id": "gaza-2026-06-05-the-new-arab-0e1b8c1a3cc2",
-    "source_id": "gaza-2026-06-05-the-new-arab-0e1b8c1a3cc2",
-    "title": "The Jewish filmmaker trying to understand Israel after Gaza",
-    "url": "https://www.newarab.com/features/jewish-filmmaker-trying-understand-israel-after-gaza",
-    "canonical_url": "https://www.newarab.com/features/jewish-filmmaker-trying-understand-israel-after-gaza",
+    "source_record_id": "gaza-2026-06-05-the-new-arab-b107a5cc9cb0",
+    "source_id": "gaza-2026-06-05-the-new-arab-b107a5cc9cb0",
+    "title": "Gaza's fishermen patch up dinghies with door frames to float",
+    "url": "https://www.newarab.com/news/gazas-fishermen-patch-dinghies-door-frames-float",
+    "canonical_url": "https://www.newarab.com/news/gazas-fishermen-patch-dinghies-door-frames-float",
     "canonical_url_attempted": false,
     "canonicalization_status": "direct_url",
     "wrapper_url": null,
     "publisher": "The New Arab",
-    "published_at": "2026-06-05T12:41:46+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
-    "summary_or_snippet": "We speak to filmmaker Gillian Moseley about 'Planet Israel', her new documentary exploring why so many Israelis support the genocide in Gaza",
+    "published_at": "2026-06-05T13:39:24+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
+    "summary_or_snippet": "The Gaza fishing industry's total catch has shrunk to less than 15 tons a month-the amount they used to take every day before Israel's genocidal war.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -224,7 +274,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-006"
+      "gaza-story-2026-06-05-007"
     ],
     "claim_ids": [],
     "candidate_score": 32,
@@ -244,9 +294,9 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "new arab|the jewish filmmaker trying to understand israel after gaza",
-    "title_fingerprint": "the jewish filmmaker trying to understand israel after gaza",
-    "claim_fingerprint": "new arab|the jewish filmmaker trying to understand israel after gaza|conflict"
+    "dedupe_key": "new arab|gaza s fishermen patch up dinghies with door frames to float",
+    "title_fingerprint": "gaza s fishermen patch up dinghies with door frames to float",
+    "claim_fingerprint": "new arab|gaza s fishermen patch up dinghies with door frames to float|conflict"
   },
   {
     "source_record_id": "gaza-2026-06-05-aljazeera-middle-east-4058b3f90038",
@@ -259,7 +309,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-06-05T11:38:03+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "Hamas official Husam Badran, in an exclusive interview, lays out what the group is ready to do ahead of Cairo talks.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -272,7 +322,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-007"
+      "gaza-story-2026-06-05-008"
     ],
     "claim_ids": [],
     "candidate_score": 40,
@@ -298,6 +348,55 @@
     "claim_fingerprint": "al jazeera|hamas says won t surrender arms but only police will carry weapons in gaza|conflict"
   },
   {
+    "source_record_id": "gaza-2026-06-05-anadolu-middle-east-79ae74154ca2",
+    "source_id": "gaza-2026-06-05-anadolu-middle-east-79ae74154ca2",
+    "title": "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report",
+    "url": "https://www.aa.com.tr/en/middle-east/newly-disclosed-israeli-testimonies-detail-expulsions-killings-during-1967-war-report/3957493",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/newly-disclosed-israeli-testimonies-detail-expulsions-killings-during-1967-war-report/3957493",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-06-05T10:44:00+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
+    "summary_or_snippet": "Haaretz investigation cites archival documents, government correspondence and unpublished soldiers' accounts on displacement of Palestinians and Syrians",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-05",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-05-009"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "anadolu|newly disclosed israeli testimonies detail expulsions killings during 1967 war report",
+    "title_fingerprint": "newly disclosed israeli testimonies detail expulsions killings during 1967 war report",
+    "claim_fingerprint": "anadolu|newly disclosed israeli testimonies detail expulsions killings during 1967 war report|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-06-05-the-new-arab-aea6d78a7b80",
     "source_id": "gaza-2026-06-05-the-new-arab-aea6d78a7b80",
     "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
@@ -308,7 +407,7 @@
     "wrapper_url": null,
     "publisher": "The New Arab",
     "published_at": "2026-06-05T00:51:55+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "Following the court's overturning of the ban, the ICRC said it is 'ready to resume' its work in visiting Palestinian prisoners in held in Israeli detention.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -321,7 +420,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-008"
+      "gaza-story-2026-06-05-010"
     ],
     "claim_ids": [],
     "candidate_score": 64,
@@ -349,6 +448,57 @@
     "claim_fingerprint": "new arab|israel supreme court strikes down ban on red cross prison visits|conflict"
   },
   {
+    "source_record_id": "gaza-2026-06-05-anadolu-middle-east-6a93dfea03aa",
+    "source_id": "gaza-2026-06-05-anadolu-middle-east-6a93dfea03aa",
+    "title": "UN agency says displacement in Lebanon rises despite ceasefire",
+    "url": "https://www.aa.com.tr/en/middle-east/un-agency-says-displacement-in-lebanon-rises-despite-ceasefire/3957441",
+    "canonical_url": "https://www.aa.com.tr/en/middle-east/un-agency-says-displacement-in-lebanon-rises-despite-ceasefire/3957441",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Anadolu Agency",
+    "published_at": "2026-06-05T09:58:06+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
+    "summary_or_snippet": "More than 2,100 people sheltering in UNRWA facilities as hostilities continue despite truce, agency says",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "anadolu-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-05",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-05-011"
+    ],
+    "claim_ids": [],
+    "candidate_score": 60,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "anadolu|un agency says displacement in lebanon rises despite ceasefire",
+    "title_fingerprint": "un agency says displacement in lebanon rises despite ceasefire",
+    "claim_fingerprint": "anadolu|un agency says displacement in lebanon rises despite ceasefire|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-06-05-the-new-arab-1abfb93290a4",
     "source_id": "gaza-2026-06-05-the-new-arab-1abfb93290a4",
     "title": "8 in 10 Labour members back UK sanctions on Israel over Gaza",
@@ -359,7 +509,7 @@
     "wrapper_url": null,
     "publisher": "The New Arab",
     "published_at": "2026-06-04T18:03:50+00:00",
-    "retrieved_at": "2026-06-05T15:56:43.230643+00:00",
+    "retrieved_at": "2026-06-05T16:04:46.217986+00:00",
     "summary_or_snippet": "A new poll suggests Labour members are far ahead of the party leadership on Gaza, with overwhelming support for sanctions on Israel.",
     "source_type": "rss",
     "region_scope": "Gaza",
@@ -372,7 +522,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-05",
     "used_in_story_ids": [
-      "gaza-story-2026-06-05-009"
+      "gaza-story-2026-06-05-012"
     ],
     "claim_ids": [],
     "candidate_score": 24,

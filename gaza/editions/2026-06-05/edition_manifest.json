@@ -2,19 +2,20 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-05T15:56:49.292130+00:00",
+  "generated_at": "2026-06-05T16:04:52.236851+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-05/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-05",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-05",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-05",
   "template_version": "gaza-source-record-v1",
-  "source_count": 8,
-  "story_count": 6,
+  "source_count": 11,
+  "story_count": 8,
   "source_adequacy_status": "daily_briefing",
   "source_adequacy_label": "Daily briefing",
-  "publisher_count": 4,
+  "publisher_count": 5,
   "publishers": [
     "Al Jazeera",
+    "Anadolu Agency",
     "BBC News",
     "The Guardian",
     "The New Arab"
@@ -34,7 +35,7 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
-    "suppressed 4 repeated/stale candidate sources via cross-edition dedupe"
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe"
   ],
   "errors": []
 }

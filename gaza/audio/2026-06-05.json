@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-05T16:04:52.680097Z",
+  "generated_at": "2026-06-05T16:06:27.964373Z",
   "audio_status": "audio_file_ready_existing",
   "audio_file": "2026-06-05.mp3",
   "audio_url": "/gaza/audio/2026-06-05.mp3",
@@ -23,7 +23,7 @@
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-06-05T16:04:52.680082Z",
+  "cost_logged_at": "2026-06-05T16:06:27.964352Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,

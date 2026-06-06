@@ -263,8 +263,8 @@
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
-      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
-      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
+      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
+      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
       "evidence_text_basis": "page_text_excerpt",
       "pressure_match_terms": [
         "struggling to meet demand",
@@ -1151,8 +1151,8 @@
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
-      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
-      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
+      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
+      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
       "evidence_text_basis": "page_text_excerpt",
       "pressure_match_terms": [
         "struggling to meet demand",
@@ -2547,8 +2547,8 @@
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
-      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
-      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year. { member.metadata.pbs_uid = event?.detail?.metadata?.pbs?.customer_uid; member.metadata.viewer_uid = event?.detail?.metadata?.pbs?.viewer_uid; member.metadata.passport_uid = event?.detail?.metadata?.pbs?.passport_uid; member.metadata.connected =",
+      "evidence_text": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
+      "evidence_excerpt": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
       "evidence_text_basis": "page_text_excerpt",
       "pressure_match_terms": [
         "struggling to meet demand",

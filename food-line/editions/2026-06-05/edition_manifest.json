@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-06T16:25:32.063253+00:00",
+  "generated_at": "2026-06-06T20:58:57.959536+00:00",
   "source_count": 29,
   "story_count": 1,
   "source_adequacy": {
@@ -129,6 +129,6 @@
     }
   },
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-05/",
-  "bluesky_post_text": "Food Line Dispatch, June 5, 2026: Local/operational signal from 13abc, Toledo. 13abc reported rising food-assistance demand across its service area in Toledo, affecting SNAP households. The need for food assistance was already growing before the shutdown according to local food assistance organizati",
+  "bluesky_post_text": "Food Line Dispatch, June 5, 2026: Local food pantries are preparing for increased demand as SNAP benefits face shutdown pause from 13abc, Toledo. 13abc reported rising food-assistance demand across its service area in Toledo, affecting SNAP households. The briefing also tracks related public backgro",
   "bluesky_post_ready": true
 }

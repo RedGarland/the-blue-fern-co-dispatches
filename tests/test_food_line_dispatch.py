@@ -1,10 +1,11 @@
-import csv
+﻿import csv
 import base64
 import json
 import ssl
 import sys
 import types
 import urllib.error
+from datetime import date as dt_date
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,11 @@ from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.test_food_line_candidate_sources import cleanup_food_line_candidates, import_food_line_candidate_intake, test_food_line_candidate_sources as run_food_line_candidate_sources
 from bluefern_dispatches.food_line_sources import GENERIC_PRESSURE_SUMMARIES, load_food_line_candidate_registry, load_food_line_registry
 from bluefern_dispatches.tts_provider import TTSResult, TTSDiagnostics
+
+
+@pytest.fixture(autouse=True)
+def _food_line_suite_today(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 30))
 
 
 def _ensure_assets(root: Path) -> None:
@@ -45,6 +51,13 @@ def _ensure_assets(root: Path) -> None:
 
 def _manual_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "sources" / date / "manual_sources.json"
+
+
+def _clear_food_line_registries(root: Path) -> None:
+    registry_dir = root / "data" / "dispatches" / "food-line"
+    registry_dir.mkdir(parents=True, exist_ok=True)
+    (registry_dir / "source_registry.json").write_text("[]", encoding="utf-8")
+    (registry_dir / "pressure_source_registry.json").write_text("[]", encoding="utf-8")
 
 
 def _row(
@@ -658,48 +671,234 @@ def test_food_line_2026_06_13_kltv_excerpt_is_cleaned_before_rendering():
     assert "17% increase" in excerpt
 
 
-def test_food_line_2026_06_13_skips_reused_kltv_lead_and_preserves_diagnostics(tmp_path: Path):
+def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagnostics(tmp_path: Path):
     _ensure_assets(tmp_path)
-    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    _clear_food_line_registries(tmp_path)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
 
-    date_a = "2026-06-12"
-    p_a = _manual_path(tmp_path, date_a)
-    p_a.parent.mkdir(parents=True, exist_ok=True)
-    p_a.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    result_a = run_food_line_dispatch(tmp_path, date_a)
-    assert result_a["public_rendered"] is True
-    assert result_a["qualified_primary_count"] == 1
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
 
-    date_b = "2026-06-13"
-    p_b = _manual_path(tmp_path, date_b)
-    p_b.parent.mkdir(parents=True, exist_ok=True)
-    p_b.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    result_b = run_food_line_dispatch(tmp_path, date_b)
+    review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
+    kltv = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-c531de22a923a8d8")
+    lead = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
-    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date_b
-    review_manifest = tmp_path / "output" / "review" / "food-line" / date_b / "run_manifest.json"
-    data_manifest = tmp_path / "data" / "dispatches" / "food-line" / "editions" / date_b / "run_manifest.json"
-    audio_index = tmp_path / "output" / "site" / "food-line" / "audio" / "index.html"
-    podcast_feed = tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml"
+    assert result["public_rendered"] is True
+    assert result["skip_reason"] == ""
+    assert result["primary_disqualification_reason"] == ""
+    assert result["lead_source_record_id"] == "food-line-auto-9013087c4ebc5f32"
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["selected_lead_pressure_type"] == "demand strain"
+    assert result["selected_lead_pressure_scope_label"] == "Local / operational"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-05/"
+    assert kltv["pressure_signal"] == "true"
+    assert kltv["pressure_verification_status"] == "source_text_verified"
+    assert kltv["source_published_date"] == "2026-06-05"
+    assert kltv["freshness_status"] == "fresh_daily_signal"
+    assert kltv["primary_eligible"] == "true"
+    assert kltv["primary_disqualification_reason"] == ""
+    assert lead["source_title"].startswith("Local food pantries are preparing for increased demand")
+    assert lead["location_name"] == "Toledo"
+    assert lead["pressure_signal"] == "true"
+    assert lead["pressure_verification_status"] == "source_text_verified"
+    assert lead["source_published_date"] == "2026-06-05"
+    assert lead["freshness_status"] == "fresh_daily_signal"
+    assert lead["primary_eligible"] == "true"
+    assert lead["primary_disqualification_reason"] == ""
+    assert "editions/2026-06-05/" in archive_html
+    assert "Today’s Read" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Primary Food Access Signal" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
+    assert "Today’s pressure point" not in edition_html
+    assert "What changed" not in edition_html
+    assert "Who is exposed" not in edition_html
+    assert "Field signals" not in edition_html
+    assert "Where pressure is visible" not in edition_html
+    assert "Map notes" not in edition_html
+    assert "What to watch tomorrow" not in edition_html
 
-    assert result_b["public_rendered"] is False
-    assert result_b["skip_reason"] == "No new primary food-access signal qualified for public Food Line publication."
-    assert result_b["primary_signal_status"] == "continuing_only"
-    assert result_b["lead_source_record_id"] is None
-    assert result_b["qualified_primary_count"] == 0
-    assert not site_edition.exists()
-    assert review_manifest.exists()
-    assert data_manifest.exists()
-    assert audio_index.exists()
-    assert podcast_feed.exists()
 
-    manifest = json.loads(data_manifest.read_text(encoding="utf-8"))
+def test_food_line_stale_future_edition_folders_are_pruned_from_public_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+
+    stale_date = "2026-06-12"
+    stale_dir = tmp_path / "output" / "site" / "food-line" / "editions" / stale_date
+    stale_dir.mkdir(parents=True, exist_ok=True)
+    (stale_dir / "index.html").write_text("<html><body>stale</body></html>", encoding="utf-8")
+    (stale_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": stale_date,
+                "public_rendered": True,
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+                "future_date_blocked": False,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (stale_dir / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (stale_dir / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    audio_root = tmp_path / "output" / "site" / "food-line" / "audio"
+    audio_root.mkdir(parents=True, exist_ok=True)
+    (audio_root / f"{stale_date}.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": stale_date,
+                "transcript_url": f"https://dispatches.thebluefernco.com/food-line/audio/{stale_date}-transcript.html",
+                "audio_available": True,
+                "audio_file": f"{stale_date}.mp3",
+                "audio_url": f"/food-line/audio/{stale_date}.mp3",
+                "audio_mime_type": "audio/mpeg",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (audio_root / f"{stale_date}-transcript.html").write_text("<html>stale transcript</html>", encoding="utf-8")
+    (audio_root / f"{stale_date}.mp3").write_bytes(b"stale-mp3")
+
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    podcast = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+
+    assert result["public_rendered"] is True
+    assert result["future_date_blocked"] is False
+    assert not stale_dir.exists()
+    assert not (audio_root / f"{stale_date}.json").exists()
+    assert not (audio_root / f"{stale_date}-transcript.html").exists()
+    assert not (audio_root / f"{stale_date}.mp3").exists()
+    assert "editions/2026-06-05/" in archive_html
+    assert "editions/2026-06-12/" not in archive_html
+    assert stale_date not in podcast
+
+
+def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_feed = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is False
+    assert result["future_date_blocked"] is True
+    assert result["future_date_override_used"] is False
+    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["bluesky_post_ready"] is False
+    assert result["bluesky_post_text"] is None
+    assert result["qualified_primary_count"] == 0
+    assert site_edition.exists() is False
+    assert "2026-06-13" not in archive_html
+    assert "2026-06-13" not in audio_index
+    assert "2026-06-13" not in podcast_feed
     assert manifest["public_rendered"] is False
+    assert manifest["future_date_blocked"] is True
+    assert manifest["future_date_override_used"] is False
     assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "No new primary food-access signal qualified for public Food Line publication."
-    assert manifest["continuing_pressure_source_record_ids"] == ["food-line-auto-c531de22a923a8d8"]
-    assert manifest["public_url"] is None
+    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+
+
+def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-12" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+
+    date = "2026-06-12"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_feed = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is False
+    assert result["future_date_blocked"] is True
+    assert result["future_date_override_used"] is False
+    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["bluesky_post_ready"] is False
+    assert result["bluesky_post_text"] is None
+    assert result["qualified_primary_count"] == 0
+    assert site_edition.exists() is False
+    assert "2026-06-12" not in archive_html
+    assert "2026-06-12" not in audio_index
+    assert "2026-06-12" not in podcast_feed
+    assert manifest["public_rendered"] is False
+    assert manifest["future_date_blocked"] is True
+    assert manifest["future_date_override_used"] is False
+    assert manifest["qualified_primary_count"] == 0
+    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+
+
+def test_food_line_2026_06_13_can_publish_when_future_override_is_allowed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date, allow_future_date=True)
+
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is True
+    assert result["future_date_blocked"] is False
+    assert result["future_date_override_used"] is True
+    assert result["skip_reason"] == ""
+    assert result["bluesky_post_ready"] is True
+    assert result["qualified_primary_count"] == 1
+    assert site_edition.exists()
+    assert manifest["public_rendered"] is True
+    assert manifest["future_date_blocked"] is False
+    assert manifest["future_date_override_used"] is True
+    assert manifest["bluesky_post_ready"] is True
 
 
 def test_food_line_podcast_description_varies_by_pressure_summary(tmp_path: Path):
@@ -759,12 +958,16 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert result["podcast_enclosure_present"] is True
     assert result["audio_mp3_url"] == "/food-line/audio/2026-06-04.mp3"
     assert Path(result["audio_mp3_path"]).exists()
+    assert result["audio_story_section_count"] >= 4
+    assert result["audio_story_sections"]
     assert audio_json["episode_title"] == "Food Line Dispatch - June 4, 2026"
+    assert audio_json["audio_story_section_count"] >= 4
+    assert audio_json["audio_story_sections"]
     assert audio_json["episode_summary"].startswith("KLTV reported")
     assert "17 percent increase" in audio_json["episode_summary"]
     assert "Publishing note: This dispatch is based on one verified Food Line pressure record from KLTV." in audio_json["episode_summary"]
     assert "Food bank sees rising demand from families" not in audio_json["script_text"]
-    assert "Today's pressure point:" in audio_json["script_text"]
+    assert "Today's pressure point:" not in audio_json["script_text"]
     assert "When benefit delays hit" in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
     assert "Source note:" not in audio_json["script_text"]
@@ -777,10 +980,10 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "the verified record came from" not in audio_json["script_text"].lower()
     assert "Skip to content" not in audio_json["script_text"]
     assert "Advertise With Us" not in audio_json["script_text"]
-    assert transcript.index("Today&apos;s pressure point") < transcript.index("Why it matters")
-    assert transcript.index("Why it matters") < transcript.index("Publishing note")
-    assert transcript.index("Publishing note") < transcript.index("Source note")
-    assert transcript.index("Source note") < transcript.index("Transcript and source links")
+    assert transcript.index("Opening") < transcript.index("Today&apos;s Read")
+    assert transcript.index("Today&apos;s Read") < transcript.index("Primary Food Access Signal")
+    assert transcript.index("Primary Food Access Signal") < transcript.index("Source Note")
+    assert transcript.index("Source Note") < transcript.index("Transcript and source links")
     assert "Review summary:" not in transcript
     assert "17 percent increase" in transcript
     assert "Edition status: Daily edition" not in transcript
@@ -790,11 +993,17 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "the verified record came from" not in transcript.lower()
     assert "Review summary:" not in transcript.split("Publishing note", 1)[0]
     assert "Review summary:" not in audio_index.split("Publishing note", 1)[0]
-    assert audio_index.index("KLTV reported") < audio_index.index("Publishing note")
+    assert audio_index.index("Opening") < audio_index.index("Today&apos;s Read")
+    assert audio_index.index("Today&apos;s Read") < audio_index.index("Primary Food Access Signal")
     assert "17 percent increase" in audio_index
-    assert "Source note" in audio_index
+    assert "Source Note" in audio_index
     assert "Where pressure is visible" not in audio_index
     assert "For traceability" not in audio_index
+    assert result["selected_lead_pressure_scope_label"] == "Local / operational"
+    assert result["selected_lead_pressure_scope_text"] == "local/operational"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
     assert "<enclosure " in podcast
     assert "Review summary:" not in podcast
     assert "matched terms" not in podcast.lower()
@@ -1369,6 +1578,7 @@ def test_food_line_output_includes_scope_counts(tmp_path: Path):
         ("SNAP benefits delayed", "Households reported a SNAP delay and application backlog.", "state_official", "benefit disruption"),
         ("Summer meal site closure", "The meal site closed and children are missing meals.", "school_meals_child_nutrition", "child meal gap"),
         ("Meals on Wheels waitlist grows", "The senior meal waitlist grew and providers could not serve seniors.", "senior_meals", "senior meal strain"),
+        ("Families face medical bills and food hardship", "Households are skipping meals because medical bills and prescription costs keep rising.", "local_news", "household hardship"),
         ("Grocery closure creates access gap", "A grocery closure left rural residents without nearby food access.", "local_news", "access gap"),
         ("Emergency food distribution after flood", "D-SNAP and emergency food distribution responded to flood disruption.", "disaster_emergency", "disaster disruption"),
     ],
@@ -1394,6 +1604,112 @@ def test_food_line_pressure_classification_examples(tmp_path: Path, title: str, 
         "elevated demand signal",
         "context signal",
     }
+
+
+def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-04"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    row = _pressure_row(
+        1,
+        "National food insecurity rises",
+        "National food insecurity and household hardship remain elevated as medical bills and prescription costs keep forcing tradeoffs.",
+        family="national_news",
+        state="US",
+    )
+    p.write_text(json.dumps([row], indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+
+    assert result["selected_lead_pressure_scope_label"] == "National / systemic"
+    assert result["selected_lead_pressure_scope_text"] == "national/systemic"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
+    assert "National/systemic signal" in result["bluesky_post_text"]
+    assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
+
+
+def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+    review = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    lead = next(row for row in review if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+
+    assert result["public_rendered"] is True
+    assert result["skip_reason"] == ""
+    assert result["primary_disqualification_reason"] == ""
+    assert result["lead_source_record_id"] == "food-line-auto-9013087c4ebc5f32"
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["selected_lead_pressure_type"] == "demand strain"
+    assert result["selected_lead_pressure_scope_label"] == "Local / operational"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-05/"
+    assert lead["pressure_signal"] == "true"
+    assert lead["pressure_type"] == "demand strain"
+    assert lead["pressure_verification_status"] == "source_text_verified"
+    assert lead["source_published_date"] == "2026-06-05"
+    assert lead["freshness_status"] == "fresh_daily_signal"
+    assert lead["primary_eligible"] == "true"
+    assert lead["primary_disqualification_reason"] == ""
+    assert "Today’s Read" in edition_html
+    assert "Primary Food Access Signal" in edition_html
+    assert "Source Note" in edition_html
+    assert "Today&apos;s pressure point" not in edition_html
+    assert "What changed" not in edition_html
+    assert "Where pressure is visible" not in edition_html
+
+
+def test_food_line_cascade_pbs_style_funding_cut_story_publishes_when_fresh_and_clean(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = [
+        row
+        for row in json.loads(payload_path.read_text(encoding="utf-8"))
+        if row["source_record_id"] == "food-line-auto-6effc522ae28d822"
+    ]
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+    review = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    lead = next(row for row in review if row["source_record_id"] == "food-line-auto-6effc522ae28d822")
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+
+    assert result["public_rendered"] is True
+    assert result["skip_reason"] == ""
+    assert result["primary_disqualification_reason"] == ""
+    assert result["lead_source_record_id"] == "food-line-auto-6effc522ae28d822"
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["selected_lead_pressure_type"] == "demand strain"
+    assert result["selected_lead_pressure_scope_label"] == "Local / operational"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/"
+    assert lead["pressure_signal"] == "true"
+    assert lead["pressure_type"] == "demand strain"
+    assert lead["pressure_verification_status"] == "source_text_verified"
+    assert lead["source_published_date"] == "2026-06-13"
+    assert lead["freshness_status"] == "fresh_daily_signal"
+    assert lead["primary_eligible"] == "true"
+    assert lead["primary_disqualification_reason"] == ""
+    assert "Today’s Read" in edition_html
+    assert "Primary Food Access Signal" in edition_html
+    assert "Source Note" in edition_html
 
 
 def test_food_line_nonpressure_rss_items_are_excluded_from_pressure_map(tmp_path: Path):
@@ -2084,6 +2400,21 @@ def test_food_line_dispatch_refreshes_historical_source_tables(tmp_path: Path):
         edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / old_date
         edition_dir.mkdir(parents=True, exist_ok=True)
         _write_source_registry(tmp_path, [_row(1, title=f"Archive Source {old_date}")])
+        (edition_dir / "index.html").write_text("<html><body>archive</body></html>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": "food-line",
+                    "edition_date": old_date,
+                    "public_rendered": True,
+                    "qualified_primary_count": 1,
+                    "skip_reason": "",
+                    "future_date_blocked": False,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
         (edition_dir / "sources_manifest.json").write_text(json.dumps([_row(1, title=f"Archive Source {old_date}")], indent=2), encoding="utf-8")
         (edition_dir / "source_table.html").write_text("<html><head></head><body><table><tr><th>Legacy</th></tr></table></body></html>", encoding="utf-8")
 
@@ -4084,3 +4415,5 @@ def test_food_line_discovered_candidates_are_processed_by_candidate_tester(tmp_p
         review = list(csv.DictReader(handle))
     assert any(row["recommendation"] == "enable" for row in review)
     assert any(row["candidate_url"] == feed_url for row in review)
+
+

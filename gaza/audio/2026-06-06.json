@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-06",
+  "generated_at": "2026-06-06T13:01:00.407501Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-06.mp3",
+  "audio_url": "/gaza/audio/2026-06-06.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1590,
+  "tts_input_word_count": 254,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1601664,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-06T13:01:00.407469Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-06-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-06/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 6, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Italy appeals for release of hunger-striking Flotilla activists. Italy urges Libya to free two detained pro-Palestinian activists as a Gaza aid convoy hunger strike enters its fifth day. This was reported by The New Arab.\n\n2. Palestinian baby killed by Israeli gunfire in occupied West Bank. A Palestinian baby was killed in Hebron as Israeli forces opened fire, while another Palestinian was shot dead near Ramallah. This was reported by The New Arab.\n\n3. Israeli forces fatally shoot Palestinian infant, wound parents in West Bank. Violence in the West Bank has escalated since. Israel began its war on Gaza in 2023. This was reported by Al Jazeera.\n\n4. Egypt questions Camp David treaty after Israel border violations. Debate is growing in Egypt over whether Israeli military activity near Rafah is altering Camp David's security arrangements without consent. This was reported by The New Arab.\n\n5. Health concerns grow for US-Palestinian student in Israel prison. The students were transferred to Israel's Ofer Prison, and human rights advocates have raised concerns that the young women could face physical violence. This was reported by The New Arab.\n\n6. Groom killed hours before his wedding in Gaza. Muhannad Farwana never got to wear his wedding suit, Israel killed him in an air strike hours before his wedding. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 6, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-06-the-new-arab-72994c589430",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/italy-appeals-release-hunger-striking-flotilla-activists",
+      "title": "Italy appeals for release of hunger-striking Flotilla activists"
+    },
+    {
+      "source_record_id": "gaza-2026-06-06-the-new-arab-d2f195d21293",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/palestinian-baby-killed-israeli-gunfire-occupied-west-bank",
+      "title": "Palestinian baby killed by Israeli gunfire in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-06-06-aljazeera-middle-east-e9da9f4f0bef",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/6/israeli-forces-fatally-shoot-palestinian-infant-wound-parents-in-west-bank?traffic_source=rss",
+      "title": "Israeli forces fatally shoot Palestinian infant, wound parents in West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-06-06-the-new-arab-615c27418869",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/egypt-questions-camp-david-treaty-after-israel-border-violations",
+      "title": "Egypt questions Camp David treaty after Israel border violations"
+    },
+    {
+      "source_record_id": "gaza-2026-06-06-the-new-arab-f930463b9a6e",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/health-concerns-grow-us-palestinian-student-israel-prison",
+      "title": "Health concerns grow for US-Palestinian student in Israel prison"
+    },
+    {
+      "source_record_id": "gaza-2026-06-06-aljazeera-middle-east-a4b0c794b97f",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/6/6/groom-killed-hours-before-his-wedding-in-gaza?traffic_source=rss",
+      "title": "Groom killed hours before his wedding in Gaza"
+    }
+  ]
+}

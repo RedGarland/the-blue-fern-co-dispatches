@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 05 Jun 2026 16:24:32 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 06 Jun 2026 13:01:00 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 6, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-06-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-06-transcript.html</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Italy appeals for release of hunger-striking Flotilla activists. Italy urges Libya to free two detained pro-Palestinian activists as a Gaza aid convoy hunger strike enters its fifth day. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-06.mp3" length="1601664" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 5, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-05-transcript.html</link>

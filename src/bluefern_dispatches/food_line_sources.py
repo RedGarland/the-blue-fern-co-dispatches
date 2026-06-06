@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import hashlib
 import html
@@ -773,7 +773,7 @@ def _normalize_source_text(text: str, *, limit: int | None = None) -> str:
 FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
     "Skip to main content",
     "Skip to content",
-    "Here’s how you know",
+    "Hereâ€™s how you know",
     "Here's how you know",
     "Advertise With Us",
     "Teacher Tribute",
@@ -800,9 +800,10 @@ FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
     "A .gov website belongs to an official government organization in the United States",
     "A .gov website belongs to an official government organization",
     "Secure .gov websites use HTTPS",
-    "A lock ( Lock Locked padlock ) or https:// means you’ve safely connected to the .gov website",
+    "A lock ( Lock Locked padlock ) or https:// means youâ€™ve safely connected to the .gov website",
     "A lock ( Lock Locked padlock ) or https:// means you've safely connected to the .gov website",
     "Share sensitive information only on official, secure websites",
+    "member.metadata",
     "KLTV.com - Channel 7 News, Weather, Sports for East Texas - KLTV.com - Tyler, Longview, Jacksonville",
     "ETX News",
 )
@@ -823,7 +824,7 @@ def _strip_food_line_public_chrome(text: str, *, title: str = "", limit: int = 4
         clean = clean[: min(cut_points)]
     for phrase in FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES:
         clean = re.sub(re.escape(phrase), " ", clean, flags=re.IGNORECASE)
-    clean = re.sub(r"\s+", " ", clean).strip(" -–—:;,.")
+    clean = re.sub(r"\s+", " ", clean).strip(" -–—:;,.{}")
     return _normalize_source_text(clean, limit=limit)
 
 
@@ -838,7 +839,7 @@ def clean_food_line_public_evidence_excerpt(text: str, *, title: str = "", limit
         clean = re.sub(re.escape(title_text), " ", clean, flags=re.IGNORECASE)
     for phrase in FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES:
         clean = re.sub(re.escape(phrase), " ", clean, flags=re.IGNORECASE)
-    clean = re.sub(r"\s+", " ", clean).strip(" -–—:;,.")
+    clean = re.sub(r"\s+", " ", clean).strip(" -–—:;,.{}")
     clean = _normalize_source_text(clean, limit=limit)
     if not clean:
         return FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK
@@ -1766,3 +1767,4 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
         "rejected_news": rejected_news,
         "failed_sources": failures,
     }
+

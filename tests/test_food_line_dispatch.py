@@ -1,6 +1,7 @@
 ﻿import csv
 import base64
 import json
+import re
 import ssl
 import sys
 import types
@@ -122,6 +123,15 @@ def _write_candidate_registry(root: Path, payload: list[dict]) -> Path:
     path = registry_dir / "candidate_source_registry.json"
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return path
+
+
+def _http_urls(text: str) -> list[str]:
+    urls = {
+        url
+        for url in re.findall(r'href="(https?://[^"]+)"', text)
+        if "dispatches.thebluefernco.com" not in url and "thebluefernco.com" not in url
+    }
+    return sorted(urls)
 
 
 def _write_intake_csv(root: Path, rows: list[dict[str, str]]) -> Path:
@@ -342,8 +352,10 @@ def test_food_line_alias_fields_load_map_and_source_table(tmp_path: Path):
     map_payload = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
     assert len(map_payload["markers"]) == 2
     source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
-    assert "Alias Source One" in source_table
-    assert "https://example.com/alias-one" in source_table
+    assert "Alias Source Two" in source_table
+    assert "https://example.com/alias-two" in source_table
+    assert "Alias Source One" not in source_table
+    assert "https://example.com/alias-one" not in source_table
 
 
 def test_food_line_map_page_is_interactive_and_not_placeholder(tmp_path: Path):
@@ -369,11 +381,11 @@ def test_food_line_map_page_is_interactive_and_not_placeholder(tmp_path: Path):
     assert "leaflet" in map_html.lower()
     assert "map_data.json" in map_html
     assert "Latest mapped signals for 2026-06-01" not in map_html
-    assert "<strong>Pressure summary:</strong>" in map_html
-    assert "<strong>Pressure signal:</strong>" in map_html
+    assert "<strong>What happened:</strong>" in map_html
+    assert "<strong>Included in briefing:</strong>" in map_html
     assert "<div><strong>Category:</strong>" not in map_html
     assert "<div><strong>Issue tags:</strong>" not in map_html
-    assert "<strong>Source purpose:</strong>" in map_html
+    assert "<strong>How it was used:</strong>" in map_html
     assert "<strong>Source:</strong>" in map_html
     assert "<strong>Dispatch date:</strong>" in map_html
     assert "<strong>Coordinate basis:</strong>" in map_html
@@ -586,7 +598,7 @@ def test_food_line_source_table_and_map_include_auto_sources(tmp_path: Path):
     table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     assert "Auto Source Title" in table
     assert "https://example.com/auto-1" in table
-    assert "Source Purpose" in table
+    assert "How it was used" in table
     map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
     assert any(marker.get("source_title") == "Auto Source Title" for marker in map_data.get("markers") or [])
 
@@ -718,13 +730,16 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "editions/2026-06-05/" in archive_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
-    assert "Primary Food Access Signal" in edition_html
+    assert "Main Food Access Story" in edition_html
     assert "What Else We’re Watching" in edition_html
     assert "Context and Watch Items" not in edition_html
     assert "Sources Behind This Briefing" in edition_html
     assert "Source Mix" not in edition_html
     assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
+    assert "What happened" in edition_html
+    assert "Why it matters" in edition_html
+    assert "Read the source" in edition_html
     assert "Skip to main content" not in edition_html
     assert "Here’s how you know" not in edition_html
     assert "Here&#x27;s how you know" not in edition_html
@@ -974,10 +989,9 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert audio_json["audio_story_sections"]
     assert audio_json["episode_summary"].startswith("KLTV reported")
     assert "17 percent increase" in audio_json["episode_summary"]
-    assert "Publishing note: This dispatch is based on one verified Food Line pressure record from KLTV." in audio_json["episode_summary"]
-    assert "Food bank sees rising demand from families" not in audio_json["script_text"]
+    assert "Publishing note: This dispatch is based on one public Food Line source record from KLTV." in audio_json["episode_summary"]
     assert "Today's pressure point:" not in audio_json["script_text"]
-    assert "When benefit delays hit" in audio_json["script_text"]
+    assert "This local food-access story matters" in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
     assert "Source note:" not in audio_json["script_text"]
     assert "Edition status: Daily edition" not in audio_json["script_text"]
@@ -990,9 +1004,9 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Skip to content" not in audio_json["script_text"]
     assert "Advertise With Us" not in audio_json["script_text"]
     assert transcript.index("Opening") < transcript.index("Today&apos;s Read")
-    assert transcript.index("Today&apos;s Read") < transcript.index("Primary Food Access Signal")
-    assert transcript.index("Primary Food Access Signal") < transcript.index("Source Note")
-    assert transcript.index("Source Note") < transcript.index("Transcript and source links")
+    assert transcript.index("Today&apos;s Read") < transcript.index("Main Food Access Story")
+    assert transcript.index("Main Food Access Story") < transcript.index("Sources Behind This Briefing")
+    assert transcript.index("Sources Behind This Briefing") < transcript.index("Transcript and source links")
     assert "Review summary:" not in transcript
     assert "17 percent increase" in transcript
     assert "Edition status: Daily edition" not in transcript
@@ -1003,9 +1017,9 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Review summary:" not in transcript.split("Publishing note", 1)[0]
     assert "Review summary:" not in audio_index.split("Publishing note", 1)[0]
     assert audio_index.index("Opening") < audio_index.index("Today&apos;s Read")
-    assert audio_index.index("Today&apos;s Read") < audio_index.index("Primary Food Access Signal")
+    assert audio_index.index("Today&apos;s Read") < audio_index.index("Main Food Access Story")
     assert "17 percent increase" in audio_index
-    assert "Source Note" in audio_index
+    assert "Sources Behind This Briefing" in audio_index
     assert "Where pressure is visible" not in audio_index
     assert "For traceability" not in audio_index
     assert result["selected_lead_pressure_scope_label"] == "Local / operational"
@@ -1680,8 +1694,8 @@ def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     assert result["bluesky_post_text"]
     assert len(result["bluesky_post_text"]) <= 300
     assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
-    assert "National/systemic signal" in result["bluesky_post_text"]
     assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
+    assert "The briefing also tracks related public background sources." in result["bluesky_post_text"]
 
 
 def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):
@@ -1717,8 +1731,8 @@ def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(
     assert lead["primary_eligible"] == "true"
     assert lead["primary_disqualification_reason"] == ""
     assert "Today’s Read" in edition_html
-    assert "Primary Food Access Signal" in edition_html
-    assert "Source Note" in edition_html
+    assert "Main Food Access Story" in edition_html
+    assert "Sources Behind This Briefing" in edition_html
     assert "Today&apos;s pressure point" not in edition_html
     assert "What changed" not in edition_html
     assert "Where pressure is visible" not in edition_html
@@ -1761,8 +1775,8 @@ def test_food_line_cascade_pbs_style_funding_cut_story_publishes_when_fresh_and_
     assert lead["primary_eligible"] == "true"
     assert lead["primary_disqualification_reason"] == ""
     assert "Today’s Read" in edition_html
-    assert "Primary Food Access Signal" in edition_html
-    assert "Source Note" in edition_html
+    assert "Main Food Access Story" in edition_html
+    assert "Sources Behind This Briefing" in edition_html
 
 
 def test_food_line_nonpressure_rss_items_are_excluded_from_pressure_map(tmp_path: Path):
@@ -1821,7 +1835,7 @@ def test_food_line_affected_groups_require_supporting_text_and_baseline_stays_ba
     assert by_title["USDA context"]["pressure_signal"] is False
     assert result["baseline_source_count"] == 1
     source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
-    assert "Not clearly isolated by source" in source_table
+    assert "Not clearly isolated by source" not in source_table
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     assert "children" in edition_html.lower() or "snap households" in edition_html.lower() or "low-income households" in edition_html.lower()
 
@@ -1854,11 +1868,11 @@ def test_food_line_source_table_includes_pressure_summary(tmp_path: Path):
     p.write_text(json.dumps([row], indent=2), encoding="utf-8")
     run_food_line_dispatch(tmp_path, date)
     table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
-    assert "Pressure Summary" in table
-    assert "Evidence Excerpt" in table
-    assert "Source Record ID" in table
-    assert "pressure_signal" in table
-    assert "pressure_verification_status" in table
+    assert "What happened" in table
+    assert "What the source says" in table
+    assert "Record ID" in table
+    assert "How it was used" in table
+    assert "Verification status" in table
     assert "rising food-assistance demand" in table.lower()
 
 
@@ -1893,7 +1907,7 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Daily briefing / June 4, 2026" in edition_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
-    assert "Primary Food Access Signal" in edition_html
+    assert "Main Food Access Story" in edition_html
     assert "What Else We’re Watching" not in edition_html
     assert "Context and Watch Items" not in edition_html
     assert "Sources Behind This Briefing" in edition_html
@@ -1909,15 +1923,50 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Sports" not in edition_html
     assert "Contests" not in edition_html
     assert "Closings & Delays" not in edition_html
-    assert "Open the public source table for traceability fields and cleaned evidence excerpts." in edition_html
-    assert "Source URL:" in edition_html
-    assert "Source Record ID" in source_table_html
-    assert "Evidence Excerpt" in source_table_html
+    assert "Open the public source table for traceability and cleaned excerpts." in edition_html
+    assert "Source:" in edition_html
+    assert "Where:" in edition_html
+    assert "What happened:" in edition_html
+    assert "Why it matters:" in edition_html
+    assert "Read the source:" in edition_html
+    assert "Record ID" in source_table_html
+    assert "What the source says" in source_table_html
     assert "Unrelated local arts story" not in source_table_html
     assert "Skip to content" not in source_table_html
-    assert "Signal mix today" not in source_table_html
+    assert "Verification status" in source_table_html
+    assert "Used on public page" in source_table_html
     assert "Skip to content" not in map_html
-    assert "Evidence excerpt:" in map_html
+    assert "What the source says:" in map_html
+
+
+def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, date)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+
+    page_urls = _http_urls(edition_html)
+    table_urls = _http_urls(source_table_html)
+    assert page_urls == table_urls
+    assert "What Else We’re Watching" in edition_html
+    assert "Sources Behind This Briefing" in edition_html
+    assert "Context and Watch Items" not in edition_html
+    assert "Source Mix" not in edition_html
+    assert "local_signal" not in source_table_html
+    assert "source_text_verified" not in source_table_html
+    assert "demoted_context" not in source_table_html
+    assert "context only" not in source_table_html.lower()
+    assert "Cascade PBS" not in source_table_html
+    assert "KLTV" not in source_table_html
+    assert "Used on public page" in source_table_html
+    assert "Yes" in source_table_html
 
 
 def test_food_line_reuses_previous_day_lead_as_continuing_pressure(tmp_path: Path):
@@ -1979,15 +2028,15 @@ def test_food_line_map_popup_uses_pressure_summary_and_not_tags_as_primary_evide
     map_html = (tmp_path / "output" / "site" / "food-line" / "map" / "index.html").read_text(encoding="utf-8")
     assert "Location:" in map_html
     assert "Verification status:" in map_html
-    assert "Source record ID:" in map_html
+    assert "Record ID:" in map_html
     assert "Source URL:" in map_html
-    assert "Pressure summary:" in map_html
-    assert "Evidence excerpt:" in map_html
+    assert "What happened:" in map_html
+    assert "What the source says:" in map_html
     assert "rising food-assistance demand" in map_html.lower()
     assert "Source-backed food insecurity context signal" not in map_html
     assert "<div><strong>Category:</strong>" not in map_html
     assert "<div><strong>Issue tags:</strong>" not in map_html
-    assert "Not clearly isolated by source" in map_html
+    assert "Not clearly isolated by source" not in map_html
 
 
 def test_food_line_blank_affected_groups_render_placeholder_everywhere(tmp_path: Path):
@@ -2001,9 +2050,9 @@ def test_food_line_blank_affected_groups_render_placeholder_everywhere(tmp_path:
     map_html = (tmp_path / "output" / "site" / "food-line" / "map" / "index.html").read_text(encoding="utf-8")
     source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
-    assert "Not clearly isolated by source" in map_html
-    assert "Not clearly isolated by source" in source_table
-    assert "Not clearly isolated by source" in edition_html
+    assert "Not clearly isolated by source" not in map_html
+    assert "Not clearly isolated by source" not in source_table
+    assert "Not clearly isolated by source" not in edition_html
 
 
 def test_food_line_map_and_runner_diagnostics_count_only_pressure_records(tmp_path: Path):
@@ -2034,7 +2083,7 @@ def test_food_line_map_and_runner_diagnostics_count_only_pressure_records(tmp_pa
     public_source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     assert "Food bank sees rising demand from families" in public_source_table
     assert "Restaurant announces new menu" not in public_source_table
-    assert "USDA context" not in public_source_table
+    assert "USDA context" in public_source_table
     with (tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8") as handle:
         pressure_review = list(csv.DictReader(handle))
     assert len(pressure_review) == 3
@@ -2413,11 +2462,11 @@ def test_food_line_source_table_includes_evidence_fields(tmp_path: Path):
     p.write_text(json.dumps([row], indent=2), encoding="utf-8")
     run_food_line_dispatch(tmp_path, date)
     table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
-    assert "Source Record ID" in table
-    assert "Evidence Excerpt" in table
-    assert "pressure_signal" in table
-    assert "pressure_verification_status" in table
-    assert "Source Purpose" in table
+    assert "Record ID" in table
+    assert "What the source says" in table
+    assert "How it was used" in table
+    assert "Verification status" in table
+    assert "Source family" in table
     assert "rising food-assistance demand" in table.lower()
 
 
@@ -2482,11 +2531,11 @@ def test_food_line_dispatch_refreshes_historical_source_tables(tmp_path: Path):
 
     for old_date in old_dates:
         source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / old_date / "source_table.html").read_text(encoding="utf-8")
-        assert 'name="viewport" content="width=device-width, initial-scale=1"' in source_table_html
-        assert "Source Record ID" in source_table_html
-        assert "Evidence Excerpt" in source_table_html
-        assert "pressure_signal" in source_table_html
-        assert 'src="../../assets/food-line-logo.png"' in source_table_html
+    assert 'name="viewport" content="width=device-width, initial-scale=1"' in source_table_html
+    assert "Record ID" in source_table_html
+    assert "What the source says" in source_table_html
+    assert "Verification status" in source_table_html
+    assert 'src="../../assets/food-line-logo.png"' in source_table_html
 
 
 def test_food_line_blue_fern_compliance_report_is_written(tmp_path: Path):
@@ -2705,7 +2754,7 @@ def test_food_line_blue_fern_compliance_missing_map_popup_fields_fails(tmp_path:
     run_food_line_dispatch(tmp_path, date)
 
     map_path = tmp_path / "output" / "site" / "food-line" / "map" / "index.html"
-    map_text = map_path.read_text(encoding="utf-8").replace("Pressure summary:", "Summary removed:").replace("Evidence excerpt:", "Evidence removed:")
+    map_text = map_path.read_text(encoding="utf-8").replace("What happened:", "Summary removed:").replace("What the source says:", "Evidence removed:")
     map_path.write_text(map_text, encoding="utf-8")
 
     result = food_line_compliance.run_food_line_blue_fern_compliance(tmp_path, date)
@@ -2724,7 +2773,7 @@ def test_food_line_blue_fern_compliance_missing_source_table_verification_column
     run_food_line_dispatch(tmp_path, date)
 
     table_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html"
-    table_text = table_path.read_text(encoding="utf-8").replace("pressure_verification_status", "verification_status_removed")
+    table_text = table_path.read_text(encoding="utf-8").replace("Verification status", "verification_status_removed")
     table_path.write_text(table_text, encoding="utf-8")
 
     result = food_line_compliance.run_food_line_blue_fern_compliance(tmp_path, date)

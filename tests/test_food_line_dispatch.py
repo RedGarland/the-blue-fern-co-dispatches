@@ -719,7 +719,11 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Primary Food Access Signal" in edition_html
-    assert "Source Mix" in edition_html
+    assert "What Else We’re Watching" in edition_html
+    assert "Context and Watch Items" not in edition_html
+    assert "Sources Behind This Briefing" in edition_html
+    assert "Source Mix" not in edition_html
+    assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
     assert "Today’s pressure point" not in edition_html
     assert "What changed" not in edition_html
@@ -1841,7 +1845,11 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Primary Food Access Signal" in edition_html
-    assert "Source Mix" in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "Context and Watch Items" not in edition_html
+    assert "Sources Behind This Briefing" in edition_html
+    assert "Source Mix" not in edition_html
+    assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
     assert "No new primary pressure signal qualified today." not in edition_html
     assert "What changed today" not in edition_html

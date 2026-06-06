@@ -1293,7 +1293,7 @@ def _food_line_source_mix_html(sources: list[dict[str, Any]], primary_row: dict[
         coverage_note = "Coverage is thin today and no new primary pressure signal qualified."
     source_table_link = "<p><a href=\"./source_table.html\">Open the public source table for traceability fields and cleaned evidence excerpts.</a></p>"
     return (
-        f"<p>Source mix: {len(verified_rows)} public item(s) from {publisher_count} publisher(s). "
+        f"<p>Sources behind this briefing: {len(verified_rows)} public item(s) from {publisher_count} publisher(s). "
         f"Records reviewed: {reviewed_count}; records excluded: {excluded_count}.</p>"
         f"<p>{html.escape(coverage_note)}</p>"
         f"{source_table_link}"
@@ -1716,7 +1716,7 @@ def render_edition(
     context_section_html = ""
     if context_rows:
         context_section_html = (
-            "<h2>Context and Watch Items</h2>"
+            "<h2>What Else We’re Watching</h2>"
             "<p>Background records remain traceable here when they help explain the pressure picture without changing the lead.</p>"
             f"<ul>{''.join(_food_line_source_card_html(row, label='Context record', heading_prefix='Context:') for row in context_rows)}</ul>"
         )
@@ -1737,7 +1737,7 @@ def render_edition(
     {primary_section_html}
     {continuing_section_html}
     {context_section_html}
-    <h2>Source Mix</h2>
+    <h2>Sources Behind This Briefing</h2>
     {source_mix_html}
     <h2>Source Note</h2>
     {source_note_html}

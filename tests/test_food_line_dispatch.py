@@ -725,6 +725,11 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Source Mix" not in edition_html
     assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
+    assert "Skip to main content" not in edition_html
+    assert "Here’s how you know" not in edition_html
+    assert "Here&#x27;s how you know" not in edition_html
+    assert "Secure .gov websites use HTTPS" not in edition_html
+    assert ".gov website belongs" not in edition_html
     assert "Today’s pressure point" not in edition_html
     assert "What changed" not in edition_html
     assert "Who is exposed" not in edition_html
@@ -1160,6 +1165,50 @@ def test_food_line_public_evidence_excerpt_strips_kltv_site_chrome():
     assert "KLTV.com - Channel 7 News" not in cleaned
     assert "ETX News" not in cleaned
     assert "Food bank demand increased and pantry lines grew" in cleaned
+
+
+def test_food_line_public_evidence_excerpt_strips_usda_gov_chrome():
+    raw = (
+        "Summer nutrition programs can help families keep meals on the table. "
+        "Skip to main content Here’s how you know An official website of the United States government "
+        "Official websites use .gov A .gov website belongs to an official government organization in the United States "
+        "Secure .gov websites use HTTPS A lock ( Lock Locked padlock ) or https:// means you’ve safely connected to the .gov website "
+        "Share sensitive information only on official, secure websites."
+    )
+    cleaned = food_line.clean_food_line_public_evidence_excerpt(raw, title="Summer Nutrition Programs", limit=420)
+    assert cleaned != food_line.FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK
+    assert "Skip to main content" not in cleaned
+    assert "Here’s how you know" not in cleaned
+    assert "An official website of the United States government" not in cleaned
+    assert "Official websites use .gov" not in cleaned
+    assert "A .gov website belongs" not in cleaned
+    assert "Secure .gov websites use HTTPS" not in cleaned
+    assert "Share sensitive information only on official, secure websites" not in cleaned
+    assert "can help families keep meals on the table" in cleaned
+
+
+def test_food_line_source_card_omits_excerpt_when_boilerplate_cleans_to_fallback():
+    row = {
+        "title": "USDA Summer Food Service Program",
+        "publisher": "USDA FNS",
+        "location_name": "United States",
+        "url": "https://www.fns.usda.gov/summer",
+        "source_record_id": "food-line-context-test",
+        "pressure_type": "context only",
+        "pressure_summary": "",
+        "evidence_text": (
+            "Skip to main content Here’s how you know An official website of the United States government "
+            "Official websites use .gov A .gov website belongs to an official government organization in the United States "
+            "Secure .gov websites use HTTPS A lock ( Lock Locked padlock ) or https:// means you’ve safely connected to the .gov website "
+            "Share sensitive information only on official, secure websites."
+        ),
+        "affected_groups": [],
+    }
+    html_output = food_line._food_line_source_card_html(row, label="Context record", heading_prefix="Context:")
+    assert "Evidence excerpt:" not in html_output
+    assert "USDA FNS" in html_output
+    assert "https://www.fns.usda.gov/summer" in html_output
+    assert "Context: USDA Summer Food Service Program" in html_output
 
 
 def test_food_line_audio_transcript_only_omits_enclosure(tmp_path: Path):

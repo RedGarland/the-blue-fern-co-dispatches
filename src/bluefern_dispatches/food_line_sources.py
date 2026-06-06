@@ -771,7 +771,10 @@ def _normalize_source_text(text: str, *, limit: int | None = None) -> str:
 
 
 FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
+    "Skip to main content",
     "Skip to content",
+    "Here’s how you know",
+    "Here's how you know",
     "Advertise With Us",
     "Teacher Tribute",
     "Health Update",
@@ -792,6 +795,14 @@ FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
     "Watch Newscasts",
     "Big Red Box",
     "See it, Snap it, Send it",
+    "An official website of the United States government",
+    "Official websites use .gov",
+    "A .gov website belongs to an official government organization in the United States",
+    "A .gov website belongs to an official government organization",
+    "Secure .gov websites use HTTPS",
+    "A lock ( Lock Locked padlock ) or https:// means you’ve safely connected to the .gov website",
+    "A lock ( Lock Locked padlock ) or https:// means you've safely connected to the .gov website",
+    "Share sensitive information only on official, secure websites",
     "KLTV.com - Channel 7 News, Weather, Sports for East Texas - KLTV.com - Tyler, Longview, Jacksonville",
     "ETX News",
 )

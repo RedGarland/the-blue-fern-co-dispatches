@@ -1148,7 +1148,8 @@ def _food_line_source_card_html(
     source_record_id = html.escape(str(row.get("source_record_id") or ""))
     pressure_type = html.escape(str(row.get("pressure_type") or ""))
     pressure_summary = html.escape(str(row.get("pressure_summary") or ""))
-    evidence_excerpt = html.escape(_public_evidence_excerpt(row))
+    evidence_excerpt_raw = _public_evidence_excerpt(row)
+    evidence_excerpt = html.escape(evidence_excerpt_raw)
     affected_groups = html.escape(_affected_groups_display(row.get("affected_groups")))
     if heading_prefix:
         heading = f"{html.escape(heading_prefix)} {title}".strip()
@@ -1160,10 +1161,12 @@ def _food_line_source_card_html(
     if publisher:
         location_part = f" - {location}" if location else ""
         parts.append(f"<p>{publisher}{location_part}</p>")
+    if pressure_summary:
+        parts.append(f"<p><strong>Pressure summary:</strong> {pressure_summary}</p>")
+    if evidence_excerpt_raw and evidence_excerpt_raw != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
+        parts.append(f"<p><strong>Evidence excerpt:</strong> {evidence_excerpt}</p>")
     parts.extend(
         [
-            f"<p><strong>Pressure summary:</strong> {pressure_summary}</p>",
-            f"<p><strong>Evidence excerpt:</strong> {evidence_excerpt}</p>",
             f"<p><strong>Pressure type:</strong> {pressure_type}</p>",
             f"<p><strong>Affected groups:</strong> {affected_groups}</p>",
             f"<p><strong>Source URL:</strong> <a href=\"{source_url}\" target=\"_blank\" rel=\"noopener noreferrer\">{source_url}</a></p>",

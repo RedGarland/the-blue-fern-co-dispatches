@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-05",
-  "generated_at": "2026-06-05T21:11:17.856706+00:00",
+  "generated_at": "2026-06-05T22:19:51.049750+00:00",
   "source_count": 29,
   "story_count": 1,
   "source_adequacy": {
@@ -23,24 +23,20 @@
   },
   "lead_source_record_id": "food-line-auto-9013087c4ebc5f32",
   "lead_source_canonical_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause",
-  "previous_edition_date": "2026-06-03",
+  "previous_edition_date": null,
   "primary_signal_status": "new_primary",
   "primary_disqualification_reason": "",
   "public_rendered": true,
   "qualified_primary_count": 1,
   "future_date_blocked": false,
   "future_date_override_used": false,
-  "continuing_context_count": 3,
-  "continuing_pressure_count": 1,
+  "continuing_context_count": 2,
+  "continuing_pressure_count": 0,
   "context_count": 2,
   "excluded_count": 26,
   "skip_reason": "",
-  "continuing_pressure_source_record_ids": [
-    "food-line-auto-c531de22a923a8d8"
-  ],
-  "continuing_pressure_source_urls": [
-    "https://www.kltv.com/2025/10/29/food-pantries-struggle-keep-up-with-rising-demand-due-government-shutdown-snap-benefits-delays"
-  ],
+  "continuing_pressure_source_record_ids": [],
+  "continuing_pressure_source_urls": [],
   "lead_issue_tags": [
     "SNAP",
     "benefits"

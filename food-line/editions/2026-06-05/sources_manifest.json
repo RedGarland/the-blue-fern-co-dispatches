@@ -1055,8 +1055,8 @@
     "date_basis": "source_published",
     "map_eligible": true,
     "coordinate_basis": "",
-    "primary_eligible": false,
-    "primary_disqualification_reason": "reused prior lead from 2026-06-03"
+    "primary_eligible": true,
+    "primary_disqualification_reason": ""
   },
   {
     "source_record_id": "food-line-auto-2e32be066d594dd9",

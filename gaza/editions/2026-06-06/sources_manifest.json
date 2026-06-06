@@ -1,0 +1,53 @@
+[
+  {
+    "source_id": "gaza-src-001",
+    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
+    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
+    "publisher": "The New York Times",
+    "published_at": null,
+    "retrieved_at": "2026-06-06T01:40:21.823134+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "gaza-story-001"
+    ],
+    "claim_ids": [
+      "gaza-claim-001"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-06"
+  },
+  {
+    "source_id": "gaza-src-002",
+    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
+    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
+    "publisher": "Haaretz",
+    "published_at": null,
+    "retrieved_at": "2026-06-06T01:40:21.823134+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "gaza-story-001"
+    ],
+    "claim_ids": [
+      "gaza-claim-002"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-06"
+  },
+  {
+    "source_id": "gaza-src-003",
+    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
+    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
+    "publisher": "The Times of Israel",
+    "published_at": null,
+    "retrieved_at": "2026-06-06T01:40:21.823134+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "gaza-story-001"
+    ],
+    "claim_ids": [
+      "gaza-claim-003"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-06"
+  }
+]

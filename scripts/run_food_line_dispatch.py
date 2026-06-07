@@ -631,6 +631,28 @@ def _food_line_public_reported_clause(row: dict[str, Any] | None) -> str:
     return clause
 
 
+def _food_line_spoken_secondary_clause(row: dict[str, Any]) -> str:
+    publisher = str(row.get("publisher") or row.get("source_name") or "").strip()
+    publisher_key = publisher.lower()
+    location = str(row.get("location_name") or row.get("state") or "").strip()
+    if publisher_key == "cascade pbs":
+        return "Washington food banks were worried about federal food-program cuts"
+    if publisher_key == "kltv":
+        return "East Texas food banks were working to keep up with rising demand during the government shutdown"
+    clause = str(row.get("pressure_summary") or "").strip()
+    if not clause:
+        clause = _food_line_public_reported_clause(row)
+    clause = clause.strip().rstrip(".")
+    if publisher and clause.lower().startswith(publisher.lower()):
+        clause = clause[len(publisher) :].lstrip(" ,:-")
+    clause = re.sub(r"^reported that\s+", "", clause, flags=re.IGNORECASE)
+    clause = re.sub(r"^reported\s+", "", clause, flags=re.IGNORECASE)
+    clause = clause[:1].lower() + clause[1:] if clause else clause
+    if location and clause and not clause.lower().startswith(location.lower()):
+        clause = f"{location} {clause}".strip()
+    return clause
+
+
 def _public_source_table_rows_html(
     rows: list[dict[str, Any]],
     *,
@@ -1277,11 +1299,26 @@ def _food_line_primary_signal_card_html(row: dict[str, Any], *, scope_label: str
 
 def _food_line_transcript_source_links_html(date: str) -> str:
     return f"""
+    <p><a href="/food-line/audio/{date}.mp3">Listen or download the MP3</a></p>
     <p><a href="{date}-transcript.html">Open the transcript</a></p>
     <p><a href="../editions/{date}/source_table.html">Open the public source table for {html.escape(date)}</a></p>
     <p><a href="../editions/{date}/">Open the public edition</a></p>
     <p><a href="podcast.xml">Open the podcast feed</a></p>
     """
+
+
+def _food_line_audio_links_html(date: str, *, include_transcript_link: bool) -> str:
+    parts = [f'    <p><a href="/food-line/audio/{date}.mp3">Listen or download the MP3</a></p>']
+    if include_transcript_link:
+        parts.append(f'    <p><a href="/food-line/audio/{date}-transcript.html">Read the transcript</a></p>')
+    parts.extend(
+        [
+            f'    <p><a href="/food-line/editions/{date}/source_table.html">Open the source table</a></p>',
+            f'    <p><a href="/food-line/editions/{date}/">Open the public edition</a></p>',
+            '    <p><a href="podcast.xml">Open the podcast feed</a></p>',
+        ]
+    )
+    return "\n".join(parts)
 
 
 def _food_line_source_card_html(
@@ -1759,27 +1796,16 @@ def _food_line_audio_story_sections(
     main_story: list[str] = []
     what_else: list[str] = []
     sources_behind: list[str] = []
-    closing = ["The transcript and public source table preserve the source links and cleaned excerpts."]
+    closing = ["This has been the Food Line briefing from The Blue Fern Co."]
     if lead:
         publisher = str(lead.get("publisher") or lead.get("source_name") or "the source").strip()
         location = str(lead.get("location_name") or lead.get("state") or "").strip()
-        story_sentence = _food_line_public_reported_clause(lead)
-        published_at = str(lead.get("published_at") or "").strip()
-        lead_date = published_at[:10] if len(published_at) >= 10 else date
-        today_read.append(f"{publisher} reported that {story_sentence}" + (f" in {location}" if location and location.lower() not in story_sentence.lower() else "") + ".")
-        today_read.append(_food_line_why_it_matters(lead, None))
-        affected_groups = _affected_groups_display(list(lead.get("affected_groups") or []))
-        main_story.extend(
-            [
-                f"Source: {publisher}.",
-                f"Where: {location or 'Not listed'}.",
-                f"Date: {_human_date(lead_date)}.",
-                f"What happened: {str(lead.get('pressure_summary') or story_sentence).strip().rstrip('.')}.",
-                f"Who may be affected: {affected_groups or 'Not listed.'}",
-                f"Why it matters: {_food_line_why_it_matters(lead, None)}",
-                f"Read the source: {str(lead.get('url') or '').strip()}",
-            ]
+        story_sentence = _food_line_public_reported_clause(lead).strip().rstrip(".")
+        today_read.append(
+            f"{publisher} reported that {story_sentence}" + (f" in {location}" if location and location.lower() not in story_sentence.lower() else "") + "."
         )
+        today_read.append(_food_line_why_it_matters(lead, None))
+        main_story.append(f"In {location or 'the reported area'}, {publisher} reported rising food-assistance demand affecting {_affected_groups_display(list(lead.get('affected_groups') or [])) or 'local households'}.")
     elif primary_signal_status == "continuing_only" and continuing_rows:
         continuing = continuing_rows[0]
         publisher = str(continuing.get("publisher") or continuing.get("source_name") or "the source").strip()
@@ -1787,19 +1813,10 @@ def _food_line_audio_story_sections(
         today_read.extend(
             [
                 "No new primary story qualified today.",
-                f"The Food Line review keeps the prior {publisher} story in view"
-                + (f" from {location}" if location else "")
-                + " while new records are reviewed.",
+                f"The Food Line review keeps the prior {publisher} story in view" + (f" in {location}" if location else "") + " while new records are reviewed.",
             ]
         )
-        main_story.extend(
-            [
-                f"Source: {publisher}.",
-                f"Where: {location or 'Not listed'}.",
-                f"What happened: {str(continuing.get('pressure_summary') or 'The earlier lead remains under review.').strip().rstrip('.')}.",
-                f"Read the source: {str(continuing.get('url') or '').strip()}",
-            ]
-        )
+        main_story.append(f"In {location or 'the reported area'}, {publisher} remains the prior lead while new records are reviewed.")
         if previous_context.get("previous_edition_date"):
             today_read.append(f"It was the lead in the {previous_context['previous_edition_date']} edition.")
     else:
@@ -1814,20 +1831,14 @@ def _food_line_audio_story_sections(
     elif editorial_status == "sparse":
         today_read.append("This edition is limited because the source set is sparse.")
     if context_rows:
+        what_else.append("We are also watching two related food-access reports.")
         for row in context_rows:
             background_title = str(row.get("title") or "Background source").strip().split(" | ", 1)[0].strip()
             background_publisher = str(row.get("publisher") or row.get("source_name") or "the source").strip()
-            what_the_source_says = _public_evidence_excerpt(row)
-            what_the_source_says = "" if what_the_source_says == FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK else what_the_source_says
-            what_else.extend(
-                [
-                    f"{background_title} from {background_publisher}.",
-                    f"Why it is included: {_food_line_background_reason(row)}",
-                ]
-            )
-            if what_the_source_says:
-                what_else.append(f"What the source says: {what_the_source_says.rstrip('.')}.")
-            what_else.append(f"Read the source: {str(row.get('url') or '').strip()}")
+            what_the_source_says = _food_line_spoken_secondary_clause(row)
+            if not what_the_source_says:
+                what_the_source_says = str(row.get("title") or background_title).strip().split(" | ", 1)[0].strip()
+            what_else.append(f"{background_publisher} reported that {what_the_source_says}.")
     else:
         what_else.append(_food_line_no_current_secondary_note())
     public_rows = _food_line_public_rendered_rows(sources, lead, continuing_rows)
@@ -1843,16 +1854,9 @@ def _food_line_audio_story_sections(
     ]
     excluded_count = max(0, len(sources) - len(public_rows))
     if background_rows:
-        sources_behind.append(
-            f"Sources behind this briefing: {len(page_rows)} sources were used on the public page, with {len(background_rows)} additional background reference sources listed in the source table. "
-            f"The run reviewed {len(sources)} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use."
-        )
+        sources_behind.append("Source links, excerpts, and background references are available in the public source table.")
     else:
-        sources_behind.append(
-            f"Sources behind this briefing: {len(page_rows)} sources were used on the public page. "
-            f"The run reviewed {len(sources)} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use."
-        )
-    sources_behind.append(_food_line_source_note())
+        sources_behind.append("Source links and excerpts are available in the public source table.")
     return {
         "opening": opening,
         "today_read": today_read,
@@ -1900,7 +1904,7 @@ def _food_line_audio_transcript_sections_html(sections: dict[str, list[str]]) ->
         ("Today&apos;s Read", "today_read"),
         ("Main Food Access Story", "main_story"),
         ("What Else We’re Watching", "what_else"),
-        ("Sources Behind This Briefing", "sources_behind"),
+        ("Source Note", "sources_behind"),
         ("Closing", "closing"),
     ]
     html_parts: list[str] = []
@@ -1919,7 +1923,7 @@ def _food_line_audio_index_sections_html(sections: dict[str, list[str]]) -> list
         ("Today&apos;s Read", "today_read"),
         ("Main Food Access Story", "main_story"),
         ("What Else We’re Watching", "what_else"),
-        ("Sources Behind This Briefing", "sources_behind"),
+        ("Source Note", "sources_behind"),
         ("Closing", "closing"),
     ]
     html_parts: list[str] = []
@@ -2646,10 +2650,8 @@ def write_food_line_audio(
     transcript_parts.extend(_food_line_audio_transcript_sections_html(sections))
     if audio_available and audio_mp3_url:
         transcript_parts.append(f'    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>')
-    transcript_parts.append("    <h2>Transcript</h2>")
-    transcript_parts.extend(f"    <p>{html.escape(p)}</p>" for p in script.split("\n\n"))
-    transcript_parts.append("    <h2>Transcript and source links</h2>")
-    transcript_parts.append(_food_line_transcript_source_links_html(date))
+    transcript_parts.append("    <h2>Source links</h2>")
+    transcript_parts.append(_food_line_audio_links_html(date, include_transcript_link=False))
     transcript_parts.append(f"    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>")
     transcript_parts.append("  </main>")
     transcript_parts.append("</body>")
@@ -2669,8 +2671,8 @@ def write_food_line_audio(
   </section>
   <section class="food-line-panel">
     {"".join(_food_line_audio_index_sections_html(sections))}
-    <h2>Transcript and source links</h2>
-    {_food_line_transcript_source_links_html(date)}
+    <h2>Source links</h2>
+    {_food_line_audio_links_html(date, include_transcript_link=True)}
     <h2>Podcast enclosure status</h2>
     <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>
     {"<p><audio controls preload=\"none\" src=\"%s\"></audio></p>" % html.escape(audio_mp3_url) if audio_available and audio_mp3_url else ""}

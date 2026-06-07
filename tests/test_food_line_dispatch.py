@@ -811,18 +811,39 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "rising food-assistance demand" in audio_json["episode_summary"]
     assert "SNAP" in audio_json["episode_summary"]
     assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
+    assert "Source links, excerpts, and background references are available in the public source table." in audio_json["script_text"]
+    assert "The run reviewed" not in audio_json["script_text"]
+    assert "Read the source:" not in audio_json["script_text"]
+    assert "Source:" not in audio_json["script_text"]
+    assert "Where:" not in audio_json["script_text"]
+    assert "Date:" not in audio_json["script_text"]
+    assert "https://" not in audio_json["script_text"]
+    assert transcript.count("This is the Food Line briefing for June 5, 2026.") == 1
     assert "What Else We’re Watching" in transcript
     assert "Cascade PBS" in transcript
     assert "KLTV" in transcript
     assert "No additional current food-access items were strong enough to change today’s lead." not in transcript
     assert "USDA FNS" not in transcript
     assert "USDA ERS" not in transcript
+    assert "<h2>Transcript</h2>" not in transcript
+    assert "Source Note" in transcript
+    assert "Source links" in transcript
+    assert "/food-line/audio/2026-06-05.mp3" in transcript
+    assert "/food-line/editions/2026-06-05/source_table.html" in transcript
+    assert "Open the public edition" in transcript
+    assert "Open the podcast feed" in transcript
+    assert "Podcast enclosure:</strong> present" in transcript
     assert "What Else We’re Watching" in audio_index
     assert "Cascade PBS" in audio_index
     assert "KLTV" in audio_index
     assert "No additional current food-access items were strong enough to change today’s lead." not in audio_index
     assert "USDA FNS" not in audio_index
     assert "USDA ERS" not in audio_index
+    assert "Source Note" in audio_index
+    assert "Source links" in audio_index
+    assert "/food-line/audio/2026-06-05-transcript.html" in audio_index
+    assert "/food-line/editions/2026-06-05/source_table.html" in audio_index
+    assert "Open the podcast feed" in audio_index
     assert "<title>Food Line Briefing — June 5, 2026</title>" in podcast
     assert "13abc" in podcast
     assert "Toledo" in podcast
@@ -1139,6 +1160,15 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "When benefits are delayed or paused" in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
     assert "Source note:" not in audio_json["script_text"]
+    assert "Source links and excerpts are available in the public source table." in audio_json["script_text"]
+    assert "Source links, excerpts, and background references are available in the public source table." not in audio_json["script_text"]
+    assert "The run reviewed" not in audio_json["script_text"]
+    assert "Read the source:" not in audio_json["script_text"]
+    assert "Source:" not in audio_json["script_text"]
+    assert "Where:" not in audio_json["script_text"]
+    assert "Date:" not in audio_json["script_text"]
+    assert "https://" not in audio_json["script_text"]
+    assert "This edition uses only saved Food Line source records available at publish time." not in audio_json["script_text"]
     assert "Edition status: Daily edition" not in audio_json["script_text"]
     assert "Where pressure is visible" not in audio_json["script_text"]
     assert "For traceability" not in audio_json["script_text"]
@@ -1148,24 +1178,36 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "the verified record came from" not in audio_json["script_text"].lower()
     assert "Skip to content" not in audio_json["script_text"]
     assert "Advertise With Us" not in audio_json["script_text"]
+    assert transcript.count("This is the Food Line briefing for June 4, 2026.") == 1
     assert transcript.index("Opening") < transcript.index("Today&apos;s Read")
     assert transcript.index("Today&apos;s Read") < transcript.index("Main Food Access Story")
-    assert transcript.index("Main Food Access Story") < transcript.index("Sources Behind This Briefing")
-    assert transcript.index("Sources Behind This Briefing") < transcript.index("Transcript and source links")
+    assert transcript.index("Main Food Access Story") < transcript.index("Source Note")
+    assert transcript.index("Source Note") < transcript.index("Source links")
+    assert "<h2>Transcript</h2>" not in transcript
     assert "Review summary:" not in transcript
     assert "Edition status: Daily edition" not in transcript
     assert "Where pressure is visible" not in transcript
     assert "For traceability" not in transcript
     assert "matched terms" not in transcript.lower()
     assert "the verified record came from" not in transcript.lower()
-    assert "Review summary:" not in transcript.split("Publishing note", 1)[0]
-    assert "Review summary:" not in audio_index.split("Publishing note", 1)[0]
+    assert "/food-line/audio/2026-06-04.mp3" in transcript
+    assert "/food-line/editions/2026-06-04/source_table.html" in transcript
+    assert "Open the public edition" in transcript
+    assert "Open the podcast feed" in transcript
+    assert "Podcast enclosure:</strong> present" in transcript
+    assert "Review summary:" not in transcript.split("Source Note", 1)[0]
+    assert "Review summary:" not in audio_index.split("Source Note", 1)[0]
     assert audio_index.index("Opening") < audio_index.index("Today&apos;s Read")
     assert audio_index.index("Today&apos;s Read") < audio_index.index("Main Food Access Story")
-    assert "Sources Behind This Briefing" in audio_index
+    assert audio_index.index("Main Food Access Story") < audio_index.index("Source Note")
+    assert "Source Note" in audio_index
+    assert "Source links" in audio_index
     assert "Where pressure is visible" not in audio_index
     assert "For traceability" not in audio_index
     assert "The briefing also tracks related public background sources." not in audio_index
+    assert "/food-line/audio/2026-06-04-transcript.html" in audio_index
+    assert "/food-line/editions/2026-06-04/source_table.html" in audio_index
+    assert "Open the podcast feed" in audio_index
     assert result["selected_lead_pressure_scope_label"] == "Local / operational"
     assert result["selected_lead_pressure_scope_text"] == "local/operational"
     assert result["bluesky_post_ready"] is True

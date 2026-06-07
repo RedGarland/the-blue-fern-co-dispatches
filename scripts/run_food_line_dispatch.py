@@ -484,7 +484,9 @@ def _food_line_public_rendered_rows(
     add_row(primary_row)
     for row in continuing_rows:
         add_row(row)
-    for row in _food_line_context_rows(sources, primary_row, continuing_rows):
+    for row in _food_line_current_secondary_rows(sources, primary_row, continuing_rows):
+        add_row(row)
+    for row in _food_line_traceability_rows(sources, primary_row, continuing_rows):
         add_row(row)
     return rendered_rows
 
@@ -517,12 +519,14 @@ def _food_line_public_usage_label(row: dict[str, Any], primary_row: dict[str, An
     for continuing_row in continuing_rows:
         if row_id == str(continuing_row.get("source_record_id") or "").strip():
             return "Earlier lead"
-    return "Background"
+    if bool(row.get("pressure_signal")):
+        return "Current secondary item"
+    return "Background reference"
 
 
 def _food_line_public_issue_label(row: dict[str, Any], usage_label: str) -> str:
-    if usage_label == "Background":
-        return "Background"
+    if usage_label == "Background reference":
+        return "Background reference"
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     mapping = {
         "demand strain": "Pantry demand / food-assistance demand",
@@ -540,11 +544,13 @@ def _food_line_public_issue_label(row: dict[str, Any], usage_label: str) -> str:
     if pressure_type in mapping:
         return mapping[pressure_type]
     if pressure_type == "context only":
-        return "Background"
+        return "Background reference"
     return pressure_type.replace("_", " ").title() if pressure_type else ""
 
 
 def _food_line_public_verification_status_label(row: dict[str, Any]) -> str:
+    if not bool(row.get("pressure_signal")):
+        return "Background reference"
     status = str(row.get("pressure_verification_status") or "").strip().lower()
     mapping = {
         "source_text_verified": "Source text reviewed",
@@ -558,8 +564,8 @@ def _food_line_public_verification_status_label(row: dict[str, Any]) -> str:
 
 
 def _food_line_public_what_happened_label(row: dict[str, Any], usage_label: str) -> str:
-    if usage_label == "Background":
-        return "Background"
+    if usage_label == "Background reference":
+        return "Background reference"
     pressure_summary = str(row.get("pressure_summary") or "").strip()
     if pressure_summary:
         return pressure_summary
@@ -647,7 +653,7 @@ def _public_source_table_rows_html(
         f"<td>{html.escape(_public_evidence_excerpt(s) if _public_evidence_excerpt(s) != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK else '')}</td>"
         f"<td>{html.escape(_food_line_public_verification_status_label(s))}</td>"
         f"<td>{html.escape(_affected_groups_display(s.get('affected_groups')))}</td>"
-        f"<td>Yes</td>"
+        f"<td>{html.escape(_food_line_public_usage_label(s, primary_row, continuing_rows) if _food_line_public_usage_label(s, primary_row, continuing_rows) == 'Background reference' else 'Yes')}</td>"
         "</tr>"
         for s in rows
     )
@@ -1054,7 +1060,7 @@ def _human_date(date: str) -> str:
 
 
 def _episode_title(date: str) -> str:
-    return f"Food Line Dispatch - {_human_date(date)}"
+    return f"Food Line Briefing — {_human_date(date)}"
 
 
 def _audio_episode_title(date: str) -> str:
@@ -1348,7 +1354,7 @@ def _food_line_at_a_glance_items(
     continuing_rows: list[dict[str, Any]],
     primary_signal_status: str,
 ) -> str:
-    context_rows = _food_line_context_rows(sources, primary_row, continuing_rows)
+    context_rows = _food_line_current_secondary_rows(sources, primary_row, continuing_rows)
     items: list[str] = []
     if primary_row:
         publisher = html.escape(str(primary_row.get("publisher") or ""))
@@ -1383,11 +1389,11 @@ def _food_line_at_a_glance_items(
                 publisher_text = f"{publishers[0]} and {publishers[1]}"
             else:
                 publisher_text = ", ".join(publishers[:-1]) + f", and {publishers[-1]}"
-            items.append(f"<li>{html.escape(publisher_text)} provide background on food assistance and food security.</li>")
+            items.append(f"<li>{html.escape(publisher_text)} provide current secondary context for today’s food-access story.</li>")
         else:
-            items.append("<li>Background sources below provide context for today’s food-access story.</li>")
+            items.append("<li>Current secondary items below provide context for today’s food-access story.</li>")
     else:
-        items.append("<li>Public sources below provide traceability and cleaned excerpts.</li>")
+        items.append(f"<li>{html.escape(_food_line_no_current_secondary_note())}</li>")
     return "".join(items)
 
 
@@ -1431,20 +1437,39 @@ def _food_line_today_read_html(
     return "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in paragraphs[:3])
 
 
-def _food_line_context_rows(sources: list[dict[str, Any]], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _food_line_traceability_rows(sources: list[dict[str, Any]], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     blocked_ids = {
         str(row.get("source_record_id") or "").strip()
         for row in ([primary_row] if primary_row else []) + list(continuing_rows)
         if row
     }
-    context_rows = [
+    traceability_rows = [
         row
         for row in sources
         if str(row.get("source_record_id") or "").strip() not in blocked_ids
         and not bool(row.get("pressure_signal"))
         and str(row.get("source_role") or "") in {"background_context", "policy_context", "resource_context", "baseline_condition"}
     ]
-    return context_rows[:2]
+    return traceability_rows[:2]
+
+
+def _food_line_current_secondary_rows(sources: list[dict[str, Any]], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    blocked_ids = {
+        str(row.get("source_record_id") or "").strip()
+        for row in ([primary_row] if primary_row else []) + list(continuing_rows)
+        if row
+    }
+    secondary_rows = [
+        row
+        for row in sources
+        if str(row.get("source_record_id") or "").strip() not in blocked_ids
+        and bool(row.get("pressure_signal"))
+    ]
+    return secondary_rows[:2]
+
+
+def _food_line_no_current_secondary_note() -> str:
+    return "No additional current food-access items were strong enough to change today’s lead. Background sources are listed in the public source table."
 
 
 def _food_line_source_mix_html(
@@ -1454,11 +1479,26 @@ def _food_line_source_mix_html(
     continuing_rows: list[dict[str, Any]],
     primary_signal_status: str,
 ) -> str:
-    publisher_count = len({str(row.get("publisher") or "").strip() for row in public_rows if str(row.get("publisher") or "").strip()})
     reviewed_count = len(sources)
+    public_page_rows = [
+        row
+        for row in public_rows
+        if _food_line_public_usage_label(row, primary_row, continuing_rows) != "Background reference"
+    ]
+    background_rows = [
+        row
+        for row in public_rows
+        if _food_line_public_usage_label(row, primary_row, continuing_rows) == "Background reference"
+    ]
+    public_page_count = len(public_page_rows)
+    background_count = len(background_rows)
     excluded_count = max(0, reviewed_count - len(public_rows))
+    if background_count:
+        source_clause = f"{public_page_count} sources were used on the public page, with {background_count} additional background reference sources listed in the source table"
+    else:
+        source_clause = f"{public_page_count} sources were used on the public page"
     return (
-        f"<p>Sources behind this briefing: {len(public_rows)} public sources from {publisher_count} publishers. "
+        f"<p>Sources behind this briefing: {source_clause}. "
         f"The run reviewed {reviewed_count} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use.</p>"
         "<p><a href=\"./source_table.html\">Open the public source table for source links, traceability, and cleaned excerpts.</a></p>"
     )
@@ -1654,7 +1694,7 @@ def _food_line_audio_story_sections(
     _ = sources
     _ = adequacy
     _ = previous_context
-    context_rows = _food_line_context_rows(sources, lead, continuing_rows)
+    context_rows = _food_line_current_secondary_rows(sources, lead, continuing_rows)
     opening = [f"This is the Food Line briefing for {_human_date(date)}."]
     today_read: list[str] = []
     main_story: list[str] = []
@@ -1729,23 +1769,30 @@ def _food_line_audio_story_sections(
             if what_the_source_says:
                 what_else.append(f"What the source says: {what_the_source_says.rstrip('.')}.")
             what_else.append(f"Read the source: {str(row.get('url') or '').strip()}")
-    elif continuing_rows:
-        for row in continuing_rows:
-            what_else.extend(
-                [
-                    f"Earlier lead: {str(row.get('title') or 'Earlier lead').strip()} from {str(row.get('publisher') or row.get('source_name') or 'the source').strip()}"
-                    + (f" in {str(row.get('location_name') or row.get('state') or '').strip()}" if str(row.get("location_name") or row.get("state") or "").strip() else "")
-                    + ".",
-                    f"What happened: {str(row.get('pressure_summary') or 'The earlier lead remains under review.').strip().rstrip('.')}.",
-                    f"Read the source: {str(row.get('url') or '').strip()}",
-                ]
-            )
+    else:
+        what_else.append(_food_line_no_current_secondary_note())
     public_rows = _food_line_public_rendered_rows(sources, lead, continuing_rows)
-    publisher_count = len({str(row.get("publisher") or "").strip() for row in public_rows if str(row.get("publisher") or "").strip()})
+    page_rows = [
+        row
+        for row in public_rows
+        if _food_line_public_usage_label(row, lead, continuing_rows) != "Background reference"
+    ]
+    background_rows = [
+        row
+        for row in public_rows
+        if _food_line_public_usage_label(row, lead, continuing_rows) == "Background reference"
+    ]
     excluded_count = max(0, len(sources) - len(public_rows))
-    sources_behind.append(
-        f"Sources behind this briefing: {len(public_rows)} public sources from {publisher_count} publishers. The run reviewed {len(sources)} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use."
-    )
+    if background_rows:
+        sources_behind.append(
+            f"Sources behind this briefing: {len(page_rows)} sources were used on the public page, with {len(background_rows)} additional background reference sources listed in the source table. "
+            f"The run reviewed {len(sources)} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use."
+        )
+    else:
+        sources_behind.append(
+            f"Sources behind this briefing: {len(page_rows)} sources were used on the public page. "
+            f"The run reviewed {len(sources)} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use."
+        )
     sources_behind.append(_food_line_source_note())
     return {
         "opening": opening,
@@ -1855,7 +1902,7 @@ def render_edition(
     pressure_count = len(pressure_rows)
     reviewed_count = len(sources)
     excluded_count = max(0, reviewed_count - pressure_count)
-    context_rows = _food_line_context_rows(sources, primary_row, continuing_rows)
+    context_rows = _food_line_current_secondary_rows(sources, primary_row, continuing_rows)
     public_rows = _food_line_public_rendered_rows(sources, primary_row, continuing_rows)
     lead_scope_label = _food_line_lead_pressure_scope_label(primary_row) if primary_row else None
     glance_html = _food_line_at_a_glance_items(sources, primary_row, continuing_rows, primary_signal_status)
@@ -1895,8 +1942,13 @@ def render_edition(
     if context_rows:
         context_section_html = (
             "<h2>What Else We’re Watching</h2>"
-            "<p>These sources provide background for today’s food-access story.</p>"
-            f"<ul>{''.join(_food_line_source_card_html(row, background=True) for row in context_rows)}</ul>"
+            "<p>These current secondary items add context for today’s food-access story.</p>"
+            f"<ul>{''.join(_food_line_source_card_html(row) for row in context_rows)}</ul>"
+        )
+    else:
+        context_section_html = (
+            "<h2>What Else We’re Watching</h2>"
+            f"<p>{html.escape(_food_line_no_current_secondary_note())}</p>"
         )
     body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
@@ -1936,8 +1988,28 @@ def _source_table_html(
 ) -> str:
     effective_rows = public_rows or list(sources)
     rows = _public_source_table_rows_html(effective_rows, primary_row=primary_row, continuing_rows=continuing_rows)
-    publisher_count = len({str(row.get("publisher") or "").strip() for row in effective_rows if str(row.get("publisher") or "").strip()})
-    audit_summary = _public_review_summary(len(sources), len(effective_rows), publisher_count=publisher_count)
+    page_rows = [
+        row
+        for row in effective_rows
+        if _food_line_public_usage_label(row, primary_row, continuing_rows) != "Background reference"
+    ]
+    background_rows = [
+        row
+        for row in effective_rows
+        if _food_line_public_usage_label(row, primary_row, continuing_rows) == "Background reference"
+    ]
+    page_source_count = len(page_rows)
+    background_count = len(background_rows)
+    if background_count:
+        audit_summary = (
+            f"Sources behind this briefing: {page_source_count} sources were used on the public page, with {background_count} additional background reference sources listed in the source table. "
+            f"The run reviewed {len(sources)} records and excluded {max(0, len(sources) - len(effective_rows))} that were duplicate, stale, unrelated, or not strong enough for public use."
+        )
+    else:
+        audit_summary = (
+            f"Sources behind this briefing: {page_source_count} sources were used on the public page. "
+            f"The run reviewed {len(sources)} records and excluded {max(0, len(sources) - len(effective_rows))} that were duplicate, stale, unrelated, or not strong enough for public use."
+        )
     body = (
         f"{_food_line_theme_styles()}"
         f"{header(DISPATCH_NAME, '../../', '../../archive.html', '/food-line/')}"
@@ -2260,18 +2332,16 @@ def _podcast_description(
 ) -> str:
     pressure_point = _food_line_public_pressure_point(lead)
     why_it_matters = _food_line_why_it_matters(lead)
-    publishing_note = _food_line_publishing_note(sources, lead, public_rows=public_rows)
-    source_note = _food_line_source_note()
+    source_note = "Background and source links are available in the public source table."
     if editorial_status == "monitoring/context":
         mode_text = "This edition is monitoring and context only."
     elif editorial_status == "sparse":
         mode_text = "This edition is limited because the source set is sparse."
     else:
         mode_text = ""
-    parts = [pressure_point, why_it_matters, f"Publishing note: {publishing_note}", f"Source note: {source_note}"]
+    parts = [pressure_point, why_it_matters, source_note]
     if mode_text:
         parts.append(mode_text)
-    parts.append("Cleaned transcripts and source tables preserve traceability.")
     return " ".join(part for part in parts if part)
 
 
@@ -2787,7 +2857,7 @@ def run_food_line_dispatch(
     demoted_by_source_purpose_count = int((collect_result or {}).get("demoted_by_source_purpose_count") or sum(1 for row in sources if str(row.get("source_purpose") or "") in {"donation_page", "evergreen_context", "resource_page", "program_description"} and str(row.get("pressure_verification_status") or "") == "demoted_context"))
     collector_audit_path = str((collect_result or {}).get("collector_audit_path") or "")
     pressure_review_path = _write_food_line_review_csv(root, date, sources)
-    context_rows = _food_line_context_rows(sources, lead_row, continuing_rows)
+    context_rows = _food_line_traceability_rows(sources, lead_row, continuing_rows)
     continuing_source_record_ids = [str(row.get("source_record_id") or "").strip() for row in continuing_rows if str(row.get("source_record_id") or "").strip()]
     continuing_source_urls = [str(row.get("url") or "").strip() for row in continuing_rows if str(row.get("url") or "").strip()]
     public_rendered = bool(lead_row) and not future_date_blocked

@@ -352,10 +352,11 @@ def test_food_line_alias_fields_load_map_and_source_table(tmp_path: Path):
     map_payload = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
     assert len(map_payload["markers"]) == 2
     source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    assert "Alias Source One" in source_table
     assert "Alias Source Two" in source_table
+    assert "Current secondary item" in source_table
     assert "https://example.com/alias-two" in source_table
-    assert "Alias Source One" not in source_table
-    assert "https://example.com/alias-one" not in source_table
+    assert "https://example.com/alias-one" in source_table
 
 
 def test_food_line_map_page_is_interactive_and_not_placeholder(tmp_path: Path):
@@ -701,6 +702,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     lead = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     glance_html = edition_html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
     today_read_html = edition_html.split("<h2>Today’s Read</h2>", 1)[1].split("<h2>At A Glance</h2>", 1)[0]
 
@@ -736,7 +738,9 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "More background sources appear below" not in glance_html
     assert "13abc reported that Toledo food pantries were preparing for increased demand as SNAP benefits faced a shutdown pause." in today_read_html
     assert "When benefits are delayed or paused" in today_read_html
-    assert "USDA FNS and USDA ERS provide background on food assistance and food security." in glance_html
+    assert "current secondary context" in glance_html
+    assert "Cascade PBS" in glance_html
+    assert "KLTV" in glance_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Main Food Access Story" in edition_html
@@ -749,7 +753,17 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "What happened" in edition_html
     assert "Why it matters" in edition_html
     assert "Read the source" in edition_html
-    assert "Why it is included" in edition_html
+    assert "USDA FNS" not in edition_html
+    assert "USDA ERS" not in edition_html
+    assert "13abc" in source_table_html
+    assert "Cascade PBS" in source_table_html
+    assert "KLTV" in source_table_html
+    assert "USDA FNS" in source_table_html
+    assert "USDA ERS" in source_table_html
+    assert "3 sources were used on the public page" in source_table_html
+    assert "2 additional background reference sources" in source_table_html
+    assert "Background reference" in source_table_html
+    assert "Yes" in source_table_html
     assert "Skip to main content" not in edition_html
     assert "Here’s how you know" not in edition_html
     assert "Here&#x27;s how you know" not in edition_html
@@ -768,6 +782,121 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Where pressure is visible" not in edition_html
     assert "Map notes" not in edition_html
     assert "What to watch tomorrow" not in edition_html
+
+
+def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    _mock_food_line_tts(monkeypatch)
+
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=True)
+
+    audio_json = json.loads((tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.json").read_text(encoding="utf-8"))
+    transcript = (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}-transcript.html").read_text(encoding="utf-8")
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+
+    assert result["audio_generated"] is True
+    assert audio_json["episode_title"] == "Food Line Briefing — June 5, 2026"
+    assert "13abc reported" in audio_json["episode_summary"]
+    assert "Toledo" in audio_json["episode_summary"]
+    assert "rising food-assistance demand" in audio_json["episode_summary"]
+    assert "SNAP" in audio_json["episode_summary"]
+    assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
+    assert "What Else We’re Watching" in transcript
+    assert "Cascade PBS" in transcript
+    assert "KLTV" in transcript
+    assert "No additional current food-access items were strong enough to change today’s lead." not in transcript
+    assert "USDA FNS" not in transcript
+    assert "USDA ERS" not in transcript
+    assert "What Else We’re Watching" in audio_index
+    assert "Cascade PBS" in audio_index
+    assert "KLTV" in audio_index
+    assert "No additional current food-access items were strong enough to change today’s lead." not in audio_index
+    assert "USDA FNS" not in audio_index
+    assert "USDA ERS" not in audio_index
+    assert "<title>Food Line Briefing — June 5, 2026</title>" in podcast
+    assert "13abc" in podcast
+    assert "Toledo" in podcast
+    assert "rising food-assistance demand" in podcast
+    assert "SNAP" in podcast
+    assert "Background and source links are available in the public source table." in podcast
+    assert "USDA FNS" not in podcast
+    assert "USDA ERS" not in podcast
+    assert "Pressure type" not in podcast
+    assert "Evidence excerpt" not in podcast
+    assert "Context record" not in podcast
+    assert "Source role" not in podcast
+    assert "Source record ID" not in podcast
+    assert "local / operational signal" not in podcast
+    assert "source_text_verified" not in podcast
+    assert "pressure_signal" not in podcast
+
+
+def test_food_line_secondary_items_render_in_what_else_when_present():
+    lead = {
+        "source_record_id": "lead-1",
+        "title": "Primary story",
+        "publisher": "Lead News",
+        "location_name": "Toledo",
+        "pressure_summary": "Lead story summary.",
+        "evidence_text": "Lead story summary.",
+        "url": "https://example.com/lead",
+        "pressure_signal": True,
+        "source_role": "local_signal",
+        "source_family": "local_news",
+        "affected_groups": ["SNAP households"],
+    }
+    secondary = {
+        "source_record_id": "secondary-1",
+        "title": "Secondary food-access item",
+        "publisher": "Neighbor News",
+        "location_name": "Toledo",
+        "pressure_summary": "Secondary item summary.",
+        "evidence_text": "Secondary item summary.",
+        "url": "https://example.com/secondary",
+        "pressure_signal": True,
+        "source_role": "local_signal",
+        "source_family": "local_news",
+    }
+    background = {
+        "source_record_id": "background-1",
+        "title": "USDA FNS background",
+        "publisher": "USDA FNS",
+        "location_name": "United States",
+        "pressure_summary": "",
+        "evidence_text": "Background only.",
+        "url": "https://example.com/background",
+        "pressure_signal": False,
+        "source_role": "resource_context",
+        "source_family": "school_meals_child_nutrition",
+    }
+
+    edition_html = food_line.render_edition(
+        "2026-06-05",
+        [lead, secondary, background],
+        {},
+        lead,
+        "daily",
+        {},
+        {},
+        {},
+        "new_primary",
+        [],
+    )
+
+    assert "What Else We’re Watching" in edition_html
+    assert "Secondary food-access item" in edition_html
+    assert "No additional current food-access items were strong enough to change today’s lead." not in edition_html
+    assert "USDA FNS background" not in edition_html
 
 
 def test_food_line_stale_future_edition_folders_are_pruned_from_public_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -958,8 +1087,8 @@ def test_food_line_podcast_description_varies_by_pressure_summary(tmp_path: Path
     run_food_line_dispatch(tmp_path, date_b)
     desc_b = json.loads((tmp_path / "output" / "site" / "food-line" / "audio" / f"{date_b}.json").read_text(encoding="utf-8"))["episode_summary"]
     assert desc_a != desc_b
-    assert "Publishing note:" in desc_a
-    assert "Publishing note:" in desc_b
+    assert "Background and source links are available in the public source table." in desc_a
+    assert "Background and source links are available in the public source table." in desc_b
     assert "Review summary:" not in desc_a
     assert "Review summary:" not in desc_b
     assert "Accountability note:" not in desc_a
@@ -1000,12 +1129,12 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert Path(result["audio_mp3_path"]).exists()
     assert result["audio_story_section_count"] >= 4
     assert result["audio_story_sections"]
-    assert audio_json["episode_title"] == "Food Line Dispatch - June 4, 2026"
+    assert audio_json["episode_title"] == "Food Line Briefing — June 4, 2026"
     assert audio_json["audio_story_section_count"] >= 4
     assert audio_json["audio_story_sections"]
     assert audio_json["episode_summary"].startswith("KLTV reported")
     assert "17 percent increase" in audio_json["episode_summary"]
-    assert "Publishing note: This briefing is based on one public source from one publisher." in audio_json["episode_summary"]
+    assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
     assert "Today's pressure point:" not in audio_json["script_text"]
     assert "When benefits are delayed or paused" in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
@@ -1049,7 +1178,7 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Edition status: Daily edition" not in podcast
     assert "Where pressure is visible" not in podcast
     assert "The briefing also tracks related public background sources." not in podcast
-    assert podcast.index("KLTV reported") < podcast.index("Publishing note:")
+    assert podcast.index("KLTV reported") < podcast.index("Background and source links are available in the public source table.")
     assert 'src="/food-line/audio/2026-06-04.mp3"' in audio_index
     assert "<strong>Podcast enclosure:</strong> present" in audio_index
     assert "<strong>Podcast enclosure:</strong> present" in transcript
@@ -1924,14 +2053,14 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Main Food Access Story" in edition_html
-    assert "What Else We’re Watching" not in edition_html
+    assert "What Else We’re Watching" in edition_html
     assert "Context and Watch Items" not in edition_html
     assert "Sources Behind This Briefing" in edition_html
     assert "Source Mix" not in edition_html
     assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
-    assert "Background records remain traceable here" not in edition_html
-    assert "More background sources appear below" not in edition_html
+    assert "No additional current food-access items were strong enough to change today’s lead." in edition_html
+    assert "Background sources are listed in the public source table." in edition_html
     assert "public item(s)" not in edition_html
     assert "primary pressure lead" not in edition_html
     assert "What changed today" not in edition_html
@@ -1976,7 +2105,10 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
 
     page_urls = _http_urls(edition_html)
     table_urls = _http_urls(source_table_html)
-    assert page_urls == table_urls
+    assert any("13abc" in url.lower() for url in page_urls)
+    assert any("kltv" in url.lower() for url in page_urls)
+    assert any("cascadepbs" in url.lower() for url in page_urls)
+    assert set(page_urls).issubset(set(table_urls))
     assert "What Else We’re Watching" in edition_html
     assert "Sources Behind This Briefing" in edition_html
     assert "Context and Watch Items" not in edition_html
@@ -1985,10 +2117,15 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
     assert "source_text_verified" not in source_table_html
     assert "demoted_context" not in source_table_html
     assert "context only" not in source_table_html.lower()
-    assert "Cascade PBS" not in source_table_html
-    assert "KLTV" not in source_table_html
+    assert "Cascade PBS" in source_table_html
+    assert "KLTV" in source_table_html
+    assert "USDA FNS" in source_table_html
+    assert "USDA ERS" in source_table_html
+    assert "USDA FNS" not in edition_html
+    assert "USDA ERS" not in edition_html
     assert "Used on public page" in source_table_html
-    assert "Yes" in source_table_html
+    assert "Background reference" in source_table_html
+    assert source_table_html.count("Yes") >= 3
 
 
 def test_food_line_reuses_previous_day_lead_as_continuing_pressure(tmp_path: Path):
@@ -2695,7 +2832,7 @@ def test_food_line_blue_fern_compliance_fails_on_audio_podcast_chrome(tmp_path: 
     run_food_line_dispatch(tmp_path, date, generate_audio=True)
 
     podcast_path = tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml"
-    podcast_path.write_text(podcast_path.read_text(encoding="utf-8").replace("Food Line Dispatch - June 4, 2026", "Food Line Dispatch - June 4, 2026 Skip to content Advertise With Us"), encoding="utf-8")
+    podcast_path.write_text(podcast_path.read_text(encoding="utf-8").replace("Food Line Briefing — June 4, 2026", "Food Line Briefing — June 4, 2026 Skip to content Advertise With Us"), encoding="utf-8")
 
     result = food_line_compliance.run_food_line_blue_fern_compliance(tmp_path, date)
 

@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-07",
+  "generated_at": "2026-06-07T18:01:15.258063Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-07.mp3",
+  "audio_url": "/gaza/audio/2026-06-07.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1708,
+  "tts_input_word_count": 272,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1809792,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-07T18:01:15.258039Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-07-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 7, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 'What ceasefire?' Palestinians inspect destruction after Israeli strike. Palestinians inspect the aftermath of an Israeli strike in Khan Younis. This was reported by Al Jazeera.\n\n2. Gaza civil defence says 10 killed in Israeli strikes. Israeli strikes killed 10 people in Gaza on Saturday, the territory's civil defence said, amid a fragile ceasefire in effect since last October. This was reported by The New Arab.\n\n3. 7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say. Israeli troops shot at a car in the occupied West Bank, killing a 7-month-old Palestinian baby and wounding his parents, the Palestinian health ministry said, with the bullet striking the boy in the face. This was reported by PBS NewsHour.\n\n4. Israeli attacks across Gaza kill 10 Palestinians, wound 29 despite ceasefire. Attacks come as Palestinian factions and mediators meet in Cairo for talks aimed at advancing to next phase of Gaza ceasefire agreement. This was reported by Anadolu Agency.\n\n5. Israeli forces arrest Hebron academic in West Bank raids. Israeli forces arrested academic Bilal Al-Shobaki and his parents as raids and settler attacks intensified across the occupied West Bank. This was reported by The New Arab.\n\n6. Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks. Israeli attacks came near Khan Younis, in Gaza City and Deir el-Balah as Hamas and other groups met mediators in Cairo. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 7, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-07-aljazeera-middle-east-2a12385f96fc",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/6/7/what-ceasefire-palestinians-inspect-destruction-after-israeli-strike?traffic_source=rss",
+      "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike"
+    },
+    {
+      "source_record_id": "gaza-2026-06-07-the-new-arab-32a158d7b182",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/gaza-civil-defence-says-10-killed-israeli-strikes",
+      "title": "Gaza civil defence says 10 killed in Israeli strikes"
+    },
+    {
+      "source_record_id": "gaza-2026-06-07-pbs-newshour-world-660448a608d3",
+      "publisher": "PBS NewsHour",
+      "url": "https://www.pbs.org/newshour/world/7-month-old-baby-killed-after-israeli-troops-open-fire-on-a-car-palestinian-health-officials-say",
+      "title": "7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say"
+    },
+    {
+      "source_record_id": "gaza-2026-06-07-anadolu-middle-east-784fffe1a592",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israeli-attacks-across-gaza-kill-10-palestinians-wound-29-despite-ceasefire/3959347",
+      "title": "Israeli attacks across Gaza kill 10 Palestinians, wound 29 despite ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-07-the-new-arab-d5004fcda41b",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-forces-arrest-hebron-academic-west-bank-raids",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids"
+    },
+    {
+      "source_record_id": "gaza-2026-06-07-aljazeera-middle-east-cc3105f9e520",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/7/israeli-army-kills-nine-in-gaza-as-mediators-renew-diplomacy-in-cairo?traffic_source=rss",
+      "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks"
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-07",
+  "candidates_seen": 11,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-06-07-009",
+      "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-011",
+      "title": "Gaza civil defence says 10 killed in Israeli strikes",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-004",
+      "title": "7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-003",
+      "title": "Israeli attacks across Gaza kill 10 Palestinians, wound 29 despite ceasefire",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-005",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-002",
+      "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-010",
+      "title": "Palestinian teen killed by Israeli naval fire in Gaza",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-007",
+      "title": "Palestinian factions, mediators resume Cairo talks on next phase of Gaza ceasefire",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-008",
+      "title": "Israel advances waste treatment project in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-001",
+      "title": "Outrage as US actor, influencer mock rape of Palestinians",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-006",
+      "title": "Fifty-two hours on an Israeli prison ship",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-06-07-004",
+      "title": "7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-06-010",
+      "prior_edition_date": "2026-06-06",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-005",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-010",
+      "title": "Palestinian teen killed by Israeli naval fire in Gaza",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-02-005",
+      "prior_edition_date": "2026-06-02",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-008",
+      "title": "Israel advances waste treatment project in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-06-07-009",
+      "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-011",
+      "title": "Gaza civil defence says 10 killed in Israeli strikes",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-004",
+      "title": "7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-06-010",
+      "prior_edition_date": "2026-06-06",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-003",
+      "title": "Israeli attacks across Gaza kill 10 Palestinians, wound 29 despite ceasefire",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-005",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-002",
+      "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-010",
+      "title": "Palestinian teen killed by Israeli naval fire in Gaza",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-02-005",
+      "prior_edition_date": "2026-06-02",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-007",
+      "title": "Palestinian factions, mediators resume Cairo talks on next phase of Gaza ceasefire",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-008",
+      "title": "Israel advances waste treatment project in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-001",
+      "title": "Outrage as US actor, influencer mock rape of Palestinians",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-006",
+      "title": "Fifty-two hours on an Israeli prison ship",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

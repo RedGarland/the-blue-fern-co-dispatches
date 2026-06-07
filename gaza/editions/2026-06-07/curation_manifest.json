@@ -1,21 +1,622 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-06-07",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-06-07-009",
+    "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike",
+    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 79,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-2a12385f96fc"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-2a12385f96fc"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/7/what-ceasefire-palestinians-inspect-destruction-after-israeli-strike?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 79,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-011",
+    "title": "Gaza civil defence says 10 killed in Israeli strikes",
+    "summary": "Israeli strikes killed 10 people in Gaza on Saturday, the territory's civil defence said, amid a fragile ceasefire in effect since last October.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 74,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-the-new-arab-32a158d7b182"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-the-new-arab-32a158d7b182"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-civil-defence-says-10-killed-israeli-strikes"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 74,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-004",
+    "title": "7-month-old baby killed after Israeli troops open fire on a car, Palestinian health officials say",
+    "summary": "Israeli troops shot at a car in the occupied West Bank, killing a 7-month-old Palestinian baby and wounding his parents, the Palestinian health ministry said, with the bullet striking the boy in the face.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 72,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-pbs-newshour-world-660448a608d3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-pbs-newshour-world-660448a608d3"
+    ],
+    "source_urls": [
+      "https://www.pbs.org/newshour/world/7-month-old-baby-killed-after-israeli-troops-open-fire-on-a-car-palestinian-health-officials-say"
+    ],
+    "publisher_names": [
+      "PBS NewsHour"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 72,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-06-010",
+    "prior_edition_date": "2026-06-06",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-003",
+    "title": "Israeli attacks across Gaza kill 10 Palestinians, wound 29 despite ceasefire",
+    "summary": "Attacks come as Palestinian factions and mediators meet in Cairo for talks aimed at advancing to next phase of Gaza ceasefire agreement.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-784fffe1a592"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-784fffe1a592"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-attacks-across-gaza-kill-10-palestinians-wound-29-despite-ceasefire/3959347"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-005",
+    "title": "Israeli forces arrest Hebron academic in West Bank raids",
+    "summary": "Israeli forces arrested academic Bilal Al-Shobaki and his parents as raids and settler attacks intensified across the occupied West Bank.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-the-new-arab-d5004fcda41b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-the-new-arab-d5004fcda41b"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-forces-arrest-hebron-academic-west-bank-raids"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-002",
+    "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks",
+    "summary": "Israeli attacks came near Khan Younis, in Gaza City and Deir el-Balah as Hamas and other groups met mediators in Cairo.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-cc3105f9e520"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-cc3105f9e520"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/7/israeli-army-kills-nine-in-gaza-as-mediators-renew-diplomacy-in-cairo?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-010",
+    "title": "Palestinian teen killed by Israeli naval fire in Gaza",
+    "summary": "Muhammad Musa Abu Giab, 15, worked as fisherman before being shot dead by Israeli army, sources tell Anadolu.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-477b0e20c8d2"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-477b0e20c8d2"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/palestinian-teen-killed-by-israeli-naval-fire-in-gaza/3958931"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-02-005",
+    "prior_edition_date": "2026-06-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-007",
+    "title": "Palestinian factions, mediators resume Cairo talks on next phase of Gaza ceasefire",
+    "summary": "Representatives of Palestinian factions, mediators from Egypt, Qatar and T\u00fcrkiye are meeting in Cairo to discuss implementation of 2nd phase of Gaza ceasefire agreement.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-af247ec137f9"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-anadolu-middle-east-af247ec137f9"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/palestinian-factions-mediators-resume-cairo-talks-on-next-phase-of-gaza-ceasefire/3959262"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-008",
+    "title": "Israel advances waste treatment project in West Bank",
+    "summary": "The Jerusalem Governorate says a planned Israeli waste-to-energy project in Qalandia risks displacement, pollution and violations of international law.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 47,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-the-new-arab-2450a176c808"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-the-new-arab-2450a176c808"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-advances-waste-treatment-project-west-bank"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-001",
+    "title": "Outrage as US actor, influencer mock rape of Palestinians",
+    "summary": "The Tribeca Film Festival condemned comedian Elon Gold and pro-Israel activist Lizzy Savetsky after they joked about the rape of Palestinians.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-the-new-arab-999317ab5108"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-the-new-arab-999317ab5108"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/outrage-us-actor-influencer-mock-rape-palestinians"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-07-006",
+    "title": "Fifty-two hours on an Israeli prison ship",
+    "summary": "A flotilla activist recounts his detention after Israeli forces intercepted a Gaza-bound solidarity mission at sea.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 32,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-30804d382f09"
+    ],
+    "source_ids": [
+      "gaza-2026-06-07-aljazeera-middle-east-30804d382f09"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/6/7/fifty-two-hours-on-an-israeli-prison-ship?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-07T18:00:54.689465+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 32,
+    "substantive_ground": false,
+    "flotilla_only": true,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

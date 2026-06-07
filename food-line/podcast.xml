@@ -7,13 +7,14 @@
   <language>en-us</language>
   <itunes:image href="https://dispatches.thebluefernco.com/food-line/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/food-line/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 07 Jun 2026 20:26:33 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 07 Jun 2026 20:31:22 +0000</lastBuildDate>
   <item>
     <title>Food Line Briefing — June 7, 2026</title>
     <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-07-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-07-transcript.html</guid>
     <pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate>
     <description>No current Food Line update was published because no fresh source-backed current-story records were available. Stale sources remain in the source audit, but they are not presented as current stories. Background and source links are available in the public source table. This edition is a no-current-update public fallback.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-07.mp3" length="589056" type="audio/mpeg" />
   </item>
   <item>
     <title>Food Line Briefing — June 5, 2026</title>

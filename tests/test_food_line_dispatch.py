@@ -701,6 +701,8 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     lead = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    glance_html = edition_html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
+    today_read_html = edition_html.split("<h2>Today’s Read</h2>", 1)[1].split("<h2>At A Glance</h2>", 1)[0]
 
     assert result["public_rendered"] is True
     assert result["skip_reason"] == ""
@@ -728,6 +730,13 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert lead["primary_eligible"] == "true"
     assert lead["primary_disqualification_reason"] == ""
     assert "editions/2026-06-05/" in archive_html
+    assert glance_html.count("<li>") <= 3
+    assert "Today&apos;s lead:" not in glance_html
+    assert "What happened:" not in glance_html
+    assert "More background sources appear below" not in glance_html
+    assert "13abc reported that Toledo food pantries were preparing for increased demand as SNAP benefits faced a shutdown pause." in today_read_html
+    assert "When benefits are delayed or paused" in today_read_html
+    assert "USDA FNS and USDA ERS provide background on food assistance and food security." in glance_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Main Food Access Story" in edition_html
@@ -740,11 +749,18 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "What happened" in edition_html
     assert "Why it matters" in edition_html
     assert "Read the source" in edition_html
+    assert "Why it is included" in edition_html
     assert "Skip to main content" not in edition_html
     assert "Here’s how you know" not in edition_html
     assert "Here&#x27;s how you know" not in edition_html
     assert "Secure .gov websites use HTTPS" not in edition_html
     assert ".gov website belongs" not in edition_html
+    assert "Background records remain traceable here" not in edition_html
+    assert "More background sources appear below" not in edition_html
+    assert "public item(s)" not in edition_html
+    assert "primary pressure lead" not in edition_html
+    assert "source_text_verified" not in edition_html
+    assert "pressure_signal" not in edition_html
     assert "Today’s pressure point" not in edition_html
     assert "What changed" not in edition_html
     assert "Who is exposed" not in edition_html
@@ -989,9 +1005,9 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert audio_json["audio_story_sections"]
     assert audio_json["episode_summary"].startswith("KLTV reported")
     assert "17 percent increase" in audio_json["episode_summary"]
-    assert "Publishing note: This dispatch is based on one public Food Line source record from KLTV." in audio_json["episode_summary"]
+    assert "Publishing note: This briefing is based on one public source from one publisher." in audio_json["episode_summary"]
     assert "Today's pressure point:" not in audio_json["script_text"]
-    assert "This local food-access story matters" in audio_json["script_text"]
+    assert "When benefits are delayed or paused" in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
     assert "Source note:" not in audio_json["script_text"]
     assert "Edition status: Daily edition" not in audio_json["script_text"]
@@ -1008,7 +1024,6 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert transcript.index("Main Food Access Story") < transcript.index("Sources Behind This Briefing")
     assert transcript.index("Sources Behind This Briefing") < transcript.index("Transcript and source links")
     assert "Review summary:" not in transcript
-    assert "17 percent increase" in transcript
     assert "Edition status: Daily edition" not in transcript
     assert "Where pressure is visible" not in transcript
     assert "For traceability" not in transcript
@@ -1018,10 +1033,10 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Review summary:" not in audio_index.split("Publishing note", 1)[0]
     assert audio_index.index("Opening") < audio_index.index("Today&apos;s Read")
     assert audio_index.index("Today&apos;s Read") < audio_index.index("Main Food Access Story")
-    assert "17 percent increase" in audio_index
     assert "Sources Behind This Briefing" in audio_index
     assert "Where pressure is visible" not in audio_index
     assert "For traceability" not in audio_index
+    assert "The briefing also tracks related public background sources." not in audio_index
     assert result["selected_lead_pressure_scope_label"] == "Local / operational"
     assert result["selected_lead_pressure_scope_text"] == "local/operational"
     assert result["bluesky_post_ready"] is True
@@ -1033,6 +1048,7 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "the verified record came from" not in podcast.lower()
     assert "Edition status: Daily edition" not in podcast
     assert "Where pressure is visible" not in podcast
+    assert "The briefing also tracks related public background sources." not in podcast
     assert podcast.index("KLTV reported") < podcast.index("Publishing note:")
     assert 'src="/food-line/audio/2026-06-04.mp3"' in audio_index
     assert "<strong>Podcast enclosure:</strong> present" in audio_index
@@ -1695,7 +1711,7 @@ def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     assert len(result["bluesky_post_text"]) <= 300
     assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
     assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
-    assert "The briefing also tracks related public background sources." in result["bluesky_post_text"]
+    assert "USDA sources provide background on summer nutrition programs and food security." in result["bluesky_post_text"]
 
 
 def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):
@@ -1914,7 +1930,10 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Source Mix" not in edition_html
     assert "source mix" not in edition_html.lower()
     assert "Source Note" in edition_html
-    assert "No new primary pressure signal qualified today." not in edition_html
+    assert "Background records remain traceable here" not in edition_html
+    assert "More background sources appear below" not in edition_html
+    assert "public item(s)" not in edition_html
+    assert "primary pressure lead" not in edition_html
     assert "What changed today" not in edition_html
     assert "Publishing note" not in edition_html
     assert "Skip to content" not in edition_html
@@ -1923,7 +1942,7 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Sports" not in edition_html
     assert "Contests" not in edition_html
     assert "Closings & Delays" not in edition_html
-    assert "Open the public source table for traceability and cleaned excerpts." in edition_html
+    assert "Open the public source table for source links, traceability, and cleaned excerpts." in edition_html
     assert "Source:" in edition_html
     assert "Where:" in edition_html
     assert "What happened:" in edition_html
@@ -1935,6 +1954,9 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Skip to content" not in source_table_html
     assert "Verification status" in source_table_html
     assert "Used on public page" in source_table_html
+    assert "source_text_verified" not in source_table_html
+    assert "pressure_signal" not in source_table_html
+    assert "Source record ID" not in source_table_html
     assert "Skip to content" not in map_html
     assert "What the source says:" in map_html
 

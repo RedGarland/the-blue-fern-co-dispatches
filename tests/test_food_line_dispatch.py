@@ -1404,6 +1404,56 @@ def test_food_line_cli_defaults_to_audio_generation():
     assert transcript_only_args.generate_audio is False
 
 
+def test_food_line_blocked_date_keeps_existing_audio_landing_page(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _mock_food_line_tts(monkeypatch)
+
+    public_date = "2026-06-05"
+    blocked_date = "2026-07-12"
+    p_public = _manual_path(tmp_path, public_date)
+    p_public.parent.mkdir(parents=True, exist_ok=True)
+    p_public.write_text(json.dumps([_pressure_row(1, "Food bank sees rising demand from families", "Food bank demand increased and pantry lines grew.", family="local_news", state="TX")], indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, public_date, generate_audio=True)
+
+    p_blocked = _manual_path(tmp_path, blocked_date)
+    p_blocked.parent.mkdir(parents=True, exist_ok=True)
+    p_blocked.write_text(json.dumps([_pressure_row(2, "Food banks brace for demand", "Food bank demand increased and pantry lines grew.", family="local_news", state="WA")], indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, blocked_date)
+
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+
+    assert "No public audio episode was published for this run." not in audio_index
+    assert "No public audio episode was published" not in audio_index
+    assert "Food Line Briefing — June 5, 2026" in audio_index
+    assert "/food-line/audio/2026-06-05.mp3" in audio_index
+    assert "/food-line/audio/2026-06-05-transcript.html" in audio_index
+    assert "/food-line/editions/2026-06-05/source_table.html" in audio_index
+    assert "podcast.xml" in audio_index
+    assert "Podcast enclosure:</strong> present" in audio_index
+    assert '<enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-05.mp3" length="13" type="audio/mpeg" />' in podcast
+
+
+def test_food_line_public_audio_links_use_explicit_index_html(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _mock_food_line_tts(monkeypatch)
+
+    date = "2026-06-05"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps([_pressure_row(1, "Food bank sees rising demand from families", "Food bank demand increased and pantry lines grew.", family="local_news", state="TX")], indent=2), encoding="utf-8")
+
+    run_food_line_dispatch(tmp_path, date, generate_audio=True)
+
+    home_index = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+
+    assert 'href="audio/index.html"' in home_index
+    assert 'href="audio/"' not in home_index
+    assert 'href="https://dispatches.thebluefernco.com/food-line/audio/index.html"' in audio_index
+    assert 'href="https://dispatches.thebluefernco.com/food-line/audio/"' not in audio_index
+
+
 def test_food_line_audio_failure_reports_sanitized_diagnostics(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     date = "2026-06-04"

@@ -1637,9 +1637,68 @@ def _prune_food_line_public_artifacts(root: Path, *, allow_future_date: bool) ->
     return removed
 
 
+def _food_line_latest_public_audio_metadata(root: Path, *, max_edition_date: str | None = None) -> dict[str, Any] | None:
+    site_root = root / "output" / "site"
+    audio_root = site_root / DISPATCH_SLUG / "audio"
+    candidates = sorted(
+        (path for path in audio_root.glob("*.json") if not path.name.endswith("flash-briefing.json")),
+        key=lambda path: path.name,
+        reverse=True,
+    )
+    for path in candidates:
+        edition_date = path.stem
+        if not DATE_RE.match(edition_date):
+            continue
+        try:
+            payload = _read_json(path)
+        except Exception:  # noqa: BLE001
+            continue
+        if not isinstance(payload, dict):
+            continue
+        audio_file = str(payload.get("audio_file") or "").strip()
+        audio_mp3_path = audio_root / audio_file if audio_file else None
+        if not audio_mp3_path or not audio_mp3_path.exists() or audio_mp3_path.stat().st_size <= 0:
+            continue
+        if bool(payload.get("audio_available")) or bool(payload.get("podcast_enclosure_present")):
+            return payload
+    return None
+
+
 def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, *, include_date: bool = True) -> None:
     audio_root = root / "output" / "site" / DISPATCH_SLUG / "audio"
     audio_root.mkdir(parents=True, exist_ok=True)
+    latest_audio = _food_line_latest_public_audio_metadata(root)
+    if latest_audio:
+        edition_date = str(latest_audio.get("edition_date") or "").strip()
+        episode_title = str(latest_audio.get("episode_title") or f"Food Line Briefing — {_human_date(edition_date)}").strip()
+        transcript_url = f"/food-line/audio/{edition_date}-transcript.html"
+        audio_mp3_url = str(latest_audio.get("audio_mp3_url") or latest_audio.get("audio_url") or f"/food-line/audio/{edition_date}.mp3").strip()
+        source_table_url = f"/food-line/editions/{edition_date}/source_table.html"
+        podcast_enclosure_text = "present"
+        body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
+<main class="home food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--audio", "../assets/")}
+    <p class="eyebrow">The Blue Fern Co.</p>
+    <h1>Food Line Audio</h1>
+    <p>{html.escape(episode_title)}</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Latest episode</h2>
+    <p><strong>{html.escape(episode_title)}</strong></p>
+    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>
+    <p><a href="{html.escape(audio_mp3_url)}">Listen or download the MP3</a></p>
+    <p><a href="{html.escape(transcript_url)}">Read the transcript</a></p>
+    <p><a href="{html.escape(source_table_url)}">Open the source table</a></p>
+    <p><a href="podcast.xml">Open the podcast feed</a></p>
+    <p><strong>Podcast enclosure:</strong> {podcast_enclosure_text}</p>
+    <p><a href="../archive.html">Back to the Food Line archive</a></p>
+  </section>
+</main>
+{footer("../")}"""
+        _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body, DISPATCH_NAME))
+        return
     episode_line = (
         f"No public audio episode was published for {_human_date(date)}."
         if include_date
@@ -1663,7 +1722,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
   </section>
 </main>
 {footer("../")}"""
-    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/", "../assets/site.css", body, DISPATCH_NAME))
+    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body, DISPATCH_NAME))
 
 
 def _food_line_edition_navigation_html(previous_date: str | None) -> str:
@@ -2620,7 +2679,7 @@ def write_food_line_audio(
   </section>
 </main>
 {footer("../")}"""
-    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/", "../assets/site.css", audio_index, DISPATCH_NAME))
+    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index, DISPATCH_NAME))
     write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=max_edition_date)
     return {
         "audio_generated": audio_generated,
@@ -2683,7 +2742,7 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
   <section class="food-line-panel">
     <h2>Current coverage</h2>
     {"<p><a href=\"editions/{0}/\">Latest edition</a></p>".format(latest_public_date) if latest_public_date else "<p>No public editions have been published yet.</p>"}
-    <p><a href="audio/">Audio and podcast feed</a></p>
+    <p><a href="audio/index.html">Audio and podcast feed</a></p>
     <p><a href="map/">Pressure map</a></p>
     <p>This dispatch is source-backed and uses verified pressure signals only.</p>
   </section>

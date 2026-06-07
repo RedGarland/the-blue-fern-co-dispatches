@@ -1396,6 +1396,14 @@ def test_food_line_audio_transcript_only_omits_enclosure(tmp_path: Path):
     assert "Food Line Audio" in audio_index
 
 
+def test_food_line_cli_defaults_to_audio_generation():
+    args = food_line.parse_args(["--date", "2026-06-05"])
+    assert args.generate_audio is True
+
+    transcript_only_args = food_line.parse_args(["--date", "2026-06-05", "--no-generate-audio"])
+    assert transcript_only_args.generate_audio is False
+
+
 def test_food_line_audio_failure_reports_sanitized_diagnostics(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     date = "2026-06-04"

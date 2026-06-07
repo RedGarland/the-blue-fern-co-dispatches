@@ -3198,6 +3198,14 @@ def run_range(
     *,
     collect: bool = False,
     allow_future_date: bool = False,
+    generate_audio: bool = True,
+    require_audio: bool = False,
+    force_audio_regenerate: bool = False,
+    tts_provider: str = "none",
+    audio_model: str = "gpt-4o-mini-tts",
+    audio_voice: str = "alloy",
+    audio_format: str = "mp3",
+    audio_timeout_seconds: float = 90.0,
 ) -> list[dict[str, Any]]:
     start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
     end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
@@ -3206,7 +3214,22 @@ def run_range(
     out: list[dict[str, Any]] = []
     day = start
     while day <= end:
-        out.append(run_food_line_dispatch(root, day.isoformat(), collect=collect, allow_future_date=allow_future_date))
+        out.append(
+            run_food_line_dispatch(
+                root,
+                day.isoformat(),
+                collect=collect,
+                generate_audio=generate_audio,
+                require_audio=require_audio,
+                force_audio_regenerate=force_audio_regenerate,
+                tts_provider=tts_provider,
+                audio_model=audio_model,
+                audio_voice=audio_voice,
+                audio_format=audio_format,
+                audio_timeout_seconds=audio_timeout_seconds,
+                allow_future_date=allow_future_date,
+            )
+        )
         day += timedelta(days=1)
     return out
 
@@ -3219,7 +3242,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
-    p.add_argument("--generate-audio", action="store_true", help="Generate Food Line audio narration and podcast MP3 artifacts.")
+    audio_group = p.add_mutually_exclusive_group()
+    audio_group.add_argument(
+        "--generate-audio",
+        dest="generate_audio",
+        action="store_true",
+        help="Generate Food Line audio narration and podcast MP3 artifacts.",
+    )
+    audio_group.add_argument(
+        "--no-generate-audio",
+        dest="generate_audio",
+        action="store_false",
+        help="Skip Food Line audio narration and leave transcript-only output.",
+    )
+    p.set_defaults(generate_audio=True)
     p.add_argument("--require-audio", action="store_true", help="Require the Food Line audio MP3 to be generated before the run can succeed.")
     p.add_argument("--force-audio-regenerate", action="store_true", help="Regenerate Food Line audio even when an MP3 already exists; preserve the existing MP3 if regeneration fails.")
     p.add_argument("--allow-future-date", action="store_true", help="Allow public Food Line output for a future-dated edition.")
@@ -3247,6 +3283,14 @@ def main(argv: list[str] | None = None) -> int:
                     args.end_date,
                     collect=bool(args.collect),
                     allow_future_date=bool(args.allow_future_date),
+                    generate_audio=bool(args.generate_audio),
+                    require_audio=bool(args.require_audio),
+                    force_audio_regenerate=bool(args.force_audio_regenerate),
+                    tts_provider=str(args.tts_provider or "none"),
+                    audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                    audio_voice=str(args.audio_voice or "alloy"),
+                    audio_format=str(args.audio_format or "mp3"),
+                    audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
                 ),
             }
         else:

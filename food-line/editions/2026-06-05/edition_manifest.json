@@ -1,0 +1,134 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-06-05",
+  "generated_at": "2026-06-07T06:25:36.678915+00:00",
+  "source_count": 29,
+  "story_count": 1,
+  "source_adequacy": {
+    "status": "daily",
+    "label": "Daily edition",
+    "source_count": 29,
+    "source_families": [
+      "disaster_emergency",
+      "economic_data",
+      "local_news",
+      "public_radio",
+      "school_meals_child_nutrition",
+      "state_official"
+    ],
+    "local_signal_count": 25,
+    "state_signal_count": 25,
+    "national_context_count": 4
+  },
+  "lead_source_record_id": "food-line-auto-9013087c4ebc5f32",
+  "lead_source_canonical_url": "https://www.13abc.com/2025/10/28/local-food-pantries-are-preparing-increased-demand-snap-benefits-face-shutdown-pause",
+  "previous_edition_date": null,
+  "primary_signal_status": "new_primary",
+  "primary_disqualification_reason": "",
+  "public_rendered": true,
+  "qualified_primary_count": 1,
+  "future_date_blocked": false,
+  "future_date_override_used": false,
+  "continuing_context_count": 2,
+  "continuing_pressure_count": 0,
+  "context_count": 2,
+  "excluded_count": 26,
+  "skip_reason": "",
+  "continuing_pressure_source_record_ids": [],
+  "continuing_pressure_source_urls": [],
+  "lead_issue_tags": [
+    "SNAP",
+    "benefits"
+  ],
+  "source_roles_count": {
+    "daily_signal": 0,
+    "background_context": 0,
+    "policy_context": 0,
+    "provider_signal": 0,
+    "local_signal": 25,
+    "map_signal": 0,
+    "resource_context": 3,
+    "baseline_condition": 1
+  },
+  "local_signal_count": 25,
+  "state_signal_count": 25,
+  "national_context_count": 4,
+  "editorial_status": "daily_signal",
+  "pressure_status": "pressure_detected",
+  "why_this_lead": "selected new primary pressure signal (local_signal, benefit disruption)",
+  "selected_lead_source_role": "local_signal",
+  "selected_lead_pressure_type": "demand strain",
+  "selected_lead_affected_groups": [
+    "SNAP households"
+  ],
+  "pressure_source_count_by_family": {
+    "disaster_emergency": 0,
+    "economic_data": 0,
+    "local_news": 3,
+    "public_radio": 0,
+    "school_meals_child_nutrition": 0,
+    "state_official": 0
+  },
+  "pressure_source_count_by_state": {
+    "CA": 0,
+    "FL": 0,
+    "ID": 0,
+    "MS": 0,
+    "OH": 1,
+    "PA": 0,
+    "TX": 1,
+    "US": 0,
+    "WA": 1
+  },
+  "news_item_count": 20,
+  "provider_pressure_count": 0,
+  "official_pressure_count": 0,
+  "baseline_source_count": 1,
+  "rejected_news_count": 0,
+  "rejected_news_reasons": [],
+  "rejected_news_by_source": {},
+  "collected_source_count_by_source_id": {},
+  "pressure_verified_count": 3,
+  "pressure_demoted_unverified_count": 26,
+  "pressure_registry_only_count": 0,
+  "pressure_evidence_basis_counts": {
+    "page_text_excerpt": 9,
+    "rss_item_text": 20
+  },
+  "collected_count_by_extraction_quality": {
+    "high": 20,
+    "medium": 9
+  },
+  "verified_pressure_count_by_extraction_quality": {
+    "medium": 3
+  },
+  "demoted_count_by_extraction_quality": {
+    "high": 20,
+    "medium": 6
+  },
+  "fetch_failure_count_by_source_id": {},
+  "no_evidence_count_by_source_id": {},
+  "rejected_by_source_purpose_count": 0,
+  "demoted_by_source_purpose_count": 0,
+  "registry_source_purpose_refresh": {
+    "path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\pressure_source_registry.json",
+    "changed": false,
+    "blocked_count": 0,
+    "source_purpose_counts": {
+      "current_news": 15,
+      "disaster_alert": 1,
+      "donation_page": 3,
+      "official_notice": 1,
+      "provider_update": 3,
+      "resource_page": 1
+    },
+    "current_or_evergreen_counts": {
+      "current": 20,
+      "evergreen": 4
+    }
+  },
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-05/",
+  "bluesky_post_text": "Food Line Dispatch, June 5, 2026: 13abc reported that Toledo food pantries were preparing for increased demand as SNAP benefits faced a shutdown pause. USDA sources provide background on summer nutrition programs and food security. Read the full briefing: https://dispatches.thebluefernco.com/food-li",
+  "bluesky_post_ready": true
+}

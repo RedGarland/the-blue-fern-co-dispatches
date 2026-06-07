@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Food Line Dispatch - 2026-06-07</title>
+  <link rel="canonical" href="https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/">
+  <meta property="og:url" content="https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/">
+  <meta property="og:site_name" content="Food Line Dispatch">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<style>
+:root {
+  --ink: #1E3F4F;
+  --navy: #1E3F4F;
+  --blue-fern: #4E6B79;
+  --soft-blue: #EFE7DA;
+  --fern-green: #4E6B79;
+  --paper: #FBF7EF;
+  --border: #D2C5B4;
+  --panel: #FFFDF8;
+  --muted: #4E6B79;
+}
+.food-line-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+.food-line-hero {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.food-line-hero .eyebrow,
+.food-line-hero p {
+  margin: 0;
+}
+.food-line-logo {
+  display: block;
+  height: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.food-line-logo--home {
+  width: min(360px, 90vw);
+}
+.food-line-logo--edition {
+  width: min(460px, 90vw);
+}
+.food-line-logo--map {
+  width: min(520px, 90vw);
+}
+.food-line-logo--audio {
+  width: min(360px, 90vw);
+}
+.food-line-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: 0 18px 42px rgba(30, 63, 79, 0.08);
+}
+.food-line-panel h2:first-child,
+.food-line-panel h3:first-child {
+  margin-top: 0;
+}
+.food-line-source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.food-line-source-table th,
+.food-line-source-table td {
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  padding: 0.65rem 0.55rem;
+}
+.food-line-source-table th {
+  text-align: left;
+  color: var(--navy);
+  background: #F3EBDD;
+  position: sticky;
+  top: 0;
+}
+.food-line-source-table td:nth-child(9),
+.food-line-source-table td:nth-child(14) {
+  min-width: 16rem;
+}
+.food-line-source-table td:nth-child(10),
+.food-line-source-table td:nth-child(17) {
+  min-width: 10rem;
+}
+.food-line-map-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-map {
+  height: min(70vh, 640px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.food-line-map-panel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 1rem 1.1rem;
+}
+.food-line-map-panel ul {
+  margin-top: 0.8rem;
+}
+.food-line-map-panel .fl-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.food-line-map-panel .fl-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.food-line-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid #1B2F39;
+  display: inline-block;
+}
+.food-line-map-popup {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+}
+.food-line-map-popup a {
+  word-break: break-word;
+}
+.food-line-audio-shell {
+  display: grid;
+  gap: 1rem;
+}
+.food-line-audio-list {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.food-line-audio-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+.food-line-audio-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-source-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1rem 0.9rem;
+  background: #FFFDF9;
+  box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
+}
+.food-line-source-card h3 {
+  margin-top: 0;
+}
+.food-line-source-card p {
+  margin: 0.35rem 0;
+}
+@media (max-width: 640px) {
+  .food-line-logo--edition,
+  .food-line-logo--map,
+  .food-line-logo--audio,
+  .food-line-logo--home {
+    width: 90vw;
+  }
+  .food-line-source-table {
+    font-size: 0.9rem;
+  }
+}
+</style>
+  <header class="site-header">
+    <a class="brand" href="../../index.html">Food Line Dispatch</a>
+    <nav><a href="/">Dispatches Home</a><a href="/food-line/">Food Line Dispatch</a><a href="../../archive.html">Archive</a><a href="../../rss.xml">RSS</a></nav>
+  </header>
+<main class="container food-line-shell">
+  <section class="food-line-hero">
+    <img class="hero-logo food-line-logo food-line-logo--edition" src="../../assets/food-line-logo.png" alt="The Food Line Dispatch">
+    <p class="eyebrow">Daily briefing / June 7, 2026</p>
+    <h1>Food Line Dispatch</h1>
+    <p>Generated from saved Food Line source records available for June 7, 2026.</p>
+  </section>
+  <section class="food-line-panel">
+    <h2>Today’s Read</h2>
+    <p>No current Food Line update was published because no fresh source-backed current-story records were available.</p><p>The run reviewed 33 records, excluded 33 stale or otherwise non-publishable records, and kept stale sources out of the current-story sections.</p><p>Stale source IDs: food-line-auto-6effc522ae28d822, food-line-auto-eaca418865f7e95d, food-line-auto-caffe71b3d391158, food-line-auto-ad5e20f9358ace0f, food-line-auto-cb89664d60edab52, food-line-auto-8f2c6af0192b3089, food-line-auto-73ffb7d625c24e4c, food-line-auto-8a0e3577f2ee46b1, food-line-auto-93ce312aa86969d2, food-line-auto-5f18a0ea856bc3b6, food-line-auto-b231e4cf9a7668cb, food-line-auto-a205ca3dd7858585, food-line-auto-20cd2b8f75d16cb7, food-line-auto-503ea9e5508a3256, food-line-auto-034f1eda7360afe1, food-line-auto-7b84dd4d17d68194, food-line-auto-c35741dcd0708b36, food-line-auto-462f5dc4ba6cb1b5, food-line-auto-127b2a184584de4c, food-line-auto-20a3efe8e07798ba, food-line-auto-434a296a51388c04, food-line-auto-46b8cca63536862c, food-line-auto-9013087c4ebc5f32.</p>
+    <h2>At A Glance</h2>
+    <ul><li>33 records reviewed.</li><li>33 records excluded from current-story use.</li><li>23 stale current-story candidate sources blocked by freshness filtering.</li><li>Freshness window: 3 days.</li></ul>
+    <h2>Background References</h2><p>Background references stay in the audit only. They are not promoted as current stories when freshness filtering blocks the edition.</p><ul><li class='food-line-source-card'><h3>Summer Nutrition Programs | Food and Nutrition Administration</h3><p><strong>Source:</strong> USDA FNS - United States</p><p><strong>Why it is included:</strong> USDA FNS provides background on federal summer nutrition programs for children when school is out.</p><p><strong>Read the source:</strong> <a href="https://www.fns.usda.gov/summer" target="_blank" rel="noopener noreferrer">https://www.fns.usda.gov/summer</a></p></li><li class='food-line-source-card'><h3>Food Security in the U.S. | Economic Research Service</h3><p><strong>Source:</strong> USDA ERS - United States</p><p><strong>Why it is included:</strong> USDA ERS defines food security and tracks national food-security trends.</p><p><strong>What the source says:</strong> Food security means access by all people at all times to enough food for an active, healthy life. ERS presents trends, statistics, and charts related to food security, along with definitions, background, key publications, and resources</p><p><strong>Read the source:</strong> <a href="https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us" target="_blank" rel="noopener noreferrer">https://www.ers.usda.gov/topics/food-nutrition-assistance/food-security-in-the-us</a></p></li><li class='food-line-source-card'><h3>North Texas Food Bank</h3><p><strong>Source:</strong> North Texas Food Bank - Dallas, TX</p><p><strong>Why it is included:</strong> This report provides background on local food-assistance conditions that help explain today’s lead story.</p><p><strong>What the source says:</strong> The packages and distributes food to more than 400 food pantries and community organizations across 13 North Texas counties</p><p><strong>Read the source:</strong> <a href="https://ntfb.org/" target="_blank" rel="noopener noreferrer">https://ntfb.org/</a></p></li><li class='food-line-source-card'><h3>North Texas Food Bank</h3><p><strong>Source:</strong> North Texas Food Bank - Dallas, TX</p><p><strong>Why it is included:</strong> This report provides background on local food-assistance conditions that help explain today’s lead story.</p><p><strong>What the source says:</strong> The packages and distributes food to more than 400 food pantries and community organizations across 13 North Texas counties</p><p><strong>Read the source:</strong> <a href="https://ntfb.org/" target="_blank" rel="noopener noreferrer">https://ntfb.org/</a></p></li><li class='food-line-source-card'><h3>Summer Nutrition Programs | Food and Nutrition Administration</h3><p><strong>Source:</strong> USDA FNS - United States</p><p><strong>Why it is included:</strong> USDA FNS provides background on federal summer nutrition programs for children when school is out.</p><p><strong>Read the source:</strong> <a href="https://www.fns.usda.gov/summer" target="_blank" rel="noopener noreferrer">https://www.fns.usda.gov/summer</a></p></li><li class='food-line-source-card'><h3>Disaster Assistance | Food and Nutrition Administration</h3><p><strong>Source:</strong> USDA FNS - United States</p><p><strong>Why it is included:</strong> This source provides background on disaster assistance.</p><p><strong>Read the source:</strong> <a href="https://www.fns.usda.gov/disaster/disaster-assistance" target="_blank" rel="noopener noreferrer">https://www.fns.usda.gov/disaster/disaster-assistance</a></p></li><li class='food-line-source-card'><h3>The Regional Food Bank expects to lose more than 7 million pounds of food this year as a result of federal cuts | WAMC</h3><p><strong>Source:</strong> WAMC - Northeastern New York</p><p><strong>Why it is included:</strong> This report provides background on local food-assistance conditions that help explain today’s lead story.</p><p><strong>What the source says:</strong> As the Regional Food Bank of Northeastern New York prepares to face additional federal cuts, leaders say they are working to diversify its sources of donations. COO Nick Pisani says the food bank will receive roughly 7 million less pounds of food this year than it did in 2024. WAMC’s Samantha Simmons spoke with him earlier this week about how federal cuts are impacting operations</p><p><strong>Read the source:</strong> <a href="https://www.wamc.org/news/2025-09-14/the-regional-food-bank-expects-to-lose-more-than-7-million-pounds-of-food-this-year-as-a-result-of-federal-cuts" target="_blank" rel="noopener noreferrer">https://www.wamc.org/news/2025-09-14/the-regional-food-bank-expects-to-lose-more-than-7-million-pounds-of-food-this-year-as-a-result-of-federal-cuts</a></p></li><li class='food-line-source-card'><h3>Kentucky food banks stretched thin as demand rises and donations fall during shutdown | Local News | wdrb.com</h3><p><strong>Source:</strong> WDRB - Kentucky</p><p><strong>Why it is included:</strong> This report provides background on local food-assistance conditions that help explain today’s lead story.</p><p><strong>What the source says:</strong> Food pantries, like the one at St. Vincent de Paul, have been a lifeline for those who typically rely on federal SNAP benefits</p><p><strong>Read the source:</strong> <a href="https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html" target="_blank" rel="noopener noreferrer">https://www.wdrb.com/news/kentucky-food-banks-stretched-thin-as-demand-rises-and-donations-fall-during-shutdown/article_cb1eeec4-b98f-4a7c-a276-28dd19ca5f40.html</a></p></li></ul>
+    <h2>Source Audit</h2>
+    <p>Source links, traceability, and cleaned excerpts are available in the public source table.</p>
+    <p><a href="source_table.html">Open the source audit and background references table.</a></p>
+    <h2>Source Note</h2>
+    <p>This edition uses only saved Food Line source records available at publish time. Source coverage may be uneven; items appear only when a traceable source record exists.</p>
+    <nav class='food-line-edition-nav'><a href="../../archive.html">Archive</a><a href="../../index.html">Dispatches home</a><a href="../2026-06-05/">Previous edition</a></nav>
+  </section>
+</main>
+  <footer class="site-footer">
+    <div class="publisher">
+      <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="../../assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <p class="publisher-label">Published by <a href="https://thebluefernco.com/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
+    </div>
+  </footer>
+</body>
+</html>

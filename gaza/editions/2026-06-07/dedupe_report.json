@@ -1,21 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-07",
-  "candidates_seen": 8,
+  "candidates_seen": 7,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-06-07-007",
-      "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-07-008",
       "title": "Gaza civil defence says 10 killed in Israeli strikes",
       "classification": "new",
       "material_update": true,
@@ -37,23 +26,23 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-07-004",
-      "title": "Israeli forces arrest Hebron academic in West Bank raids",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-06-07-002",
       "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
         "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-004",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -143,20 +132,6 @@
   "reasons": [
     {
       "story_id": "gaza-story-2026-06-07-007",
-      "title": "'What ceasefire?' Palestinians inspect destruction after Israeli strike",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-07-008",
       "title": "Gaza civil defence says 10 killed in Israeli strikes",
       "classification": "new",
       "material_update": true,
@@ -184,20 +159,6 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-07-004",
-      "title": "Israeli forces arrest Hebron academic in West Bank raids",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
-      "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-06-07-002",
       "title": "Israel kills 13 in Gaza as Egypt hosts renewed 'ceasefire' talks",
       "classification": "new",
@@ -208,6 +169,20 @@
       "duplicate_reasons": [],
       "prior_story_matched": null,
       "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-07-004",
+      "title": "Israeli forces arrest Hebron academic in West Bank raids",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
       "include_decision": "include",
       "public_rendered": true
     },

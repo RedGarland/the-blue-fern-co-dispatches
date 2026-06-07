@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-07",
-  "generated_at": "2026-06-07T18:23:53.988195+00:00",
+  "generated_at": "2026-06-07T19:12:49.599605+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-07",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-07",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-07",
   "template_version": "gaza-source-record-v1",
-  "source_count": 8,
-  "story_count": 8,
+  "source_count": 7,
+  "story_count": 7,
   "source_adequacy_status": "limited_source_update",
   "source_adequacy_label": "Limited-source update",
   "publisher_count": 3,
@@ -19,7 +19,7 @@
     "The New Arab"
   ],
   "source_adequacy_warnings": [
-    "This is a limited-source update generated from 8 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+    "This is a limited-source update generated from 7 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
   ],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-07\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-07\\curation_manifest.json",
@@ -35,8 +35,8 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
-    "suppressed 4 repeated/stale candidate sources via cross-edition dedupe",
-    "This is a limited-source update generated from 8 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "suppressed 5 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 7 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
     "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-07\\manual_sources.template.json"
   ],
   "errors": []

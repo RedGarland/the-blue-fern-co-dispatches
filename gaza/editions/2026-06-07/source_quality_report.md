@@ -2,16 +2,16 @@
 
 - Status: **limited_source_update**
 - Recommendation: **publish limited-source update**
-- Sources: 8 from 3 publishers
+- Sources: 7 from 3 publishers
 - Publishers: Al Jazeera, PBS NewsHour, The New Arab
 - Categories: 1
 - All stories from one publisher: false
-- Core ground-development sources: 6
+- Core ground-development sources: 5
 - Context-only sources: 1
 - Claim-attributed sources: 0
 
 ## Source families
-- news_media: 4
+- news_media: 3
 - other_public_media: 4
 
 ## Fetch failures
@@ -26,4 +26,4 @@
 - npr-world: no matching Gaza items for 2026-06-07
 
 ## Warnings
-- This is a limited-source update generated from 8 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.
+- This is a limited-source update generated from 7 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.

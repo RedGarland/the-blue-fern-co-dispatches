@@ -1,0 +1,56 @@
+[
+  {
+    "source_record_id": "food-line-src-001",
+    "title": "Food banks continue to see increased need as SNAP requirements shift",
+    "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+    "publisher": "NEPM",
+    "published_at": "2026-06-08T12:00:00Z",
+    "retrieved_at": "2026-06-08T13:00:00Z",
+    "summary_or_snippet": "Food banks continue to see increased need as SNAP requirements shift. Project Bread says food assistance call demand is up and dropped calls are creating friction.",
+    "source_type": "rss",
+    "source_family": "public_radio",
+    "state": "MA",
+    "location_name": "Massachusetts",
+    "issue_tags": [
+      "food banks / pantry capacity",
+      "household hardship signal"
+    ],
+    "map_category": "elevated demand"
+  },
+  {
+    "source_record_id": "food-line-src-002",
+    "title": "Giant freezer helps Aroostook food pantries",
+    "url": "https://themainemonitor.org/giant-freezer-help-aroostook-food-pantries/",
+    "publisher": "The Maine Monitor",
+    "published_at": "2026-06-08T12:00:00Z",
+    "retrieved_at": "2026-06-08T13:00:00Z",
+    "summary_or_snippet": "Federal food assistance cuts are squeezing Aroostook County food pantries. Clients are receiving less and pantries are buying more food themselves.",
+    "source_type": "rss",
+    "source_family": "nonprofit_news",
+    "state": "ME",
+    "location_name": "Aroostook County, ME",
+    "issue_tags": [
+      "food banks / pantry capacity",
+      "household hardship signal"
+    ],
+    "map_category": "elevated demand"
+  },
+  {
+    "source_record_id": "food-line-src-003",
+    "title": "Rising food insecurity strains South Florida food banks",
+    "url": "https://www.miamiherald.com/news/local/article315996054.html",
+    "publisher": "Miami Herald",
+    "published_at": "2026-06-08T12:00:00Z",
+    "retrieved_at": "2026-06-08T13:00:00Z",
+    "summary_or_snippet": "Food bank demand has surged with about a 60% increase in people showing up, hundreds served weekly, and first-time visitors increasing as grocery costs rise.",
+    "source_type": "rss",
+    "source_family": "local_news",
+    "state": "FL",
+    "location_name": "Miami, FL",
+    "issue_tags": [
+      "food banks / pantry capacity",
+      "household hardship signal"
+    ],
+    "map_category": "elevated demand"
+  }
+]

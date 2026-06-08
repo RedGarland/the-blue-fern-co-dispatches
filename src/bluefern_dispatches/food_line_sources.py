@@ -8,6 +8,7 @@ import re
 import ssl
 import urllib.error
 import urllib.request
+from urllib.parse import urlparse
 import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, timezone
@@ -76,25 +77,147 @@ TAG_RULES: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
     (("insecurity", "hardship", "poverty"), ("household food insecurity",)),
 ]
 
+# Discovery/context terms are intentionally broad so they can find likely-relevant sources.
+DISCOVERY_CONTEXT_TERMS = (
+    "food insecurity",
+    "low food security",
+    "very low food security",
+    "food insufficiency",
+    "community food security",
+    "nutritional insecurity",
+    "SNAP",
+    "food stamps",
+    "EBT",
+    "WIC",
+    "National School Lunch Program",
+    "NSLP",
+    "School Breakfast Program",
+    "TEFAP",
+    "Emergency Food Assistance Program",
+    "food assistance safety net",
+    "Farm Bill nutrition title",
+    "food deserts",
+    "food swamps",
+    "food mirages",
+    "grocery closure",
+    "grocery access",
+    "food prices",
+    "grocery prices",
+    "cost of living",
+    "inflation",
+    "income volatility",
+    "underemployment",
+    "ALICE",
+    "food bank",
+    "food banks",
+    "food pantry",
+    "food pantries",
+    "Feeding America",
+    "pantry demand",
+    "food bank demand",
+    "mobile pantry",
+    "meal site",
+    "soup kitchen",
+)
+
+# Promotion/current-story terms should require current pressure evidence.
+CURRENT_PRESSURE_EVIDENCE_TERMS = (
+    "increased need",
+    "surge in demand",
+    "surged",
+    "rising demand",
+    "more people showing up",
+    "people showing up",
+    "first-time visitors",
+    "food assistance need",
+    "food bank demand",
+    "food pantry demand",
+    "pantry demand",
+    "requests for food assistance",
+    "food bank saw increased need",
+    "food banks saw increased need",
+    "snap requirements shift",
+    "snap requirements shifting",
+    "snap work requirements",
+    "snap cuts",
+    "snap delays",
+    "snap benefit delay",
+    "snap benefits delayed",
+    "ebt delay",
+    "ebt outage",
+    "wic delay",
+    "wic disruption",
+    "benefit disruption",
+    "benefit cliff",
+    "recertification",
+    "recertification backlog",
+    "waiver expiration",
+    "application backlog",
+    "access friction",
+    "application friction",
+    "call center overwhelmed",
+    "dropped calls",
+    "reduced distribution",
+    "limited distribution",
+    "pantries limiting distributions",
+    "pantries buying more food",
+    "buying more food",
+    "supply dropped",
+    "donations dropped",
+    "food prices",
+    "grocery prices",
+    "cost of living",
+    "inflation",
+    "income volatility",
+    "underemployment",
+    "skipping meals",
+    "unable to afford food",
+    "food hardship",
+    "families going hungry",
+    "food desert",
+    "food deserts",
+    "food mirage",
+    "food swamps",
+    "grocery closure",
+    "grocery access",
+    "rural grocery closure",
+    "transportation barrier",
+    "rural food access",
+    "emergency food distribution",
+    "disaster food assistance",
+    "d-snap",
+    "meal site closure",
+    "senior meal waitlist",
+)
+
 PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
+    (
+        "demand strain",
         (
-            "demand strain",
-            (
-                "demand is up",
-                "demand increased",
-                "increased demand",
-                "preparing for increased demand",
-                "rising demand",
-                "record demand",
-                "more families",
-                "longer lines",
-                "pantry lines",
-                "food bank demand",
-                "food pantry demand",
-                "emergency food demand",
-                "struggling to meet demand",
-            ),
+            "demand is up",
+            "demand increased",
+            "increased demand",
+            "increased need",
+            "preparing for increased demand",
+            "rising demand",
+            "record demand",
+            "surge in demand",
+            "surged",
+            "more people showing up",
+            "people showing up",
+            "first-time visitors",
+            "more families",
+            "longer lines",
+            "pantry lines",
+            "food bank demand",
+            "food pantry demand",
+            "pantry demand",
+            "food assistance need",
+            "requests for food assistance",
+            "emergency food demand",
+            "struggling to meet demand",
         ),
+    ),
     (
         "service reduction",
         (
@@ -102,22 +225,31 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "cut hours",
             "limited distribution",
             "fewer distributions",
-                "closed pantry",
-                "pantry closure",
-                "reduced capacity",
-                "smaller boxes",
-                "supply shortage",
-                "shelves bare",
-                "empty shelves",
-                "low inventory",
-                "federal cuts",
-                "food programs",
-            ),
+            "closed pantry",
+            "pantry closure",
+            "reduced capacity",
+            "smaller boxes",
+            "supply shortage",
+            "shelves bare",
+            "empty shelves",
+            "low inventory",
+            "federal cuts",
+            "food programs",
+            "reduced distribution",
+            "pantries limiting distributions",
+            "buying more food",
+            "pantries buying more food",
+            "donations dropped",
+            "supply dropped",
         ),
+    ),
     (
         "benefit disruption",
         (
             "snap delay",
+            "snap requirements shift",
+            "snap requirements shifting",
+            "snap work requirements",
             "benefit delay",
             "benefits delay",
             "snap benefits delayed",
@@ -127,9 +259,20 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "ebt outage",
             "benefits cut",
             "snap cut",
+            "snap cuts",
+            "snap delays",
             "wic disruption",
+            "wic delay",
+            "wic benefits delayed",
             "recertification backlog",
+            "recertification",
             "application backlog",
+            "waiver expiration",
+            "benefit cliff",
+            "access friction",
+            "application friction",
+            "call center overwhelmed",
+            "dropped calls",
         ),
     ),
     (
@@ -157,7 +300,11 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
         "access gap",
         (
             "food desert",
+            "food deserts",
+            "food mirage",
+            "food swamps",
             "grocery closure",
+            "grocery access",
             "rural grocery closure",
             "no nearby grocery",
             "transportation barrier",
@@ -170,9 +317,14 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "skipping meals",
             "unable to afford food",
             "food hardship",
-            "food insecurity",
             "hunger increased",
             "families going hungry",
+            "food prices",
+            "grocery prices",
+            "cost of living",
+            "inflation",
+            "income volatility",
+            "underemployment",
             "medical bills",
             "medical cost",
             "medical costs",
@@ -412,6 +564,26 @@ SOURCE_PURPOSE_CURRENT_TERMS = (
     "limited hours",
     "reduced hours",
     "rising demand",
+    "demand increased",
+    "food bank demand",
+    "food pantry demand",
+    "food assistance demand",
+    "pantry demand",
+    "pantry lines",
+    "pantry lines grew",
+    "increased need",
+    "surge in demand",
+    "surged",
+    "people showing up",
+    "first-time visitors",
+    "food assistance need",
+    "call demand",
+    "dropped calls",
+    "access friction",
+    "application friction",
+    "buying more food",
+    "pantries buying more food",
+    "food prices",
     "report",
     "release",
     "article",
@@ -492,6 +664,243 @@ def _freshness_status_for_dates(edition_date: str, published_at: str, max_age_da
         "stale_outside_daily_window",
         f"published {published_dt.isoformat()} is {age_days} days before edition {edition_date}, outside the {max_age_days}-day window",
     )
+
+
+def _parse_food_line_date(value: str) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    candidates = [raw]
+    if len(raw) >= 10:
+        candidates.insert(0, raw[:10])
+    for candidate in candidates:
+        try:
+            return datetime.fromisoformat(candidate.replace("Z", "+00:00")).date().isoformat()
+        except ValueError:
+            try:
+                return datetime.strptime(candidate[:10], "%Y-%m-%d").date().isoformat()
+            except ValueError:
+                continue
+    return ""
+
+
+def _url_path_date(url: str) -> tuple[str, str]:
+    parsed = urlparse(str(url or "").strip())
+    path = parsed.path or ""
+    match = re.search(r"/(20\d{2})/(\d{2})/(\d{2})(?=/|$)", path)
+    if match:
+        return f"{match.group(1)}-{match.group(2)}-{match.group(3)}", "url_path_ymd"
+    match = re.search(r"/(20\d{2})/(\d{2})(?=/|$)", path)
+    if match:
+        return f"{match.group(1)}-{match.group(2)}-01", "url_path_ym"
+    return "", ""
+
+
+def validate_food_line_source_freshness(
+    edition_date: str,
+    published_at: str,
+    url: str,
+    usage_type: str,
+    *,
+    page_metadata_date: str = "",
+    audit_url_path_date: bool = False,
+    background: bool = False,
+    freshness_window_days: int = 3,
+) -> dict[str, Any]:
+    edition_date = validate_date(edition_date)
+    usage_type = str(usage_type or "current_public_story").strip() or "current_public_story"
+    background = bool(background)
+    window_days = max(0, int(freshness_window_days or 0))
+    published_raw = str(published_at or "").strip()
+    page_metadata_raw = str(page_metadata_date or "").strip()
+    url = str(url or "").strip()
+    published_date = _parse_food_line_date(published_raw)
+    page_metadata_parsed = _parse_food_line_date(page_metadata_raw)
+    url_date, url_date_basis = _url_path_date(url)
+    verified_date = published_date or page_metadata_parsed
+    verified_date_basis = "published_at" if published_date else ("page_metadata" if page_metadata_parsed else "")
+    source_published_date = verified_date or url_date
+    source_published_date_basis = verified_date_basis if verified_date_basis else ("url_path" if url_date else "")
+    source_url_date = url_date
+    source_url_date_basis = url_date_basis
+    source_freshness_date_basis = verified_date_basis if verified_date_basis else ("url_path_only" if url_date else "missing")
+    usage_bucket = "background_reference" if background else "current_public_story"
+
+    try:
+        edition_dt = datetime.strptime(edition_date, "%Y-%m-%d").date()
+    except ValueError:
+        return {
+            "source_freshness_status": "unparsed_source_published_date",
+            "source_freshness_disqualification_reason": "could not parse edition date",
+            "freshness_status": "unparsed_source_published_date",
+            "freshness_disqualification_reason": "could not parse edition date",
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": background,
+            "usage_bucket": usage_bucket,
+        }
+
+    if not verified_date:
+        if url_date:
+            if audit_url_path_date:
+                try:
+                    url_dt = datetime.strptime(url_date, "%Y-%m-%d").date()
+                except ValueError:
+                    status = "unparsed_source_published_date"
+                    reason = "could not parse source published date"
+                else:
+                    age_days = (edition_dt - url_dt).days
+                    if age_days < 0:
+                        status = "stale_outside_daily_window"
+                        reason = f"url_path date {url_dt.isoformat()} is after edition {edition_date}"
+                    elif age_days > window_days:
+                        status = "stale_outside_daily_window"
+                        reason = f"url_path date {url_dt.isoformat()} is {age_days} days before edition {edition_date}, outside the {window_days}-day window"
+                    else:
+                        status = "fresh_daily_signal" if age_days <= 1 else "fresh_recent_signal"
+                        reason = ""
+            else:
+                status = "url_path_only"
+                reason = "url path date is not a verified publication date"
+        else:
+            status = "missing_source_published_date" if not published_raw and not page_metadata_raw else "unparsed_source_published_date"
+            reason = (
+                "missing source published date"
+                if not published_raw and not page_metadata_raw
+                else "could not parse source published date"
+            )
+        if background:
+            return {
+                "source_freshness_status": "background_reference",
+                "source_freshness_disqualification_reason": "",
+                "freshness_status": "background_reference",
+                "freshness_disqualification_reason": "",
+                "source_published_date": source_published_date,
+                "source_published_date_basis": source_published_date_basis,
+                "source_url_date": source_url_date,
+                "source_url_date_basis": source_url_date_basis,
+                "source_freshness_date_basis": source_freshness_date_basis,
+                "freshness_window_days": window_days,
+                "public_story_eligible": False,
+                "usage_type": usage_type,
+                "background_reference": True,
+                "usage_bucket": usage_bucket,
+            }
+        return {
+            "source_freshness_status": status,
+            "source_freshness_disqualification_reason": reason,
+            "freshness_status": status,
+            "freshness_disqualification_reason": reason,
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": False,
+            "usage_bucket": usage_bucket,
+        }
+
+    if background:
+        return {
+            "source_freshness_status": "background_reference",
+            "source_freshness_disqualification_reason": "",
+            "freshness_status": "background_reference",
+            "freshness_disqualification_reason": "",
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": True,
+            "usage_bucket": usage_bucket,
+        }
+
+    try:
+        published_dt = datetime.strptime(verified_date, "%Y-%m-%d").date()
+    except ValueError:
+        return {
+            "source_freshness_status": "unparsed_source_published_date",
+            "source_freshness_disqualification_reason": "could not parse source published date",
+            "freshness_status": "unparsed_source_published_date",
+            "freshness_disqualification_reason": "could not parse source published date",
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": False,
+            "usage_bucket": usage_bucket,
+        }
+    age_days = (edition_dt - published_dt).days
+    if age_days < 0:
+        reason = f"{verified_date_basis or 'published_at'} date {published_dt.isoformat()} is after edition {edition_date}"
+        return {
+            "source_freshness_status": "stale_outside_daily_window",
+            "source_freshness_disqualification_reason": reason,
+            "freshness_status": "stale_outside_daily_window",
+            "freshness_disqualification_reason": reason,
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": False,
+            "usage_bucket": usage_bucket,
+        }
+    if age_days > window_days:
+        reason = f"{verified_date_basis or 'published_at'} date {published_dt.isoformat()} is {age_days} days before edition {edition_date}, outside the {window_days}-day window"
+        return {
+            "source_freshness_status": "stale_outside_daily_window",
+            "source_freshness_disqualification_reason": reason,
+            "freshness_status": "stale_outside_daily_window",
+            "freshness_disqualification_reason": reason,
+            "source_published_date": source_published_date,
+            "source_published_date_basis": source_published_date_basis,
+            "source_url_date": source_url_date,
+            "source_url_date_basis": source_url_date_basis,
+            "source_freshness_date_basis": source_freshness_date_basis,
+            "freshness_window_days": window_days,
+            "public_story_eligible": False,
+            "usage_type": usage_type,
+            "background_reference": False,
+            "usage_bucket": usage_bucket,
+        }
+
+    status = "fresh_daily_signal" if age_days <= 1 else "fresh_recent_signal"
+    return {
+        "source_freshness_status": status,
+        "source_freshness_disqualification_reason": "",
+        "freshness_status": status,
+        "freshness_disqualification_reason": "",
+        "source_published_date": source_published_date,
+        "source_published_date_basis": source_published_date_basis,
+        "source_url_date": source_url_date,
+        "source_url_date_basis": source_url_date_basis,
+        "source_freshness_date_basis": source_freshness_date_basis,
+        "freshness_window_days": window_days,
+        "public_story_eligible": verified_date_basis in {"published_at", "page_metadata"},
+        "usage_type": usage_type,
+        "background_reference": False,
+        "usage_bucket": usage_bucket,
+    }
 
 
 def _normalize_registry_keywords(value: Any, default: list[str]) -> list[str]:
@@ -681,14 +1090,30 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
             str(row.get("source_name") or ""),
             str(row.get("title") or ""),
             str(row.get("title_fallback") or ""),
+            str(row.get("publisher") or ""),
+        )
+        if part
+    ), limit=800).lower()
+    page_signal_text = _normalize_source_text(" ".join(
+        part
+        for part in (
+            str(row.get("source_name") or ""),
+            str(row.get("title") or ""),
+            str(row.get("title_fallback") or ""),
+            str(row.get("publisher") or ""),
+            str(row.get("url") or ""),
+            str(row.get("candidate_url") or ""),
+        )
+        if part
+    ), limit=900).lower()
+    content_text = _normalize_source_text(" ".join(
+        part
+        for part in (
             str(row.get("summary_or_snippet") or ""),
             str(row.get("summary_fallback") or ""),
             str(row.get("evidence_text") or ""),
             str(row.get("candidate_reason") or ""),
             str(row.get("notes") or ""),
-            str(row.get("publisher") or ""),
-            str(row.get("url") or ""),
-            str(row.get("candidate_url") or ""),
         )
         if part
     ), limit=1200).lower()
@@ -698,14 +1123,27 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     source_purpose = "unknown"
     non_promotable_reason = SOURCE_PURPOSE_NON_PROMOTABLE_REASONS["unknown"]
 
-    if any(term in source_name or term in url for term in SOURCE_PURPOSE_DONATION_TERMS):
+    donation_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_DONATION_TERMS)
+    evergreen_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_EVERGREEN_TERMS)
+    resource_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_RESOURCE_TERMS)
+    current_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_CURRENT_TERMS)
+    disaster_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_DISASTER_TERMS)
+    current_news_families = {"national_news", "local_news", "public_radio", "nonprofit_news"}
+
+    if family in current_news_families:
+        if current_hit or disaster_hit:
+            source_purpose = "current_news"
+        elif resource_hit:
+            source_purpose = "resource_page"
+        elif donation_hit and not current_hit:
+            source_purpose = "donation_page"
+        else:
+            source_purpose = "current_news"
+    elif donation_hit:
         source_purpose = "donation_page"
-    elif any(term in source_name or term in url for term in SOURCE_PURPOSE_EVERGREEN_TERMS):
+    elif evergreen_hit:
         source_purpose = "evergreen_context"
     else:
-        resource_hit = any(term in source_name or term in url for term in SOURCE_PURPOSE_RESOURCE_TERMS)
-        current_hit = any(term in source_name or term in url for term in SOURCE_PURPOSE_CURRENT_TERMS)
-        disaster_hit = any(term in source_name or term in url for term in SOURCE_PURPOSE_DISASTER_TERMS)
         if family == "food_bank_provider":
             if resource_hit and not current_hit:
                 source_purpose = "resource_page"
@@ -715,8 +1153,6 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
                 source_purpose = "resource_page"
         elif family in {"state_official", "federal_official", "state_policy_news"}:
             source_purpose = "disaster_alert" if disaster_hit else "official_notice"
-        elif family in {"national_news", "local_news", "public_radio", "nonprofit_news"}:
-            source_purpose = "current_news"
         elif family == "economic_data":
             source_purpose = "data_release" if source_type == "api" or any(term in source_name for term in ("data release", "dataset", "statistics", "dashboard")) else "research_report"
         elif disaster_hit:
@@ -940,7 +1376,7 @@ def _build_pressure_summary(
                 sentence += f", affecting {groups_text}"
             return sentence + "."
     elif pressure_type == "service reduction":
-        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "closed", "capacity", "inventory", "fewer distributions")):
+        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
             sentence = f"{subject} reduced distribution hours because of low inventory"
             if place and place != "United States":
                 sentence += f" in {place}"

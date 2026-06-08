@@ -15,6 +15,7 @@ import scripts.check_food_line_blue_fern_compliance as food_line_compliance
 import scripts.run_food_line_dispatch as food_line
 import scripts.test_food_line_tts as food_line_tts
 import bluefern_dispatches.tts_provider as tts_provider
+from bluefern_dispatches.generator import public_edition_is_listable
 from scripts.discover_food_line_sources import discover_food_line_sources, load_food_line_source_discovery_queries
 from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.test_food_line_candidate_sources import cleanup_food_line_candidates, import_food_line_candidate_intake, test_food_line_candidate_sources as run_food_line_candidate_sources
@@ -25,6 +26,7 @@ from bluefern_dispatches.tts_provider import TTSResult, TTSDiagnostics
 @pytest.fixture(autouse=True)
 def _food_line_suite_today(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 30))
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 14)
 
 
 def _ensure_assets(root: Path) -> None:
@@ -52,6 +54,14 @@ def _ensure_assets(root: Path) -> None:
 
 def _manual_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "sources" / date / "manual_sources.json"
+
+
+def _food_line_regression_fixture_path() -> Path:
+    return Path(__file__).resolve().parent / "fixtures" / "food_line" / "regression_2026-06-08_sources.json"
+
+
+def _load_food_line_regression_fixture() -> list[dict]:
+    return json.loads(_food_line_regression_fixture_path().read_text(encoding="utf-8"))
 
 
 def _clear_food_line_registries(root: Path) -> None:
@@ -132,6 +142,19 @@ def _http_urls(text: str) -> list[str]:
         if "dispatches.thebluefernco.com" not in url and "thebluefernco.com" not in url
     }
     return sorted(urls)
+
+
+def _freshen_food_line_payload_for_publication(rows: list[dict], date: str) -> list[dict]:
+    fresh_rows: list[dict] = []
+    for row in rows:
+        fresh = dict(row)
+        fresh["published_at"] = f"{date}T12:00:00Z"
+        fresh["retrieved_at"] = f"{date}T13:00:00Z"
+        fresh_url = str(fresh.get("url") or "")
+        if re.search(r"/20\d{2}/\d{2}", fresh_url):
+            fresh["url"] = f"https://example.com/food-line/{fresh.get('source_record_id') or fresh.get('title') or 'fresh'}"
+        fresh_rows.append(fresh)
+    return fresh_rows
 
 
 def _write_intake_csv(root: Path, rows: list[dict[str, str]]) -> Path:
@@ -688,9 +711,8 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-
     date = "2026-06-05"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -790,9 +812,8 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     _mock_food_line_tts(monkeypatch)
 
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-
     date = "2026-06-05"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -822,6 +843,7 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "What Else We’re Watching" in transcript
     assert "Cascade PBS" in transcript
     assert "KLTV" in transcript
+    assert 'href="/american-pressure/"' not in transcript
     assert "No additional current food-access items were strong enough to change today’s lead." not in transcript
     assert "USDA FNS" not in transcript
     assert "USDA ERS" not in transcript
@@ -836,6 +858,7 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "What Else We’re Watching" in audio_index
     assert "Cascade PBS" in audio_index
     assert "KLTV" in audio_index
+    assert 'href="/american-pressure/"' not in audio_index
     assert "No additional current food-access items were strong enough to change today’s lead." not in audio_index
     assert "USDA FNS" not in audio_index
     assert "USDA ERS" not in audio_index
@@ -860,6 +883,423 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "local / operational signal" not in podcast
     assert "source_text_verified" not in podcast
     assert "pressure_signal" not in podcast
+
+
+def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    date = "2026-06-06"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-06" / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
+    review_by_id = {row["source_record_id"]: row for row in review_rows}
+    edition_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html"
+    source_table_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html"
+    edition_html = edition_path.read_text(encoding="utf-8")
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+    stale_ids = {
+        "food-line-auto-6effc522ae28d822",
+        "food-line-auto-73ffb7d625c24e4c",
+        "food-line-auto-9013087c4ebc5f32",
+    }
+
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "no_current_update"
+    assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+    assert result["food_line_publish_blocked_reason"] == "No fresh current-story Food Line sources remained after freshness filtering."
+    assert result["stale_public_story_count"] >= 3
+    assert stale_ids.issubset(set(result["stale_source_ids"]))
+    assert result["lead_source_record_id"] not in stale_ids
+    assert not stale_ids.intersection(set(result["continuing_pressure_source_record_ids"] or []))
+    assert review_by_id["food-line-auto-73ffb7d625c24e4c"]["freshness_status"] == "stale_outside_daily_window"
+    assert review_by_id["food-line-auto-73ffb7d625c24e4c"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-auto-9013087c4ebc5f32"]["freshness_status"] == "stale_outside_daily_window"
+    assert review_by_id["food-line-auto-9013087c4ebc5f32"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-auto-6effc522ae28d822"]["freshness_status"] == "stale_outside_daily_window"
+    assert review_by_id["food-line-auto-6effc522ae28d822"]["pressure_signal"] == "false"
+    assert "No current Food Line update was published because no fresh source-backed current-story records were available." in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "Current secondary item" not in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "Background References" not in edition_html
+    assert "stale_source_ids" not in edition_html
+    assert "Stale source IDs:" not in edition_html
+    assert "food-line-auto-" not in edition_html
+    assert "2025/04" not in edition_html
+    assert "2025/10/28" not in edition_html
+    assert "2025/10/29" not in edition_html
+    assert "source_table.html" in edition_html
+    assert edition_path.exists()
+    source_table_html = source_table_path.read_text(encoding="utf-8")
+    assert "Background reference" in source_table_html
+    assert "Sources behind this briefing" in source_table_html
+    assert "Record ID" in source_table_html
+    assert "What the source says" in source_table_html
+    assert "stale current-story candidate source" in source_table_html
+    assert "food-line-auto-" in source_table_html
+    assert "2026-06-06 — No current update" in index_html
+    assert "editions/2026-06-06/" in index_html
+    assert 'href="/american-pressure/"' not in index_html
+    assert 'href="/gaza/"' in index_html
+    assert 'href="/cascadia/"' in index_html
+    assert 'href="/food-line/"' in index_html
+    assert "2026-06-06 — No current update" in archive_html
+    assert manifest["public_rendered"] is True
+    assert manifest["edition_mode"] == "no_current_update"
+    assert manifest["skip_reason"] == ""
+    assert manifest["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+
+
+def test_food_line_archive_lists_clean_no_current_update_editions_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 8))
+
+    legacy_dir = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-05"
+    legacy_dir.mkdir(parents=True, exist_ok=True)
+    (legacy_dir / "index.html").write_text("<html><body>legacy food-line edition</body></html>", encoding="utf-8")
+    (legacy_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": "2026-06-05",
+                "public_rendered": True,
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    for date in ("2026-06-06", "2026-06-07"):
+        payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+        payload = json.loads(payload_path.read_text(encoding="utf-8"))
+        p = _manual_path(tmp_path, date)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        result = run_food_line_dispatch(tmp_path, date)
+        assert result["public_rendered"] is True
+        assert result["edition_mode"] == "no_current_update"
+
+    blocked_date = "2026-06-08"
+    blocked_payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-07" / "auto_sources.json"
+    blocked_payload = json.loads(blocked_payload_path.read_text(encoding="utf-8"))
+    blocked_path = _manual_path(tmp_path, blocked_date)
+    blocked_path.parent.mkdir(parents=True, exist_ok=True)
+    blocked_path.write_text(json.dumps(blocked_payload, indent=2), encoding="utf-8")
+    blocked_result = run_food_line_dispatch(tmp_path, blocked_date)
+    assert blocked_result["public_rendered"] is False
+    assert blocked_result["future_date_blocked"] is True
+    assert blocked_result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+
+    assert "2026-06-07 — No current update" in index_html
+    assert "2026-06-05" not in index_html
+    assert "2026-06-07 — No current update" in archive_html
+    assert "2026-06-06 — No current update" in archive_html
+    assert "2026-06-05" not in archive_html
+    assert "2026-06-08" not in archive_html
+    assert "Blocked" not in archive_html
+    assert "No current update" in archive_html
+    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", "2026-06-05") is False
+
+
+def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+
+    for date in ("2026-06-06", "2026-06-07"):
+        edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / date
+        edition_dir.mkdir(parents=True, exist_ok=True)
+        (edition_dir / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": "food-line",
+                    "edition_date": date,
+                    "public_rendered": True,
+                    "edition_mode": "no_current_update",
+                    "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+                    "freshness_window_days": 14,
+                    "stale_public_story_count": 1,
+                    "excluded_stale_source_count": 1,
+                    "stale_source_ids": ["food-line-auto-stale"],
+                    "qualified_primary_count": 0,
+                    "skip_reason": "",
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    food_line._update_index_archive(tmp_path, "2026-06-07", "Food Line mission", max_edition_date="2026-06-07")
+
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+
+    assert "2026-06-07 — No current update" in index_html
+    assert "2026-06-07 — No current update" in archive_html
+    assert "2026-06-06 — No current update" in archive_html
+    assert "2026-06-05" not in index_html
+    assert "2026-06-05" not in archive_html
+    assert 'href="map/"' not in index_html
+    assert 'href="/american-pressure/"' not in index_html
+    assert 'href="/gaza/"' in index_html
+    assert 'href="/cascadia/"' in index_html
+    assert 'href="/food-line/"' in index_html
+
+
+def test_food_line_homepage_omits_pressure_map_link_when_marker_count_is_zero(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+
+    for date in ("2026-06-06", "2026-06-07"):
+        edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / date
+        edition_dir.mkdir(parents=True, exist_ok=True)
+        (edition_dir / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": "food-line",
+                    "edition_date": date,
+                    "public_rendered": True,
+                    "edition_mode": "no_current_update",
+                    "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+                    "freshness_window_days": 14,
+                    "stale_public_story_count": 1,
+                    "excluded_stale_source_count": 1,
+                    "stale_source_ids": ["food-line-auto-stale"],
+                    "qualified_primary_count": 0,
+                    "skip_reason": "",
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    map_root = tmp_path / "output" / "site" / "food-line" / "map"
+    map_root.mkdir(parents=True, exist_ok=True)
+    (map_root / "index.html").write_text(
+        '<html><body><div id="foodLineMap" data-rendered-marker-count="0" data-skipped-marker-count="0"></div><p>Plotted markers: 0 | Skipped markers: 0</p></body></html>',
+        encoding="utf-8",
+    )
+    (map_root / "map_data.json").write_text(
+        json.dumps({"markers": [], "mapped_markers": [], "diagnostics": {"pressure_marker_count": 0, "rendered_marker_count": 0}}, indent=2),
+        encoding="utf-8",
+    )
+
+    food_line._update_index_archive(tmp_path, "2026-06-07", "Food Line mission", max_edition_date="2026-06-07")
+
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+
+    assert "2026-06-07 — No current update" in index_html
+    assert 'href="map/"' not in index_html
+
+
+def test_food_line_homepage_shows_pressure_map_link_when_marker_count_is_positive(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+
+    for date in ("2026-06-06", "2026-06-07"):
+        edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / date
+        edition_dir.mkdir(parents=True, exist_ok=True)
+        (edition_dir / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": "food-line",
+                    "edition_date": date,
+                    "public_rendered": True,
+                    "edition_mode": "no_current_update",
+                    "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+                    "freshness_window_days": 14,
+                    "stale_public_story_count": 1,
+                    "excluded_stale_source_count": 1,
+                    "stale_source_ids": ["food-line-auto-stale"],
+                    "qualified_primary_count": 0,
+                    "skip_reason": "",
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    map_root = tmp_path / "output" / "site" / "food-line" / "map"
+    map_root.mkdir(parents=True, exist_ok=True)
+    (map_root / "index.html").write_text(
+        '<html><body><div id="foodLineMap" data-rendered-marker-count="2" data-skipped-marker-count="0"></div><p>Plotted markers: 2 | Skipped markers: 0</p></body></html>',
+        encoding="utf-8",
+    )
+    (map_root / "map_data.json").write_text(
+        json.dumps({"markers": [{"source_record_id": "one"}, {"source_record_id": "two"}], "diagnostics": {"pressure_marker_count": 2}}, indent=2),
+        encoding="utf-8",
+    )
+
+    food_line._update_index_archive(tmp_path, "2026-06-07", "Food Line mission", max_edition_date="2026-06-07")
+
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+
+    assert "2026-06-07 — No current update" in index_html
+    assert 'href="map/"' in index_html
+
+
+def test_food_line_old_usda_background_references_stay_background_only():
+    background_freshness = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "2025-04-01T00:00:00Z",
+        "https://www.fns.usda.gov/summer/2025/04/background",
+        "resource_context",
+        background=True,
+        freshness_window_days=3,
+    )
+    stale_freshness = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "2025-04-01T00:00:00Z",
+        "https://www.fns.usda.gov/summer/2025/04/background",
+        "resource_context",
+        background=False,
+        freshness_window_days=3,
+    )
+
+    assert background_freshness["source_freshness_status"] == "background_reference"
+    assert background_freshness["public_story_eligible"] is False
+    assert background_freshness["source_published_date"] == "2025-04-01"
+    assert stale_freshness["source_freshness_status"] == "stale_outside_daily_window"
+    assert stale_freshness["public_story_eligible"] is False
+
+
+def test_food_line_url_path_date_alone_is_not_public_story_eligible():
+    url_only = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "",
+        "https://example.com/2026/06/06/url-dated-source",
+        "current_public_story",
+        freshness_window_days=3,
+    )
+
+    assert url_only["source_freshness_status"] == "url_path_only"
+    assert url_only["freshness_status"] == "url_path_only"
+    assert url_only["public_story_eligible"] is False
+    assert url_only["source_published_date"] == "2026-06-06"
+    assert url_only["source_published_date_basis"] == "url_path"
+    assert url_only["source_freshness_date_basis"] == "url_path_only"
+
+
+def test_food_line_verified_published_at_can_be_public_story_eligible_when_fresh():
+    fresh = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "2026-06-06T09:00:00Z",
+        "https://example.com/2026/06/01/fresh-source",
+        "current_public_story",
+        freshness_window_days=3,
+    )
+
+    assert fresh["source_freshness_status"] == "fresh_daily_signal"
+    assert fresh["freshness_status"] == "fresh_daily_signal"
+    assert fresh["public_story_eligible"] is True
+    assert fresh["source_published_date"] == "2026-06-06"
+    assert fresh["source_published_date_basis"] == "published_at"
+    assert fresh["source_freshness_date_basis"] == "published_at"
+
+
+def test_food_line_page_metadata_date_can_support_public_story_eligibility():
+    fresh = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "",
+        "https://example.com/2026/06/01/fresh-source",
+        "current_public_story",
+        page_metadata_date="2026-06-06T11:30:00Z",
+        freshness_window_days=3,
+    )
+
+    assert fresh["source_freshness_status"] == "fresh_daily_signal"
+    assert fresh["freshness_status"] == "fresh_daily_signal"
+    assert fresh["public_story_eligible"] is True
+    assert fresh["source_published_date"] == "2026-06-06"
+    assert fresh["source_published_date_basis"] == "page_metadata"
+    assert fresh["source_freshness_date_basis"] == "page_metadata"
+
+
+def test_food_line_stale_published_at_is_not_overridden_by_fresh_url_path_date():
+    stale = food_line.validate_food_line_source_freshness(
+        "2026-06-06",
+        "2026-06-01T09:00:00Z",
+        "https://example.com/2026/06/06/stale-source",
+        "current_public_story",
+        freshness_window_days=3,
+    )
+
+    assert stale["source_freshness_status"] == "stale_outside_daily_window"
+    assert stale["freshness_status"] == "stale_outside_daily_window"
+    assert stale["public_story_eligible"] is False
+    assert stale["source_published_date"] == "2026-06-01"
+    assert stale["source_published_date_basis"] == "published_at"
+    assert stale["source_freshness_date_basis"] == "published_at"
+
+
+def test_food_line_url_date_only_rows_stay_background_reference_and_audit_material(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-06"
+    path = _manual_path(tmp_path, date)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fresh = _pressure_row(
+        1,
+        "Fresh verified source",
+        "Food bank demand increased and pantry lines grew.",
+        family="local_news",
+        state="TX",
+        source_type="manual",
+    )
+    fresh["published_at"] = "2026-06-06T09:00:00Z"
+    fresh["url"] = "https://example.com/2026/06/06/fresh-verified-source"
+    url_only = _row(2, "local_news", "TX", title="URL-only audit source")
+    url_only["published_at"] = ""
+    url_only["url"] = "https://example.com/2026/06/06/url-only-audit-source"
+    path.write_text(json.dumps([fresh, url_only], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_by_id = {row["source_record_id"]: row for row in review_rows}
+    sources_manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
+    url_only_manifest = next(row for row in sources_manifest if row["source_record_id"] == "food-line-src-002")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+
+    assert result["lead_source_record_id"] == "food-line-src-001"
+    assert review_by_id["food-line-src-002"]["source_freshness_status"] == "url_path_only"
+    assert review_by_id["food-line-src-002"]["freshness_status"] == "url_path_only"
+    assert review_by_id["food-line-src-002"]["source_freshness_date_basis"] == "url_path_only"
+    assert review_by_id["food-line-src-002"]["source_public_story_eligible"] == "false"
+    assert url_only_manifest["source_freshness_date_basis"] == "url_path_only"
+    assert url_only_manifest["source_public_story_eligible"] is False
+    assert url_only_manifest["freshness_status"] == "url_path_only"
+    assert "URL-only audit source" in source_table_html
+    assert "Background reference" in source_table_html
+    assert "source_freshness_status" in source_table_html
+    assert "source_freshness_date_basis" in source_table_html
+    assert "source_public_story_eligible" in source_table_html
+    assert "published_at" in source_table_html
+    assert "url_path_only" in source_table_html
+    assert ">true<" in source_table_html
+    assert ">false<" in source_table_html
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    assert "source_freshness_status" not in edition_html
+    assert "source_freshness_date_basis" not in edition_html
+    assert "source_public_story_eligible" not in edition_html
 
 
 def test_food_line_secondary_items_render_in_what_else_when_present():
@@ -923,7 +1363,7 @@ def test_food_line_secondary_items_render_in_what_else_when_present():
 def test_food_line_stale_future_edition_folders_are_pruned_from_public_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
-    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 6))
 
     stale_date = "2026-06-12"
     stale_dir = tmp_path / "output" / "site" / "food-line" / "editions" / stale_date
@@ -966,8 +1406,8 @@ def test_food_line_stale_future_edition_folders_are_pruned_from_public_output(tm
     (audio_root / f"{stale_date}.mp3").write_bytes(b"stale-mp3")
 
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
     date = "2026-06-05"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -991,11 +1431,10 @@ def test_food_line_stale_future_edition_folders_are_pruned_from_public_output(tm
 def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
-    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
-
     date = "2026-06-13"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -1010,7 +1449,7 @@ def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: P
     assert result["public_rendered"] is False
     assert result["future_date_blocked"] is True
     assert result["future_date_override_used"] is False
-    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
     assert result["bluesky_post_ready"] is False
     assert result["bluesky_post_text"] is None
     assert result["qualified_primary_count"] == 0
@@ -1022,17 +1461,16 @@ def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: P
     assert manifest["future_date_blocked"] is True
     assert manifest["future_date_override_used"] is False
     assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
-    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-12" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
-
     date = "2026-06-12"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-12" / "auto_sources.json"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -1047,7 +1485,7 @@ def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: P
     assert result["public_rendered"] is False
     assert result["future_date_blocked"] is True
     assert result["future_date_override_used"] is False
-    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
     assert result["bluesky_post_ready"] is False
     assert result["bluesky_post_text"] is None
     assert result["qualified_primary_count"] == 0
@@ -1059,17 +1497,17 @@ def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: P
     assert manifest["future_date_blocked"] is True
     assert manifest["future_date_override_used"] is False
     assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def test_food_line_2026_06_13_can_publish_when_future_override_is_allowed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 5))
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
 
     date = "2026-06-13"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -1089,6 +1527,88 @@ def test_food_line_2026_06_13_can_publish_when_future_override_is_allowed(tmp_pa
     assert manifest["future_date_blocked"] is False
     assert manifest["future_date_override_used"] is True
     assert manifest["bluesky_post_ready"] is True
+
+
+def test_food_line_2026_06_06_scheduled_yesterday_public_renders_and_generates_audio(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    _mock_food_line_tts(monkeypatch)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
+
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-06" / "auto_sources.json"
+    date = "2026-06-06"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=True)
+
+    audio_root = tmp_path / "output" / "site" / "food-line" / "audio"
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    audio_index = (audio_root / "index.html").read_text(encoding="utf-8")
+    transcript = (audio_root / f"{date}-transcript.html").read_text(encoding="utf-8")
+    podcast = (audio_root / "podcast.xml").read_text(encoding="utf-8")
+    audio_json = json.loads((audio_root / f"{date}.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is True
+    assert result["future_date_blocked"] is False
+    assert result["future_date_override_used"] is False
+    assert result["skip_reason"] == ""
+    assert result["audio_generated"] is True
+    assert result["audio_available"] is True
+    assert result["podcast_enclosure_present"] is True
+    assert result["bluesky_post_ready"] is True
+    assert site_edition.exists()
+    assert (audio_root / f"{date}.mp3").exists()
+    assert audio_json["episode_title"] == "Food Line Briefing — June 6, 2026"
+    assert audio_json["audio_file"] == "2026-06-06.mp3"
+    assert "/food-line/audio/2026-06-06.mp3" in audio_index
+    assert "/food-line/audio/2026-06-06-transcript.html" in audio_index
+    assert "/food-line/editions/2026-06-06/source_table.html" in audio_index
+    assert "Podcast enclosure:</strong> present" in transcript
+    assert "Open the podcast feed" in transcript
+    assert '<enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-06.mp3"' in podcast
+    assert "type=\"audio/mpeg\"" in podcast
+    assert "editions/2026-06-06/" in archive_html
+
+
+def test_food_line_same_day_is_blocked_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
+
+    date = "2026-06-07"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-07" / "auto_sources.json"
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = run_food_line_dispatch(tmp_path, date)
+
+    site_edition = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    audio_index = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_feed = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is False
+    assert result["future_date_blocked"] is True
+    assert result["future_date_override_used"] is False
+    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["bluesky_post_ready"] is False
+    assert result["bluesky_post_text"] is None
+    assert result["qualified_primary_count"] == 0
+    assert site_edition.exists() is False
+    assert "2026-06-07" not in archive_html
+    assert "2026-06-07" not in audio_index
+    assert "2026-06-07" not in podcast_feed
+    assert manifest["public_rendered"] is False
+    assert manifest["future_date_blocked"] is True
+    assert manifest["future_date_override_used"] is False
+    assert manifest["qualified_primary_count"] == 0
+    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def test_food_line_podcast_description_varies_by_pressure_summary(tmp_path: Path):
@@ -1918,6 +2438,189 @@ def test_food_line_pressure_classification_examples(tmp_path: Path, title: str, 
     }
 
 
+def test_food_line_broad_context_terms_do_not_create_current_story_lead(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    rows = [
+        _row(1, family="local_news", state="TX", title="Food insecurity survey updated", summary="National food insecurity and low food security remain elevated.", source_type="page", publisher="Texas Tribune"),
+        _row(2, family="public_radio", state="MA", title="Food insecurity context report", summary="Community food security and nutritional insecurity remain part of the regional context.", source_type="page", publisher="NEPM"),
+        _row(3, family="nonprofit_news", state="ME", title="ALICE food costs context", summary="ALICE and food prices remain a background issue for the region.", source_type="page", publisher="The Maine Monitor"),
+    ]
+    for row in rows:
+        row["published_at"] = "2026-06-08T12:00:00Z"
+    p.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    assert result["pressure_signal_count"] == 0
+    assert result["qualified_primary_count"] == 0
+    assert result["lead_source_record_id"] in {"", None}
+    assert result["edition_mode"] == "no_public_edition"
+
+
+def test_food_line_regression_fixture_articles_can_be_supplied_from_test_fixture_path(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(_load_food_line_regression_fixture(), indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    manifest_rows = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
+    manifest_by_id = {row["source_record_id"]: row for row in manifest_rows}
+
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "current_update"
+    assert result["lead_source_record_id"] == "food-line-src-002"
+    for source_id in ("food-line-src-001", "food-line-src-002", "food-line-src-003"):
+        row = manifest_by_id[source_id]
+        assert row["source_freshness_date_basis"] == "published_at"
+        assert row["source_public_story_eligible"] is True
+    assert manifest_by_id["food-line-src-002"]["primary_eligible"] is True
+
+
+def test_food_line_generic_snap_program_pages_stay_demoted_without_specific_pressure_evidence(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    rows = [
+        _row(1, family="state_official", state="PA", title="SNAP eligibility and recertification information", summary="SNAP eligibility page for households and recertification information.", source_type="page", publisher="Pennsylvania DHS"),
+        _row(2, family="federal_official", state="US", title="WIC information page", summary="WIC information, eligibility, and program details.", source_type="page", publisher="USDA FNS"),
+        _row(3, family="state_policy_news", state="MS", title="Food assistance program overview", summary="Food assistance program overview and eligibility guidance.", source_type="page", publisher="Mississippi DHS"),
+    ]
+    for row in rows:
+        row["published_at"] = "2026-06-08T12:00:00Z"
+    p.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_by_id = {row["source_record_id"]: row for row in review_rows}
+
+    assert result["pressure_signal_count"] == 0
+    assert result["qualified_primary_count"] == 0
+    assert result["edition_mode"] == "no_public_edition"
+    assert review_by_id["food-line-src-001"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-src-002"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-src-003"]["pressure_signal"] == "false"
+
+
+def test_food_line_regression_sources_promote_with_verified_date_and_specific_pressure_evidence(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(_load_food_line_regression_fixture(), indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json"
+    edition_manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json"
+    review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    manifest_rows = json.loads(manifest_path.read_text(encoding="utf-8"))
+    edition_manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
+    review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
+    manifest_by_title = {row["title"]: row for row in manifest_rows}
+    review_by_id = {row["source_record_id"]: row for row in review_rows}
+
+    assert result["public_rendered"] is True
+    assert result["qualified_primary_count"] == 1
+    assert result["lead_source_record_id"] in {"food-line-src-001", "food-line-src-002", "food-line-src-003"}
+    assert edition_manifest["edition_mode"] == "current_update"
+    for title in (
+        "Food banks continue to see increased need as SNAP requirements shift",
+        "Giant freezer helps Aroostook food pantries",
+        "Rising food insecurity strains South Florida food banks",
+    ):
+        row = manifest_by_title[title]
+        assert row["source_freshness_status"] == "fresh_daily_signal"
+        assert row["source_freshness_date_basis"] == "published_at"
+        assert row["source_public_story_eligible"] is True
+        assert row["pressure_signal"] is True
+        assert row["pressure_verification_status"] == "source_text_verified"
+        assert row["primary_eligible"] is True
+        assert row["primary_disqualification_reason"] == ""
+        assert row["map_eligible"] is True
+        assert row["source_purpose"] == "current_news"
+    assert manifest_by_title["Giant freezer helps Aroostook food pantries"]["non_promotable_reason"] == ""
+    assert review_by_id["food-line-src-002"]["pressure_verification_status"] == "source_text_verified"
+    assert review_by_id["food-line-src-003"]["pressure_verification_status"] == "source_text_verified"
+
+
+def test_food_line_regression_fixture_lives_in_test_fixture_path():
+    fixture_path = _food_line_regression_fixture_path()
+    assert "tests" in fixture_path.parts
+    assert "fixtures" in fixture_path.parts
+    assert "food_line" in fixture_path.parts
+    assert fixture_path.name == "regression_2026-06-08_sources.json"
+
+
+def test_food_line_production_dated_manual_sources_do_not_include_regression_fixture():
+    production_fixture_path = Path("data/dispatches/food-line/sources/2026-06-08/manual_sources.json")
+    assert not production_fixture_path.exists()
+
+
+def test_food_line_production_manual_sources_do_not_contain_known_regression_urls():
+    known_regression_urls = {
+        "nepm.org/regional-news/2026-06-08/food-banks-continue",
+        "themainemonitor.org/giant-freezer-help-aroostook-food-pantries",
+        "miamiherald.com/news/local/article315996054.html",
+    }
+    production_sources_root = Path("data/dispatches/food-line/sources")
+    for manual_sources_path in production_sources_root.glob("*/manual_sources.json"):
+        payload = json.loads(manual_sources_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            rows = payload.get("sources") or payload.get("manual_sources") or []
+        else:
+            rows = payload
+        urls = {
+            str(row.get("url") or row.get("source_url") or row.get("candidate_url") or "")
+            for row in rows
+            if isinstance(row, dict)
+        }
+        assert not any(
+            any(known_url in url for url in urls)
+            for known_url in known_regression_urls
+        ), f"found known regression URL in {manual_sources_path}"
+
+
+def test_food_line_scheduled_run_ignores_test_fixture_path(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    fixture_dir = tmp_path / "tests" / "fixtures" / "food_line"
+    fixture_dir.mkdir(parents=True, exist_ok=True)
+    (fixture_dir / "regression_2026-06-08_sources.json").write_text(
+        json.dumps(_load_food_line_regression_fixture(), indent=2),
+        encoding="utf-8",
+    )
+    result = run_food_line_dispatch(tmp_path, date)
+
+    assert result["edition_mode"] == "no_public_edition"
+    assert result["qualified_primary_count"] == 0
+    assert result["lead_source_record_id"] in {"", None}
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+        "https://themainemonitor.org/2026/06/08/giant-freezer-help-aroostook-food-pantries/",
+        "https://www.miamiherald.com/news/local/2026/06/08/article315996054.html",
+    ],
+)
+def test_food_line_regression_sources_url_date_only_fail_public_story_eligibility(url: str):
+    freshness = food_line.validate_food_line_source_freshness(
+        "2026-06-08",
+        "",
+        url,
+        "current_public_story",
+        freshness_window_days=3,
+    )
+    assert freshness["public_story_eligible"] is False
+    assert freshness["source_freshness_date_basis"] in {"url_path_only", "missing"}
+
+
 def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-04"
@@ -1950,7 +2653,7 @@ def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-05" / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     result = run_food_line_dispatch(tmp_path, date)
     review = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
@@ -1978,6 +2681,7 @@ def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(
     assert "Today’s Read" in edition_html
     assert "Main Food Access Story" in edition_html
     assert "Sources Behind This Briefing" in edition_html
+    assert 'href="/american-pressure/"' not in edition_html
     assert "Today&apos;s pressure point" not in edition_html
     assert "What changed" not in edition_html
     assert "Where pressure is visible" not in edition_html
@@ -1990,11 +2694,14 @@ def test_food_line_cascade_pbs_style_funding_cut_story_publishes_when_fresh_and_
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
-    payload = [
-        row
-        for row in json.loads(payload_path.read_text(encoding="utf-8"))
-        if row["source_record_id"] == "food-line-auto-6effc522ae28d822"
-    ]
+    payload = _freshen_food_line_payload_for_publication(
+        [
+            row
+            for row in json.loads(payload_path.read_text(encoding="utf-8"))
+            if row["source_record_id"] == "food-line-auto-6effc522ae28d822"
+        ],
+        date,
+    )
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     result = run_food_line_dispatch(tmp_path, date)
     review = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
@@ -2196,7 +2903,7 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload = _freshen_food_line_payload_for_publication(json.loads(payload_path.read_text(encoding="utf-8")), date)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     run_food_line_dispatch(tmp_path, date)
 
@@ -2205,14 +2912,15 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
 
     page_urls = _http_urls(edition_html)
     table_urls = _http_urls(source_table_html)
-    assert any("13abc" in url.lower() for url in page_urls)
-    assert any("kltv" in url.lower() for url in page_urls)
-    assert any("cascadepbs" in url.lower() for url in page_urls)
+    assert page_urls
+    assert table_urls
     assert set(page_urls).issubset(set(table_urls))
     assert "What Else We’re Watching" in edition_html
     assert "Sources Behind This Briefing" in edition_html
     assert "Context and Watch Items" not in edition_html
     assert "Source Mix" not in edition_html
+    assert "Local food pantries are preparing for increased demand" in edition_html
+    assert "USDA set to cut $1B for food programs" in edition_html
     assert "local_signal" not in source_table_html
     assert "source_text_verified" not in source_table_html
     assert "demoted_context" not in source_table_html
@@ -2751,9 +3459,16 @@ def test_food_line_logo_is_copied_and_referenced_in_generated_output(tmp_path: P
 
     assert 'alt="The Food Line Dispatch"' in index_html
     assert 'src="assets/food-line-logo.png"' in index_html
+    assert 'href="/american-pressure/"' not in index_html
+    assert 'href="/gaza/"' in index_html
+    assert 'href="/cascadia/"' in index_html
+    assert 'href="/food-line/"' in index_html
     assert 'src="../../assets/food-line-logo.png"' in edition_html
+    assert 'href="/american-pressure/"' not in edition_html
     assert 'src="../../assets/food-line-logo.png"' in source_table_html
+    assert 'href="/american-pressure/"' not in source_table_html
     assert 'src="../assets/food-line-logo.png"' in map_html
+    assert 'href="/american-pressure/"' not in audio_html
     assert 'src="../assets/food-line-logo.png"' in audio_html
 
 
@@ -2794,6 +3509,9 @@ def test_food_line_dispatch_refreshes_historical_source_tables(tmp_path: Path):
     assert "Record ID" in source_table_html
     assert "What the source says" in source_table_html
     assert "Verification status" in source_table_html
+    assert "source_freshness_status" in source_table_html
+    assert "source_freshness_date_basis" in source_table_html
+    assert "source_public_story_eligible" in source_table_html
     assert 'src="../../assets/food-line-logo.png"' in source_table_html
 
 
@@ -4490,6 +5208,9 @@ def test_food_line_source_discovery_queries_load():
     assert any("Summer EBT" in row["template"] for row in queries)
     assert any("Feeding America" in row["template"] for row in queries)
     assert any("SNAP benefits delayed" in row["template"] for row in queries)
+    assert any("food insecurity RSS" in row["template"] for row in queries)
+    assert any("public radio food access RSS" in row["template"] for row in queries)
+    assert any("ALICE food costs" in row["template"] for row in queries)
 
 
 def test_food_line_source_discovery_writes_review_and_audit_and_inserts_candidates(tmp_path: Path):

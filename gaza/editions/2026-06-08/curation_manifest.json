@@ -1,21 +1,224 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-06-08",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-06-08-004",
+    "title": "Israel kills 14 people in attacks across Gaza",
+    "summary": "Israel killed at least 14 people in Gaza on Sunday in strikes across Khan Younis, Gaza City, and Deir el-Balah.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 65,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-06-08-aljazeera-middle-east-8eb238925d0e"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-06-08-aljazeera-middle-east-8eb238925d0e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/8/israel-kills-14-people-in-attacks-across-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-08T13:00:43.788207+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-07-002",
+    "prior_edition_date": "2026-06-07",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-08-002",
+    "title": "Smoke rises in illegal Israeli settlement after Iranian missile attack",
+    "summary": "Smoke was seen in an illegal Israeli settlement in the occupied West Bank after Iran launched launched missiles.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-08-aljazeera-middle-east-227bf387455b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-08-aljazeera-middle-east-227bf387455b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/8/smoke-rises-in-illegal-israeli-settlement-after-iranian-missile-attack?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-08T13:00:43.788207+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-08-001",
+    "title": "Mediators for Gaza 'ceasefire' focus on arms, governance",
+    "summary": "Participants describe the talks as highly sensitive since last October's ceasefire, which aims to break the deadlock in the deal's second phase.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-08-the-new-arab-497bcc1800a4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-08-the-new-arab-497bcc1800a4"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/mediators-gaza-ceasefire-focus-arms-governance"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-08T13:00:43.788207+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-08-003",
+    "title": "Dutch report documenting Israeli shootings of Gaza children wins European Press Prize",
+    "summary": "Journalists from Dutch newspaper verified 114 cases of children under 15 being struck by single bullets to head or chest, with medical experts saying pattern suggests deliberate targeting.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-08-anadolu-middle-east-8a484a0588af"
+    ],
+    "source_ids": [
+      "gaza-2026-06-08-anadolu-middle-east-8a484a0588af"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/europe/dutch-report-documenting-israeli-shootings-of-gaza-children-wins-european-press-prize/3959768"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-08T13:00:43.788207+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

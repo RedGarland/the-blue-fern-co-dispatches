@@ -5,9 +5,9 @@
   "week_start_date": "2026-05-31",
   "week_end_date": "2026-06-06",
   "display_date_range": "May 31\u2013June 6, 2026",
-  "generated_at": "2026-06-07T18:00:46.034162+00:00",
+  "generated_at": "2026-06-08T13:00:02.521203+00:00",
   "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-06-06/",
-  "source_count": 244,
+  "source_count": 418,
   "story_count": 8,
   "pillars_present": [
     "food_pressure",
@@ -24,14 +24,14 @@
     "childcare_school_family_pressure"
   ],
   "source_count_by_pillar": {
-    "food_pressure": 52,
-    "housing_household_cost_pressure": 50,
-    "health_access_pressure": 30,
-    "labor_income_pressure": 1,
-    "financial_distress_pressure": 2,
-    "local_system_strain": 30,
-    "environmental_pressure": 30,
-    "policy_implementation": 49,
+    "food_pressure": 83,
+    "housing_household_cost_pressure": 74,
+    "health_access_pressure": 58,
+    "labor_income_pressure": 28,
+    "financial_distress_pressure": 6,
+    "local_system_strain": 59,
+    "environmental_pressure": 60,
+    "policy_implementation": 50,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
@@ -47,28 +47,28 @@
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
-  "rejected_no_public_pressure_angle": 0,
+  "rejected_no_public_pressure_angle": 1,
   "rejected_investor_only": 0,
-  "rejected_duplicate_or_stale": 61,
+  "rejected_duplicate_or_stale": 85,
   "rejected_missing_required_fields": 0,
   "is_free_public": true,
   "public_exposed": true,
   "has_detail_tier": false,
   "source_mode": "both",
   "item_type_counts": {
-    "baseline_gauge": 8,
-    "current_week_development": 0,
+    "baseline_gauge": 0,
+    "current_week_development": 8,
     "watchlist_item": 0
   },
   "source_role_counts": {
-    "human_story": 0,
+    "human_story": 174,
     "data_anchor": 244,
     "watchlist_signal": 0
   },
   "brief_quality_counts": {
-    "story_plus_data": 0,
-    "official_release_only": 3,
-    "baseline_only": 5,
+    "story_plus_data": 8,
+    "official_release_only": 0,
+    "baseline_only": 0,
     "watchlist_only": 0
   },
   "searched_pillars": [
@@ -90,71 +90,45 @@
     "policy_implementation": "benefit or policy implementation problems"
   },
   "current_development_count_by_pillar": {
-    "food_pressure": 0,
-    "housing_household_cost_pressure": 0,
-    "health_access_pressure": 0,
-    "labor_income_pressure": 0,
-    "financial_distress_pressure": 1,
-    "local_system_strain": 1,
-    "environmental_pressure": 28,
-    "policy_implementation": 0,
+    "food_pressure": 31,
+    "housing_household_cost_pressure": 24,
+    "health_access_pressure": 28,
+    "labor_income_pressure": 27,
+    "financial_distress_pressure": 5,
+    "local_system_strain": 30,
+    "environmental_pressure": 58,
+    "policy_implementation": 1,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
   "human_story_count_by_pillar": {
-    "food_pressure": 0,
-    "housing_household_cost_pressure": 0,
-    "health_access_pressure": 0,
-    "labor_income_pressure": 0,
-    "financial_distress_pressure": 0,
-    "local_system_strain": 0,
-    "environmental_pressure": 0,
-    "policy_implementation": 0,
+    "food_pressure": 31,
+    "housing_household_cost_pressure": 24,
+    "health_access_pressure": 28,
+    "labor_income_pressure": 27,
+    "financial_distress_pressure": 4,
+    "local_system_strain": 29,
+    "environmental_pressure": 30,
+    "policy_implementation": 1,
     "transportation_daily_access_pressure": 0,
     "childcare_school_family_pressure": 0
   },
-  "missing_required_current_development_pillars": [
-    "financial_distress_pressure",
-    "food_pressure",
-    "health_access_pressure",
-    "housing_household_cost_pressure",
-    "labor_income_pressure",
-    "local_system_strain"
-  ],
-  "collection_gap_pillars": [
-    "financial_distress_pressure",
-    "food_pressure",
-    "health_access_pressure",
-    "housing_household_cost_pressure",
-    "labor_income_pressure",
-    "local_system_strain"
-  ],
-  "story_plus_data_count": 0,
-  "baseline_only_count": 5,
-  "briefs_with_human_story": 0,
+  "missing_required_current_development_pillars": [],
+  "collection_gap_pillars": [],
+  "story_plus_data_count": 8,
+  "baseline_only_count": 0,
+  "briefs_with_human_story": 8,
   "briefs_with_data_anchor": 8,
-  "baseline_only_briefs": 5,
-  "missing_human_story_pillars": [
-    "environmental_pressure",
-    "financial_distress_pressure",
-    "food_pressure",
-    "health_access_pressure",
-    "housing_household_cost_pressure",
-    "labor_income_pressure",
-    "local_system_strain",
-    "policy_implementation"
-  ],
-  "baseline_only_edition": true,
+  "baseline_only_briefs": 0,
+  "missing_human_story_pillars": [],
+  "baseline_only_edition": false,
   "low_quality_story_ids": [],
   "future_enhancements": {
     "american_pressure_map": "Show current-week developments with location data filtered by pressure area; do not map national baseline gauges unless they include state/county geography."
   },
   "warnings": [
     "manual sources not found for 2026-06-06; continuing with auto baseline sources only",
-    "curation_diagnostics={\"candidates_accepted\": 244, \"candidates_found\": 317, \"neutralized_invalid_location_phrase\": 0, \"rejected_duplicate_or_stale\": 61, \"rejected_invalid_location_only\": 0, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 0, \"rejected_non_us_source\": 12, \"sources_attempted\": 317}",
-    "coverage_watchlist: no current_week_development records; add manual weekly developments",
-    "coverage_watchlist: missing important current-development pillars: financial_distress_pressure,food_pressure,health_access_pressure,housing_household_cost_pressure,labor_income_pressure,local_system_strain",
-    "coverage_watchlist: No current-development source was captured for this pillar."
+    "curation_diagnostics={\"candidates_accepted\": 418, \"candidates_found\": 537, \"neutralized_invalid_location_phrase\": 14, \"rejected_duplicate_or_stale\": 85, \"rejected_invalid_location_only\": 13, \"rejected_investor_only\": 0, \"rejected_missing_required_fields\": 0, \"rejected_no_public_pressure_angle\": 1, \"rejected_non_us_source\": 20, \"sources_attempted\": 537}"
   ],
   "errors": []
 }

@@ -7,7 +7,7 @@
   <language>en-us</language>
   <itunes:image href="https://dispatches.thebluefernco.com/food-line/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/food-line/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 08 Jun 2026 00:52:32 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 08 Jun 2026 00:56:42 +0000</lastBuildDate>
   <item>
     <title>Food Line Briefing — June 7, 2026</title>
     <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-07-transcript.html</link>
@@ -23,14 +23,6 @@
     <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
     <description>No current Food Line update was published because no fresh source-backed current-story records were available. Stale sources remain in the source audit, but they are not presented as current stories. Background and source links are available in the public source table. This edition is a no-current-update public fallback.</description>
     <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-06.mp3" length="553728" type="audio/mpeg" />
-  </item>
-  <item>
-    <title>Food Line Briefing — June 5, 2026</title>
-    <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-05-transcript.html</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-05-transcript.html</guid>
-    <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-    <description>13abc reported rising food-assistance demand across its service area in Toledo, affecting SNAP households. The need for food assistance was already growing before the shutdown according to local food assistance organizations. When benefits are delayed or paused, food pantries may see higher demand from households that rely on SNAP. Background and source links are available in the public source table.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-05.mp3" length="778368" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

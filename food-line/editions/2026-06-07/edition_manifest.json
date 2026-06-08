@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-07",
-  "generated_at": "2026-06-08T01:58:12.803555+00:00",
+  "generated_at": "2026-06-08T02:53:46.910216+00:00",
   "source_count": 33,
   "story_count": 0,
   "source_adequacy": {
@@ -18,7 +18,7 @@
       "school_meals_child_nutrition",
       "state_official"
     ],
-    "local_signal_count": 25,
+    "local_signal_count": 17,
     "state_signal_count": 29,
     "national_context_count": 4
   },
@@ -43,14 +43,14 @@
   "source_roles_count": {
     "daily_signal": 0,
     "background_context": 0,
-    "policy_context": 0,
+    "policy_context": 2,
     "provider_signal": 0,
-    "local_signal": 25,
-    "map_signal": 0,
+    "local_signal": 17,
+    "map_signal": 6,
     "resource_context": 7,
     "baseline_condition": 1
   },
-  "local_signal_count": 25,
+  "local_signal_count": 17,
   "state_signal_count": 29,
   "national_context_count": 4,
   "editorial_status": "monitoring/context",
@@ -89,8 +89,8 @@
   "rejected_news_reasons": [],
   "rejected_news_by_source": {},
   "collected_source_count_by_source_id": {},
-  "pressure_verified_count": 0,
-  "pressure_demoted_unverified_count": 33,
+  "pressure_verified_count": 1,
+  "pressure_demoted_unverified_count": 32,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
     "page_text_excerpt": 13,
@@ -100,10 +100,12 @@
     "high": 20,
     "medium": 13
   },
-  "verified_pressure_count_by_extraction_quality": {},
+  "verified_pressure_count_by_extraction_quality": {
+    "medium": 1
+  },
   "demoted_count_by_extraction_quality": {
     "high": 20,
-    "medium": 13
+    "medium": 12
   },
   "fetch_failure_count_by_source_id": {},
   "no_evidence_count_by_source_id": {},

@@ -1,11 +1,10 @@
 {
-  "ok": false,
+  "ok": true,
   "edition_date": "2026-06-07",
   "public_story_count": 5,
   "source_table_row_count": 5,
   "map_report_count": 5,
-  "failures": [
-    "rejected story leaked to map payload"
-  ],
-  "warnings": []
+  "failures": [],
+  "warnings": [],
+  "offending_rejected_records": []
 }

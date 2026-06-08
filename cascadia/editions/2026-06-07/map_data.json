@@ -206,70 +206,6 @@
       "coverage_end": "2026-06-07"
     },
     {
-      "story_id": "map-registry-f218a4a43d6800ec",
-      "title": "First-time homebuyers face hurdles despite gradual improvement",
-      "category": "government",
-      "category_id": "housing_homelessness",
-      "category_label": "Housing and homelessness",
-      "pressure_type": "Housing and homelessness",
-      "place": "WA",
-      "state": "WA",
-      "state_or_region": "WA",
-      "region_label": "Puget Sound",
-      "regional_area": "Puget Sound",
-      "publisher": "Washington State Standard",
-      "published_at": "2026-06-04T18:21:59Z",
-      "source_url": "https://washingtonstatestandard.com/2026/06/04/repub/first-time-homebuyers-face-hurdles-despite-gradual-improvement/",
-      "source_record_id": "registry-f218a4a43d6800ec",
-      "what_we_found": "The idea started with a sermon Micah Longmire heard at his Presbyterian church in Ogden, Utah, about the importance of grandparents in a child\u2019s life. Longmire, now 31, exchanged a look with his mother-in-law.",
-      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
-      "read_more": "/cascadia/editions/2026-06-07/",
-      "read_more_label": "First-time homebuyers face hurdles despite gradual improvement",
-      "location_label": "WA",
-      "address": null,
-      "location_precision": "statewide",
-      "precision_note": "Statewide report.",
-      "marker_scope": "statewide",
-      "lat": 47.4009,
-      "lon": -120.4508,
-      "coordinate_basis": "state_centroid",
-      "map_source": "backfill_record",
-      "coverage_start": "2026-06-01",
-      "coverage_end": "2026-06-07"
-    },
-    {
-      "story_id": "map-registry-d65c4d9d1db53b56",
-      "title": "Year-over-year homelessness declines",
-      "category": "housing",
-      "category_id": "housing_homelessness",
-      "category_label": "Housing and homelessness",
-      "pressure_type": "Housing and homelessness",
-      "place": "WA",
-      "state": "WA",
-      "state_or_region": "WA",
-      "region_label": "Puget Sound",
-      "regional_area": "Puget Sound",
-      "publisher": "Washington State Standard",
-      "published_at": "2026-06-02T11:00:32Z",
-      "source_url": "https://washingtonstatestandard.com/2026/06/02/repub/year-over-year-homelessness-declines/",
-      "source_record_id": "registry-d65c4d9d1db53b56",
-      "what_we_found": "There were fewer homeless people in the United States on a single night in January 2025 than in January 2024, but homelessness increased in 28 states, according to the latest federal count. The U.S.",
-      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
-      "read_more": "/cascadia/editions/2026-06-07/",
-      "read_more_label": "Year-over-year homelessness declines",
-      "location_label": "WA",
-      "address": null,
-      "location_precision": "statewide",
-      "precision_note": "Statewide report.",
-      "marker_scope": "statewide",
-      "lat": 47.4009,
-      "lon": -120.4508,
-      "coordinate_basis": "state_centroid",
-      "map_source": "backfill_record",
-      "coverage_start": "2026-06-01",
-      "coverage_end": "2026-06-07"
-    },
-    {
       "story_id": "map-registry-cc4e109248c9378d",
       "title": "Idaho US Sen. Crapo\u2019s 2025 housing survey identifies housing challenges faced by Idahoans",
       "category": "housing",
@@ -531,7 +467,7 @@
       "map_source": "backfill_record",
       "coverage_start": "2026-06-01",
       "coverage_end": "2026-06-07",
-      "group_count": 4,
+      "group_count": 2,
       "group_id": "puget-sound-474--1205",
       "reports": [
         {
@@ -555,28 +491,6 @@
           "source_url": "https://washingtonstatestandard.com/2026/06/04/repub/trump-to-pump-700m-into-coal-power-in-the-states-as-he-again-blasts-renewable-energy/",
           "read_more": "/cascadia/editions/2026-06-07/",
           "read_more_label": "Trump to pump $700M into coal power in the states, as he again blasts renewable energy"
-        },
-        {
-          "headline": "First-time homebuyers face hurdles despite gradual improvement",
-          "summary": "The idea started with a sermon Micah Longmire heard at his Presbyterian church in Ogden, Utah, about the importance of grandparents in a child\u2019s life. Longmire, now 31, exchanged a look with his mother-in-law.",
-          "pressure_type": "Housing and homelessness",
-          "category_id": "housing_homelessness",
-          "category_label": "Housing and homelessness",
-          "publisher": "Washington State Standard",
-          "source_url": "https://washingtonstatestandard.com/2026/06/04/repub/first-time-homebuyers-face-hurdles-despite-gradual-improvement/",
-          "read_more": "/cascadia/editions/2026-06-07/",
-          "read_more_label": "First-time homebuyers face hurdles despite gradual improvement"
-        },
-        {
-          "headline": "Year-over-year homelessness declines",
-          "summary": "There were fewer homeless people in the United States on a single night in January 2025 than in January 2024, but homelessness increased in 28 states, according to the latest federal count. The U.S.",
-          "pressure_type": "Housing and homelessness",
-          "category_id": "housing_homelessness",
-          "category_label": "Housing and homelessness",
-          "publisher": "Washington State Standard",
-          "source_url": "https://washingtonstatestandard.com/2026/06/02/repub/year-over-year-homelessness-declines/",
-          "read_more": "/cascadia/editions/2026-06-07/",
-          "read_more_label": "Year-over-year homelessness declines"
         }
       ],
       "pressure_areas": [
@@ -672,33 +586,27 @@
   "diagnostics": {
     "raw_candidate_count": 24,
     "accepted_local_marker_count": 0,
-    "regional_statewide_report_count": 12,
-    "excluded_count": 24,
+    "regional_statewide_report_count": 10,
+    "excluded_count": 10,
     "excluded_reasons": {
-      "statewide_not_default_layer": 12,
-      "no_source_date": 12
+      "statewide_not_default_layer": 10
     },
-    "category_corrections_applied": 7,
+    "category_corrections_applied": 5,
     "stale_records_removed": 0,
     "state_only_place_excluded": 0,
-    "local_extraction_success_count": 12,
-    "local_extraction_failure_count": 12,
-    "local_extraction_success_rate": 0.5,
+    "local_extraction_success_count": 0,
+    "local_extraction_failure_count": 10,
+    "local_extraction_success_rate": 0.0,
     "unresolved_category_count": 0,
     "category_resolution_success_count": 5,
-    "extraction_fields_success": {
-      "city_hint": 10,
-      "pattern": 2
-    },
+    "extraction_fields_success": {},
     "extraction_fields_failed": {
-      "none": 12
+      "none": 10
     },
-    "place_extraction_attempted": 24,
-    "place_extraction_succeeded": 12,
+    "place_extraction_attempted": 10,
+    "place_extraction_succeeded": 0,
     "place_match_by_type": {
-      "none": 12,
-      "city_hint": 10,
-      "pattern": 2
+      "none": 10
     },
     "candidate_diagnostics_rows": [
       {
@@ -807,36 +715,6 @@
         "excluded_reason": ""
       },
       {
-        "title": "First-time homebuyers face hurdles despite gradual improvement",
-        "source_url": "https://washingtonstatestandard.com/2026/06/04/repub/first-time-homebuyers-face-hurdles-despite-gradual-improvement/",
-        "publisher": "Washington State Standard",
-        "detected_pressure_category": "Housing and homelessness",
-        "detected_place_candidates": [
-          "WA",
-          ""
-        ],
-        "selected_place": "WA",
-        "selected_precision": "statewide",
-        "coordinate_basis": "state_centroid",
-        "inclusion_decision": "regional_report",
-        "excluded_reason": ""
-      },
-      {
-        "title": "Year-over-year homelessness declines",
-        "source_url": "https://washingtonstatestandard.com/2026/06/02/repub/year-over-year-homelessness-declines/",
-        "publisher": "Washington State Standard",
-        "detected_pressure_category": "Housing and homelessness",
-        "detected_place_candidates": [
-          "WA",
-          ""
-        ],
-        "selected_place": "WA",
-        "selected_precision": "statewide",
-        "coordinate_basis": "state_centroid",
-        "inclusion_decision": "regional_report",
-        "excluded_reason": ""
-      },
-      {
         "title": "Idaho US Sen. Crapo\u2019s 2025 housing survey identifies housing challenges faced by Idahoans",
         "source_url": "https://idahocapitalsun.com/2026/06/06/idaho-us-sen-crapos-2025-housing-survey-identifies-housing-challenges-faced-by-idahoans/",
         "publisher": "Idaho Capital Sun",
@@ -891,16 +769,12 @@
     "excluded_backfill_records": 19,
     "default_view_mode": "regional_fallback",
     "local_marker_count": 0,
-    "regional_report_count": 12,
+    "regional_report_count": 10,
     "default_show_regional": true,
     "initial_render_layer": "regional_only",
     "initial_visible_count": 4,
     "top_sources_local_markers": [],
     "sources_only_regional_reports": [
-      {
-        "source": "Washington State Standard",
-        "regional_reports": 4
-      },
       {
         "source": "Idaho Capital Sun Feed",
         "regional_reports": 3
@@ -912,21 +786,13 @@
       {
         "source": "Washington State Standard Feed",
         "regional_reports": 2
-      }
-    ],
-    "sources_with_no_local_mappable_reports": [
-      {
-        "source": "City of Seattle",
-        "non_local_reports": 6
-      },
-      {
-        "source": "Portland PublicAlerts",
-        "non_local_reports": 4
       },
       {
         "source": "Washington State Standard",
-        "non_local_reports": 4
-      },
+        "regional_reports": 2
+      }
+    ],
+    "sources_with_no_local_mappable_reports": [
       {
         "source": "Idaho Capital Sun Feed",
         "non_local_reports": 3
@@ -940,14 +806,14 @@
         "non_local_reports": 2
       },
       {
-        "source": "Marion County",
+        "source": "Washington State Standard",
         "non_local_reports": 2
       }
     ],
     "top_missing_place_reasons": [
       {
         "reason": "statewide_not_default_layer",
-        "count": 12
+        "count": 10
       }
     ],
     "recommended_source_additions": [

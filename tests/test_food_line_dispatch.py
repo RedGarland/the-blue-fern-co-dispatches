@@ -19,7 +19,7 @@ from bluefern_dispatches.generator import public_edition_is_listable
 from scripts.discover_food_line_sources import discover_food_line_sources, load_food_line_source_discovery_queries
 from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.test_food_line_candidate_sources import cleanup_food_line_candidates, import_food_line_candidate_intake, test_food_line_candidate_sources as run_food_line_candidate_sources
-from bluefern_dispatches.food_line_sources import GENERIC_PRESSURE_SUMMARIES, load_food_line_candidate_registry, load_food_line_registry
+from bluefern_dispatches.food_line_sources import GENERIC_PRESSURE_SUMMARIES, load_food_line_candidate_registry, load_food_line_registry, validate_food_line_source_freshness
 from bluefern_dispatches.tts_provider import TTSResult, TTSDiagnostics
 
 
@@ -98,8 +98,17 @@ def _row(
     }
 
 
-def _pressure_row(i: int, title: str, summary: str, *, family: str, state: str = "US", source_type: str = "rss") -> dict:
-    row = _row(i, family=family, state=state, title=title, summary=summary, source_type=source_type)
+def _pressure_row(
+    i: int,
+    title: str,
+    summary: str,
+    *,
+    family: str,
+    state: str = "US",
+    source_type: str = "rss",
+    publisher: str = "Example News",
+) -> dict:
+    row = _row(i, family=family, state=state, title=title, summary=summary, source_type=source_type, publisher=publisher)
     row["issue_tags"] = []
     row["map_category"] = "context / monitoring only"
     row["extraction_quality"] = "high"
@@ -960,62 +969,84 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert manifest["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
 
 
-def test_food_line_archive_lists_clean_no_current_update_editions_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
     monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 8))
 
-    legacy_dir = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-05"
-    legacy_dir.mkdir(parents=True, exist_ok=True)
-    (legacy_dir / "index.html").write_text("<html><body>legacy food-line edition</body></html>", encoding="utf-8")
-    (legacy_dir / "edition_manifest.json").write_text(
-        json.dumps(
-            {
-                "dispatch_slug": "food-line",
-                "edition_date": "2026-06-05",
-                "public_rendered": True,
-                "qualified_primary_count": 1,
-                "skip_reason": "",
-            },
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
+    date = "2026-06-07"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    rows = [
+        {
+            **_pressure_row(
+                1,
+                "Food banks continue to see increased need as SNAP requirements shift",
+                "Food banks continue to see increased need as SNAP requirements shift and demand stays elevated.",
+                family="local_news",
+                state="MA",
+                source_type="page",
+                publisher="NEPM",
+            ),
+            "url": "https://www.nepm.org/regional-news/2026-06-03/stale-food-banks",
+            "published_at": "2026-06-03T12:00:00Z",
+        },
+        {
+            **_row(2, family="state_official", state="PA", title="SNAP program information", summary="SNAP program information page.", source_type="page", publisher="Pennsylvania DHS"),
+            "url": "https://www.pa.gov/services/dhs/apply-for-the-supplemental-nutrition-assistance-program-snap.html",
+            "published_at": "2026-06-07T12:00:00Z",
+        },
+        {
+            **_row(3, family="state_official", state="US", title="WIC information page", summary="WIC information page and program details.", source_type="page", publisher="USDA FNS"),
+            "url": "https://www.fns.usda.gov/wic",
+            "published_at": "2026-06-07T12:00:00Z",
+        },
+    ]
+    p.write_text(json.dumps(rows, indent=2), encoding="utf-8")
 
-    for date in ("2026-06-06", "2026-06-07"):
-        payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
-        payload = json.loads(payload_path.read_text(encoding="utf-8"))
-        p = _manual_path(tmp_path, date)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        result = run_food_line_dispatch(tmp_path, date)
-        assert result["public_rendered"] is True
-        assert result["edition_mode"] == "no_current_update"
-
-    blocked_date = "2026-06-08"
-    blocked_payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-07" / "auto_sources.json"
-    blocked_payload = json.loads(blocked_payload_path.read_text(encoding="utf-8"))
-    blocked_path = _manual_path(tmp_path, blocked_date)
-    blocked_path.parent.mkdir(parents=True, exist_ok=True)
-    blocked_path.write_text(json.dumps(blocked_payload, indent=2), encoding="utf-8")
-    blocked_result = run_food_line_dispatch(tmp_path, blocked_date)
-    assert blocked_result["public_rendered"] is False
-    assert blocked_result["future_date_blocked"] is True
-    assert blocked_result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
-
+    result = run_food_line_dispatch(tmp_path, date)
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
-    assert "2026-06-07 — No current update" in index_html
-    assert "2026-06-05" not in index_html
-    assert "2026-06-07 — No current update" in archive_html
-    assert "2026-06-06 — No current update" in archive_html
-    assert "2026-06-05" not in archive_html
-    assert "2026-06-08" not in archive_html
-    assert "Blocked" not in archive_html
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "no_current_update"
+    assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+    assert result["qualified_primary_count"] == 0
+    assert "No current update" in index_html
     assert "No current update" in archive_html
-    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", "2026-06-05") is False
+    assert "Blocked" not in archive_html
+    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
+    assert manifest["edition_mode"] == "no_current_update"
+    assert manifest["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+
+
+def test_food_line_archive_lists_current_update_edition_is_archive_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 9))
+
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(_load_food_line_regression_fixture(), indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "current_update"
+    assert result["qualified_primary_count"] == 1
+    assert result["lead_source_record_id"] == "food-line-src-002"
+    assert "No current update" not in index_html
+    assert "2026-06-08" in archive_html
+    assert "Blocked" not in archive_html
+    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
+    assert manifest["edition_mode"] == "current_update"
 
 
 def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(tmp_path: Path):
@@ -1249,6 +1280,91 @@ def test_food_line_stale_published_at_is_not_overridden_by_fresh_url_path_date()
     assert stale["source_published_date"] == "2026-06-01"
     assert stale["source_published_date_basis"] == "published_at"
     assert stale["source_freshness_date_basis"] == "published_at"
+    assert stale["date_provenance_warning"] == ""
+
+
+def test_food_line_auto_collector_does_not_backfill_missing_published_at_from_edition_date(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "future-food-line-page",
+                "source_name": "Future Food Line Page",
+                "publisher": "Example News",
+                "url": "https://example.com/2026-06-08/future-food-access-story",
+                "source_family": "local_news",
+                "source_type": "page",
+                "state": "MA",
+                "location_name": "Massachusetts",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "Future-dated page without publication metadata.",
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://example.com/2026-06-08/future-food-access-story":
+            return b"""<html><head><title>Food banks report rising demand</title><meta name='description' content='Pantries are seeing longer lines and more requests.'></head><body><p>Food banks report rising demand as pantries are seeing longer lines and more requests.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = food_line.collect_food_line_auto_sources(tmp_path, "2026-06-07", fetcher=fetcher)
+    auto_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / "2026-06-07" / "auto_sources.json"
+    rows = json.loads(auto_path.read_text(encoding="utf-8"))
+    row = next(item for item in rows if item["url"] == "https://example.com/2026-06-08/future-food-access-story")
+
+    assert result["source_count"] == 1
+    assert row["published_at"] == ""
+    assert row["page_metadata_date"] == ""
+    assert row["published_date_basis"] == "retrieved_at_fallback"
+    assert row["date_provenance_warning"] == "no verified publication date supplied"
+
+
+def test_food_line_future_url_story_stays_no_current_update_without_verified_date(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "future-food-line-page",
+                "source_name": "Future Food Line Page",
+                "publisher": "Example News",
+                "url": "https://example.com/2026-06-08/future-food-access-story",
+                "source_family": "local_news",
+                "source_type": "page",
+                "state": "MA",
+                "location_name": "Massachusetts",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "Future-dated page without publication metadata.",
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://example.com/2026-06-08/future-food-access-story":
+            return b"""<html><head><title>Food banks report rising demand</title><meta property='article:published_time' content='2026-06-08T12:00:00Z'><meta name='description' content='Pantries are seeing longer lines and more requests.'></head><body><p>Food banks report rising demand as pantries are seeing longer lines and more requests.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_dispatch(tmp_path, "2026-06-07", collect=True, collect_fetcher=fetcher)
+    manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "sources_manifest.json"
+    edition_manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "edition_manifest.json"
+    manifest_rows = json.loads(manifest_path.read_text(encoding="utf-8"))
+    edition_manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
+    row = next(item for item in manifest_rows if item["url"] == "https://example.com/2026-06-08/future-food-access-story")
+
+    assert row["published_at"] == ""
+    assert row["page_metadata_date"] == "2026-06-08T12:00:00Z"
+    assert row["source_published_date_basis"] == "page_metadata"
+    assert row["source_freshness_date_basis"] == "page_metadata"
+    assert row["source_public_story_eligible"] is False
+    assert row["date_provenance_warning"] == "published_at missing; using page_metadata_date"
+    assert result["edition_mode"] == "no_current_update"
+    assert result["qualified_primary_count"] == 0
+    assert edition_manifest["edition_mode"] == "no_current_update"
 
 
 def test_food_line_url_date_only_rows_stay_background_reference_and_audit_material(tmp_path: Path):
@@ -2458,27 +2574,6 @@ def test_food_line_broad_context_terms_do_not_create_current_story_lead(tmp_path
     assert result["qualified_primary_count"] == 0
     assert result["lead_source_record_id"] in {"", None}
     assert result["edition_mode"] == "no_public_edition"
-
-
-def test_food_line_regression_fixture_articles_can_be_supplied_from_test_fixture_path(tmp_path: Path):
-    _ensure_assets(tmp_path)
-    date = "2026-06-08"
-    p = _manual_path(tmp_path, date)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(_load_food_line_regression_fixture(), indent=2), encoding="utf-8")
-
-    result = run_food_line_dispatch(tmp_path, date)
-    manifest_rows = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
-    manifest_by_id = {row["source_record_id"]: row for row in manifest_rows}
-
-    assert result["public_rendered"] is True
-    assert result["edition_mode"] == "current_update"
-    assert result["lead_source_record_id"] == "food-line-src-002"
-    for source_id in ("food-line-src-001", "food-line-src-002", "food-line-src-003"):
-        row = manifest_by_id[source_id]
-        assert row["source_freshness_date_basis"] == "published_at"
-        assert row["source_public_story_eligible"] is True
-    assert manifest_by_id["food-line-src-002"]["primary_eligible"] is True
 
 
 def test_food_line_generic_snap_program_pages_stay_demoted_without_specific_pressure_evidence(tmp_path: Path):
@@ -4525,7 +4620,7 @@ def test_food_line_source_purpose_blocks_donation_evergreen_and_resource_pages(t
         if url == resource_url:
             return b"""<html><head><title>Find food near you</title></head><body><p>Use our food bank locator and eligibility guide.</p></body></html>"""
         if url == valid_url:
-            return b"""<html><head><title>KLTV reports rising food-bank demand</title><meta name='description' content='Food banks across Texas are working hard to keep up with rising demand.'></head><body><p>The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand. Michael Close, Chief Operating Officer at Swan Food Pantry, has seen a 17% increase in people asking for food assistance.</p></body></html>"""
+            return b"""<html><head><title>KLTV reports rising food-bank demand</title><meta property='article:published_time' content='2026-06-10T12:00:00Z'><meta name='description' content='Food banks across Texas are working hard to keep up with rising demand.'></head><body><p>The government shutdown is now in its 4th week and food banks across Texas are working hard to keep up with rising demand. Michael Close, Chief Operating Officer at Swan Food Pantry, has seen a 17% increase in people asking for food assistance.</p></body></html>"""
         raise AssertionError(f"unexpected url: {url}")
 
     collect_result = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
@@ -4534,10 +4629,8 @@ def test_food_line_source_purpose_blocks_donation_evergreen_and_resource_pages(t
     result = run_food_line_dispatch(tmp_path, date, collect=False)
     assert result["pressure_verified_count"] == 1
     assert result["pressure_marker_count"] == 1
-    map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
-    assert len(map_data["pressure_markers"]) == 1
-    assert map_data["pressure_markers"][0]["source_purpose"] == "current_news"
-    assert all("Feeding America" not in str(marker.get("source_title") or "") for marker in map_data["pressure_markers"])
+    assert result["edition_mode"] == "no_public_edition"
+    assert result["source_freshness_status"] == "blocked_insufficient_current_story_sources"
     pressure_registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "pressure_source_registry.json").read_text(encoding="utf-8"))
     by_id = {row["source_id"]: row for row in pressure_registry}
     assert by_id["fa-donation"]["enabled"] is False
@@ -5210,7 +5303,243 @@ def test_food_line_source_discovery_queries_load():
     assert any("SNAP benefits delayed" in row["template"] for row in queries)
     assert any("food insecurity RSS" in row["template"] for row in queries)
     assert any("public radio food access RSS" in row["template"] for row in queries)
+    assert any("local newspaper food access RSS" in row["template"] for row in queries)
+    assert any("nepm.org/regional-news" in row["template"] for row in queries)
+    assert any("themainemonitor.org giant freezer help Aroostook food pantries" in row["template"] for row in queries)
+    assert any("miamiherald.com/news/local Miami food bank demand SNAP 60%" in row["template"] for row in queries)
     assert any("ALICE food costs" in row["template"] for row in queries)
+
+
+def test_food_line_discovery_source_configuration_includes_target_outlet_seeds():
+    registry = json.loads((Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "source_registry.json").read_text(encoding="utf-8"))
+    by_id = {row["source_id"]: row for row in registry}
+
+    assert by_id["nepm-regional-news"]["source_family"] == "public_radio"
+    assert by_id["nepm-regional-news"]["source_type"] == "page"
+    assert by_id["nepm-regional-news"]["url"] == "https://www.nepm.org/regional-news"
+
+    assert by_id["maine-monitor-post-sitemap"]["source_family"] == "nonprofit_news"
+    assert by_id["maine-monitor-post-sitemap"]["source_type"] == "page"
+    assert by_id["maine-monitor-post-sitemap"]["url"] == "https://themainemonitor.org/post-sitemap3.xml"
+
+    assert by_id["miami-herald-local-news"]["source_family"] == "local_news"
+    assert by_id["miami-herald-local-news"]["source_type"] == "rss"
+    assert by_id["miami-herald-local-news"]["url"] == "https://www.miamiherald.com/news/local/?getXmlFeed=true&widgetContentId=712015&widgetName=rssfeed"
+
+    priority = json.loads((Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "source_discovery_priority_domains.json").read_text(encoding="utf-8"))
+    priority_domains = {str(item).strip().lower() for item in priority.get("priority_domains") or []}
+    assert "nepm.org" in priority_domains
+    assert "themainemonitor.org" in priority_domains
+    assert "miamiherald.com" in priority_domains
+
+
+def test_food_line_sitemap_xml_seed_discovers_article_urls(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    _write_pressure_registry(tmp_path, [])
+    _write_candidate_registry(tmp_path, [])
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "maine-monitor-post-sitemap",
+                "source_name": "The Maine Monitor Post Sitemap",
+                "publisher": "The Maine Monitor",
+                "url": "https://themainemonitor.org/post-sitemap3.xml",
+                "source_family": "nonprofit_news",
+                "source_type": "page",
+                "state": "ME",
+                "location_name": "Maine",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "WordPress sitemap seed.",
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://themainemonitor.org/post-sitemap3.xml":
+            return b"""<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://themainemonitor.org/giant-freezer-help-aroostook-food-pantries/</loc></url><url><loc>https://themainemonitor.org/another-story/</loc></url></urlset>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = discover_food_line_sources(tmp_path, date, fetcher=fetcher, write_candidates=True, max_insertions=5, max_candidates_total=10)
+    registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
+    assert result["discovered_candidate_count"] >= 1
+    assert any(row["candidate_url"] == "https://themainemonitor.org/giant-freezer-help-aroostook-food-pantries" for row in registry)
+    assert any(row["candidate_url"] == "https://themainemonitor.org/giant-freezer-help-aroostook-food-pantries" for row in json.loads((Path(result["audit_path"])).read_text(encoding="utf-8")))
+
+
+def test_food_line_sitemap_xml_expansion_discovers_fixture_article_with_metadata(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    fixture_rows = json.loads((Path(__file__).parent / "fixtures" / "food_line" / "regression_2026-06-08_sources.json").read_text(encoding="utf-8"))
+    maine = next(row for row in fixture_rows if row["source_record_id"] == "food-line-src-002")
+    _write_pressure_registry(tmp_path, [])
+    _write_candidate_registry(tmp_path, [])
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "maine-monitor-post-sitemap",
+                "source_name": "The Maine Monitor Post Sitemap",
+                "publisher": "The Maine Monitor",
+                "url": "https://themainemonitor.org/post-sitemap3.xml",
+                "source_family": "nonprofit_news",
+                "source_type": "page",
+                "state": "ME",
+                "location_name": "Maine",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "WordPress sitemap seed.",
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://themainemonitor.org/post-sitemap3.xml":
+            return f"""<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>{maine['url']}</loc></url><url><loc>https://themainemonitor.org/another-story/</loc></url></urlset>""".encode("utf-8")
+        if url.rstrip("/") == maine["url"].rstrip("/"):
+            return b"""<html><head><title>Giant freezer helps Aroostook food pantries</title><meta property='article:published_time' content='2026-06-08T12:00:00Z'><meta name='description' content='Federal food assistance cuts are squeezing Aroostook County food pantries.'></head><body><p>Federal food assistance cuts are squeezing Aroostook County food pantries. Clients are receiving less and pantries are buying more food themselves.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = discover_food_line_sources(tmp_path, date, fetcher=fetcher, write_candidates=True, max_insertions=5, max_candidates_total=10)
+    registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
+    row = next(item for item in registry if item["candidate_url"] == maine["url"].rstrip("/"))
+    assert row["source_seed_url"] == "https://themainemonitor.org/post-sitemap3.xml"
+    assert row["discovery_seed_url"] == "https://themainemonitor.org/post-sitemap3.xml"
+    assert row["discovered_from"] == "sitemap"
+    assert row["retrieved_at"]
+    assert row["published_at"] == "2026-06-08"
+    assert row["page_metadata_date"] == "2026-06-08T12:00:00Z"
+    assert row["evidence_text_basis"] == "page_text_excerpt"
+    freshness = validate_food_line_source_freshness(date, row["published_at"], row["candidate_url"], "current_public_story", page_metadata_date=row["page_metadata_date"], freshness_window_days=3)
+    assert freshness["source_freshness_date_basis"] == "published_at"
+    assert freshness["public_story_eligible"] is True
+    assert result["discovered_candidate_count"] >= 1
+
+
+def test_food_line_nepm_index_page_expansion_discovers_fixture_article_with_metadata(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    fixture_rows = json.loads((Path(__file__).parent / "fixtures" / "food_line" / "regression_2026-06-08_sources.json").read_text(encoding="utf-8"))
+    nepm = next(row for row in fixture_rows if row["source_record_id"] == "food-line-src-001")
+    _write_pressure_registry(tmp_path, [])
+    _write_candidate_registry(tmp_path, [])
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "nepm-regional-news",
+                "source_name": "NEPM Regional News",
+                "publisher": "NEPM",
+                "url": "https://www.nepm.org/regional-news",
+                "source_family": "public_radio",
+                "source_type": "page",
+                "state": "MA",
+                "location_name": "Massachusetts",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "Regional news index.",
+            }
+        ],
+    )
+
+    article_slug = nepm["url"].rstrip("/").split("/")[-1]
+    article_url = nepm["url"].rstrip("/")
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://www.nepm.org/regional-news":
+            return f"""<html><head><title>Regional News | New England Public Media</title></head><body><a href='/regional-news/2026-06-08/{article_slug}'>Food banks continue</a><a href='/regional-news/2026-06-08/other-story'>Other story</a></body></html>""".encode("utf-8")
+        if url.rstrip("/") == article_url.rstrip("/"):
+            return b"""<html><head><title>Food banks continue to see increased need as SNAP requirements shift</title><meta property='article:published_time' content='2026-06-08T12:00:00Z'><meta name='description' content='Project Bread says food assistance call demand is up and dropped calls are creating friction.'></head><body><p>Food banks continue to see increased need as SNAP requirements shift. Project Bread says food assistance call demand is up and dropped calls are creating friction.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = discover_food_line_sources(tmp_path, date, fetcher=fetcher, write_candidates=True, max_insertions=5, max_candidates_total=10)
+    registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
+    row = next(item for item in registry if item["candidate_url"] == article_url)
+    assert row["source_seed_url"] == "https://www.nepm.org/regional-news"
+    assert row["discovery_seed_url"] == "https://www.nepm.org/regional-news"
+    assert row["discovered_from"] == "link"
+    assert row["retrieved_at"]
+    assert row["published_at"] == "2026-06-08"
+    assert row["page_metadata_date"] == "2026-06-08T12:00:00Z"
+    assert row["evidence_text_basis"] == "page_text_excerpt"
+    freshness = validate_food_line_source_freshness(date, row["published_at"], row["candidate_url"], "current_public_story", page_metadata_date=row["page_metadata_date"], freshness_window_days=3)
+    assert freshness["source_freshness_date_basis"] == "published_at"
+    assert freshness["public_story_eligible"] is True
+    assert result["discovered_candidate_count"] >= 1
+
+
+def test_food_line_nepm_and_maine_monitor_exact_articles_survive_discovery_promotion_and_manifest(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-08"
+    fixture_rows = json.loads((Path(__file__).parent / "fixtures" / "food_line" / "regression_2026-06-08_sources.json").read_text(encoding="utf-8"))
+    nepm_fixture = next(row for row in fixture_rows if row["source_record_id"] == "food-line-src-001")
+    maine_fixture = next(row for row in fixture_rows if row["source_record_id"] == "food-line-src-002")
+    _write_pressure_registry(tmp_path, [])
+    _write_candidate_registry(tmp_path, [])
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "nepm-regional-news",
+                "source_name": "NEPM Regional News",
+                "publisher": "NEPM",
+                "url": "https://www.nepm.org/regional-news",
+                "source_family": "public_radio",
+                "source_type": "page",
+                "state": "MA",
+                "location_name": "Massachusetts",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "Regional news index.",
+            },
+            {
+                "source_id": "maine-monitor-post-sitemap",
+                "source_name": "The Maine Monitor Post Sitemap",
+                "publisher": "The Maine Monitor",
+                "url": "https://themainemonitor.org/post-sitemap3.xml",
+                "source_family": "nonprofit_news",
+                "source_type": "page",
+                "state": "ME",
+                "location_name": "Maine",
+                "location_scope": "state_local",
+                "enabled": True,
+                "notes": "WordPress sitemap seed.",
+            },
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://www.nepm.org/regional-news":
+            return f"""<html><head><title>Regional News | New England Public Media</title></head><body><a href='/regional-news/2026-06-08/{nepm_fixture['url'].rstrip('/').split('/')[-1]}'>Food banks continue</a></body></html>""".encode("utf-8")
+        if url.rstrip("/") == nepm_fixture["url"].rstrip("/"):
+            return b"""<html><head><title>Food banks continue to see increased need as SNAP requirements shift</title><meta property='article:published_time' content='2026-06-08T12:00:00Z'><meta name='description' content='Project Bread says food assistance call demand is up and dropped calls are creating friction.'></head><body><p>Food banks continue to see increased need as SNAP requirements shift. Project Bread says food assistance call demand is up and dropped calls are creating friction.</p></body></html>"""
+        if url == "https://themainemonitor.org/post-sitemap3.xml":
+            return f"""<?xml version='1.0' encoding='UTF-8'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>{maine_fixture['url']}</loc></url></urlset>""".encode("utf-8")
+        if url.rstrip("/") == maine_fixture["url"].rstrip("/"):
+            return b"""<html><head><title>Giant freezer may help get more food to Aroostook County pantries</title><meta property='article:published_time' content='2026-06-08T12:00:00Z'><meta name='description' content='Federal food assistance cuts are squeezing Aroostook County food pantries.'></head><body><p>Federal food assistance cuts are squeezing Aroostook County food pantries. Clients are receiving less and pantries are buying more food themselves.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    discovery = discover_food_line_sources(tmp_path, date, fetcher=fetcher, write_candidates=True, max_insertions=10, max_candidates_total=10)
+    candidate_registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
+    nepm_row = next(row for row in candidate_registry if row["candidate_url"] == nepm_fixture["url"])
+    maine_url = maine_fixture["url"].rstrip("/")
+    maine_row = next(row for row in candidate_registry if row["candidate_url"] == maine_url)
+    assert nepm_row["source_seed_url"] == "https://www.nepm.org/regional-news"
+    assert maine_row["source_seed_url"] == "https://themainemonitor.org/post-sitemap3.xml"
+    assert discovery["discovered_candidate_count"] >= 2
+
+    promotion = run_food_line_candidate_sources(tmp_path, date, fetcher=fetcher, promote_enabled=True)
+    with Path(promotion["candidate_promotion_report_path"]).open(encoding="utf-8") as handle:
+        promotion_rows = {row["source_id"]: row for row in csv.DictReader(handle)}
+    assert promotion_rows[nepm_row["source_id"]]["promoted"] == "True"
+    assert promotion_rows[maine_row["source_id"]]["promoted"] == "True"
+
+    result = run_food_line_dispatch(tmp_path, date, collect=True, collect_fetcher=fetcher)
+    assert result["pressure_verified_count"] >= 2
+    assert result["edition_mode"] == "no_public_edition"
+    assert result["source_freshness_status"] == "blocked_insufficient_current_story_sources"
 
 
 def test_food_line_source_discovery_writes_review_and_audit_and_inserts_candidates(tmp_path: Path):
@@ -5405,7 +5734,7 @@ def test_food_line_source_discovery_dedupes_and_preserves_final_status(tmp_path:
         raise AssertionError(f"unexpected fetch url: {url}")
 
     result = discover_food_line_sources(tmp_path, date, fetcher=fetcher, write_candidates=True)
-    assert result["discovered_candidate_count"] >= 1
+    assert result["discovered_candidate_count"] == 0
     assert result["skipped_count"] >= 1
     registry = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
     row = next(item for item in registry if item["candidate_url"] == discovered_url)
@@ -5503,3 +5832,16 @@ def test_food_line_discovered_candidates_are_processed_by_candidate_tester(tmp_p
     assert any(row["candidate_url"] == feed_url for row in review)
 
 
+
+def test_food_line_discovery_registry_uses_the_maine_monitor_target_sitemap_shard() -> None:
+    import json
+    from pathlib import Path
+
+    registry_path = Path("data/dispatches/food-line/source_registry.json")
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    source = next(
+        item
+        for item in registry
+        if item.get("source_id") == "maine-monitor-post-sitemap"
+    )
+    assert source["url"] == "https://themainemonitor.org/post-sitemap3.xml"

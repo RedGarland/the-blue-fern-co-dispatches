@@ -225,26 +225,26 @@
     "query_template": "{state} grocery access food assistance OR low-income grocery access",
     "category": "local_media",
     "source_family": "local_news",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 207,
+    "candidates_found": 207,
+    "candidates_inserted": 58,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 13.41
   },
   {
     "template": "{state} Feeding America food bank demand",
     "query_template": "{state} Feeding America food bank demand",
     "category": "provider",
     "source_family": "nonprofit_news",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 400,
+    "candidates_found": 400,
+    "candidates_inserted": 1,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.08
   },
   {
     "template": "{state} state agency food assistance notice",
@@ -264,13 +264,13 @@
     "query_template": "{state} food insecurity RSS",
     "category": "local_media",
     "source_family": "local_news",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 147,
+    "candidates_found": 147,
+    "candidates_inserted": 1,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.2
   },
   {
     "template": "{state} food pantry demand RSS",
@@ -290,39 +290,104 @@
     "query_template": "{state} public radio food access RSS",
     "category": "local_media",
     "source_family": "public_radio",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 147,
+    "candidates_found": 147,
+    "candidates_inserted": 1,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.2
   },
   {
     "template": "{state} nonprofit news food bank demand RSS",
     "query_template": "{state} nonprofit news food bank demand RSS",
     "category": "local_media",
     "source_family": "nonprofit_news",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 1658,
+    "candidates_found": 1658,
+    "candidates_inserted": 93,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 2,
+    "rolling_query_quality_score": 6.67
+  },
+  {
+    "template": "{state} local newspaper food access RSS",
+    "query_template": "{state} local newspaper food access RSS",
+    "category": "local_media",
+    "source_family": "local_news",
+    "runs": 126,
+    "candidates_found": 126,
+    "candidates_inserted": 1,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.24
   },
   {
     "template": "{state} food deserts OR grocery access",
     "query_template": "{state} food deserts OR grocery access",
     "category": "local_media",
     "source_family": "local_news",
-    "runs": 0,
-    "candidates_found": 0,
+    "runs": 207,
+    "candidates_found": 207,
+    "candidates_inserted": 4,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 5.58
+  },
+  {
+    "template": "site:nepm.org/regional-news food banks continue increased need SNAP requirements shift",
+    "query_template": "site:nepm.org/regional-news food banks continue increased need SNAP requirements shift",
+    "category": "local_media",
+    "source_family": "public_radio",
+    "runs": 251,
+    "candidates_found": 251,
     "candidates_inserted": 0,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.0
+  },
+  {
+    "template": "site:themainemonitor.org giant freezer help Aroostook food pantries",
+    "query_template": "site:themainemonitor.org giant freezer help Aroostook food pantries",
+    "category": "local_media",
+    "source_family": "nonprofit_news",
+    "runs": 18,
+    "candidates_found": 18,
+    "candidates_inserted": 3,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 10.0
+  },
+  {
+    "template": "site:miamiherald.com/news/local Miami food bank demand SNAP 60%",
+    "query_template": "site:miamiherald.com/news/local Miami food bank demand SNAP 60%",
+    "category": "local_media",
+    "source_family": "local_news",
+    "runs": 56,
+    "candidates_found": 56,
+    "candidates_inserted": 0,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 5.0
+  },
+  {
+    "template": "site:miamiherald.com/news/local/article315996054.html rising food insecurity strains South Florida food banks",
+    "query_template": "site:miamiherald.com/news/local/article315996054.html rising food insecurity strains South Florida food banks",
+    "category": "local_media",
+    "source_family": "local_news",
+    "runs": 46,
+    "candidates_found": 46,
+    "candidates_inserted": 0,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 5.0
   },
   {
     "template": "{state} ALICE food costs",
@@ -342,13 +407,13 @@
     "query_template": "{state} college student food insecurity",
     "category": "local_media",
     "source_family": "local_news",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 18,
+    "candidates_found": 18,
+    "candidates_inserted": 1,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 6.67
   },
   {
     "template": "{state} tribal food access",
@@ -368,12 +433,12 @@
     "query_template": "{state} immigrant food access",
     "category": "local_media",
     "source_family": "local_news",
-    "runs": 0,
-    "candidates_found": 0,
+    "runs": 15,
+    "candidates_found": 15,
     "candidates_inserted": 0,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
     "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rolling_query_quality_score": 5.0
   }
 ]

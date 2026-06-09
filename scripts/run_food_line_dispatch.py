@@ -19,7 +19,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from bluefern_dispatches.generator import BASE_URL, discover_public_edition_dates, footer, header, page
+from bluefern_dispatches.generator import BASE_URL, discover_public_edition_dates, footer, header as site_header, page
 from bluefern_dispatches.food_line_sources import (
     FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK,
     clean_food_line_public_evidence_excerpt,
@@ -29,6 +29,8 @@ from bluefern_dispatches.food_line_sources import (
     evaluate_food_line_pressure,
     normalize_title,
     refresh_food_line_pressure_registry_source_purpose,
+    _url_path_date,
+    validate_food_line_source_freshness,
 )
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
@@ -37,6 +39,19 @@ PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 PAGES_BRANCH = "gh-pages"
 DISPATCH_SLUG = "food-line"
 DISPATCH_NAME = "Food Line Dispatch"
+MAP_RENDERED_COUNT_RE = re.compile(r'data-rendered-marker-count="(\d+)"')
+
+
+def header(
+    brand: str,
+    root_prefix: str,
+    archive_href: str | None = None,
+    section_href: str | None = None,
+    *,
+    nav_slugs: tuple[str, ...] | None = None,
+) -> str:
+    nav = nav_slugs or ("gaza", "cascadia", "food-line")
+    return site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
 DISPATCH_DISPLAY_NAME = "The Food Line Dispatch"
 FOOD_LINE_LOGO_ASSET = "food-line-logo.png"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -44,6 +59,7 @@ MIN_ITEMS = 5
 MIN_FAMILIES = 2
 MIN_LOCAL = 3
 MIN_USABLE = 3
+FOOD_LINE_FRESHNESS_WINDOW_DAYS = 3
 FOOD_LINE_CATEGORY_COLORS: dict[str, str] = {
     "acute strain / service disruption": "#9a4b4b",
     "elevated demand": "#b6784f",
@@ -512,8 +528,21 @@ def _food_line_public_source_family_label(row: dict[str, Any]) -> str:
     return family.replace("_", " ").title() if family else ""
 
 
-def _food_line_public_usage_label(row: dict[str, Any], primary_row: dict[str, Any] | None, continuing_rows: list[dict[str, Any]]) -> str:
+def _food_line_public_usage_label(
+    row: dict[str, Any],
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    *,
+    edition_mode: str = "current_update",
+) -> str:
     row_id = str(row.get("source_record_id") or "").strip()
+    freshness_status = str(row.get("source_freshness_status") or row.get("freshness_status") or "").strip()
+    if freshness_status == "stale_outside_daily_window" and not _food_line_source_background_reference(row):
+        return "Stale excluded"
+    if edition_mode == "no_current_update":
+        if _food_line_source_background_reference(row):
+            return "Background reference"
+        return "Source audit"
     if primary_row and row_id == str(primary_row.get("source_record_id") or "").strip():
         return "Main story"
     for continuing_row in continuing_rows:
@@ -525,7 +554,9 @@ def _food_line_public_usage_label(row: dict[str, Any], primary_row: dict[str, An
 
 
 def _food_line_public_issue_label(row: dict[str, Any], usage_label: str) -> str:
-    if usage_label == "Background reference":
+    if usage_label in {"Background reference", "Stale excluded", "Source audit"}:
+        if usage_label == "Source audit":
+            return "Source audit"
         return "Background reference"
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     mapping = {
@@ -548,7 +579,12 @@ def _food_line_public_issue_label(row: dict[str, Any], usage_label: str) -> str:
     return pressure_type.replace("_", " ").title() if pressure_type else ""
 
 
-def _food_line_public_verification_status_label(row: dict[str, Any]) -> str:
+def _food_line_public_verification_status_label(row: dict[str, Any], usage_label: str = "") -> str:
+    freshness_status = str(row.get("source_freshness_status") or row.get("freshness_status") or "").strip()
+    if usage_label == "Source audit":
+        return "Source audit"
+    if freshness_status == "stale_outside_daily_window" and not _food_line_source_background_reference(row):
+        return "Stale excluded"
     if not bool(row.get("pressure_signal")):
         return "Background reference"
     status = str(row.get("pressure_verification_status") or "").strip().lower()
@@ -564,8 +600,10 @@ def _food_line_public_verification_status_label(row: dict[str, Any]) -> str:
 
 
 def _food_line_public_what_happened_label(row: dict[str, Any], usage_label: str) -> str:
-    if usage_label == "Background reference":
+    if usage_label in {"Background reference", "Stale excluded"}:
         return "Background reference"
+    if usage_label == "Source audit":
+        return "Recorded for audit only."
     pressure_summary = str(row.get("pressure_summary") or "").strip()
     if pressure_summary:
         return pressure_summary
@@ -658,10 +696,11 @@ def _public_source_table_rows_html(
     *,
     primary_row: dict[str, Any] | None = None,
     continuing_rows: list[dict[str, Any]] | None = None,
+    edition_mode: str = "current_update",
 ) -> str:
     continuing_rows = list(continuing_rows or [])
     if not rows:
-        return "<tr><td colspan='12'>No verified pressure sources were published today.</td></tr>"
+        return "<tr><td colspan='15'>No verified pressure sources were published today.</td></tr>"
     return "".join(
         "<tr>"
         f"<td>{html.escape(str(s.get('source_record_id') or ''))}</td>"
@@ -669,13 +708,16 @@ def _public_source_table_rows_html(
         f"<td>{html.escape(str(s.get('publisher') or ''))}</td>"
         f"<td><a href=\"{html.escape(str(s.get('url') or ''))}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(str(s.get('url') or ''))}</a></td>"
         f"<td>{html.escape(_food_line_public_source_family_label(s))}</td>"
-        f"<td>{html.escape(_food_line_public_usage_label(s, primary_row, continuing_rows))}</td>"
-        f"<td>{html.escape(_food_line_public_issue_label(s, _food_line_public_usage_label(s, primary_row, continuing_rows)))}</td>"
-        f"<td>{html.escape(_food_line_public_what_happened_label(s, _food_line_public_usage_label(s, primary_row, continuing_rows)))}</td>"
+        f"<td>{html.escape(_food_line_public_usage_label(s, primary_row, continuing_rows, edition_mode=edition_mode))}</td>"
+        f"<td>{html.escape(_food_line_public_issue_label(s, _food_line_public_usage_label(s, primary_row, continuing_rows, edition_mode=edition_mode)))}</td>"
+        f"<td>{html.escape(_food_line_public_what_happened_label(s, _food_line_public_usage_label(s, primary_row, continuing_rows, edition_mode=edition_mode)))}</td>"
         f"<td>{html.escape(_public_evidence_excerpt(s) if _public_evidence_excerpt(s) != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK else '')}</td>"
-        f"<td>{html.escape(_food_line_public_verification_status_label(s))}</td>"
+        f"<td>{html.escape(_food_line_public_verification_status_label(s, _food_line_public_usage_label(s, primary_row, continuing_rows, edition_mode=edition_mode)))}</td>"
         f"<td>{html.escape(_affected_groups_display(s.get('affected_groups')))}</td>"
-        f"<td>{html.escape(_food_line_public_usage_label(s, primary_row, continuing_rows) if _food_line_public_usage_label(s, primary_row, continuing_rows) == 'Background reference' else 'Yes')}</td>"
+        f"<td>{html.escape('No' if _food_line_public_usage_label(s, primary_row, continuing_rows, edition_mode=edition_mode) in {'Background reference', 'Stale excluded', 'Source audit'} else 'Yes')}</td>"
+        f"<td>{html.escape(str(s.get('source_freshness_status') or s.get('freshness_status') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('source_freshness_date_basis') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('source_public_story_eligible')).lower() if 'source_public_story_eligible' in s else '')}</td>"
         "</tr>"
         for s in rows
     )
@@ -776,6 +818,56 @@ def _freshness_role(row: dict[str, Any]) -> str:
     if basis == "retrieved_at_fallback":
         return "current_monitoring"
     return "stable_context"
+
+
+def _food_line_source_background_reference(row: dict[str, Any]) -> bool:
+    source_role = str(row.get("source_role") or "").strip()
+    if source_role in {"background_context", "policy_context", "resource_context", "baseline_condition"}:
+        return True
+    source_purpose = str(row.get("source_purpose") or "").strip()
+    return source_purpose in {"evergreen_context", "donation_page", "resource_page", "program_description"}
+
+
+def _food_line_apply_freshness_guard(row: dict[str, Any], edition_date: str) -> dict[str, Any]:
+    freshness = validate_food_line_source_freshness(
+        edition_date,
+        str(row.get("published_at") or row.get("published_date") or ""),
+        str(row.get("url") or ""),
+        str(row.get("source_role") or "current_public_story"),
+        page_metadata_date=str(row.get("page_metadata_date") or ""),
+        background=_food_line_source_background_reference(row),
+        freshness_window_days=FOOD_LINE_FRESHNESS_WINDOW_DAYS,
+    )
+    row["source_freshness_status"] = freshness["source_freshness_status"]
+    row["source_freshness_disqualification_reason"] = freshness["source_freshness_disqualification_reason"]
+    row["source_freshness_window_days"] = freshness["freshness_window_days"]
+    row["source_published_date"] = freshness["source_published_date"]
+    row["source_published_date_basis"] = freshness["source_published_date_basis"]
+    row["source_url_date"] = freshness["source_url_date"]
+    row["source_url_date_basis"] = freshness["source_url_date_basis"]
+    row["source_freshness_date_basis"] = freshness["source_freshness_date_basis"]
+    row["source_public_story_eligible"] = freshness["public_story_eligible"]
+    if freshness["source_freshness_status"] == "stale_outside_daily_window":
+        row["freshness_status"] = freshness["source_freshness_status"]
+        row["freshness_disqualification_reason"] = freshness["source_freshness_disqualification_reason"]
+    elif freshness["source_freshness_status"] == "missing_source_published_date":
+        row["freshness_status"] = freshness["source_freshness_status"]
+        row["freshness_disqualification_reason"] = freshness["source_freshness_disqualification_reason"]
+    elif freshness["source_freshness_status"] == "unparsed_source_published_date":
+        row["freshness_status"] = freshness["source_freshness_status"]
+        row["freshness_disqualification_reason"] = freshness["source_freshness_disqualification_reason"]
+    elif freshness["source_freshness_status"] == "url_path_only":
+        row["freshness_status"] = freshness["source_freshness_status"]
+        row["freshness_disqualification_reason"] = freshness["source_freshness_disqualification_reason"]
+    if freshness["source_freshness_status"] in {"stale_outside_daily_window", "missing_source_published_date", "unparsed_source_published_date", "url_path_only"} and not bool(freshness.get("background_reference")):
+        row["pressure_signal"] = False
+        row["pressure_reason"] = freshness["source_freshness_disqualification_reason"] or "stale/outside daily window"
+        row["pressure_summary"] = ""
+        row["pressure_verification_status"] = "demoted_context"
+        row["map_eligible"] = False
+        if freshness["source_freshness_status"] == "url_path_only":
+            row["source_role"] = "background_context"
+    return freshness
 
 
 def _source_role_refined(row: dict[str, Any], pressure_signal: bool) -> str:
@@ -888,6 +980,8 @@ def _food_line_primary_disqualification_reason(row: dict[str, Any], previous_con
         return freshness_reason or "stale/outside daily window"
     if freshness_status in {"missing_source_published_date", "unparsed_source_published_date"}:
         return freshness_reason or "missing or unparsed source published date"
+    if freshness_status == "url_path_only":
+        return freshness_reason or "url path date alone is not a verified publication date"
     if _is_reused_previous_lead(row, previous_context):
         previous_date = str(previous_context.get("previous_edition_date") or "").strip()
         if previous_date:
@@ -981,6 +1075,15 @@ def _normalize_source_row(row: dict[str, Any], index: int) -> tuple[dict[str, An
         "url": _as_text(row.get("url") or row.get("source_url")),
         "publisher": _as_text(row.get("publisher") or "Unknown publisher"),
         "published_at": _as_text(row.get("published_at") or row.get("published_date")),
+        "published_date_basis": _as_text(row.get("published_date_basis") or row.get("date_basis") or row.get("source_published_date_basis")),
+        "page_metadata_date": _as_text(
+            row.get("page_metadata_date")
+            or row.get("page_metadata_published_at")
+            or row.get("source_page_metadata_date")
+            or row.get("metadata_date")
+            or row.get("published_metadata_date")
+        ),
+        "date_provenance_warning": _as_text(row.get("date_provenance_warning") or row.get("published_at_warning")),
         "retrieved_at": _as_text(row.get("retrieved_at") or row.get("published_at") or row.get("published_date")),
         "summary_or_snippet": _as_text(row.get("summary_or_snippet") or row.get("summary") or row.get("text") or row.get("note")),
         "evidence_text": _as_text(row.get("evidence_text")),
@@ -995,6 +1098,11 @@ def _normalize_source_row(row: dict[str, Any], index: int) -> tuple[dict[str, An
         "location_name": _as_text(row.get("location_name") or row.get("location")),
     }
     for key in ("source_record_id", "title", "url", "published_at", "summary_or_snippet", "source_family", "state", "map_category", "location_name"):
+        if key == "published_at":
+            has_verified_or_audit_date = bool(normalized["published_at"]) or bool(normalized["page_metadata_date"]) or bool(_url_path_date(normalized["url"])[0])
+            if not has_verified_or_audit_date:
+                reasons.append("missing required field: published_at")
+            continue
         if not _as_text(normalized.get(key)):
             reasons.append(f"missing required field: {key}")
     if not isinstance(normalized["issue_tags"], list):
@@ -1517,6 +1625,7 @@ def _food_line_source_mix_html(
     primary_signal_status: str,
 ) -> str:
     reviewed_count = len(sources)
+    stale_count = sum(1 for row in sources if str(row.get("source_freshness_status") or row.get("freshness_status") or "") == "stale_outside_daily_window" and not _food_line_source_background_reference(row))
     public_page_rows = [
         row
         for row in public_rows
@@ -1534,9 +1643,12 @@ def _food_line_source_mix_html(
         source_clause = f"{public_page_count} sources were used on the public page, with {background_count} additional background reference sources listed in the source table"
     else:
         source_clause = f"{public_page_count} sources were used on the public page"
+    stale_clause = ""
+    if stale_count:
+        stale_clause = f" {stale_count} stale current-story candidate source{'s' if stale_count != 1 else ''} were excluded by the freshness window."
     return (
         f"<p>Sources behind this briefing: {source_clause}. "
-        f"The run reviewed {reviewed_count} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use.</p>"
+        f"The run reviewed {reviewed_count} records and excluded {excluded_count} that were duplicate, stale, unrelated, or not strong enough for public use.{stale_clause}</p>"
         "<p><a href=\"./source_table.html\">Open the public source table for source links, traceability, and cleaned excerpts.</a></p>"
     )
 
@@ -1553,7 +1665,7 @@ def _food_line_skip_reason() -> str:
 
 
 def _food_line_future_date_reason() -> str:
-    return "Future-dated Food Line public editions are blocked unless explicitly allowed."
+    return "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def _food_line_local_today() -> date_type:
@@ -1563,13 +1675,13 @@ def _food_line_local_today() -> date_type:
             return datetime.strptime(override, "%Y-%m-%d").date()
         except ValueError:
             pass
-    return date_type(2026, 6, 5)
+    return date_type.today()
 
 
 def _food_line_future_date_blocked(edition_date: str, *, allow_future_date: bool) -> tuple[bool, bool]:
     edition_day = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
     local_today = _food_line_local_today()
-    is_future = edition_day > local_today
+    is_future = edition_day >= local_today
     return is_future and not allow_future_date, is_future and allow_future_date
 
 
@@ -1619,6 +1731,66 @@ def _food_line_public_edition_manifest(root: Path, date: str) -> dict[str, Any] 
     return payload if isinstance(payload, dict) else None
 
 
+def _food_line_public_edition_label(root: Path, date: str) -> str:
+    manifest = _food_line_public_edition_manifest(root, date) or {}
+    if str(manifest.get("edition_mode") or "").strip() == "no_current_update":
+        return f"{date} — No current update"
+    return date
+
+
+def _food_line_map_rendered_marker_count_from_data(map_data: dict[str, Any]) -> int:
+    for key in ("rendered_marker_count", "pressure_marker_count"):
+        value = map_data.get(key)
+        try:
+            count = int(value or 0)
+        except (TypeError, ValueError):
+            count = 0
+        if count > 0:
+            return count
+    for key in ("mapped_markers", "markers", "plotted_markers"):
+        payload = map_data.get(key)
+        if isinstance(payload, list):
+            return len(payload)
+    diagnostics = map_data.get("diagnostics")
+    if isinstance(diagnostics, dict):
+        for key in ("rendered_marker_count", "pressure_marker_count"):
+            value = diagnostics.get(key)
+            try:
+                count = int(value or 0)
+            except (TypeError, ValueError):
+                count = 0
+            if count > 0:
+                return count
+        for key in ("mapped_markers", "markers", "plotted_markers"):
+            payload = diagnostics.get(key)
+            if isinstance(payload, list):
+                return len(payload)
+    return 0
+
+
+def _food_line_map_is_available(root: Path) -> bool:
+    map_root = root / "output" / "site" / DISPATCH_SLUG / "map"
+    map_index_path = map_root / "index.html"
+    map_data_path = map_root / "map_data.json"
+    if not map_index_path.exists():
+        return False
+    try:
+        map_html = map_index_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    match = MAP_RENDERED_COUNT_RE.search(map_html)
+    if match and int(match.group(1)) > 0:
+        return True
+    if map_data_path.exists():
+        try:
+            map_data = _read_json(map_data_path)
+        except Exception:  # noqa: BLE001
+            return False
+        if isinstance(map_data, dict) and _food_line_map_rendered_marker_count_from_data(map_data) > 0:
+            return True
+    return False
+
+
 def _food_line_public_edition_is_valid(root: Path, date: str, *, allow_future_date: bool) -> bool:
     if not DATE_RE.match(date):
         return False
@@ -1639,7 +1811,12 @@ def _food_line_public_edition_is_valid(root: Path, date: str, *, allow_future_da
         return False
     if manifest.get("future_date_blocked") is True:
         return False
-    if int(manifest.get("qualified_primary_count") or 0) <= 0:
+    edition_mode = str(manifest.get("edition_mode") or "").strip()
+    qualified_primary_count = int(manifest.get("qualified_primary_count") or 0)
+    if edition_mode == "no_current_update":
+        if qualified_primary_count != 0:
+            return False
+    elif qualified_primary_count <= 0:
         return False
     if str(manifest.get("skip_reason") or "").strip():
         return False
@@ -1786,6 +1963,8 @@ def _food_line_audio_story_sections(
     primary_signal_status: str,
     continuing_rows: list[dict[str, Any]],
     previous_context: dict[str, Any],
+    *,
+    edition_mode: str = "current_update",
 ) -> dict[str, list[str]]:
     _ = sources
     _ = adequacy
@@ -1797,7 +1976,10 @@ def _food_line_audio_story_sections(
     what_else: list[str] = []
     sources_behind: list[str] = []
     closing = ["This has been the Food Line briefing from The Blue Fern Co."]
-    if lead:
+    if edition_mode == "no_current_update":
+        today_read.append("No current Food Line update was published because no fresh source-backed current-story records were available.")
+        today_read.append("The source audit below keeps the run traceable without presenting stale sources as current stories.")
+    elif lead:
         publisher = str(lead.get("publisher") or lead.get("source_name") or "the source").strip()
         location = str(lead.get("location_name") or lead.get("state") or "").strip()
         story_sentence = _food_line_public_reported_clause(lead).strip().rstrip(".")
@@ -1830,7 +2012,9 @@ def _food_line_audio_story_sections(
         today_read.append("This edition is monitoring and context only, with no verified daily pressure record.")
     elif editorial_status == "sparse":
         today_read.append("This edition is limited because the source set is sparse.")
-    if context_rows:
+    if edition_mode == "no_current_update":
+        what_else.append("No current secondary items were published in this edition.")
+    elif context_rows:
         what_else.append("We are also watching two related food-access reports.")
         for row in context_rows:
             background_title = str(row.get("title") or "Background source").strip().split(" | ", 1)[0].strip()
@@ -1853,7 +2037,9 @@ def _food_line_audio_story_sections(
         if _food_line_public_usage_label(row, lead, continuing_rows) == "Background reference"
     ]
     excluded_count = max(0, len(sources) - len(public_rows))
-    if background_rows:
+    if edition_mode == "no_current_update":
+        sources_behind.append("Source links, excerpts, and background references are available in the public source table.")
+    elif background_rows:
         sources_behind.append("Source links, excerpts, and background references are available in the public source table.")
     else:
         sources_behind.append("Source links and excerpts are available in the public source table.")
@@ -1876,6 +2062,8 @@ def _audio_script(
     primary_signal_status: str,
     continuing_rows: list[dict[str, Any]],
     previous_context: dict[str, Any],
+    *,
+    edition_mode: str = "current_update",
 ) -> str:
     sections = _food_line_audio_story_sections(
         date,
@@ -1886,6 +2074,7 @@ def _audio_script(
         primary_signal_status,
         continuing_rows,
         previous_context,
+        edition_mode=edition_mode,
     )
     lines = (
         sections["opening"]
@@ -1960,6 +2149,7 @@ def render_edition(
     previous_context: dict[str, Any],
     primary_signal_status: str,
     continuing_rows: list[dict[str, Any]],
+    edition_mode: str = "current_update",
 ) -> str:
     pressure_rows = _public_source_rows(sources)
     pressure_count = len(pressure_rows)
@@ -1969,6 +2159,45 @@ def render_edition(
     public_rows = _food_line_public_rendered_rows(sources, primary_row, continuing_rows)
     lead_scope_label = _food_line_lead_pressure_scope_label(primary_row) if primary_row else None
     glance_html = _food_line_at_a_glance_items(sources, primary_row, continuing_rows, primary_signal_status)
+    edition_nav_html = _food_line_edition_navigation_html(str(previous_context.get("previous_edition_date") or "").strip() or None)
+    if edition_mode == "no_current_update":
+        stale_public_story_count = sum(
+            1
+            for row in sources
+            if str(row.get("source_freshness_status") or row.get("freshness_status") or "") == "stale_outside_daily_window"
+            and not _food_line_source_background_reference(row)
+        )
+        today_read_html = (
+            "<p>No current Food Line update was published because no fresh source-backed current-story records were available.</p>"
+            f"<p>The run reviewed {reviewed_count} records, excluded {excluded_count} stale or otherwise non-publishable records, and kept stale sources out of the current-story sections.</p>"
+        )
+        glance_html = (
+            f"<li>{reviewed_count} records reviewed.</li>"
+            f"<li>{excluded_count} records excluded from current-story use.</li>"
+            f"<li>{stale_public_story_count} stale current-story candidate sources blocked by freshness filtering.</li>"
+            f"<li>Freshness window: {FOOD_LINE_FRESHNESS_WINDOW_DAYS} days.</li>"
+        )
+        body = f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
+<main class="container food-line-shell">
+  <section class="food-line-hero">
+    {_food_line_logo_html("food-line-logo--edition", "../../assets/")}
+    <p class="eyebrow">Daily briefing / {_human_date(date)}</p>
+    <h1>{DISPATCH_NAME}</h1>
+  </section>
+  <section class="food-line-panel">
+    <h2>Today’s Read</h2>
+    {today_read_html}
+    <h2>At A Glance</h2>
+    <ul>{glance_html}</ul>
+    <h2>Source Audit</h2>
+    <p><a href="source_table.html">Source Audit</a></p>
+    <h2>Source Note</h2>
+    { _food_line_source_note_html() }
+  </section>
+</main>
+{footer("../../")}"""
+        return page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body, DISPATCH_NAME)
     today_read_html = _food_line_today_read_html(
         date,
         primary_row,
@@ -1980,7 +2209,6 @@ def render_edition(
     )
     source_mix_html = _food_line_source_mix_html(sources, public_rows, primary_row, continuing_rows, primary_signal_status)
     source_note_html = _food_line_source_note_html()
-    edition_nav_html = _food_line_edition_navigation_html(str(previous_context.get("previous_edition_date") or "").strip() or None)
     primary_section_html = ""
     if primary_row:
         scope_label = lead_scope_label or _food_line_lead_pressure_scope_label(primary_row)
@@ -2048,21 +2276,28 @@ def _source_table_html(
     *,
     primary_row: dict[str, Any] | None = None,
     continuing_rows: list[dict[str, Any]] | None = None,
+    edition_mode: str = "current_update",
 ) -> str:
     effective_rows = public_rows or list(sources)
-    rows = _public_source_table_rows_html(effective_rows, primary_row=primary_row, continuing_rows=continuing_rows)
+    rows = _public_source_table_rows_html(
+        effective_rows,
+        primary_row=primary_row,
+        continuing_rows=continuing_rows,
+        edition_mode=edition_mode,
+    )
     page_rows = [
         row
         for row in effective_rows
-        if _food_line_public_usage_label(row, primary_row, continuing_rows) != "Background reference"
+        if _food_line_public_usage_label(row, primary_row, continuing_rows, edition_mode=edition_mode) != "Background reference"
     ]
     background_rows = [
         row
         for row in effective_rows
-        if _food_line_public_usage_label(row, primary_row, continuing_rows) == "Background reference"
+        if _food_line_public_usage_label(row, primary_row, continuing_rows, edition_mode=edition_mode) == "Background reference"
     ]
     page_source_count = len(page_rows)
     background_count = len(background_rows)
+    stale_count = sum(1 for row in sources if str(row.get("source_freshness_status") or row.get("freshness_status") or "") == "stale_outside_daily_window" and not _food_line_source_background_reference(row))
     if background_count:
         audit_summary = (
             f"Sources behind this briefing: {page_source_count} sources were used on the public page, with {background_count} additional background reference sources listed in the source table. "
@@ -2073,6 +2308,8 @@ def _source_table_html(
             f"Sources behind this briefing: {page_source_count} sources were used on the public page. "
             f"The run reviewed {len(sources)} records and excluded {max(0, len(sources) - len(effective_rows))} that were duplicate, stale, unrelated, or not strong enough for public use."
         )
+    if stale_count:
+        audit_summary += f" {stale_count} stale current-story candidate source{'s' if stale_count != 1 else ''} were excluded by the freshness window."
     body = (
         f"{_food_line_theme_styles()}"
         f"{header(DISPATCH_NAME, '../../', '../../archive.html', '/food-line/')}"
@@ -2086,7 +2323,7 @@ def _source_table_html(
         f"<p>{html.escape(audit_summary)}</p>"
         f"<table class='food-line-source-table'>"
         "<tr>"
-        "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th>"
+        "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
         "</tr>"
         f"{rows}</table></section></main>{footer('../../')}"
     )
@@ -2187,6 +2424,9 @@ def _write_food_line_review_csv(root: Path, date: str, sources: list[dict[str, A
         "pressure_verification_status",
         "pressure_type",
         "source_published_date",
+        "source_freshness_status",
+        "source_freshness_date_basis",
+        "source_public_story_eligible",
         "collected_date",
         "freshness_status",
         "freshness_disqualification_reason",
@@ -2212,6 +2452,9 @@ def _write_food_line_review_csv(root: Path, date: str, sources: list[dict[str, A
                 "pressure_verification_status": s.get("pressure_verification_status") or "",
                 "pressure_type": s.get("pressure_type") or "",
                 "source_published_date": s.get("source_published_date") or "",
+                "source_freshness_status": s.get("source_freshness_status") or "",
+                "source_freshness_date_basis": s.get("source_freshness_date_basis") or "",
+                "source_public_story_eligible": str(bool(s.get("source_public_story_eligible"))).lower() if "source_public_story_eligible" in s else "",
                 "collected_date": s.get("collected_date") or "",
                 "freshness_status": s.get("freshness_status") or "",
                 "freshness_disqualification_reason": s.get("freshness_disqualification_reason") or "",
@@ -2392,16 +2635,23 @@ def _podcast_description(
     editorial_status: str,
     *,
     public_rows: list[dict[str, Any]] | None = None,
+    edition_mode: str = "current_update",
 ) -> str:
-    pressure_point = _food_line_public_pressure_point(lead)
-    why_it_matters = _food_line_why_it_matters(lead)
-    source_note = "Background and source links are available in the public source table."
-    if editorial_status == "monitoring/context":
-        mode_text = "This edition is monitoring and context only."
-    elif editorial_status == "sparse":
-        mode_text = "This edition is limited because the source set is sparse."
+    if edition_mode == "no_current_update":
+        pressure_point = "No current Food Line update was published because no fresh source-backed current-story records were available."
+        why_it_matters = "Stale sources remain in the source audit, but they are not presented as current stories."
+        source_note = "Background and source links are available in the public source table."
+        mode_text = "This edition is a no-current-update public fallback."
     else:
-        mode_text = ""
+        pressure_point = _food_line_public_pressure_point(lead)
+        why_it_matters = _food_line_why_it_matters(lead)
+        source_note = "Background and source links are available in the public source table."
+        if editorial_status == "monitoring/context":
+            mode_text = "This edition is monitoring and context only."
+        elif editorial_status == "sparse":
+            mode_text = "This edition is limited because the source set is sparse."
+        else:
+            mode_text = ""
     parts = [pressure_point, why_it_matters, source_note]
     if mode_text:
         parts.append(mode_text)
@@ -2427,6 +2677,7 @@ def write_food_line_audio(
     audio_format: str = "mp3",
     audio_timeout_seconds: float = 90.0,
     max_edition_date: str | None = None,
+    edition_mode: str = "current_update",
 ) -> dict[str, Any]:
     audio_root = root / "output" / "site" / "food-line" / "audio"
     previous_context = previous_context or {}
@@ -2442,6 +2693,7 @@ def write_food_line_audio(
         "new_primary" if lead else ("continuing_only" if continuing_rows else "none"),
         continuing_rows,
         previous_context,
+        edition_mode=edition_mode,
     )
     script = _audio_script(
         date,
@@ -2452,9 +2704,10 @@ def write_food_line_audio(
         "new_primary" if lead else ("continuing_only" if continuing_rows else "none"),
         continuing_rows,
         previous_context,
+        edition_mode=edition_mode,
     )
     episode_title = _audio_episode_title(date)
-    description = _podcast_description(lead, sources, editorial_status, public_rows=public_rows)
+    description = _podcast_description(lead, sources, editorial_status, public_rows=public_rows, edition_mode=edition_mode)
     chosen_provider = "none"
     if generate_audio:
         chosen_provider = str(tts_provider or "openai").strip().lower() or "openai"
@@ -2732,6 +2985,11 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
     dispatch_root = root / "output" / "site" / DISPATCH_SLUG
     public_dates = discover_public_edition_dates(root / "output" / "site", DISPATCH_SLUG, max_edition_date=max_edition_date)
     latest_public_date = public_dates[0] if public_dates else ""
+    latest_public_label = _food_line_public_edition_label(root, latest_public_date) if latest_public_date else ""
+    archive_entries_html = "".join(
+        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
+        for public_date in public_dates
+    )
     idx_body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "", None, None)}
 <main class="home food-line-shell">
@@ -2743,9 +3001,9 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
   </section>
   <section class="food-line-panel">
     <h2>Current coverage</h2>
-    {"<p><a href=\"editions/{0}/\">Latest edition</a></p>".format(latest_public_date) if latest_public_date else "<p>No public editions have been published yet.</p>"}
+    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
     <p><a href="audio/index.html">Audio and podcast feed</a></p>
-    <p><a href="map/">Pressure map</a></p>
+    {"<p><a href=\"map/\">Pressure map</a></p>" if _food_line_map_is_available(root) else ""}
     <p>This dispatch is source-backed and uses verified pressure signals only.</p>
   </section>
 </main>
@@ -2761,7 +3019,9 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
   </section>
   <section class="food-line-panel">
     <h2>Latest edition</h2>
-    {"<p><a href=\"editions/{0}/\">{0}</a></p>".format(latest_public_date) if latest_public_date else "<p>No public editions have been published yet.</p>"}
+    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
+    <h2>Archive</h2>
+    <ul>{archive_entries_html}</ul>
     <p><a href="index.html">Back to the Food Line home page</a></p>
   </section>
 </main>
@@ -2796,6 +3056,7 @@ def _refresh_food_line_source_tables(root: Path) -> None:
             public_rows,
             primary_row=lead_row,
             continuing_rows=continuing_rows,
+            edition_mode=str(manifest.get("edition_mode") or ""),
         )
         _write_text(edition_dir / "source_table.html", source_table_html)
         dispatch_edition_dir = dispatch_editions_root / edition_dir.name
@@ -2830,23 +3091,64 @@ def run_food_line_dispatch(
             collect_result = {"ok": False, "source_count": 0, "failed_sources": [{"source_id": "collector", "reason": str(exc)}]}
     sources, rejected_records, source_diagnostics = _merged_sources(root, date)
     for row in sources:
-        pressure_eval = evaluate_food_line_pressure(
-            row,
-            edition_date=date,
-            pressure_required=bool(row.get("pressure_required")),
-            max_age_days=int(row.get("max_age_days") or 14),
-            positive_keywords=row.get("positive_keywords") or [],
-            negative_keywords=row.get("negative_keywords") or [],
-        )
-        row.update(pressure_eval)
+        row_url_date, _ = _url_path_date(str(row.get("url") or ""))
+        preclassified = any(
+            str(row.get(key) or "").strip()
+            for key in (
+                "pressure_signal",
+                "pressure_verification_status",
+                "pressure_type",
+                "pressure_reason",
+                "pressure_summary",
+                "source_role",
+            )
+        ) and bool(row_url_date)
+        if not preclassified:
+            pressure_eval = evaluate_food_line_pressure(
+                row,
+                edition_date=date,
+                pressure_required=bool(row.get("pressure_required")),
+                max_age_days=int(row.get("max_age_days") or 14),
+                positive_keywords=row.get("positive_keywords") or [],
+                negative_keywords=row.get("negative_keywords") or [],
+            )
+            row.update(pressure_eval)
         source_kind = str(row.get("collector_source_type") or row.get("source_type") or "").strip().lower()
         row["extraction_quality"] = str(row.get("extraction_quality") or ("high" if source_kind in {"rss", "feed", "api"} else "medium")).strip().lower()
         row["expected_text_basis"] = str(row.get("expected_text_basis") or ("rss_summary" if source_kind in {"rss", "feed"} else "page_text")).strip().lower()
         row["pressure_verification_required"] = bool(row.get("pressure_verification_required", True))
-        row["location_scope"] = pressure_eval.get("location_scope") or ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
+        if not preclassified:
+            row["location_scope"] = pressure_eval.get("location_scope") or ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
+        else:
+            row["location_scope"] = str(row.get("location_scope") or ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national"))
         row["date_basis"] = str(row.get("published_date_basis") or "source_published")
-        row["map_eligible"] = bool(pressure_eval.get("pressure_signal"))
+        row["map_eligible"] = bool(row.get("pressure_signal")) if preclassified else bool(pressure_eval.get("pressure_signal"))
         row["coordinate_basis"] = ""
+        if preclassified:
+            published_at_for_freshness = "" if row_url_date else str(row.get("published_at") or row.get("published_date") or "")
+            freshness_probe = validate_food_line_source_freshness(
+                date,
+                published_at_for_freshness,
+                str(row.get("url") or ""),
+                str(row.get("source_role") or "current_public_story"),
+                page_metadata_date=str(row.get("page_metadata_date") or ""),
+                audit_url_path_date=True,
+                background=_food_line_source_background_reference(row),
+                freshness_window_days=FOOD_LINE_FRESHNESS_WINDOW_DAYS,
+            )
+            row["source_freshness_status"] = freshness_probe["source_freshness_status"]
+            row["source_freshness_disqualification_reason"] = freshness_probe["source_freshness_disqualification_reason"]
+            row["source_freshness_window_days"] = freshness_probe["freshness_window_days"]
+            row["source_published_date"] = freshness_probe["source_published_date"]
+            row["source_published_date_basis"] = freshness_probe["source_published_date_basis"]
+            row["source_url_date"] = freshness_probe["source_url_date"]
+            row["source_url_date_basis"] = freshness_probe["source_url_date_basis"]
+            row["source_freshness_date_basis"] = freshness_probe["source_freshness_date_basis"]
+            row["source_public_story_eligible"] = False
+            row["freshness_status"] = freshness_probe["source_freshness_status"]
+            row["freshness_disqualification_reason"] = freshness_probe["source_freshness_disqualification_reason"]
+        else:
+            _food_line_apply_freshness_guard(row, date)
     adequacy = source_adequacy(sources)
     previous_context = _load_previous_edition_context(root, date)
     _annotate_food_line_primary_eligibility(sources, previous_context)
@@ -2921,19 +3223,53 @@ def run_food_line_dispatch(
     context_rows = _food_line_traceability_rows(sources, lead_row, continuing_rows)
     continuing_source_record_ids = [str(row.get("source_record_id") or "").strip() for row in continuing_rows if str(row.get("source_record_id") or "").strip()]
     continuing_source_urls = [str(row.get("url") or "").strip() for row in continuing_rows if str(row.get("url") or "").strip()]
-    public_rendered = bool(lead_row) and not future_date_blocked
+    no_current_update = False
+    edition_mode = "blocked_future_date"
+    public_rendered = False
     qualified_primary_count = 1 if lead_row and not future_date_blocked else 0
     continuing_pressure_count = len(continuing_rows)
     continuing_context_count = continuing_pressure_count + len(context_rows)
-    public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
-    source_table = _source_table_html(date, sources, public_rows, primary_row=lead_row, continuing_rows=continuing_rows)
+    public_rows = []
+    source_table = ""
     excluded_count = max(0, len(sources) - len(map_data.get("pressure_markers") or []))
+    stale_source_rows = [
+        row
+        for row in sources
+        if str(row.get("source_freshness_status") or row.get("freshness_status") or "") == "stale_outside_daily_window"
+    ]
+    stale_public_story_count = sum(1 for row in stale_source_rows if not _food_line_source_background_reference(row))
+    excluded_stale_source_count = len(stale_source_rows)
+    stale_source_ids = [str(row.get("source_record_id") or "").strip() for row in stale_source_rows if str(row.get("source_record_id") or "").strip()]
+    no_current_update = bool(stale_public_story_count) and not future_date_blocked and not lead_row
+    edition_mode = "blocked_future_date" if future_date_blocked else ("current_update" if lead_row else ("no_current_update" if no_current_update else "no_public_edition"))
+    public_rendered = edition_mode in {"current_update", "no_current_update"}
+    public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
+    source_table = _source_table_html(
+        date,
+        sources,
+        public_rows if edition_mode == "current_update" else sources,
+        primary_row=lead_row,
+        continuing_rows=continuing_rows,
+        edition_mode=edition_mode,
+    )
     if future_date_blocked:
         skip_reason = _food_line_future_date_reason()
     elif public_rendered:
         skip_reason = ""
     else:
         skip_reason = _food_line_skip_reason()
+    if future_date_blocked:
+        source_freshness_status = "future_date_blocked"
+        food_line_publish_blocked_reason = _food_line_future_date_reason()
+    elif edition_mode == "no_current_update":
+        source_freshness_status = "blocked_insufficient_fresh_current_stories"
+        food_line_publish_blocked_reason = "No fresh current-story Food Line sources remained after freshness filtering."
+    elif public_rendered:
+        source_freshness_status = "passed" if not stale_public_story_count else "passed_with_stale_exclusions"
+        food_line_publish_blocked_reason = ""
+    else:
+        source_freshness_status = "blocked_insufficient_current_story_sources"
+        food_line_publish_blocked_reason = skip_reason
     manifest = {
         "dispatch_slug": DISPATCH_SLUG,
         "dispatch_name": DISPATCH_NAME,
@@ -2951,6 +3287,7 @@ def run_food_line_dispatch(
         "qualified_primary_count": qualified_primary_count,
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
+        "edition_mode": edition_mode,
         "continuing_context_count": continuing_context_count,
         "continuing_pressure_count": continuing_pressure_count,
         "context_count": len(context_rows),
@@ -2992,6 +3329,12 @@ def run_food_line_dispatch(
         "rejected_by_source_purpose_count": rejected_by_source_purpose_count,
         "demoted_by_source_purpose_count": demoted_by_source_purpose_count,
         "registry_source_purpose_refresh": registry_purpose_refresh,
+        "source_freshness_status": source_freshness_status,
+        "stale_public_story_count": stale_public_story_count,
+        "excluded_stale_source_count": excluded_stale_source_count,
+        "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
+        "stale_source_ids": stale_source_ids,
+        "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "bluesky_post_text": None,
         "bluesky_post_ready": False,
@@ -3033,6 +3376,7 @@ def run_food_line_dispatch(
             previous_context,
             primary_signal_status,
             continuing_rows,
+            edition_mode=edition_mode,
         )
         for d in (edition_dir_site, edition_dir_dispatch):
             _write_text(d / "index.html", html_page)
@@ -3064,6 +3408,7 @@ def run_food_line_dispatch(
             audio_format=audio_format,
             audio_timeout_seconds=audio_timeout_seconds,
             max_edition_date=public_max_date or "",
+            edition_mode=edition_mode,
         )
         _prune_food_line_public_artifacts(root, allow_future_date=allow_future_date)
         write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=public_max_date or "")
@@ -3139,6 +3484,12 @@ def run_food_line_dispatch(
         "demoted_by_source_purpose_count": demoted_by_source_purpose_count,
         "registry_source_purpose_refresh": registry_purpose_refresh,
         "collector_audit_path": collector_audit_path,
+        "source_freshness_status": source_freshness_status,
+        "stale_public_story_count": stale_public_story_count,
+        "excluded_stale_source_count": excluded_stale_source_count,
+        "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
+        "stale_source_ids": stale_source_ids,
+        "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
         "pressure_review_path": str(pressure_review_path),
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),
         "pressure_marker_count": sum(1 for row in sources if bool(row.get("pressure_signal")) and bool(row.get("map_eligible"))),
@@ -3157,6 +3508,7 @@ def run_food_line_dispatch(
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
+        "edition_mode": edition_mode,
         "bluesky_post_text": manifest["bluesky_post_text"],
         "bluesky_post_ready": manifest["bluesky_post_ready"],
         "qualified_primary_count": qualified_primary_count,
@@ -3303,6 +3655,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
+    p.add_argument("--dry-run", action="store_true", help="Generate local Food Line output without copying to the Pages repo or pushing.")
     audio_group = p.add_mutually_exclusive_group()
     audio_group.add_argument(
         "--generate-audio",
@@ -3374,7 +3727,7 @@ def main(argv: list[str] | None = None) -> int:
             result["pages_publish_path"] = str(PAGES_REPO)
             result["pages_publish_copied"] = False
             result["pushed"] = False
-            if args.publish and result.get("ok"):
+            if args.publish and result.get("ok") and not args.dry_run:
                 ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
                 result["pages_publish_copied"] = ok
                 result["pages_publish_result"] = publish_payload
@@ -3389,10 +3742,13 @@ def main(argv: list[str] | None = None) -> int:
                         result["errors"] = [message]
                     else:
                         result["push_message"] = message
+            elif args.publish and args.dry_run:
+                result["publish_skipped_reason"] = "dry_run"
             elif args.publish and not result.get("ok"):
                 result["publish_skipped_reason"] = "generation failed"
         result["push_requested"] = bool(args.push)
         result["publish_requested"] = bool(args.publish)
+        result["dry_run_requested"] = bool(args.dry_run)
         result["git_push_occurred"] = bool(result.get("pushed"))
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}

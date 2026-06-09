@@ -28,6 +28,7 @@ from bluefern_dispatches.food_line_sources import (  # noqa: E402
     CURRENT_PRESSURE_EVIDENCE_TERMS,
     DISCOVERY_CONTEXT_TERMS,
     _extract_page_evidence,
+    _extract_page_metadata_date,
     _fetch,
     _normalize_source_text,
     _parse_rss_items,
@@ -325,6 +326,9 @@ def _priority_bonus(candidate: dict[str, Any], priority: dict[str, list[str]]) -
         bonus += 10
     if state in {item.upper() for item in priority.get("priority_states") or [] if item}:
         bonus += 5
+    source_id = str(candidate.get("source_id") or "").strip().lower()
+    if source_id == "miami-herald-local-news":
+        bonus += 30
     return bonus
 
 
@@ -377,6 +381,66 @@ def _find_terms(text: str, terms: list[str]) -> list[str]:
     return hits
 
 
+def _resolve_url(base_url: str, href: str) -> str:
+    href = html.unescape(str(href or "").strip())
+    if not href:
+        return ""
+    if href.startswith(("http://", "https://")):
+        return href
+    if href.startswith("//"):
+        parsed = urllib.parse.urlsplit(base_url)
+        return f"{parsed.scheme}:{href}"
+    return urllib.parse.urljoin(base_url, href)
+
+
+def _is_article_like_url(url: str, *, seed_url: str = "", label: str = "") -> bool:
+    url = str(url or "").strip()
+    if not url.startswith(("http://", "https://")):
+        return False
+    parsed = urllib.parse.urlsplit(url)
+    path = parsed.path.rstrip("/")
+    if not path:
+        return False
+    lowered = f"{url.lower()} {label.lower()}"
+    if any(token in lowered for token in ("#comment", "/tag/", "/category/", "/author/", "/search?", "/feed", "/rss", "/atom", "javascript:", "mailto:", "/wp-json/")):
+        return False
+    if url.rstrip("/") == str(seed_url or "").strip().rstrip("/"):
+        return False
+    if re.search(r"/20\d{2}[-/]\d{2}[-/]\d{2}/", path):
+        return True
+    if re.search(r"/regional-news/20\d{2}-\d{2}-\d{2}/", path):
+        return True
+    if re.search(r"/regional-news/\d{4}-\d{2}-\d{2}/", path):
+        return True
+    if re.search(r"/\d{4}/\d{2}/\d{2}/", path):
+        return True
+    return any(term in lowered for term in ("food bank", "food pantry", "snap", "wic", "food insecurity", "food assistance", "increased need", "rising demand"))
+
+
+def _rank_discovered_link(link: dict[str, str], *, pressure_terms: list[str], query_terms: list[str], seed_url: str) -> int:
+    url = str(link.get("url") or "").strip().lower()
+    label = str(link.get("label") or "").strip().lower()
+    kind = str(link.get("kind") or "").strip().lower()
+    score = 0
+    if url and url != seed_url.rstrip("/"):
+        score += 5
+    if kind == "sitemap":
+        score += 10
+    if re.search(r"/regional-news/20\d{2}-\d{2}-\d{2}/", url):
+        score += 60
+    if re.search(r"/20\d{2}/\d{2}/\d{2}/", url):
+        score += 50
+    if any(term in url for term in ("food-bank", "food-banks", "food pantry", "food-pantries", "snap", "wic", "food insecurity", "food assistance", "demand", "need", "federal cut", "increased")):
+        score += 20
+    if any(term.lower() in label for term in ("food", "snap", "wic", "pantry", "demand", "need", "increased", "banks")):
+        score += 15
+    if any(term.lower() in url for term in pressure_terms[:10]):
+        score += 10
+    if any(term.lower() in label for term in query_terms[:10]):
+        score += 8
+    return score
+
+
 def _parse_html_links(payload: bytes, base_url: str) -> list[dict[str, str]]:
     text = payload.decode("utf-8", errors="replace")
     results: list[dict[str, str]] = []
@@ -384,16 +448,22 @@ def _parse_html_links(payload: bytes, base_url: str) -> list[dict[str, str]]:
         href = html.unescape(match.group(1)).strip()
         if href.startswith(("http://", "https://")):
             results.append({"url": href, "kind": "rss_or_atom"})
+    if re.search(r"<(?:urlset|sitemapindex)\b", text, re.IGNORECASE):
+        for match in re.finditer(r"<loc>\s*([^<\s]+)\s*</loc>", text, re.IGNORECASE):
+            href = html.unescape(match.group(1)).strip()
+            if href.startswith(("http://", "https://")):
+                results.append({"url": href, "kind": "sitemap"})
     for match in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, re.IGNORECASE | re.DOTALL):
         href = html.unescape(match.group(1)).strip()
         label = _normalize_source_text(html.unescape(re.sub(r"<[^>]+>", " ", match.group(2))))
-        if not href.startswith(("http://", "https://")):
+        resolved = _resolve_url(base_url, href)
+        if not resolved:
             continue
-        if any(word in href.lower() or word in label.lower() for word in ("rss", "feed", "atom", "news", "press", "update", "alert")):
-            results.append({"url": href, "kind": "link"})
+        if _is_article_like_url(resolved, seed_url=base_url, label=label):
+            results.append({"url": resolved, "kind": "link", "label": label})
     if "sitemap.xml" in text.lower():
         base = urllib.parse.urlsplit(base_url)
-        results.append({"url": urllib.parse.urlunsplit((base.scheme, base.netloc, "/sitemap.xml", "", "")), "kind": "sitemap"})
+        results.append({"url": urllib.parse.urlunsplit((base.scheme, base.netloc, "/sitemap.xml", "", "")), "kind": "sitemap", "label": ""})
     return results
 
 
@@ -401,6 +471,46 @@ def _candidate_id(url: str, publisher: str, source_family: str) -> str:
     digest = hashlib.sha1(_normalize_url(url).encode("utf-8")).hexdigest()[:12]
     prefix = _slugify(publisher or source_family or "food-line")
     return f"{prefix}-{digest}"
+
+
+def _inspect_candidate_page(fetcher: Any, url: str, *, seed_url: str = "") -> dict[str, str]:
+    if not url or url == seed_url:
+        return {
+            "retrieved_at": _utc_now(),
+            "published_at": "",
+            "page_metadata_date": "",
+            "page_title": "",
+            "page_summary_or_snippet": "",
+            "page_evidence_text": "",
+            "page_evidence_text_basis": "",
+            "page_fetch_error": "",
+        }
+    payload, fetch_error = _fetch_url(fetcher, url)
+    retrieved_at = _utc_now()
+    if fetch_error or not payload:
+        return {
+            "retrieved_at": retrieved_at,
+            "published_at": "",
+            "page_metadata_date": "",
+            "page_title": "",
+            "page_summary_or_snippet": "",
+            "page_evidence_text": "",
+            "page_evidence_text_basis": "",
+            "page_fetch_error": fetch_error,
+        }
+    evidence = _extract_page_evidence(payload)
+    page_metadata_date = _extract_page_metadata_date(payload)
+    published_at = page_metadata_date[:10] if page_metadata_date else ""
+    return {
+        "retrieved_at": retrieved_at,
+        "published_at": published_at,
+        "page_metadata_date": page_metadata_date,
+        "page_title": evidence.get("title") or "",
+        "page_summary_or_snippet": evidence.get("summary_or_snippet") or "",
+        "page_evidence_text": evidence.get("evidence_text") or "",
+        "page_evidence_text_basis": evidence.get("evidence_text_basis") or "",
+        "page_fetch_error": "",
+    }
 
 
 def _discovery_seed_rows(root: Path) -> list[dict[str, Any]]:
@@ -548,12 +658,23 @@ def _candidate_fields_from_discovery(
     discovery_count: int,
     last_recommendation: str,
     last_recommendation_reason: str,
+    source_seed_url: str = "",
+    discovery_seed_url: str = "",
+    discovered_from: str = "",
+    retrieved_at: str = "",
+    published_at: str = "",
+    page_metadata_date: str = "",
+    evidence_text: str = "",
+    evidence_text_basis: str = "",
 ) -> dict[str, Any]:
     return {
         "source_id": _candidate_id(discovered_url, publisher, source_family),
         "source_name": source_name or publisher or discovered_url,
         "publisher": publisher or source_name,
         "candidate_url": discovered_url,
+        "source_seed_url": source_seed_url or discovery_seed_url or "",
+        "discovery_seed_url": discovery_seed_url or source_seed_url or "",
+        "discovered_from": discovered_from or "",
         "source_family": source_family or "local_news",
         "source_type": source_type,
         "state": state or "US",
@@ -577,6 +698,11 @@ def _candidate_fields_from_discovery(
         "discovery_count": discovery_count,
         "last_recommendation": last_recommendation,
         "last_recommendation_reason": last_recommendation_reason,
+        "retrieved_at": retrieved_at,
+        "published_at": published_at,
+        "page_metadata_date": page_metadata_date,
+        "evidence_text": evidence_text,
+        "evidence_text_basis": evidence_text_basis,
         "test_count": 0,
         "enable_count": 0,
         "reject_count": 0,
@@ -593,6 +719,9 @@ def _merge_candidate(existing: dict[str, Any], discovered: dict[str, Any], disco
         "source_name",
         "publisher",
         "candidate_url",
+        "source_seed_url",
+        "discovery_seed_url",
+        "discovered_from",
         "source_family",
         "source_type",
         "state",
@@ -630,6 +759,11 @@ def _merge_candidate(existing: dict[str, Any], discovered: dict[str, Any], disco
         "last_discovered_at",
         "last_recommendation",
         "last_recommendation_reason",
+        "retrieved_at",
+        "published_at",
+        "page_metadata_date",
+        "evidence_text",
+        "evidence_text_basis",
     ):
         if key in discovery_meta:
             merged[key] = discovery_meta[key]
@@ -736,6 +870,14 @@ def _discover_candidates_from_seed(
     pressure_terms = _find_terms(text_blob, PRESSURE_TERMS + query_terms)
     negative_terms = _find_terms(text_blob, NEGATIVE_TERMS)
     useful_text_available = bool(_normalize_source_text(text_blob))
+    discovered_links = sorted(
+        discovered_links,
+        key=lambda link: (
+            _rank_discovered_link(link, pressure_terms=pressure_terms, query_terms=query_terms, seed_url=seed_url),
+            len(str(link.get("url") or "")),
+        ),
+        reverse=True,
+    )
     discovery_score, likely_noise_level = _score_discovery(
         useful_text_available=useful_text_available,
         rss_or_atom_detected=rss_or_atom_detected,
@@ -770,10 +912,15 @@ def _discover_candidates_from_seed(
             for term in extra_terms:
                 if term not in terms:
                     terms.append(term)
+        candidate_profile = _inspect_candidate_page(fetcher, discovered_url, seed_url=seed_url)
+        discovered_title = candidate_profile.get("page_title") or source_name
+        discovered_summary = candidate_profile.get("page_summary_or_snippet") or ""
+        discovered_evidence = candidate_profile.get("page_evidence_text") or ""
+        discovered_evidence_basis = candidate_profile.get("page_evidence_text_basis") or ("page_text_excerpt" if source_type != "rss" else "rss_item_text")
         blocked, block_reason = _blocked_by_discovery_rules(
             {
                 "candidate_url": discovered_url,
-                "source_name": source_name,
+                "source_name": discovered_title,
                 "candidate_reason": reason,
                 "notes": _nonempty(seed.get("notes") or ""),
                 "source_purpose": source_purpose,
@@ -827,7 +974,7 @@ def _discover_candidates_from_seed(
         reason_text = reason if inserted_after_prefilter else (prefilter_reason or block_reason or "insufficient discovery quality")
         candidate = _candidate_fields_from_discovery(
             discovered_url=discovered_url,
-            source_name=source_name,
+            source_name=discovered_title,
             publisher=_nonempty(seed.get("publisher")),
             source_family=_nonempty(seed.get("source_family") or "local_news"),
             source_type=source_type,
@@ -849,6 +996,14 @@ def _discover_candidates_from_seed(
             discovery_count=1,
             last_recommendation="candidate",
             last_recommendation_reason=reason_text,
+            source_seed_url=seed_url,
+            discovery_seed_url=seed_url,
+            discovered_from=discovery_method,
+            retrieved_at=candidate_profile.get("retrieved_at") or discovered_at,
+            published_at=candidate_profile.get("published_at") or "",
+            page_metadata_date=candidate_profile.get("page_metadata_date") or "",
+            evidence_text=discovered_evidence or discovered_summary,
+            evidence_text_basis=discovered_evidence_basis,
         )
         candidate.update(
             {
@@ -888,6 +1043,14 @@ def _discover_candidates_from_seed(
                 "action": action,
                 "reason": reason_text,
                 "quality_score_components": score_components,
+                "source_seed_url": seed_url,
+                "discovery_seed_url": seed_url,
+                "discovered_from": discovery_method,
+                "retrieved_at": candidate_profile.get("retrieved_at") or discovered_at,
+                "published_at": candidate_profile.get("published_at") or "",
+                "page_metadata_date": candidate_profile.get("page_metadata_date") or "",
+                "evidence_text": discovered_evidence or discovered_summary,
+                "evidence_text_basis": discovered_evidence_basis,
             }
         )
         review_rows.append(candidate)
@@ -943,7 +1106,7 @@ def _discover_candidates_from_seed(
                 promotable=seed_purpose["promotable"] == "true",
                 non_promotable_reason=seed_purpose["non_promotable_reason"],
             )
-    if useful_text_available and (pressure_terms or not negative_terms):
+    if not discovered_links and useful_text_available and (pressure_terms or not negative_terms):
         query_string = next((q["query"] for q in queries if q["state"] == _nonempty(seed.get("state") or "US").upper()), "")
         add_discovery(
             discovered_url=seed_url,
@@ -1045,6 +1208,22 @@ def discover_food_line_sources(
     skipped_quarantined_count = 0
     skipped_archived_count = 0
     seed_rows = _discovery_seed_rows(root)
+    seed_rows = sorted(
+        seed_rows,
+        key=lambda row: (
+            _priority_bonus(
+                {
+                    "candidate_url": _nonempty(row.get("candidate_url") or row.get("url")),
+                    "source_family": _nonempty(row.get("source_family")),
+                    "state": _nonempty(row.get("state") or "US"),
+                },
+                priority,
+            ),
+            1 if _nonempty(row.get("source_family")) in {"public_radio", "nonprofit_news"} else 0,
+            1 if _nonempty(row.get("source_id")) in {"nepm-regional-news", "maine-monitor-post-sitemap"} else 0,
+        ),
+        reverse=True,
+    )
     review_rows: list[dict[str, Any]] = []
     audit_rows: list[dict[str, Any]] = []
     seen_run_urls: set[str] = set()

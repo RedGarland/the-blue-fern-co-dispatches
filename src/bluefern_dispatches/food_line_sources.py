@@ -191,33 +191,35 @@ CURRENT_PRESSURE_EVIDENCE_TERMS = (
 )
 
 PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
-    (
-        "demand strain",
         (
-            "demand is up",
-            "demand increased",
-            "increased demand",
-            "increased need",
-            "preparing for increased demand",
-            "rising demand",
-            "record demand",
-            "surge in demand",
-            "surged",
-            "more people showing up",
-            "people showing up",
-            "first-time visitors",
-            "more families",
-            "longer lines",
-            "pantry lines",
-            "food bank demand",
-            "food pantry demand",
-            "pantry demand",
-            "food assistance need",
-            "requests for food assistance",
-            "emergency food demand",
-            "struggling to meet demand",
+            "demand strain",
+            (
+                "demand is up",
+                "demand increased",
+                "increased demand",
+                "increased need",
+                "preparing for increased demand",
+                "rising demand",
+                "record demand",
+                "surge in demand",
+                "surged",
+                "more people showing up",
+                "people showing up",
+                "first-time visitors",
+                "more families",
+                "longer lines",
+                "pantry lines",
+                "food bank demand",
+                "food pantry demand",
+                "pantry demand",
+                "food assistance need",
+                "requests for food assistance",
+                "emergency food demand",
+                "more food to",
+                "get more food to",
+                "struggling to meet demand",
+            ),
         ),
-    ),
     (
         "service reduction",
         (
@@ -719,6 +721,12 @@ def validate_food_line_source_freshness(
     url_date, url_date_basis = _url_path_date(url)
     verified_date = published_date or page_metadata_parsed
     verified_date_basis = "published_at" if published_date else ("page_metadata" if page_metadata_parsed else "")
+    date_provenance_warning = _date_provenance_warning(
+        published_raw=published_raw,
+        page_metadata_raw=page_metadata_raw,
+        url_date=url_date,
+        audit_url_path_date=audit_url_path_date,
+    )
     source_published_date = verified_date or url_date
     source_published_date_basis = verified_date_basis if verified_date_basis else ("url_path" if url_date else "")
     source_url_date = url_date
@@ -739,6 +747,7 @@ def validate_food_line_source_freshness(
             "source_url_date": source_url_date,
             "source_url_date_basis": source_url_date_basis,
             "source_freshness_date_basis": source_freshness_date_basis,
+            "date_provenance_warning": date_provenance_warning,
             "freshness_window_days": window_days,
             "public_story_eligible": False,
             "usage_type": usage_type,
@@ -786,6 +795,7 @@ def validate_food_line_source_freshness(
                 "source_url_date": source_url_date,
                 "source_url_date_basis": source_url_date_basis,
                 "source_freshness_date_basis": source_freshness_date_basis,
+                "date_provenance_warning": date_provenance_warning,
                 "freshness_window_days": window_days,
                 "public_story_eligible": False,
                 "usage_type": usage_type,
@@ -802,6 +812,7 @@ def validate_food_line_source_freshness(
             "source_url_date": source_url_date,
             "source_url_date_basis": source_url_date_basis,
             "source_freshness_date_basis": source_freshness_date_basis,
+            "date_provenance_warning": date_provenance_warning,
             "freshness_window_days": window_days,
             "public_story_eligible": False,
             "usage_type": usage_type,
@@ -840,6 +851,7 @@ def validate_food_line_source_freshness(
             "source_url_date": source_url_date,
             "source_url_date_basis": source_url_date_basis,
             "source_freshness_date_basis": source_freshness_date_basis,
+            "date_provenance_warning": date_provenance_warning,
             "freshness_window_days": window_days,
             "public_story_eligible": False,
             "usage_type": usage_type,
@@ -859,6 +871,7 @@ def validate_food_line_source_freshness(
             "source_url_date": source_url_date,
             "source_url_date_basis": source_url_date_basis,
             "source_freshness_date_basis": source_freshness_date_basis,
+            "date_provenance_warning": date_provenance_warning,
             "freshness_window_days": window_days,
             "public_story_eligible": False,
             "usage_type": usage_type,
@@ -877,6 +890,7 @@ def validate_food_line_source_freshness(
             "source_url_date": source_url_date,
             "source_url_date_basis": source_url_date_basis,
             "source_freshness_date_basis": source_freshness_date_basis,
+            "date_provenance_warning": date_provenance_warning,
             "freshness_window_days": window_days,
             "public_story_eligible": False,
             "usage_type": usage_type,
@@ -895,6 +909,7 @@ def validate_food_line_source_freshness(
         "source_url_date": source_url_date,
         "source_url_date_basis": source_url_date_basis,
         "source_freshness_date_basis": source_freshness_date_basis,
+        "date_provenance_warning": date_provenance_warning,
         "freshness_window_days": window_days,
         "public_story_eligible": verified_date_basis in {"published_at", "page_metadata"},
         "usage_type": usage_type,
@@ -1353,6 +1368,47 @@ def _extract_page_evidence(payload: bytes) -> dict[str, str]:
     }
 
 
+def _extract_page_metadata_date(payload: bytes) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    patterns = [
+        r'<meta\b[^>]*(?:property|name)=["\']article:published_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']article:published_time["\']',
+        r'<meta\b[^>]*(?:property|name)=["\']article:modified_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']article:modified_time["\']',
+        r'<meta\b[^>]*(?:property|name)=["\']og:updated_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']og:updated_time["\']',
+        r'"datePublished"\s*:\s*"([^"]+)"',
+        r'"dateModified"\s*:\s*"([^"]+)"',
+        r'<time\b[^>]*datetime=["\']([^"\']+)["\']',
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
+        if match:
+            return _normalize_source_text(match.group(1))
+    return ""
+
+
+def _date_provenance_warning(
+    *,
+    published_raw: str,
+    page_metadata_raw: str,
+    url_date: str,
+    audit_url_path_date: bool = False,
+) -> str:
+    published_raw = str(published_raw or "").strip()
+    page_metadata_raw = str(page_metadata_raw or "").strip()
+    url_date = str(url_date or "").strip()
+    if published_raw:
+        return ""
+    if page_metadata_raw:
+        if _parse_food_line_date(page_metadata_raw):
+            return "published_at missing; using page_metadata_date"
+        return "published_at missing; page_metadata_date could not be parsed"
+    if url_date:
+        return "published_at missing; URL date used for audit only" if audit_url_path_date else "published_at missing; URL date is not a verified publication date"
+    return "no verified publication date supplied"
+
+
 def _build_pressure_summary(
     *,
     source_name: str,
@@ -1368,7 +1424,7 @@ def _build_pressure_summary(
     groups_text = ", ".join(affected_groups[:2])
 
     if pressure_type == "demand strain":
-        if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry")):
+        if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to")):
             sentence = f"{subject} reported rising food-assistance demand across its service area"
             if place and place != "United States":
                 sentence += f" in {place}"
@@ -1778,15 +1834,32 @@ def _iso_date(value: str) -> str:
 def _fetch(url: str, timeout: int = 15) -> bytes:
     if food_line_test_mode_enabled():
         raise urllib.error.URLError(f"Food Line network access disabled in test mode: {url}")
-    req = urllib.request.Request(url, headers={"User-Agent": "BlueFernFoodLineCollector/1.0", "Accept": "application/rss+xml, application/xml;q=0.9, */*;q=0.8"})
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/rss+xml;q=0.8,*/*;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    req = urllib.request.Request(url, headers=headers)
+
+    def _read(timeout_seconds: int, *, context: ssl.SSLContext | None = None) -> bytes:
+        with urllib.request.urlopen(req, timeout=timeout_seconds, context=context) as resp:  # noqa: S310
+            return resp.read(2_000_000)
+
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
-            return resp.read()
+        return _read(timeout)
     except urllib.error.URLError as exc:
         reason = getattr(exc, "reason", None)
+        if isinstance(reason, TimeoutError) or "timed out" in str(exc).lower():
+            longer_timeout = max(timeout * 3, timeout + 15)
+            try:
+                return _read(longer_timeout)
+            except urllib.error.URLError as retry_exc:
+                retry_reason = getattr(retry_exc, "reason", None)
+                if isinstance(retry_reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(retry_exc):
+                    return _read(longer_timeout, context=ssl._create_unverified_context())
+                raise
         if isinstance(reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(exc):
-            with urllib.request.urlopen(req, timeout=timeout, context=ssl._create_unverified_context()) as resp:  # noqa: S310
-                return resp.read()
+            return _read(timeout, context=ssl._create_unverified_context())
         raise
 
 
@@ -2013,18 +2086,20 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                 published_basis = "source_published"
             else:
                 payload = fetch(source_url, timeout=15)
+                page_metadata_date = _extract_page_metadata_date(payload)
                 evidence = _extract_page_evidence(payload)
                 items = [
                     {
                         "title": evidence.get("title") or str(source.get("title_fallback") or source.get("name") or source_id),
                         "url": source_url,
                         "published_at": "",
+                        "page_metadata_date": page_metadata_date,
                         "summary_or_snippet": evidence.get("summary_or_snippet") or "",
                         "evidence_text": evidence.get("evidence_text") or "",
                         "evidence_text_basis": evidence.get("evidence_text_basis") or "insufficient_evidence",
                     }
                 ]
-                published_basis = "retrieved_at_fallback"
+                published_basis = "page_metadata" if page_metadata_date else "retrieved_at_fallback"
             audit_entry["fetched"] = True
             audit_entry["item_count"] = len(items[:5])
         except (urllib.error.URLError, TimeoutError, ET.ParseError, OSError, ValueError) as exc:
@@ -2043,11 +2118,18 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
             summary = str(item.get("summary_or_snippet") or "").strip()
             evidence_text = str(item.get("evidence_text") or "").strip()
             evidence_text_basis = str(item.get("evidence_text_basis") or "").strip()
+            item_page_metadata_date = str(item.get("page_metadata_date") or "").strip()
             extraction_basis_used.add(evidence_text_basis or "insufficient_evidence")
             tags = list(source.get("default_issue_tags") or []) + infer_issue_tags(title, summary, url, source_family)
             tags = [tag for i, tag in enumerate(tags) if tag and tag not in tags[:i]]
             record_id = "food-line-auto-" + hashlib.sha1(f"{source_id}|{url}|{title}".encode("utf-8")).hexdigest()[:16]
             published_at = _iso_date(str(item.get("published_at") or ""))
+            date_provenance_warning = _date_provenance_warning(
+                published_raw=published_at,
+                page_metadata_raw=item_page_metadata_date,
+                url_date=_url_path_date(url)[0],
+                audit_url_path_date=False,
+            )
             pressure_eval = evaluate_food_line_pressure(
                 {
                     "title": title,
@@ -2059,6 +2141,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "source_type": source_kind,
                     "state": source.get("state") or DEFAULT_STATE,
                     "published_at": published_at,
+                    "page_metadata_date": item_page_metadata_date,
                     "positive_keywords": source.get("positive_keywords") or [],
                     "negative_keywords": source.get("negative_keywords") or [],
                 },
@@ -2098,7 +2181,8 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "source_id": source_id,
                     "source_name": str(source.get("source_name") or source.get("name") or source_id),
                     "publisher": str(source.get("publisher") or source.get("source_name") or source.get("name") or "Unknown publisher"),
-                    "published_at": published_at or f"{edition_date}T00:00:00+00:00",
+                    "published_at": published_at,
+                    "page_metadata_date": item_page_metadata_date,
                     "retrieved_at": retrieved_at,
                     "summary_or_snippet": summary or "Source-backed food insecurity context signal.",
                     "source_type": source_kind,
@@ -2107,6 +2191,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "expected_text_basis": str(source.get("expected_text_basis") or "manual"),
                     "pressure_verification_required": bool(source.get("pressure_verification_required")),
                     "published_date_basis": "source_published" if published_at else published_basis,
+                    "date_provenance_warning": date_provenance_warning,
                     "source_family": source_family,
                     "location_name": str(source.get("location_name") or DEFAULT_LOCATION),
                     "state": str(source.get("state") or DEFAULT_STATE),

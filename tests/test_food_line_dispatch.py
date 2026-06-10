@@ -767,23 +767,24 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Today&apos;s lead:" not in glance_html
     assert "What happened:" not in glance_html
     assert "More background sources appear below" not in glance_html
-    assert "13abc reported that Toledo food pantries were preparing for increased demand as SNAP benefits faced a shutdown pause." in today_read_html
-    assert "When benefits are delayed or paused" in today_read_html
-    assert "current secondary context" in glance_html
+    assert "Today’s saved source records point to" in today_read_html
+    assert "reported food-pressure signals" in today_read_html
     assert "Cascade PBS" in glance_html
-    assert "KLTV" in glance_html
+    assert "Partial-source update / June 5, 2026" in edition_html
+    assert "Generated from saved source records available for June 5, 2026." in edition_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
-    assert "Main Food Access Story" in edition_html
-    assert "What Else We’re Watching" in edition_html
-    assert "Context and Watch Items" not in edition_html
-    assert "Sources Behind This Briefing" in edition_html
-    assert "Source Mix" not in edition_html
-    assert "source mix" not in edition_html.lower()
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
     assert "Source Note" in edition_html
-    assert "What happened" in edition_html
-    assert "Why it matters" in edition_html
-    assert "Read the source" in edition_html
+    assert edition_html.index("Today’s Read") < edition_html.index("At A Glance") < edition_html.index("Core Food Pressure Signals") < edition_html.index("Other Food Line Signals") < edition_html.index("Source Mix") < edition_html.index("Source Note")
+    assert "Main Food Access Story" not in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "Context and Watch Items" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
+    assert "Source Audit" not in edition_html
+    assert "source mix" in edition_html.lower()
     assert "USDA FNS" not in edition_html
     assert "USDA ERS" not in edition_html
     assert "13abc" in source_table_html
@@ -841,7 +842,14 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "rising food-assistance demand" in audio_json["episode_summary"]
     assert "SNAP" in audio_json["episode_summary"]
     assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
+    assert "current public signals selected from" in audio_json["script_text"]
     assert "Source links, excerpts, and background references are available in the public source table." in audio_json["script_text"]
+    assert "We are also watching two related food-access reports." not in audio_json["script_text"]
+    assert (
+        "Another report points to related pressure on pantry capacity." in audio_json["script_text"]
+        or "A second signal adds regional context." in audio_json["script_text"]
+        or "Another report adds related food-pressure context." in audio_json["script_text"]
+    )
     assert "The run reviewed" not in audio_json["script_text"]
     assert "Read the source:" not in audio_json["script_text"]
     assert "Source:" not in audio_json["script_text"]
@@ -849,7 +857,9 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "Date:" not in audio_json["script_text"]
     assert "https://" not in audio_json["script_text"]
     assert transcript.count("This is the Food Line briefing for June 5, 2026.") == 1
-    assert "What Else We’re Watching" in transcript
+    assert "current public signals selected from" in transcript
+    assert "Core Food Pressure Signals" in transcript
+    assert "Other Food Line Signals" in transcript
     assert "Cascade PBS" in transcript
     assert "KLTV" in transcript
     assert 'href="/american-pressure/"' not in transcript
@@ -859,12 +869,17 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "<h2>Transcript</h2>" not in transcript
     assert "Source Note" in transcript
     assert "Source links" in transcript
+    assert "Main Food Access Story" not in transcript
+    assert "What Else We’re Watching" not in transcript
+    assert "Sources Behind This Briefing" not in transcript
     assert "/food-line/audio/2026-06-05.mp3" in transcript
     assert "/food-line/editions/2026-06-05/source_table.html" in transcript
     assert "Open the public edition" in transcript
     assert "Open the podcast feed" in transcript
     assert "Podcast enclosure:</strong> present" in transcript
-    assert "What Else We’re Watching" in audio_index
+    assert "current public signals selected from" in audio_index
+    assert "Core Food Pressure Signals" in audio_index
+    assert "Other Food Line Signals" in audio_index
     assert "Cascade PBS" in audio_index
     assert "KLTV" in audio_index
     assert 'href="/american-pressure/"' not in audio_index
@@ -873,6 +888,9 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "USDA ERS" not in audio_index
     assert "Source Note" in audio_index
     assert "Source links" in audio_index
+    assert "Main Food Access Story" not in audio_index
+    assert "What Else We’re Watching" not in audio_index
+    assert "Sources Behind This Briefing" not in audio_index
     assert "/food-line/audio/2026-06-05-transcript.html" in audio_index
     assert "/food-line/editions/2026-06-05/source_table.html" in audio_index
     assert "Open the podcast feed" in audio_index
@@ -936,11 +954,20 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert review_by_id["food-line-auto-9013087c4ebc5f32"]["pressure_signal"] == "false"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["freshness_status"] == "stale_outside_daily_window"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["pressure_signal"] == "false"
-    assert "No current Food Line update was published because no fresh source-backed current-story records were available." in edition_html
+    assert "No current update / June 6, 2026" in edition_html
+    assert "Generated from saved source records available for June 6, 2026." in edition_html
+    assert "No fresh source-backed current food-pressure signal qualified today." in edition_html
+    assert "Today’s Read" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
     assert "Main Food Access Story" not in edition_html
     assert "Current secondary item" not in edition_html
     assert "What Else We’re Watching" not in edition_html
     assert "Background References" not in edition_html
+    assert "Source Audit" not in edition_html
     assert "stale_source_ids" not in edition_html
     assert "Stale source IDs:" not in edition_html
     assert "food-line-auto-" not in edition_html
@@ -1016,6 +1043,7 @@ def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_p
     assert result["qualified_primary_count"] == 0
     assert "No current update" in index_html
     assert "No current update" in archive_html
+    assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in index_html
     assert "Blocked" not in archive_html
     assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
     assert manifest["edition_mode"] == "no_current_update"
@@ -1036,17 +1064,63 @@ def test_food_line_archive_lists_current_update_edition_is_archive_safe(tmp_path
     result = run_food_line_dispatch(tmp_path, date)
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
     assert result["public_rendered"] is True
     assert result["edition_mode"] == "current_update"
     assert result["qualified_primary_count"] == 1
     assert result["lead_source_record_id"] == "food-line-src-002"
+    assert "across its service area in Maine" not in edition_html
+    assert "service area in Maine" not in edition_html
+    assert "Maine in Maine" not in edition_html
+    assert "Massachusetts in Massachusetts" not in edition_html
+    assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in edition_html
+    assert "It should not be read as a complete national measure of food insecurity." in edition_html
     assert "No current update" not in index_html
     assert "2026-06-08" in archive_html
     assert "Blocked" not in archive_html
+    assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in index_html
     assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
     assert manifest["edition_mode"] == "current_update"
+
+
+def test_food_line_2026_06_08_rendered_public_files_regressions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 9))
+
+    date = "2026-06-08"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    production_payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    p.write_text(production_payload_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    transcript_html = (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}-transcript.html").read_text(encoding="utf-8")
+
+    assert result["public_rendered"] is True
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "reported signals" in edition_html
+    assert "complete national measure" in edition_html
+    assert "service area in Maine" not in edition_html
+    assert "Maine rising" not in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
+
+    assert "selected from 34 reviewed records" in transcript_html
+    assert "Core Food Pressure Signals" in transcript_html
+    assert "Other Food Line Signals" in transcript_html
+    assert "service area in Maine" not in transcript_html
+    assert "Maine rising" not in transcript_html
+    assert "related food-access reports" not in transcript_html
+    assert "Main Food Access Story" not in transcript_html
+    assert "What Else We’re Watching" not in transcript_html
 
 
 def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(tmp_path: Path):
@@ -1470,9 +1544,16 @@ def test_food_line_secondary_items_render_in_what_else_when_present():
         [],
     )
 
-    assert "What Else We’re Watching" in edition_html
-    assert "Secondary food-access item" in edition_html
-    assert "No additional current food-access items were strong enough to change today’s lead." not in edition_html
+    assert "Limited-source update / June 5, 2026" in edition_html
+    assert "Today’s Read" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "No fresh source-backed current food-pressure signal qualified today." not in edition_html
     assert "USDA FNS background" not in edition_html
 
 
@@ -1816,8 +1897,9 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Advertise With Us" not in audio_json["script_text"]
     assert transcript.count("This is the Food Line briefing for June 4, 2026.") == 1
     assert transcript.index("Opening") < transcript.index("Today&apos;s Read")
-    assert transcript.index("Today&apos;s Read") < transcript.index("Main Food Access Story")
-    assert transcript.index("Main Food Access Story") < transcript.index("Source Note")
+    assert transcript.index("Today&apos;s Read") < transcript.index("Core Food Pressure Signals")
+    assert transcript.index("Core Food Pressure Signals") < transcript.index("Other Food Line Signals")
+    assert transcript.index("Other Food Line Signals") < transcript.index("Source Note")
     assert transcript.index("Source Note") < transcript.index("Source links")
     assert "<h2>Transcript</h2>" not in transcript
     assert "Review summary:" not in transcript
@@ -1834,13 +1916,20 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Review summary:" not in transcript.split("Source Note", 1)[0]
     assert "Review summary:" not in audio_index.split("Source Note", 1)[0]
     assert audio_index.index("Opening") < audio_index.index("Today&apos;s Read")
-    assert audio_index.index("Today&apos;s Read") < audio_index.index("Main Food Access Story")
-    assert audio_index.index("Main Food Access Story") < audio_index.index("Source Note")
+    assert audio_index.index("Today&apos;s Read") < audio_index.index("Core Food Pressure Signals")
+    assert audio_index.index("Core Food Pressure Signals") < audio_index.index("Other Food Line Signals")
+    assert audio_index.index("Other Food Line Signals") < audio_index.index("Source Note")
     assert "Source Note" in audio_index
     assert "Source links" in audio_index
     assert "Where pressure is visible" not in audio_index
     assert "For traceability" not in audio_index
     assert "The briefing also tracks related public background sources." not in audio_index
+    assert "Main Food Access Story" not in transcript
+    assert "What Else We’re Watching" not in transcript
+    assert "Sources Behind This Briefing" not in transcript
+    assert "Main Food Access Story" not in audio_index
+    assert "What Else We’re Watching" not in audio_index
+    assert "Sources Behind This Briefing" not in audio_index
     assert "/food-line/audio/2026-06-04-transcript.html" in audio_index
     assert "/food-line/editions/2026-06-04/source_table.html" in audio_index
     assert "Open the podcast feed" in audio_index
@@ -2739,6 +2828,7 @@ def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
     assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
     assert "USDA sources provide background on summer nutrition programs and food security." in result["bluesky_post_text"]
+    assert result["public_url"] in result["bluesky_post_text"]
 
 
 def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):
@@ -2774,8 +2864,13 @@ def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(
     assert lead["primary_eligible"] == "true"
     assert lead["primary_disqualification_reason"] == ""
     assert "Today’s Read" in edition_html
-    assert "Main Food Access Story" in edition_html
-    assert "Sources Behind This Briefing" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
     assert 'href="/american-pressure/"' not in edition_html
     assert "Today&apos;s pressure point" not in edition_html
     assert "What changed" not in edition_html
@@ -2822,8 +2917,13 @@ def test_food_line_cascade_pbs_style_funding_cut_story_publishes_when_fresh_and_
     assert lead["primary_eligible"] == "true"
     assert lead["primary_disqualification_reason"] == ""
     assert "Today’s Read" in edition_html
-    assert "Main Food Access Story" in edition_html
-    assert "Sources Behind This Briefing" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
 
 
 def test_food_line_nonpressure_rss_items_are_excluded_from_pressure_map(tmp_path: Path):
@@ -2951,18 +3051,21 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     map_html = (tmp_path / "output" / "site" / "food-line" / "map" / "index.html").read_text(encoding="utf-8")
 
-    assert "Daily briefing / June 4, 2026" in edition_html
+    assert "Limited-source update / June 4, 2026" in edition_html
+    assert "Generated from saved source records available for June 4, 2026." in edition_html
     assert "Today’s Read" in edition_html
     assert "At A Glance" in edition_html
-    assert "Main Food Access Story" in edition_html
-    assert "What Else We’re Watching" in edition_html
-    assert "Context and Watch Items" not in edition_html
-    assert "Sources Behind This Briefing" in edition_html
-    assert "Source Mix" not in edition_html
-    assert "source mix" not in edition_html.lower()
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
     assert "Source Note" in edition_html
-    assert "No additional current food-access items were strong enough to change today’s lead." in edition_html
-    assert "Background sources are listed in the public source table." in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "Context and Watch Items" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
+    assert "source mix" in edition_html.lower()
+    assert "No fresh source-backed current food-pressure signal qualified today." not in edition_html
+    assert "Background records remain in the source audit and public source table only." not in edition_html
     assert "public item(s)" not in edition_html
     assert "primary pressure lead" not in edition_html
     assert "What changed today" not in edition_html
@@ -2974,11 +3077,11 @@ def test_food_line_public_edition_uses_pressure_summary_and_cleans_public_excerp
     assert "Contests" not in edition_html
     assert "Closings & Delays" not in edition_html
     assert "Open the public source table for source links, traceability, and cleaned excerpts." in edition_html
-    assert "Source:" in edition_html
-    assert "Where:" in edition_html
-    assert "What happened:" in edition_html
-    assert "Why it matters:" in edition_html
-    assert "Read the source:" in edition_html
+    assert "<strong>Sources</strong>" in edition_html
+    assert "Context:" in edition_html
+    assert "KLTV" in edition_html
+    assert "Demand strain" in edition_html
+    assert "East Texas, TX" in edition_html
     assert "Record ID" in source_table_html
     assert "What the source says" in source_table_html
     assert "Unrelated local arts story" not in source_table_html
@@ -3010,10 +3113,17 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
     assert page_urls
     assert table_urls
     assert set(page_urls).issubset(set(table_urls))
-    assert "What Else We’re Watching" in edition_html
-    assert "Sources Behind This Briefing" in edition_html
+    assert "Today’s Read" in edition_html
+    assert "At A Glance" in edition_html
+    assert "Core Food Pressure Signals" in edition_html
+    assert "Other Food Line Signals" in edition_html
+    assert "Source Mix" in edition_html
+    assert "Source Note" in edition_html
+    assert "Main Food Access Story" not in edition_html
+    assert "What Else We’re Watching" not in edition_html
+    assert "Sources Behind This Briefing" not in edition_html
     assert "Context and Watch Items" not in edition_html
-    assert "Source Mix" not in edition_html
+    assert "Source Mix" in edition_html
     assert "Local food pantries are preparing for increased demand" in edition_html
     assert "USDA set to cut $1B for food programs" in edition_html
     assert "local_signal" not in source_table_html
@@ -3139,9 +3249,17 @@ def test_food_line_map_and_runner_diagnostics_count_only_pressure_records(tmp_pa
     assert map_data.get("diagnostics", {}).get("pressure_marker_count") == 1
     assert map_data.get("diagnostics", {}).get("excluded_record_count") == 2
     assert map_data.get("diagnostics", {}).get("excluded_context_count") == 1
+    assert map_data.get("diagnostics", {}).get("exclusion_reason_counts", {}).get("background/context only") == 1
+    assert map_data.get("diagnostics", {}).get("exclusion_reason_counts", {}).get("weak pressure signal") == 1
     assert len(map_data.get("mapped_markers") or []) == 1
     assert map_data.get("mapped_markers")[0]["source_title"] == "Food bank sees rising demand from families"
     assert map_data.get("excluded_records") and all("reason" in record for record in map_data["excluded_records"])
+    assert result["exclusion_reason_counts"]["background/context only"] == 1
+    assert result["exclusion_reason_counts"]["weak pressure signal"] == 1
+    assert "background or context material 1" in result["exclusion_reason_summary"]
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["exclusion_reason_counts"]["background/context only"] == 1
+    assert manifest["exclusion_reason_counts"]["weak pressure signal"] == 1
     public_source_table = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     assert "Food bank sees rising demand from families" in public_source_table
     assert "Restaurant announces new menu" not in public_source_table
@@ -3150,6 +3268,219 @@ def test_food_line_map_and_runner_diagnostics_count_only_pressure_records(tmp_pa
         pressure_review = list(csv.DictReader(handle))
     assert len(pressure_review) == 3
     assert any(row["pressure_signal"] == "false" for row in pressure_review)
+
+
+def test_food_line_outside_product_geography_is_bucketed_and_not_rendered(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-04"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    row = _pressure_row(
+        1,
+        "Hamilton food banks see rising demand",
+        "Hamilton food banks report rising demand and more families asking for food support.",
+        family="local_news",
+        state="Ontario",
+        source_type="rss",
+        publisher="Hamilton Spectator",
+    )
+    row["country"] = "Canada"
+    row["location_name"] = "Hamilton, Ontario"
+    p.write_text(json.dumps([row], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_row = review_rows[0]
+    map_data = json.loads((tmp_path / "output" / "review" / "food-line" / date / "map_data.json").read_text(encoding="utf-8"))
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is False
+    assert result["pressure_signal_count"] == 0
+    assert result["pressure_marker_count"] == 0
+    assert result["exclusion_reason_counts"]["outside product geography"] == 1
+    assert manifest["exclusion_reason_counts"]["outside product geography"] == 1
+    assert map_data["diagnostics"]["exclusion_reason_counts"]["outside product geography"] == 1
+    assert review_row["pressure_signal"] == "false"
+    assert review_row["pressure_verification_status"] == "demoted_context"
+    assert review_row["source_title"] == "Hamilton food banks see rising demand"
+    assert review_row["location_name"] == "Hamilton, Ontario"
+    assert review_row["state"] == "Ontario"
+    assert review_row["pressure_summary"] == ""
+    assert not (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists()
+    assert not map_data.get("pressure_markers")
+    assert map_data.get("excluded_records")
+    assert any(record.get("source_title") == "Hamilton food banks see rising demand" for record in map_data["excluded_records"])
+
+
+def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-10"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    local = _pressure_row(
+        1,
+        "Pantry sees more first-time visitors",
+        "A local pantry reported rising food-assistance demand and more first-time visitors seeking help.",
+        family="local_news",
+        state="TX",
+        source_type="manual",
+        publisher="Austin Monitor",
+    )
+    local["location_name"] = "Austin, Texas"
+
+    research = _pressure_row(
+        2,
+        "Sports-betting study links legal access to lower food sufficiency",
+        (
+            "GamblingHarm.org reported on research that linked legal sports-betting access to lower food sufficiency "
+            "among some U.S. households, especially adults without a college degree, adults ages 25 to 44, and non-white adults."
+        ),
+        family="policy_research",
+        state="US",
+        source_type="manual",
+        publisher="GamblingHarm.org",
+    )
+    research["location_name"] = "United States"
+    research["url"] = "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/"
+    research["primary_source_url"] = "https://www.nber.org/papers/example-food-sufficiency-study"
+    research["secondary_source_url"] = research["url"]
+    research["source_traceability_role"] = "secondary_explainer_with_primary_reference"
+
+    background = _row(3, "economic_data", "US", title="USDA context", summary="USDA food security context.", source_type="manual", publisher="USDA")
+    background["location_name"] = "United States"
+
+    p.write_text(json.dumps([local, research, background], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    transcript_html = (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}-transcript.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_by_title = {row["source_title"]: row for row in review_rows}
+
+    assert result["ok"] is True
+    assert result["public_rendered"] is True
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["pressure_signal_count"] == 2
+    assert result["pressure_marker_count"] == 1
+    assert "Sports-betting study links legal access to lower food sufficiency" in edition_html
+    assert "legal sports-betting access to lower food sufficiency among some U.S. households" in edition_html
+    assert "pantry-demand story" not in edition_html
+    assert "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/" in edition_html
+    assert "Household financial stress" in source_table_html
+    assert "research_signal" not in edition_html
+    assert "data_anchor_signal" not in edition_html
+    assert "institutional_context_signal" not in edition_html
+    assert "research_signal" not in source_table_html
+    assert "data_anchor_signal" not in source_table_html
+    assert "institutional_context_signal" not in source_table_html
+    assert "legal sports-betting access to lower food sufficiency among some U.S. households" in transcript_html
+    assert transcript_html.index("Other Food Line Signals") < transcript_html.index("legal sports-betting access to lower food sufficiency among some U.S. households")
+    assert "pantry-demand story" not in transcript_html
+    assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["pressure_signal"] == "true"
+    assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["primary_source_url"] == "https://www.nber.org/papers/example-food-sufficiency-study"
+    assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["secondary_source_url"] == "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/"
+    assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["source_traceability_role"] == "secondary_explainer_with_primary_reference"
+    assert any(
+        record.get("source_title") == "Sports-betting study links legal access to lower food sufficiency"
+        and record.get("reason") == "not_map_eligible"
+        for record in map_data["excluded_records"]
+    )
+    assert all(
+        marker.get("source_title") != "Sports-betting study links legal access to lower food sufficiency"
+        for marker in map_data["pressure_markers"]
+    )
+
+
+def test_food_line_bluesky_research_signal_avoids_duplicate_attribution_and_keeps_public_url(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-10"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    research = _pressure_row(
+        1,
+        "Sports-betting study links legal access to lower food sufficiency",
+        (
+            "GamblingHarm.org reported on research that linked legal sports-betting access to lower food sufficiency "
+            "among some U.S. households, especially adults without a college degree, adults ages 25 to 44, and non-white adults."
+        ),
+        family="policy_research",
+        state="US",
+        source_type="manual",
+        publisher="GamblingHarm.org",
+    )
+    research["location_name"] = "United States"
+    research["url"] = "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/"
+    research["primary_source_url"] = "https://www.nber.org/papers/example-food-sufficiency-study"
+    research["secondary_source_url"] = research["url"]
+    research["source_traceability_role"] = "secondary_explainer_with_primary_reference"
+
+    background = _row(2, "economic_data", "US", title="USDA context", summary="USDA food security context.", source_type="manual", publisher="USDA")
+    background["location_name"] = "United States"
+
+    p.write_text(json.dumps([research, background], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    assert result["selected_lead_source_role"] == "research_signal"
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert "GamblingHarm.org reported that GamblingHarm.org reported" not in result["bluesky_post_text"]
+    assert "reported on research linking legal sports-betting access to lower food sufficiency among some U.S. households" in result["bluesky_post_text"]
+    assert "pantry-demand story" not in result["bluesky_post_text"]
+    assert "research_signal" not in result["bluesky_post_text"]
+    assert "data_anchor_signal" not in result["bluesky_post_text"]
+    assert "institutional_context_signal" not in result["bluesky_post_text"]
+    assert "pressure_signal" not in result["bluesky_post_text"]
+    assert "source_role" not in result["bluesky_post_text"]
+    assert "evidence_level" not in result["bluesky_post_text"]
+    assert result["public_url"] in result["bluesky_post_text"]
+    prefix = result["bluesky_post_text"].split(result["public_url"], 1)[0].rstrip()
+    assert not prefix.endswith("pa")
+    assert not prefix.endswith("food-pressure pa")
+    assert prefix.endswith(".") or prefix.endswith("...")
+
+
+def test_food_line_bluesky_research_signal_drops_second_sentence_before_clipping_first(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-10"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    research = _pressure_row(
+        1,
+        "Sports-betting study links legal access to lower food sufficiency",
+        (
+            "GamblingHarm.org reported on research that linked legal sports-betting access to lower food sufficiency "
+            "among some U.S. households, especially adults without a college degree, adults ages 25 to 44, and non-white adults."
+        ),
+        family="policy_research",
+        state="US",
+        source_type="manual",
+        publisher="GamblingHarm.org",
+    )
+    research["location_name"] = "United States"
+    research["url"] = "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/"
+
+    p.write_text(json.dumps([research], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    assert result["selected_lead_source_role"] == "research_signal"
+    assert result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
+    assert "reported on research linking legal sports-betting access to lower food sufficiency among some U.S. households." in result["bluesky_post_text"]
+    assert "household financial stress" not in result["bluesky_post_text"]
+    assert result["public_url"] in result["bluesky_post_text"]
+    prefix = result["bluesky_post_text"].split(result["public_url"], 1)[0].rstrip()
+    assert not prefix.endswith("pa")
+    assert prefix.endswith(".") or prefix.endswith("...")
 
 
 def test_food_line_collect_reports_rejected_news_reasons(tmp_path: Path):

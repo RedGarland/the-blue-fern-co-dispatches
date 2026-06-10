@@ -2397,6 +2397,44 @@ def _write_min_cascadia_public_edition(site_root: Path, edition_date: str, cover
     edition_dir.joinpath("map.html").write_text('<a href="source_table.html">Source table</a>', encoding="utf-8")
 
 
+def _write_min_food_line_public_edition(
+    site_root: Path,
+    edition_date: str,
+    *,
+    body_html: str,
+    edition_mode: str = "current_update",
+    manifest_overrides: dict[str, object] | None = None,
+):
+    edition_dir = site_root / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html><body>Home</body></html>", encoding="utf-8")
+    (site_root / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (site_root / "food-line" / "archive.html").write_text("<html><body>Food Line archive</body></html>", encoding="utf-8")
+    edition_dir.joinpath("index.html").write_text(body_html, encoding="utf-8")
+    manifest = {
+        "dispatch_slug": "food-line",
+        "edition_date": edition_date,
+        "public_rendered": True,
+        "edition_mode": edition_mode,
+        "source_freshness_status": "passed_with_stale_exclusions",
+        "freshness_window_days": 3,
+        "stale_public_story_count": 0,
+        "excluded_stale_source_count": 0,
+        "stale_source_ids": [],
+        "qualified_primary_count": 1 if edition_mode != "no_current_update" else 0,
+        "skip_reason": "",
+    }
+    if manifest_overrides:
+        manifest.update(manifest_overrides)
+    edition_dir.joinpath("edition_manifest.json").write_text(
+        json.dumps(
+            manifest,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_cascadia_index_uses_newest_valid_weekly_edition_and_lists_it(cascadia_work_root):
     site_root = cascadia_work_root / "output" / "site"
     _write_min_cascadia_public_edition(site_root, "2026-05-10", "2026-05-04", "2026-05-10")
@@ -2406,6 +2444,127 @@ def test_cascadia_index_uses_newest_valid_weekly_edition_and_lists_it(cascadia_w
     index_html = (site_root / "cascadia" / "index.html").read_text(encoding="utf-8")
     assert 'href="editions/2026-05-24/"' in index_html
     assert "2026-05-24" in index_html
+
+
+def test_publish_pages_overwrites_existing_food_line_edition_index(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = tmp_path / "repo"
+    site_root = root / "output" / "site"
+    pages_repo = root / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", "-b", "main"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "tests@example.com"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    (pages_repo / ".keep").write_text("keep\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".keep"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "commit", "-m", "Initial Pages repo"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    (pages_repo / "index.html").write_text("<html><body>Old home</body></html>", encoding="utf-8")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "archive.html").write_text("<html><body>Food Line archive</body></html>", encoding="utf-8")
+    old_edition_dir = pages_repo / "food-line" / "editions" / "2026-06-08"
+    old_edition_dir.mkdir(parents=True, exist_ok=True)
+    (old_edition_dir / "index.html").write_text("<p>Old Food Line edition</p>", encoding="utf-8")
+
+    _write_min_food_line_public_edition(
+        site_root,
+        "2026-06-08",
+        body_html="<p>New Food Line edition</p>",
+    )
+
+    def fake_build_site(*args, **kwargs):
+        return {
+            "ok": True,
+            "errors": [],
+            "warnings": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_archive_entries_written": [],
+            "gaza_editions_skipped": [],
+        }
+
+    monkeypatch.setattr("bluefern_dispatches.generator.build_site", fake_build_site)
+
+    result = publish_pages(
+        root,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=root / "backup",
+        expect_date="2026-06-08",
+        expect_dispatches=("food-line",),
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert result["food_line_public_edition_skip_diagnostics"] == []
+    assert (pages_repo / "food-line" / "editions" / "2026-06-08" / "index.html").read_text(encoding="utf-8") == "<p>New Food Line edition</p>"
+    assert "Old Food Line edition" not in (pages_repo / "food-line" / "editions" / "2026-06-08" / "index.html").read_text(encoding="utf-8")
+
+
+def test_publish_pages_reports_food_line_non_listable_exclusion(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = tmp_path / "repo"
+    site_root = root / "output" / "site"
+    pages_repo = root / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", "-b", "main"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "tests@example.com"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    (pages_repo / ".keep").write_text("keep\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".keep"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "commit", "-m", "Initial Pages repo"], cwd=pages_repo, check=True, capture_output=True, text=True)
+    (pages_repo / "index.html").write_text("<html><body>Old home</body></html>", encoding="utf-8")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "archive.html").write_text("<html><body>Food Line archive</body></html>", encoding="utf-8")
+
+    _write_min_food_line_public_edition(
+        site_root,
+        "2026-06-08",
+        body_html="<p>Non-listable Food Line edition</p>",
+        manifest_overrides={"qualified_primary_count": 0, "edition_mode": "current_update"},
+    )
+
+    def fake_build_site(*args, **kwargs):
+        return {
+            "ok": True,
+            "errors": [],
+            "warnings": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_archive_entries_written": [],
+            "gaza_editions_skipped": [],
+        }
+
+    monkeypatch.setattr("bluefern_dispatches.generator.build_site", fake_build_site)
+
+    result = publish_pages(
+        root,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=root / "backup",
+        expect_date="2026-06-08",
+        expect_dispatches=("food-line",),
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "food-line" / "editions" / "2026-06-08" / "index.html").exists() is False
+    assert result["food_line_public_edition_skip_diagnostics"]
+    report = result["food_line_public_edition_skip_diagnostics"][0]
+    assert report["edition_date"] == "2026-06-08"
+    assert report["manifest_path"].endswith(r"food-line\editions\2026-06-08\edition_manifest.json")
+    assert report["manifest_exists"] is True
+    assert report["dispatch_slug"] == "food-line"
+    assert report["listable"] is False
+    assert report["public_rendered"] is True
+    assert "qualified_primary_count" in report["false_or_invalid_fields"]
+    assert any("qualified_primary_count" in reason for reason in report["reasons"])
+    assert any("Food Line edition 2026-06-08 was not copied to Pages" in warning for warning in result["warnings"])
 
 
 def test_every_public_cascadia_edition_source_table_link_resolves(cascadia_work_root):
@@ -4532,6 +4691,9 @@ def test_artifact_validation_rejected_titles_do_not_leak_into_public_map_payload
     curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-03"
     curated_dir.mkdir(parents=True, exist_ok=True)
     rejected_title = "Rejected Backfill Story"
+    rejected_story_id = "story-rejected"
+    rejected_source_id = "src-rejected"
+    rejected_url = "https://example.com/rejected-story"
     curated_dir.joinpath("curation_manifest.json").write_text(
         json.dumps(
             [
@@ -4559,7 +4721,7 @@ def test_artifact_validation_rejected_titles_do_not_leak_into_public_map_payload
                     ],
                 },
                 {
-                    "story_id": "story-rejected",
+                    "story_id": rejected_story_id,
                     "title": rejected_title,
                     "summary": "This item was rejected for public output.",
                     "category": "public safety",
@@ -4567,13 +4729,13 @@ def test_artifact_validation_rejected_titles_do_not_leak_into_public_map_payload
                     "included_in_public_summary": False,
                     "included_in_detail_dataset": False,
                     "excluded_reason": "geography_state_inferred_only_from_feed",
-                    "source_record_ids": ["src-rejected"],
-                    "source_urls": ["https://example.com/rejected-story"],
+                    "source_record_ids": [rejected_source_id],
+                    "source_urls": [rejected_url],
                     "source_records": [
                         {
-                            "source_record_id": "src-rejected",
-                            "source_url": "https://example.com/rejected-story",
-                            "url": "https://example.com/rejected-story",
+                            "source_record_id": rejected_source_id,
+                            "source_url": rejected_url,
+                            "url": rejected_url,
                             "publisher": "Example",
                             "published_at": "2026-05-02T13:00:00Z",
                             "state_hint": "WA",
@@ -4618,12 +4780,24 @@ def test_artifact_validation_rejected_titles_do_not_leak_into_public_map_payload
     assert result["ok"] is True
     report = run_cascadia_dispatch.validate_cascadia_artifacts(cascadia_work_root, "2026-05-03", dry_run=False)
     assert "rejected story leaked to map payload" not in report.get("failures", [])
+    assert report["offending_rejected_records"] == []
 
     map_data = read_json(cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map_data.json")
     map_payload_text = json.dumps(map_data)
-    assert rejected_title not in map_payload_text
+    edition_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
+    source_table_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "source_table.html").read_text(encoding="utf-8")
+    map_html = (cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03" / "map.html").read_text(encoding="utf-8")
+    assert rejected_story_id not in map_payload_text
+    assert rejected_source_id not in map_payload_text
+    assert rejected_url not in map_payload_text
     accepted_titles = {str(row.get("title") or "") for row in map_data.get("markers", []) + map_data.get("regional_reports", [])}
     assert "Accepted Public Story" in accepted_titles
+    assert rejected_title not in edition_html
+    assert rejected_title not in source_table_html
+    assert rejected_title not in map_html
+    assert rejected_source_id not in edition_html
+    assert rejected_source_id not in source_table_html
+    assert rejected_source_id not in map_html
 
     site_edition = cascadia_work_root / "output" / "site" / "cascadia" / "editions" / "2026-05-03"
     assert (site_edition / "curation_manifest.json").exists()

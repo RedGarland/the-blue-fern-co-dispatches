@@ -24,6 +24,28 @@ TEST_MODE_ENV_VAR = "BLUEFERN_TEST_MODE"
 
 DEFAULT_LOCATION = "United States"
 DEFAULT_STATE = "US"
+US_STATE_ABBREVIATIONS = {
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+    "DC",
+}
+US_STATE_NAMES = {
+    "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware",
+    "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky",
+    "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri",
+    "montana", "nebraska", "nevada", "new hampshire", "new jersey", "new mexico", "new york",
+    "north carolina", "north dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "rhode island",
+    "south carolina", "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington",
+    "west virginia", "wisconsin", "wyoming", "district of columbia",
+}
+NON_US_GEOGRAPHY_TERMS = {
+    "canada", "ontario", "hamilton, ontario", "toronto", "quebec", "british columbia", "alberta",
+    "saskatchewan", "manitoba", "new brunswick", "nova scotia", "prince edward island",
+    "newfoundland and labrador",
+}
 LOCAL_FAMILIES = {
     "local_news",
     "public_radio",
@@ -319,6 +341,9 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "skipping meals",
             "unable to afford food",
             "food hardship",
+            "food insecurity",
+            "food sufficiency",
+            "food insufficiency",
             "hunger increased",
             "families going hungry",
             "food prices",
@@ -327,6 +352,10 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "inflation",
             "income volatility",
             "underemployment",
+            "financial stress",
+            "sports betting",
+            "sports-betting",
+            "gambling",
             "medical bills",
             "medical cost",
             "medical costs",
@@ -401,6 +430,13 @@ DEFAULT_AFFECTED_GROUP_KEYWORDS = {
     "low-income households": ["low-income", "low income", "poverty", "families"],
     "rural residents": ["rural"],
     "disaster-affected households": ["disaster", "hurricane", "flood", "wildfire", "storm"],
+    "working-age adults without a college degree": [
+        "without a college degree",
+        "no college degree",
+        "adults without a college degree",
+    ],
+    "adults 25-44": ["25-44", "25 to 44", "ages 25 to 44", "aged 25 to 44"],
+    "non-white adults": ["non-white adults", "nonwhite adults", "racialized adults"],
 }
 
 
@@ -633,6 +669,64 @@ def _infer_affected_groups(text: str) -> list[str]:
         if any(keyword in lowered for keyword in keywords):
             groups.append(group)
     return groups
+
+
+def _is_research_or_data_signal(
+    row: dict[str, Any],
+    *,
+    source_purpose: str,
+    pressure_signal: bool,
+    supported_geography: bool,
+) -> bool:
+    if not pressure_signal or not supported_geography:
+        return False
+    family = str(row.get("source_family") or "").strip().lower()
+    if family in {"economic_data", "policy_research"}:
+        return True
+    return source_purpose in {"research_report", "data_release"}
+
+
+def _smooth_public_pressure_summary(
+    summary: str,
+    *,
+    subject: str,
+    location_name: str,
+    pressure_type: str,
+) -> str:
+    text = re.sub(r"\s+", " ", str(summary or "").strip())
+    if not text:
+        return ""
+    place = str(location_name or "").strip()
+    subject_lower = str(subject or "").strip().lower()
+    place_pattern = re.escape(place) if place else ""
+    text = text.replace("including strain affecting", "affecting")
+    if place:
+        text = re.sub(
+            rf"\bservice area in {place_pattern}\b",
+            place,
+            text,
+            flags=re.IGNORECASE,
+        )
+        text = re.sub(
+            rf"\bin {place_pattern}, affecting ([^.]+?) in {place_pattern}\b",
+            rf"in {place}, affecting \1",
+            text,
+            flags=re.IGNORECASE,
+        )
+        if pressure_type == "demand strain" and place.lower() in subject_lower:
+            text = re.sub(
+                rf"reported rising food-assistance demand in {place_pattern}",
+                f"reported food-assistance pressure in {place}",
+                text,
+                flags=re.IGNORECASE,
+            )
+            text = re.sub(
+                rf"\b{place_pattern}\s+rising food-assistance demand\b",
+                f"food-assistance pressure in {place}",
+                text,
+                flags=re.IGNORECASE,
+            )
+    return text.strip()
 
 
 def _freshness_role_for_dates(edition_date: str, published_at: str, max_age_days: int) -> str:
@@ -1221,6 +1315,30 @@ def _normalize_source_text(text: str, *, limit: int | None = None) -> str:
     return clean
 
 
+def food_line_is_supported_geography(row: dict[str, Any]) -> bool:
+    country = _normalize_source_text(str(row.get("country") or ""))
+    state = _normalize_source_text(str(row.get("state") or ""))
+    location_name = _normalize_source_text(str(row.get("location_name") or row.get("location") or ""))
+    combined = " ".join(part for part in (country, state, location_name) if part).lower()
+
+    if country and country.lower() not in {"us", "usa", "united states", "united states of america"}:
+        return False
+    if state:
+        state_upper = state.upper()
+        if state_upper in {"US", "USA"}:
+            return True
+        if state_upper in US_STATE_ABBREVIATIONS:
+            return True
+        if state.lower() in US_STATE_NAMES:
+            return True
+        if any(term in combined for term in NON_US_GEOGRAPHY_TERMS):
+            return False
+        return True
+    if any(term in combined for term in NON_US_GEOGRAPHY_TERMS):
+        return False
+    return True
+
+
 FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES = (
     "Skip to main content",
     "Skip to content",
@@ -1417,79 +1535,132 @@ def _build_pressure_summary(
     pressure_type: str,
     affected_groups: list[str],
     text: str,
+    source_purpose: str = "",
+    source_family: str = "",
 ) -> str:
+    def _append_place(sentence: str, place_name: str, *, preposition: str = "in") -> str:
+        cleaned_place = str(place_name or "").strip()
+        if not cleaned_place or cleaned_place == "United States":
+            return sentence
+        if cleaned_place.lower() in sentence.lower():
+            return sentence
+        return f"{sentence} {preposition} {cleaned_place}"
+
+    def _append_groups(sentence: str, groups: str) -> str:
+        cleaned_groups = str(groups or "").strip()
+        if not cleaned_groups:
+            return sentence
+        return f"{sentence}, including strain affecting {cleaned_groups}"
+
     lowered = text.lower()
     place = str(location_name or "").strip()
     subject = str(publisher or source_name or "").strip() or "The source"
-    groups_text = ", ".join(affected_groups[:2])
+    groups_text = ", ".join(affected_groups[:3])
+    source_purpose = str(source_purpose or "").strip().lower()
+    source_family = str(source_family or "").strip().lower()
+    research_or_data_signal = source_family in {"economic_data", "policy_research"} or source_purpose in {"research_report", "data_release"}
+
+    if research_or_data_signal and pressure_type == "household hardship":
+        if any(term in lowered for term in ("sports betting", "sports-betting", "gambling")):
+            sentence = f"{subject} reported on research linking legal sports-betting access to lower food sufficiency among some U.S. households"
+        elif any(term in lowered for term in ("food sufficiency", "food insufficiency")):
+            sentence = f"{subject} reported on research linking household financial stress to lower food sufficiency among some U.S. households"
+        else:
+            sentence = f"{subject} reported on research linking household financial stress to food hardship among some U.S. households"
+        if groups_text:
+            sentence += f", especially among {groups_text}"
+        sentence += ". The signal points to household financial stress as a food-pressure pathway."
+        return _smooth_public_pressure_summary(
+            sentence,
+            subject=subject,
+            location_name=place,
+            pressure_type=pressure_type,
+        )
 
     if pressure_type == "demand strain":
         if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to")):
-            sentence = f"{subject} reported rising food-assistance demand across its service area"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported rising food-assistance demand", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "service reduction":
         if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
-            sentence = f"{subject} reduced distribution hours because of low inventory"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported reduced distribution hours", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "benefit disruption":
         if any(term in lowered for term in ("snap", "benefit", "ebt", "wic", "delay", "outage", "backlog")):
-            sentence = f"State officials reported a SNAP benefit delay"
-            if place and place != "United States":
-                sentence += f" affecting households in {place}"
-            elif place == "United States":
-                sentence += " affecting households"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported a SNAP benefit delay", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "child meal gap":
         if any(term in lowered for term in ("summer meal", "school meal", "meal site", "sun bucks", "children", "missing meals")):
-            sentence = f"A summer meal site closure is leaving children without meals"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported a child meal gap", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "senior meal strain":
         if any(term in lowered for term in ("meals on wheels", "senior", "waitlist", "home-delivered", "unable to serve seniors")):
-            sentence = f"A senior meal provider reported a waitlist for home-delivered meals"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported senior meal strain", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "access gap":
         if any(term in lowered for term in ("food desert", "grocery closure", "no nearby grocery", "transportation barrier", "rural food access")):
-            sentence = f"A grocery closure is widening food access gaps"
-            if place and place != "United States":
-                sentence += f" for residents in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported a food-access gap", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "household hardship":
-        if any(term in lowered for term in ("skipping meals", "unable to afford food", "food hardship", "food insecurity", "hunger increased", "going hungry", "medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs")):
+        if any(term in lowered for term in ("skipping meals", "unable to afford food", "food hardship", "food insecurity", "food sufficiency", "food insufficiency", "hunger increased", "going hungry", "medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs", "financial stress", "sports betting", "sports-betting", "gambling")):
             if any(term in lowered for term in ("medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs")):
-                sentence = f"Households are reporting food hardship tied to health-care costs"
+                sentence = f"{subject} reported household food hardship tied to health-care costs"
             else:
-                sentence = f"Households are reporting food hardship"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+                sentence = f"{subject} reported household food hardship"
+            sentence = _append_place(sentence, place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "disaster disruption":
         if any(term in lowered for term in ("emergency food", "disaster", "d-snap", "storm", "flood", "wildfire")):
-            sentence = f"Emergency food distribution and disaster assistance are responding to disruption"
-            if place and place != "United States":
-                sentence += f" in {place}"
-            if groups_text:
-                sentence += f", affecting {groups_text}"
-            return sentence + "."
+            sentence = _append_place(f"{subject} reported disaster-related food disruption", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     return ""
 
 
@@ -1554,6 +1725,7 @@ def evaluate_food_line_pressure(
     pressure_signal = False
     pressure_reason = "insufficient specific pressure evidence"
     pressure_verification_status = "insufficient_evidence"
+    supported_geography = food_line_is_supported_geography(row)
     blocked_by_source_purpose = source_purpose in SOURCE_PURPOSE_EVERGREEN_VALUES
     if blocked_by_source_purpose:
         pressure_verification_status = "demoted_context"
@@ -1570,6 +1742,8 @@ def evaluate_food_line_pressure(
             pressure_type=pressure_type,
             affected_groups=affected_groups,
             text=classification_text,
+            source_purpose=source_purpose,
+            source_family=str(row.get("source_family") or ""),
         )
         if pressure_summary and not _is_generic_pressure_summary(pressure_summary) and match_terms:
             pressure_signal = True
@@ -1579,6 +1753,10 @@ def evaluate_food_line_pressure(
                 pressure_reason += f"; negative filter {negative_hit} ignored because pressure evidence was explicit"
         else:
             affected_groups = []
+    if pressure_signal and not supported_geography:
+        pressure_signal = False
+        pressure_reason = "outside product geography"
+        pressure_verification_status = "demoted_context"
     if not pressure_signal:
         pressure_summary = ""
         if blocked_by_source_purpose:
@@ -1607,13 +1785,26 @@ def evaluate_food_line_pressure(
         else:
             evidence_level = "direct reported hardship"
     state = str(row.get("state") or "").strip().upper()
-    if family in BASELINE_FAMILIES:
+    research_or_data_signal = _is_research_or_data_signal(
+        row,
+        source_purpose=source_purpose,
+        pressure_signal=pressure_signal,
+        supported_geography=supported_geography,
+    )
+    if family in BASELINE_FAMILIES and not research_or_data_signal:
         source_role = "baseline_condition"
+    elif research_or_data_signal:
+        if family == "economic_data" or source_purpose == "data_release":
+            source_role = "data_anchor_signal"
+        elif family in {"state_official", "federal_official", "state_policy_news"}:
+            source_role = "institutional_context_signal"
+        else:
+            source_role = "research_signal"
     elif family == "food_bank_provider":
         source_role = "provider_signal" if pressure_signal else "resource_context"
     elif blocked_by_source_purpose:
         source_role = "resource_context"
-    elif state not in {"", "US"} and family in LOCAL_FAMILIES:
+    elif supported_geography and state not in {"", "US"} and family in LOCAL_FAMILIES:
         source_role = "local_signal"
     elif family in {"state_official", "federal_official", "state_policy_news"}:
         source_role = "policy_context"
@@ -1623,7 +1814,7 @@ def evaluate_food_line_pressure(
         source_role = "pressure_evidence" if pressure_signal else "resource_context"
     if pressure_required and not pressure_signal and negative_hit and family not in BASELINE_FAMILIES:
         source_role = "rejected_context"
-    location_scope = "state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national"
+    location_scope = "outside_product_geography" if not supported_geography else ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
     return {
         "pressure_signal": bool(pressure_signal),
         "pressure_type": pressure_type,
@@ -1642,6 +1833,7 @@ def evaluate_food_line_pressure(
         "collected_date": edition_date,
         "source_role": source_role,
         "location_scope": location_scope,
+        "supported_product_geography": supported_geography,
         "source_role_allowed": _registry_role_allowed(bool(pressure_required), family),
         "pressure_required": bool(pressure_required),
         "positive_keywords": positives,
@@ -2221,7 +2413,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "evidence_level": str(pressure_eval.get("evidence_level") or "background context"),
                     "freshness_role": str(pressure_eval.get("freshness_role") or "dated_recent_signal"),
                     "source_role": str(pressure_eval.get("source_role") or "resource_context"),
-                    "map_eligible": bool(pressure_eval.get("pressure_signal")),
+                    "map_eligible": bool(pressure_eval.get("pressure_signal")) and str(pressure_eval.get("source_role") or "") not in {"data_anchor_signal", "research_signal", "institutional_context_signal"},
                 }
             )
         audit_entry["accepted_pressure_count"] = sum(1 for row in rows if str(row.get("source_id") or "") == source_id and bool(row.get("pressure_signal")))

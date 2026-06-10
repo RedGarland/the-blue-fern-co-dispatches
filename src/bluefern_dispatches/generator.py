@@ -566,7 +566,7 @@ def header(
     nav_slugs: tuple[str, ...] | None = None,
 ) -> str:
     root_links = []
-    for slug in nav_slugs or ("gaza", "cascadia", "american-pressure", "food-line"):
+    for slug in nav_slugs or ("gaza", "cascadia", "food-line"):
         if not dispatch_public_visible(slug):
             continue
         root_links.append(f'<a href="/{slug}/">{html.escape(DISPATCH_LABELS.get(slug, slug.title()))}</a>')
@@ -691,7 +691,127 @@ def is_weekly_cascadia_manifest(manifest: dict[str, Any], edition_date: str) -> 
     return True
 
 
+def _food_line_public_edition_listability_report(site_root: Path, edition_date: str) -> dict[str, Any]:
+    edition_dir = site_root / "food-line" / "editions" / edition_date
+    manifest_path = edition_dir / "edition_manifest.json"
+    freshness_keys = (
+        "public_rendered",
+        "edition_mode",
+        "source_freshness_status",
+        "freshness_window_days",
+        "stale_public_story_count",
+        "excluded_stale_source_count",
+        "stale_source_ids",
+    )
+    report: dict[str, Any] = {
+        "dispatch_slug": "food-line",
+        "edition_date": edition_date,
+        "edition_dir": str(edition_dir),
+        "manifest_path": str(manifest_path),
+        "manifest_exists": manifest_path.exists(),
+        "manifest_valid_json": False,
+        "manifest_is_object": False,
+        "dispatch_slug_value": "",
+        "edition_date_value": "",
+        "public_rendered": False,
+        "edition_mode": "",
+        "source_freshness_status": "",
+        "freshness_window_days": None,
+        "qualified_primary_count": None,
+        "skip_reason": "",
+        "listable": False,
+        "missing_required_fields": list(freshness_keys),
+        "false_or_invalid_fields": [],
+        "reasons": [],
+    }
+    if not manifest_path.exists():
+        report["reasons"].append("manifest missing")
+        return report
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        report["manifest_valid_json"] = True
+    except (OSError, json.JSONDecodeError) as exc:
+        report["reasons"].append(f"manifest invalid JSON: {exc}")
+        return report
+    if not isinstance(manifest, dict):
+        report["reasons"].append("manifest is not an object")
+        return report
+    report["manifest_is_object"] = True
+    report["dispatch_slug_value"] = str(manifest.get("dispatch_slug") or "")
+    report["edition_date_value"] = str(manifest.get("edition_date") or "")
+    report["public_rendered"] = manifest.get("public_rendered") is True
+    report["edition_mode"] = str(manifest.get("edition_mode") or "").strip()
+    report["source_freshness_status"] = str(manifest.get("source_freshness_status") or "").strip()
+    report["skip_reason"] = str(manifest.get("skip_reason") or "").strip()
+    report["missing_required_fields"] = [field for field in freshness_keys if field not in manifest]
+    if report["dispatch_slug_value"] != "food-line":
+        report["false_or_invalid_fields"].append("dispatch_slug")
+        report["reasons"].append(f"dispatch_slug must be food-line (found {report['dispatch_slug_value'] or 'missing'})")
+    if report["edition_date_value"] and report["edition_date_value"] != edition_date:
+        report["false_or_invalid_fields"].append("edition_date")
+        report["reasons"].append(f"edition_date mismatch: {report['edition_date_value']} != {edition_date}")
+    if not report["public_rendered"]:
+        report["false_or_invalid_fields"].append("public_rendered")
+        report["reasons"].append("public_rendered is false")
+    if not report["source_freshness_status"]:
+        report["false_or_invalid_fields"].append("source_freshness_status")
+        report["reasons"].append("source_freshness_status is missing or empty")
+    try:
+        freshness_window_days = int(manifest.get("freshness_window_days") or 0)
+    except (TypeError, ValueError):
+        freshness_window_days = None
+        report["false_or_invalid_fields"].append("freshness_window_days")
+        report["reasons"].append("freshness_window_days is missing or invalid")
+    else:
+        report["freshness_window_days"] = freshness_window_days
+        if freshness_window_days <= 0:
+            report["false_or_invalid_fields"].append("freshness_window_days")
+            report["reasons"].append("freshness_window_days must be greater than zero")
+    try:
+        qualified_primary_count = int(manifest.get("qualified_primary_count") or 0)
+    except (TypeError, ValueError):
+        qualified_primary_count = None
+        report["false_or_invalid_fields"].append("qualified_primary_count")
+        report["reasons"].append("qualified_primary_count is missing or invalid")
+    else:
+        report["qualified_primary_count"] = qualified_primary_count
+        if report["edition_mode"] == "no_current_update":
+            if qualified_primary_count != 0:
+                report["false_or_invalid_fields"].append("qualified_primary_count")
+                report["reasons"].append("no_current_update editions require qualified_primary_count to equal 0")
+        elif qualified_primary_count <= 0:
+            report["false_or_invalid_fields"].append("qualified_primary_count")
+            report["reasons"].append("current_update editions require qualified_primary_count greater than 0")
+        elif report["edition_mode"] != "current_update":
+            report["false_or_invalid_fields"].append("edition_mode")
+            report["reasons"].append(f"edition_mode must be current_update for public Food Line editions (found {report['edition_mode'] or 'missing'})")
+    if report["skip_reason"]:
+        report["false_or_invalid_fields"].append("skip_reason")
+        report["reasons"].append("skip_reason is set")
+    report["listable"] = (
+        report["manifest_exists"]
+        and report["manifest_valid_json"]
+        and report["manifest_is_object"]
+        and report["dispatch_slug_value"] == "food-line"
+        and (not report["edition_date_value"] or report["edition_date_value"] == edition_date)
+        and report["public_rendered"] is True
+        and report["source_freshness_status"] != ""
+        and report["freshness_window_days"] is not None
+        and int(report["freshness_window_days"]) > 0
+        and report["qualified_primary_count"] is not None
+        and (
+            (report["edition_mode"] == "no_current_update" and int(report["qualified_primary_count"]) == 0)
+            or (report["edition_mode"] == "current_update" and int(report["qualified_primary_count"]) > 0)
+        )
+        and report["edition_mode"] in {"current_update", "no_current_update"}
+        and not report["skip_reason"]
+    )
+    return report
+
+
 def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) -> bool:
+    if slug == "food-line":
+        return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
     if slug == "gaza":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         if not manifest_path.exists():
@@ -743,33 +863,7 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
                 return False
         return True
     if slug == "food-line":
-        edition_dir = site_root / slug / "editions" / edition_date
-        manifest_path = edition_dir / "edition_manifest.json"
-        index_path = edition_dir / "index.html"
-        if not manifest_path.exists() or not index_path.exists():
-            return False
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return False
-        if not isinstance(manifest, dict):
-            return False
-        if manifest.get("dispatch_slug") != "food-line":
-            return False
-        if manifest.get("edition_date") and manifest.get("edition_date") != edition_date:
-            return False
-        has_public_fields = any(key in manifest for key in ("public_rendered", "qualified_primary_count", "skip_reason"))
-        if has_public_fields:
-            if manifest.get("public_rendered") is not True:
-                return False
-            if int(manifest.get("qualified_primary_count") or 0) <= 0:
-                return False
-            if str(manifest.get("skip_reason") or "").strip():
-                return False
-        else:
-            if int(manifest.get("source_count") or 0) <= 0 and int(manifest.get("story_count") or 0) <= 0:
-                return False
-        return True
+        return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
     if slug == "american-pressure":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         index_path = site_root / slug / "editions" / edition_date / "index.html"
@@ -884,6 +978,24 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     if str(manifest.get("zero_story_review_status") or "").strip().lower() == "credible":
         return True
     return False
+
+
+def _food_line_public_edition_skip_warning(report: dict[str, Any]) -> str:
+    edition_date = str(report.get("edition_date") or "").strip() or "unknown-date"
+    manifest_path = str(report.get("manifest_path") or "").strip() or "unknown manifest"
+    dispatch_slug = str(report.get("dispatch_slug_value") or report.get("dispatch_slug") or "").strip() or "missing"
+    manifest_exists = "yes" if report.get("manifest_exists") else "no"
+    listable = "yes" if report.get("listable") else "no"
+    public_rendered = "yes" if report.get("public_rendered") else "no"
+    missing_fields = ", ".join(str(item) for item in (report.get("missing_required_fields") or []) if str(item).strip()) or "none"
+    false_fields = ", ".join(str(item) for item in (report.get("false_or_invalid_fields") or []) if str(item).strip()) or "none"
+    reasons = "; ".join(str(item) for item in (report.get("reasons") or []) if str(item).strip()) or "no specific reason recorded"
+    return (
+        f"Food Line edition {edition_date} was not copied to Pages. "
+        f"manifest_path={manifest_path}; manifest_exists={manifest_exists}; dispatch_slug={dispatch_slug}; "
+        f"public_rendered={public_rendered}; public_edition_is_listable={listable}; "
+        f"missing_required_fields={missing_fields}; false_or_invalid_fields={false_fields}; reasons={reasons}"
+    )
 
 
 def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> dict[str, Any]:
@@ -1825,11 +1937,15 @@ def is_relative_to(path: Path, parent: Path) -> bool:
 
 
 def collect_public_site_files(
-    site_root: Path, only_dispatches: tuple[str, ...] = (), public_max_dates: dict[str, str] | None = None
+    site_root: Path,
+    only_dispatches: tuple[str, ...] = (),
+    public_max_dates: dict[str, str] | None = None,
+    skip_diagnostics: list[dict[str, Any]] | None = None,
 ) -> list[Path]:
     if not site_root.exists():
         return []
     files = []
+    food_line_reported: set[str] = set()
     for path in site_root.rglob("*"):
         if not path.is_file():
             continue
@@ -1843,6 +1959,9 @@ def collect_public_site_files(
             if max_public_date and edition_date > max_public_date:
                 continue
             if not public_edition_is_listable(site_root, slug, edition_date):
+                if slug == "food-line" and skip_diagnostics is not None and edition_date not in food_line_reported:
+                    skip_diagnostics.append(_food_line_public_edition_listability_report(site_root, edition_date))
+                    food_line_reported.add(edition_date)
                 continue
         files.append(path)
     return sorted(files)
@@ -1919,6 +2038,7 @@ def copy_public_site_to_pages(
     dry_run: bool,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
+    skip_diagnostics: list[dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
@@ -1933,7 +2053,12 @@ def copy_public_site_to_pages(
         ".pytest_cache/",
         f"{pages_repo / '.git'}",
     ]
-    for source in collect_public_site_files(site_root, only_dispatches=only_dispatches, public_max_dates=public_max_dates):
+    for source in collect_public_site_files(
+        site_root,
+        only_dispatches=only_dispatches,
+        public_max_dates=public_max_dates,
+        skip_diagnostics=skip_diagnostics,
+    ):
         target = pages_repo / source.relative_to(site_root)
         copied.append(str(target))
         if dry_run:
@@ -2310,6 +2435,7 @@ def publish_pages(
     would_copy = not errors
     copied: list[str] = []
     skipped: list[str] = []
+    skip_diagnostics: list[dict[str, Any]] = []
     removed_non_publishable: list[dict[str, str]] = []
     removed_stale_artifacts: list[str] = []
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
@@ -2337,7 +2463,9 @@ def publish_pages(
             dry_run=dry_run,
             only_dispatches=only_dispatches,
             public_max_dates=public_max_dates,
+            skip_diagnostics=skip_diagnostics,
         )
+        warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         if not dry_run:
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
@@ -2392,6 +2520,7 @@ def publish_pages(
         "stale_pages_artifacts_removed": [] if dry_run else removed_stale_artifacts,
         "stale_pages_artifacts_that_would_be_removed": removed_stale_artifacts if dry_run else [],
         "files_that_would_be_skipped": skipped,
+        "food_line_public_edition_skip_diagnostics": skip_diagnostics,
         "would_copy": would_copy,
         "copied": bool(copied) and not dry_run,
         "would_commit": bool(commit),

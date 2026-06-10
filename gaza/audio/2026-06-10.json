@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-10",
+  "generated_at": "2026-06-10T13:01:20.057393Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-10.mp3",
+  "audio_url": "/gaza/audio/2026-06-10.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1691,
+  "tts_input_word_count": 259,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1731456,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-10T13:01:20.057364Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-10-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-10/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 10, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinians face systematic abuse by Israeli settlers and Hamas alike: Independent investigators. Palestinian civilians are trapped between escalating settler violence in the occupied West Bank and fear-based Hamas rule in the Gaza Strip, investigators appointed by the UN Human Rights Council said on Tuesday in a new report. This was reported by UN News.\n\n2. Hamas pushes to link Gaza to Iran war deal, but many unconvinced. As Israeli attacks persist and the humanitarian toll rises, Gaza's residents are caught between diplomatic efforts and daily survival. This was reported by The New Arab.\n\n3. Satellite images show Israel's destruction of historical city of Tyre. Satellite data shows damage to residential areas, UNESCO Heritage buffer zones and Palestinian camps in Israeli attacks. This was reported by Al Jazeera.\n\n4. Amnesty says Israel ethnically cleansing West Bank Palestinians. Israel has forcibly displaced thousands of Palestinians from the West Bank's Area C, calling for sanctions on Netanyahu and other ministers. This was reported by The New Arab.\n\n5. UK and allies sanction 'networks' enabling settler violence in West Bank. Israel condemns as \"disgraceful\". This was reported by BBC News.\n\n6. Israeli settlers torch fields near Palestinian Christian village. A group of Israeli settlers set ablaze fields near the historic Christian village of Taybeh in the latest West Bank rampage incident. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 10, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-10-un-news-middle-east-a01e59ef7a25",
+      "publisher": "UN News",
+      "url": "https://news.un.org/feed/view/en/story/2026/06/1167682",
+      "title": "Palestinians face systematic abuse by Israeli settlers and Hamas alike: Independent investigators"
+    },
+    {
+      "source_record_id": "gaza-2026-06-10-the-new-arab-596ea3f51c59",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/hamas-pushes-link-gaza-iran-war-deal-many-unconvinced",
+      "title": "Hamas pushes to link Gaza to Iran war deal, but many unconvinced"
+    },
+    {
+      "source_record_id": "gaza-2026-06-10-aljazeera-middle-east-f29cddd9b3bb",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/10/satellite-images-show-israels-destruction-of-historical-city-of-tyre?traffic_source=rss",
+      "title": "Satellite images show Israel's destruction of historical city of Tyre"
+    },
+    {
+      "source_record_id": "gaza-2026-06-10-the-new-arab-eceb5f453cd0",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/amnesty-says-israel-ethnically-cleansing-west-bank-palestinians",
+      "title": "Amnesty says Israel ethnically cleansing West Bank Palestinians"
+    },
+    {
+      "source_record_id": "gaza-2026-06-10-bbc-middle-east-5c59ee1731f9",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cddl4dl9m3po?at_medium=RSS&at_campaign=rss",
+      "title": "UK and allies sanction 'networks' enabling settler violence in West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-06-10-the-new-arab-e16658eba009",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israeli-settlers-torch-fields-near-palestinian-christian-village",
+      "title": "Israeli settlers torch fields near Palestinian Christian village"
+    }
+  ]
+}

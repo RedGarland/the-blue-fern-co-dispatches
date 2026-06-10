@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 09 Jun 2026 13:01:07 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 10 Jun 2026 13:01:20 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 10, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-10-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-10-transcript.html</guid>
+    <pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Palestinians face systematic abuse by Israeli settlers and Hamas alike: Independent investigators. Palestinian civilians are trapped between escalating settler violence in the occupied West Bank and fear-based Hamas rule in the Gaza Strip, investigators appointed by the UN Human Rights Council said on Tuesday in a new report. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-10.mp3" length="1731456" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 9, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-09-transcript.html</link>

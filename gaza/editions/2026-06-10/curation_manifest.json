@@ -1,21 +1,452 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-06-10",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
+    "story_id": "gaza-story-2026-06-10-002",
+    "title": "Palestinians face systematic abuse by Israeli settlers and Hamas alike: Independent investigators",
+    "summary": "Palestinian civilians are trapped between escalating settler violence in the occupied West Bank and fear-based Hamas rule in the Gaza Strip, investigators appointed by the UN Human Rights Council said on Tuesday in a new report.",
     "category": "humanitarian",
-    "score": 100,
+    "story_scope": "core_gaza",
+    "score": 83,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "humanitarian_impact",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-06-10-un-news-middle-east-a01e59ef7a25"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-06-10-un-news-middle-east-a01e59ef7a25"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/06/1167682"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 83,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-007",
+    "title": "Hamas pushes to link Gaza to Iran war deal, but many unconvinced",
+    "summary": "As Israeli attacks persist and the humanitarian toll rises, Gaza's residents are caught between diplomatic efforts and daily survival.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-the-new-arab-596ea3f51c59"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-the-new-arab-596ea3f51c59"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/hamas-pushes-link-gaza-iran-war-deal-many-unconvinced"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-003",
+    "title": "Satellite images show Israel's destruction of historical city of Tyre",
+    "summary": "Satellite data shows damage to residential areas, UNESCO Heritage buffer zones and Palestinian camps in Israeli attacks.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-aljazeera-middle-east-f29cddd9b3bb"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-aljazeera-middle-east-f29cddd9b3bb"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/10/satellite-images-show-israels-destruction-of-historical-city-of-tyre?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-005",
+    "title": "Amnesty says Israel ethnically cleansing West Bank Palestinians",
+    "summary": "Israel has forcibly displaced thousands of Palestinians from the West Bank's Area C, calling for sanctions on Netanyahu and other ministers.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 61,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-the-new-arab-eceb5f453cd0"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-the-new-arab-eceb5f453cd0"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/amnesty-says-israel-ethnically-cleansing-west-bank-palestinians"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-004",
+    "title": "UK and allies sanction 'networks' enabling settler violence in West Bank",
+    "summary": "Israel condemns as \"disgraceful\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 48,
+    "scoring_reasons": [
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-bbc-middle-east-5c59ee1731f9"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-bbc-middle-east-5c59ee1731f9"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/cddl4dl9m3po?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-06-009",
+    "prior_edition_date": "2026-06-06",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-001",
+    "title": "Israeli settlers torch fields near Palestinian Christian village",
+    "summary": "A group of Israeli settlers set ablaze fields near the historic Christian village of Taybeh in the latest West Bank rampage incident.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-the-new-arab-e16658eba009"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-the-new-arab-e16658eba009"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-settlers-torch-fields-near-palestinian-christian-village"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-006",
+    "title": "Rising from the rubble: A Gaza tech incubator defies Israel's war",
+    "summary": "Israel's war on Gaza has decimated the tech sector, killing experts and destroying incubators that offered opportunity.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-aljazeera-middle-east-6a6f5cc647b7"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-aljazeera-middle-east-6a6f5cc647b7"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/economy/2026/6/10/rising-from-the-rubble-a-gaza-tech-incubator-defies-israels-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-10-008",
+    "title": "Israel puts Gaza doctor Abu Safiya in solitary confinement",
+    "summary": "Prominent Gaza doctor Hussam Abu Safiya has been transferred to a maximum-security prison and placed in solitary confinement.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 30,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-10-the-new-arab-a0acb5abf866"
+    ],
+    "source_ids": [
+      "gaza-2026-06-10-the-new-arab-a0acb5abf866"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-puts-gaza-doctor-abu-safiya-solitary-confinement"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-10T13:01:02.183147+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 30,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-09-003",
+    "prior_edition_date": "2026-06-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
   }
 ]

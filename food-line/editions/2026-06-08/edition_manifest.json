@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-08",
-  "generated_at": "2026-06-09T07:30:03.710671+00:00",
+  "generated_at": "2026-06-10T03:10:40.543925+00:00",
   "source_count": 34,
   "story_count": 1,
   "source_adequacy": {
@@ -36,6 +36,19 @@
   "continuing_pressure_count": 0,
   "context_count": 2,
   "excluded_count": 32,
+  "exclusion_reason_counts": {
+    "stale": 4,
+    "duplicate": 0,
+    "unrelated": 0,
+    "resource-only / no pressure signal": 3,
+    "weak pressure signal": 19,
+    "missing usable date": 0,
+    "missing usable location": 0,
+    "insufficient source traceability": 0,
+    "background/context only": 6,
+    "other": 0
+  },
+  "exclusion_reason_summary": "Exclusion breakdown: stale 4; resource-only or no pressure signal 3; weak pressure signal 19; background or context material 6.",
   "skip_reason": "",
   "continuing_pressure_source_record_ids": [],
   "continuing_pressure_source_urls": [],

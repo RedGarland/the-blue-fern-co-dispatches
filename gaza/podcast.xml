@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 10 Jun 2026 13:01:20 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 11 Jun 2026 13:01:08 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 11, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-11-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-11-transcript.html</guid>
+    <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Amnesty accuses Israel's government of 'ethnic cleansing' of West Bank Palestinians. The London-based rights group says the Israeli government is deliberately trying to annex the Palestinian territory. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-11.mp3" length="2208000" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 10, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-10-transcript.html</link>

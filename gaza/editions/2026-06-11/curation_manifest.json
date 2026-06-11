@@ -1,21 +1,445 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-06-11",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-06-11-005",
+    "title": "Amnesty accuses Israel's government of 'ethnic cleansing' of West Bank Palestinians",
+    "summary": "The London-based rights group says the Israeli government is deliberately trying to annex the Palestinian territory.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 58,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-06-11-npr-world-144c5f2ae7bd"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-06-11-npr-world-144c5f2ae7bd"
+    ],
+    "source_urls": [
+      "https://www.npr.org/2026/06/11/g-s1-127411/amnesty-israel-west-bank"
+    ],
+    "publisher_names": [
+      "NPR"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-004",
+    "title": "Pro-Palestinian activists accused of intimidation campaign against University of Michigan officials",
+    "summary": "Federal prosecutors unsealed indictment against activists trying to force the school to cut financial ties to Israel Sign up for the Breaking News US newsletter email Federal prosecutors unsealed an indictment on Wednesday against eight pro-Palestinian activists who are accused of conspiring to run a criminal intimidation campaign against University of Michigan officials while trying to force the school to cut financial ties to Israel . The indictment also describes vandalism against some companies that operate in Michigan and against the Jewish Federation of Metropolitan Detroit.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-guardian-world-3b3d327f7874"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-guardian-world-3b3d327f7874"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/jun/10/pro-palestinian-activists-accused-intimidation-campaign-university-michigan"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-002",
+    "title": "Video shows Gaza teen fisherman before Israeli forces killed him at sea",
+    "summary": "Mohammad Abu Giab was a 15-year-old fisherman from Gaza that was shot dead by Israeli forces off Deir el-Balah.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-bbfe433d7f29"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-bbfe433d7f29"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-008",
+    "title": "INTERVIEW - Amnesty chief slams EU for turning a blind eye to Israel's 'ethnic cleansing' in West Bank",
+    "summary": "Agnes Callamard says violence by extremist occupiers against Palestinians are not isolated incidents, but part of long-running 'ethnic cleansing' project driven by Israeli state actors.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-anadolu-middle-east-56cad39b9649"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-anadolu-middle-east-56cad39b9649"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/interview-amnesty-chief-slams-eu-for-turning-a-blind-eye-to-israel-s-ethnic-cleansing-in-west-bank/3963921"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-007",
+    "title": "Detained Gaza doctor Hussam Abu Safia shows signs of torture, family says",
+    "summary": "Gaza paediatrician appears by video link in Israeli court, as lawyer and family demand release, fearing for his life.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-82f0fcc45083"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-82f0fcc45083"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/11/detained-gaza-doctor-hussam-abu-safia-shows-signs-of-torture-family-says?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-006",
+    "title": "Gaza doctor Hussam Abu Safiya to appear before Israeli court",
+    "summary": "The jailed doctor's son tells. The New Arab that his father is being held in unbearable conditions and fear him dying alone behind bars.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-the-new-arab-9b4881ce281e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-the-new-arab-9b4881ce281e"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-doctor-hussam-abu-safiya-appear-israeli-court"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-003",
+    "title": "Israel deports French journalist over criticism of Gaza genocide",
+    "summary": "French Embassy expresses strong dissatisfaction with Israeli move to deport Alice Froussard.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-anadolu-middle-east-74e5e799080b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-anadolu-middle-east-74e5e799080b"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-deports-french-journalist-over-criticism-of-gaza-genocide/3964155"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-11-009",
+    "title": "World celebrates, but Gaza watches the World Cup from a distance",
+    "summary": "Amid war and ruins, Gaza footballers keep training but feel erased from the World Cup and global football stage.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-9490aef2c9d1"
+    ],
+    "source_ids": [
+      "gaza-2026-06-11-aljazeera-middle-east-9490aef2c9d1"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/longform/2026/6/11/world-celebrates-but-gaza-watches-the-world-cup-from-a-distance?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-11T13:00:43.092816+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

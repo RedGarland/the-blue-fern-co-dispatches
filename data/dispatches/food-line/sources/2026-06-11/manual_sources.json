@@ -1,0 +1,52 @@
+[
+  {
+    "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+    "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+    "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+    "publisher": "WSLS",
+    "published_at": "2026-06-10T06:24:00",
+    "page_metadata_date": "2026-06-10T09:57:00",
+    "retrieved_at": "2026-06-11T00:00:00Z",
+    "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+    "evidence_text": "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. Enge said the shortfall is significant and is causing them to hand out less food. Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options.",
+    "evidence_text_basis": "page_text_excerpt",
+    "source_type": "page",
+    "source_family": "local_news",
+    "state": "VA",
+    "location_name": "Roanoke, VA",
+    "location_scope": "local",
+    "country": "US",
+    "source_purpose": "current_news",
+    "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+    "source_traceability_role": "article_url",
+    "issue_tags": [
+      "food shortage",
+      "pantry capacity",
+      "SNAP",
+      "school meals"
+    ],
+    "map_category": "acute strain / service disruption",
+    "positive_keywords": [
+      "food shortage",
+      "empty shelves",
+      "USDA",
+      "SNAP",
+      "school meals",
+      "pantry"
+    ],
+    "negative_keywords": [
+      "recipe",
+      "restaurant review",
+      "menu",
+      "cooking tips",
+      "chef",
+      "grocery sale"
+    ],
+    "affected_group_keywords": [
+      "pantry clients",
+      "SNAP households",
+      "families",
+      "children"
+    ]
+  }
+]

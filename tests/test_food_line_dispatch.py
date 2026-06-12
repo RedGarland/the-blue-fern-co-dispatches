@@ -2579,6 +2579,89 @@ def test_food_line_local_signal_beats_background_as_lead(tmp_path: Path):
     assert result["lead_source_record_id"] == local["source_record_id"]
 
 
+def test_food_line_wsls_roanoke_shortage_is_local_map_eligible_and_traceable(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-11"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    wsls_id = "wsls-roanoke-st-francis-house-food-shortage-20260610"
+    wsls_excerpt = (
+        "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+        "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+        "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+        "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+        "Enge said the shortfall is significant and is causing them to hand out less food. "
+        "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+        "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+    )
+    wsls = {
+        "source_record_id": wsls_id,
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": wsls_excerpt,
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    background = _row(2, family="economic_data", state="US", title="USDA ERS food security context", summary="USDA ERS context note.", source_type="page", publisher="USDA ERS")
+    background["map_category"] = "context / monitoring only"
+    background["issue_tags"] = ["household food insecurity", "economic pressure"]
+    background["location_name"] = "United States"
+    second_background = _row(3, family="school_meals_child_nutrition", state="US", title="USDA summer meals context", summary="USDA summer meal programs and guidance.", source_type="page", publisher="USDA FNS")
+    second_background["map_category"] = "context / monitoring only"
+    second_background["issue_tags"] = ["summer meals", "child hunger", "school meals"]
+    second_background["location_name"] = "United States"
+    p.write_text(json.dumps([wsls, background, second_background], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+
+    sources_manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
+    wsls_manifest = next(row for row in sources_manifest if row["source_record_id"] == wsls_id)
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    wsls_review = next(row for row in review_rows if row["source_record_id"] == wsls_id)
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
+
+    assert result["public_rendered"] is True
+    assert result["lead_source_record_id"] == wsls_id
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["pressure_signal_count"] >= 1
+    assert result["pressure_marker_count"] >= 1
+    assert wsls_review["source_url"] == wsls["url"]
+    assert wsls_review["primary_source_url"] == wsls["url"]
+    assert wsls_review["source_traceability_role"] == "article_url"
+    assert wsls_review["pressure_verification_status"] == "source_text_verified"
+    assert wsls_manifest["pressure_signal"] is True
+    assert map_data["pressure_markers"]
+    assert any(marker["source_record_id"] == wsls_id for marker in map_data["pressure_markers"])
+    assert "Why Roanoke" in source_table_html
+    assert "faced completely empty shelves in May" in source_table_html
+    assert "they received even less food" in source_table_html
+    assert "WSLS" in source_table_html
+    assert "data_anchor_signal" not in edition_html
+    assert "research_signal" not in edition_html
+    assert "data_anchor_signal" not in source_table_html
+    assert "research_signal" not in source_table_html
+
+
 def test_food_line_state_centroid_basis_labeled_clearly(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-03"
@@ -5662,6 +5745,129 @@ def test_food_line_discovery_source_configuration_includes_target_outlet_seeds()
     assert "nepm.org" in priority_domains
     assert "themainemonitor.org" in priority_domains
     assert "miamiherald.com" in priority_domains
+    assert "wsls.com" in priority_domains
+
+
+def test_food_line_pressure_registry_includes_wsls_roanoke_local_feed():
+    registry = json.loads((Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "pressure_source_registry.json").read_text(encoding="utf-8"))
+    by_id = {row["source_id"]: row for row in registry}
+
+    wsls = by_id["wsls_roanoke_local"]
+    assert wsls["publisher"] == "WSLS"
+    assert wsls["source_family"] == "local_news"
+    assert wsls["source_type"] == "rss"
+    assert wsls["url"] == "https://www.wsls.com/arc/outboundfeeds/rss/category/news/?outputType=xml&size=10"
+    assert wsls["state"] == "VA"
+    assert wsls["location_name"] == "Roanoke, VA"
+    assert wsls["location_scope"] == "state_local"
+    assert wsls["source_role_allowed"] == "pressure_evidence"
+    assert wsls["pressure_required"] is True
+    assert wsls["freshness_mode"] == "pressure"
+    assert wsls["max_age_days"] == 14
+    assert wsls["enabled"] is True
+    assert wsls["source_purpose"] == "current_news"
+    assert wsls["current_or_evergreen"] == "current"
+    assert wsls["promotable"] is True
+    assert wsls["expected_text_basis"] == "rss_summary"
+    assert "food pantry" in wsls["positive_keywords"]
+    assert "St. Francis House" in wsls["positive_keywords"]
+    assert "Feeding Southwest Virginia" in wsls["positive_keywords"]
+
+
+def test_food_line_wsls_feed_source_qualifies_pressure_items_but_not_generic_local_news(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-11"
+    feed_url = "https://www.wsls.com/arc/outboundfeeds/rss/category/news/?outputType=xml&size=10"
+    _write_pressure_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "wsls_roanoke_local",
+                "source_name": "WSLS Roanoke and Southwest Virginia News",
+                "publisher": "WSLS",
+                "source_type": "rss",
+                "url": feed_url,
+                "source_family": "local_news",
+                "state": "VA",
+                "location_name": "Roanoke, VA",
+                "location_scope": "state_local",
+                "source_role_allowed": "pressure_evidence",
+                "pressure_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "positive_keywords": [
+                    "food pantry",
+                    "food shortage",
+                    "food insecurity",
+                    "SNAP",
+                    "USDA food",
+                    "school meals",
+                    "St. Francis House",
+                    "Feeding Southwest Virginia",
+                ],
+                "negative_keywords": [
+                    "recipe",
+                    "restaurant",
+                    "menu",
+                    "chef",
+                    "festival",
+                    "gala",
+                    "donation drive",
+                ],
+                "affected_group_keywords": [
+                    "pantry clients",
+                    "SNAP households",
+                    "families",
+                    "children",
+                    "students",
+                ],
+                "enabled": True,
+                "summary_fallback": "WSLS local-news feed for Roanoke and Southwest Virginia food access pressure.",
+                "notes": "Verified official WSLS RSS feed.",
+                "pressure_verification_required": True,
+                "extraction_quality": "high",
+                "expected_text_basis": "rss_summary",
+                "source_purpose": "current_news",
+                "current_or_evergreen": "current",
+                "promotable": True,
+                "non_promotable_reason": "",
+            }
+        ],
+    )
+    rss_payload = _rss_payload(
+        [
+                {
+                    "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+                    "link": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+                    "description": "St. Francis House reported rising demand and reduced distribution after empty shelves in May. The June USDA delivery was smaller than May's, the pantry is handing out less food, food supply is down 64% compared with January, and summer school-meal gaps plus SNAP and USDA pressure are adding strain.",
+                },
+            {
+                "title": "Roanoke city leaders discuss park improvements",
+                "link": "https://www.wsls.com/news/local/2026/06/10/roanoke-park-update/",
+                "description": "City leaders discussed a park project and traffic timing.",
+            },
+        ]
+    )
+
+    result = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=lambda _url, timeout=15: rss_payload)
+    rows = json.loads(Path(result["auto_sources_path"]).read_text(encoding="utf-8"))
+    by_title = {row["title"]: row for row in rows}
+
+    qualifying_title = "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer"
+    generic_title = "Roanoke city leaders discuss park improvements"
+
+    assert result["source_count"] == 2
+    assert result["collected_source_count_by_source_id"] == {"wsls_roanoke_local": 2}
+    assert by_title[qualifying_title]["pressure_signal"] is True
+    assert by_title[qualifying_title]["map_eligible"] is True
+    assert by_title[qualifying_title]["source_role"] == "local_signal"
+    assert by_title[qualifying_title]["pressure_verification_status"] == "source_text_verified"
+    assert by_title[qualifying_title]["source_family"] == "local_news"
+    assert by_title[qualifying_title]["state"] == "VA"
+    assert by_title[qualifying_title]["url"] == "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/"
+    assert by_title[generic_title]["pressure_signal"] is False
+    assert by_title[generic_title]["map_eligible"] is False
+    assert by_title[generic_title]["pressure_verification_status"] == "demoted_context"
 
 
 def test_food_line_sitemap_xml_seed_discovers_article_urls(tmp_path: Path):

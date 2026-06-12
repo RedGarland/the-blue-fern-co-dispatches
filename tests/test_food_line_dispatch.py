@@ -837,19 +837,17 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
 
     assert result["audio_generated"] is True
     assert audio_json["episode_title"] == "Food Line Briefing — June 5, 2026"
-    assert "13abc reported" in audio_json["episode_summary"]
-    assert "Toledo" in audio_json["episode_summary"]
-    assert "rising food-assistance demand" in audio_json["episode_summary"]
-    assert "SNAP" in audio_json["episode_summary"]
+    assert audio_json["episode_summary"].lower().startswith("today's food line briefing tracks")
+    assert "toledo" in audio_json["episode_summary"].lower()
+    assert "reported rising food-assistance demand" not in audio_json["episode_summary"]
     assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
     assert "current public signals selected from" in audio_json["script_text"]
     assert "Source links, excerpts, and background references are available in the public source table." in audio_json["script_text"]
     assert "We are also watching two related food-access reports." not in audio_json["script_text"]
-    assert (
-        "Another report points to related pressure on pantry capacity." in audio_json["script_text"]
-        or "A second signal adds regional context." in audio_json["script_text"]
-        or "Another report adds related food-pressure context." in audio_json["script_text"]
-    )
+    assert "Another report points to related pressure on pantry capacity." not in audio_json["script_text"]
+    assert "In Washington, Cascade PBS reported that" in audio_json["script_text"]
+    assert "In East Texas" in audio_json["script_text"]
+    assert "KLTV reported that" in audio_json["script_text"]
     assert "The run reviewed" not in audio_json["script_text"]
     assert "Read the source:" not in audio_json["script_text"]
     assert "Source:" not in audio_json["script_text"]
@@ -862,6 +860,8 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "Other Food Line Signals" in transcript
     assert "Cascade PBS" in transcript
     assert "KLTV" in transcript
+    assert "In Washington, Cascade PBS reported that" in transcript
+    assert "In East Texas" in transcript
     assert 'href="/american-pressure/"' not in transcript
     assert "No additional current food-access items were strong enough to change today’s lead." not in transcript
     assert "USDA FNS" not in transcript
@@ -882,6 +882,8 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "Other Food Line Signals" in audio_index
     assert "Cascade PBS" in audio_index
     assert "KLTV" in audio_index
+    assert "In Washington, Cascade PBS reported that" in audio_index
+    assert "In East Texas" in audio_index
     assert 'href="/american-pressure/"' not in audio_index
     assert "No additional current food-access items were strong enough to change today’s lead." not in audio_index
     assert "USDA FNS" not in audio_index
@@ -895,10 +897,9 @@ def test_food_line_2026_06_05_audio_outputs_skip_static_background_cards(tmp_pat
     assert "/food-line/editions/2026-06-05/source_table.html" in audio_index
     assert "Open the podcast feed" in audio_index
     assert "<title>Food Line Briefing — June 5, 2026</title>" in podcast
-    assert "13abc" in podcast
-    assert "Toledo" in podcast
-    assert "rising food-assistance demand" in podcast
-    assert "SNAP" in podcast
+    assert "Today's Food Line briefing tracks" in podcast
+    assert "toledo" in podcast.lower()
+    assert "reported rising food-assistance demand" not in podcast
     assert "Background and source links are available in the public source table." in podcast
     assert "USDA FNS" not in podcast
     assert "USDA ERS" not in podcast
@@ -1870,11 +1871,11 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert audio_json["episode_title"] == "Food Line Briefing — June 4, 2026"
     assert audio_json["audio_story_section_count"] >= 4
     assert audio_json["audio_story_sections"]
-    assert audio_json["episode_summary"].startswith("KLTV reported")
-    assert "17 percent increase" in audio_json["episode_summary"]
+    assert "Food Line Audio &mdash; June 4, 2026" in audio_index
+    assert audio_json["episode_summary"].lower().startswith("today's food line briefing tracks food-bank demand in east texas")
     assert "Background and source links are available in the public source table." in audio_json["episode_summary"]
     assert "Today's pressure point:" not in audio_json["script_text"]
-    assert "When benefits are delayed or paused" in audio_json["script_text"]
+    assert "When benefits are delayed or paused" not in audio_json["script_text"]
     assert "Publishing note:" not in audio_json["script_text"]
     assert "Source note:" not in audio_json["script_text"]
     assert "Source links and excerpts are available in the public source table." in audio_json["script_text"]
@@ -1945,7 +1946,7 @@ def test_food_line_audio_generation_writes_clean_metadata_and_enclosure(tmp_path
     assert "Edition status: Daily edition" not in podcast
     assert "Where pressure is visible" not in podcast
     assert "The briefing also tracks related public background sources." not in podcast
-    assert podcast.index("KLTV reported") < podcast.index("Background and source links are available in the public source table.")
+    assert podcast.index("food-bank demand in East Texas") < podcast.index("Background and source links are available in the public source table.")
     assert 'src="/food-line/audio/2026-06-04.mp3"' in audio_index
     assert "<strong>Podcast enclosure:</strong> present" in audio_index
     assert "<strong>Podcast enclosure:</strong> present" in transcript
@@ -2581,7 +2582,7 @@ def test_food_line_local_signal_beats_background_as_lead(tmp_path: Path):
 
 def test_food_line_wsls_roanoke_shortage_is_local_map_eligible_and_traceable(tmp_path: Path):
     _ensure_assets(tmp_path)
-    date = "2026-06-11"
+    date = "2026-06-10"
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
     wsls_id = "wsls-roanoke-st-francis-house-food-shortage-20260610"
@@ -2639,12 +2640,16 @@ def test_food_line_wsls_roanoke_shortage_is_local_map_eligible_and_traceable(tmp
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    edition_manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
     assert result["public_rendered"] is True
+    assert result["future_date_blocked"] is False
     assert result["lead_source_record_id"] == wsls_id
     assert result["selected_lead_source_role"] == "local_signal"
     assert result["pressure_signal_count"] >= 1
     assert result["pressure_marker_count"] >= 1
+    assert edition_manifest["public_rendered"] is True
+    assert edition_manifest["future_date_blocked"] is False
     assert wsls_review["source_url"] == wsls["url"]
     assert wsls_review["primary_source_url"] == wsls["url"]
     assert wsls_review["source_traceability_role"] == "article_url"
@@ -2656,10 +2661,359 @@ def test_food_line_wsls_roanoke_shortage_is_local_map_eligible_and_traceable(tmp
     assert "faced completely empty shelves in May" in source_table_html
     assert "they received even less food" in source_table_html
     assert "WSLS" in source_table_html
+    assert "No current update" not in (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     assert "data_anchor_signal" not in edition_html
     assert "research_signal" not in edition_html
     assert "data_anchor_signal" not in source_table_html
     assert "research_signal" not in source_table_html
+
+
+def test_food_line_june_11_wsls_only_shows_audit_reason_and_summary_counts_match(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    seed_date = "2026-06-10"
+    seed_path = _manual_path(tmp_path, seed_date)
+    seed_path.parent.mkdir(parents=True, exist_ok=True)
+    seed_wsls = {
+        "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": (
+            "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+            "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+            "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+            "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+            "Enge said the shortfall is significant and is causing them to hand out less food. "
+            "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+            "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    seed_path.write_text(json.dumps([seed_wsls], indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, seed_date)
+
+    date = "2026-06-11"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    stale_row = _row(2, family="local_news", state="VA", title="Older local news update", summary="A local community update from earlier in the month.")
+    stale_row["published_at"] = "2026-05-20T12:00:00"
+    stale_row["page_metadata_date"] = "2026-05-20T12:00:00"
+    wsls = {
+        "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": (
+            "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+            "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+            "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+            "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+            "Enge said the shortfall is significant and is causing them to hand out less food. "
+            "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+            "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    p.write_text(json.dumps([wsls, stale_row], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "no_current_update"
+    assert result["lead_source_record_id"] is None
+    assert "No current update" in edition_html
+    assert "Source audit: reused prior lead from 2026-06-10" in source_table_html
+    assert "0 sources were used on the public page" in source_table_html
+    assert "1 source audit record" in source_table_html
+    assert "Used on public page" in source_table_html
+    assert "No" in source_table_html
+
+
+def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    seed_date = "2026-06-10"
+    seed_path = _manual_path(tmp_path, seed_date)
+    seed_path.parent.mkdir(parents=True, exist_ok=True)
+    seed_wsls = {
+        "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": (
+            "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+            "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+            "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+            "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+            "Enge said the shortfall is significant and is causing them to hand out less food. "
+            "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+            "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    seed_path.write_text(json.dumps([seed_wsls], indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, seed_date)
+
+    date = "2026-06-11"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    wsls = {
+        "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": (
+            "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+            "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+            "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+            "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+            "Enge said the shortfall is significant and is causing them to hand out less food. "
+            "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+            "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    kold = {
+        "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+        "title": "Tucson food bank sees surge in visitors as inflation rises",
+        "url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+        "publisher": "KOLD / 13 News",
+        "published_at": "2026-06-10T18:53:00-07:00",
+        "page_metadata_date": "2026-06-10T18:53:00-07:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "Catholic Community Services' Tucson food bank saw rising demand from first-time visitors. Supplies were running out more regularly, and some visitors could not get food because lines were too long or supplies were nearly gone.",
+        "evidence_text": (
+            "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. "
+            "Many of the people who are now coming in haven't consistently used community food resources in the past. "
+            "Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. "
+            "Tim Kromer with Catholic Community Services said he's seen that need increase on a daily basis at the food bank. "
+            "With rising demand, supplies are dwindling quicker than usual. "
+            "Rodriquez said her most recent trip was unsuccessful because the line was so long and the bank was already giving out the last of what it had. "
+            "Because it's summer, families with children are seeing a large increase in need."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "AZ",
+        "location_name": "Tucson, AZ",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food bank demand", "pantry capacity", "SNAP", "food assistance"],
+        "map_category": "demand strain",
+        "positive_keywords": ["food bank", "food assistance", "first-time", "supplies are dwindling", "running out", "SNAP", "inflation", "families with children"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["first-time food bank users", "families with children", "SNAP households", "low-income households"],
+    }
+    p.write_text(json.dumps([kold, wsls], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
+    sources_manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
+    by_id = {row["source_record_id"]: row for row in sources_manifest}
+    wsls_summary = food_line._food_line_public_summary_sentence(wsls)
+    kold_summary = food_line._food_line_public_summary_sentence(kold)
+
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "current_update"
+    assert result["lead_source_record_id"] == kold["source_record_id"]
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert "Today’s read:" in edition_html
+    assert "St. Francis House" in edition_html
+    assert "Catholic Community Services" in edition_html
+    assert "reported rising food-assistance demand" not in edition_html
+    assert "No current update" not in edition_html
+    assert "Source audit: reused prior lead" not in source_table_html
+    assert kold["url"] in source_table_html
+    assert by_id[kold["source_record_id"]]["map_eligible"] is True
+    assert by_id[kold["source_record_id"]]["source_freshness_status"] == "fresh_daily_signal"
+    assert by_id[kold["source_record_id"]]["source_public_story_eligible"] is True
+    assert by_id[wsls["source_record_id"]]["source_freshness_status"] == "fresh_daily_signal"
+    assert map_data["diagnostics"]["pressure_marker_count"] >= 2
+    assert any(marker["source_record_id"] == kold["source_record_id"] for marker in map_data["pressure_markers"])
+    assert "pressure_signal" not in edition_html
+    assert "local_signal" not in edition_html
+    assert "Source audit" not in edition_html
+
+
+def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regenerating_mp3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 12))
+    date = "2026-06-11"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    sources_dir = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-11"
+    payload_path = sources_dir / "manual_sources.json"
+    auto_payload_path = sources_dir / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    auto_payload = json.loads(auto_payload_path.read_text(encoding="utf-8"))
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _manual_path(tmp_path, date).with_name("auto_sources.json").write_text(json.dumps(auto_payload, indent=2), encoding="utf-8")
+    existing_audio = _seed_existing_food_line_audio(tmp_path, date, b"existing-food-line-mp3")
+    existing_audio_bytes = existing_audio.read_bytes()
+    existing_audio_v2 = _seed_existing_food_line_audio(tmp_path, f"{date}-v2", b"existing-food-line-mp3-v2")
+    existing_audio_v2_bytes = existing_audio_v2.read_bytes()
+    wsls = next(row for row in payload if row["source_record_id"] == "wsls-roanoke-st-francis-house-food-shortage-20260610")
+    kold = next(row for row in payload if row["source_record_id"] == "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610")
+    wsls_summary = food_line._food_line_public_summary_sentence(wsls)
+    kold_summary = food_line._food_line_public_summary_sentence(kold)
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    audio_json = json.loads((tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.json").read_text(encoding="utf-8"))
+    published_audio_root = Path(__file__).resolve().parents[1] / "output" / "site" / "food-line" / "audio"
+    transcript = (published_audio_root / f"{date}-transcript.html").read_text(encoding="utf-8")
+    audio_index = (published_audio_root / "index.html").read_text(encoding="utf-8")
+
+    assert result["audio_generated"] is False
+    assert result["audio_reused_existing"] is True
+    assert result["audio_status"] == "audio_file_reused_existing"
+    assert result["audio_story_sections"] == ["opening", "today_read", "main_story", "what_else", "sources_behind", "closing"]
+    assert audio_json["audio_file"] == "2026-06-11-v2.mp3"
+    assert audio_json["audio_mp3_url"] == "/food-line/audio/2026-06-11-v2.mp3"
+    assert existing_audio.read_bytes() == existing_audio_bytes
+    assert existing_audio_v2.read_bytes() == existing_audio_v2_bytes
+    assert result["audio_mp3_url"] == "/food-line/audio/2026-06-11-v2.mp3"
+    assert "Catholic Community Services" in transcript
+    assert "St. Francis House" in transcript
+    assert "empty shelves" in transcript.lower()
+    assert "supplies were running out" in transcript.lower() or "running out more regularly" in transcript.lower()
+    assert "When benefits are delayed or paused" not in transcript
+    assert "â€”" not in transcript
+    assert "reported rising food-assistance demand" not in transcript
+    assert "pressure_signal" not in transcript
+    assert "local_signal" not in transcript
+    assert "map_signal" not in transcript
+    other_match = re.search(r"<h2>Other Food Line Signals</h2>\s*<p>(.*?)</p>", transcript)
+    assert other_match is not None
+    other_text = other_match.group(1)
+    assert "Another report points to related pressure on pantry capacity." not in other_text
+    assert "In Roanoke" in other_text
+    assert "WSLS reported that" in other_text
+    assert "St. Francis House" in other_text
+    assert "empty shelves" in other_text.lower()
+    assert "smaller" in other_text.lower()
+    assert "USDA" in other_text
+    assert "64%" in other_text
+    assert "are..." not in other_text
+    assert "..." not in other_text
+    assert other_text.endswith(".")
+    assert transcript.count("Opening") == 1
+    assert transcript.count("Today&apos;s Read") == 1
+    assert transcript.count("Core Food Pressure Signals") == 1
+    assert transcript.count("Other Food Line Signals") == 1
+    assert transcript.count("Source Note") == 1
+    assert transcript.count("Closing") == 1
+    assert transcript.index("Opening") < transcript.index("Today&apos;s Read") < transcript.index("Core Food Pressure Signals") < transcript.index("Other Food Line Signals") < transcript.index("Source Note") < transcript.index("Closing")
+    assert "Food Line Audio &mdash; June 11, 2026" in audio_index
+    assert "/food-line/audio/2026-06-11-v2.mp3" in audio_index
+    assert "reported rising food-assistance demand" not in audio_index
+    assert "St. Francis House" in audio_index
+    assert "Catholic Community Services" in audio_index
+    assert "empty shelves" in audio_index.lower()
+    assert "running out" in audio_index.lower()
+    assert "When benefits are delayed or paused" not in audio_index
+    assert "â€”" not in audio_index
+    other_index_match = re.search(r"<h2>Other Food Line Signals</h2>\s*<p>(.*?)</p>", audio_index)
+    assert other_index_match is not None
+    other_index_text = other_index_match.group(1)
+    assert "Another report points to related pressure on pantry capacity." not in other_index_text
+    assert "In Roanoke" in other_index_text
+    assert "WSLS reported that" in other_index_text
+    assert "St. Francis House" in other_index_text
+    assert "empty shelves" in other_index_text.lower()
+    assert "64%" in other_index_text
+    assert "are..." not in other_index_text
+    assert "..." not in other_index_text
+    assert other_index_text.endswith(".")
+    assert "St. Francis House" in wsls_summary
+    assert "empty shelves" in wsls_summary.lower()
+    assert "USDA" in wsls_summary
+    assert "Roanoke" in wsls_summary
+    assert len(wsls_summary.split()) <= 60
+    assert "Catholic Community Services" in kold_summary
+    assert "running out" in kold_summary.lower() or "supplies" in kold_summary.lower()
+    assert "Tucson" in kold_summary
+    assert len(kold_summary.split()) <= 60
+    assert "reported rising food-assistance demand" not in wsls_summary.lower()
+    assert "reported rising food-assistance demand" not in kold_summary.lower()
 
 
 def test_food_line_state_centroid_basis_labeled_clearly(tmp_path: Path):

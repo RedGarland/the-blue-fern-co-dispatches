@@ -1,10 +1,10 @@
 {
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
-  "edition_date": "2026-06-10",
-  "generated_at": "2026-06-12T03:26:05.481871+00:00",
+  "edition_date": "2026-06-11",
+  "generated_at": "2026-06-12T07:30:02.892671+00:00",
   "source_count": 30,
-  "story_count": 1,
+  "story_count": 0,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
@@ -21,18 +21,18 @@
     "state_signal_count": 26,
     "national_context_count": 4
   },
-  "lead_source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
-  "lead_source_canonical_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer",
-  "previous_edition_date": "2026-06-09",
-  "primary_signal_status": "new_primary",
-  "primary_disqualification_reason": "",
+  "lead_source_record_id": null,
+  "lead_source_canonical_url": "",
+  "previous_edition_date": "2026-06-10",
+  "primary_signal_status": "continuing_only",
+  "primary_disqualification_reason": "no new primary pressure signal qualified today; prior lead from 2026-06-10 remains under continuing pressure",
   "public_rendered": true,
-  "qualified_primary_count": 1,
+  "qualified_primary_count": 0,
   "future_date_blocked": false,
   "future_date_override_used": false,
-  "edition_mode": "current_update",
-  "continuing_context_count": 2,
-  "continuing_pressure_count": 0,
+  "edition_mode": "no_current_update",
+  "continuing_context_count": 3,
+  "continuing_pressure_count": 1,
   "context_count": 2,
   "excluded_count": 29,
   "exclusion_reason_counts": {
@@ -50,14 +50,13 @@
   },
   "exclusion_reason_summary": "Exclusion breakdown: stale 23; resource-only or no pressure signal 3; weak pressure signal 2; background or context material 1.",
   "skip_reason": "",
-  "continuing_pressure_source_record_ids": [],
-  "continuing_pressure_source_urls": [],
-  "lead_issue_tags": [
-    "food shortage",
-    "pantry capacity",
-    "SNAP",
-    "school meals"
+  "continuing_pressure_source_record_ids": [
+    "wsls-roanoke-st-francis-house-food-shortage-20260610"
   ],
+  "continuing_pressure_source_urls": [
+    "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/"
+  ],
+  "lead_issue_tags": [],
   "source_roles_count": {
     "daily_signal": 0,
     "background_context": 0,
@@ -76,14 +75,10 @@
   "national_context_count": 4,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
-  "why_this_lead": "selected new primary pressure signal (local_signal, acute strain / service disruption)",
-  "selected_lead_source_role": "local_signal",
-  "selected_lead_pressure_type": "demand strain",
-  "selected_lead_affected_groups": [
-    "children",
-    "SNAP households",
-    "low-income households"
-  ],
+  "why_this_lead": "no new primary pressure signal qualified today; prior lead from 2026-06-10 remains under continuing pressure",
+  "selected_lead_source_role": null,
+  "selected_lead_pressure_type": null,
+  "selected_lead_affected_groups": [],
   "pressure_source_count_by_family": {
     "disaster_emergency": 0,
     "economic_data": 0,
@@ -151,7 +146,7 @@
       "evergreen": 3
     }
   },
-  "source_freshness_status": "passed_with_stale_exclusions",
+  "source_freshness_status": "blocked_insufficient_fresh_current_stories",
   "stale_public_story_count": 23,
   "excluded_stale_source_count": 23,
   "freshness_window_days": 3,
@@ -168,20 +163,20 @@
     "food-line-auto-38586f1e003c588a",
     "food-line-auto-8a0e3577f2ee46b1",
     "food-line-auto-93ce312aa86969d2",
+    "food-line-auto-1da7af8594b8b86d",
     "food-line-auto-20cd2b8f75d16cb7",
     "food-line-auto-503ea9e5508a3256",
     "food-line-auto-034f1eda7360afe1",
     "food-line-auto-7b84dd4d17d68194",
-    "food-line-auto-c35741dcd0708b36",
+    "food-line-auto-336448f8d800690e",
+    "food-line-auto-b076636b4e1cc0b1",
+    "food-line-auto-021550004edbbf76",
+    "food-line-auto-95bff8b25ccaf92b",
     "food-line-auto-c6a40b8d0c11c801",
-    "food-line-auto-470df824317bfae0",
-    "food-line-auto-c7d36cbb7c3e2d51",
-    "food-line-auto-d86347617caf03df",
-    "food-line-auto-650c2a7f879479b7",
     "food-line-auto-9013087c4ebc5f32"
   ],
-  "food_line_publish_blocked_reason": "",
-  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-10/",
-  "bluesky_post_text": "Food Line Dispatch, June 10, 2026: WSLS reported that why Roanoke's St. Francis House was facing its tightest food shortage ever this summer in Roanoke, VA. https://dispatches.thebluefernco.com/food-line/editions/2026-06-10/",
-  "bluesky_post_ready": true
+  "food_line_publish_blocked_reason": "No fresh current-story Food Line sources remained after freshness filtering.",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
 }

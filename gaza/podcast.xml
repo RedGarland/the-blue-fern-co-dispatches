@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 11 Jun 2026 13:01:08 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 12 Jun 2026 13:01:07 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 12, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-12-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-12-transcript.html</guid>
+    <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Israel wounds 5 in shelling of Gaza school sheltering displaced Palestinians. Israeli army continues shelling and demolishing homes in eastern Gaza despite ceasefire. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-12.mp3" length="2103168" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 11, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-11-transcript.html</link>

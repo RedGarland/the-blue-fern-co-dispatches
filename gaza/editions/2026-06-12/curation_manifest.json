@@ -1,21 +1,561 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-06-12",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-06-12-008",
+    "title": "Israel wounds 5 in shelling of Gaza school sheltering displaced Palestinians",
+    "summary": "Israeli army continues shelling and demolishing homes in eastern Gaza despite ceasefire.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 78,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-0b5b3ef23817"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-0b5b3ef23817"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-wounds-5-in-shelling-of-gaza-school-sheltering-displaced-palestinians/3964961"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 78,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-003",
+    "title": "Gaza ceasefire roadmap under threat as Israel expands territorial control, experts warn",
+    "summary": "More than 8 months after ceasefire, reconstruction has yet to begin amid aid restrictions, displacement, continuing military operations.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-75c13eba89d5"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-75c13eba89d5"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/gaza-ceasefire-roadmap-under-threat-as-israel-expands-territorial-control-experts-warn/3965246"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-004",
+    "title": "Video of visually impaired Palestinian boy crying over broken glasses draws global attention",
+    "summary": "Ayoub Junaid, seven, given new pair but needs surgery as Gaza's children remain unable to access treatment. A video of a seven-year-old Palestinian boy in Gaza who suffers from a severe visual impairment crying over his shattered glasses has drawn widespread attention across social and international media. The footage of Ayoub Junaid has shone a light on the plight of the many visually impaired children in Gaza who, because of Israel's blockade and the devastation caused by the war, have been unable to access eye examinations, corrective lenses or specialist ophthalmic surgery.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-guardian-world-65d5dfb72b3e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-guardian-world-65d5dfb72b3e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jun/12/video-visually-impaired-palestinian-boy-gaza-ayoub-junaid-crying-broken-glasses"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-011",
+    "title": "Israeli firm accused of using fake Palestine aid campaign to collect donations in France",
+    "summary": "Website presented itself as humanitarian group supporting Palestinians while allegedly operating through fake online networks.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-322971b4d7a7"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-322971b4d7a7"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-firm-accused-of-using-fake-palestine-aid-campaign-to-collect-donations-in-france/3964684"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-006",
+    "title": "Palestinians offer Friday prayers on land threatened by Israeli occupier attacks",
+    "summary": "Idhna residents hold prayers on parts of threatened land despite Israeli army declaring the area 'closed military zone'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-41a55b623ff7"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-anadolu-middle-east-41a55b623ff7"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/palestinians-offer-friday-prayers-on-land-threatened-by-israeli-occupier-attacks/3965213"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-007",
+    "title": "UNICEF warns of surge in Israeli killing of Palestinian children",
+    "summary": "UNICEF has condemned the \"intolerable price\" Palestinian children are paying for Israel's escalating military operations and settler violence.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 48,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-the-new-arab-418c27457d4b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-the-new-arab-418c27457d4b"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/unicef-warns-surge-israeli-killing-palestinian-children"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-002",
+    "title": "'Torture isn't new to Palestinians': How Israel learned from colonialism",
+    "summary": "A chain of sexual violence that Britain built, France refined and. Israel inherited is being used against Palestinians.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-aljazeera-middle-east-08f04cf36f36"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-aljazeera-middle-east-08f04cf36f36"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/6/12/torture-isnt-new-to-palestinians-how-israel-learned-from-colonialism?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-009",
+    "title": "Israel to set up Jenin military base amid refugee displacement",
+    "summary": "Israel is moving ahead with plans for a permanent military installation in Jenin, a step it has not taken in the West Bank since the 1993 Oslo Accords.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 47,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-the-new-arab-600bf42c0301"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-the-new-arab-600bf42c0301"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-set-jenin-military-base-amid-refugee-displacement"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-005",
+    "title": "Gazan rapper Shamaly's story of survival through music",
+    "summary": "The New Arab Meets: Shamaly, the Gazan rapper documenting life before, during, and after genocide through music born in war-torn Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-the-new-arab-b3a83befa7dd"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-the-new-arab-b3a83befa7dd"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/features/gazan-rapper-shamalys-story-survival-through-music"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-12-001",
+    "title": "Gaza watches 2026 World Cup despite Israel's genocide",
+    "summary": "\"The same country hosting the world's biggest football tournament is also the country that has supported. Israel throughout this war.\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-12-the-new-arab-8bfc5a5cf27e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-12-the-new-arab-8bfc5a5cf27e"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-watches-2026-world-cup-despite-israels-genocide"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-12T13:00:41.299320+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   }
 ]

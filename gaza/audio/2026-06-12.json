@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-12",
+  "generated_at": "2026-06-12T13:01:07.458975Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-12.mp3",
+  "audio_url": "/gaza/audio/2026-06-12.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 2176,
+  "tts_input_word_count": 321,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 2103168,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-12T13:01:07.458947Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-12-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-12/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 12, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel wounds 5 in shelling of Gaza school sheltering displaced Palestinians. Israeli army continues shelling and demolishing homes in eastern Gaza despite ceasefire. This was reported by Anadolu Agency.\n\n2. Gaza ceasefire roadmap under threat as Israel expands territorial control, experts warn. More than 8 months after ceasefire, reconstruction has yet to begin amid aid restrictions, displacement, continuing military operations. This was reported by Anadolu Agency.\n\n3. Video of visually impaired Palestinian boy crying over broken glasses draws global attention. Ayoub Junaid, seven, given new pair but needs surgery as Gaza's children remain unable to access treatment. A video of a seven-year-old Palestinian boy in Gaza who suffers from a severe visual impairment crying over his shattered glasses has drawn widespread attention across social and international media. The footage of Ayoub Junaid has shone a light on the plight of the many visually impaired children in Gaza who, because of Israel's blockade and the devastation caused by the war, have been unable to access eye examinations, corrective lenses or specialist ophthalmic surgery. This was reported by The Guardian.\n\n4. Israeli firm accused of using fake Palestine aid campaign to collect donations in France. Website presented itself as humanitarian group supporting Palestinians while allegedly operating through fake online networks. This was reported by Anadolu Agency.\n\n5. Palestinians offer Friday prayers on land threatened by Israeli occupier attacks. Idhna residents hold prayers on parts of threatened land despite Israeli army declaring the area 'closed military zone'. This was reported by Anadolu Agency.\n\n6. UNICEF warns of surge in Israeli killing of Palestinian children. UNICEF has condemned the \"intolerable price\" Palestinian children are paying for Israel's escalating military operations and settler violence. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 12, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-12-anadolu-middle-east-0b5b3ef23817",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israel-wounds-5-in-shelling-of-gaza-school-sheltering-displaced-palestinians/3964961",
+      "title": "Israel wounds 5 in shelling of Gaza school sheltering displaced Palestinians"
+    },
+    {
+      "source_record_id": "gaza-2026-06-12-anadolu-middle-east-75c13eba89d5",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/gaza-ceasefire-roadmap-under-threat-as-israel-expands-territorial-control-experts-warn/3965246",
+      "title": "Gaza ceasefire roadmap under threat as Israel expands territorial control, experts warn"
+    },
+    {
+      "source_record_id": "gaza-2026-06-12-guardian-world-65d5dfb72b3e",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/jun/12/video-visually-impaired-palestinian-boy-gaza-ayoub-junaid-crying-broken-glasses",
+      "title": "Video of visually impaired Palestinian boy crying over broken glasses draws global attention"
+    },
+    {
+      "source_record_id": "gaza-2026-06-12-anadolu-middle-east-322971b4d7a7",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israeli-firm-accused-of-using-fake-palestine-aid-campaign-to-collect-donations-in-france/3964684",
+      "title": "Israeli firm accused of using fake Palestine aid campaign to collect donations in France"
+    },
+    {
+      "source_record_id": "gaza-2026-06-12-anadolu-middle-east-41a55b623ff7",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/palestinians-offer-friday-prayers-on-land-threatened-by-israeli-occupier-attacks/3965213",
+      "title": "Palestinians offer Friday prayers on land threatened by Israeli occupier attacks"
+    },
+    {
+      "source_record_id": "gaza-2026-06-12-the-new-arab-418c27457d4b",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/unicef-warns-surge-israeli-killing-palestinian-children",
+      "title": "UNICEF warns of surge in Israeli killing of Palestinian children"
+    }
+  ]
+}

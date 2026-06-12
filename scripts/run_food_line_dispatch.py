@@ -1104,6 +1104,10 @@ def _lead_score(row: dict[str, Any], edition_date: str) -> int:
     text = _source_evidence_text(row).lower()
     if any(token in text for token in ("delay", "closure", "closed", "wait", "suspension", "disruption", "reduced", "cut")):
         score += 8
+    if "first-time visitors" in text or "first time visitors" in text:
+        score += 6
+    if "running out" in text:
+        score += 4
     if "context" in text and role == "background_context":
         score -= 4
     if str(row.get("published_date_basis") or "") == "retrieved_at_fallback" and str(row.get("collector_source_type") or "").lower() not in {"rss", "feed", "live_update"}:
@@ -1605,7 +1609,7 @@ def _food_line_audio_why_it_matters(lead: dict[str, Any] | None) -> str:
         )
         if part
     ).lower()
-    explicit_snap_context = any(
+    delay_or_pause_context = any(
         phrase in evidence_text
         for phrase in (
             "benefit delay",
@@ -1613,6 +1617,11 @@ def _food_line_audio_why_it_matters(lead: dict[str, Any] | None) -> str:
             "benefits were delayed",
             "benefits paused",
             "benefit disruption",
+        )
+    )
+    snap_cut_context = any(
+        phrase in evidence_text
+        for phrase in (
             "snap cuts",
             "snap reductions",
             "loss of snap support",
@@ -1620,15 +1629,14 @@ def _food_line_audio_why_it_matters(lead: dict[str, Any] | None) -> str:
             "snap support",
             "snap benefit",
             "snap benefits face",
-            "snap/usda pressure",
         )
     )
-    if not explicit_snap_context:
+    if not delay_or_pause_context and not snap_cut_context:
         return ""
-    if pressure_type == "benefit disruption":
+    if delay_or_pause_context:
         sentence = "When benefits are delayed or paused, households that rely on SNAP may turn to nearby food pantries."
     else:
-        sentence = "When benefits are delayed or paused, food pantries may see higher demand from households that rely on SNAP."
+        sentence = "Cuts to SNAP and other USDA programs are leaving more families with fewer options."
     if location:
         return f"In {location}, {sentence}"
     return sentence
@@ -1836,8 +1844,9 @@ def _food_line_transcript_source_links_html(date: str) -> str:
     """
 
 
-def _food_line_audio_links_html(date: str, *, include_transcript_link: bool) -> str:
-    parts = [f'    <p><a href="/food-line/audio/{date}.mp3">Listen or download the MP3</a></p>']
+def _food_line_audio_links_html(date: str, *, include_transcript_link: bool, audio_mp3_url: str | None = None) -> str:
+    audio_link = audio_mp3_url or f"/food-line/audio/{date}.mp3"
+    parts = [f'    <p><a href="{html.escape(audio_link)}">Listen or download the MP3</a></p>']
     if include_transcript_link:
         parts.append(f'    <p><a href="/food-line/audio/{date}-transcript.html">Read the transcript</a></p>')
     parts.extend(
@@ -3595,7 +3604,7 @@ def write_food_line_audio(
     if audio_available and audio_mp3_url:
         transcript_parts.append(f'    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>')
     transcript_parts.append("    <h2>Source links</h2>")
-    transcript_parts.append(_food_line_audio_links_html(date, include_transcript_link=False))
+    transcript_parts.append(_food_line_audio_links_html(date, include_transcript_link=False, audio_mp3_url=audio_mp3_url))
     transcript_parts.append(f"    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>")
     transcript_parts.append("  </main>")
     transcript_parts.append("</body>")
@@ -3616,7 +3625,7 @@ def write_food_line_audio(
   <section class="food-line-panel">
     {"".join(_food_line_audio_index_sections_html(sections))}
     <h2>Source links</h2>
-    {_food_line_audio_links_html(date, include_transcript_link=True)}
+    {_food_line_audio_links_html(date, include_transcript_link=True, audio_mp3_url=audio_mp3_url)}
     <h2>Podcast enclosure status</h2>
     <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>
     {"<p><audio controls preload=\"none\" src=\"%s\"></audio></p>" % html.escape(audio_mp3_url) if audio_available and audio_mp3_url else ""}
@@ -4133,6 +4142,7 @@ def run_food_line_dispatch(
         )
         _prune_food_line_public_artifacts(root, allow_future_date=allow_future_date)
         write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=public_max_date or "")
+        _update_index_archive(root, date, mission, max_edition_date=public_max_date)
     else:
         _remove_food_line_public_edition(root, date)
         _remove_food_line_audio_artifacts(root, date)
@@ -4141,6 +4151,7 @@ def run_food_line_dispatch(
         _update_index_archive(root, date, mission, max_edition_date=public_max_date)
         _prune_food_line_public_artifacts(root, allow_future_date=allow_future_date)
         write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=public_max_date or "")
+        _update_index_archive(root, date, mission, max_edition_date=public_max_date)
     audio_generated = bool(audio_result.get("audio_generated"))
     audio_available = bool(audio_result.get("audio_available"))
     audio_reused_existing = bool(audio_result.get("audio_reused_existing"))

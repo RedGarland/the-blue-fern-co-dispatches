@@ -64,6 +64,78 @@ def _load_food_line_regression_fixture() -> list[dict]:
     return json.loads(_food_line_regression_fixture_path().read_text(encoding="utf-8"))
 
 
+def _food_line_june_11_rows() -> tuple[dict, dict]:
+    wsls = {
+        "source_record_id": "wsls-roanoke-st-francis-house-food-shortage-20260610",
+        "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
+        "url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "publisher": "WSLS",
+        "published_at": "2026-06-10T06:24:00",
+        "page_metadata_date": "2026-06-10T09:57:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain.",
+        "evidence_text": (
+            "ROANOKE, Va. - Roanoke City's St. Francis House Food Pantry faced completely empty shelves in May. "
+            "Now in June, the pantry is facing an even tighter situation heading into summer, and the people who run it say the situation is only getting harder. "
+            "St. Francis House received a new USDA food shipment for June, but the entire delivery is expected to last through the end of the month, and they received even less food than they had in May. "
+            "In May, the pantry ran out of food in just two weeks. The June delivery was even smaller than May's. "
+            "Enge said the shortfall is significant and is causing them to hand out less food. "
+            "Summer is one of the busiest seasons for food pantries, as children who typically receive free or reduced-price lunches during the school year lose access to those daily meals. "
+            "At the same time, cuts to SNAP and other USDA programs are leaving more families with fewer options."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "VA",
+        "location_name": "Roanoke, VA",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food shortage", "pantry capacity", "SNAP", "school meals"],
+        "map_category": "acute strain / service disruption",
+        "positive_keywords": ["food shortage", "empty shelves", "USDA", "SNAP", "school meals", "pantry"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["pantry clients", "SNAP households", "families", "children"],
+    }
+    kold = {
+        "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+        "title": "Tucson food bank sees surge in visitors as inflation rises",
+        "url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+        "publisher": "KOLD / 13 News",
+        "published_at": "2026-06-10T18:53:00-07:00",
+        "page_metadata_date": "2026-06-10T18:53:00-07:00",
+        "retrieved_at": "2026-06-11T00:00:00Z",
+        "summary_or_snippet": "Catholic Community Services' Tucson food bank saw rising demand from first-time visitors. Supplies were running out more regularly, and some visitors could not get food because lines were too long or supplies were nearly gone.",
+        "evidence_text": (
+            "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. "
+            "Many of the people who are now coming in haven't consistently used community food resources in the past. "
+            "Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. "
+            "Tim Kromer with Catholic Community Services said he's seen that need increase on a daily basis at the food bank. "
+            "With rising demand, supplies are dwindling quicker than usual. "
+            "Rodriquez said her most recent trip was unsuccessful because the line was so long and the bank was already giving out the last of what it had. "
+            "Because it's summer, families with children are seeing a large increase in need."
+        ),
+        "evidence_text_basis": "page_text_excerpt",
+        "source_type": "page",
+        "source_family": "local_news",
+        "state": "AZ",
+        "location_name": "Tucson, AZ",
+        "location_scope": "local",
+        "country": "US",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+        "source_traceability_role": "article_url",
+        "issue_tags": ["food bank demand", "pantry capacity", "SNAP", "food assistance"],
+        "map_category": "demand strain",
+        "positive_keywords": ["food bank", "food assistance", "first-time", "supplies are dwindling", "running out", "SNAP", "inflation", "families with children"],
+        "negative_keywords": ["recipe", "restaurant review", "menu", "cooking tips", "chef", "grocery sale"],
+        "affected_group_keywords": ["first-time food bank users", "families with children", "SNAP households", "low-income households"],
+    }
+    return kold, wsls
+
+
 def _clear_food_line_registries(root: Path) -> None:
     registry_dir = root / "data" / "dispatches" / "food-line"
     registry_dir.mkdir(parents=True, exist_ok=True)
@@ -2911,40 +2983,48 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     assert "pressure_signal" not in edition_html
     assert "local_signal" not in edition_html
     assert "Source audit" not in edition_html
+    home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    assert '<h2>Current coverage</h2>' in home_html
+    assert 'editions/2026-06-11/' in home_html
+    assert '2026-06-07 â€” No current update' not in home_html
+    assert '2026-06-11' in home_html
 
 
 def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regenerating_mp3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 12))
+    seed_date = "2026-06-10"
+    seed_path = _manual_path(tmp_path, seed_date)
+    seed_path.parent.mkdir(parents=True, exist_ok=True)
+    _kold, seed_wsls = _food_line_june_11_rows()
+    seed_path.write_text(json.dumps([seed_wsls], indent=2), encoding="utf-8")
+    run_food_line_dispatch(tmp_path, seed_date)
     date = "2026-06-11"
     p = _manual_path(tmp_path, date)
     p.parent.mkdir(parents=True, exist_ok=True)
-    sources_dir = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-11"
-    payload_path = sources_dir / "manual_sources.json"
-    auto_payload_path = sources_dir / "auto_sources.json"
-    payload = json.loads(payload_path.read_text(encoding="utf-8"))
-    auto_payload = json.loads(auto_payload_path.read_text(encoding="utf-8"))
+    kold, wsls = _food_line_june_11_rows()
+    payload = [kold, wsls]
+    auto_payload = [dict(row) for row in payload]
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     _manual_path(tmp_path, date).with_name("auto_sources.json").write_text(json.dumps(auto_payload, indent=2), encoding="utf-8")
     existing_audio = _seed_existing_food_line_audio(tmp_path, date, b"existing-food-line-mp3")
     existing_audio_bytes = existing_audio.read_bytes()
     existing_audio_v2 = _seed_existing_food_line_audio(tmp_path, f"{date}-v2", b"existing-food-line-mp3-v2")
     existing_audio_v2_bytes = existing_audio_v2.read_bytes()
-    wsls = next(row for row in payload if row["source_record_id"] == "wsls-roanoke-st-francis-house-food-shortage-20260610")
-    kold = next(row for row in payload if row["source_record_id"] == "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610")
     wsls_summary = food_line._food_line_public_summary_sentence(wsls)
     kold_summary = food_line._food_line_public_summary_sentence(kold)
 
     result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
 
     audio_json = json.loads((tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.json").read_text(encoding="utf-8"))
-    published_audio_root = Path(__file__).resolve().parents[1] / "output" / "site" / "food-line" / "audio"
+    published_audio_root = tmp_path / "output" / "site" / "food-line" / "audio"
     transcript = (published_audio_root / f"{date}-transcript.html").read_text(encoding="utf-8")
     audio_index = (published_audio_root / "index.html").read_text(encoding="utf-8")
 
     assert result["audio_generated"] is False
     assert result["audio_reused_existing"] is True
     assert result["audio_status"] == "audio_file_reused_existing"
+    assert result["lead_source_record_id"] == kold["source_record_id"]
     assert result["audio_story_sections"] == ["opening", "today_read", "main_story", "what_else", "sources_behind", "closing"]
     assert audio_json["audio_file"] == "2026-06-11-v2.mp3"
     assert audio_json["audio_mp3_url"] == "/food-line/audio/2026-06-11-v2.mp3"
@@ -2991,6 +3071,8 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert "running out" in audio_index.lower()
     assert "When benefits are delayed or paused" not in audio_index
     assert "â€”" not in audio_index
+    assert "/food-line/audio/2026-06-11-v2.mp3" in audio_index
+    assert "/food-line/audio/2026-06-11.mp3" not in audio_index
     other_index_match = re.search(r"<h2>Other Food Line Signals</h2>\s*<p>(.*?)</p>", audio_index)
     assert other_index_match is not None
     other_index_text = other_index_match.group(1)

@@ -467,5 +467,51 @@
     "pressure_required": true,
     "extraction_quality": "medium",
     "expected_text_basis": "rss_item_text"
+  },
+  {
+    "source_id": "ktal-kmss-food-bank-summer-feeding",
+    "name": "KTAL / KMSS Food Bank Summer Feeding",
+    "publisher": "KTAL / KMSS",
+    "source_type": "page",
+    "url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+    "source_family": "local_news",
+    "location_name": "Northwest Louisiana",
+    "state": "LA",
+    "default_issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "summer meals"
+    ],
+    "default_map_category": "summer meal / child nutrition",
+    "enabled": true,
+    "notes": "Northwest Louisiana summer-feeding reporting with concrete inventory strain.",
+    "summary_fallback": "KTAL / KMSS reporting on summer feeding and pantry strain in Northwest Louisiana.",
+    "pressure_verification_required": true,
+    "pressure_required": true,
+    "extraction_quality": "medium",
+    "expected_text_basis": "page_text"
+  },
+  {
+    "source_id": "tulsa-flyer-food-bank-fuel-costs",
+    "name": "Tulsa Flyer Food Bank Fuel Costs",
+    "publisher": "Tulsa Flyer",
+    "source_type": "page",
+    "url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
+    "source_family": "local_news",
+    "location_name": "Tulsa, OK",
+    "state": "OK",
+    "default_issue_tags": [
+      "food banks",
+      "pantry capacity",
+      "summer meals"
+    ],
+    "default_map_category": "acute strain / service disruption",
+    "enabled": true,
+    "notes": "Tulsa Flyer reporting on fuel-cost strain and summer meal delivery.",
+    "summary_fallback": "Tulsa Flyer reporting on food-bank fuel costs and summer meal delivery strain.",
+    "pressure_verification_required": true,
+    "pressure_required": true,
+    "extraction_quality": "medium",
+    "expected_text_basis": "page_text"
   }
 ]

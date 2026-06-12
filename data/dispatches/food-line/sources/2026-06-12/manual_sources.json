@@ -1,0 +1,39 @@
+[
+  {
+    "source_record_id": "tulsa-flyer-food-bank-fuel-costs-20260612",
+    "title": "Food Bank of Eastern Oklahoma says fuel costs are taking meals away",
+    "url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
+    "publisher": "Tulsa Flyer",
+    "published_at": "2026-06-12T12:00:00Z",
+    "retrieved_at": "2026-06-12T12:00:00Z",
+    "summary_or_snippet": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away.",
+    "evidence_text": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away.",
+    "evidence_text_basis": "manual_review",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "source_family": "local_news",
+    "region_scope": "local",
+    "location_name": "Tulsa, OK",
+    "state": "OK",
+    "map_category": "acute strain / service disruption",
+    "pressure_signal": true,
+    "pressure_type": "service reduction",
+    "pressure_reason": "matched service reduction; record fuel costs and meals lost to higher diesel spending",
+    "affected_groups": [
+      "children",
+      "families",
+      "low-income households"
+    ],
+    "evidence_level": "news report",
+    "freshness_role": "fresh_daily_signal",
+    "source_role": "local_signal",
+    "map_eligible": true,
+    "location_scope": "local",
+    "date_basis": "published_at",
+    "source_purpose": "current_news",
+    "primary_source_url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
+    "source_traceability_role": "article_url",
+    "pressure_summary": "Tulsa Flyer reported that Food Bank of Eastern Oklahoma is absorbing record fuel costs while expanding summer meal delivery, and the added diesel expense takes meals away.",
+    "traceability_note": "Original publisher URL; reviewed because the article ties higher fuel costs directly to fewer meals."
+  }
+]

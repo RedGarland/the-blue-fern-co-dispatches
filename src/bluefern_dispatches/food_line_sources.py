@@ -257,6 +257,9 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "shelves bare",
             "empty shelves",
             "low inventory",
+            "record-low inventory",
+            "inventory down",
+            "inventory is down",
             "federal cuts",
             "food programs",
             "reduced distribution",
@@ -264,6 +267,14 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "buying more food",
             "pantries buying more food",
             "donations dropped",
+            "lower donations",
+            "rising food costs",
+            "food costs",
+            "fuel costs",
+            "diesel costs",
+            "delivery costs",
+            "operating costs",
+            "meals away",
             "supply dropped",
         ),
     ),
@@ -505,6 +516,7 @@ GENERIC_PRESSURE_SUMMARIES = {
 
 SUPPORTED_EVIDENCE_BASIS = {
     "manual_source_text",
+    "manual_review",
     "page_text_excerpt",
     "page_title_and_meta",
     "page_title_only",
@@ -622,6 +634,17 @@ SOURCE_PURPOSE_CURRENT_TERMS = (
     "buying more food",
     "pantries buying more food",
     "food prices",
+    "food costs",
+    "rising food costs",
+    "lower donations",
+    "donations dropped",
+    "record-low inventory",
+    "low inventory",
+    "inventory down",
+    "fuel costs",
+    "diesel costs",
+    "delivery costs",
+    "operating costs",
     "report",
     "release",
     "article",
@@ -1236,11 +1259,35 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     evergreen_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_EVERGREEN_TERMS)
     resource_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_RESOURCE_TERMS)
     current_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_CURRENT_TERMS)
+    concrete_pressure_hit = any(
+        term in content_text or term in source_name or term in page_signal_text or term in url
+        for term in (
+            "record-low inventory",
+            "low inventory",
+            "inventory down",
+            "inventory is down",
+            "lower donations",
+            "donations dropped",
+            "rising food costs",
+            "food costs",
+            "fuel costs",
+            "diesel costs",
+            "delivery costs",
+            "operating costs",
+            "meal gaps",
+            "school meal gap",
+            "summer meal gap",
+            "capacity to feed",
+            "needs partners",
+            "cannot meet demand",
+            "meeting need has become increasingly difficult",
+        )
+    )
     disaster_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_DISASTER_TERMS)
     current_news_families = {"national_news", "local_news", "public_radio", "nonprofit_news"}
 
     if family in current_news_families:
-        if current_hit or disaster_hit:
+        if current_hit or disaster_hit or (resource_hit and concrete_pressure_hit):
             source_purpose = "current_news"
         elif resource_hit:
             source_purpose = "resource_page"
@@ -1254,9 +1301,9 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
         source_purpose = "evergreen_context"
     else:
         if family == "food_bank_provider":
-            if resource_hit and not current_hit:
+            if resource_hit and not (current_hit or concrete_pressure_hit):
                 source_purpose = "resource_page"
-            elif current_hit or any(term in source_name for term in ("update", "news", "report", "press release", "shortage", "waitlist", "closure", "hours", "demand")):
+            elif current_hit or concrete_pressure_hit or any(term in source_name for term in ("update", "news", "report", "press release", "shortage", "waitlist", "closure", "hours", "demand")):
                 source_purpose = "provider_update"
             else:
                 source_purpose = "resource_page"

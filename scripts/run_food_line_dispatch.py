@@ -1369,20 +1369,41 @@ def _load_source_file(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, 
     return valid, rejected, []
 
 
+def _source_merge_url(row: dict[str, Any]) -> str:
+    primary = canonical_url(str(row.get("primary_source_url") or ""))
+    url = canonical_url(str(row.get("url") or ""))
+    publisher = str(row.get("publisher") or "").strip().lower()
+    traceability_role = str(row.get("source_traceability_role") or "").strip().lower()
+    if primary and (publisher == "msn" or "msn" in url or "wrapper" in traceability_role or "syndicated" in traceability_role):
+        return primary
+    return primary or url
+
+
 def _merged_sources(root: Path, date: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
     manual_path = _manual_source_path(root, date)
     auto_path = _auto_source_path(root, date)
     manual_rows, manual_rejected, diagnostics = _load_source_file(manual_path) if manual_path.exists() else ([], [], [])
     auto_rows, auto_rejected, _ = _load_source_file(auto_path) if auto_path.exists() else ([], [], [])
-    seen_urls = {canonical_url(str(row.get("url") or "")) for row in manual_rows}
-    seen_titles = {normalize_title(str(row.get("title") or "")) for row in manual_rows}
-    merged = list(manual_rows)
+    seen_urls: set[str] = set()
+    seen_titles: set[str] = set()
+    merged: list[dict[str, Any]] = []
+    for row in manual_rows:
+        url_key = _source_merge_url(row)
+        title_key = normalize_title(str(row.get("title") or ""))
+        if url_key in seen_urls or title_key in seen_titles:
+            diagnostics.append(f"manual record skipped due to duplicate override: {row.get('source_record_id') or row.get('title')}")
+            continue
+        seen_urls.add(url_key)
+        seen_titles.add(title_key)
+        merged.append(row)
     for row in auto_rows:
-        url_key = canonical_url(str(row.get("url") or ""))
+        url_key = _source_merge_url(row)
         title_key = normalize_title(str(row.get("title") or ""))
         if url_key in seen_urls or title_key in seen_titles:
             diagnostics.append(f"auto record skipped due to manual duplicate override: {row.get('source_record_id') or row.get('title')}")
             continue
+        seen_urls.add(url_key)
+        seen_titles.add(title_key)
         merged.append(row)
     return merged, [*manual_rejected, *auto_rejected], diagnostics
 
@@ -1565,40 +1586,51 @@ def _food_line_public_pressure_point(lead: dict[str, Any] | None) -> str:
 
 def _food_line_why_it_matters(lead: dict[str, Any] | None, scope_label: str | None = None) -> str:
     lead = lead or {}
-    pressure_type = str(lead.get("pressure_type") or "").strip()
     location = str(lead.get("location_name") or "").strip()
-    affected_groups = _affected_groups_display(list(lead.get("affected_groups") or []))
-    lane = _food_line_lead_pressure_lane(lead)
-    if pressure_type == "demand strain":
-        return "When benefits are delayed or paused, food pantries may see higher demand from households that rely on SNAP."
-    elif pressure_type == "benefit disruption":
-        return "When benefits are delayed or paused, households that rely on SNAP may turn to nearby food pantries."
-    elif pressure_type == "service reduction":
-        return "When services are reduced, households may have fewer nearby options for food support."
-    elif pressure_type == "child meal gap":
-        return "When school meals are unavailable, families may rely more on summer meal programs and related supports."
-    elif pressure_type == "senior meal strain":
-        return "When senior meal programs are strained, older adults may have fewer reliable meal options."
-    elif pressure_type == "access gap":
-        return "When access gaps widen, households may need to look for other nearby food support."
-    elif pressure_type == "household hardship":
-        return "When costs rise, households may have less room in the budget for food."
-    elif pressure_type == "disaster disruption":
-        return "When disasters disrupt normal routines, households may need emergency food support."
+    evidence_text = " ".join(
+        part
+        for part in (
+            str(lead.get("evidence_text") or "").strip(),
+            str(lead.get("summary_or_snippet") or "").strip(),
+            str(lead.get("pressure_summary") or "").strip(),
+        )
+        if part
+    ).lower()
+    delay_or_pause_context = any(
+        phrase in evidence_text
+        for phrase in (
+            "benefit delay",
+            "benefits delayed",
+            "benefits were delayed",
+            "benefits paused",
+            "benefit disruption",
+            "benefits face shutdown pause",
+            "snap benefits face shutdown pause",
+        )
+    )
+    snap_cut_context = any(
+        phrase in evidence_text
+        for phrase in (
+            "snap cuts",
+            "snap reductions",
+            "loss of snap support",
+            "cuts to snap",
+            "snap support",
+        )
+    )
+    if not delay_or_pause_context and not snap_cut_context:
+        return ""
+    if delay_or_pause_context:
+        sentence = "Benefits were delayed or paused, so households that rely on SNAP may turn to nearby food pantries."
     else:
-        if lane == "national_systemic":
-            return "Broad food-access pressure can affect household access before it is visible everywhere."
-        sentence = "This food-access story matters because service changes or benefit delays can push households toward nearby support"
-        if location:
-            sentence += f" in {location}"
-        if affected_groups:
-            sentence += f", with {affected_groups} among those affected"
-        return sentence.rstrip(".") + "."
+        sentence = "Cuts to SNAP and other USDA programs are leaving more families with fewer options."
+    if location:
+        return f"In {location}, {sentence}"
+    return sentence
 
 
 def _food_line_audio_why_it_matters(lead: dict[str, Any] | None) -> str:
     lead = lead or {}
-    pressure_type = str(lead.get("pressure_type") or "").strip()
     location = str(lead.get("location_name") or "").strip()
     evidence_text = " ".join(
         part
@@ -1634,7 +1666,7 @@ def _food_line_audio_why_it_matters(lead: dict[str, Any] | None) -> str:
     if not delay_or_pause_context and not snap_cut_context:
         return ""
     if delay_or_pause_context:
-        sentence = "When benefits are delayed or paused, households that rely on SNAP may turn to nearby food pantries."
+        sentence = "Benefits were delayed or paused, so households that rely on SNAP may turn to nearby food pantries."
     else:
         sentence = "Cuts to SNAP and other USDA programs are leaving more families with fewer options."
     if location:
@@ -3411,9 +3443,15 @@ def write_food_line_audio(
         chosen_provider = str(tts_provider or "openai").strip().lower() or "openai"
         if chosen_provider == "none":
             chosen_provider = "openai"
-    preferred_audio_paths = [audio_root / f"{date}-v2.{audio_format}", audio_root / f"{date}.{audio_format}"]
-    selected_existing_audio_path = next((path for path in preferred_audio_paths if path.exists()), None)
-    audio_filename = selected_existing_audio_path.name if selected_existing_audio_path else f"{date}.{audio_format}"
+    audio_filename = f"{date}.{audio_format}"
+    if generate_audio and force_audio_regenerate:
+        preferred_audio_paths = [audio_root / f"{date}-v2.{audio_format}", audio_root / f"{date}.{audio_format}"]
+        selected_existing_audio_path = next((path for path in preferred_audio_paths if path.exists()), None)
+        audio_filename = selected_existing_audio_path.name if selected_existing_audio_path else f"{date}.{audio_format}"
+    else:
+        preferred_audio_paths = [audio_root / f"{date}-v2.{audio_format}", audio_root / f"{date}.{audio_format}"]
+        selected_existing_audio_path = next((path for path in preferred_audio_paths if path.exists()), None)
+        audio_filename = selected_existing_audio_path.name if selected_existing_audio_path else f"{date}.{audio_format}"
     audio_path = audio_root / audio_filename
     audio_temp_path = audio_root / f"{date}.tmp.{audio_format}"
     existing_audio_mp3_size = audio_path.stat().st_size if audio_path.exists() else None

@@ -48,5 +48,57 @@
       "families",
       "children"
     ]
+  },
+  {
+    "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+    "title": "Tucson food bank sees surge in visitors as inflation rises",
+    "url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+    "publisher": "KOLD / 13 News",
+    "published_at": "2026-06-10T18:53:00-07:00",
+    "page_metadata_date": "2026-06-10T18:53:00-07:00",
+    "retrieved_at": "2026-06-11T00:00:00Z",
+    "summary_or_snippet": "Catholic Community Services' Tucson food bank saw rising demand from first-time visitors. Supplies were running out more regularly, and some visitors could not get food because lines were too long or supplies were nearly gone.",
+    "evidence_text": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's seen that need increase on a daily basis at the food bank. With rising demand, supplies are dwindling quicker than usual. Rodriquez said her most recent trip was unsuccessful because the line was so long and the bank was already giving out the last of what it had.",
+    "evidence_text_basis": "page_text_excerpt",
+    "source_type": "page",
+    "source_family": "local_news",
+    "state": "AZ",
+    "location_name": "Tucson, AZ",
+    "location_scope": "local",
+    "country": "US",
+    "source_purpose": "current_news",
+    "primary_source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+    "source_traceability_role": "article_url",
+    "issue_tags": [
+      "food bank demand",
+      "pantry capacity",
+      "SNAP",
+      "food assistance"
+    ],
+    "map_category": "demand strain",
+    "positive_keywords": [
+      "food bank",
+      "food assistance",
+      "first-time",
+      "supplies are dwindling",
+      "running out",
+      "SNAP",
+      "inflation",
+      "families with children"
+    ],
+    "negative_keywords": [
+      "recipe",
+      "restaurant review",
+      "menu",
+      "cooking tips",
+      "chef",
+      "grocery sale"
+    ],
+    "affected_group_keywords": [
+      "first-time food bank users",
+      "families with children",
+      "SNAP households",
+      "low-income households"
+    ]
   }
 ]

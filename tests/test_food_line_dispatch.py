@@ -1186,7 +1186,7 @@ def test_food_line_2026_06_08_rendered_public_files_regressions(tmp_path: Path, 
     assert "Main Food Access Story" not in edition_html
     assert "Sources Behind This Briefing" not in edition_html
 
-    assert "selected from 34 reviewed records" in transcript_html
+    assert "selected from 33 reviewed records" in transcript_html
     assert "Core Food Pressure Signals" in transcript_html
     assert "Other Food Line Signals" in transcript_html
     assert "service area in Maine" not in transcript_html
@@ -3096,6 +3096,127 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert len(kold_summary.split()) <= 60
     assert "reported rising food-assistance demand" not in wsls_summary.lower()
     assert "reported rising food-assistance demand" not in kold_summary.lower()
+
+
+def test_food_line_resource_framed_provider_update_qualifies_and_wrapper_dedupes(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-10"
+    provider_row = {
+        "source_record_id": "foodbank-find-food-summer-feeding-20260610",
+        "title": "Find food this summer as inventory tightens",
+        "url": "https://example.com/find-food-summer-feeding",
+        "publisher": "Example Food Bank",
+        "published_at": "2026-06-10T12:00:00Z",
+        "retrieved_at": "2026-06-10T12:00:00Z",
+        "summary_or_snippet": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year.",
+        "evidence_text": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year.",
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "food_bank_provider",
+        "state": "LA",
+        "location_name": "Northwest Louisiana",
+        "map_category": "summer meal / child nutrition",
+        "source_purpose": "",
+        "issue_tags": ["food banks", "pantry capacity", "summer meals"],
+    }
+    purpose = food_line.classify_food_line_source_purpose(provider_row)
+    assert purpose["source_purpose"] == "provider_update"
+    pressure = food_line.evaluate_food_line_pressure(
+        provider_row,
+        edition_date=date,
+        pressure_required=True,
+        positive_keywords=["food bank", "summer meals", "inventory", "donations"],
+        negative_keywords=["recipe"],
+    )
+    assert pressure["pressure_signal"] is True
+    assert pressure["pressure_type"] == "service reduction"
+    assert pressure["source_role"] == "provider_signal"
+    assert pressure["pressure_summary"].lower().startswith("example food bank reported")
+    assert "children" in pressure["pressure_summary"].lower()
+    assert "low-income households" in pressure["pressure_summary"].lower()
+
+    manual_dir = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date
+    manual_dir.mkdir(parents=True, exist_ok=True)
+    manual_dir.joinpath("manual_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "ktal-food-bank-summer-feeding-20260610",
+                    "title": "Food Bank of Northwest Louisiana says summer feeding need is tightening inventory",
+                    "url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+                    "publisher": "KTAL / KMSS",
+                    "published_at": "2026-06-10T12:00:00Z",
+                    "retrieved_at": "2026-06-10T12:00:00Z",
+                    "summary_or_snippet": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year.",
+                    "evidence_text": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year. The food bank says it has capacity to feed more children but needs partners.",
+                    "evidence_text_basis": "manual_review",
+                    "source_type": "manual",
+                    "provider_id": "manual",
+                    "source_family": "local_news",
+                    "region_scope": "regional",
+                    "location_name": "Northwest Louisiana",
+                    "state": "LA",
+                        "map_category": "summer meal / child nutrition",
+                    "pressure_signal": True,
+                    "pressure_type": "service reduction",
+                    "pressure_reason": "matched service reduction; record-low inventory, lower donations, and rising food costs",
+                    "affected_groups": ["children", "families", "low-income households"],
+                    "evidence_level": "news report",
+                    "freshness_role": "fresh_daily_signal",
+                    "source_role": "local_signal",
+                    "map_eligible": True,
+                    "location_scope": "regional",
+                    "date_basis": "published_at",
+                    "source_purpose": "current_news",
+                    "primary_source_url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+                    "source_traceability_role": "article_url",
+                    "pressure_summary": "KTAL reported that Food Bank of Northwest Louisiana is running one of its lowest inventories in years after lower donations and rising food costs, even as it provides summer meals and groceries to children and families.",
+                    "traceability_note": "Original publisher URL; reviewed because the article is framed as a summer feeding story but includes concrete inventory, donation, and cost strain evidence.",
+                },
+                {
+                    "source_record_id": "msn-food-bank-struggles-low-inventory-20260610",
+                    "title": "Food bank struggles to meet rising demand amid low inventory",
+                    "url": "https://www.msn.com/en-us/news/us/food-bank-struggles-to-meet-rising-demand-amid-low-inventory/ar-AA25lPEi",
+                    "publisher": "MSN",
+                    "published_at": "2026-06-10T12:00:00Z",
+                    "retrieved_at": "2026-06-10T12:00:00Z",
+                    "summary_or_snippet": "MSN wrapper for the KTAL / KMSS article about Food Bank of Northwest Louisiana summer feeding strain and low inventory.",
+                    "evidence_text": "MSN wrapper for the KTAL / KMSS article about Food Bank of Northwest Louisiana summer feeding strain and low inventory.",
+                    "evidence_text_basis": "manual_review",
+                    "source_type": "manual",
+                    "provider_id": "manual",
+                    "source_family": "local_news",
+                    "region_scope": "regional",
+                    "location_name": "Northwest Louisiana",
+                    "state": "LA",
+                        "map_category": "summer meal / child nutrition",
+                    "pressure_signal": True,
+                    "pressure_type": "service reduction",
+                    "pressure_reason": "wrapper duplicate of KTAL / KMSS source",
+                    "affected_groups": ["children", "families", "low-income households"],
+                    "evidence_level": "news report",
+                    "freshness_role": "fresh_daily_signal",
+                    "source_role": "local_signal",
+                    "map_eligible": True,
+                    "location_scope": "regional",
+                    "date_basis": "published_at",
+                    "source_purpose": "current_news",
+                    "primary_source_url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+                    "source_traceability_role": "syndicated_wrapper",
+                    "pressure_summary": "MSN duplicated the KTAL / KMSS story about Food Bank of Northwest Louisiana summer feeding strain and low inventory.",
+                    "traceability_note": "MSN wrapper record kept for traceability but should dedupe to the original KTAL / KMSS source URL for public use.",
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    merged, rejected, diagnostics = food_line._merged_sources(tmp_path, date)
+    assert rejected == []
+    assert len(merged) == 1
+    assert merged[0]["source_record_id"] == "ktal-food-bank-summer-feeding-20260610"
+    assert any("duplicate override" in item for item in diagnostics)
 
 
 def test_food_line_state_centroid_basis_labeled_clearly(tmp_path: Path):

@@ -51,6 +51,50 @@
       "coordinate_basis": "state centroid"
     },
     {
+      "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+      "location_name": "Tucson, AZ",
+      "state": "AZ",
+      "county_name": "",
+      "category": "demand strain",
+      "publisher": "KOLD / 13 News",
+      "source_family": "local_news",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_excerpt": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_text_basis": "page_text_excerpt",
+      "pressure_match_terms": [
+        "rising demand",
+        "first-time visitors"
+      ],
+      "pressure_verification_status": "source_text_verified",
+      "issue_tags": [
+        "food bank demand",
+        "pantry capacity",
+        "SNAP",
+        "food assistance"
+      ],
+      "affected_groups": [],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Tucson food bank sees surge in visitors as inflation rises",
+      "source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+      "note": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
+      "dispatch_date": "2026-06-11",
+      "latitude": null,
+      "longitude": null,
+      "coordinate_basis": "state centroid"
+    },
+    {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
       "location_name": "United States",
       "state": "US",
@@ -1204,6 +1248,50 @@
       "source_title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
       "source_url": "https://www.wsls.com/news/local/2026/06/10/why-roanokes-st-francis-house-is-facing-its-tightest-food-shortage-ever-this-summer/",
       "note": "WSLS reported rising food-assistance demand in Roanoke, VA, affecting children, SNAP households, low-income households.",
+      "dispatch_date": "2026-06-11",
+      "latitude": null,
+      "longitude": null,
+      "coordinate_basis": "state centroid"
+    },
+    {
+      "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+      "location_name": "Tucson, AZ",
+      "state": "AZ",
+      "county_name": "",
+      "category": "demand strain",
+      "publisher": "KOLD / 13 News",
+      "source_family": "local_news",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_excerpt": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_text_basis": "page_text_excerpt",
+      "pressure_match_terms": [
+        "rising demand",
+        "first-time visitors"
+      ],
+      "pressure_verification_status": "source_text_verified",
+      "issue_tags": [
+        "food bank demand",
+        "pantry capacity",
+        "SNAP",
+        "food assistance"
+      ],
+      "affected_groups": [],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Tucson food bank sees surge in visitors as inflation rises",
+      "source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+      "note": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
       "dispatch_date": "2026-06-11",
       "latitude": null,
       "longitude": null,
@@ -2549,9 +2637,9 @@
     }
   ],
   "diagnostics": {
-    "total_source_count": 30,
-    "pressure_signal_count": 1,
-    "pressure_marker_count": 1,
+    "total_source_count": 31,
+    "pressure_signal_count": 2,
+    "pressure_marker_count": 2,
     "baseline_record_count": 1,
     "context_record_count": 4,
     "excluded_context_count": 4,
@@ -2561,19 +2649,19 @@
       "context_only_or_no_pressure_evidence": 28,
       "baseline_condition": 1
     },
-    "pressure_verified_count": 2,
+    "pressure_verified_count": 3,
     "pressure_demoted_unverified_count": 28,
     "pressure_registry_only_count": 0,
     "pressure_evidence_basis_counts": {
-      "page_text_excerpt": 10,
+      "page_text_excerpt": 11,
       "rss_item_text": 20
     },
     "collected_count_by_extraction_quality": {
       "high": 20,
-      "medium": 10
+      "medium": 11
     },
     "verified_pressure_count_by_extraction_quality": {
-      "medium": 2
+      "medium": 3
     },
     "demoted_count_by_extraction_quality": {
       "high": 20,
@@ -2593,8 +2681,8 @@
       "other": 0
     },
     "exclusion_reason_summary": "Exclusion breakdown: stale 23; resource-only or no pressure signal 3; weak pressure signal 2; background or context material 1.",
-    "marker_count": 1,
-    "plotted_marker_count": 1,
+    "marker_count": 2,
+    "plotted_marker_count": 2,
     "skipped_marker_count": 0,
     "skipped_markers": []
   },
@@ -2645,6 +2733,50 @@
       "dispatch_date": "2026-06-11",
       "latitude": 37.431573,
       "longitude": -78.656894,
+      "coordinate_basis": "state centroid"
+    },
+    {
+      "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
+      "location_name": "Tucson, AZ",
+      "state": "AZ",
+      "county_name": "",
+      "category": "demand strain",
+      "publisher": "KOLD / 13 News",
+      "source_family": "local_news",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_excerpt": "Catholic Community Services' food bank has seen rising demand from first-time visitors and to their clothing donation center. Many of the people who are now coming in haven't consistently used community food resources in the past. Vanessa Rodriquez said she's begun utilizing food banks for the very first time in her life as her grocery bills have gotten too high. Tim Kromer with Catholic Community Services said he's",
+      "evidence_text_basis": "page_text_excerpt",
+      "pressure_match_terms": [
+        "rising demand",
+        "first-time visitors"
+      ],
+      "pressure_verification_status": "source_text_verified",
+      "issue_tags": [
+        "food bank demand",
+        "pantry capacity",
+        "SNAP",
+        "food assistance"
+      ],
+      "affected_groups": [],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Tucson food bank sees surge in visitors as inflation rises",
+      "source_url": "https://www.kold.com/2026/06/11/tucson-food-bank-sees-surge-visitors-inflation-rises/",
+      "note": "KOLD / 13 News reported rising food-assistance demand in Tucson, AZ.",
+      "dispatch_date": "2026-06-11",
+      "latitude": 34.048928,
+      "longitude": -111.093731,
       "coordinate_basis": "state centroid"
     }
   ]

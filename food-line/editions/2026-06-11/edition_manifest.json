@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-11",
-  "generated_at": "2026-06-12T20:34:24.487313+00:00",
+  "generated_at": "2026-06-12T22:25:32.303039+00:00",
   "source_count": 30,
   "story_count": 1,
   "source_adequacy": {
@@ -27,6 +27,7 @@
   "primary_signal_status": "new_primary",
   "primary_disqualification_reason": "",
   "public_rendered": true,
+  "public_signal_count": 2,
   "qualified_primary_count": 1,
   "future_date_blocked": false,
   "future_date_override_used": false,

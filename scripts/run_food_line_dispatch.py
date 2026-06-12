@@ -1453,7 +1453,10 @@ def _audio_review_summary(sources: list[dict[str, Any]]) -> str:
 
 
 def _audio_lead_summary(lead: dict[str, Any] | None) -> str:
-    return _food_line_public_summary_sentence(lead, max_words=60)
+    summary = _food_line_public_summary_sentence(lead, max_words=60).strip()
+    if not summary:
+        return ""
+    return summary.rstrip(".") + "."
 
 
 def _food_line_audio_topic_label(row: dict[str, Any] | None) -> str:
@@ -2281,6 +2284,13 @@ def _food_line_public_edition_manifest(root: Path, date: str) -> dict[str, Any] 
 
 def _food_line_public_edition_label(root: Path, date: str) -> str:
     manifest = _food_line_public_edition_manifest(root, date) or {}
+    public_signal_count = 0
+    try:
+        public_signal_count = int(manifest.get("public_signal_count") or 0)
+    except (TypeError, ValueError):
+        public_signal_count = 0
+    if public_signal_count > 0:
+        return f"{date} — Pantry demand and summer food-bank strain"
     if str(manifest.get("edition_mode") or "").strip() == "no_current_update":
         return f"{date} — No current update"
     return date
@@ -3994,6 +4004,7 @@ def run_food_line_dispatch(
     edition_mode = "blocked_future_date" if future_date_blocked else ("current_update" if lead_row else ("no_current_update" if no_current_update else "no_public_edition"))
     public_rendered = edition_mode in {"current_update", "no_current_update"}
     public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
+    public_signal_count = len(public_rows)
     current_public_rows = [
         row
         for row in public_rows
@@ -4050,6 +4061,7 @@ def run_food_line_dispatch(
         "primary_signal_status": primary_signal_status,
         "primary_disqualification_reason": primary_disqualification_reason,
         "public_rendered": public_rendered,
+        "public_signal_count": public_signal_count,
         "qualified_primary_count": qualified_primary_count,
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,

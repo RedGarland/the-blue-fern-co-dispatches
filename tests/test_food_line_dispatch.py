@@ -1056,13 +1056,13 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "What the source says" in source_table_html
     assert "stale current-story candidate source" in source_table_html
     assert "food-line-auto-" in source_table_html
-    assert "2026-06-06 — No current update" in index_html
+    assert "2026-06-06 — Pantry demand and summer food-bank strain" in index_html
     assert "editions/2026-06-06/" in index_html
     assert 'href="/american-pressure/"' not in index_html
     assert 'href="/gaza/"' in index_html
     assert 'href="/cascadia/"' in index_html
     assert 'href="/food-line/"' in index_html
-    assert "2026-06-06 — No current update" in archive_html
+    assert "2026-06-06 — Pantry demand and summer food-bank strain" in archive_html
     assert manifest["public_rendered"] is True
     assert manifest["edition_mode"] == "no_current_update"
     assert manifest["skip_reason"] == ""
@@ -1114,8 +1114,10 @@ def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_p
     assert result["edition_mode"] == "no_current_update"
     assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
     assert result["qualified_primary_count"] == 0
-    assert "No current update" in index_html
-    assert "No current update" in archive_html
+    assert "Pantry demand and summer food-bank strain" in index_html
+    assert "Pantry demand and summer food-bank strain" in archive_html
+    assert "No current update" not in index_html
+    assert "No current update" not in archive_html
     assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in index_html
     assert "Blocked" not in archive_html
     assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
@@ -2986,7 +2988,8 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     assert '<h2>Current coverage</h2>' in home_html
     assert 'editions/2026-06-11/' in home_html
-    assert '2026-06-07 â€” No current update' not in home_html
+    assert '2026-06-11 — Pantry demand and summer food-bank strain' in home_html
+    assert 'No current update' not in home_html
     assert '2026-06-11' in home_html
 
 
@@ -3073,6 +3076,9 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert "â€”" not in audio_index
     assert "/food-line/audio/2026-06-11-v2.mp3" in audio_index
     assert "/food-line/audio/2026-06-11.mp3" not in audio_index
+    audio_teaser_match = re.search(r'<h1>Food Line Audio &mdash; June 11, 2026</h1>\s*<p>(.*?)</p>', audio_index, re.S)
+    assert audio_teaser_match is not None
+    assert audio_teaser_match.group(1).endswith(".")
     other_index_match = re.search(r"<h2>Other Food Line Signals</h2>\s*<p>(.*?)</p>", audio_index)
     assert other_index_match is not None
     other_index_text = other_index_match.group(1)

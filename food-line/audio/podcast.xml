@@ -7,14 +7,14 @@
   <language>en-us</language>
   <itunes:image href="https://dispatches.thebluefernco.com/food-line/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/food-line/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 12 Jun 2026 17:29:30 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 12 Jun 2026 18:30:46 +0000</lastBuildDate>
   <item>
     <title>Food Line Briefing — June 11, 2026</title>
     <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-11-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-11-transcript.html</guid>
     <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-    <description>Today's Food Line briefing tracks food-bank demand in Tucson, AZ and continuing food-bank demand in Roanoke, VA. When benefits are delayed or paused, food pantries may see higher demand from households that rely on SNAP. Background and source links are available in the public source table.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-11.mp3" length="962688" type="audio/mpeg" />
+    <description>Today's Food Line briefing tracks food-bank demand in Tucson, AZ and continuing food-bank demand in Roanoke, VA. Background and source links are available in the public source table.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-11.mp3" length="912768" type="audio/mpeg" />
   </item>
   <item>
     <title>Food Line Briefing — June 10, 2026</title>
@@ -55,6 +55,14 @@
     <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
     <description>No current Food Line update was published because no fresh source-backed current-story records were available. Stale sources remain in the source audit, but they are not presented as current stories. Background and source links are available in the public source table. This edition is a no-current-update public fallback.</description>
     <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-06.mp3" length="553728" type="audio/mpeg" />
+  </item>
+  <item>
+    <title>Food Line Briefing — June 5, 2026</title>
+    <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-05-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-05-transcript.html</guid>
+    <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+    <description>No current Food Line update was published because no fresh source-backed current-story records were available. Stale sources remain in the source audit, but they are not presented as current stories. Background and source links are available in the public source table. This edition is a no-current-update public fallback.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-05.mp3" length="778368" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

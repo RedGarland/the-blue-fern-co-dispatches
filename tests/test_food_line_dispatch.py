@@ -3084,6 +3084,7 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert "first-time visitors" in claim_ledger_html
     assert "supplies were running out more regularly" in claim_ledger_html.lower()
     assert "Tucson, AZ" in claim_ledger_html
+    assert "In Roanoke, VA" in claim_ledger_html
     assert "St. Francis House had empty shelves in May" in claim_ledger_html
     assert "KOLD / 13 News" in claim_ledger_html
     assert "WSLS" in claim_ledger_html
@@ -3095,6 +3096,22 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert "pressure_signal" not in claim_ledger_html
     assert "Confidence</th>" in claim_ledger_html
     assert ">moderate<" in claim_ledger_html
+    from html import unescape
+
+    claim_cells = re.findall(r"<td>(.*?)</td>", claim_ledger_html)
+    claim_texts = [unescape(cell) for cell in claim_cells[::12]]
+    roanoke_claim = next(text for text in claim_texts if "St. Francis House" in text)
+    tucson_claim = next(text for text in claim_texts if "Catholic Community Services" in text)
+    assert roanoke_claim.endswith(".")
+    assert tucson_claim.endswith(".")
+    assert "adding strain in Roanoke, VA" not in roanoke_claim
+    assert "..." not in roanoke_claim
+    assert "..." not in tucson_claim
+    assert "64%" in roanoke_claim
+    assert "empty shelves" in roanoke_claim.lower()
+    assert "smaller than May" in roanoke_claim
+    assert "first-time visitors" in tucson_claim
+    assert "Tucson" in tucson_claim
     assert edition_manifest["claim_count"] == 2
     assert edition_manifest["claim_ledger_path"] == "/food-line/editions/2026-06-11/claim_ledger.html"
     assert edition_manifest["source_table_path"] == "/food-line/editions/2026-06-11/source_table.html"

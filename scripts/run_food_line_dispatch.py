@@ -2122,19 +2122,52 @@ def _food_line_public_signal_item_html(row: dict[str, Any]) -> str:
 
 
 def _food_line_claim_supported_text(row: dict[str, Any]) -> str:
-    summary = _food_line_public_summary_sentence(row, max_words=80).strip().rstrip(".")
+    summary = _food_line_public_summary_sentence(row, max_words=80).strip()
     if summary and not _food_line_public_summary_is_generic(summary):
-        return summary
+        location = _food_line_public_location_label(row)
+        cleaned_summary, stripped_location = _food_line_clean_claim_location_tail(summary, location)
+        if stripped_location and location and location.lower() not in cleaned_summary.lower():
+            cleaned_summary = f"In {location}, {cleaned_summary}"
+        return _food_line_ensure_final_punctuation(cleaned_summary)
     evidence_excerpt = _public_evidence_excerpt(row)
     if evidence_excerpt and evidence_excerpt != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
-        return evidence_excerpt.rstrip(".")
+        return _food_line_ensure_final_punctuation(evidence_excerpt)
     pressure_summary = str(row.get("pressure_summary") or "").strip()
     if pressure_summary:
-        return pressure_summary.rstrip(".")
+        return _food_line_ensure_final_punctuation(pressure_summary)
     title = str(row.get("title") or "").strip()
     if title:
-        return title.rstrip(".")
-    return "Source-backed food-pressure claim"
+        return _food_line_ensure_final_punctuation(title)
+    return "Source-backed food-pressure claim."
+
+
+def _food_line_ensure_final_punctuation(text: str) -> str:
+    sentence = re.sub(r"\s+", " ", str(text or "").strip())
+    if not sentence:
+        return ""
+    if sentence[-1] in ".!?":
+        return sentence
+    return f"{sentence}."
+
+
+def _food_line_clean_claim_location_tail(text: str, location: str) -> tuple[str, bool]:
+    sentence = re.sub(r"\s+", " ", str(text or "").strip())
+    location = re.sub(r"\s+", " ", str(location or "").strip()).strip(" ,.;:-")
+    if not sentence or not location:
+        return sentence, False
+    escaped_location = re.escape(location)
+    patterns = (
+        rf"^(?P<body>.*?)(?:\s*,?\s+in\s+{escaped_location})$",
+        rf"^(?P<body>.*?)(?:\s*,?\s+{escaped_location})$",
+    )
+    for pattern in patterns:
+        match = re.match(pattern, sentence, flags=re.IGNORECASE)
+        if not match:
+            continue
+        body = match.group("body").rstrip(" ,;:-")
+        if body:
+            return body, True
+    return sentence, False
 
 
 def _food_line_claim_interpretation(row: dict[str, Any]) -> str:

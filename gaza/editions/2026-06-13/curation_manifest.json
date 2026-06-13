@@ -1,11 +1,11 @@
 [
   {
-    "story_id": "gaza-story-2026-06-13-003",
-    "title": "Israeli army kills Palestinian municipality worker in central Gaza",
-    "summary": "Despite truce in effect since October 2025, Israeli army launches drone strike near Bureij refugee camp.",
+    "story_id": "gaza-story-2026-06-13-006",
+    "title": "Gaza post-'ceasefire' deaths hit 983 as Israeli attack targets refugee camp",
+    "summary": "Israeli attack kills one person in central Gaza's Bureij camp, as a disabled Palestinian is shot in occupied West Bank.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 75,
+    "score": 81,
     "scoring_reasons": [
       "ceasefire_diplomacy",
       "civilian_harm",
@@ -27,23 +27,24 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-fb200c8c910b"
+      "gaza-2026-06-13-aljazeera-middle-east-0c06dc7d54ea"
     ],
     "source_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-fb200c8c910b"
+      "gaza-2026-06-13-aljazeera-middle-east-0c06dc7d54ea"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-municipality-worker-in-central-gaza/3965899"
+      "https://www.aljazeera.com/news/2026/6/13/gaza-post-ceasefire-deaths-hit-983-as-israeli-attack-targets-refugee-camp?traffic_source=rss"
     ],
     "publisher_names": [
-      "Anadolu Agency"
+      "Al Jazeera"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza",
-      "palestin"
+      "palestin",
+      "west bank"
     ],
-    "top_story_relevance_score": 75,
+    "top_story_relevance_score": 81,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -52,13 +53,13 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-01-002",
-    "prior_edition_date": "2026-06-01",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-13-005",
+    "story_id": "gaza-story-2026-06-13-004",
     "title": "How Gaza's students are still learning despite shattered schools and displacement",
     "summary": "For nearly three years, children in Gaza have grown up surrounded by war, displacement and loss. Thousands of children have been killed in Israeli strikes that followed the Hamas assault on Oct. 7. Still, the children of Gaza yearn for the chance to keep learning in classes held in tents, damaged buildings and overcrowded shelters. Ali Rogin reports.",
     "category": "conflict",
@@ -96,7 +97,7 @@
     "publisher_names": [
       "PBS NewsHour"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -115,64 +116,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-13-009",
-    "title": "Palestinian American woman held without charge by Israeli military",
-    "summary": "Soldiers arrested university student Sama Safi, 20, along with members of Palestinian women's national soccer team. A 20-year-old Palestinian American woman has been held in Israeli military detention for nearly two weeks after Israeli soldiers stormed her family home in a pre-dawn raid on 2 June. Sama Safi, a psychology student at Birzeit University in the occupied West Bank, has not been charged with any crimes. A spokesperson for the Israeli military said she and three other women detained around the same time were arrested \"after promoting hostile terrorist activity and additional terrorist-related activities\".",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 65,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-06-13-guardian-world-50abde68f93e"
-    ],
-    "source_ids": [
-      "gaza-2026-06-13-guardian-world-50abde68f93e"
-    ],
-    "source_urls": [
-      "https://www.theguardian.com/us-news/2026/jun/13/palestinian-held-sama-safi-israeli-military"
-    ],
-    "publisher_names": [
-      "The Guardian"
-    ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "west bank"
-    ],
-    "top_story_relevance_score": 65,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "independently_reported",
-    "claim_status": "independently_reported",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-05-28-004",
-    "prior_edition_date": "2026-05-28",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-06-13-004",
+    "story_id": "gaza-story-2026-06-13-003",
     "title": "Palestinian and Israeli civil society groups urge G7 to take action on Gaza",
     "summary": "Paris meeting draws up proposals and calls for urgent diplomacy towards two-state solution at summit next week Palestinian and Israeli civil society groups meeting in Paris on Friday have urged G7 leaders to act at their summit in the French spa town of \u00c9vian-les-Bains next week to save the narrowing chances of a two-state solution. The groups called for specific action on enforcing a ceasefire, disarming Hamas and starting reconstruction in Gaza, and said the various peace processes including the Board of Peace initiative should be integrated into one programme.",
     "category": "conflict",
@@ -209,7 +153,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -229,13 +173,14 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-13-007",
-    "title": "Separated by the Gaza war, a Palestinian yearns to see his family again",
-    "summary": "Shady al-Areer, 38, was smuggled from Israel into the occupied West Bank after October 7, 2023. This is his story.",
+    "story_id": "gaza-story-2026-06-13-008",
+    "title": "Protesters in Stockholm rally against Israeli attacks in Palestinian territories, Lebanon",
+    "summary": "Demonstrators call for end to Israeli military operations, halt to Swedish arms sales to Israel.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 50,
+    "score": 56,
     "scoring_reasons": [
+      "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
@@ -243,7 +188,7 @@
       "humanitarian_impact": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
@@ -253,35 +198,34 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-13-aljazeera-middle-east-9de6f28b55c6"
+      "gaza-2026-06-13-anadolu-middle-east-25a0048e18f8"
     ],
     "source_ids": [
-      "gaza-2026-06-13-aljazeera-middle-east-9de6f28b55c6"
+      "gaza-2026-06-13-anadolu-middle-east-25a0048e18f8"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/features/longform/2026/6/13/separated-by-the-gaza-war-a-palestinian-yearns-to-see-his-family-again?traffic_source=rss"
+      "https://www.aa.com.tr/en/world/protesters-in-stockholm-rally-against-israeli-attacks-in-palestinian-territories-lebanon/3966207"
     ],
     "publisher_names": [
-      "Al Jazeera"
+      "Anadolu Agency"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza",
-      "palestin",
-      "west bank"
+      "palestin"
     ],
-    "top_story_relevance_score": 50,
-    "substantive_ground": false,
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
-    "core_ground_development": false,
+    "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-05-30-003",
-    "prior_edition_date": "2026-05-30",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
     "dedupe_reasons": []
   },
   {
@@ -321,7 +265,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -341,64 +285,9 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-13-008",
-    "title": "As World Cup kicks off, Gaza amputee girls chase football dreams",
-    "summary": "After losing her leg in an Israeli strike, 24-year-old Rozan Khaira refused to abandon sport she loves 'An injury is not the end of a dream. It can open new doors,' she tells Anadolu.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 45,
-    "scoring_reasons": [
-      "civilian_harm",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 12,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-dba445a11459"
-    ],
-    "source_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-dba445a11459"
-    ],
-    "source_urls": [
-      "https://www.aa.com.tr/en/sports/as-world-cup-kicks-off-gaza-amputee-girls-chase-football-dreams/3965689"
-    ],
-    "publisher_names": [
-      "Anadolu Agency"
-    ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 45,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
     "story_id": "gaza-story-2026-06-13-002",
-    "title": "Molokhia cigarettes: Gaza's toxic alternative to tobacco",
-    "summary": "Smokers in Gaza turn to toxic molokhia nicotine cigarettes as tobacco prices surge, causing serious health risks.",
+    "title": "Gaza pet owners struggle to keep animals healthy amid vet crisis",
+    "summary": "Animal lovers in Gaza are resorting to desperate measures to keep their pets alive and healthy.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 38,
@@ -420,18 +309,18 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-13-aljazeera-middle-east-9e8bd8a3c787"
+      "gaza-2026-06-13-aljazeera-middle-east-a541cc4163d7"
     ],
     "source_ids": [
-      "gaza-2026-06-13-aljazeera-middle-east-9e8bd8a3c787"
+      "gaza-2026-06-13-aljazeera-middle-east-a541cc4163d7"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/features/longform/2026/6/13/molokhia-cigarettes-gazas-toxic-alternative-to-tobacco?traffic_source=rss"
+      "https://www.aljazeera.com/video/newsfeed/2026/6/13/gaza-pet-owners-struggle-to-keep-animals-healthy-amid-vet-crisis?traffic_source=rss"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -450,7 +339,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-13-011",
+    "story_id": "gaza-story-2026-06-13-007",
     "title": "Palestinian rapper Shamaly's story of survival through music",
     "summary": "The New Arab Meets: Shamaly, the Palestinian rapper documenting life before, during, and after genocide through music born in war-torn Gaza.",
     "category": "conflict",
@@ -485,7 +374,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -510,62 +399,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-06-13-010",
-    "title": "Israel expanding Gaza 'yellow line' to derail ceasefire talks, says Hamas",
-    "summary": "- Israeli army moves yellow line blocks westward by 300 meters in several areas of Gaza Strip.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 31,
-    "scoring_reasons": [
-      "ceasefire_diplomacy",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-c9b0b9e19377"
-    ],
-    "source_ids": [
-      "gaza-2026-06-13-anadolu-middle-east-c9b0b9e19377"
-    ],
-    "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/israel-expanding-gaza-yellow-line-to-derail-ceasefire-talks-says-hamas/3965331"
-    ],
-    "publisher_names": [
-      "Anadolu Agency"
-    ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 31,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-06-13-006",
+    "story_id": "gaza-story-2026-06-13-005",
     "title": "Is the UK complicit in Israeli abuse of Gaza flotilla activists?",
     "summary": "The UK's handling of detained flotilla activists suggests a willingness to look away when ally. Israel is accused of abuse, writes Nadeem Dawud.",
     "category": "conflict",
@@ -600,7 +434,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-13T13:00:42.534239+00:00",
+    "generated_at": "2026-06-13T19:15:24.167829+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

@@ -1479,6 +1479,39 @@ def _audio_lead_summary(lead: dict[str, Any] | None) -> str:
     return summary.rstrip(".") + "."
 
 
+def _food_line_bluesky_summary_clause(lead: dict[str, Any] | None) -> str:
+    lead = lead or {}
+    candidates = [
+        _food_line_public_summary_sentence(lead, max_words=60),
+        _audio_lead_summary(lead),
+        _food_line_public_pressure_point(lead),
+    ]
+    publisher = str(lead.get("publisher") or lead.get("source_name") or "").strip()
+    location = str(lead.get("location_name") or lead.get("state") or "").strip()
+    for candidate in candidates:
+        clause = re.sub(r"\s+", " ", str(candidate or "").strip()).rstrip(".")
+        if not clause or _food_line_public_summary_is_generic(clause):
+            continue
+        clause = re.sub(r"^reported that\s+", "", clause, flags=re.IGNORECASE)
+        clause = re.sub(r"^reported on\s+", "", clause, flags=re.IGNORECASE)
+        clause = re.sub(r"^why\s+", "", clause, flags=re.IGNORECASE)
+        clause = re.sub(r"^how\s+", "", clause, flags=re.IGNORECASE)
+        clause = clause.strip(" ,;:-")
+        if not clause:
+            continue
+        if publisher and clause.lower().startswith(publisher.lower()):
+            clause = clause[len(publisher) :].lstrip(" ,:-")
+        if location and clause.lower().startswith(f"in {location.lower()}"):
+            clause = clause[3 + len(location) :].lstrip(" ,:-")
+        if clause and not clause.endswith("."):
+            clause += "."
+        if clause and clause != ".":
+            return clause.rstrip(".")
+    if location:
+        return f"{publisher} shared a source-backed update on {location}".strip()
+    return f"{publisher} shared a source-backed update".strip()
+
+
 def _food_line_audio_topic_label(row: dict[str, Any] | None) -> str:
     pressure_type = str((row or {}).get("pressure_type") or "").strip().lower()
     if pressure_type == "demand strain":
@@ -1793,6 +1826,8 @@ def _food_line_bluesky_post_text(date: str, lead: dict[str, Any] | None, public_
         sentence = re.sub(r"\s+", " ", str(text or "").strip())
         if not sentence:
             return ""
+        if sentence.endswith(":"):
+            return sentence
         return sentence.rstrip(".") + "."
 
     def _shorten_at_word_boundary(text: str, max_len: int) -> str:
@@ -1821,6 +1856,15 @@ def _food_line_bluesky_post_text(date: str, lead: dict[str, Any] | None, public_
             text = f"{body} {suffix}".strip()
             if len(text) <= max_len:
                 return text
+        if len(clean_sentences) >= 2:
+            tail = " ".join(clean_sentences[1:]).strip()
+            if tail:
+                available = max_len - len(suffix) - len(tail) - 2
+                if available > 0:
+                    shortened_head = _shorten_at_word_boundary(clean_sentences[0], available)
+                    text = f"{shortened_head} {tail} {suffix}".strip()
+                    if len(text) <= max_len:
+                        return text
         available = max_len - len(suffix) - 1
         if available <= 0:
             return suffix
@@ -1829,7 +1873,7 @@ def _food_line_bluesky_post_text(date: str, lead: dict[str, Any] | None, public_
 
     date_text = _human_date(date)
     publisher = str(lead.get("publisher") or lead.get("source_name") or "the source").strip()
-    location = str(lead.get("location_name") or lead.get("state") or "").strip()
+    summary_clause = _food_line_bluesky_summary_clause(lead).strip().rstrip(".")
     suffix = public_url or ""
     if _food_line_is_nonlocal_data_signal(lead):
         summary = str(lead.get("pressure_summary") or "").strip()
@@ -1847,13 +1891,10 @@ def _food_line_bluesky_post_text(date: str, lead: dict[str, Any] | None, public_
             [f"Food Line Dispatch, {date_text}: {lead_sentence}", second_sentence],
             suffix,
         )
-    lead_clause = _food_line_public_reported_clause(lead) or _food_line_public_story_sentence(lead)
-    if location and location.lower() not in lead_clause.lower():
-        lead_clause = f"{lead_clause} in {location}"
     return _compose_ranked_post(
         [
-            f"Food Line Dispatch, {date_text}: {publisher} reported that {lead_clause}.",
-            "USDA sources provide background on summer nutrition programs and food security.",
+            f"Food Line Dispatch, {date_text}: {publisher} reported that {summary_clause}.",
+            "Source-backed public briefing:",
         ],
         suffix,
     )

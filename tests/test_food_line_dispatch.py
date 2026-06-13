@@ -3029,6 +3029,19 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert result["audio_status"] == "audio_file_reused_existing"
     assert result["lead_source_record_id"] == kold["source_record_id"]
     assert result["audio_story_sections"] == ["opening", "today_read", "main_story", "what_else", "sources_behind", "closing"]
+    assert result["bluesky_post_text"]
+    assert "reported that why" not in result["bluesky_post_text"]
+    assert "reported that how" not in result["bluesky_post_text"]
+    assert "Why Roanoke's St. Francis House" not in result["bluesky_post_text"]
+    assert "Source-backed public briefing" in result["bluesky_post_text"]
+    assert "Catholic Community Services" in result["bluesky_post_text"]
+    assert "first-time" in result["bluesky_post_text"].lower()
+    assert "supplies" in result["bluesky_post_text"].lower()
+    assert "running out" in result["bluesky_post_text"].lower()
+    assert "Tucson" in result["bluesky_post_text"]
+    assert "pressure_signal" not in result["bluesky_post_text"]
+    assert "local_signal" not in result["bluesky_post_text"]
+    assert len(result["bluesky_post_text"]) <= 300
     assert audio_json["audio_file"] == "2026-06-11-v2.mp3"
     assert audio_json["audio_mp3_url"] == "/food-line/audio/2026-06-11-v2.mp3"
     assert existing_audio.read_bytes() == existing_audio_bytes
@@ -3473,7 +3486,8 @@ def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     assert len(result["bluesky_post_text"]) <= 300
     assert result["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-04/"
     assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
-    assert "USDA sources provide background on summer nutrition programs and food security." in result["bluesky_post_text"]
+    assert "reported household food hardship tied to health-care costs in Sacramento" in result["bluesky_post_text"]
+    assert "Source-backed public briefing" in result["bluesky_post_text"]
     assert result["public_url"] in result["bluesky_post_text"]
 
 
@@ -3509,6 +3523,79 @@ def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path
     assert payload["image_alt"] == bluesky_post.FOOD_LINE_SOCIAL_IMAGE_ALT
     assert payload["post_text"] == post_text
     assert payload["public_url"] == public_url
+
+
+def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-06-11"
+    public_url = "https://dispatches.thebluefernco.com/food-line/"
+    post_text = "Food Line Dispatch, June 11, 2026: WSLS reported that Roanoke's St. Francis House faced empty shelves. Source-backed public briefing:"
+    state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("network call should not happen during Bluesky dry-run or duplicate guard")
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fail_if_called)
+
+    dry_run_result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url=public_url,
+        post_text=post_text,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=2,
+        post_requested=True,
+        project_root=tmp_path,
+        allow_publish=False,
+        dry_run=True,
+    )
+    dry_run_payload = json.loads(state_path.read_text(encoding="utf-8"))
+    assert dry_run_result["reason"] == "dry_run"
+    assert dry_run_payload["status"] == "dry_run"
+    assert dry_run_payload["post_text"] == post_text
+    assert dry_run_payload["public_url"] == public_url
+
+    state_path.write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "public_url": public_url,
+                "post_text": post_text,
+                "card_title": "The Food Line Dispatch - June 11, 2026",
+                "card_description": "Food Line Dispatch, June 11, 2026: WSLS reported that Roanoke's St. Francis House faced empty shelves.",
+                "image_path": "assets/food-line-dispatch-social.png",
+                "image_alt": bluesky_post.FOOD_LINE_SOCIAL_IMAGE_ALT,
+                "status": "success",
+                "skip_reason": None,
+                "dry_run": False,
+                "forced_post": False,
+                "post_uri": "at://did:plc:example/app.bsky.feed.post/abc",
+                "post_cid": "bafyreexample",
+                "embed_type": "app.bsky.embed.external",
+                "thumb_status": "uploaded",
+                "posted_at": "2026-06-11T00:00:00Z",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    duplicate_result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url=public_url,
+        post_text=post_text,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=2,
+        post_requested=True,
+        project_root=tmp_path,
+        allow_publish=True,
+        dry_run=False,
+    )
+    assert duplicate_result["reason"] == "skipped_existing_receipt"
+    assert duplicate_result["post_uri"] == "at://did:plc:example/app.bsky.feed.post/abc"
+    assert duplicate_result["post_cid"] == "bafyreexample"
 
 
 def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):

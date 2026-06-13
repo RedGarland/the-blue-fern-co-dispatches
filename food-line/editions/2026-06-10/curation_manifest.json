@@ -102,7 +102,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": true,
       "primary_eligible": true,
-      "primary_disqualification_reason": ""
+      "primary_disqualification_reason": "",
+      "claim_supported": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year. The food bank says it has capacity to feed more children but needs partners, as school-meal gaps add strain.",
+      "limitations": "The source documents service strain in Northwest Louisiana, but it does not measure total unmet need across the full service area.",
+      "included": true,
+      "exclusion_reason": ""
     },
     {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
@@ -201,7 +205,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": false,
       "primary_eligible": false,
-      "primary_disqualification_reason": "insufficient specific pressure evidence"
+      "primary_disqualification_reason": "insufficient specific pressure evidence",
+      "claim_supported": "In United States, USDA FNS reported context only.",
+      "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+      "included": false,
+      "exclusion_reason": "background reference"
     },
     {
       "source_record_id": "food-line-auto-0a6971fe2afe00bb",
@@ -297,7 +305,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": false,
       "primary_eligible": false,
-      "primary_disqualification_reason": "insufficient specific pressure evidence"
+      "primary_disqualification_reason": "insufficient specific pressure evidence",
+      "claim_supported": "In United States, Food security means access by all people at all times to enough food for an active, healthy life. ERS presents trends, statistics, and charts related to food security, along with definitions, background, key publications, and resources.",
+      "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+      "included": false,
+      "exclusion_reason": "background reference"
     },
     {
       "source_record_id": "food-line-auto-6833f0ff7b903066",
@@ -401,7 +413,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": true,
       "primary_eligible": false,
-      "primary_disqualification_reason": "insufficient specific pressure evidence"
+      "primary_disqualification_reason": "insufficient specific pressure evidence",
+      "claim_supported": "SNAP, formerly known as food stamps, provides food assistance to eligible low-income Pennsylvanians, offering EBT Cards to purchase fresh, healthy foods. Check your eligibility and apply online.",
+      "limitations": "The source describes conditions in Pennsylvania, but it does not prove a broader regional trend.",
+      "included": false,
+      "exclusion_reason": "background reference"
     },
     {
       "source_record_id": "food-line-auto-8e0ce4668b9ad388",
@@ -511,7 +527,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": true,
       "primary_eligible": false,
-      "primary_disqualification_reason": "insufficient specific pressure evidence"
+      "primary_disqualification_reason": "insufficient specific pressure evidence",
+      "claim_supported": "In Mississippi, SNAP provides food benefits to low-income families to supplement their grocery budget so they can afford nutritious food.",
+      "limitations": "The source describes conditions in Mississippi, but it does not prove a broader regional trend.",
+      "included": false,
+      "exclusion_reason": "background reference"
     },
     {
       "source_record_id": "food-line-auto-418880e754e57c06",
@@ -611,7 +631,11 @@
       "source_freshness_date_basis": "published_at",
       "source_public_story_eligible": false,
       "primary_eligible": false,
-      "primary_disqualification_reason": "insufficient specific pressure evidence"
+      "primary_disqualification_reason": "insufficient specific pressure evidence",
+      "claim_supported": "USDA FNS reported context only in United States, affecting disaster-affected households.",
+      "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+      "included": false,
+      "exclusion_reason": "background reference"
     }
   ]
 }

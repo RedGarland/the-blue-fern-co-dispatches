@@ -11,7 +11,7 @@ def test_builds_expected_gaza_post_text_without_url():
     assert "Today's Gaza Dispatch is live." not in text
     assert "Today's edition follows several threads at once:" not in text
     assert "Read the source-backed" not in text
-    assert "https://dispatches.thebluefernco.com" not in text
+    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in text
     assert len(text) <= bluesky_post.BLUESKY_MAX_POST_LENGTH
 
 
@@ -45,18 +45,41 @@ def test_builds_reader_friendly_prose_from_fixture_story_fields(tmp_path: Path):
         "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/",
         project_root=tmp_path,
     )
-    assert text.startswith("In the May 29 briefing:") or text.startswith("The May 29 briefing")
-    assert "Israeli strikes in Gaza" in text or "satellite imagery showing changes on the ground" in text
-    assert "aid pressure" in text
-    assert "satellite imagery" in text or "changes on the ground" in text or "court action over Red Cross access to Palestinian detainees" in text
-    assert "http://" not in text and "https://" not in text
-    assert "Today's edition follows several threads at once:" not in text
+    assert text.startswith("In the May 29 Gaza briefing:")
+    assert "Displacement pressure increased in several areas." in text or "Palestinians were held without charge in reported detention cases." in text
+    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/" in text
+    assert "satellite imagery" not in text
+    assert "1967" not in text
+
+
+def write_current_edition_artifacts(root: Path, edition_date: str = "2026-05-07", summary: str = "Specific verified Gaza dispatch summary.") -> None:
+    current = root / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current edition summary",
+                    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 1, "publisher_count": 1, "publishers": ["Example News"], "social_summary": summary}),
+        encoding="utf-8",
+    )
+    site = root / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 7, 2026</p></body></html>", encoding="utf-8")
+    run_manifest = root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
+    run_manifest.parent.mkdir(parents=True, exist_ok=True)
+    run_manifest.write_text(json.dumps({"social_summary": summary}), encoding="utf-8")
 
 
 def test_focus_fallback_when_no_topics_derived(tmp_path: Path):
-    curated = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-05-29" / "curation_manifest.json"
-    curated.parent.mkdir(parents=True, exist_ok=True)
-    curated.write_text(json.dumps([{"title": "Update", "summary": "General context."}]), encoding="utf-8")
     text = bluesky_post.build_gaza_bluesky_post_text(
         "2026-05-29",
         "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/",
@@ -88,7 +111,8 @@ def test_focus_derivation_sanitizes_internal_or_incomplete_public_prose(tmp_path
         "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/",
         project_root=tmp_path,
     )
-    assert "aid pressure" in text
+    assert text.startswith("In the May 29 Gaza briefing:")
+    assert "Aid corridor pressure remains in focus." in text
     assert "included because" not in text.lower()
     assert "would allow." not in text.lower()
 
@@ -123,8 +147,9 @@ def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: 
         "https://dispatches.thebluefernco.com/gaza/editions/2026-05-31/",
         project_root=tmp_path,
     )
-    assert "military-announced operations in Gaza" in text
-    assert "aid pressure around Gaza's borders" in text
+    assert text.startswith("In the May 31 Gaza briefing:")
+    assert "destroyed weapons storage facilities in Gaza" in text
+    assert "Gaza-bound convoy in Libya was dissolved after arrests." in text
     assert "inside Gaza" not in text.lower()
 
 
@@ -168,10 +193,185 @@ def test_june_5_post_uses_filtered_gaza_topics(tmp_path: Path):
         "https://dispatches.thebluefernco.com/gaza/editions/2026-06-05/",
         project_root=tmp_path,
     )
-    assert text == (
-        "The June 5 briefing leads with Israeli strikes in Gaza, then turns to court action over Red Cross access to Palestinian detainees "
-        "and newly surfaced documentation tied to 1967 expulsions and killings.\n\nRead the full briefing:"
+    assert text.startswith("In the June 5 Gaza briefing:")
+    assert "Gaza City" in text or "Red Cross" in text or "1967" in text
+    assert "satellite imagery" not in text
+
+
+def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases():
+    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        "2026-06-07",
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
+        project_root=root,
     )
+    assert text.startswith("In the June 7 Gaza briefing:")
+    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/" in text
+    assert "Israeli strikes killed 10 people in Gaza on Saturday" in text or "Khan Younis strikes" in text
+    assert "satellite imagery" not in text
+    assert "1967" not in text
+
+
+def test_june_13_post_uses_public_summary_and_public_url():
+    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-13/"
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        "2026-06-13",
+        public_url,
+        project_root=root,
+    )
+    assert text.startswith("In the June 13 Gaza briefing:")
+    assert public_url in text
+    assert "Despite truce in effect since October 2025, Israeli army launches drone strike near Bureij refugee camp." in text
+    assert bluesky_post.BLUESKY_GAZA_POST_FALLBACK not in text
+    assert "The latest Gaza briefing is live." not in text
+
+
+def test_build_uses_current_date_artifacts_and_ignores_prior_edition_artifacts(tmp_path: Path):
+    prior = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-06-06"
+    prior.mkdir(parents=True, exist_ok=True)
+    (prior / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Prior edition stale summary",
+                    "summary": "Satellite imagery showing changes on the ground and 1967 expulsions and killings.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    current = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-06-07"
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current edition summary",
+                    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-06-07", "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / "2026-06-07"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 7, 2026</p></body></html>", encoding="utf-8")
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        "2026-06-07",
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
+        project_root=tmp_path,
+    )
+    assert "Satellite imagery showing changes on the ground" not in text
+    assert "1967 expulsions and killings" not in text
+    assert "Khan Younis strikes" in text
+
+
+def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+
+    monkeypatch.setattr(
+        bluesky_post,
+        "build_gaza_bluesky_post_text",
+        lambda *_args, **_kwargs: "In the June 7 Gaza briefing: satellite imagery showing changes on the ground; and newly surfaced documentation tied to 1967 expulsions and killings.",
+    )
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: "Safe summary.")
+    called = {"count": 0}
+
+    def fake_post_json(*_args, **_kwargs):
+        called["count"] += 1
+        raise AssertionError("network call should not happen when stale content is blocked")
+
+    monkeypatch.setattr(bluesky_post, "_post_json", fake_post_json)
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network call should not happen when stale content is blocked")))
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-06-07",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co"),
+        force_post=True,
+    )
+    assert result["status"] == "blocked"
+    assert result["reason"] == "stale-content-guard-failed"
+    assert called["count"] == 0
+
+
+def test_gaza_post_blocks_fallback_text_with_clear_reason(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    write_current_edition_artifacts(tmp_path)
+
+    monkeypatch.setattr(bluesky_post, "build_gaza_bluesky_post_text", lambda *_args, **_kwargs: bluesky_post.BLUESKY_GAZA_POST_FALLBACK)
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: "Specific verified Gaza dispatch summary.")
+
+    def fake_post_json(*_args, **_kwargs):
+        raise AssertionError("network call should not happen when fallback text is blocked")
+
+    monkeypatch.setattr(bluesky_post, "_post_json", fake_post_json)
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network call should not happen when fallback text is blocked")))
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-05-07",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+        force_post=True,
+    )
+    assert result["status"] == "blocked"
+    assert result["reason"] == "current-edition-public-summary-unavailable"
+    assert result["stale_content_guard_status"] == "blocked"
+
+
+def test_bluesky_blocks_when_artifact_date_mismatches_requested_date(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    current = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-06-07"
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current edition summary",
+                    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-06-06", "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / "2026-06-07"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 7, 2026</p></body></html>", encoding="utf-8")
+    monkeypatch.setattr(bluesky_post, "build_gaza_bluesky_post_text", lambda *_args, **_kwargs: "Safe current-edition text.")
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: "Safe summary.")
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-06-07",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+    assert result["status"] == "blocked"
+    assert result["reason"] == "current-edition-date-mismatch"
+    assert result["edition_date_verified"] is False
 
 
 def test_card_description_uses_daily_specific_summary(tmp_path: Path):
@@ -281,12 +481,13 @@ def test_skips_when_run_failed(monkeypatch):
     assert result["reason"] == "run_failed"
 
 
-def test_redacts_app_password_in_errors(monkeypatch):
+def test_redacts_app_password_in_errors(monkeypatch, tmp_path: Path):
     secret = "bluefern-app-pass"
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", secret)
+    write_current_edition_artifacts(tmp_path)
 
     def fake_post_json(_url, _payload, timeout=20.0):
         _ = timeout
@@ -298,6 +499,7 @@ def test_redacts_app_password_in_errors(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
         run_succeeded=True,
         post_requested=True,
+        project_root=tmp_path,
     )
     assert result["status"] == "failure"
     assert secret not in str(result.get("reason"))
@@ -344,7 +546,7 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
         assert req.headers.get("Authorization", "").startswith("Bearer ")
         body = json.loads(req.data.decode("utf-8"))
         record = body["record"]
-        assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" not in record["text"]
+        assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in record["text"]
         embed = record["embed"]
         assert embed["$type"] == "app.bsky.embed.external"
         assert embed["external"]["uri"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/"
@@ -363,6 +565,8 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
     assert result["status"] == "success"
     assert result["post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/xyz"
     assert result["embed_type"] == "app.bsky.embed.external"
+    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in result["post_text"]
+    assert "Specific verified Gaza dispatch summary." in result["post_text"]
     assert result["thumb_status"] == "uploaded"
     assert result["compressed_thumb"] is False
     assert isinstance(result["original_thumb_bytes"], int)
@@ -711,11 +915,12 @@ def test_over_limit_never_causes_full_post_failure(monkeypatch, tmp_path: Path):
     assert secret not in json.dumps(result)
 
 
-def test_http_error_returns_safe_reason(monkeypatch):
+def test_http_error_returns_safe_reason(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "pass123")
+    write_current_edition_artifacts(tmp_path)
 
     monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
 
@@ -729,6 +934,7 @@ def test_http_error_returns_safe_reason(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
         run_succeeded=True,
         post_requested=True,
+        project_root=tmp_path,
     )
     assert result["status"] == "failure"
     assert result["reason"] == "http_error_401"
@@ -736,11 +942,12 @@ def test_http_error_returns_safe_reason(monkeypatch):
     assert result["error_message"] is None
 
 
-def test_http_400_json_body_is_included_safely(monkeypatch):
+def test_http_400_json_body_is_included_safely(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "pass123")
+    write_current_edition_artifacts(tmp_path)
     monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
 
     def fake_urlopen(_req, timeout=20.0):
@@ -754,6 +961,7 @@ def test_http_400_json_body_is_included_safely(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
         run_succeeded=True,
         post_requested=True,
+        project_root=tmp_path,
     )
     assert result["status"] == "failure"
     assert result["reason"] == "http_error_400: InvalidRequest: invalid embed shape"
@@ -761,11 +969,12 @@ def test_http_400_json_body_is_included_safely(monkeypatch):
     assert result["error_message"] == "invalid embed shape"
 
 
-def test_http_400_plain_text_body_is_included_safely_and_truncated(monkeypatch):
+def test_http_400_plain_text_body_is_included_safely_and_truncated(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "pass123")
+    write_current_edition_artifacts(tmp_path)
     monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
 
     plain = "invalid field length " * 40
@@ -780,18 +989,20 @@ def test_http_400_plain_text_body_is_included_safely_and_truncated(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
         run_succeeded=True,
         post_requested=True,
+        project_root=tmp_path,
     )
     assert result["status"] == "failure"
     assert result["reason"].startswith("http_error_400: ")
     assert len(result["reason"]) <= len("http_error_400: ") + bluesky_post.MAX_HTTP_ERROR_DETAIL_LENGTH
 
 
-def test_http_400_redacts_bearer_tokens_and_password(monkeypatch):
+def test_http_400_redacts_bearer_tokens_and_password(monkeypatch, tmp_path: Path):
     secret = "super-secret-pass"
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", secret)
+    write_current_edition_artifacts(tmp_path)
     monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
 
     body = {
@@ -811,6 +1022,7 @@ def test_http_400_redacts_bearer_tokens_and_password(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
         run_succeeded=True,
         post_requested=True,
+        project_root=tmp_path,
     )
     reason = str(result["reason"])
     assert secret not in reason
@@ -871,6 +1083,7 @@ def test_second_run_skips_using_existing_receipt(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    write_current_edition_artifacts(tmp_path)
     receipt = tmp_path / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "bluesky_post_receipt.json"
     receipt.parent.mkdir(parents=True, exist_ok=True)
     receipt.write_text(
@@ -1002,6 +1215,7 @@ def test_failed_post_does_not_write_success_receipt(monkeypatch, tmp_path: Path)
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    write_current_edition_artifacts(tmp_path)
     monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
     monkeypatch.setattr(
         bluesky_post.request,

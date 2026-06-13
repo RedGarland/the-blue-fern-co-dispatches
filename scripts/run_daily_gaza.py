@@ -20,6 +20,7 @@ if str(SRC) not in sys.path:
 
 from bluefern_dispatches.gaza_sources import collect_gaza_sources
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
+from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from scripts.run_and_notify import notification_error_message, send_email
 from scripts.publish_gaza_historical import (
     BASE_PUBLIC_URL,
@@ -57,6 +58,9 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "source_mode",
     "source_file",
     "source_count",
+    "source_adequacy_status",
+    "publisher_count",
+    "publishers",
     "generation_ok",
     "generated",
     "archive_updated",
@@ -84,6 +88,17 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "warnings",
     "errors",
     "manual_push_command",
+    "bluesky_status",
+    "bluesky_post_uri",
+    "bluesky_reason",
+    "bluesky_post_text",
+    "bluesky_embed_type",
+    "bluesky_card_title",
+    "bluesky_card_description",
+    "bluesky_source_artifact_paths",
+    "bluesky_edition_date_verified",
+    "bluesky_stale_content_guard_status",
+    "bluesky_thumb_status",
 )
 COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
@@ -396,6 +411,9 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "source_mode": args.source_mode,
         "source_file": str(source_file_for(args.date)),
         "source_count": 0,
+        "source_adequacy_status": None,
+        "publisher_count": 0,
+        "publishers": [],
         "generation_ok": False,
         "generated": False,
         "archive_updated": False,
@@ -424,6 +442,17 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "errors": [],
         "failed_source_ids": [],
         "manual_push_command": manual_push_command(Path(args.pages_repo), args.pages_branch),
+        "bluesky_status": "skipped",
+        "bluesky_post_uri": None,
+        "bluesky_reason": "not_attempted",
+        "bluesky_post_text": None,
+        "bluesky_embed_type": None,
+        "bluesky_card_title": None,
+        "bluesky_card_description": None,
+        "bluesky_source_artifact_paths": [],
+        "bluesky_edition_date_verified": False,
+        "bluesky_stale_content_guard_status": "not_evaluated",
+        "bluesky_thumb_status": "not_attempted",
         "planned_actions": [],
         "public_story_count": 0,
         "pages_dry_run_ok": False,
@@ -478,6 +507,9 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"date: {summary.get('date')}",
         f"ok: {str(summary.get('ok')).lower()}",
         f"source_count: {summary.get('source_count')}",
+        f"source_adequacy_status: {summary.get('source_adequacy_status')}",
+        f"publisher_count: {summary.get('publisher_count')}",
+        f"publishers: {', '.join(summary.get('publishers') or []) if summary.get('publishers') else '<none>'}",
         f"generation_ok: {str(summary.get('generation_ok')).lower()}",
         f"generated: {str(summary.get('generated')).lower()}",
         f"archive_updated: {str(summary.get('archive_updated')).lower()}",
@@ -505,6 +537,17 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"local edition path: {local_paths.get('edition')}",
         f"log path: {local_paths.get('log')}",
         f"run manifest path: {local_paths.get('run_manifest')}",
+        f"bluesky_status: {summary.get('bluesky_status')}",
+        f"bluesky_post_uri: {summary.get('bluesky_post_uri')}",
+        f"bluesky_reason: {summary.get('bluesky_reason')}",
+        f"bluesky_post_text: {summary.get('bluesky_post_text')}",
+        f"bluesky_embed_type: {summary.get('bluesky_embed_type')}",
+        f"bluesky_card_title: {summary.get('bluesky_card_title')}",
+        f"bluesky_card_description: {summary.get('bluesky_card_description')}",
+        f"bluesky_source_artifact_paths: {summary.get('bluesky_source_artifact_paths')}",
+        f"bluesky_edition_date_verified: {summary.get('bluesky_edition_date_verified')}",
+        f"bluesky_stale_content_guard_status: {summary.get('bluesky_stale_content_guard_status')}",
+        f"bluesky_thumb_status: {summary.get('bluesky_thumb_status')}",
         "",
         "warnings:",
         format_lines(list(summary.get("warnings") or [])),
@@ -544,6 +587,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--min-sources", type=int, default=1, help="Minimum valid source records required.")
     parser.add_argument("--source-mode", choices=sorted(SOURCE_MODES), default="both", help="Source collection mode.")
     parser.add_argument("--allow-thin-edition", action="store_true", help="Allow publish when only thin Gaza coverage survives relevance gates.")
+    parser.add_argument("--post-bluesky", action="store_true", help="Post a Gaza dispatch announcement to Bluesky after successful publish.")
+    parser.add_argument("--no-post-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
+    parser.add_argument("--force-bluesky-post", action="store_true", help="Post to Bluesky even when a successful receipt already exists for this edition.")
+    parser.add_argument("--generate-audio", action="store_true", help="Generate Gaza audio artifacts after dispatch generation.")
+    parser.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="Optional TTS provider when --generate-audio is used.")
+    parser.add_argument("--audio-voice", default="alloy", help="TTS voice for --generate-audio.")
+    parser.add_argument("--audio-voices", default="", help="Comma-separated voices for alternating mode (example: alloy,verse).")
+    parser.add_argument("--audio-alternate-voices", action="store_true", help="Alternate voices across segmented Gaza audio stories.")
+    parser.add_argument("--audio-segue-chime", choices=("none", "gentle"), default="none", help="Optional segue chime between segmented stories.")
+    parser.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model for --generate-audio.")
+    parser.add_argument("--audio-format", choices=("mp3", "wav"), default="mp3", help="Audio format for generated speech.")
+    parser.add_argument("--tts-price-per-1m-chars", type=float, default=None, help="Optional pricing basis used for estimated TTS cost logging.")
     parser.add_argument(
         "--validation-profile",
         choices=list(profile_names()),
@@ -560,6 +615,9 @@ def main(argv: list[str] | None = None) -> int:
         _ = get_profile(args.validation_profile)
     except ValueError as exc:
         print(json.dumps({"ok": False, "errors": [str(exc)], "validation_profile": args.validation_profile}, indent=2))
+        return 1
+    if args.post_bluesky and args.no_post_bluesky:
+        print(json.dumps({"ok": False, "errors": ["--post-bluesky and --no-post-bluesky cannot be used together"]}, indent=2))
         return 1
     args.date = validate_date(args.date)
     args.pages_repo = str(Path(args.pages_repo))
@@ -630,11 +688,27 @@ def main(argv: list[str] | None = None) -> int:
     log_line(log_path, f"Pipeline command started: {command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))}")
     generation = run_command(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))
     log_line(log_path, f"Generation return code: {generation.returncode}")
+    generation_payload: dict[str, Any] = {}
+    try:
+        generation_payload = parse_json_stdout(generation)
+    except Exception:
+        generation_payload = {}
     if generation.returncode != 0:
         summary["errors"].append(generation.stderr.strip() or generation.stdout.strip() or "Gaza generation failed")
         return finish(1)
+    for warning in generation_payload.get("warnings") or []:
+        text = str(warning).strip()
+        if text and text not in summary["warnings"]:
+            summary["warnings"].append(text)
     summary["generated"] = True
     summary["generation_ok"] = True
+    summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status")
+    summary["publisher_count"] = int(generation_payload.get("publisher_count") or 0)
+    summary["publishers"] = list(generation_payload.get("publishers") or [])
+    for warning in generation_payload.get("source_adequacy_warnings") or []:
+        text = str(warning).strip()
+        if text and text not in summary["warnings"]:
+            summary["warnings"].append(text)
 
     generated_validation = validate_generated_output(args.date)
     summary.update(
@@ -653,6 +727,40 @@ def main(argv: list[str] | None = None) -> int:
         summary["publish_blocked"] = True
         summary["publish_blocked_reason"] = "post-generation-validation-errors"
         return finish(1)
+
+    if args.generate_audio:
+        try:
+            from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
+
+            audio_result = write_gaza_audio_outputs(
+                ROOT,
+                args.date,
+                dry_run=bool(args.dry_run),
+                tts_provider=str(args.tts_provider or "none"),
+                tts_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                tts_voice=str(args.audio_voice or "alloy"),
+                audio_format=str(args.audio_format or "mp3"),
+                alternate_voices=bool(args.audio_alternate_voices),
+                voices=str(args.audio_voices or ""),
+                segue_chime=str(args.audio_segue_chime or "none"),
+                tts_price_per_1m_chars=args.tts_price_per_1m_chars,
+            )
+            if not args.dry_run:
+                summary["warnings"].append(f"audio artifacts updated: {audio_result.transcript_path}")
+            if str(args.tts_provider or "none") != "none" and str(audio_result.audio_status) != "audio_file_ready":
+                summary["errors"].append(f"audio generation failed: {audio_result.audio_status}")
+                summary["publish_blocked"] = True
+                summary["publish_blocked_reason"] = "audio-generation-failed"
+                return finish(1)
+        except Exception as exc:  # noqa: BLE001
+            summary["errors"].append(f"audio generation failed: {exc}")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "audio-generation-failed"
+            return finish(1)
+    else:
+        summary["warnings"].append(
+            f"audio not generated in daily run; follow-up: python scripts/run_gaza_audio.py --date {args.date} --tts-provider none"
+        )
 
     if not args.skip_tests:
         summary["tests_run"] = True
@@ -695,6 +803,27 @@ def main(argv: list[str] | None = None) -> int:
         return finish(1)
 
     if args.dry_run:
+        if bool(args.post_bluesky and not args.no_post_bluesky):
+            dry_run_bluesky = maybe_post_gaza_dispatch_to_bluesky(
+                edition_date=args.date,
+                public_url=(summary.get("public_urls") or {}).get("edition"),
+                run_succeeded=True,
+                post_requested=True,
+                project_root=ROOT,
+                force_post=bool(args.force_bluesky_post),
+                allow_publish=False,
+            )
+            summary["bluesky_status"] = str(dry_run_bluesky.get("status") or "skipped")
+            summary["bluesky_post_uri"] = dry_run_bluesky.get("post_uri")
+            summary["bluesky_reason"] = dry_run_bluesky.get("reason")
+            summary["bluesky_post_text"] = dry_run_bluesky.get("post_text")
+            summary["bluesky_embed_type"] = dry_run_bluesky.get("embed_type")
+            summary["bluesky_card_title"] = dry_run_bluesky.get("card_title")
+            summary["bluesky_card_description"] = dry_run_bluesky.get("card_description")
+            summary["bluesky_source_artifact_paths"] = list(dry_run_bluesky.get("source_artifact_paths") or [])
+            summary["bluesky_edition_date_verified"] = bool(dry_run_bluesky.get("edition_date_verified"))
+            summary["bluesky_stale_content_guard_status"] = dry_run_bluesky.get("stale_content_guard_status")
+            summary["bluesky_thumb_status"] = dry_run_bluesky.get("thumb_status") or "not_attempted"
         summary["ok"] = True
         summary["publish_ok"] = True
         log_line(log_path, "Dry run complete; Pages repo was not updated.")
@@ -749,6 +878,31 @@ def main(argv: list[str] | None = None) -> int:
             summary["publish_blocked"] = True
             summary["publish_blocked_reason"] = "pages-push-failed"
             return finish(1)
+
+    bluesky_result = maybe_post_gaza_dispatch_to_bluesky(
+        edition_date=args.date,
+        public_url=(summary.get("public_urls") or {}).get("edition"),
+        run_succeeded=bool(summary.get("generation_ok") and summary.get("publish_ok") and summary.get("pages_repo_updated")),
+        post_requested=bool(args.post_bluesky and not args.no_post_bluesky),
+        project_root=ROOT,
+        force_post=bool(args.force_bluesky_post),
+        allow_publish=not bool(args.dry_run),
+    )
+    summary["bluesky_status"] = str(bluesky_result.get("status") or "skipped")
+    summary["bluesky_post_uri"] = bluesky_result.get("post_uri")
+    summary["bluesky_reason"] = bluesky_result.get("reason")
+    summary["bluesky_post_text"] = bluesky_result.get("post_text")
+    summary["bluesky_embed_type"] = bluesky_result.get("embed_type")
+    summary["bluesky_card_title"] = bluesky_result.get("card_title")
+    summary["bluesky_card_description"] = bluesky_result.get("card_description")
+    summary["bluesky_source_artifact_paths"] = list(bluesky_result.get("source_artifact_paths") or [])
+    summary["bluesky_edition_date_verified"] = bool(bluesky_result.get("edition_date_verified"))
+    summary["bluesky_stale_content_guard_status"] = bluesky_result.get("stale_content_guard_status")
+    summary["bluesky_thumb_status"] = bluesky_result.get("thumb_status") or "not_attempted"
+    if summary["bluesky_status"] == "failure":
+        summary["warnings"].append(f"Bluesky post failed: {summary['bluesky_reason']}")
+    elif summary["bluesky_status"] == "success":
+        log_line(log_path, f"Bluesky post succeeded: {summary['bluesky_post_uri']}")
 
     if args.open_local:
         open_local_edition(ROOT / "output" / "site" / "gaza" / "editions" / args.date / "index.html")

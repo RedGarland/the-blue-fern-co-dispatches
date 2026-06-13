@@ -470,43 +470,106 @@ def _compose_cta(edition_date: str) -> str:
     return "Full briefing:"
 
 
+def _shorten_post_text_at_word_boundary(text: str, max_len: int) -> str:
+    sentence = re.sub(r"\s+", " ", str(text or "").strip())
+    if len(sentence) <= max_len:
+        return sentence
+    if max_len <= 3:
+        return "..."[:max_len]
+    trimmed = sentence[: max_len - 3].rstrip(" ,;:-.")
+    if " " in trimmed:
+        trimmed = trimmed.rsplit(" ", 1)[0].rstrip(" ,;:-.")
+    if not trimmed:
+        return "..."
+    return trimmed + "..."
+
+
+def _gaza_public_summary_for_bluesky(project_root: Path, edition_date: str, max_length: int = 180) -> str:
+    context = _gaza_bluesky_context(project_root, edition_date)
+    edition_manifest = context.get("edition_manifest")
+    cleaned = _prefer_dispatch_level_summary(edition_manifest, max_length)
+    if cleaned:
+        return cleaned
+    cleaned = _extract_top_story_summary(project_root, edition_date, max_length)
+    if cleaned:
+        return cleaned
+    cleaned = _extract_first_paragraph_from_html(project_root, edition_date, max_length)
+    if cleaned:
+        return cleaned
+    for row in context.get("story_rows") or []:
+        if not isinstance(row, dict):
+            continue
+        cleaned = _clean_description_text(
+            str(row.get("social_summary") or row.get("public_summary") or row.get("summary") or row.get("summary_or_snippet") or row.get("title") or ""),
+            max_length,
+        )
+        if cleaned:
+            return cleaned
+    return ""
+
+
 def build_gaza_bluesky_post_text(edition_date: str, public_url: str, project_root: Path | None = None) -> str:
-    _ = public_url
     root = project_root or Path.cwd()
     clean_date = str(edition_date or "").strip()
-    topics = _derive_gaza_focus_topics(root, clean_date, max_topics=5)
-    if not topics:
+    context = _gaza_bluesky_context(root, clean_date)
+    topics = []
+    for row in context.get("story_rows") or []:
+        if not isinstance(row, dict):
+            continue
+        snippet = _story_post_snippet(row)
+        if not snippet:
+            continue
+        if snippet.casefold() in {item.casefold() for item in topics}:
+            continue
+        topics.append(snippet)
+        if len(topics) >= 5:
+            break
+    public_summary = _gaza_public_summary_for_bluesky(root, clean_date, max_length=180)
+    if not topics and not public_summary:
         return BLUESKY_GAZA_POST_FALLBACK
     date_text = _format_post_date(clean_date)
-    if len(topics) == 1:
-        intro = f"In the {date_text} Gaza briefing: {topics[0]}."
-    elif len(topics) == 2:
-        intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
-    else:
-        intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
-    context = _gaza_bluesky_context(root, clean_date)
-    summary_line = ""
     source_count = int(context.get("source_count") or 0)
     publisher_count = int(context.get("publisher_count") or 0)
+    summary_line = ""
     if source_count and publisher_count:
         summary_line = f"This is a limited-source update from {source_count} saved records across {publisher_count} publishers."
-    body = intro if not summary_line else f"{intro}\n\n{summary_line}"
-    body = URL_RE.sub(" ", body)
-    body = WHITESPACE_RE.sub(" ", body.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n").strip()
-    if len(body) <= BLUESKY_MAX_POST_LENGTH:
+    url_suffix = f"\n\nPublic edition: {public_url}" if str(public_url or "").strip() else ""
+
+    def _with_suffix(body: str) -> str:
+        body = WHITESPACE_RE.sub(" ", body.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n").strip()
+        if url_suffix and len(f"{body}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
+            return f"{body}{url_suffix}"
         return body
-    if summary_line:
-        compact = intro
-        if len(compact) <= BLUESKY_MAX_POST_LENGTH:
-            return compact
-    if len(topics) >= 2:
+
+    if topics:
+        if len(topics) == 1:
+            intro = f"In the {date_text} Gaza briefing: {topics[0]}."
+        elif len(topics) == 2:
+            intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
+        else:
+            intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
+        candidate = _with_suffix(intro if not summary_line else f"{intro}\n\n{summary_line}")
+        if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != intro:
+            return candidate
+        if len(f"{intro}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
+            return f"{intro}{url_suffix}" if url_suffix else intro
+    if public_summary:
+        prefix = f"In the {date_text} Gaza briefing: "
+        available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - 1
+        if available > 0:
+            summary = _shorten_post_text_at_word_boundary(public_summary.rstrip(".") or public_summary, available).rstrip(".")
+            candidate = f"{prefix}{summary}."
+            candidate = _with_suffix(candidate)
+            if len(candidate) <= BLUESKY_MAX_POST_LENGTH:
+                return candidate
+    if topics:
         compact_topics = topics[:2]
         if len(compact_topics) == 1:
             compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}."
         else:
             compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}; and {compact_topics[1]}."
-        if len(compact) <= BLUESKY_MAX_POST_LENGTH:
-            return compact
+        if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
+            return f"{compact}{url_suffix}" if url_suffix else compact
     return BLUESKY_GAZA_POST_FALLBACK[:BLUESKY_MAX_POST_LENGTH]
 
 
@@ -979,16 +1042,16 @@ def maybe_post_gaza_dispatch_to_bluesky(
     result["post_text"] = text
     result["card_title"] = card_title
     result["card_description"] = card_description
+    if text == BLUESKY_GAZA_POST_FALLBACK or card_description == BLUESKY_CARD_FALLBACK_DESCRIPTION:
+        result["status"] = "blocked"
+        result["reason"] = "current-edition-public-summary-unavailable"
+        result["stale_content_guard_status"] = "blocked"
+        return result
     ok, guard_status = _bluesky_stale_content_guard(text, context)
     result["stale_content_guard_status"] = guard_status
     if not ok:
         result["status"] = "blocked"
         result["reason"] = guard_status
-        return result
-    if text == BLUESKY_GAZA_POST_FALLBACK or card_description == BLUESKY_CARD_FALLBACK_DESCRIPTION:
-        result["status"] = "blocked"
-        result["reason"] = "current-edition-summary-unavailable"
-        result["stale_content_guard_status"] = "blocked"
         return result
     if not allow_publish:
         result["reason"] = "dry_run"

@@ -1,27 +1,41 @@
 {
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
-  "public_visible": true,
   "edition_date": "2026-06-13",
-  "generated_at": "2026-06-13T07:30:17.405592+00:00",
+  "generated_at": "2026-06-13T13:00:42.534239+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-13/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13",
-  "local_backup_path": "output\\tmp-backups-pages\\gaza\\2026-06-13",
-  "template_version": "dispatches-static-v1",
-  "source_count": 3,
-  "story_count": 1,
+  "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-13",
+  "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-13",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 11,
+  "story_count": 10,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 5,
+  "publishers": [
+    "Al Jazeera",
+    "Anadolu Agency",
+    "PBS NewsHour",
+    "The Guardian",
+    "The New Arab"
+  ],
+  "source_adequacy_warnings": [],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\curation_manifest.json",
   "free_public_artifacts": [
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\edition_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\sources_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-13\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
-  "future_paid_fields_todo": [],
   "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
   "warnings": [
-    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-06-07.json"
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe"
   ],
   "errors": []
 }

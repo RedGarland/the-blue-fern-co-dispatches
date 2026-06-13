@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-13",
+  "generated_at": "2026-06-13T13:01:09.713131Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-13.mp3",
+  "audio_url": "/gaza/audio/2026-06-13.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 2706,
+  "tts_input_word_count": 424,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 2697600,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-13T13:01:09.713107Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-13-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-13/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 13, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli army kills Palestinian municipality worker in central Gaza. Despite truce in effect since October 2025, Israeli army launches drone strike near Bureij refugee camp. This was reported by Anadolu Agency.\n\n2. How Gaza's students are still learning despite shattered schools and displacement. For nearly three years, children in Gaza have grown up surrounded by war, displacement and loss. Thousands of children have been killed in Israeli strikes that followed the Hamas assault on Oct. 7. Still, the children of Gaza yearn for the chance to keep learning in classes held in tents, damaged buildings and overcrowded shelters. Ali Rogin reports. This was reported by PBS NewsHour.\n\n3. Palestinian American woman held without charge by Israeli military. Soldiers arrested university student Sama Safi, 20, along with members of Palestinian women's national soccer team. A 20-year-old Palestinian American woman has been held in Israeli military detention for nearly two weeks after Israeli soldiers stormed her family home in a pre-dawn raid on 2 June. Sama Safi, a psychology student at Birzeit University in the occupied West Bank, has not been charged with any crimes. A spokesperson for the Israeli military said she and three other women detained around the same time were arrested \"after promoting hostile terrorist activity and additional terrorist-related activities\". This was reported by The Guardian.\n\n4. Palestinian and Israeli civil society groups urge G7 to take action on Gaza. Paris meeting draws up proposals and calls for urgent diplomacy towards two-state solution at summit next week Palestinian and Israeli civil society groups meeting in Paris on Friday have urged G7 leaders to act at their summit in the French spa town of \u00c9vian-les-Bains next week to save the narrowing chances of a two-state solution. The groups called for specific action on enforcing a ceasefire, disarming Hamas and starting reconstruction in Gaza, and said the various peace processes including the Board of Peace initiative should be integrated into one programme. This was reported by The Guardian.\n\n5. Separated by the Gaza war, a Palestinian yearns to see his family again. Shady al-Areer, 38, was smuggled from Israel into the occupied West Bank after October 7, 2023. This is his story. This was reported by Al Jazeera.\n\n6. Palestine Action activists sentenced as terrorists in UK court. Israel-based defence firm's UK factory. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 13, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-13-anadolu-middle-east-fb200c8c910b",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israeli-army-kills-palestinian-municipality-worker-in-central-gaza/3965899",
+      "title": "Israeli army kills Palestinian municipality worker in central Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-06-13-pbs-newshour-world-4eaeb747deda",
+      "publisher": "PBS NewsHour",
+      "url": "https://www.pbs.org/newshour/show/how-gazas-students-are-still-learning-despite-shattered-schools-and-displacement",
+      "title": "How Gaza's students are still learning despite shattered schools and displacement"
+    },
+    {
+      "source_record_id": "gaza-2026-06-13-guardian-world-50abde68f93e",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/13/palestinian-held-sama-safi-israeli-military",
+      "title": "Palestinian American woman held without charge by Israeli military"
+    },
+    {
+      "source_record_id": "gaza-2026-06-13-guardian-world-ef57845aa991",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/jun/12/palestinian-israeli-civil-society-groups-g7-summit-gaza",
+      "title": "Palestinian and Israeli civil society groups urge G7 to take action on Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-06-13-aljazeera-middle-east-9de6f28b55c6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/longform/2026/6/13/separated-by-the-gaza-war-a-palestinian-yearns-to-see-his-family-again?traffic_source=rss",
+      "title": "Separated by the Gaza war, a Palestinian yearns to see his family again"
+    },
+    {
+      "source_record_id": "gaza-2026-06-13-the-new-arab-dd989d6145f1",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/palestine-action-activists-sentenced-terrorists-uk-court",
+      "title": "Palestine Action activists sentenced as terrorists in UK court"
+    }
+  ]
+}

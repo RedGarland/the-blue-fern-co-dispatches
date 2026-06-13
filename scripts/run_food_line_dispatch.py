@@ -19,6 +19,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from bluefern_dispatches.bluesky_post import maybe_post_food_line_dispatch_to_bluesky
 from bluefern_dispatches.generator import BASE_URL, discover_public_edition_dates, footer, header as site_header, page
 from bluefern_dispatches.food_line_sources import (
     FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK,
@@ -40,6 +41,10 @@ PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 PAGES_BRANCH = "gh-pages"
 DISPATCH_SLUG = "food-line"
 DISPATCH_NAME = "Food Line Dispatch"
+FOOD_LINE_SOCIAL_IMAGE_ASSET = "food-line-dispatch-social.png"
+FOOD_LINE_SOCIAL_IMAGE_URL = f"{BASE_URL}/food-line/assets/{FOOD_LINE_SOCIAL_IMAGE_ASSET}"
+FOOD_LINE_SOCIAL_IMAGE_ALT = "The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing."
+FOOD_LINE_PAGE_DESCRIPTION = "Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States."
 MAP_RENDERED_COUNT_RE = re.compile(r'data-rendered-marker-count="(\d+)"')
 
 
@@ -53,6 +58,21 @@ def header(
 ) -> str:
     nav = nav_slugs or ("gaza", "cascadia", "food-line")
     return site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
+
+
+def _food_line_page(title: str, canonical: str, css_href: str, body: str) -> str:
+    return page(
+        title,
+        canonical,
+        css_href,
+        body,
+        DISPATCH_NAME,
+        description=FOOD_LINE_PAGE_DESCRIPTION,
+        og_image=FOOD_LINE_SOCIAL_IMAGE_URL,
+        og_image_alt=FOOD_LINE_SOCIAL_IMAGE_ALT,
+    )
+
+
 DISPATCH_DISPLAY_NAME = "The Food Line Dispatch"
 FOOD_LINE_LOGO_ASSET = "food-line-logo.png"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -2469,7 +2489,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
   </section>
 </main>
 {footer("../")}"""
-        _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body, DISPATCH_NAME))
+        _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body))
         return
     episode_line = (
         f"No public audio episode was published for {_human_date(date)}."
@@ -2495,7 +2515,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
   </section>
 </main>
 {footer("../")}"""
-    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body, DISPATCH_NAME))
+    _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body))
 
 
 def _food_line_edition_navigation_html(previous_date: str | None) -> str:
@@ -2584,20 +2604,20 @@ def _food_line_audio_story_sections(
     if edition_mode == "no_current_update":
         what_else.append("No current secondary items were published in this edition.")
     elif continuing_rows:
-        for row in continuing_rows[:2]:
-            summary = _food_line_audio_other_signal_summary(row)
-            if summary:
-                what_else.append(summary)
-        if not what_else:
+        summaries = [_food_line_audio_other_signal_summary(row) for row in continuing_rows[:2]]
+        summaries = [summary for summary in summaries if summary]
+        if summaries:
+            what_else.extend(summaries)
+        else:
             transition = _food_line_audio_secondary_transition(lead, continuing_rows)
             if transition:
                 what_else.append(transition)
     elif context_rows:
-        for row in context_rows:
-            summary = _food_line_audio_other_signal_summary(row)
-            if summary:
-                what_else.append(summary)
-        if not what_else:
+        summaries = [_food_line_audio_other_signal_summary(row) for row in context_rows]
+        summaries = [summary for summary in summaries if summary]
+        if summaries:
+            what_else.extend(summaries)
+        else:
             transition = _food_line_audio_secondary_transition(lead, context_rows)
             if transition:
                 what_else.append(transition)
@@ -2853,7 +2873,7 @@ def render_food_line_edition(
   </section>
 </main>
 {footer("../../")}"""
-    return page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body, DISPATCH_NAME)
+    return _food_line_page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body)
 
 
 def _source_table_html(
@@ -2938,7 +2958,7 @@ def _source_table_html(
         "</tr>"
         f"{rows}</table></section></main>{footer('../../')}"
     )
-    return page(f"Food Line Source Table {date}", f"{BASE_URL}/food-line/editions/{date}/source_table.html", "../../assets/site.css", body, DISPATCH_NAME)
+    return _food_line_page(f"Food Line Source Table {date}", f"{BASE_URL}/food-line/editions/{date}/source_table.html", "../../assets/site.css", body)
 
 
 def _build_map_data(date: str, sources: list[dict[str, Any]]) -> dict[str, Any]:
@@ -3682,7 +3702,7 @@ def write_food_line_audio(
   </section>
 </main>
 {footer("../")}"""
-    _write_text(audio_root / "index.html", page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index, DISPATCH_NAME))
+    _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index))
     write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=max_edition_date)
     return {
         "audio_generated": audio_generated,
@@ -3775,8 +3795,8 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
   </section>
 </main>
 {footer("")}"""
-    _write_text(dispatch_root / "index.html", page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body, DISPATCH_NAME))
-    _write_text(dispatch_root / "archive.html", page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body, DISPATCH_NAME))
+    _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
+    _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
 
 
 def _refresh_food_line_source_tables(root: Path) -> None:
@@ -4004,12 +4024,12 @@ def run_food_line_dispatch(
     edition_mode = "blocked_future_date" if future_date_blocked else ("current_update" if lead_row else ("no_current_update" if no_current_update else "no_public_edition"))
     public_rendered = edition_mode in {"current_update", "no_current_update"}
     public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
-    public_signal_count = len(public_rows)
     current_public_rows = [
         row
         for row in public_rows
         if _food_line_public_usage_label(row, lead_row, continuing_rows, edition_mode=edition_mode) != "Background reference"
     ]
+    public_signal_count = len(current_public_rows)
     exclusion_reason_counts = _food_line_exclusion_reason_counts(
         sources,
         rejected_records,
@@ -4440,6 +4460,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
     p.add_argument("--dry-run", action="store_true", help="Generate local Food Line output without copying to the Pages repo or pushing.")
+    p.add_argument("--post-bluesky", action="store_true", help="Post the published Food Line dispatch to Bluesky after a successful publish.")
+    p.add_argument("--skip-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
+    p.add_argument("--dry-run-bluesky", action="store_true", help="Write planned Food Line Bluesky post metadata without posting.")
+    p.add_argument("--force-bluesky", action="store_true", help="Repost to Bluesky even when a receipt already exists for this edition.")
+    p.add_argument("--allow-bluesky-text-only", action="store_true", help="Allow a Food Line Bluesky post to proceed without the social image if upload fails.")
     audio_group = p.add_mutually_exclusive_group()
     audio_group.add_argument(
         "--generate-audio",
@@ -4530,9 +4555,124 @@ def main(argv: list[str] | None = None) -> int:
                 result["publish_skipped_reason"] = "dry_run"
             elif args.publish and not result.get("ok"):
                 result["publish_skipped_reason"] = "generation failed"
+            bluesky_requested = bool(args.post_bluesky or args.dry_run_bluesky)
+            if args.post_bluesky and args.skip_bluesky:
+                raise ValueError("--post-bluesky and --skip-bluesky cannot be used together")
+            bluesky_result: dict[str, Any] = {
+                "status": "skipped",
+                "reason": "not_requested",
+                "post_uri": None,
+                "post_cid": None,
+                "post_text": None,
+                "card_title": None,
+                "card_description": None,
+                "image_path": None,
+                "image_alt": None,
+                "state_path": None,
+                "embed_type": None,
+                "thumb_status": "not_attempted",
+            }
+            if bluesky_requested and not args.skip_bluesky:
+                if args.dry_run and args.dry_run_bluesky:
+                    bluesky_result = maybe_post_food_line_dispatch_to_bluesky(
+                        edition_date=args.date,
+                        public_url=(result.get("public_url") or result.get("public_urls", {}).get("edition")),
+                        post_text=result.get("bluesky_post_text"),
+                        run_succeeded=bool(result.get("ok")),
+                        public_rendered=bool(result.get("public_rendered")),
+                        public_signal_count=int(result.get("public_signal_count") or 0),
+                        post_requested=True,
+                        project_root=Path.cwd(),
+                        force_post=bool(args.force_bluesky),
+                        allow_publish=False,
+                        dry_run=True,
+                        allow_text_only=bool(args.allow_bluesky_text_only),
+                    )
+                elif args.publish and bool(result.get("pages_publish_copied")) and bool(result.get("ok")):
+                    bluesky_result = maybe_post_food_line_dispatch_to_bluesky(
+                        edition_date=args.date,
+                        public_url=(result.get("public_url") or result.get("public_urls", {}).get("edition")),
+                        post_text=result.get("bluesky_post_text"),
+                        run_succeeded=bool(result.get("ok") and result.get("pages_publish_copied")),
+                        public_rendered=bool(result.get("public_rendered")),
+                        public_signal_count=int(result.get("public_signal_count") or 0),
+                        post_requested=True,
+                        project_root=Path.cwd(),
+                        force_post=bool(args.force_bluesky),
+                        allow_publish=True,
+                        dry_run=False,
+                        allow_text_only=bool(args.allow_bluesky_text_only),
+                    )
+                elif args.dry_run:
+                    bluesky_result = {
+                        "status": "skipped",
+                        "reason": "dry_run",
+                        "post_uri": None,
+                        "post_cid": None,
+                        "post_text": result.get("bluesky_post_text"),
+                        "card_title": None,
+                        "card_description": None,
+                        "image_path": None,
+                        "image_alt": None,
+                        "state_path": None,
+                        "embed_type": None,
+                        "thumb_status": "not_attempted",
+                    }
+                elif args.publish:
+                    bluesky_result = {
+                        "status": "skipped",
+                        "reason": "publish_not_ready",
+                        "post_uri": None,
+                        "post_cid": None,
+                        "post_text": result.get("bluesky_post_text"),
+                        "card_title": None,
+                        "card_description": None,
+                        "image_path": None,
+                        "image_alt": None,
+                        "state_path": None,
+                        "embed_type": None,
+                        "thumb_status": "not_attempted",
+                    }
+                else:
+                    bluesky_result = {
+                        "status": "skipped",
+                        "reason": "not_published",
+                        "post_uri": None,
+                        "post_cid": None,
+                        "post_text": result.get("bluesky_post_text"),
+                        "card_title": None,
+                        "card_description": None,
+                        "image_path": None,
+                        "image_alt": None,
+                        "state_path": None,
+                        "embed_type": None,
+                        "thumb_status": "not_attempted",
+                    }
+            result["bluesky_status"] = bluesky_result.get("status")
+            result["bluesky_reason"] = bluesky_result.get("reason")
+            result["bluesky_post_uri"] = bluesky_result.get("post_uri")
+            result["bluesky_post_cid"] = bluesky_result.get("post_cid")
+            result["bluesky_post_text"] = bluesky_result.get("post_text")
+            result["bluesky_embed_type"] = bluesky_result.get("embed_type")
+            result["bluesky_card_title"] = bluesky_result.get("card_title")
+            result["bluesky_card_description"] = bluesky_result.get("card_description")
+            result["bluesky_image_path"] = bluesky_result.get("image_path")
+            result["bluesky_image_alt"] = bluesky_result.get("image_alt")
+            result["bluesky_state_path"] = bluesky_result.get("state_path")
+            result["bluesky_thumb_status"] = bluesky_result.get("thumb_status")
+            result["bluesky_dry_run"] = bool(args.dry_run or args.dry_run_bluesky)
         result["push_requested"] = bool(args.push)
         result["publish_requested"] = bool(args.publish)
         result["dry_run_requested"] = bool(args.dry_run)
+        result["bluesky_requested"] = bool(args.post_bluesky or args.dry_run_bluesky)
+        result["bluesky_force_requested"] = bool(args.force_bluesky)
+        result["bluesky_skip_requested"] = bool(args.skip_bluesky)
+        result["bluesky_allow_text_only"] = bool(args.allow_bluesky_text_only)
+        result["recommended_schedule_command"] = (
+            "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "
+            "\"Set-Location 'C:\\PythonProjects\\Dispatches From The Blue Fern Co'; & '.\\.venv\\Scripts\\python.exe' "
+            "'scripts\\run_food_line_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish --push --post-bluesky\""
+        )
         result["git_push_occurred"] = bool(result.get("pushed"))
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}

@@ -1158,16 +1158,22 @@ def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site)
     (edition / "index.html").write_text("<html>Food Line edition</html>", encoding="utf-8")
     (edition / "edition_manifest.json").write_text(
         json.dumps(
-            {
-                "dispatch_slug": "food-line",
-                "edition_date": "2026-06-01",
-                "public_story_count": 1,
-                "public_rendered": True,
-                "qualified_primary_count": 1,
-                "skip_reason": "",
-            },
-            indent=2,
-        ),
+                {
+                    "dispatch_slug": "food-line",
+                    "edition_date": "2026-06-01",
+                    "public_story_count": 1,
+                    "public_rendered": True,
+                    "edition_mode": "current_update",
+                    "source_freshness_status": "passed",
+                    "freshness_window_days": 14,
+                    "stale_public_story_count": 0,
+                    "excluded_stale_source_count": 0,
+                    "stale_source_ids": [],
+                    "qualified_primary_count": 1,
+                    "skip_reason": "",
+                },
+                indent=2,
+            ),
         encoding="utf-8",
     )
     (edition / "sources_manifest.json").write_text(
@@ -1199,6 +1205,7 @@ def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site)
     assert (pages_repo / "food-line" / "audio" / "podcast.xml").exists()
     assert (pages_repo / "food-line" / "podcast.xml").exists()
     assert (pages_repo / "food-line" / "assets" / "food-line-logo.png").exists()
+    assert (pages_repo / "food-line" / "assets" / "food-line-dispatch-social.png").exists()
 
 
 def test_pages_publish_removes_skipped_food_line_editions(built_site):

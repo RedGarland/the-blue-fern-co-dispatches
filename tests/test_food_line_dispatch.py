@@ -13,6 +13,7 @@ import pytest
 
 import scripts.check_food_line_blue_fern_compliance as food_line_compliance
 import scripts.run_food_line_dispatch as food_line
+import bluefern_dispatches.bluesky_post as bluesky_post
 import scripts.test_food_line_tts as food_line_tts
 import bluefern_dispatches.tts_provider as tts_provider
 from bluefern_dispatches.generator import public_edition_is_listable
@@ -36,6 +37,7 @@ def _ensure_assets(root: Path) -> None:
     for asset_name in (
         "bluefern.png",
         "food-line-logo.png",
+        "food-line-dispatch-social.png",
         "site.css",
         "favicon.ico",
         "favicon-16x16.png",
@@ -1056,13 +1058,13 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "What the source says" in source_table_html
     assert "stale current-story candidate source" in source_table_html
     assert "food-line-auto-" in source_table_html
-    assert "2026-06-06 — Pantry demand and summer food-bank strain" in index_html
+    assert "2026-06-06 — No current update" in index_html
     assert "editions/2026-06-06/" in index_html
     assert 'href="/american-pressure/"' not in index_html
     assert 'href="/gaza/"' in index_html
     assert 'href="/cascadia/"' in index_html
     assert 'href="/food-line/"' in index_html
-    assert "2026-06-06 — Pantry demand and summer food-bank strain" in archive_html
+    assert "2026-06-06 — No current update" in archive_html
     assert manifest["public_rendered"] is True
     assert manifest["edition_mode"] == "no_current_update"
     assert manifest["skip_reason"] == ""
@@ -1114,10 +1116,8 @@ def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_p
     assert result["edition_mode"] == "no_current_update"
     assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
     assert result["qualified_primary_count"] == 0
-    assert "Pantry demand and summer food-bank strain" in index_html
-    assert "Pantry demand and summer food-bank strain" in archive_html
-    assert "No current update" not in index_html
-    assert "No current update" not in archive_html
+    assert "2026-06-07 — No current update" in index_html
+    assert "2026-06-07 — No current update" in archive_html
     assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in index_html
     assert "Blocked" not in archive_html
     assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
@@ -3475,6 +3475,40 @@ def test_food_line_bluesky_ready_summary_tracks_scope_and_url(tmp_path: Path):
     assert "Food Line Dispatch, June 4, 2026:" in result["bluesky_post_text"]
     assert "USDA sources provide background on summer nutrition programs and food security." in result["bluesky_post_text"]
     assert result["public_url"] in result["bluesky_post_text"]
+
+
+def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-06-11"
+    public_url = "https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/"
+    post_text = "Food Line Dispatch, June 11, 2026: test post text."
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("network call should not happen during Bluesky dry-run")
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fail_if_called)
+
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url=public_url,
+        post_text=post_text,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=2,
+        post_requested=True,
+        project_root=tmp_path,
+        allow_publish=False,
+        dry_run=True,
+    )
+
+    state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
+    payload = json.loads(state_path.read_text(encoding="utf-8"))
+    assert result["status"] == "skipped"
+    assert result["reason"] == "dry_run"
+    assert payload["image_path"] == "assets/food-line-dispatch-social.png"
+    assert payload["image_alt"] == bluesky_post.FOOD_LINE_SOCIAL_IMAGE_ALT
+    assert payload["post_text"] == post_text
+    assert payload["public_url"] == public_url
 
 
 def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(tmp_path: Path):

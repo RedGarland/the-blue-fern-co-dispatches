@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 import scripts.check_food_line_blue_fern_compliance as food_line_compliance
+import scripts.discover_food_line_sources as food_line_discovery
 import scripts.run_food_line_dispatch as food_line
 import bluefern_dispatches.bluesky_post as bluesky_post
 import scripts.test_food_line_tts as food_line_tts
@@ -2201,6 +2202,30 @@ def test_food_line_public_evidence_excerpt_strips_usda_gov_chrome():
     assert "can help families keep meals on the table" in cleaned
 
 
+def test_food_line_public_evidence_excerpt_strips_wpde_sinclair_footer():
+    raw = (
+        "Grand Strand food providers say inflation is driving more families to pantries. "
+        "WPDE reported that food insecurity is rising above levels seen during the COVID-19 pandemic, and local food providers along the Grand Strand say they are seeing the impact firsthand. "
+        "In Horry County, Feeding America’s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure. "
+        "When looking only at children, about 20 percent of Horry County’s kids are considered food insecure. "
+        "The Lowcountry Food Bank said demand is climbing at pantries and mobile distributions. "
+        "ABC 15 is teaming up with Feeding America for Sinclair Cares: Summer Hunger Relief, encouraging donations to help provide food for kids during the summer. "
+        "More information and donations are available at sinclaircares.com."
+    )
+    cleaned = food_line.clean_food_line_public_evidence_excerpt(
+        raw,
+        title="Grand Strand food providers say inflation is driving more families to pantries",
+        limit=900,
+    )
+    assert cleaned != food_line.FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK
+    assert "Sinclair Cares" not in cleaned
+    assert "More information and donations are available at" not in cleaned
+    assert "abc 15 is teaming up" not in cleaned.lower()
+    assert "14 percent" in cleaned
+    assert "20 percent" in cleaned
+    assert "mobile distributions" in cleaned
+
+
 def test_food_line_source_card_omits_excerpt_when_boilerplate_cleans_to_fallback():
     row = {
         "title": "USDA Summer Food Service Program",
@@ -2223,6 +2248,26 @@ def test_food_line_source_card_omits_excerpt_when_boilerplate_cleans_to_fallback
     assert "USDA FNS" in html_output
     assert "https://www.fns.usda.gov/summer" in html_output
     assert "Context: USDA Summer Food Service Program" in html_output
+
+
+def test_food_line_discovery_source_configuration_includes_wpde_and_south_carolina():
+    registry = json.loads((Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "source_registry.json").read_text(encoding="utf-8"))
+    by_id = {row["source_id"]: row for row in registry}
+
+    wpde = by_id["wpde-grand-strand-local-news"]
+    assert wpde["source_family"] == "local_news"
+    assert wpde["source_type"] == "page"
+    assert wpde["url"] == "https://wpde.com/news/local"
+    assert wpde["state"] == "SC"
+    assert wpde["location_name"] == "Horry County, SC"
+
+    priority = json.loads((Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "source_discovery_priority_domains.json").read_text(encoding="utf-8"))
+    priority_domains = {str(item).strip().lower() for item in priority.get("priority_domains") or []}
+    priority_states = {str(item).strip().upper() for item in priority.get("priority_states") or []}
+    assert "wpde.com" in priority_domains
+    assert "www.wpde.com" in priority_domains
+    assert "SC" in priority_states
+    assert "SC" in food_line_discovery.STATES
 
 
 def test_food_line_audio_transcript_only_omits_enclosure(tmp_path: Path):
@@ -4310,6 +4355,78 @@ def test_food_line_bluesky_research_signal_drops_second_sentence_before_clipping
     prefix = result["bluesky_post_text"].split(result["public_url"], 1)[0].rstrip()
     assert not prefix.endswith("pa")
     assert prefix.endswith(".") or prefix.endswith("...")
+
+
+def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_source = {
+        "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+        "title": "Grand Strand food providers say inflation is driving more families to pantries",
+        "url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+        "publisher": "WPDE / ABC 15",
+        "published_at": "2026-06-12T21:58:00Z",
+        "retrieved_at": "2026-06-12T21:58:00Z",
+        "summary_or_snippet": "Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food Bank said some Conway distributions usually serving about 100 families had 185 and demand is climbing at pantries and mobile distributions.",
+        "evidence_text": (
+            "Grand Strand food providers say inflation is driving more families to pantries WPDE — Food insecurity is rising above levels seen during the COVID-19 pandemic. "
+            "In Horry County, Feeding America’s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County’s children are considered food insecure. "
+            "The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. "
+            "Inflation and higher costs are making it harder for families to afford food and for food banks to source it. "
+            "ABC 15 is teaming up with Feeding America for Sinclair Cares: Summer Hunger Relief, encouraging donations to help provide food for kids during the summer. "
+            "More information and donations are available at sinclaircares.com."
+        ),
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "local_news",
+        "state": "SC",
+        "location_name": "Horry County",
+        "location_scope": "state_local",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+        "source_traceability_role": "article_url",
+        "pressure_signal": True,
+        "pressure_type": "demand strain",
+        "pressure_reason": "Matched demand strain; the article reports higher food insecurity, rising pantry demand, and mobile distributions serving 185 families.",
+        "pressure_summary": "Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food Bank said some Conway distributions usually serving about 100 families had 185 and inflation was making food harder to afford and source.",
+        "affected_groups": ["children", "low-income households", "pantry clients"],
+        "evidence_level": "news report",
+        "freshness_role": "fresh_daily_signal",
+        "source_role": "local_signal",
+        "map_category": "elevated demand",
+        "map_eligible": True,
+        "pressure_verification_status": "source_text_verified",
+    }
+    manual_path.write_text(json.dumps([manual_source], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "claim_ledger.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["edition_mode"] == "current_update"
+    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["audio_generated"] is False
+    assert not (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.mp3").exists()
+    assert "No current update" not in edition_html
+    assert "WPDE / ABC 15" in source_table_html
+    assert "Horry County" in source_table_html
+    assert "14 percent" in claim_ledger_html
+    assert "20 percent" in claim_ledger_html
+    assert "185" in claim_ledger_html
+    assert "Sinclair Cares" not in claim_ledger_html
+    assert "More information and donations are available at" not in claim_ledger_html
+    assert "Comment with Bubbles" not in claim_ledger_html
+    assert "food insecurity in horry county is about 14 percent" in claim_ledger_html.lower()
+    assert "food insecurity in horry county is about 14 percent" in edition_html.lower()
+    assert "food insecurity in horry county is about 14 percent" in result["bluesky_post_text"].lower() if result["bluesky_post_text"] else True
+    assert manifest["public_signal_count"] == 1
+    assert manifest["lead_source_record_id"] == "wpde-grand-strand-food-insecurity-20260612"
 
 
 def test_food_line_collect_reports_rejected_news_reasons(tmp_path: Path):

@@ -38,7 +38,7 @@ from bluefern_dispatches.food_line_sources import (  # noqa: E402
     resolve_food_line_fetcher,
 )
 
-STATES = ["WA", "OR", "ID", "CA", "TX", "FL", "NY", "PA", "OH", "MS", "KY"]
+STATES = ["WA", "OR", "ID", "CA", "TX", "FL", "NY", "PA", "OH", "MS", "KY", "SC"]
 VALID_SOURCE_TYPES = {"rss", "page", "api"}
 VALID_STATUSES = {"candidate", "tested_good", "tested_weak", "tested_failed", "enabled", "rejected", "promoted"}
 PRESSURE_TERMS = list(dict.fromkeys([*DISCOVERY_CONTEXT_TERMS, *CURRENT_PRESSURE_EVIDENCE_TERMS]))

@@ -513,5 +513,28 @@
     "pressure_required": true,
     "extraction_quality": "medium",
     "expected_text_basis": "page_text"
+  },
+  {
+    "source_id": "wpde-grand-strand-local-news",
+    "name": "WPDE Grand Strand Local News",
+    "publisher": "WPDE / ABC 15",
+    "source_type": "page",
+    "url": "https://wpde.com/news/local",
+    "source_family": "local_news",
+    "location_name": "Horry County, SC",
+    "state": "SC",
+    "default_issue_tags": [
+      "food insecurity",
+      "food pantries",
+      "inflation"
+    ],
+    "default_map_category": "elevated demand",
+    "enabled": true,
+    "notes": "WPDE local-news index for Grand Strand and Horry County reporting.",
+    "summary_fallback": "WPDE local-news reporting on Grand Strand food access and pantry demand.",
+    "pressure_verification_required": true,
+    "pressure_required": true,
+    "extraction_quality": "medium",
+    "expected_text_basis": "page_text"
   }
 ]

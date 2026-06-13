@@ -2,12 +2,12 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-12",
-  "generated_at": "2026-06-13T07:30:02.878916+00:00",
+  "generated_at": "2026-06-13T19:39:01.495343+00:00",
   "source_count": 29,
-  "story_count": 0,
+  "story_count": 1,
   "source_adequacy": {
-    "status": "monitoring_context",
-    "label": "Monitoring/context edition",
+    "status": "daily",
+    "label": "Daily edition",
     "source_count": 29,
     "source_families": [
       "disaster_emergency",
@@ -21,42 +21,42 @@
     "state_signal_count": 26,
     "national_context_count": 3
   },
-  "lead_source_record_id": null,
-  "lead_source_canonical_url": "",
+  "lead_source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+  "lead_source_canonical_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
   "previous_edition_date": "2026-06-11",
-  "primary_signal_status": "none",
-  "primary_disqualification_reason": "no pressure signal qualified today",
+  "primary_signal_status": "new_primary",
+  "primary_disqualification_reason": "",
   "public_rendered": true,
-  "public_signal_count": 0,
-  "qualified_primary_count": 0,
-  "claim_count": 0,
+  "public_signal_count": 1,
+  "qualified_primary_count": 1,
+  "claim_count": 1,
   "claim_ledger_path": "/food-line/editions/2026-06-12/claim_ledger.html",
   "source_table_path": "/food-line/editions/2026-06-12/source_table.html",
-  "qualified_source_count": 0,
-  "excluded_source_count": 29,
+  "qualified_source_count": 1,
+  "excluded_source_count": 28,
   "correction_status": "none",
   "validation_status": "ok",
   "future_date_blocked": false,
   "future_date_override_used": false,
-  "edition_mode": "no_current_update",
+  "edition_mode": "current_update",
   "continuing_context_count": 2,
   "continuing_pressure_count": 0,
   "context_count": 2,
-  "excluded_count": 29,
+  "excluded_count": 28,
   "exclusion_reason_counts": {
     "stale": 23,
     "duplicate": 1,
     "unrelated": 0,
     "outside product geography": 0,
     "resource-only / no pressure signal": 2,
-    "weak pressure signal": 3,
+    "weak pressure signal": 2,
     "missing usable date": 0,
     "missing usable location": 0,
     "insufficient source traceability": 0,
     "background/context only": 1,
     "other": 0
   },
-  "exclusion_reason_summary": "Exclusion breakdown: stale 23; duplicate 1; resource-only or no pressure signal 2; weak pressure signal 3; background or context material 1.",
+  "exclusion_reason_summary": "Exclusion breakdown: stale 23; duplicate 1; resource-only or no pressure signal 2; weak pressure signal 2; background or context material 1.",
   "skip_reason": "",
   "continuing_pressure_source_record_ids": [],
   "continuing_pressure_source_urls": [],
@@ -77,16 +77,19 @@
   "local_signal_count": 18,
   "state_signal_count": 26,
   "national_context_count": 3,
-  "editorial_status": "monitoring/context",
-  "pressure_status": "monitoring_context_only",
-  "why_this_lead": "no pressure signal qualified today",
-  "selected_lead_source_role": null,
-  "selected_lead_pressure_type": null,
-  "selected_lead_affected_groups": [],
+  "editorial_status": "daily_signal",
+  "pressure_status": "pressure_detected",
+  "why_this_lead": "selected new primary pressure signal (local_signal, elevated demand)",
+  "selected_lead_source_role": "local_signal",
+  "selected_lead_pressure_type": "demand strain",
+  "selected_lead_affected_groups": [
+    "children",
+    "low-income households"
+  ],
   "pressure_source_count_by_family": {
     "disaster_emergency": 0,
     "economic_data": 0,
-    "local_news": 0,
+    "local_news": 1,
     "public_radio": 0,
     "school_meals_child_nutrition": 0,
     "state_official": 0
@@ -97,8 +100,8 @@
     "ID": 0,
     "MS": 0,
     "OH": 0,
-    "OK": 0,
     "PA": 0,
+    "SC": 1,
     "TX": 0,
     "US": 0,
     "WA": 0
@@ -111,8 +114,8 @@
   "rejected_news_reasons": [],
   "rejected_news_by_source": {},
   "collected_source_count_by_source_id": {},
-  "pressure_verified_count": 1,
-  "pressure_demoted_unverified_count": 28,
+  "pressure_verified_count": 2,
+  "pressure_demoted_unverified_count": 27,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
     "manual_review": 1,
@@ -124,11 +127,11 @@
     "medium": 9
   },
   "verified_pressure_count_by_extraction_quality": {
-    "medium": 1
+    "medium": 2
   },
   "demoted_count_by_extraction_quality": {
     "high": 20,
-    "medium": 8
+    "medium": 7
   },
   "fetch_failure_count_by_source_id": {},
   "no_evidence_count_by_source_id": {},
@@ -151,7 +154,7 @@
       "evergreen": 3
     }
   },
-  "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+  "source_freshness_status": "passed_with_stale_exclusions",
   "stale_public_story_count": 23,
   "excluded_stale_source_count": 23,
   "freshness_window_days": 3,
@@ -180,8 +183,8 @@
     "food-line-auto-54abc5c03fb692a1",
     "food-line-auto-9013087c4ebc5f32"
   ],
-  "food_line_publish_blocked_reason": "No fresh current-story Food Line sources remained after freshness filtering.",
+  "food_line_publish_blocked_reason": "",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
-  "bluesky_post_text": null,
-  "bluesky_post_ready": false
+  "bluesky_post_text": "Food Line Dispatch, June 12, 2026: WPDE / ABC 15 reported that Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food... Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
+  "bluesky_post_ready": true
 }

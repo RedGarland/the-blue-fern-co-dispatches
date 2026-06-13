@@ -222,7 +222,7 @@ def test_june_13_post_uses_public_summary_and_public_url():
     )
     assert text.startswith("In the June 13 Gaza briefing:")
     assert public_url in text
-    assert "Despite truce in effect since October 2025, Israeli army launches drone strike near Bureij refugee camp." in text
+    assert "Israeli attack kills one person in central Gaza's Bureij camp" in text
     assert bluesky_post.BLUESKY_GAZA_POST_FALLBACK not in text
     assert "The latest Gaza briefing is live." not in text
 
@@ -546,7 +546,8 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
         assert req.headers.get("Authorization", "").startswith("Bearer ")
         body = json.loads(req.data.decode("utf-8"))
         record = body["record"]
-        assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in record["text"]
+        assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" not in record["text"]
+        assert "Public edition:" not in record["text"]
         embed = record["embed"]
         assert embed["$type"] == "app.bsky.embed.external"
         assert embed["external"]["uri"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/"
@@ -565,14 +566,71 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
     assert result["status"] == "success"
     assert result["post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/xyz"
     assert result["embed_type"] == "app.bsky.embed.external"
-    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in result["post_text"]
+    assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" not in result["post_text"]
+    assert "Public edition:" not in result["post_text"]
     assert "Specific verified Gaza dispatch summary." in result["post_text"]
+    assert result["stale_content_guard_status"] == "passed"
     assert result["thumb_status"] == "uploaded"
     assert result["compressed_thumb"] is False
     assert isinstance(result["original_thumb_bytes"], int)
     assert isinstance(result["uploaded_thumb_bytes"], int)
     assert result["error_type"] is None
     assert result["error_message"] is None
+
+
+def test_posts_text_only_when_no_embed_is_available(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    manifest_path = tmp_path / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "run_manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps({"social_summary": "Specific verified Gaza dispatch summary."}), encoding="utf-8")
+
+    def fake_post_json(url, payload, timeout=20.0):
+        _ = timeout
+        assert url.endswith("/com.atproto.server.createSession")
+        assert payload["identifier"] == "bluefern.test"
+        return {"accessJwt": "token-123", "did": "did:plc:abc123"}
+
+    class FakeResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            _ = (exc_type, exc, tb)
+            return False
+
+        def read(self):
+            return json.dumps(self._payload).encode("utf-8")
+
+    def fake_urlopen(req, timeout=20.0):
+        _ = timeout
+        assert req.full_url.endswith("/com.atproto.repo.createRecord")
+        body = json.loads(req.data.decode("utf-8"))
+        record = body["record"]
+        assert "embed" not in record
+        assert "Public edition: https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in record["text"]
+        return FakeResponse({"uri": "at://did:plc:abc123/app.bsky.feed.post/text-only"})
+
+    monkeypatch.setattr(bluesky_post, "_post_json", fake_post_json)
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: bluesky_post.BLUESKY_CARD_FALLBACK_DESCRIPTION)
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-05-07",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+    assert result["status"] == "success"
+    assert result["embed_type"] is None
+    assert "Public edition: https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" in result["post_text"]
+    assert "Specific verified Gaza dispatch summary." in result["post_text"]
+    assert result["stale_content_guard_status"] == "passed"
 
 
 def test_thumbnail_candidate_selection_order(tmp_path: Path):

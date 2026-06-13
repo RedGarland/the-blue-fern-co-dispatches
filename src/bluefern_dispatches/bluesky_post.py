@@ -508,7 +508,13 @@ def _gaza_public_summary_for_bluesky(project_root: Path, edition_date: str, max_
     return ""
 
 
-def build_gaza_bluesky_post_text(edition_date: str, public_url: str, project_root: Path | None = None) -> str:
+def build_gaza_bluesky_post_text(
+    edition_date: str,
+    public_url: str,
+    project_root: Path | None = None,
+    *,
+    include_public_url: bool = True,
+) -> str:
     root = project_root or Path.cwd()
     clean_date = str(edition_date or "").strip()
     context = _gaza_bluesky_context(root, clean_date)
@@ -533,7 +539,7 @@ def build_gaza_bluesky_post_text(edition_date: str, public_url: str, project_roo
     summary_line = ""
     if source_count and publisher_count:
         summary_line = f"This is a limited-source update from {source_count} saved records across {publisher_count} publishers."
-    url_suffix = f"\n\nPublic edition: {public_url}" if str(public_url or "").strip() else ""
+    url_suffix = f"\n\nPublic edition: {public_url}" if include_public_url and str(public_url or "").strip() else ""
 
     def _with_suffix(body: str) -> str:
         body = WHITESPACE_RE.sub(" ", body.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n").strip()
@@ -1036,13 +1042,19 @@ def maybe_post_gaza_dispatch_to_bluesky(
         result["reason"] = "current-edition-date-mismatch"
         result["stale_content_guard_status"] = "blocked"
         return result
-    text = build_gaza_bluesky_post_text(edition_date, public_url, project_root=root)
     card_title = _build_gaza_card_title(edition_date)
     card_description = build_gaza_card_description(edition_date, root, max_length=BLUESKY_CARD_MAX_DESCRIPTION_LENGTH)
+    use_external_embed = card_description != BLUESKY_CARD_FALLBACK_DESCRIPTION
+    text = build_gaza_bluesky_post_text(
+        edition_date,
+        public_url,
+        project_root=root,
+        include_public_url=not use_external_embed,
+    )
     result["post_text"] = text
     result["card_title"] = card_title
     result["card_description"] = card_description
-    if text == BLUESKY_GAZA_POST_FALLBACK or card_description == BLUESKY_CARD_FALLBACK_DESCRIPTION:
+    if text == BLUESKY_GAZA_POST_FALLBACK:
         result["status"] = "blocked"
         result["reason"] = "current-edition-public-summary-unavailable"
         result["stale_content_guard_status"] = "blocked"
@@ -1098,13 +1110,12 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "edition_date_verified": result["edition_date_verified"],
                 "stale_content_guard_status": result["stale_content_guard_status"],
             }
-        thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes = _upload_card_thumb(access_jwt, root, edition_date)
-        external: dict[str, Any] = {
-            "$type": "app.bsky.embed.external",
-            "external": {"uri": str(public_url), "title": card_title, "description": card_description},
-        }
-        if thumb_blob:
-            external["external"]["thumb"] = thumb_blob
+        thumb_blob = None
+        thumb_status = "not_attempted"
+        compressed_thumb = False
+        original_thumb_bytes = None
+        uploaded_thumb_bytes = None
+        image_path = None
         record_payload = {
             "repo": did,
             "collection": "app.bsky.feed.post",
@@ -1112,9 +1123,18 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "$type": "app.bsky.feed.post",
                 "text": text,
                 "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "embed": external,
             },
         }
+        if use_external_embed:
+            thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes = _upload_card_thumb(access_jwt, root, edition_date)
+            external: dict[str, Any] = {
+                "$type": "app.bsky.embed.external",
+                "external": {"uri": str(public_url), "title": card_title, "description": card_description},
+            }
+            if thumb_blob:
+                external["external"]["thumb"] = thumb_blob
+                image_path = FOOD_LINE_SOCIAL_IMAGE_PATH
+            record_payload["record"]["embed"] = external
         req = _build_auth_request(f"{BLUESKY_API_BASE}/com.atproto.repo.createRecord", record_payload, access_jwt)
         with request.urlopen(req, timeout=20.0) as resp:
             body = resp.read().decode("utf-8")
@@ -1142,7 +1162,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             post_text=text,
             card_title=card_title,
             card_description=card_description,
-            embed_type="app.bsky.embed.external",
+            embed_type="app.bsky.embed.external" if use_external_embed else None,
             thumb_status=thumb_status,
             original_thumb_bytes=original_thumb_bytes,
             uploaded_thumb_bytes=uploaded_thumb_bytes,
@@ -1151,7 +1171,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "status": "success",
             "post_uri": post_uri,
             "reason": None,
-            "embed_type": "app.bsky.embed.external",
+            "embed_type": "app.bsky.embed.external" if use_external_embed else None,
             "card_title": card_title,
             "card_description": card_description,
             "post_text": text,
@@ -1159,6 +1179,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "compressed_thumb": compressed_thumb,
             "original_thumb_bytes": original_thumb_bytes,
             "uploaded_thumb_bytes": uploaded_thumb_bytes,
+            "image_path": image_path,
             "error_type": None,
             "error_message": None,
             "source_artifact_paths": result["source_artifact_paths"],

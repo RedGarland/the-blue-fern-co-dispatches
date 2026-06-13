@@ -73,6 +73,60 @@ GAP_TRACKING_QUERY_PARAMS = {
     "ref",
     "source",
 }
+GAP_RESOURCE_ONLY_TERMS = (
+    "food drive",
+    "fill-a-bus",
+    "food for fines",
+    "stock the shelves",
+    "stock-the-shelves",
+    "donate",
+    "donations",
+    "fundraiser",
+    "charity drive",
+    "team up",
+    "launches campaign",
+    "food distribution schedule",
+    "where families can find food",
+    "where families can get food",
+    "find food",
+    "find a food bank",
+    "free meals",
+    "get help",
+    "apply for benefits",
+    "hours",
+    "locations",
+    "food pantry locator",
+)
+GAP_DIRECT_PRESSURE_TERMS = (
+    "record demand",
+    "demand is rising",
+    "rising demand",
+    "demand rising",
+    "demand continues to rise",
+    "demand surges",
+    "surge in demand",
+    "higher demand",
+    "empty shelves",
+    "shelves are bare",
+    "low inventory",
+    "critical shortage",
+    "temporarily closes",
+    "can't keep food on the shelf",
+    "cannot keep food on the shelf",
+    "snap benefits were halted",
+    "snap benefits halted",
+    "snap cuts",
+    "snap reductions",
+    "benefits were halted",
+    "benefit reductions",
+    "fuel costs",
+    "deliveries affected",
+    "meals reduced",
+    "increased need",
+    "food insecurity is rising",
+    "food insecurity percent",
+    "food insecurity percentage",
+)
 
 
 def _utc_now() -> str:
@@ -287,6 +341,72 @@ def _gap_normalize_url(url: str) -> str:
     return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path.rstrip("/"), cleaned_query, ""))
 
 
+def _gap_resolve_article_url(url: str) -> str:
+    value = _gap_normalize_url(url)
+    if not value:
+        return ""
+    parsed = urllib.parse.urlsplit(value)
+    if parsed.netloc.lower() not in {"news.google.com", "www.news.google.com"} and "news.google.com" not in value.lower():
+        return value
+    try:
+        req = urllib.request.Request(value, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:  # noqa: S310
+            final_url = _gap_normalize_url(resp.geturl())
+    except Exception:  # noqa: BLE001
+        final_url = ""
+    if final_url and _is_article_like_url(final_url, seed_url=value):
+        return final_url
+    return value
+
+
+def _gap_direct_pressure_hits(text: str) -> list[str]:
+    lowered = text.lower()
+    hits: list[str] = []
+    patterns = (
+        (r"\bempty shelves\b", "empty shelves"),
+        (r"\bshelves are bare\b", "shelves are bare"),
+        (r"\brecord demand\b", "record demand"),
+        (r"\bdemand is rising\b", "demand is rising"),
+        (r"\brising demand\b", "rising demand"),
+        (r"\bdemand rising\b", "demand rising"),
+        (r"\bdemand continues to rise\b", "demand continues to rise"),
+        (r"\bdemand surges\b", "demand surges"),
+        (r"\bsurge in demand\b", "surge in demand"),
+        (r"\bhigher demand\b", "higher demand"),
+        (r"\blow inventory\b", "low inventory"),
+        (r"\bcritical shortage\b", "critical shortage"),
+        (r"\btemporarily closes?\b", "temporarily closes"),
+        (r"can(?:'|’|â€™)?t keep food on the shelf", "can't keep food on the shelf"),
+        (r"\bcannot keep food on the shelf\b", "cannot keep food on the shelf"),
+        (r"\bsnap benefits? (?:were )?halted\b", "SNAP benefits halted"),
+        (r"\bsnap cuts\b", "SNAP cuts"),
+        (r"\bsnap reductions\b", "SNAP reductions"),
+        (r"\bbenefits? were halted\b", "benefits were halted"),
+        (r"\bbenefit reductions\b", "benefit reductions"),
+        (r"\bfuel costs?\b", "fuel costs"),
+        (r"\bdeliver(?:y|ies) affected\b", "deliveries affected"),
+        (r"\bmeals? reduced\b", "meals reduced"),
+        (r"\bincreased need\b", "increased need"),
+        (r"\bfood insecurity (?:percent|percentage)\b", "food insecurity percentage"),
+        (r"\bfood insecurity (?:is|was|at) \d", "food insecurity percentage"),
+        (r"\bout of food\b", "out of food"),
+        (r"\brunning out\b", "running out"),
+    )
+    for pattern, label in patterns:
+        if re.search(pattern, lowered):
+            hits.append(label)
+    return hits
+
+
+def _gap_resource_only_hits(text: str) -> list[str]:
+    lowered = text.lower()
+    hits: list[str] = []
+    for term in GAP_RESOURCE_ONLY_TERMS:
+        if term in lowered and term not in hits:
+            hits.append(term)
+    return hits
+
+
 def _gap_parse_published_at(value: str) -> str:
     raw = _nonempty(value)
     if not raw:
@@ -327,17 +447,22 @@ def _gap_parse_rss_items(payload: bytes) -> list[dict[str, str]]:
             link_el = item.find("link")
             if link_el is not None:
                 link = _nonempty(link_el.attrib.get("href"))
-        candidate_url = source_url or link
-        candidate_url = _gap_normalize_url(candidate_url)
+        google_news_url = _gap_normalize_url(link)
+        candidate_url = _gap_resolve_article_url(link) or _gap_normalize_url(source_url)
+        if candidate_url and not _is_article_like_url(candidate_url, label=publisher):
+            fallback_url = _gap_normalize_url(source_url)
+            if fallback_url and _is_article_like_url(fallback_url, label=publisher):
+                candidate_url = fallback_url
         if not candidate_url:
             continue
         rows.append(
             {
                 "title": _normalize_source_text(item.findtext("title") or ""),
                 "publisher": publisher,
-                "publisher_url": source_url,
+                "publisher_url": _gap_normalize_url(source_url),
                 "candidate_url": candidate_url,
-                "link_url": _gap_normalize_url(link),
+                "google_news_url": google_news_url,
+                "link_url": google_news_url,
                 "published_at": _gap_parse_published_at(item.findtext("pubDate") or item.findtext("published") or item.findtext("updated") or ""),
                 "summary_or_snippet": _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or ""),
             }
@@ -377,12 +502,18 @@ def _gap_resource_only_hit(text: str) -> bool:
     return any(term in lowered for term in resource_only_terms)
 
 
-def score_food_line_discovery_gap_candidate(candidate: dict[str, Any], *, known_local_domain: bool = False) -> tuple[int, list[str], list[str]]:
+def score_food_line_discovery_gap_candidate(
+    candidate: dict[str, Any],
+    *,
+    known_local_domain: bool = False,
+) -> tuple[int, list[str], list[str]]:
     text = _gap_text_blob(candidate)
     lowered = text.lower()
     score = 0
     reasons: list[str] = []
     penalties: list[str] = []
+    direct_hits = _gap_direct_pressure_hits(lowered)
+    resource_hits = _gap_resource_only_hits(lowered)
     if "food insecurity" in lowered:
         score += 3
         reasons.append("food insecurity")
@@ -402,12 +533,15 @@ def score_food_line_discovery_gap_candidate(candidate: dict[str, Any], *, known_
     if any(term in lowered for term in ("children", "summer meals", "school meals", "families")):
         score += 2
         reasons.append("households or children")
+    if direct_hits:
+        score += 4
+        reasons.append("direct pressure signal: " + ", ".join(direct_hits[:4]))
+    if resource_hits:
+        score -= 4
+        penalties.append("resource/donation framing")
     if known_local_domain:
         score += 1
         reasons.append("local or news domain")
-    if _gap_resource_only_hit(lowered):
-        score -= 3
-        penalties.append("resource only")
     return score, reasons, penalties
 
 
@@ -418,15 +552,21 @@ def classify_food_line_discovery_gap_candidate(
     known_local_domain: bool = False,
 ) -> dict[str, Any]:
     score, reasons, penalties = score_food_line_discovery_gap_candidate(candidate, known_local_domain=known_local_domain)
-    resource_only = "resource only" in penalties
+    text = _gap_text_blob(candidate)
+    direct_pressure = bool(_gap_direct_pressure_hits(text))
+    resource_only = "resource/donation framing" in penalties
     if known_status in {"already_included", "already_excluded", "duplicate"}:
         classification = "duplicate_or_known"
-    elif score >= 3 and not resource_only:
+    elif direct_pressure and resource_only:
+        classification = "needs_review"
+    elif direct_pressure and score >= 4:
         classification = "likely_qualifying"
-    elif resource_only and score <= 3:
+    elif resource_only:
         classification = "likely_resource_only"
     elif score <= 1:
         classification = "likely_resource_only"
+    elif score >= 4 and not direct_pressure:
+        classification = "needs_review"
     else:
         classification = "needs_review"
     reason_bits = list(reasons)
@@ -436,11 +576,15 @@ def classify_food_line_discovery_gap_candidate(
     elif known_status == "already_excluded":
         reason_bits.append("already excluded")
     elif known_status == "duplicate":
-        reason_bits.append("duplicate")
+        reason_bits.append("duplicate of known included source")
     elif known_status == "known_domain_new_article":
         reason_bits.append("known domain new article")
     elif known_status == "unknown_domain_new_article":
         reason_bits.append("unknown domain new article")
+    if classification == "likely_resource_only" and not direct_pressure:
+        reason_bits.append("resource/donation framing without direct pressure evidence")
+    elif classification == "needs_review" and resource_only and direct_pressure:
+        reason_bits.append("mixed resource and pressure signals; needs review")
     return {
         "classification": classification,
         "score": score,
@@ -575,7 +719,9 @@ def run_food_line_discovery_gap_check(
                     "title": _nonempty(item.get("title")),
                     "publisher": publisher,
                     "publisher_domain": _gap_domain(publisher_url or candidate_url) or publisher,
+                    "domain": _gap_domain(publisher_url or candidate_url) or publisher,
                     "publisher_url": publisher_url,
+                    "google_news_url": _nonempty(item.get("google_news_url") or item.get("link_url") or ""),
                     "url": candidate_url,
                     "normalized_url": normalized_url,
                     "discovered_query": query,
@@ -622,8 +768,10 @@ def run_food_line_discovery_gap_check(
             "title": candidate.get("title") or "",
             "publisher": candidate.get("publisher") or "",
             "publisher_domain": candidate.get("publisher_domain") or candidate_domain or "",
+            "domain": candidate.get("domain") or candidate_domain or "",
             "url": normalized_url,
             "normalized_url": normalized_url,
+            "google_news_url": candidate.get("google_news_url") or "",
             "discovered_query": candidate.get("discovered_queries", [candidate.get("discovered_query") or ""])[0] or "",
             "discovered_queries": candidate.get("discovered_queries") or [],
             "discovered_at": candidate.get("discovered_at") or discovered_at,

@@ -1,0 +1,25 @@
+{
+  "queries": [
+    "food insecurity",
+    "food bank demand",
+    "food pantry demand",
+    "food bank shelves",
+    "food bank inventory",
+    "SNAP food bank",
+    "summer hunger",
+    "school meals food bank",
+    "food bank inflation",
+    "food bank fuel costs",
+    "pantry demand",
+    "pantry shortage",
+    "food bank shortage",
+    "mobile food distribution demand"
+  ],
+  "exclude_domains": [
+    "facebook.com",
+    "x.com",
+    "twitter.com",
+    "instagram.com",
+    "youtube.com"
+  ]
+}

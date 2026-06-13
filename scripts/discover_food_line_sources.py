@@ -12,8 +12,10 @@ import sys
 import urllib.parse
 import urllib.error
 import urllib.request
+import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +27,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.food_line_sources import (  # noqa: E402
     DEFAULT_AFFECTED_GROUP_KEYWORDS,
     DEFAULT_NEGATIVE_KEYWORDS,
+    INVALID_XML_ENTITY_RE,
     CURRENT_PRESSURE_EVIDENCE_TERMS,
     DISCOVERY_CONTEXT_TERMS,
     _extract_page_evidence,
@@ -34,8 +37,11 @@ from bluefern_dispatches.food_line_sources import (  # noqa: E402
     _parse_rss_items,
     canonical_url,
     classify_food_line_source_purpose,
+    load_food_line_candidate_registry,
+    load_food_line_registry,
     load_food_line_source_performance_history,
     resolve_food_line_fetcher,
+    validate_date,
 )
 
 STATES = ["WA", "OR", "ID", "CA", "TX", "FL", "NY", "PA", "OH", "MS", "KY", "SC"]
@@ -53,6 +59,20 @@ NEGATIVE_TERMS = [
     "donation drive",
     "volunteer",
 ]
+GAP_QUERY_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
+GAP_TRACKING_QUERY_PARAMS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "gclid",
+    "fbclid",
+    "mc_cid",
+    "mc_eid",
+    "ref",
+    "source",
+}
 
 
 def _utc_now() -> str:
@@ -221,6 +241,479 @@ def _save_discovery_query_rows(root: Path, rows: list[dict[str, Any]]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
+
+
+def _discovery_gap_queries_path(root: Path) -> Path:
+    return root / "data" / "dispatches" / "food-line" / "discovery_gap_queries.json"
+
+
+def load_food_line_discovery_gap_queries(root: Path) -> dict[str, Any]:
+    path = _discovery_gap_queries_path(root)
+    repo_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "discovery_gap_queries.json"
+    if not path.exists():
+        path = repo_path
+    if not path.exists():
+        return {"queries": [], "exclude_domains": []}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path.name} must be an object")
+    queries = [str(item).strip() for item in payload.get("queries") or [] if str(item).strip()]
+    exclude_domains = [str(item).strip().lower() for item in payload.get("exclude_domains") or [] if str(item).strip()]
+    return {"queries": queries, "exclude_domains": exclude_domains}
+
+
+def _gap_query_url(query: str) -> str:
+    return GAP_QUERY_RSS_TEMPLATE.format(query=urllib.parse.quote_plus(str(query or "").strip()))
+
+
+def _gap_domain(url: str) -> str:
+    try:
+        return urllib.parse.urlsplit(str(url or "").strip()).netloc.lower()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _gap_normalize_url(url: str) -> str:
+    value = _nonempty(url)
+    if not value:
+        return ""
+    parsed = urllib.parse.urlsplit(_normalize_url(value))
+    query_items = [
+        (key, val)
+        for key, val in urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
+        if key.lower() not in GAP_TRACKING_QUERY_PARAMS and not key.lower().startswith("utm_")
+    ]
+    cleaned_query = urllib.parse.urlencode(query_items, doseq=True)
+    return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path.rstrip("/"), cleaned_query, ""))
+
+
+def _gap_parse_published_at(value: str) -> str:
+    raw = _nonempty(value)
+    if not raw:
+        return ""
+    for candidate in (raw, raw[:10]):
+        try:
+            parsed = parsedate_to_datetime(candidate)
+        except Exception:  # noqa: BLE001
+            parsed = None
+        if parsed is not None:
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.isoformat()
+        try:
+            parsed = datetime.fromisoformat(candidate.replace("Z", "+00:00"))
+        except Exception:  # noqa: BLE001
+            parsed = None
+        if parsed is not None:
+            return parsed.isoformat()
+    return raw
+
+
+def _gap_parse_rss_items(payload: bytes) -> list[dict[str, str]]:
+    text = INVALID_XML_ENTITY_RE.sub("&amp;", payload.decode("utf-8", errors="replace"))
+    root = ET.fromstring(text)
+    items = root.findall(".//item")
+    if not items:
+        items = root.findall(".//{*}item")
+    rows: list[dict[str, str]] = []
+    for item in items:
+        source_el = item.find("source")
+        if source_el is None:
+            source_el = item.find("{*}source")
+        source_url = _nonempty(source_el.attrib.get("url") if source_el is not None else "")
+        publisher = _normalize_source_text(source_el.text or "") if source_el is not None else ""
+        link = _nonempty(item.findtext("link") or "")
+        if not link:
+            link_el = item.find("link")
+            if link_el is not None:
+                link = _nonempty(link_el.attrib.get("href"))
+        candidate_url = source_url or link
+        candidate_url = _gap_normalize_url(candidate_url)
+        if not candidate_url:
+            continue
+        rows.append(
+            {
+                "title": _normalize_source_text(item.findtext("title") or ""),
+                "publisher": publisher,
+                "publisher_url": source_url,
+                "candidate_url": candidate_url,
+                "link_url": _gap_normalize_url(link),
+                "published_at": _gap_parse_published_at(item.findtext("pubDate") or item.findtext("published") or item.findtext("updated") or ""),
+                "summary_or_snippet": _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or ""),
+            }
+        )
+    return rows
+
+
+def _gap_text_blob(candidate: dict[str, Any]) -> str:
+    return _normalize_source_text(
+        " ".join(
+            part
+            for part in (
+                str(candidate.get("title") or ""),
+                str(candidate.get("summary_or_snippet") or ""),
+                str(candidate.get("publisher") or ""),
+                str(candidate.get("candidate_url") or ""),
+            )
+            if part
+        ),
+        limit=1200,
+    )
+
+
+def _gap_resource_only_hit(text: str) -> bool:
+    lowered = text.lower()
+    resource_only_terms = (
+        "where to get food",
+        "free meals",
+        "distribution schedule",
+        "hours",
+        "locations",
+        "find food",
+        "find a food bank",
+        "get help",
+        "apply for benefits",
+    )
+    return any(term in lowered for term in resource_only_terms)
+
+
+def score_food_line_discovery_gap_candidate(candidate: dict[str, Any], *, known_local_domain: bool = False) -> tuple[int, list[str], list[str]]:
+    text = _gap_text_blob(candidate)
+    lowered = text.lower()
+    score = 0
+    reasons: list[str] = []
+    penalties: list[str] = []
+    if "food insecurity" in lowered:
+        score += 3
+        reasons.append("food insecurity")
+    if "food bank" in lowered and any(term in lowered for term in ("demand", "shortage", "inventory", "shelves", "cost", "inflation", "snap")):
+        score += 3
+        reasons.append("food bank pressure")
+    if "pantry" in lowered and any(term in lowered for term in ("demand", "shortage", "empty", "line", "shelves")):
+        score += 2
+        reasons.append("pantry pressure")
+    if (
+        re.search(r"\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\s*(?:%|percent)\b", lowered)
+        or re.search(r"\$\d{1,3}(?:,\d{3})*(?:\.\d+)?", lowered)
+        or re.search(r"\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b", lowered)
+    ) and any(term in lowered for term in ("famil", "people", "meal", "dollar", "cost", "county", "counties", "household", "families", "children", "percent", "%")):
+        score += 2
+        reasons.append("numeric pressure")
+    if any(term in lowered for term in ("children", "summer meals", "school meals", "families")):
+        score += 2
+        reasons.append("households or children")
+    if known_local_domain:
+        score += 1
+        reasons.append("local or news domain")
+    if _gap_resource_only_hit(lowered):
+        score -= 3
+        penalties.append("resource only")
+    return score, reasons, penalties
+
+
+def classify_food_line_discovery_gap_candidate(
+    candidate: dict[str, Any],
+    *,
+    known_status: str,
+    known_local_domain: bool = False,
+) -> dict[str, Any]:
+    score, reasons, penalties = score_food_line_discovery_gap_candidate(candidate, known_local_domain=known_local_domain)
+    resource_only = "resource only" in penalties
+    if known_status in {"already_included", "already_excluded", "duplicate"}:
+        classification = "duplicate_or_known"
+    elif score >= 6 and not resource_only:
+        classification = "likely_qualifying"
+    elif resource_only and score <= 3:
+        classification = "likely_resource_only"
+    elif score <= 1:
+        classification = "likely_resource_only"
+    else:
+        classification = "needs_review"
+    reason_bits = list(reasons)
+    reason_bits.extend(penalties)
+    if known_status == "already_included":
+        reason_bits.append("already included")
+    elif known_status == "already_excluded":
+        reason_bits.append("already excluded")
+    elif known_status == "duplicate":
+        reason_bits.append("duplicate")
+    elif known_status == "known_domain_new_article":
+        reason_bits.append("known domain new article")
+    elif known_status == "unknown_domain_new_article":
+        reason_bits.append("unknown domain new article")
+    return {
+        "classification": classification,
+        "score": score,
+        "reason": "; ".join(reason_bits) if reason_bits else "no strong pressure markers",
+        "known_status": known_status,
+    }
+
+
+def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "_None._"
+    lines = [
+        "| Title | Publisher/domain | URL | Query | Score | Reason | Known status |",
+        "| --- | --- | --- | --- | ---: | --- | --- |",
+    ]
+    for row in rows:
+        publisher = _normalize_source_text(str(row.get("publisher") or "")).replace("|", "\\|")
+        publisher_domain = _normalize_source_text(str(row.get("publisher_domain") or "")).replace("|", "\\|")
+        publisher_cell = publisher
+        if publisher_domain and publisher_domain.lower() not in publisher.lower():
+            publisher_cell = f"{publisher} ({publisher_domain})" if publisher else publisher_domain
+        lines.append(
+            "| "
+            + " | ".join(
+                (
+                    publisher_cell
+                    if field == "publisher_domain"
+                    else _normalize_source_text(str(row.get(field) or "")).replace("|", "\\|")
+                )
+                for field in ("title", "publisher_domain", "url", "discovered_query", "score", "reason", "known_status")
+            )
+            + " |"
+        )
+    return "\n".join(lines)
+
+
+def _gap_known_status_sets(root: Path) -> dict[str, set[str]]:
+    registry_rows = load_food_line_registry(root)
+    candidate_rows = load_food_line_candidate_registry(root)
+    priority = _load_discovery_priority(root)
+    priority_domains = {str(item).strip().lower() for item in priority.get("priority_domains") or [] if str(item).strip()}
+    included_urls: set[str] = set()
+    excluded_urls: set[str] = set()
+    known_urls: set[str] = set()
+    known_domains: set[str] = set(priority_domains)
+    known_publishers: set[str] = set()
+    for row in registry_rows:
+        url = _gap_normalize_url(_nonempty(row.get("url") or row.get("candidate_url")))
+        if url:
+            known_urls.add(url)
+            known_domains.add(_gap_domain(url))
+            if _truthy(row.get("enabled"), default=True) or str(row.get("status") or "").lower() in {"enabled", "promoted"}:
+                included_urls.add(url)
+            else:
+                excluded_urls.add(url)
+        publisher = _nonempty(row.get("publisher") or row.get("source_name") or row.get("name"))
+        if publisher:
+            known_publishers.add(publisher.lower())
+    for row in candidate_rows:
+        url = _gap_normalize_url(_nonempty(row.get("candidate_url") or row.get("url")))
+        if url:
+            known_urls.add(url)
+            known_domains.add(_gap_domain(url))
+            status = str(row.get("status") or "").strip().lower()
+            if status in {"rejected", "quarantined", "archived", "tested_failed"}:
+                excluded_urls.add(url)
+        publisher = _nonempty(row.get("publisher") or row.get("source_name") or row.get("name"))
+        if publisher:
+            known_publishers.add(publisher.lower())
+    return {
+        "included_urls": included_urls,
+        "excluded_urls": excluded_urls,
+        "known_urls": known_urls,
+        "known_domains": {domain for domain in known_domains if domain},
+        "known_publishers": known_publishers,
+    }
+
+
+def run_food_line_discovery_gap_check(
+    root: Path,
+    date: str,
+    *,
+    fetcher: Any | None = None,
+    max_results_per_query: int = 10,
+) -> dict[str, Any]:
+    edition_date = validate_date(date)
+    config = load_food_line_discovery_gap_queries(root)
+    query_terms = list(config.get("queries") or [])
+    exclude_domains = {str(item).strip().lower() for item in config.get("exclude_domains") or [] if str(item).strip()}
+    fetch = resolve_food_line_fetcher(fetcher)
+    known = _gap_known_status_sets(root)
+    query_errors: list[dict[str, str]] = []
+    raw_candidates: list[dict[str, Any]] = []
+    seen_urls: set[str] = set()
+    discovered_at = _utc_now()
+    for query in query_terms:
+        rss_url = _gap_query_url(query)
+        payload, fetch_error = _fetch_url(fetch, rss_url)
+        if fetch_error or not payload:
+            query_errors.append({"query": query, "url": rss_url, "error": fetch_error or "empty response"})
+            continue
+        try:
+            rss_items = _gap_parse_rss_items(payload)
+        except Exception as exc:  # noqa: BLE001
+            query_errors.append({"query": query, "url": rss_url, "error": f"{type(exc).__name__}: {exc}"})
+            continue
+        for item in rss_items[:max_results_per_query]:
+            candidate_url = _gap_normalize_url(_nonempty(item.get("candidate_url")))
+            if not candidate_url:
+                continue
+            publisher = _nonempty(item.get("publisher") or _gap_domain(candidate_url))
+            publisher_url = _gap_normalize_url(_nonempty(item.get("publisher_url")))
+            normalized_url = candidate_url
+            known_status = "unknown_domain_new_article"
+            if normalized_url in known["included_urls"]:
+                known_status = "already_included"
+            elif normalized_url in known["excluded_urls"]:
+                known_status = "already_excluded"
+            elif normalized_url in seen_urls or normalized_url in known["known_urls"]:
+                known_status = "duplicate"
+            else:
+                candidate_domain = _gap_domain(publisher_url or candidate_url)
+                if candidate_domain in exclude_domains or _gap_domain(candidate_url) in exclude_domains:
+                    known_status = "already_excluded"
+                elif candidate_domain in known["known_domains"] or publisher.lower() in known["known_publishers"]:
+                    known_status = "known_domain_new_article"
+                else:
+                    known_status = "unknown_domain_new_article"
+            seen_urls.add(normalized_url)
+            raw_candidates.append(
+                {
+                    "title": _nonempty(item.get("title")),
+                    "publisher": publisher,
+                    "publisher_domain": _gap_domain(publisher_url or candidate_url) or publisher,
+                    "publisher_url": publisher_url,
+                    "url": candidate_url,
+                    "normalized_url": normalized_url,
+                    "discovered_query": query,
+                    "discovered_at": discovered_at,
+                    "published_at": _nonempty(item.get("published_at")),
+                    "summary_or_snippet": _nonempty(item.get("summary_or_snippet")),
+                    "known_status": known_status,
+                    "query_url": rss_url,
+                    "raw_candidate": dict(item),
+                }
+            )
+    grouped: dict[str, dict[str, Any]] = {}
+    for candidate in raw_candidates:
+        normalized_url = str(candidate.get("normalized_url") or "").strip()
+        if not normalized_url:
+            continue
+        current = grouped.get(normalized_url)
+        if current is None:
+            current = dict(candidate)
+            current["discovered_queries"] = [candidate["discovered_query"]]
+            grouped[normalized_url] = current
+        else:
+            current["discovered_queries"].append(candidate["discovered_query"])
+            if current.get("published_at") and not candidate.get("published_at"):
+                pass
+            elif candidate.get("published_at") and not current.get("published_at"):
+                current["published_at"] = candidate.get("published_at")
+            if len(str(candidate.get("summary_or_snippet") or "")) > len(str(current.get("summary_or_snippet") or "")):
+                current["summary_or_snippet"] = candidate.get("summary_or_snippet")
+            if current.get("known_status") == "unknown_domain_new_article" and candidate.get("known_status") != "unknown_domain_new_article":
+                current["known_status"] = candidate.get("known_status")
+        current["discovered_queries"] = list(dict.fromkeys(current.get("discovered_queries") or []))
+    candidates: list[dict[str, Any]] = []
+    known_local_domains = known["known_domains"]
+    for candidate in grouped.values():
+        normalized_url = str(candidate.get("normalized_url") or "").strip()
+        candidate_domain = _gap_domain(str(candidate.get("publisher_url") or "")) or _gap_domain(normalized_url)
+        classification = classify_food_line_discovery_gap_candidate(
+            candidate,
+            known_status=str(candidate.get("known_status") or "unknown_domain_new_article"),
+            known_local_domain=bool(candidate_domain and candidate_domain in known_local_domains),
+        )
+        row = {
+            "title": candidate.get("title") or "",
+            "publisher": candidate.get("publisher") or "",
+            "publisher_domain": candidate.get("publisher_domain") or candidate_domain or "",
+            "url": normalized_url,
+            "normalized_url": normalized_url,
+            "discovered_query": candidate.get("discovered_queries", [candidate.get("discovered_query") or ""])[0] or "",
+            "discovered_queries": candidate.get("discovered_queries") or [],
+            "discovered_at": candidate.get("discovered_at") or discovered_at,
+            "published_at": candidate.get("published_at") or "",
+            "summary_or_snippet": candidate.get("summary_or_snippet") or "",
+            "known_status": str(candidate.get("known_status") or "unknown_domain_new_article"),
+            "score": classification["score"],
+            "reason": classification["reason"],
+            "classification": classification["classification"],
+        }
+        candidates.append(row)
+    candidates.sort(key=lambda row: (row["classification"], -int(row["score"] or 0), str(row["title"] or ""), str(row["url"] or "")))
+    grouped_by_class = {
+        "likely_qualifying": [row for row in candidates if row["classification"] == "likely_qualifying"],
+        "needs_review": [row for row in candidates if row["classification"] == "needs_review"],
+        "likely_resource_only": [row for row in candidates if row["classification"] == "likely_resource_only"],
+        "duplicate_or_known": [row for row in candidates if row["classification"] == "duplicate_or_known"],
+    }
+    report_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / edition_date
+    report_dir.mkdir(parents=True, exist_ok=True)
+    report_json_path = report_dir / "discovery_gap_report.json"
+    report_md_path = report_dir / "discovery_gap_report.md"
+    report = {
+        "date": edition_date,
+        "generated_at": discovered_at,
+        "query_source": "google_news_rss",
+        "query_count": len(query_terms),
+        "queries": query_terms,
+        "exclude_domains": sorted(exclude_domains),
+        "candidate_count": len(candidates),
+        "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
+        "needs_review_count": len(grouped_by_class["needs_review"]),
+        "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
+        "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
+        "query_errors": query_errors,
+        "candidates": candidates,
+        "summary": {
+            "candidates_reviewed": len(candidates),
+            "likely_qualifying": len(grouped_by_class["likely_qualifying"]),
+            "needs_review": len(grouped_by_class["needs_review"]),
+            "already_known": len(grouped_by_class["duplicate_or_known"]),
+            "likely_resource_only": len(grouped_by_class["likely_resource_only"]),
+        },
+    }
+    _write_json_object(report_json_path, report)
+    md_lines = [
+        f"# Food Line Discovery Gap Check — {edition_date}",
+        "",
+        "## Likely qualifying candidates",
+        "",
+        _gap_markdown_table(grouped_by_class["likely_qualifying"]),
+        "",
+        "## Needs review",
+        "",
+        _gap_markdown_table(grouped_by_class["needs_review"]),
+        "",
+        "## Likely resource-only",
+        "",
+        _gap_markdown_table(grouped_by_class["likely_resource_only"]),
+        "",
+        "## Duplicate or already known",
+        "",
+        _gap_markdown_table(grouped_by_class["duplicate_or_known"]),
+        "",
+        "## Summary",
+        f"- candidates reviewed: {len(candidates)}",
+        f"- likely qualifying: {len(grouped_by_class['likely_qualifying'])}",
+        f"- needs review: {len(grouped_by_class['needs_review'])}",
+        f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
+        f"- likely resource-only: {len(grouped_by_class['likely_resource_only'])}",
+    ]
+    report_md_path.write_text("\n".join(md_lines).strip() + "\n", encoding="utf-8")
+    summary = {
+        "ok": True,
+        "date": edition_date,
+        "candidate_count": len(candidates),
+        "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
+        "needs_review_count": len(grouped_by_class["needs_review"]),
+        "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
+        "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
+        "report_path": str(report_json_path),
+        "report_markdown_path": str(report_md_path),
+        "query_errors": query_errors,
+        "queries": query_terms,
+        "query_source": "google_news_rss",
+        "published_pages": False,
+        "bluesky_posted": False,
+    }
+    print(json.dumps(summary, indent=2))
+    return summary
 
 
 def _expand_queries(queries: list[dict[str, Any]], states: list[str]) -> list[dict[str, Any]]:
@@ -1645,7 +2138,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--skip-archived", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--write-candidates", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--gap-check", action="store_true", help="Run the Food Line discovery gap diagnostic only.")
     args = parser.parse_args(argv)
+    if args.gap_check:
+        result = run_food_line_discovery_gap_check(
+            ROOT,
+            args.date,
+            max_results_per_query=args.max_results_per_query,
+        )
+        return 0 if result.get("ok") else 1
     states = [state.strip().upper() for state in args.states.split(",") if state.strip()]
     families = [family.strip() for family in args.families.split(",") if family.strip()]
     exclude_families = [family.strip() for family in args.exclude_families.split(",") if family.strip()]

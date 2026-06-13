@@ -106,7 +106,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": true,
     "primary_eligible": true,
-    "primary_disqualification_reason": ""
+    "primary_disqualification_reason": "",
+    "claim_supported": "St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January. Summer school-meal gaps and SNAP/USDA pressure are adding strain in Roanoke, VA",
+    "limitations": "The source documents pantry demand and supply strain in Roanoke, VA, but it does not isolate all causes of the shortage.",
+    "included": true,
+    "exclusion_reason": ""
   },
   {
     "source_record_id": "kold-tucson-food-bank-sees-surge-visitors-inflation-rises-20260610",
@@ -211,7 +215,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": true,
     "primary_eligible": true,
-    "primary_disqualification_reason": ""
+    "primary_disqualification_reason": "",
+    "claim_supported": "Catholic Community Services' Tucson food bank saw rising demand from first-time visitors. Supplies were running out more regularly, and some visitors could not get food because lines were too long or supplies were nearly gone in Tucson, AZ",
+    "limitations": "The source documents pantry demand and supply strain in Tucson, AZ, but it does not isolate all causes of the shortage.",
+    "included": true,
+    "exclusion_reason": ""
   },
   {
     "source_record_id": "food-line-auto-cf0a04e90027d7c6",
@@ -310,7 +318,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "insufficient specific pressure evidence"
+    "primary_disqualification_reason": "insufficient specific pressure evidence",
+    "claim_supported": "USDA FNS reported context only in United States",
+    "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+    "included": false,
+    "exclusion_reason": "background reference"
   },
   {
     "source_record_id": "food-line-auto-0a6971fe2afe00bb",
@@ -406,7 +418,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "insufficient specific pressure evidence"
+    "primary_disqualification_reason": "insufficient specific pressure evidence",
+    "claim_supported": "Food security means access by all people at all times to enough food for an active, healthy life. ERS presents trends, statistics, and charts related to food security, along with definitions, background, key publications, and resources in United States",
+    "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+    "included": false,
+    "exclusion_reason": "background reference"
   },
   {
     "source_record_id": "food-line-auto-6833f0ff7b903066",
@@ -510,7 +526,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": true,
     "primary_eligible": false,
-    "primary_disqualification_reason": "insufficient specific pressure evidence"
+    "primary_disqualification_reason": "insufficient specific pressure evidence",
+    "claim_supported": "SNAP, formerly known as food stamps, provides food assistance to eligible low-income Pennsylvanians, offering EBT Cards to purchase fresh, healthy foods. Check your eligibility and apply online",
+    "limitations": "The source describes conditions in Pennsylvania, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "background reference"
   },
   {
     "source_record_id": "food-line-auto-8e0ce4668b9ad388",
@@ -620,7 +640,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": true,
     "primary_eligible": false,
-    "primary_disqualification_reason": "insufficient specific pressure evidence"
+    "primary_disqualification_reason": "insufficient specific pressure evidence",
+    "claim_supported": "SNAP provides food benefits to low-income families to supplement their grocery budget so they can afford nutritious food in Mississippi",
+    "limitations": "The source describes conditions in Mississippi, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "background reference"
   },
   {
     "source_record_id": "food-line-auto-418880e754e57c06",
@@ -720,7 +744,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "insufficient specific pressure evidence"
+    "primary_disqualification_reason": "insufficient specific pressure evidence",
+    "claim_supported": "USDA FNS reported context only in United States, affecting disaster-affected households",
+    "limitations": "The source supports a local food-pressure claim, but it does not measure total unmet need.",
+    "included": false,
+    "exclusion_reason": "background reference"
   },
   {
     "source_record_id": "food-line-auto-6effc522ae28d822",
@@ -770,7 +798,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2025-04-01 is 436 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "Local banks are already struggling to meet demand, and federal cuts could mean empty shelves for the 1 in 4 Washingtonians who visited one last year",
+    "limitations": "The source describes conditions in Washington, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2025-04-01 is 436 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "current_monitoring",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-2d1ac8ec36bd1678",
@@ -867,7 +902,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "During a Texas House Public Education Committee hearing Monday, school officials, educators and parents told legislators that the funding increase that came from HB2 has not been enough to save districts from cutting positions in Austin",
+    "limitations": "The source describes conditions in Austin, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-33ac84b4b97d6dac",
@@ -964,7 +1003,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "Gerardo Reyes, who spent more than two months in detention, was reunited with his family Monday night in Austin",
+    "limitations": "The source describes conditions in Austin, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-caffe71b3d391158",
@@ -1061,7 +1104,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "A few years ago, Army veteran David Karp was surprised to discover that not only did he love crochet and knitting, but that it also helped soothe his PTSD in Austin",
+    "limitations": "The source describes conditions in Austin, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-ad5e20f9358ace0f",
@@ -1160,7 +1207,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "A new report shows Texas leading the country in its rate of uninsured children under 6 in Austin",
+    "limitations": "The source describes conditions in Austin, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-cb89664d60edab52",
@@ -1257,7 +1308,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "KUT News is strengthening its local journalism team with several key hires and promotions that expand the newsroom\u2019s capacity for investigative reporting, breaking news and community-focused coverage in Austin",
+    "limitations": "The source describes conditions in Austin, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-c531de22a923a8d8",
@@ -1311,7 +1366,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2025-10-29 is 225 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "Michael Close, Chief Operating Officer at Swan Food Pantry, has seen a 17% increase the past three weeks in people asking for food assistance in East Texas, TX",
+    "limitations": "The source describes conditions in East Texas, TX, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2025-10-29 is 225 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "policy_context",
+    "freshness_role": "current_monitoring",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-83b9057d2692702f",
@@ -1408,7 +1470,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "Scientists have discovered two new rings around Uranus, including one composed of water ice, adding to our understanding of the planets unusual structure in Idaho",
+    "limitations": "The source describes conditions in Idaho, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-6d60890f028eb8b0",
@@ -1505,7 +1571,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "What was it like growing up with Batman as your dad? Adam West's daughter shares personal stories and previews a new exhibit honoring the actors remarkable life in Idaho",
+    "limitations": "The source describes conditions in Idaho, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-38586f1e003c588a",
@@ -1602,7 +1672,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "When a struggling single mom lands at a delightfully strange hotel packed with fairies, gargoyles and charm her life takes a magical turn! in Idaho",
+    "limitations": "The source describes conditions in Idaho, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-8a0e3577f2ee46b1",
@@ -1699,7 +1773,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "A new partnership in Canyon County is equipping EMS crews with blood in ambulances so they can start life-saving transfusions before patients reach the hospital in Idaho",
+    "limitations": "The source describes conditions in Idaho, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-93ce312aa86969d2",
@@ -1799,7 +1877,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "Idaho Public Television is commemorating the 50th anniversary of the Teton Dam failure with a new program that takes a look at the disaster through personal accounts and discussion of its long-term impacts",
+    "limitations": "The source describes conditions in Idaho, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-1da7af8594b8b86d",
@@ -1848,7 +1930,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "June 1-7 is CPR and AED Awareness Week in San Diego County",
+    "limitations": "The source describes conditions in San Diego County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "fresh_daily_signal",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-20cd2b8f75d16cb7",
@@ -1897,7 +1986,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "The U.S. International Boundary and Water Commission said the line has ruptured twice over the past two weeks in San Diego County",
+    "limitations": "The source describes conditions in San Diego County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "fresh_daily_signal",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-503ea9e5508a3256",
@@ -1946,7 +2042,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "Federal rules require many adults ages 18 to 64 receiving CalFresh to show they worked, volunteered or attended job training at least 80 hours a month starting June 1 in San Diego County",
+    "limitations": "The source describes conditions in San Diego County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "fresh_daily_signal",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-034f1eda7360afe1",
@@ -1995,7 +2098,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "The ferry is a long-awaited, scenic way to travel between downtown San Diego and Chula Vista in San Diego County",
+    "limitations": "The source describes conditions in San Diego County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "fresh_daily_signal",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-7b84dd4d17d68194",
@@ -2044,7 +2154,14 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "There are more than 800,000 dogs living across San Diego County, according to the U.S. Census and American Veterinary Medical Association estimates. But along with the rising cost of housing, food, and health care, pet care is becoming another growing expense for local families",
+    "limitations": "The source describes conditions in San Diego County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2026-06-01 is 10 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "map_signal",
+    "freshness_role": "fresh_daily_signal",
+    "evidence_level": "background context"
   },
   {
     "source_record_id": "food-line-auto-336448f8d800690e",
@@ -2143,7 +2260,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "The future of Palm Beach County\u2019s public transportation system Palm Tran is hanging in the balance, with voters set to decide on property taxes this November",
+    "limitations": "The source describes conditions in Palm Beach County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-b076636b4e1cc0b1",
@@ -2242,7 +2363,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "Florida voters will decide the future of a major property-tax overhaul this November. That's after lawmakers approved a proposed constitutional amendment expanding homestead exemptions and placing new limits on local property taxes in Palm Beach County",
+    "limitations": "The source describes conditions in Palm Beach County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-021550004edbbf76",
@@ -2341,7 +2466,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "E'tesia Forbes of Glade Central Community High School sprinted to her second straight state title in the 100-meter dash, while Pahokee High School's Jamaria Richardson captured gold in the 400-meter in Palm Beach County",
+    "limitations": "The source describes conditions in Palm Beach County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-95bff8b25ccaf92b",
@@ -2440,7 +2569,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "Lake Worth Beach is poised to become the latest municipality in Palm Beach County to adopt new regulations aimed at addressing concerns over electric bikes and other micromobility devices",
+    "limitations": "The source describes conditions in Palm Beach County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-c6a40b8d0c11c801",
@@ -2539,7 +2672,11 @@
     "source_freshness_date_basis": "published_at",
     "source_public_story_eligible": false,
     "primary_eligible": false,
-    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
+    "primary_disqualification_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window",
+    "claim_supported": "More than 40 local, state, and federal agencies will be on-site at the Lake Worth campus offering on-the-spot interviews and information on paid training programs in Palm Beach County",
+    "limitations": "The source describes conditions in Palm Beach County, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "published_at date 2026-06-02 is 9 days before edition 2026-06-11, outside the 3-day window"
   },
   {
     "source_record_id": "food-line-auto-9013087c4ebc5f32",
@@ -2589,6 +2726,13 @@
     "freshness_status": "stale_outside_daily_window",
     "freshness_disqualification_reason": "url_path date 2025-10-28 is 226 days before edition 2026-06-11, outside the 3-day window",
     "primary_eligible": false,
-    "primary_disqualification_reason": "not a pressure signal"
+    "primary_disqualification_reason": "not a pressure signal",
+    "claim_supported": "The need for food assistance was already growing before the shutdown according to local food assistance organizations in Toledo",
+    "limitations": "The source describes conditions in Toledo, but it does not prove a broader regional trend.",
+    "included": false,
+    "exclusion_reason": "url_path date 2025-10-28 is 226 days before edition 2026-06-11, outside the 3-day window",
+    "source_role": "policy_context",
+    "freshness_role": "current_monitoring",
+    "evidence_level": "background context"
   }
 ]

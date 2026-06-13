@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-11",
-  "generated_at": "2026-06-12T22:25:32.303039+00:00",
+  "generated_at": "2026-06-13T02:34:37.821338+00:00",
   "source_count": 30,
   "story_count": 1,
   "source_adequacy": {
@@ -29,6 +29,13 @@
   "public_rendered": true,
   "public_signal_count": 2,
   "qualified_primary_count": 1,
+  "claim_count": 2,
+  "claim_ledger_path": "/food-line/editions/2026-06-11/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-06-11/source_table.html",
+  "qualified_source_count": 2,
+  "excluded_source_count": 28,
+  "correction_status": "none",
+  "validation_status": "ok",
   "future_date_blocked": false,
   "future_date_override_used": false,
   "edition_mode": "current_update",
@@ -184,6 +191,6 @@
   ],
   "food_line_publish_blocked_reason": "",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/",
-  "bluesky_post_text": "Food Line Dispatch, June 11, 2026: WSLS reported that why Roanoke's St. Francis House was facing its tightest food shortage ever this summer in Roanoke, VA. https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/",
+  "bluesky_post_text": "Food Line Dispatch, June 11, 2026: WSLS reported that St. Francis House had empty shelves in May. The June USDA delivery was smaller than May's, and the pantry is down 64% compared with January... Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/",
   "bluesky_post_ready": true
 }

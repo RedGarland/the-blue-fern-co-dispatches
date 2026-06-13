@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-10",
-  "generated_at": "2026-06-12T20:33:04.646711+00:00",
+  "generated_at": "2026-06-13T02:34:32.354655+00:00",
   "source_count": 29,
   "story_count": 1,
   "source_adequacy": {
@@ -27,7 +27,15 @@
   "primary_signal_status": "new_primary",
   "primary_disqualification_reason": "",
   "public_rendered": true,
+  "public_signal_count": 1,
   "qualified_primary_count": 1,
+  "claim_count": 1,
+  "claim_ledger_path": "/food-line/editions/2026-06-10/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-06-10/source_table.html",
+  "qualified_source_count": 1,
+  "excluded_source_count": 28,
+  "correction_status": "none",
+  "validation_status": "ok",
   "future_date_blocked": false,
   "future_date_override_used": false,
   "edition_mode": "current_update",
@@ -177,6 +185,6 @@
   ],
   "food_line_publish_blocked_reason": "",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-10/",
-  "bluesky_post_text": "Food Line Dispatch, June 10, 2026: KTAL / KMSS reported that food Bank of Northwest Louisiana says summer feeding need was tightening inventory. USDA sources provide background on summer nutrition programs and food security. https://dispatches.thebluefernco.com/food-line/editions/2026-06-10/",
+  "bluesky_post_text": "Food Line Dispatch, June 10, 2026: KTAL / KMSS reported that Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly... Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-10/",
   "bluesky_post_ready": true
 }

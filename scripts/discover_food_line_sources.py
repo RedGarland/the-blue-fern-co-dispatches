@@ -8,7 +8,12 @@ import hashlib
 import html
 import json
 import re
+import socket
+import ssl
 import sys
+import time
+from functools import lru_cache
+from http.client import IncompleteRead
 import urllib.parse
 import urllib.error
 import urllib.request
@@ -341,22 +346,565 @@ def _gap_normalize_url(url: str) -> str:
     return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path.rstrip("/"), cleaned_query, ""))
 
 
-def _gap_resolve_article_url(url: str) -> str:
+def _gap_extract_article_url_candidates(text: str) -> list[str]:
+    if not text:
+        return []
+    patterns = (
+        r'<link\b[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*property=["\']og:url["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*name=["\']twitter:url["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*property=["\']article:url["\'][^>]*content=["\']([^"\']+)["\']',
+    )
+    candidates: list[str] = []
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            url = _gap_normalize_url(html.unescape(match.group(1)))
+            if url and url not in candidates:
+                candidates.append(url)
+    for match in re.finditer(r"https?://[^\s\"'<>]+", text, re.IGNORECASE):
+        url = _gap_normalize_url(html.unescape(match.group(0)))
+        if url and url not in candidates:
+            candidates.append(url)
+    return candidates
+
+
+def _gap_title_terms(text: str) -> list[str]:
+    stopwords = {
+        "about",
+        "after",
+        "amid",
+        "before",
+        "during",
+        "from",
+        "into",
+        "that",
+        "this",
+        "these",
+        "those",
+        "with",
+        "without",
+        "more",
+        "than",
+        "over",
+        "under",
+        "again",
+        "still",
+        "while",
+        "where",
+        "when",
+        "what",
+        "why",
+        "how",
+        "food",
+        "bank",
+        "pantry",
+        "news",
+        "report",
+        "reports",
+        "said",
+    }
+    terms: list[str] = []
+    for token in re.findall(r"[a-z0-9]+", text.lower()):
+        if len(token) < 4 or token in stopwords:
+            continue
+        if token not in terms:
+            terms.append(token)
+    return terms
+
+
+def _gap_relevance_terms(text: str) -> list[str]:
+    stopwords = {
+        "about",
+        "after",
+        "again",
+        "amid",
+        "area",
+        "bank",
+        "before",
+        "between",
+        "children",
+        "county",
+        "counties",
+        "could",
+        "data",
+        "during",
+        "families",
+        "family",
+        "food",
+        "from",
+        "gives",
+        "going",
+        "have",
+        "higher",
+        "hours",
+        "into",
+        "just",
+        "last",
+        "local",
+        "lower",
+        "meet",
+        "meets",
+        "meeting",
+        "more",
+        "news",
+        "pantry",
+        "report",
+        "reports",
+        "said",
+        "say",
+        "says",
+        "shortage",
+        "still",
+        "struggle",
+        "struggles",
+        "struggling",
+        "that",
+        "their",
+        "these",
+        "those",
+        "this",
+        "through",
+        "today",
+        "under",
+        "until",
+        "visit",
+        "visits",
+        "what",
+        "when",
+        "where",
+        "while",
+        "with",
+        "without",
+        "would",
+        "year",
+        "yesterday",
+        "york",
+        "your",
+        "demand",
+        "rising",
+        "rise",
+        "rises",
+        "rose",
+        "low",
+        "new",
+        "high",
+        "highs",
+        "push",
+        "pushing",
+    }
+    terms: list[str] = []
+    for token in re.findall(r"[a-z0-9]+", text.lower()):
+        if len(token) < 4 or token in stopwords:
+            continue
+        if token not in terms:
+            terms.append(token)
+    return terms
+
+
+def _gap_extract_page_title(text: str) -> str:
+    if not text:
+        return ""
+    patterns = (
+        r"<title\b[^>]*>(.*?)</title>",
+        r'<meta\b[^>]*property=["\']og:title["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*name=["\']twitter:title["\'][^>]*content=["\']([^"\']+)["\']',
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
+        if match:
+            value = _normalize_source_text(html.unescape(match.group(1)))
+            if value:
+                return value
+    return ""
+
+
+def _gap_url_terms(url: str) -> list[str]:
+    path = urllib.parse.urlsplit(_gap_normalize_url(url)).path.lower()
+    terms: list[str] = []
+    for token in re.findall(r"[a-z0-9]+", path):
+        if len(token) < 4:
+            continue
+        if token not in terms:
+            terms.append(token)
+    return terms
+
+
+def _gap_resolved_url_relevance(url: str, *, title: str = "", summary: str = "", body: str = "") -> tuple[bool, str]:
+    expected_terms = _gap_relevance_terms(" ".join(part for part in (title, summary, _gap_extract_page_title(body)) if part))
+    if not expected_terms:
+        return False, "insufficient title terms for relevance check"
+    url_terms = _gap_url_terms(url)
+    overlap = [term for term in expected_terms if term in url_terms]
+    if overlap:
+        return True, ""
+    return False, f"no meaningful overlap between title terms and resolved URL: {', '.join(expected_terms[:4])}"
+
+
+def _gap_new_resolver_state(
+    *,
+    max_candidates: int | None,
+    timeout_seconds: int,
+    skip_sitemap_fallback: bool,
+    max_sitemap_lookups_per_domain: int,
+    max_sitemap_urls_per_domain: int,
+) -> dict[str, Any]:
+    return {
+        "max_candidates": max_candidates,
+        "timeout_seconds": timeout_seconds,
+        "skip_sitemap_fallback": skip_sitemap_fallback,
+        "max_sitemap_lookups_per_domain": max_sitemap_lookups_per_domain,
+        "max_sitemap_urls_per_domain": max_sitemap_urls_per_domain,
+        "resolution_cache": {},
+        "resolution_cache_hit_count": 0,
+        "sitemap_cache": {},
+        "sitemap_lookup_counts": {},
+        "sitemap_lookup_count": 0,
+        "sitemap_cache_hit_count": 0,
+        "resolved_url_count": 0,
+        "unresolved_url_count": 0,
+        "rejected_unrelated_resolved_url_count": 0,
+        "url_resolution_timeout_count": 0,
+        "resolution_attempt_count": 0,
+    }
+
+
+@lru_cache(maxsize=512)
+def _gap_fetch_url_text(url: str, *, timeout_seconds: int = 20) -> str:
     value = _gap_normalize_url(url)
     if not value:
         return ""
+    try:
+        req = urllib.request.Request(
+            value,
+            headers={
+                "User-Agent": "Mozilla/5.0",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+                "Referer": "https://news.google.com/",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=timeout_seconds, context=ssl._create_unverified_context()) as resp:  # noqa: S310
+            chunks: list[bytes] = []
+            while True:
+                try:
+                    chunk = resp.read(8192)
+                except IncompleteRead as exc:  # noqa: PERF203
+                    if exc.partial:
+                        chunks.append(bytes(exc.partial))
+                    break
+                if not chunk:
+                    break
+                chunks.append(chunk)
+            return b"".join(chunks).decode("utf-8", errors="replace")
+    except IncompleteRead as exc:  # noqa: PERF203
+        try:
+            return bytes(exc.partial).decode("utf-8", errors="replace")
+        except Exception:  # noqa: BLE001
+            return ""
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _gap_extract_sitemap_urls(payload: str) -> list[str]:
+    urls: list[str] = []
+    for match in re.finditer(r"<loc>\s*([^<\s]+)\s*</loc>", payload, re.IGNORECASE):
+        url = _gap_normalize_url(html.unescape(match.group(1)))
+        if url and url not in urls:
+            urls.append(url)
+    return urls
+
+
+def _gap_score_sitemap_candidate_url(url: str, *, title_terms: list[str], summary_terms: list[str]) -> int:
+    lowered = url.lower()
+    path = urllib.parse.urlsplit(url).path.lower()
+    score = 0
+    if len([part for part in path.split("/") if part]) >= 2:
+        score += 1
+    for term in title_terms:
+        if term in lowered:
+            score += 3
+    for term in summary_terms:
+        if term in lowered:
+            score += 1
+    if any(term in lowered for term in ("food insecurity", "food bank", "food pantry", "snap", "wic", "demand", "shortage", "fuel", "cost", "inflation", "children", "families")):
+        score += 2
+    if re.search(r"/20\d{2}[-/]\d{2}[-/]\d{2}/", path) or re.search(r"/\d{4}/\d{2}/\d{2}/", path):
+        score += 2
+    return score
+
+
+def _gap_collect_sitemap_urls(
+    origin: str,
+    *,
+    resolver_state: dict[str, Any] | None = None,
+    timeout_seconds: int = 20,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+) -> tuple[str, ...]:
+    if not origin:
+        return ()
+    cache_key = origin.rstrip("/")
+    state = resolver_state if resolver_state is not None else {}
+    sitemap_cache = state.setdefault("sitemap_cache", {})
+    if cache_key in sitemap_cache:
+        state["sitemap_cache_hit_count"] = int(state.get("sitemap_cache_hit_count") or 0) + 1
+        return tuple(sitemap_cache[cache_key])
+    domain_lookup_counts = state.setdefault("sitemap_lookup_counts", {})
+    lookup_count = int(domain_lookup_counts.get(cache_key) or 0)
+    if lookup_count >= max_sitemap_lookups_per_domain:
+        return ()
+    domain_lookup_counts[cache_key] = lookup_count + 1
+    state["sitemap_lookup_count"] = int(state.get("sitemap_lookup_count") or 0) + 1
+    sitemap_urls = [
+        urllib.parse.urljoin(origin, "/sitemap.xml"),
+        urllib.parse.urljoin(origin, "/sitemap_index.xml"),
+        urllib.parse.urljoin(origin, "/wp-sitemap.xml"),
+        urllib.parse.urljoin(origin, "/news-sitemap.xml"),
+    ]
+    discovered_urls: list[str] = []
+    seen_sitemaps: set[str] = set()
+    for sitemap_url in sitemap_urls:
+        if sitemap_url in seen_sitemaps:
+            continue
+        seen_sitemaps.add(sitemap_url)
+        payload = _gap_fetch_url_text(sitemap_url, timeout_seconds=timeout_seconds)
+        if not payload:
+            continue
+        locs = _gap_extract_sitemap_urls(payload)
+        if not locs:
+            continue
+        if max_sitemap_urls_per_domain > 0:
+            locs = locs[:max_sitemap_urls_per_domain]
+        if "<sitemapindex" in payload.lower():
+            for nested_url in locs[:20]:
+                if nested_url in seen_sitemaps:
+                    continue
+                seen_sitemaps.add(nested_url)
+                if max_sitemap_urls_per_domain > 0 and len(discovered_urls) >= max_sitemap_urls_per_domain:
+                    break
+                nested_payload = _gap_fetch_url_text(nested_url, timeout_seconds=timeout_seconds)
+                if nested_payload:
+                    discovered_urls.extend(_gap_extract_sitemap_urls(nested_payload)[:max_sitemap_urls_per_domain])
+                if max_sitemap_urls_per_domain > 0 and len(discovered_urls) >= max_sitemap_urls_per_domain:
+                    break
+        else:
+            discovered_urls.extend(locs)
+        if max_sitemap_urls_per_domain > 0 and len(discovered_urls) >= max_sitemap_urls_per_domain:
+            discovered_urls = discovered_urls[:max_sitemap_urls_per_domain]
+            break
+    sitemap_cache[cache_key] = tuple(discovered_urls)
+    return tuple(discovered_urls)
+
+
+def _gap_resolve_publisher_sitemap_url(
+    source_url: str,
+    *,
+    title: str = "",
+    summary: str = "",
+    resolver_state: dict[str, Any] | None = None,
+    timeout_seconds: int = 20,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+) -> str:
+    base = _gap_normalize_url(source_url)
+    if not base:
+        return ""
+    parsed = urllib.parse.urlsplit(base)
+    if not parsed.scheme or not parsed.netloc:
+        return ""
+    origin = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, "", "", ""))
+    discovered_urls = _gap_collect_sitemap_urls(
+        origin,
+        resolver_state=resolver_state,
+        timeout_seconds=timeout_seconds,
+        max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+        max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+    )
+    if not discovered_urls:
+        return ""
+    title_terms = _gap_title_terms(title)
+    summary_terms = _gap_title_terms(summary)
+    best_url = ""
+    best_score = 0
+    for url in discovered_urls:
+        if not _gap_is_plausible_article_url(url, seed_url=base):
+            continue
+        score = _gap_score_sitemap_candidate_url(url, title_terms=title_terms, summary_terms=summary_terms)
+        if score > best_score:
+            best_url = url
+            best_score = score
+    return best_url
+
+
+def _gap_pick_best_article_url(urls: list[str], *, seed_url: str = "") -> str:
+    best_url = ""
+    best_score = -1
+    for url in urls:
+        if not _gap_is_plausible_article_url(url, seed_url=seed_url):
+            continue
+        if "news.google.com" in url.lower():
+            continue
+        score = 0
+        path = urllib.parse.urlsplit(url).path.lower()
+        lowered = url.lower()
+        if re.search(r"/20\d{2}[-/]\d{2}[-/]\d{2}/", path):
+            score += 20
+        if re.search(r"/regional-news/20\d{2}-\d{2}-\d{2}/", path):
+            score += 20
+        if re.search(r"/\d{4}/\d{2}/\d{2}/", path):
+            score += 18
+        if any(term in lowered for term in ("food bank", "food pantry", "snap", "wic", "food insecurity", "food assistance", "demand", "need", "inflation", "federal cuts", "fuel costs", "shortage")):
+            score += 8
+        if score > best_score:
+            best_url = url
+            best_score = score
+    return best_url
+
+
+def _gap_is_plausible_article_url(url: str, *, seed_url: str = "") -> bool:
+    url = _gap_normalize_url(url)
+    if not url.startswith(("http://", "https://")):
+        return False
+    parsed = urllib.parse.urlsplit(url)
+    path = parsed.path.rstrip("/")
+    if not path:
+        return False
+    lowered = f"{url.lower()} {parsed.netloc.lower()}"
+    if any(
+        token in lowered
+        for token in (
+            "#comment",
+            "/tag/",
+            "/category/",
+            "/author/",
+            "/search?",
+            "/feed",
+            "/rss",
+            "/atom",
+            "javascript:",
+            "mailto:",
+            "/wp-json/",
+            "google.com",
+            "gstatic.com",
+            "ytimg.com",
+            "doubleclick.net",
+            "googletagmanager.com",
+            "googleusercontent.com",
+        )
+    ):
+        return False
+    if re.search(r"\.(?:png|jpe?g|gif|svg|webp|ico|css|js|json|xml)(?:$|\?)", path, re.IGNORECASE):
+        return False
+    if url.rstrip("/") == str(seed_url or "").strip().rstrip("/"):
+        return False
+    if _is_article_like_url(url, seed_url=seed_url):
+        return True
+    path_parts = [part for part in path.split("/") if part]
+    if len(path_parts) >= 2:
+        return True
+    return bool(re.search(r"\b(news|story|article|post|briefing|update)\b", lowered))
+
+
+def _gap_resolve_google_news_url(
+    url: str,
+    *,
+    title: str = "",
+    summary: str = "",
+    source_url: str = "",
+    resolver_state: dict[str, Any] | None = None,
+    timeout_seconds: int = 15,
+    skip_sitemap_fallback: bool = False,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+) -> tuple[str, str, str]:
+    value = _gap_normalize_url(url)
+    if not value:
+        return "", "empty_url", "empty url"
+    state = resolver_state if resolver_state is not None else {}
+    cache_key = value
+    cache = state.setdefault("resolution_cache", {})
+    if cache_key in cache:
+        resolved_url, status, reason = cache[cache_key]
+        state["resolution_cache_hit_count"] = int(state.get("resolution_cache_hit_count") or 0) + 1
+        return resolved_url, status, reason
     parsed = urllib.parse.urlsplit(value)
     if parsed.netloc.lower() not in {"news.google.com", "www.news.google.com"} and "news.google.com" not in value.lower():
-        return value
+        result = (value, "direct_article_url", "")
+        cache[cache_key] = result
+        return result
+    resolved = ""
+    body = ""
     try:
         req = urllib.request.Request(value, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=15) as resp:  # noqa: S310
+        with urllib.request.urlopen(req, timeout=timeout_seconds, context=ssl._create_unverified_context()) as resp:  # noqa: S310
             final_url = _gap_normalize_url(resp.geturl())
+            if final_url and _gap_is_plausible_article_url(final_url, seed_url=value):
+                relevant, reason = _gap_resolved_url_relevance(final_url, title=title, summary=summary)
+                if relevant:
+                    result = (final_url, "resolved_google_news_url", "")
+                    cache[cache_key] = result
+                    return result
+                result = ("", "rejected_unrelated_resolved_url", reason)
+                cache[cache_key] = result
+                return result
+            try:
+                body = resp.read(200_000).decode("utf-8", errors="replace")
+            except Exception:  # noqa: BLE001
+                body = ""
+    except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
+        reason = str(exc).strip() or "resolver timed out"
+        result = ("", "url_resolution_timeout", reason)
+        cache[cache_key] = result
+        return result
     except Exception:  # noqa: BLE001
         final_url = ""
-    if final_url and _is_article_like_url(final_url, seed_url=value):
-        return final_url
-    return value
+    if body:
+        resolved = _gap_pick_best_article_url(_gap_extract_article_url_candidates(body), seed_url=value)
+        if resolved:
+            relevant, reason = _gap_resolved_url_relevance(resolved, title=title, summary=summary, body=body)
+            if relevant:
+                result = (resolved, "resolved_google_news_url", "")
+                cache[cache_key] = result
+                return result
+            result = ("", "rejected_unrelated_resolved_url", reason)
+            cache[cache_key] = result
+            return result
+    if final_url and _gap_is_plausible_article_url(final_url, seed_url=value):
+        relevant, reason = _gap_resolved_url_relevance(final_url, title=title, summary=summary, body=body)
+        if relevant:
+            result = (final_url, "resolved_google_news_url", "")
+            cache[cache_key] = result
+            return result
+        result = ("", "rejected_unrelated_resolved_url", reason)
+        cache[cache_key] = result
+        return result
+    if skip_sitemap_fallback:
+        result = ("", "unresolved_google_news_url", "sitemap fallback disabled")
+        cache[cache_key] = result
+        return result
+    sitemap_url = _gap_resolve_publisher_sitemap_url(
+        source_url or value,
+        title=title,
+        summary=summary,
+        resolver_state=resolver_state,
+        timeout_seconds=timeout_seconds,
+        max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+        max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+    )
+    if sitemap_url:
+        relevant, reason = _gap_resolved_url_relevance(sitemap_url, title=title, summary=summary)
+        if relevant:
+            result = (sitemap_url, "resolved_publisher_sitemap_url", "")
+            cache[cache_key] = result
+            return result
+        result = ("", "rejected_unrelated_resolved_url", reason)
+        cache[cache_key] = result
+        return result
+    result = ("", "unresolved_google_news_url", "no acceptable article URL found")
+    cache[cache_key] = result
+    return result
 
 
 def _gap_direct_pressure_hits(text: str) -> list[str]:
@@ -366,6 +914,7 @@ def _gap_direct_pressure_hits(text: str) -> list[str]:
         (r"\bempty shelves\b", "empty shelves"),
         (r"\bshelves are bare\b", "shelves are bare"),
         (r"\brecord demand\b", "record demand"),
+        (r"\brecord number of visits\b", "record number of visits"),
         (r"\bdemand is rising\b", "demand is rising"),
         (r"\brising demand\b", "rising demand"),
         (r"\bdemand rising\b", "demand rising"),
@@ -373,6 +922,9 @@ def _gap_direct_pressure_hits(text: str) -> list[str]:
         (r"\bdemand surges\b", "demand surges"),
         (r"\bsurge in demand\b", "surge in demand"),
         (r"\bhigher demand\b", "higher demand"),
+        (r"\brising fuel prices put further strain\b", "rising fuel prices put further strain"),
+        (r"\bfuel prices? (?:are|is) hitting .*?food bank hard\b", "fuel prices hitting food bank hard"),
+        (r"\balready reeling from federal cuts\b", "already reeling from federal cuts"),
         (r"\blow inventory\b", "low inventory"),
         (r"\bcritical shortage\b", "critical shortage"),
         (r"\btemporarily closes?\b", "temporarily closes"),
@@ -429,13 +981,23 @@ def _gap_parse_published_at(value: str) -> str:
     return raw
 
 
-def _gap_parse_rss_items(payload: bytes) -> list[dict[str, str]]:
+def _gap_parse_rss_items(
+    payload: bytes,
+    *,
+    resolver_state: dict[str, Any] | None = None,
+    resolver_timeout_seconds: int = 15,
+    skip_sitemap_fallback: bool = False,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+) -> list[dict[str, str]]:
     text = INVALID_XML_ENTITY_RE.sub("&amp;", payload.decode("utf-8", errors="replace"))
     root = ET.fromstring(text)
     items = root.findall(".//item")
     if not items:
         items = root.findall(".//{*}item")
     rows: list[dict[str, str]] = []
+    state = resolver_state if resolver_state is not None else {}
+    max_candidates = state.get("max_candidates")
     for item in items:
         source_el = item.find("source")
         if source_el is None:
@@ -448,23 +1010,71 @@ def _gap_parse_rss_items(payload: bytes) -> list[dict[str, str]]:
             if link_el is not None:
                 link = _nonempty(link_el.attrib.get("href"))
         google_news_url = _gap_normalize_url(link)
-        candidate_url = _gap_resolve_article_url(link) or _gap_normalize_url(source_url)
-        if candidate_url and not _is_article_like_url(candidate_url, label=publisher):
-            fallback_url = _gap_normalize_url(source_url)
-            if fallback_url and _is_article_like_url(fallback_url, label=publisher):
-                candidate_url = fallback_url
+        title = _nonempty(item.findtext("title") or "")
+        summary = _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or "")
+        candidate_url = google_news_url or _gap_normalize_url(source_url)
+        resolved_url = ""
+        url_resolution_status = "direct_article_url"
+        url_resolution_reason = ""
+        parsed_link = urllib.parse.urlsplit(google_news_url)
+        is_google_news_url = "news.google.com" in google_news_url.lower() or parsed_link.netloc.lower() in {"news.google.com", "www.news.google.com"}
+        if is_google_news_url:
+            if max_candidates is not None and int(state.get("resolution_attempt_count") or 0) >= int(max_candidates):
+                url_resolution_status = "resolution_skipped_max_candidates"
+                url_resolution_reason = "max candidates reached"
+                state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+            else:
+                state["resolution_attempt_count"] = int(state.get("resolution_attempt_count") or 0) + 1
+                resolved_url, url_resolution_status, url_resolution_reason = _gap_resolve_google_news_url(
+                    link,
+                    title=title,
+                    summary=summary,
+                    source_url=source_url,
+                    resolver_state=state,
+                    timeout_seconds=resolver_timeout_seconds,
+                    skip_sitemap_fallback=skip_sitemap_fallback,
+                    max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+                    max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+                )
+                if url_resolution_status == "resolved_google_news_url":
+                    state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
+                elif url_resolution_status == "resolved_publisher_sitemap_url":
+                    state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
+                elif url_resolution_status == "rejected_unrelated_resolved_url":
+                    state["rejected_unrelated_resolved_url_count"] = int(state.get("rejected_unrelated_resolved_url_count") or 0) + 1
+                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                elif url_resolution_status == "url_resolution_timeout":
+                    state["url_resolution_timeout_count"] = int(state.get("url_resolution_timeout_count") or 0) + 1
+                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                elif url_resolution_status in {"unresolved_google_news_url", "resolution_skipped_max_candidates"}:
+                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+            if resolved_url:
+                candidate_url = resolved_url
+            elif google_news_url:
+                candidate_url = google_news_url
+            else:
+                candidate_url = _gap_normalize_url(source_url)
+        else:
+            candidate_url = candidate_url or _gap_normalize_url(source_url)
         if not candidate_url:
             continue
+        candidate_domain = _gap_domain(candidate_url)
+        publisher_domain = _gap_domain(source_url)
         rows.append(
             {
                 "title": _normalize_source_text(item.findtext("title") or ""),
                 "publisher": publisher,
                 "publisher_url": _gap_normalize_url(source_url),
                 "candidate_url": candidate_url,
+                "resolved_url": resolved_url,
                 "google_news_url": google_news_url,
+                "url_resolution_status": url_resolution_status,
+                "url_resolution_reason": url_resolution_reason,
                 "link_url": google_news_url,
                 "published_at": _gap_parse_published_at(item.findtext("pubDate") or item.findtext("published") or item.findtext("updated") or ""),
                 "summary_or_snippet": _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or ""),
+                "domain": candidate_domain or publisher_domain or publisher,
+                "publisher_domain": publisher_domain or candidate_domain or publisher,
             }
         )
     return rows
@@ -597,8 +1207,8 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
     if not rows:
         return "_None._"
     lines = [
-        "| Title | Publisher/domain | URL | Query | Score | Reason | Known status |",
-        "| --- | --- | --- | --- | ---: | --- | --- |",
+        "| Title | Publisher/domain | URL | URL resolution | Query | Score | Reason | Known status |",
+        "| --- | --- | --- | --- | --- | ---: | --- | --- |",
     ]
     for row in rows:
         publisher = _normalize_source_text(str(row.get("publisher") or "")).replace("|", "\\|")
@@ -606,6 +1216,10 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
         publisher_cell = publisher
         if publisher_domain and publisher_domain.lower() not in publisher.lower():
             publisher_cell = f"{publisher} ({publisher_domain})" if publisher else publisher_domain
+        url_resolution = _normalize_source_text(str(row.get("url_resolution_status") or "")).replace("|", "\\|")
+        url_resolution_reason = _normalize_source_text(str(row.get("url_resolution_reason") or "")).replace("|", "\\|")
+        if url_resolution_reason:
+            url_resolution = f"{url_resolution}: {url_resolution_reason}" if url_resolution else url_resolution_reason
         lines.append(
             "| "
             + " | ".join(
@@ -616,6 +1230,7 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
                 )
                 for field in ("title", "publisher_domain", "url", "discovered_query", "score", "reason", "known_status")
             )
+            .replace(f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | ", f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | {url_resolution} | ")
             + " |"
         )
     return "\n".join(lines)
@@ -669,10 +1284,36 @@ def run_food_line_discovery_gap_check(
     *,
     fetcher: Any | None = None,
     max_results_per_query: int = 10,
+    max_queries: int | None = None,
+    max_candidates: int | None = None,
+    resolver_timeout_seconds: int = 15,
+    skip_sitemap_fallback: bool = False,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+    fast: bool = False,
 ) -> dict[str, Any]:
+    start = time.monotonic()
     edition_date = validate_date(date)
     config = load_food_line_discovery_gap_queries(root)
     query_terms = list(config.get("queries") or [])
+    if max_queries is not None and max_queries >= 0:
+        query_terms = query_terms[:max_queries]
+    if fast:
+        resolver_timeout_seconds = min(resolver_timeout_seconds, 8)
+        skip_sitemap_fallback = True
+        if max_candidates is None:
+            max_candidates = 25
+        if max_queries is None:
+            query_terms = query_terms[:5]
+        max_sitemap_lookups_per_domain = min(max_sitemap_lookups_per_domain, 1)
+        max_sitemap_urls_per_domain = min(max_sitemap_urls_per_domain, 20)
+    resolver_state = _gap_new_resolver_state(
+        max_candidates=max_candidates,
+        timeout_seconds=resolver_timeout_seconds,
+        skip_sitemap_fallback=skip_sitemap_fallback,
+        max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+        max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+    )
     exclude_domains = {str(item).strip().lower() for item in config.get("exclude_domains") or [] if str(item).strip()}
     fetch = resolve_food_line_fetcher(fetcher)
     known = _gap_known_status_sets(root)
@@ -687,7 +1328,14 @@ def run_food_line_discovery_gap_check(
             query_errors.append({"query": query, "url": rss_url, "error": fetch_error or "empty response"})
             continue
         try:
-            rss_items = _gap_parse_rss_items(payload)
+            rss_items = _gap_parse_rss_items(
+                payload,
+                resolver_state=resolver_state,
+                resolver_timeout_seconds=resolver_timeout_seconds,
+                skip_sitemap_fallback=skip_sitemap_fallback,
+                max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+                max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+            )
         except Exception as exc:  # noqa: BLE001
             query_errors.append({"query": query, "url": rss_url, "error": f"{type(exc).__name__}: {exc}"})
             continue
@@ -718,12 +1366,15 @@ def run_food_line_discovery_gap_check(
                 {
                     "title": _nonempty(item.get("title")),
                     "publisher": publisher,
-                    "publisher_domain": _gap_domain(publisher_url or candidate_url) or publisher,
-                    "domain": _gap_domain(publisher_url or candidate_url) or publisher,
+                    "publisher_domain": _gap_domain(publisher_url) or _gap_domain(candidate_url) or publisher,
+                    "domain": _gap_domain(str(item.get("resolved_url") or candidate_url)) or _gap_domain(candidate_url) or publisher,
                     "publisher_url": publisher_url,
-                    "google_news_url": _nonempty(item.get("google_news_url") or item.get("link_url") or ""),
-                    "url": candidate_url,
-                    "normalized_url": normalized_url,
+            "google_news_url": _nonempty(item.get("google_news_url") or item.get("link_url") or ""),
+            "resolved_url": _nonempty(item.get("resolved_url") or ""),
+            "url_resolution_status": _nonempty(item.get("url_resolution_status") or ""),
+            "url_resolution_reason": _nonempty(item.get("url_resolution_reason") or ""),
+            "url": candidate_url,
+            "normalized_url": normalized_url,
                     "discovered_query": query,
                     "discovered_at": discovered_at,
                     "published_at": _nonempty(item.get("published_at")),
@@ -772,6 +1423,9 @@ def run_food_line_discovery_gap_check(
             "url": normalized_url,
             "normalized_url": normalized_url,
             "google_news_url": candidate.get("google_news_url") or "",
+            "resolved_url": candidate.get("resolved_url") or "",
+            "url_resolution_status": candidate.get("url_resolution_status") or "",
+            "url_resolution_reason": candidate.get("url_resolution_reason") or "",
             "discovered_query": candidate.get("discovered_queries", [candidate.get("discovered_query") or ""])[0] or "",
             "discovered_queries": candidate.get("discovered_queries") or [],
             "discovered_at": candidate.get("discovered_at") or discovered_at,
@@ -801,11 +1455,19 @@ def run_food_line_discovery_gap_check(
         "query_count": len(query_terms),
         "queries": query_terms,
         "exclude_domains": sorted(exclude_domains),
+        "query_count": len(query_terms),
         "candidate_count": len(candidates),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
+        "resolved_url_count": int(resolver_state.get("resolved_url_count") or 0),
+        "unresolved_url_count": int(resolver_state.get("unresolved_url_count") or 0),
+        "rejected_unrelated_resolved_url_count": int(resolver_state.get("rejected_unrelated_resolved_url_count") or 0),
+        "url_resolution_timeout_count": int(resolver_state.get("url_resolution_timeout_count") or 0),
+        "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
+        "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
+        "elapsed_seconds": round(time.monotonic() - start, 3),
         "query_errors": query_errors,
         "candidates": candidates,
         "summary": {
@@ -847,7 +1509,15 @@ def run_food_line_discovery_gap_check(
     summary = {
         "ok": True,
         "date": edition_date,
+        "query_count": len(query_terms),
         "candidate_count": len(candidates),
+        "resolved_url_count": int(resolver_state.get("resolved_url_count") or 0),
+        "unresolved_url_count": int(resolver_state.get("unresolved_url_count") or 0),
+        "rejected_unrelated_resolved_url_count": int(resolver_state.get("rejected_unrelated_resolved_url_count") or 0),
+        "url_resolution_timeout_count": int(resolver_state.get("url_resolution_timeout_count") or 0),
+        "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
+        "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
+        "elapsed_seconds": round(time.monotonic() - start, 3),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
@@ -2276,6 +2946,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--date", required=True)
     parser.add_argument("--states", default=",".join(STATES))
     parser.add_argument("--max-results-per-query", type=int, default=10)
+    parser.add_argument("--max-queries", type=int, default=None)
+    parser.add_argument("--max-candidates", type=int, default=None)
+    parser.add_argument("--resolver-timeout-seconds", type=int, default=15)
+    parser.add_argument("--skip-sitemap-fallback", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--fast", action="store_true")
     parser.add_argument("--max-candidates-total", type=int, default=250)
     parser.add_argument("--max-insertions", type=int, default=100)
     parser.add_argument("--families", default="")
@@ -2293,6 +2968,11 @@ def main(argv: list[str] | None = None) -> int:
             ROOT,
             args.date,
             max_results_per_query=args.max_results_per_query,
+            max_queries=args.max_queries,
+            max_candidates=args.max_candidates,
+            resolver_timeout_seconds=args.resolver_timeout_seconds,
+            skip_sitemap_fallback=args.skip_sitemap_fallback,
+            fast=args.fast,
         )
         return 0 if result.get("ok") else 1
     states = [state.strip().upper() for state in args.states.split(",") if state.strip()]

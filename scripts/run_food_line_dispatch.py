@@ -2621,6 +2621,71 @@ def _food_line_public_edition_label(root: Path, date: str) -> str:
     return date
 
 
+def _food_line_discovery_gap_report_paths(root: Path, date: str) -> tuple[Path, Path]:
+    report_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "discovery_gap" / date
+    return report_dir / "discovery_gap_report.json", report_dir / "discovery_gap_report.md"
+
+
+def _food_line_discovery_gap_summary(
+    root: Path,
+    date: str,
+    public_story_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    report_path, report_markdown_path = _food_line_discovery_gap_report_paths(root, date)
+    summary = {
+        "run": False,
+        "report_found": False,
+        "report_path": str(report_path),
+        "report_markdown_path": str(report_markdown_path),
+        "likely_qualifying_count": 0,
+        "unreviewed_likely_qualifying_count": 0,
+        "warning": "",
+    }
+    if not report_path.exists():
+        return summary
+    summary["report_found"] = True
+    try:
+        report = _read_json(report_path)
+    except Exception as exc:  # noqa: BLE001
+        summary["warning"] = f"Food Line discovery gap report could not be read: {exc}"
+        return summary
+    if not isinstance(report, dict):
+        summary["warning"] = "Food Line discovery gap report was not a JSON object."
+        return summary
+    summary["run"] = True
+    candidates = report.get("candidates")
+    if not isinstance(candidates, list):
+        candidates = []
+    likely_rows = [
+        row
+        for row in candidates
+        if isinstance(row, dict) and str(row.get("classification") or "").strip() == "likely_qualifying"
+    ]
+    summary["likely_qualifying_count"] = len(likely_rows)
+    included_urls = {
+        canonical_url(str(row.get("url") or row.get("source_url") or row.get("normalized_url") or ""))
+        for row in public_story_rows
+        if canonical_url(str(row.get("url") or row.get("source_url") or row.get("normalized_url") or ""))
+    }
+    unreviewed_rows = []
+    for row in likely_rows:
+        candidate_url = canonical_url(str(row.get("url") or row.get("source_url") or row.get("normalized_url") or ""))
+        if not candidate_url:
+            continue
+        if candidate_url in included_urls:
+            continue
+        unreviewed_rows.append(row)
+    summary["unreviewed_likely_qualifying_count"] = len(unreviewed_rows)
+    if unreviewed_rows:
+        count = len(unreviewed_rows)
+        summary["warning"] = (
+            f"Food Line discovery gap check found {count} likely qualifying candidate"
+            f"{'s' if count != 1 else ''} not included in this edition."
+            f" See {report_markdown_path}."
+        )
+    return summary
+
+
 def _food_line_map_rendered_marker_count_from_data(map_data: dict[str, Any]) -> int:
     for key in ("rendered_marker_count", "pressure_marker_count"):
         value = map_data.get(key)
@@ -4156,6 +4221,7 @@ def run_food_line_dispatch(
     *,
     collect: bool = False,
     collect_fetcher: Any | None = None,
+    include_discovery_gap_summary: bool = False,
     generate_audio: bool = False,
     require_audio: bool = False,
     force_audio_regenerate: bool = False,
@@ -4349,6 +4415,19 @@ def run_food_line_dispatch(
     public_signal_count = len(current_public_rows)
     public_story_rows = _food_line_public_story_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
     claim_rows = _food_line_claim_ledger_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
+    discovery_gap_summary = (
+        _food_line_discovery_gap_summary(root, date, public_story_rows)
+        if include_discovery_gap_summary
+        else {
+            "run": False,
+            "report_found": False,
+            "report_path": str(_food_line_discovery_gap_report_paths(root, date)[0]),
+            "report_markdown_path": str(_food_line_discovery_gap_report_paths(root, date)[1]),
+            "likely_qualifying_count": 0,
+            "unreviewed_likely_qualifying_count": 0,
+            "warning": "",
+        }
+    )
     public_story_ids = {
         str(row.get("source_record_id") or "").strip()
         for row in public_story_rows
@@ -4494,6 +4573,12 @@ def run_food_line_dispatch(
         "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
         "stale_source_ids": stale_source_ids,
         "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
+        "discovery_gap_check": discovery_gap_summary,
+        "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
+        "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
+        "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
+        "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
+        "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "bluesky_post_text": None,
         "bluesky_post_ready": False,
@@ -4653,6 +4738,12 @@ def run_food_line_dispatch(
         "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
         "stale_source_ids": stale_source_ids,
         "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
+        "discovery_gap_check": discovery_gap_summary,
+        "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
+        "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
+        "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
+        "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
+        "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
         "pressure_review_path": str(pressure_review_path),
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),
         "pressure_marker_count": sum(1 for row in sources if bool(row.get("pressure_signal")) and bool(row.get("map_eligible"))),
@@ -4775,6 +4866,7 @@ def run_range(
     end_date: str,
     *,
     collect: bool = False,
+    include_discovery_gap_summary: bool = False,
     allow_future_date: bool = False,
     generate_audio: bool = True,
     require_audio: bool = False,
@@ -4797,6 +4889,7 @@ def run_range(
                 root,
                 day.isoformat(),
                 collect=collect,
+                include_discovery_gap_summary=include_discovery_gap_summary,
                 generate_audio=generate_audio,
                 require_audio=require_audio,
                 force_audio_regenerate=force_audio_regenerate,
@@ -4820,6 +4913,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
+    p.add_argument(
+        "--include-discovery-gap-summary",
+        action="store_true",
+        help="Include a Food Line discovery gap warning in the run summary when a same-date report exists.",
+    )
     p.add_argument("--dry-run", action="store_true", help="Generate local Food Line output without copying to the Pages repo or pushing.")
     p.add_argument("--post-bluesky", action="store_true", help="Post the published Food Line dispatch to Bluesky after a successful publish.")
     p.add_argument("--skip-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
@@ -4866,6 +4964,7 @@ def main(argv: list[str] | None = None) -> int:
                     args.start_date,
                     args.end_date,
                     collect=bool(args.collect),
+                    include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
                     allow_future_date=bool(args.allow_future_date),
                     generate_audio=bool(args.generate_audio),
                     require_audio=bool(args.require_audio),
@@ -4884,6 +4983,7 @@ def main(argv: list[str] | None = None) -> int:
                 Path.cwd(),
                 args.date,
                 collect=bool(args.collect),
+                include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
                 generate_audio=bool(args.generate_audio),
                 require_audio=bool(args.require_audio),
                 force_audio_regenerate=bool(args.force_audio_regenerate),

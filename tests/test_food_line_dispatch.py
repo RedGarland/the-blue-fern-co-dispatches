@@ -139,6 +139,46 @@ def _food_line_june_11_rows() -> tuple[dict, dict]:
     return kold, wsls
 
 
+def _wpde_manual_source() -> dict:
+    return {
+        "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+        "title": "Grand Strand food providers say inflation is driving more families to pantries",
+        "url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+        "publisher": "WPDE / ABC 15",
+        "published_at": "2026-06-12T21:58:00Z",
+        "retrieved_at": "2026-06-12T21:58:00Z",
+        "summary_or_snippet": "Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food Bank said some Conway distributions usually serving about 100 families had 185 and demand is climbing at pantries and mobile distributions.",
+        "evidence_text": (
+            "Grand Strand food providers say inflation is driving more families to pantries WPDE — Food insecurity is rising above levels seen during the COVID-19 pandemic. "
+            "In Horry County, Feeding America’s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County’s children are considered food insecure. "
+            "The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. "
+            "Inflation and higher costs are making it harder for families to afford food and for food banks to source it. "
+            "ABC 15 is teaming up with Feeding America for Sinclair Cares: Summer Hunger Relief, encouraging donations to help provide food for kids during the summer. "
+            "More information and donations are available at sinclaircares.com."
+        ),
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "local_news",
+        "state": "SC",
+        "location_name": "Horry County",
+        "location_scope": "state_local",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+        "source_traceability_role": "article_url",
+        "pressure_signal": True,
+        "pressure_type": "demand strain",
+        "pressure_reason": "Matched demand strain; the article reports higher food insecurity, rising pantry demand, and mobile distributions serving 185 families.",
+        "pressure_summary": "Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food Bank said some Conway distributions usually serving about 100 families had 185 and inflation was making food harder to afford and source.",
+        "affected_groups": ["children", "low-income households", "pantry clients"],
+        "evidence_level": "news report",
+        "freshness_role": "fresh_daily_signal",
+        "source_role": "local_signal",
+        "map_category": "elevated demand",
+        "map_eligible": True,
+        "pressure_verification_status": "source_text_verified",
+    }
+
+
 def _clear_food_line_registries(root: Path) -> None:
     registry_dir = root / "data" / "dispatches" / "food-line"
     registry_dir.mkdir(parents=True, exist_ok=True)
@@ -217,6 +257,51 @@ def _write_candidate_registry(root: Path, payload: list[dict]) -> Path:
     path = registry_dir / "candidate_source_registry.json"
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return path
+
+
+def _write_food_line_discovery_gap_report(
+    root: Path,
+    date: str,
+    candidates: list[dict],
+    *,
+    likely_qualifying_count: int | None = None,
+    likely_resource_only_count: int | None = None,
+    duplicate_or_known_count: int | None = None,
+    needs_review_count: int | None = None,
+) -> tuple[Path, Path]:
+    report_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / date
+    report_dir.mkdir(parents=True, exist_ok=True)
+    likely_qualifying = [row for row in candidates if row.get("classification") == "likely_qualifying"]
+    likely_resource_only = [row for row in candidates if row.get("classification") == "likely_resource_only"]
+    duplicate_or_known = [row for row in candidates if row.get("classification") == "duplicate_or_known"]
+    needs_review = [row for row in candidates if row.get("classification") == "needs_review"]
+    report = {
+        "date": date,
+        "generated_at": f"{date}T12:00:00Z",
+        "query_source": "google_news_rss",
+        "query_count": 1,
+        "queries": ["food insecurity"],
+        "exclude_domains": ["facebook.com"],
+        "candidate_count": len(candidates),
+        "likely_qualifying_count": likely_qualifying_count if likely_qualifying_count is not None else len(likely_qualifying),
+        "needs_review_count": needs_review_count if needs_review_count is not None else len(needs_review),
+        "likely_resource_only_count": likely_resource_only_count if likely_resource_only_count is not None else len(likely_resource_only),
+        "duplicate_or_known_count": duplicate_or_known_count if duplicate_or_known_count is not None else len(duplicate_or_known),
+        "query_errors": [],
+        "candidates": candidates,
+        "summary": {
+            "candidates_reviewed": len(candidates),
+            "likely_qualifying": likely_qualifying_count if likely_qualifying_count is not None else len(likely_qualifying),
+            "needs_review": needs_review_count if needs_review_count is not None else len(needs_review),
+            "already_known": duplicate_or_known_count if duplicate_or_known_count is not None else len(duplicate_or_known),
+            "likely_resource_only": likely_resource_only_count if likely_resource_only_count is not None else len(likely_resource_only),
+        },
+    }
+    report_path = report_dir / "discovery_gap_report.json"
+    report_markdown_path = report_dir / "discovery_gap_report.md"
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    report_markdown_path.write_text("# Discovery gap report\n", encoding="utf-8")
+    return report_path, report_markdown_path
 
 
 def _http_urls(text: str) -> list[str]:
@@ -4427,6 +4512,119 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
     assert "food insecurity in horry county is about 14 percent" in result["bluesky_post_text"].lower() if result["bluesky_post_text"] else True
     assert manifest["public_signal_count"] == 1
     assert manifest["lead_source_record_id"] == "wpde-grand-strand-food-insecurity-20260612"
+
+
+def test_food_line_discovery_gap_summary_warns_for_unreviewed_likely_qualifying_candidate(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    path = _manual_path(tmp_path, date)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    manual_source = _wpde_manual_source()
+    path.write_text(json.dumps([manual_source], indent=2), encoding="utf-8")
+    _write_food_line_discovery_gap_report(
+        tmp_path,
+        date,
+        [
+            {
+                "title": manual_source["title"],
+                "url": manual_source["url"],
+                "classification": "likely_qualifying",
+                "score": 5,
+                "reason": "food bank demand; local news domain",
+                "known_status": "known_domain_new_article",
+            },
+            {
+                "title": "Another qualifying story",
+                "url": "https://example.com/2026/06/12/another-qualifying-story",
+                "classification": "likely_qualifying",
+                "score": 4,
+                "reason": "food pantry demand; local news domain",
+                "known_status": "known_domain_new_article",
+            },
+        ],
+    )
+
+    result = run_food_line_dispatch(tmp_path, date, include_discovery_gap_summary=True)
+    gap_summary = result["discovery_gap_check"]
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert gap_summary["run"] is True
+    assert gap_summary["report_found"] is True
+    assert gap_summary["likely_qualifying_count"] == 2
+    assert gap_summary["unreviewed_likely_qualifying_count"] == 1
+    assert gap_summary["warning"]
+    assert gap_summary["warning"].endswith(".")
+    assert gap_summary["report_markdown_path"].endswith(".md")
+    assert "Food Line discovery gap check found 1 likely qualifying candidate not included in this edition." in gap_summary["warning"]
+    assert result["discovery_gap_likely_qualifying_count"] == 2
+    assert result["discovery_gap_unreviewed_likely_qualifying_count"] == 1
+    assert result["discovery_gap_warning"] == gap_summary["warning"]
+    assert manifest["discovery_gap_check"]["unreviewed_likely_qualifying_count"] == 1
+    assert manifest["discovery_gap_warning"] == gap_summary["warning"]
+    assert manifest["discovery_gap_report_path"].endswith("discovery_gap_report.json")
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_discovery_gap_summary_ignores_duplicates_and_resource_only_candidates(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-13"
+    _write_food_line_discovery_gap_report(
+        tmp_path,
+        date,
+        [
+            {
+                "title": "Existing known article",
+                "url": "https://example.com/2026/06/13/existing-known-article",
+                "classification": "duplicate_or_known",
+                "score": 3,
+                "reason": "already included",
+                "known_status": "already_included",
+            },
+            {
+                "title": "Summer meal resource",
+                "url": "https://example.com/2026/06/13/summer-meal-resource",
+                "classification": "likely_resource_only",
+                "score": 1,
+                "reason": "resource only",
+                "known_status": "unknown_domain_new_article",
+            },
+        ],
+    )
+
+    result = run_food_line_dispatch(tmp_path, date, include_discovery_gap_summary=True)
+    gap_summary = result["discovery_gap_check"]
+
+    assert result["ok"] is True
+    assert gap_summary["run"] is True
+    assert gap_summary["report_found"] is True
+    assert gap_summary["likely_qualifying_count"] == 0
+    assert gap_summary["unreviewed_likely_qualifying_count"] == 0
+    assert gap_summary["warning"] == ""
+    assert result["discovery_gap_warning"] == ""
+    assert result["discovery_gap_likely_qualifying_count"] == 0
+    assert result["discovery_gap_unreviewed_likely_qualifying_count"] == 0
+
+
+def test_food_line_discovery_gap_summary_missing_report_does_not_fail(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-14"
+    path = _manual_path(tmp_path, date)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    manual_source = _wpde_manual_source()
+    path.write_text(json.dumps([manual_source], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, include_discovery_gap_summary=True)
+
+    assert result["ok"] is True
+    assert result["discovery_gap_check"]["run"] is False
+    assert result["discovery_gap_check"]["report_found"] is False
+    assert result["discovery_gap_check"]["likely_qualifying_count"] == 0
+    assert result["discovery_gap_check"]["unreviewed_likely_qualifying_count"] == 0
+    assert result["discovery_gap_warning"] == ""
+    assert result["discovery_gap_report_path"].endswith("discovery_gap_report.json")
+    assert result["discovery_gap_report_markdown_path"].endswith("discovery_gap_report.md")
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
 
 
 def test_food_line_collect_reports_rejected_news_reasons(tmp_path: Path):

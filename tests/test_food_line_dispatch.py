@@ -1501,8 +1501,10 @@ def test_food_line_future_url_story_stays_no_current_update_without_verified_dat
     result = run_food_line_dispatch(tmp_path, "2026-06-07", collect=True, collect_fetcher=fetcher)
     manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "sources_manifest.json"
     edition_manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "edition_manifest.json"
+    claim_ledger_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "claim_ledger.html"
     manifest_rows = json.loads(manifest_path.read_text(encoding="utf-8"))
     edition_manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
+    claim_ledger_html = claim_ledger_path.read_text(encoding="utf-8")
     row = next(item for item in manifest_rows if item["url"] == "https://example.com/2026-06-08/future-food-access-story")
 
     assert row["published_at"] == ""
@@ -1514,6 +1516,17 @@ def test_food_line_future_url_story_stays_no_current_update_without_verified_dat
     assert result["edition_mode"] == "no_current_update"
     assert result["qualified_primary_count"] == 0
     assert edition_manifest["edition_mode"] == "no_current_update"
+    assert edition_manifest["claim_count"] == 0
+    assert edition_manifest["claim_ledger_path"] == "/food-line/editions/2026-06-07/claim_ledger.html"
+    assert edition_manifest["source_table_path"] == "/food-line/editions/2026-06-07/source_table.html"
+    assert edition_manifest["qualified_source_count"] == 0
+    assert edition_manifest["excluded_source_count"] >= 0
+    assert edition_manifest["correction_status"] == "none"
+    assert edition_manifest["validation_status"] == "ok"
+    assert "No current public Food Line claims were made for this edition" in claim_ledger_html
+    assert "Records reviewed:" in claim_ledger_html
+    assert "Qualified current records: 0" in claim_ledger_html
+    assert "Excluded resource-only / no pressure signal" in claim_ledger_html
 
 
 def test_food_line_url_date_only_rows_stay_background_reference_and_audit_material(tmp_path: Path):
@@ -3023,6 +3036,10 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     published_audio_root = tmp_path / "output" / "site" / "food-line" / "audio"
     transcript = (published_audio_root / f"{date}-transcript.html").read_text(encoding="utf-8")
     audio_index = (published_audio_root / "index.html").read_text(encoding="utf-8")
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "claim_ledger.html").read_text(encoding="utf-8")
+    edition_manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8"))
 
     assert result["audio_generated"] is False
     assert result["audio_reused_existing"] is True
@@ -3057,6 +3074,34 @@ def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regene
     assert "pressure_signal" not in transcript
     assert "local_signal" not in transcript
     assert "map_signal" not in transcript
+    assert "claim_ledger.html" in edition_html
+    assert "Limits:" in edition_html
+    assert "Open the claim ledger" in edition_html
+    assert "Sources behind this briefing" in source_table_html
+    assert "Open the claim ledger" in source_table_html
+    assert "Food Line Claim Ledger" in claim_ledger_html
+    assert "Catholic Community Services" in claim_ledger_html
+    assert "first-time visitors" in claim_ledger_html
+    assert "supplies were running out more regularly" in claim_ledger_html.lower()
+    assert "Tucson, AZ" in claim_ledger_html
+    assert "St. Francis House had empty shelves in May" in claim_ledger_html
+    assert "KOLD / 13 News" in claim_ledger_html
+    assert "WSLS" in claim_ledger_html
+    assert "Evidence level" in claim_ledger_html
+    assert "Confidence" in claim_ledger_html
+    assert "Limitation" in claim_ledger_html
+    assert "Source URL" in claim_ledger_html
+    assert "food-line-auto-" not in claim_ledger_html
+    assert "pressure_signal" not in claim_ledger_html
+    assert "Confidence</th>" in claim_ledger_html
+    assert ">moderate<" in claim_ledger_html
+    assert edition_manifest["claim_count"] == 2
+    assert edition_manifest["claim_ledger_path"] == "/food-line/editions/2026-06-11/claim_ledger.html"
+    assert edition_manifest["source_table_path"] == "/food-line/editions/2026-06-11/source_table.html"
+    assert edition_manifest["qualified_source_count"] == 2
+    assert edition_manifest["excluded_source_count"] == 0
+    assert edition_manifest["correction_status"] == "none"
+    assert edition_manifest["validation_status"] == "ok"
     other_match = re.search(r"<h2>Other Food Line Signals</h2>\s*<p>(.*?)</p>", transcript)
     assert other_match is not None
     other_text = other_match.group(1)

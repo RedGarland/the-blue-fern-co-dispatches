@@ -543,6 +543,36 @@ def _food_line_public_rendered_rows(
     return rendered_rows
 
 
+def _food_line_public_story_rows(
+    sources: list[dict[str, Any]],
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    *,
+    edition_mode: str = "current_update",
+) -> list[dict[str, Any]]:
+    if edition_mode == "no_current_update":
+        return []
+    rows: list[dict[str, Any]] = []
+    rendered_ids: set[str] = set()
+
+    def add_row(row: dict[str, Any] | None) -> None:
+        if not row:
+            return
+        row_id = str(row.get("source_record_id") or "").strip()
+        if row_id and row_id in rendered_ids:
+            return
+        if row_id:
+            rendered_ids.add(row_id)
+        rows.append(row)
+
+    add_row(primary_row)
+    for row in continuing_rows:
+        add_row(row)
+    for row in _food_line_current_secondary_rows(sources, primary_row, continuing_rows):
+        add_row(row)
+    return rows
+
+
 def _food_line_public_source_family_label(row: dict[str, Any]) -> str:
     family = str(row.get("source_family") or "").strip().lower()
     mapping = {
@@ -2082,12 +2112,128 @@ def _food_line_public_signal_item_html(row: dict[str, Any]) -> str:
     if summary:
         parts.append(f"<p>{html.escape(summary)}</p>")
     parts.append(f"<p><strong>Context:</strong> {context_line}</p>")
+    parts.append(f"<p><strong>Limits:</strong> {html.escape(_food_line_public_limits_note(row))}</p>")
     parts.append("<p><strong>Sources</strong></p>")
     parts.append("<ul>")
     parts.append(f'<li><a href="{source_url}" target="_blank" rel="noopener noreferrer">{source_title}</a> - {publisher}</li>')
     parts.append("</ul>")
     parts.append("</article>")
     return "".join(parts)
+
+
+def _food_line_claim_supported_text(row: dict[str, Any]) -> str:
+    summary = _food_line_public_summary_sentence(row, max_words=80).strip().rstrip(".")
+    if summary and not _food_line_public_summary_is_generic(summary):
+        return summary
+    evidence_excerpt = _public_evidence_excerpt(row)
+    if evidence_excerpt and evidence_excerpt != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
+        return evidence_excerpt.rstrip(".")
+    pressure_summary = str(row.get("pressure_summary") or "").strip()
+    if pressure_summary:
+        return pressure_summary.rstrip(".")
+    title = str(row.get("title") or "").strip()
+    if title:
+        return title.rstrip(".")
+    return "Source-backed food-pressure claim"
+
+
+def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
+    pressure_type = str(row.get("pressure_type") or "").strip().lower()
+    location = _food_line_public_location_label(row)
+    if pressure_type == "demand strain":
+        return f"This points to pantry supply strain in {location}."
+    if pressure_type == "service reduction":
+        return f"This points to pantry capacity strain in {location}."
+    if pressure_type == "benefit disruption":
+        return f"This points to benefit disruption that can push households toward local help in {location}."
+    if pressure_type == "child meal gap":
+        return f"This points to summer meal gaps adding strain in {location}."
+    if pressure_type == "senior meal strain":
+        return f"This points to senior meal strain in {location}."
+    if pressure_type == "access gap":
+        return f"This points to local food-access gaps in {location}."
+    if pressure_type == "household hardship":
+        return f"This points to household food pressure in {location}."
+    if location and location != "the reported area":
+        return f"This points to local food-access strain in {location}."
+    return "This points to local food-access strain."
+
+
+def _food_line_claim_confidence(row: dict[str, Any]) -> str:
+    role = str(row.get("source_role") or "").strip().lower()
+    evidence_level = str(row.get("evidence_level") or "").strip().lower()
+    if role in {"local_signal", "daily_signal"} and evidence_level in {"direct reported hardship", "local reporting", "provider reported strain", "news report"}:
+        return "moderate"
+    if role in {"provider_signal", "policy_context", "resource_context"} or evidence_level in {"provider reported strain", "official notice", "policy/benefit change", "official data/statistic"}:
+        return "moderate"
+    return "low"
+
+
+def _food_line_claim_limitation(row: dict[str, Any]) -> str:
+    pressure_type = str(row.get("pressure_type") or "").strip().lower()
+    location = _food_line_public_location_label(row)
+    scope = str(row.get("location_scope") or "").strip().lower()
+    if pressure_type == "demand strain":
+        base = "The source documents pantry demand and supply strain"
+        if location and location != "the reported area":
+            base += f" in {location}"
+        return base + ", but it does not isolate all causes of the shortage."
+    if pressure_type == "service reduction":
+        base = "The source documents service strain"
+        if location and location != "the reported area":
+            base += f" in {location}"
+        return base + ", but it does not measure total unmet need across the full service area."
+    if pressure_type == "benefit disruption":
+        return "The source documents benefit-related pressure, but it does not independently measure total unmet need across all households."
+    if pressure_type == "child meal gap":
+        return "The source documents summer meal strain, but it does not prove a statewide trend."
+    if pressure_type == "senior meal strain":
+        return "The source documents senior meal strain, but it does not measure every local access barrier."
+    if scope in {"state_local", "local"} and location and location != "the reported area":
+        return f"The source describes conditions in {location}, but it does not prove a broader regional trend."
+    return "The source supports a local food-pressure claim, but it does not measure total unmet need."
+
+
+def _food_line_public_limits_note(row: dict[str, Any]) -> str:
+    claim = _food_line_claim_supported_text(row)
+    limitation = _food_line_claim_limitation(row)
+    return f"{limitation} Claim supported: {claim}."
+
+
+def _food_line_claim_ledger_row(row: dict[str, Any]) -> dict[str, str]:
+    source_title = str(row.get("title") or "").strip()
+    publisher = str(row.get("publisher") or row.get("source_name") or "").strip()
+    source_url = str(row.get("url") or "").strip()
+    published_date = str(row.get("source_published_date") or row.get("published_at") or row.get("page_metadata_date") or "").strip()
+    retrieved_date = str(row.get("retrieved_at") or "").strip()
+    evidence_level = str(row.get("evidence_level") or "").strip() or ("background context" if not bool(row.get("pressure_signal")) else "direct reported hardship")
+    freshness_role = str(row.get("freshness_role") or "").strip()
+    location_scope = str(row.get("location_scope") or "").strip()
+    return {
+        "claim": _food_line_claim_supported_text(row),
+        "interpretation": _food_line_claim_interpretation(row),
+        "supporting_source": source_title,
+        "publisher": publisher,
+        "source_url": source_url,
+        "published_date": published_date,
+        "retrieved_date": retrieved_date,
+        "evidence_level": evidence_level,
+        "confidence": _food_line_claim_confidence(row),
+        "freshness_role": freshness_role,
+        "location_scope": location_scope,
+        "limitation": _food_line_claim_limitation(row),
+    }
+
+
+def _food_line_claim_ledger_rows(
+    sources: list[dict[str, Any]],
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    *,
+    edition_mode: str = "current_update",
+) -> list[dict[str, str]]:
+    rows = _food_line_public_story_rows(sources, primary_row, continuing_rows, edition_mode=edition_mode)
+    return [_food_line_claim_ledger_row(row) for row in rows if str(row.get("url") or "").strip()]
 
 
 def _food_line_public_edition_status_label(edition_mode: str, reviewed_count: int, public_signal_count: int, excluded_count: int) -> str:
@@ -2264,12 +2410,97 @@ def _food_line_source_mix_html(
     )
 
 
-def _food_line_source_note_html() -> str:
-    return (
+def _food_line_source_note_html(*, source_table_url: str | None = None, claim_ledger_url: str | None = None) -> str:
+    parts = [
         "<p>This edition is generated only from saved source records available at publish time. "
-        "Source coverage may be uneven; signals are included only when a traceable source record exists.</p>"
-        f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
-    )
+        "Source coverage may be uneven; signals are included only when a traceable source record exists.</p>",
+        f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>",
+    ]
+    if source_table_url:
+        parts.append(f'<p><a href="{html.escape(source_table_url)}">Open the public source table for source links, traceability, and cleaned excerpts.</a></p>')
+    if claim_ledger_url:
+        parts.append(f'<p><a href="{html.escape(claim_ledger_url)}">Open the claim ledger</a></p>')
+    return "".join(parts)
+
+
+def _food_line_claim_ledger_html(
+    date: str,
+    sources: list[dict[str, Any]],
+    primary_row: dict[str, Any] | None,
+    continuing_rows: list[dict[str, Any]],
+    *,
+    edition_mode: str = "current_update",
+    review_counts: tuple[int, int] = (0, 0),
+    exclusion_reason_counts: dict[str, int] | None = None,
+) -> str:
+    reviewed_count, excluded_count = review_counts
+    claim_rows = _food_line_claim_ledger_rows(sources, primary_row, continuing_rows, edition_mode=edition_mode)
+    claim_count = len(claim_rows)
+    exclusion_reason_counts = exclusion_reason_counts or {}
+    no_update = edition_mode == "no_current_update" or claim_count == 0
+    diagnostic_lines = [
+        f"<li>Records reviewed: {reviewed_count}</li>",
+        f"<li>Qualified current records: {claim_count}</li>",
+        f"<li>Excluded stale: {int(exclusion_reason_counts.get('stale', 0))}</li>",
+        f"<li>Excluded duplicate: {int(exclusion_reason_counts.get('duplicate', 0))}</li>",
+        f"<li>Excluded resource-only / no pressure signal: {int(exclusion_reason_counts.get('resource-only / no pressure signal', 0))}</li>",
+        f"<li>Excluded weak pressure signal: {int(exclusion_reason_counts.get('weak pressure signal', 0))}</li>",
+        f"<li>Excluded insufficient source traceability: {int(exclusion_reason_counts.get('insufficient source traceability', 0))}</li>",
+    ]
+    if claim_rows:
+        rows_html = "".join(
+            "<tr>"
+            f"<td>{html.escape(row['claim'])}</td>"
+            f"<td>{html.escape(row['interpretation'])}</td>"
+            f"<td>{html.escape(row['supporting_source'])}</td>"
+            f"<td>{html.escape(row['publisher'])}</td>"
+            f"<td><a href=\"{html.escape(row['source_url'])}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(row['source_url'])}</a></td>"
+            f"<td>{html.escape(row['published_date'])}</td>"
+            f"<td>{html.escape(row['retrieved_date'])}</td>"
+            f"<td>{html.escape(row['evidence_level'])}</td>"
+            f"<td>{html.escape(row['confidence'])}</td>"
+            f"<td>{html.escape(row['freshness_role'])}</td>"
+            f"<td>{html.escape(row['location_scope'])}</td>"
+            f"<td>{html.escape(row['limitation'])}</td>"
+            "</tr>"
+            for row in claim_rows
+        )
+        summary_html = (
+            f"<p>This ledger records {claim_count} public claim{'s' if claim_count != 1 else ''} supported by source-backed Food Line signals for {_human_date(date)}.</p>"
+            f"<p>Records reviewed: {reviewed_count}. Public claims: {claim_count}. Excluded records: {excluded_count}.</p>"
+        )
+    else:
+        rows_html = ""
+        summary_html = (
+            "<p>No current public Food Line claims were made for this edition because no source-backed food-pressure signal met the project’s freshness and evidence standards.</p>"
+            f"<p>Records reviewed: {reviewed_count}. Qualified current records: {claim_count}. Excluded records: {excluded_count}.</p>"
+        )
+    return f"""{_food_line_theme_styles()}
+{header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
+<main class="container briefing food-line-shell">
+  <section class="hero food-line-hero">
+    {_food_line_logo_html("food-line-logo--edition", "../../assets/")}
+    <p class="eyebrow">{_human_date(date)}</p>
+    <h1>Food Line Claim Ledger</h1>
+    <p>What exactly did each public Food Line source support?</p>
+  </section>
+  <section class="food-line-panel">
+    {summary_html}
+    <table class="food-line-source-table">
+      <tr>
+        <th>Claim</th><th>Interpretation / why it matters</th><th>Supporting source</th><th>Publisher</th><th>Source URL</th><th>Published date</th><th>Retrieved date</th><th>Evidence level</th><th>Confidence</th><th>Freshness role</th><th>Location scope</th><th>Limitation</th>
+      </tr>
+      {rows_html}
+    </table>
+    <h2>Diagnostics</h2>
+    <ul>
+      {''.join(diagnostic_lines)}
+    </ul>
+    <p><a href="./source_table.html">Open the public source table</a></p>
+    <p><a href="./">Return to the edition</a></p>
+  </section>
+</main>
+{footer("../../")}"""
 
 
 def _food_line_skip_reason() -> str:
@@ -2875,7 +3106,7 @@ def render_food_line_edition(
     )
     summary_html = _food_line_edition_summary_html(reviewed_count, publisher_count, status_label, public_signal_count, excluded_count)
     source_mix_html = _food_line_source_mix_html(sources, public_signal_rows, primary_row, continuing_rows, primary_signal_status)
-    source_note_html = _food_line_source_note_html()
+    source_note_html = _food_line_source_note_html(source_table_url="./source_table.html", claim_ledger_url="./claim_ledger.html")
     edition_nav_html = _food_line_edition_navigation_html(str(previous_context.get("previous_edition_date") or "").strip() or None)
     core_rows = [] if edition_mode == "no_current_update" else ([primary_row] if primary_row else []) + list(continuing_rows)
     other_rows = [] if edition_mode == "no_current_update" else _food_line_current_secondary_rows(sources, primary_row, continuing_rows)
@@ -2993,6 +3224,7 @@ def _source_table_html(
         f"</div>"
         f"<p>{html.escape(audit_summary)}</p>"
         f"<p>{html.escape(exclusion_summary)}</p>"
+        f"<p><a href=\"./claim_ledger.html\">Open the claim ledger</a></p>"
         f"<table class='food-line-source-table'>"
         "<tr>"
         "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
@@ -3868,10 +4100,21 @@ def _refresh_food_line_source_tables(root: Path) -> None:
             continuing_rows=continuing_rows,
             edition_mode=str(manifest.get("edition_mode") or ""),
         )
+        claim_ledger_html = _food_line_claim_ledger_html(
+            edition_dir.name,
+            sources,
+            lead_row,
+            continuing_rows,
+            edition_mode=str(manifest.get("edition_mode") or ""),
+            review_counts=(len(sources), max(0, len(sources) - len(_food_line_public_story_rows(sources, lead_row, continuing_rows, edition_mode=str(manifest.get("edition_mode") or ""))))),
+            exclusion_reason_counts=dict((manifest.get("exclusion_reason_counts") or {})),
+        )
         _write_text(edition_dir / "source_table.html", source_table_html)
+        _write_text(edition_dir / "claim_ledger.html", claim_ledger_html)
         dispatch_edition_dir = dispatch_editions_root / edition_dir.name
         if dispatch_edition_dir.exists():
             _write_text(dispatch_edition_dir / "source_table.html", source_table_html)
+            _write_text(dispatch_edition_dir / "claim_ledger.html", claim_ledger_html)
 
 
 def run_food_line_dispatch(
@@ -4071,6 +4314,32 @@ def run_food_line_dispatch(
         if _food_line_public_usage_label(row, lead_row, continuing_rows, edition_mode=edition_mode) != "Background reference"
     ]
     public_signal_count = len(current_public_rows)
+    public_story_rows = _food_line_public_story_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
+    claim_rows = _food_line_claim_ledger_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
+    public_story_ids = {
+        str(row.get("source_record_id") or "").strip()
+        for row in public_story_rows
+        if str(row.get("source_record_id") or "").strip()
+    }
+    for row in sources:
+        row_id = str(row.get("source_record_id") or "").strip()
+        row["claim_supported"] = _food_line_claim_supported_text(row)
+        row["limitations"] = _food_line_claim_limitation(row)
+        row["included"] = bool(row_id and row_id in public_story_ids)
+        if row["included"]:
+            row["exclusion_reason"] = ""
+        else:
+            usage_label = _food_line_public_usage_label(row, lead_row, continuing_rows, edition_mode=edition_mode)
+            if usage_label == "Background reference":
+                row["exclusion_reason"] = "background reference"
+            elif usage_label.startswith("Source audit"):
+                row["exclusion_reason"] = "source audit"
+            else:
+                row["exclusion_reason"] = str(row.get("exclusion_reason") or row.get("pressure_reason") or row.get("freshness_disqualification_reason") or row.get("source_freshness_disqualification_reason") or "")
+        row["source_role"] = str(row.get("source_role") or _source_role(row) or "")
+        row["freshness_role"] = str(row.get("freshness_role") or _freshness_role(row) or "")
+        row["evidence_level"] = str(row.get("evidence_level") or _evidence_level(row, bool(row.get("pressure_signal"))) or "")
+        row["location_scope"] = str(row.get("location_scope") or ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national") or "")
     exclusion_reason_counts = _food_line_exclusion_reason_counts(
         sources,
         rejected_records,
@@ -4089,6 +4358,15 @@ def run_food_line_dispatch(
         primary_row=lead_row,
         continuing_rows=continuing_rows,
         edition_mode=edition_mode,
+    )
+    claim_ledger_html = _food_line_claim_ledger_html(
+        date,
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode=edition_mode,
+        review_counts=(len(sources), max(0, len(sources) - len(public_story_rows))),
+        exclusion_reason_counts=exclusion_reason_counts,
     )
     if future_date_blocked:
         skip_reason = _food_line_future_date_reason()
@@ -4124,6 +4402,13 @@ def run_food_line_dispatch(
         "public_rendered": public_rendered,
         "public_signal_count": public_signal_count,
         "qualified_primary_count": qualified_primary_count,
+        "claim_count": len(claim_rows),
+        "claim_ledger_path": f"/food-line/editions/{date}/claim_ledger.html",
+        "source_table_path": f"/food-line/editions/{date}/source_table.html",
+        "qualified_source_count": len(claim_rows),
+        "excluded_source_count": max(0, len(sources) - len(claim_rows)),
+        "correction_status": "none",
+        "validation_status": "pending",
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
         "edition_mode": edition_mode,
@@ -4222,6 +4507,8 @@ def run_food_line_dispatch(
         for d in (edition_dir_site, edition_dir_dispatch):
             _write_text(d / "index.html", html_page)
             _write_text(d / "source_table.html", source_table)
+            _write_text(d / "claim_ledger.html", claim_ledger_html)
+            manifest["validation_status"] = "ok" if all((d / name).exists() for name in ("index.html", "source_table.html", "claim_ledger.html")) else "error"
             _write_json(d / "sources_manifest.json", sources)
             _write_json(d / "curation_manifest.json", {"stories": sources[:6]})
             _write_json(d / "edition_manifest.json", manifest)

@@ -2461,6 +2461,10 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "freshness_role": str(pressure_eval.get("freshness_role") or "dated_recent_signal"),
                     "source_role": str(pressure_eval.get("source_role") or "resource_context"),
                     "map_eligible": bool(pressure_eval.get("pressure_signal")) and str(pressure_eval.get("source_role") or "") not in {"data_anchor_signal", "research_signal", "institutional_context_signal"},
+                    "claim_supported": str(pressure_eval.get("pressure_summary") or summary or evidence_text or title or "").strip(),
+                    "limitations": "",
+                    "included": False,
+                    "exclusion_reason": "",
                 }
             )
         audit_entry["accepted_pressure_count"] = sum(1 for row in rows if str(row.get("source_id") or "") == source_id and bool(row.get("pressure_signal")))

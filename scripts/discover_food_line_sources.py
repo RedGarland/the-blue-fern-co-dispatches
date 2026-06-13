@@ -421,7 +421,7 @@ def classify_food_line_discovery_gap_candidate(
     resource_only = "resource only" in penalties
     if known_status in {"already_included", "already_excluded", "duplicate"}:
         classification = "duplicate_or_known"
-    elif score >= 6 and not resource_only:
+    elif score >= 3 and not resource_only:
         classification = "likely_qualifying"
     elif resource_only and score <= 3:
         classification = "likely_resource_only"

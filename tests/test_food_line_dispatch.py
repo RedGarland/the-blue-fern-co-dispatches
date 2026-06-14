@@ -139,6 +139,93 @@ def _food_line_june_11_rows() -> tuple[dict, dict]:
     return kold, wsls
 
 
+def _ktal_manual_source() -> dict:
+    return {
+        "source_record_id": "ktal-food-bank-summer-feeding-20260610",
+        "title": "Food Bank of Northwest Louisiana says summer feeding need is tightening inventory",
+        "url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+        "publisher": "KTAL / KMSS",
+        "published_at": "2026-06-10T12:00:00Z",
+        "published_date_basis": "published_at",
+        "page_metadata_date": "",
+        "date_provenance_warning": "",
+        "retrieved_at": "2026-06-10T12:00:00Z",
+        "summary_or_snippet": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year.",
+        "evidence_text": (
+            "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. "
+            "Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year. "
+            "The food bank says it has capacity to feed more children but needs partners."
+        ),
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "local_news",
+        "state": "LA",
+        "issue_tags": [],
+        "map_category": "summer meal / child nutrition",
+        "location_name": "Northwest Louisiana",
+        "country": "",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+        "source_traceability_role": "article_url",
+        "pressure_signal": True,
+        "pressure_type": "service reduction",
+        "pressure_reason": "matched service reduction",
+        "pressure_summary": "KTAL / KMSS reported reduced distribution hours in Northwest Louisiana, affecting children, low-income households.",
+        "affected_groups": ["children", "low-income households"],
+        "evidence_level": "news report",
+        "freshness_role": "fresh_daily_signal",
+        "freshness_status": "fresh_daily_signal",
+        "freshness_disqualification_reason": "",
+        "source_published_date": "2026-06-10",
+        "collected_date": "2026-06-10",
+        "source_role": "local_signal",
+        "location_scope": "state_local",
+        "supported_product_geography": True,
+        "source_role_allowed": "context_only",
+        "pressure_required": False,
+        "positive_keywords": ["food bank", "pantry", "hunger", "food insecurity", "SNAP", "meal site", "grocery closure"],
+        "negative_keywords": ["recipe", "restaurant", "menu", "chef", "sale", "festival", "gala", "volunteer", "donation drive"],
+        "affected_group_keywords": [
+            "SNAP households",
+            "WIC households",
+            "adults 25-44",
+            "children",
+            "disaster-affected households",
+            "low-income households",
+            "non-white adults",
+            "rural residents",
+            "seniors",
+            "working-age adults without a college degree",
+        ],
+        "max_age_days": 14,
+        "current_or_evergreen": "current",
+        "promotable": True,
+        "non_promotable_reason": "",
+        "rejected": False,
+        "rejection_reason": "",
+        "extraction_quality": "medium",
+        "expected_text_basis": "page_text",
+        "pressure_verification_required": True,
+        "date_basis": "published_at",
+        "map_eligible": True,
+        "coordinate_basis": "",
+        "source_freshness_status": "fresh_daily_signal",
+        "source_freshness_disqualification_reason": "",
+        "source_freshness_window_days": 3,
+        "source_published_date_basis": "published_at",
+        "source_url_date": "",
+        "source_url_date_basis": "",
+        "source_freshness_date_basis": "published_at",
+        "source_public_story_eligible": True,
+        "primary_eligible": True,
+        "primary_disqualification_reason": "",
+        "claim_supported": "Food Bank of Northwest Louisiana is providing summer meals and groceries to children and families. Meeting need has become increasingly difficult. Rising food costs and lower donations have left the pantry with one of its lowest inventory levels in years, and inventory is about 31% lower than at the same time last year. The food bank says it has capacity to feed more children but needs partners, as school-meal gaps add strain.",
+        "limitations": "The source documents service strain in Northwest Louisiana, but it does not measure total unmet need across the full service area.",
+        "included": True,
+        "exclusion_reason": "",
+    }
+
+
 def _wpde_manual_source() -> dict:
     return {
         "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
@@ -3240,11 +3327,38 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     assert "local_signal" not in edition_html
     assert "Source audit" not in edition_html
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
     assert '<h2>Current coverage</h2>' in home_html
     assert 'editions/2026-06-11/' in home_html
-    assert '2026-06-11 — Pantry demand and summer food-bank strain' in home_html
+    assert 'Browse the Food Line archive' in home_html
     assert 'No current update' not in home_html
     assert '2026-06-11' in home_html
+    assert '2026-06-11 — Tucson food-bank strain and Roanoke St. Francis House shortage' in archive_html
+
+
+def test_food_line_archive_titles_and_home_link_are_source_specific(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    fixtures = [
+        ("2026-06-10", [_ktal_manual_source()]),
+        ("2026-06-11", list(_food_line_june_11_rows())),
+        ("2026-06-12", [_wpde_manual_source(), _tulsa_manual_source(), _wkrn_policy_access_source()]),
+    ]
+    for date, rows in fixtures:
+        path = _manual_path(tmp_path, date)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+        run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
+
+    assert "Browse the Food Line archive" in home_html
+    assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in home_html
+    assert "2026-06-10 — Northwest Louisiana food-bank inventory" in archive_html
+    assert "2026-06-11 — Roanoke St. Francis House shortage and Tucson food-bank strain" in archive_html
+    assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in archive_html
+    assert "Pantry demand and summer food-bank strain" not in home_html
+    assert "Pantry demand and summer food-bank strain" not in archive_html
 
 
 def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regenerating_mp3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

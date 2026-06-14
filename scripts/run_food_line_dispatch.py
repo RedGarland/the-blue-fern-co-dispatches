@@ -2790,18 +2790,148 @@ def _food_line_public_edition_manifest(root: Path, date: str) -> dict[str, Any] 
     return payload if isinstance(payload, dict) else None
 
 
-def _food_line_public_edition_label(root: Path, date: str) -> str:
+def _food_line_public_edition_source_rows(root: Path, date: str) -> list[dict[str, Any]]:
+    edition_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / date
     manifest = _food_line_public_edition_manifest(root, date) or {}
-    public_signal_count = 0
+    sources_path = edition_dir / "sources_manifest.json"
+    if not sources_path.exists():
+        return []
+    try:
+        payload = _read_json(sources_path)
+    except Exception:  # noqa: BLE001
+        return []
+    if not isinstance(payload, list):
+        return []
+    lead_id = str(manifest.get("lead_source_record_id") or "").strip()
+    continuing_ids = {
+        str(item).strip()
+        for item in (manifest.get("continuing_pressure_source_record_ids") or [])
+        if str(item).strip()
+    }
+    rows: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    by_id = {
+        str(row.get("source_record_id") or "").strip(): row
+        for row in payload
+        if isinstance(row, dict) and str(row.get("source_record_id") or "").strip()
+    }
+    lead_row = by_id.get(lead_id)
+    if lead_row is not None:
+        rows.append(lead_row)
+        seen_ids.add(lead_id)
+    for source_id in manifest.get("continuing_pressure_source_record_ids") or []:
+        row_id = str(source_id).strip()
+        if not row_id or row_id in seen_ids:
+            continue
+        row = by_id.get(row_id)
+        if row is None:
+            continue
+        rows.append(row)
+        seen_ids.add(row_id)
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        row_id = str(row.get("source_record_id") or "").strip()
+        if not row_id:
+            continue
+        if row_id in seen_ids:
+            continue
+        if row_id == lead_id or row_id in continuing_ids or str(row.get("public_inclusion_bucket") or "").startswith("included"):
+            rows.append(row)
+            seen_ids.add(row_id)
+    return rows
+
+
+def _food_line_archive_location_fragment(row: dict[str, Any]) -> str:
+    location = _food_line_public_location_label(row)
+    location = re.sub(r",\s*[A-Z]{2}$", "", location).strip()
+    return location or "the reported area"
+
+
+def _food_line_archive_signal_fragment(row: dict[str, Any]) -> str:
+    location = _food_line_archive_location_fragment(row)
+    text = " ".join(
+        part.strip().lower()
+        for part in (
+            str(row.get("title") or ""),
+            str(row.get("pressure_summary") or ""),
+            str(row.get("claim_supported") or ""),
+            str(row.get("summary_or_snippet") or ""),
+            str(row.get("evidence_text") or ""),
+        )
+        if part and str(part).strip()
+    )
+    pressure_key = _food_line_pressure_type_key(row)
+    if pressure_key == "benefit_access_decline" or "snap enrollment" in text:
+        return f"{location} SNAP enrollment"
+    if "fuel cost" in text or "diesel" in text or pressure_key == "fuel cost strain":
+        return f"{location} fuel costs"
+    if pressure_key == "service_reduction" and "inventory" in text:
+        return f"{location} food-bank inventory"
+    if "st. francis house" in text:
+        return f"{location} St. Francis House shortage"
+    if "shortage" in text or "empty shelves" in text:
+        return f"{location} shortage"
+    if "pantr" in text:
+        return f"{location} pantry demand"
+    if "food bank" in text or "food-bank" in text:
+        if "surge" in text or "visitors" in text or "demand" in text or "need" in text:
+            return f"{location} food-bank strain"
+        if "inventory" in text:
+            return f"{location} food-bank inventory"
+        return f"{location} food-bank pressure"
+    if "summer meal" in text or "school meal" in text:
+        return f"{location} summer meal strain"
+    if "food insecurity" in text:
+        return f"{location} food insecurity"
+    if pressure_key in {"demand_strain", "service_reduction"}:
+        return f"{location} food pressure"
+    return f"{location} food-pressure"
+
+
+def _food_line_join_archive_phrases(phrases: list[str]) -> str:
+    cleaned: list[str] = []
+    for item in phrases:
+        phrase = str(item).strip()
+        if phrase:
+            cleaned.append(phrase)
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for phrase in cleaned:
+        key = phrase.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(phrase)
+    if not deduped:
+        return ""
+    if len(deduped) == 1:
+        return deduped[0]
+    if len(deduped) == 2:
+        return f"{deduped[0]} and {deduped[1]}"
+    return f"{', '.join(deduped[:-1])}, and {deduped[-1]}"
+
+
+def _food_line_public_edition_title(root: Path, date: str) -> str:
+    manifest = _food_line_public_edition_manifest(root, date) or {}
     try:
         public_signal_count = int(manifest.get("public_signal_count") or 0)
     except (TypeError, ValueError):
         public_signal_count = 0
-    if public_signal_count > 0:
-        return f"{date} — Pantry demand and summer food-bank strain"
-    if str(manifest.get("edition_mode") or "").strip() == "no_current_update":
-        return f"{date} — No current update"
-    return date
+    if public_signal_count <= 0:
+        if str(manifest.get("edition_mode") or "").strip() == "no_current_update":
+            return f"{date} — No current update"
+        return date
+    rows = _food_line_public_edition_source_rows(root, date)
+    phrases = [_food_line_archive_signal_fragment(row) for row in rows]
+    title_body = _food_line_join_archive_phrases(phrases)
+    if not title_body:
+        title_body = "Pantry demand and summer food-bank strain"
+    return f"{date} — {title_body}"
+
+
+def _food_line_public_edition_label(root: Path, date: str) -> str:
+    return _food_line_public_edition_title(root, date)
 
 
 def _food_line_discovery_gap_report_paths(root: Path, date: str) -> tuple[Path, Path]:
@@ -4359,6 +4489,7 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
     <h2>Current coverage</h2>
     {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
     <p><a href="audio/index.html">Audio and podcast feed</a></p>
+    <p><a href="archive.html">Browse the Food Line archive</a></p>
     {"<p><a href=\"map/\">Pressure map</a></p>" if _food_line_map_is_available(root) else ""}
     <p>This dispatch is source-backed and uses verified pressure signals only.</p>
     <p>{html.escape(_food_line_reported_signal_limitation())}</p>

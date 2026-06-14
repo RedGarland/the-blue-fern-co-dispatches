@@ -179,6 +179,72 @@ def _wpde_manual_source() -> dict:
     }
 
 
+def _tulsa_manual_source() -> dict:
+    return {
+        "source_record_id": "tulsa-flyer-food-bank-fuel-costs-20260612",
+        "title": "Tulsa Flyer Food Bank Fuel Costs",
+        "url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
+        "publisher": "Tulsa Flyer",
+        "published_at": "2026-06-12T12:00:00Z",
+        "retrieved_at": "2026-06-12T12:00:00Z",
+        "summary_or_snippet": "Tulsa Flyer reporting on food-bank fuel costs and summer meal delivery strain.",
+        "evidence_text": "Tulsa Flyer reporting on food-bank fuel costs and summer meal delivery strain.",
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "local_news",
+        "state": "OK",
+        "location_name": "Tulsa, OK",
+        "location_scope": "local",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
+        "source_traceability_role": "article_url",
+        "pressure_signal": True,
+        "pressure_type": "fuel cost strain",
+        "pressure_reason": "Matched fuel cost strain; the article reports food-bank fuel pressure affecting summer meal delivery.",
+        "pressure_summary": "Tulsa Flyer reported fuel-cost pressure at Food Bank of Eastern Oklahoma as it worked to keep summer meal delivery moving.",
+        "affected_groups": ["children", "families", "pantry clients"],
+        "evidence_level": "news report",
+        "freshness_role": "fresh_daily_signal",
+        "source_role": "provider_signal",
+        "map_category": "acute strain / service disruption",
+        "map_eligible": True,
+        "pressure_verification_status": "source_text_verified",
+    }
+
+
+def _wkrn_policy_access_source() -> dict:
+    return {
+        "source_record_id": "wkrn-tennessee-snap-enrollment-drop-20260612",
+        "title": "Tennessee SNAP enrollment dropped by more than 100,000",
+        "url": "https://www.wkrn.com/news/local-news/2026/06/12/tennessee-snap-enrollment-dropped-by-more-than-100000/",
+        "publisher": "WKRN",
+        "published_at": "2026-06-12T18:00:00Z",
+        "retrieved_at": "2026-06-12T18:00:00Z",
+        "summary_or_snippet": "Tennessee SNAP enrollment dropped by more than 100,000, creating concern about access and benefit pressure.",
+        "evidence_text": "Tennessee SNAP enrollment dropped by more than 100,000, creating concern about access and benefit pressure.",
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "state_official",
+        "state": "TN",
+        "location_name": "Tennessee",
+        "location_scope": "state_local",
+        "source_purpose": "current_news",
+        "primary_source_url": "https://www.wkrn.com/news/local-news/2026/06/12/tennessee-snap-enrollment-dropped-by-more-than-100000/",
+        "source_traceability_role": "article_url",
+        "pressure_signal": True,
+        "pressure_type": "benefit access decline",
+        "pressure_reason": "Matched benefit access decline; the article reports a large SNAP enrollment drop and pressure on access.",
+        "pressure_summary": "WKRN reported Tennessee SNAP enrollment dropped by more than 100,000, pointing to benefit access pressure.",
+        "affected_groups": ["SNAP households", "low-income households"],
+        "evidence_level": "news report",
+        "freshness_role": "fresh_daily_signal",
+        "source_role": "policy_context",
+        "map_category": "benefit disruption",
+        "map_eligible": True,
+        "pressure_verification_status": "source_text_verified",
+    }
+
+
 def _clear_food_line_registries(root: Path) -> None:
     registry_dir = root / "data" / "dispatches" / "food-line"
     registry_dir.mkdir(parents=True, exist_ok=True)
@@ -4442,6 +4508,79 @@ def test_food_line_bluesky_research_signal_drops_second_sentence_before_clipping
     assert prefix.endswith(".") or prefix.endswith("...")
 
 
+def test_food_line_public_inclusion_helpers_separate_lead_from_public_eligibility():
+    wpde = _wpde_manual_source()
+    tulsa = _tulsa_manual_source()
+    policy = _wkrn_policy_access_source()
+    resource_only = {
+        "source_record_id": "food-drive-resource-only-20260612",
+        "title": "Food drive to stock local shelves",
+        "url": "https://example.com/food-drive",
+        "publisher": "Example Charity",
+        "published_at": "2026-06-12T12:00:00Z",
+        "retrieved_at": "2026-06-12T12:00:00Z",
+        "summary_or_snippet": "Food drive announcement with donation details only.",
+        "evidence_text": "Food drive announcement with donation details only.",
+        "evidence_text_basis": "manual_review",
+        "source_type": "manual",
+        "source_family": "food_bank_provider",
+        "state": "OK",
+        "location_name": "Tulsa, OK",
+        "location_scope": "local",
+        "source_purpose": "donation_page",
+        "pressure_signal": False,
+        "pressure_type": "context only",
+        "pressure_reason": "resource-only / no pressure signal",
+        "pressure_summary": "",
+        "affected_groups": [],
+        "evidence_level": "background context",
+        "freshness_role": "fresh_daily_signal",
+        "source_role": "resource_context",
+        "map_category": "context / monitoring only",
+        "map_eligible": False,
+        "pressure_verification_status": "demoted_context",
+    }
+
+    rows = [dict(wpde), dict(tulsa), dict(policy), resource_only]
+    previous_context = {
+        "previous_edition_date": "2026-06-11",
+        "lead_source_record_id": wpde["source_record_id"],
+        "lead_canonical_url": wpde["url"],
+    }
+    food_line._annotate_food_line_primary_eligibility(rows, previous_context)
+
+    assert rows[0]["primary_eligible"] is False
+    assert food_line._food_line_qualifies_for_public_inclusion(rows[0]) is True
+    assert food_line._food_line_public_inclusion_bucket(rows[1]) == "included_as_provider_operations_signal"
+    assert food_line._food_line_public_inclusion_bucket(rows[2]) == "included_as_policy_access_signal"
+    assert food_line._food_line_qualifies_for_public_inclusion(resource_only) is False
+    assert food_line._food_line_public_inclusion_reason(resource_only) == "resource-only / no pressure signal"
+
+
+def test_food_line_qualified_but_not_public_count_warns_when_public_rows_are_omitted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(
+        json.dumps([_wpde_manual_source(), _tulsa_manual_source(), _wkrn_policy_access_source()], indent=2),
+        encoding="utf-8",
+    )
+
+    original_public_story_rows = food_line._food_line_public_story_rows
+
+    def fake_public_story_rows(sources, primary_row, continuing_rows, *, edition_mode="current_update"):
+        rows = original_public_story_rows(sources, primary_row, continuing_rows, edition_mode=edition_mode)
+        return rows[:1]
+
+    monkeypatch.setattr(food_line, "_food_line_public_story_rows", fake_public_story_rows)
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    assert result["qualified_but_not_public_count"] >= 1
+    assert result["qualified_but_not_public_warning"]
+    assert result["qualified_but_not_public_warning"].endswith(".")
+
+
 def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-12"
@@ -4484,7 +4623,9 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
         "map_eligible": True,
         "pressure_verification_status": "source_text_verified",
     }
-    manual_path.write_text(json.dumps([manual_source], indent=2), encoding="utf-8")
+    tulsa_source = _tulsa_manual_source()
+    policy_source = _wkrn_policy_access_source()
+    manual_path.write_text(json.dumps([manual_source, tulsa_source, policy_source], indent=2), encoding="utf-8")
 
     result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
 
@@ -4495,23 +4636,38 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
 
     assert result["ok"] is True
     assert result["edition_mode"] == "current_update"
-    assert result["selected_lead_source_role"] == "local_signal"
+    assert result["public_signal_count"] == 3
+    assert result["qualified_but_not_public_count"] == 0
     assert result["audio_generated"] is False
     assert not (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.mp3").exists()
     assert "No current update" not in edition_html
     assert "WPDE / ABC 15" in source_table_html
+    assert "Tulsa Flyer" in source_table_html
+    assert "WKRN" in source_table_html
     assert "Horry County" in source_table_html
+    assert "Tulsa, OK" in source_table_html
+    assert "Tennessee" in source_table_html
     assert "14 percent" in claim_ledger_html
     assert "20 percent" in claim_ledger_html
     assert "185" in claim_ledger_html
+    assert "Tulsa Flyer" in claim_ledger_html
+    assert "WKRN" in claim_ledger_html
+    assert "fuel-cost pressure" in claim_ledger_html.lower()
+    assert "100,000" in claim_ledger_html
     assert "Sinclair Cares" not in claim_ledger_html
     assert "More information and donations are available at" not in claim_ledger_html
     assert "Comment with Bubbles" not in claim_ledger_html
     assert "food insecurity in horry county is about 14 percent" in claim_ledger_html.lower()
     assert "food insecurity in horry county is about 14 percent" in edition_html.lower()
+    assert "Tulsa Flyer" in edition_html
+    assert "WKRN" in edition_html
+    assert "Policy / Benefits Signals" in edition_html
+    assert "Provider / Operations Signals" in edition_html
     assert "food insecurity in horry county is about 14 percent" in result["bluesky_post_text"].lower() if result["bluesky_post_text"] else True
-    assert manifest["public_signal_count"] == 1
+    assert manifest["public_signal_count"] == 3
+    assert manifest["claim_count"] == 3
     assert manifest["lead_source_record_id"] == "wpde-grand-strand-food-insecurity-20260612"
+    assert manifest["qualified_but_not_public_count"] == 0
 
 
 def test_food_line_discovery_gap_summary_warns_for_unreviewed_likely_qualifying_candidate(tmp_path: Path):

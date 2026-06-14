@@ -187,8 +187,8 @@ def _tulsa_manual_source() -> dict:
         "publisher": "Tulsa Flyer",
         "published_at": "2026-06-12T12:00:00Z",
         "retrieved_at": "2026-06-12T12:00:00Z",
-        "summary_or_snippet": "Tulsa Flyer reporting on food-bank fuel costs and summer meal delivery strain.",
-        "evidence_text": "Tulsa Flyer reporting on food-bank fuel costs and summer meal delivery strain.",
+        "summary_or_snippet": "Food Bank of Eastern Oklahoma reported diesel costs of about $24,000–$26,000 per month, compared with about $12,000–$14,000 in typical summer months, reducing meal capacity for children, summer meal recipients, and food-bank clients.",
+        "evidence_text": "Food Bank of Eastern Oklahoma reported diesel costs of about $24,000–$26,000 per month, compared with about $12,000–$14,000 in typical summer months, reducing meal capacity for children, summer meal recipients, and food-bank clients.",
         "evidence_text_basis": "manual_review",
         "source_type": "manual",
         "source_family": "local_news",
@@ -200,9 +200,9 @@ def _tulsa_manual_source() -> dict:
         "source_traceability_role": "article_url",
         "pressure_signal": True,
         "pressure_type": "fuel cost strain",
-        "pressure_reason": "Matched fuel cost strain; the article reports food-bank fuel pressure affecting summer meal delivery.",
-        "pressure_summary": "Tulsa Flyer reported fuel-cost pressure at Food Bank of Eastern Oklahoma as it worked to keep summer meal delivery moving.",
-        "affected_groups": ["children", "families", "pantry clients"],
+        "pressure_reason": "Matched fuel cost strain; the article reports diesel costs of about $24,000–$26,000 per month versus about $12,000–$14,000 in typical summer months, reducing meal capacity.",
+        "pressure_summary": "Food Bank of Eastern Oklahoma reported diesel costs of about $24,000–$26,000 per month, compared with about $12,000–$14,000 in typical summer months, reducing meal capacity for children, summer meal recipients, and food-bank clients.",
+        "affected_groups": ["children", "summer meal recipients", "food-bank clients"],
         "evidence_level": "news report",
         "freshness_role": "fresh_daily_signal",
         "source_role": "provider_signal",
@@ -4651,8 +4651,11 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
     assert "20 percent" in claim_ledger_html
     assert "185" in claim_ledger_html
     assert "Tulsa Flyer" in claim_ledger_html
+    assert "$24,000–$26,000" in claim_ledger_html
+    assert "$12,000–$14,000" in claim_ledger_html
+    assert "reducing meal capacity" in claim_ledger_html.lower()
     assert "WKRN" in claim_ledger_html
-    assert "fuel-cost pressure" in claim_ledger_html.lower()
+    assert "fuel-cost pressure" not in claim_ledger_html.lower()
     assert "100,000" in claim_ledger_html
     assert "Sinclair Cares" not in claim_ledger_html
     assert "More information and donations are available at" not in claim_ledger_html
@@ -4660,6 +4663,7 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
     assert "food insecurity in horry county is about 14 percent" in claim_ledger_html.lower()
     assert "food insecurity in horry county is about 14 percent" in edition_html.lower()
     assert "Tulsa Flyer" in edition_html
+    assert "children, summer meal recipients, and food-bank clients" in source_table_html
     assert "WKRN" in edition_html
     assert "Policy / Benefits Signals" in edition_html
     assert "Provider / Operations Signals" in edition_html

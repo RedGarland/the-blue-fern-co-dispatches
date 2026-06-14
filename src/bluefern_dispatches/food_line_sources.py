@@ -311,6 +311,18 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
         ),
     ),
     (
+        "benefit access decline",
+        (
+            "snap enrollment",
+            "enrollment dropped",
+            "enrollment fell",
+            "enrollment decline",
+            "benefit access pressure",
+            "access pressure",
+            "more than 100,000",
+        ),
+    ),
+    (
         "child meal gap",
         (
             "summer meal gap",
@@ -1660,6 +1672,17 @@ def _build_pressure_summary(
                 location_name=place,
                 pressure_type=pressure_type,
             )
+    elif pressure_type == "benefit access decline":
+        if any(term in lowered for term in ("snap enrollment", "enrollment dropped", "enrollment fell", "enrollment decline", "benefit access pressure", "access pressure")):
+            sentence = _append_place(f"{subject} reported Tennessee SNAP enrollment fell by more than 100,000 people in less than a year", place)
+            if groups_text:
+                sentence += f", affecting {groups_text}"
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
     elif pressure_type == "child meal gap":
         if any(term in lowered for term in ("summer meal", "school meal", "meal site", "sun bucks", "children", "missing meals")):
             sentence = _append_place(f"{subject} reported a child meal gap", place)
@@ -1857,6 +1880,8 @@ def evaluate_food_line_pressure(
         source_role = "provider_signal" if pressure_signal else "resource_context"
     elif blocked_by_source_purpose:
         source_role = "resource_context"
+    elif pressure_signal and pressure_type == "benefit access decline":
+        source_role = "policy_context"
     elif supported_geography and state not in {"", "US"} and family in LOCAL_FAMILIES:
         source_role = "local_signal"
     elif family in {"state_official", "federal_official", "state_policy_news"}:

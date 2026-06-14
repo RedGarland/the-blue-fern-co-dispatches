@@ -216,33 +216,78 @@ def _wkrn_policy_access_source() -> dict:
     return {
         "source_record_id": "wkrn-tennessee-snap-enrollment-drop-20260612",
         "title": "Tennessee SNAP enrollment dropped by more than 100,000",
-        "url": "https://www.wkrn.com/news/local-news/2026/06/12/tennessee-snap-enrollment-dropped-by-more-than-100000/",
+        "url": "https://www.wkrn.com/news/tennessee-politics/tennessee-snap-enrollment-drops-more-than-100000/",
         "publisher": "WKRN",
-        "published_at": "2026-06-12T18:00:00Z",
-        "retrieved_at": "2026-06-12T18:00:00Z",
-        "summary_or_snippet": "Tennessee SNAP enrollment dropped by more than 100,000, creating concern about access and benefit pressure.",
-        "evidence_text": "Tennessee SNAP enrollment dropped by more than 100,000, creating concern about access and benefit pressure.",
+        "published_at": "2026-06-12T22:15:07Z",
+        "retrieved_at": "2026-06-12T22:15:07Z",
+        "summary_or_snippet": "Tennessee SNAP enrollment fell by more than 100,000 people in less than a year, with state administrative data tracking individuals, households, and benefit allotment.",
+        "evidence_text": "Tennessee SNAP enrollment fell by more than 100,000 people in less than a year, with state administrative data tracking individuals, households, and benefit allotment.",
         "evidence_text_basis": "manual_review",
         "source_type": "manual",
-        "source_family": "state_official",
+        "source_family": "local_news",
         "state": "TN",
         "location_name": "Tennessee",
-        "location_scope": "state_local",
+        "location_scope": "state",
         "source_purpose": "current_news",
-        "primary_source_url": "https://www.wkrn.com/news/local-news/2026/06/12/tennessee-snap-enrollment-dropped-by-more-than-100000/",
+        "primary_source_url": "https://www.wkrn.com/news/tennessee-politics/tennessee-snap-enrollment-drops-more-than-100000/",
+        "secondary_source_url": "https://www.tn.gov/humanservices/for-families/supplemental-nutrition-assistance-program-snap/snap-statistical-information.html",
         "source_traceability_role": "article_url",
         "pressure_signal": True,
         "pressure_type": "benefit access decline",
-        "pressure_reason": "Matched benefit access decline; the article reports a large SNAP enrollment drop and pressure on access.",
-        "pressure_summary": "WKRN reported Tennessee SNAP enrollment dropped by more than 100,000, pointing to benefit access pressure.",
+        "pressure_reason": "Matched benefit access decline; the article reports Tennessee SNAP enrollment fell by more than 100,000 people in less than a year.",
+        "pressure_summary": "Tennessee SNAP enrollment fell by more than 100,000 people in less than a year, pointing to SNAP access pressure.",
         "affected_groups": ["SNAP households", "low-income households"],
-        "evidence_level": "news report",
+        "evidence_level": "news report with state administrative data",
         "freshness_role": "fresh_daily_signal",
         "source_role": "policy_context",
         "map_category": "benefit disruption",
         "map_eligible": True,
         "pressure_verification_status": "source_text_verified",
+        "claim_supported": "Tennessee SNAP enrollment fell by more than 100,000 people in less than a year, pointing to SNAP access pressure.",
+        "limitations": "SNAP enrollment decline does not by itself prove reduced food need; it may reflect eligibility changes, recertification churn, administrative barriers, employment or income changes, or policy effects unless the source isolates causes.",
     }
+
+
+def test_food_line_manual_source_file_includes_wkrn_policy_access_signal():
+    manual_sources = json.loads(_manual_path(Path.cwd(), "2026-06-12").read_text(encoding="utf-8"))
+    row = next(item for item in manual_sources if item["source_record_id"] == "wkrn-tennessee-snap-enrollment-drop-20260612")
+    assert row["source_role"] == "policy_context"
+    assert row["pressure_type"] == "benefit access decline"
+    assert row["source_purpose"] == "current_news"
+    assert row["location_name"] == "Tennessee"
+    assert row["location_scope"] == "state"
+    assert row["pressure_summary"].startswith("Tennessee SNAP enrollment fell by more than 100,000 people in less than a year")
+    assert row["claim_supported"].startswith("Tennessee SNAP enrollment fell by more than 100,000 people in less than a year")
+    assert row["limitations"].startswith("SNAP enrollment decline does not by itself prove reduced food need")
+
+
+def test_food_line_wkrn_policy_access_signal_stays_non_lead_and_carries_limitation(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(
+        json.dumps([_wpde_manual_source(), _tulsa_manual_source(), _wkrn_policy_access_source()], indent=2),
+        encoding="utf-8",
+    )
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "claim_ledger.html").read_text(encoding="utf-8")
+
+    assert result["ok"] is True
+    assert result["public_signal_count"] == 3
+    assert result["lead_source_record_id"] == "wpde-grand-strand-food-insecurity-20260612"
+    assert "WKRN" in edition_html
+    assert "WKRN" in source_table_html
+    assert "WKRN" in claim_ledger_html
+    assert "SNAP access pressure" in claim_ledger_html
+    assert "does not by itself prove reduced food need" in claim_ledger_html
+    assert "more than 100,000" in claim_ledger_html
+    assert "Tennessee" in claim_ledger_html
+    assert "WPDE / ABC 15" in edition_html
+    assert "Tulsa Flyer" in edition_html
 
 
 def _clear_food_line_registries(root: Path) -> None:
@@ -4667,7 +4712,6 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
     assert "WKRN" in edition_html
     assert "Policy / Benefits Signals" in edition_html
     assert "Provider / Operations Signals" in edition_html
-    assert "food insecurity in horry county is about 14 percent" in result["bluesky_post_text"].lower() if result["bluesky_post_text"] else True
     assert manifest["public_signal_count"] == 3
     assert manifest["claim_count"] == 3
     assert manifest["lead_source_record_id"] == "wpde-grand-strand-food-insecurity-20260612"

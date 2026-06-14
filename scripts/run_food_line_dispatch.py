@@ -2365,6 +2365,8 @@ def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
         return f"This points to pantry capacity strain in {location}."
     if pressure_type == "benefit disruption":
         return f"This points to benefit disruption that can push households toward local help in {location}."
+    if pressure_type == "benefit access decline":
+        return f"This points to SNAP access pressure in {location}."
     if pressure_type == "child meal gap":
         return f"This points to summer meal gaps adding strain in {location}."
     if pressure_type == "senior meal strain":
@@ -2404,6 +2406,12 @@ def _food_line_claim_limitation(row: dict[str, Any]) -> str:
         return base + ", but it does not measure total unmet need across the full service area."
     if pressure_type == "benefit disruption":
         return "The source documents benefit-related pressure, but it does not independently measure total unmet need across all households."
+    if pressure_type == "benefit access decline":
+        return (
+            "SNAP enrollment decline does not by itself prove reduced food need; it may reflect eligibility changes, "
+            "recertification churn, administrative barriers, employment or income changes, or policy effects unless "
+            "the source isolates causes."
+        )
     if pressure_type == "child meal gap":
         return "The source documents summer meal strain, but it does not prove a statewide trend."
     if pressure_type == "senior meal strain":

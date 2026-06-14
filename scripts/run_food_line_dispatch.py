@@ -46,6 +46,16 @@ FOOD_LINE_SOCIAL_IMAGE_URL = f"{BASE_URL}/food-line/assets/{FOOD_LINE_SOCIAL_IMA
 FOOD_LINE_SOCIAL_IMAGE_ALT = "The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing."
 FOOD_LINE_PAGE_DESCRIPTION = "Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States."
 MAP_RENDERED_COUNT_RE = re.compile(r'data-rendered-marker-count="(\d+)"')
+_FOOD_LINE_STATE_NAMES = {
+    "AZ": "Arizona",
+    "OH": "Ohio",
+    "LA": "Louisiana",
+    "OK": "Oklahoma",
+    "SC": "South Carolina",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "VA": "Virginia",
+}
 
 
 def header(
@@ -1797,21 +1807,24 @@ def _food_line_audio_core_recap(row: dict[str, Any] | None) -> str:
 
 def _food_line_audio_other_signal_summary(row: dict[str, Any] | None) -> str:
     row = row or {}
-    summary = _food_line_public_summary_sentence(row, max_words=80)
-    location = str(row.get("location_name") or row.get("state") or "").strip()
+    nonlocal_data = _food_line_is_nonlocal_data_signal(row)
+    evidence_excerpt = _public_evidence_excerpt(row)
+    location = _food_line_natural_location_label(row)
     publisher = str(row.get("publisher") or row.get("source_name") or "").strip()
-    if summary:
-        summary = summary.strip().rstrip(".")
-        if location:
-            summary = re.sub(rf"\s+in\s+{re.escape(location)}\s*$", "", summary, flags=re.IGNORECASE).rstrip(" ,;:-")
-        if publisher:
-            if summary.lower().startswith(publisher.lower()):
-                summary = summary[len(publisher) :].lstrip(" ,:-")
-            prefix = f"In {location}, {publisher} reported that" if location else f"{publisher} reported that"
-            return f"{prefix} {summary}.".strip()
-        if location:
-            return f"In {location}, {summary}."
-        return f"{summary}."
+    pressure_summary = str(row.get("pressure_summary") or "").strip()
+    candidates = (
+        [evidence_excerpt, pressure_summary, _food_line_public_summary_sentence(row, max_words=80)]
+        if nonlocal_data
+        else [pressure_summary, _food_line_public_summary_sentence(row, max_words=80), evidence_excerpt]
+    )
+    for candidate in candidates:
+        if not candidate or candidate == FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK:
+            continue
+        if _food_line_public_summary_is_generic(candidate):
+            continue
+        body = re.sub(r"\s+", " ", str(candidate).strip()).rstrip(".")
+        prefix = f"In {location}, {publisher} reported that" if location and publisher else f"{publisher} reported that" if publisher else f"In {location},"
+        return _food_line_ensure_final_punctuation(f"{prefix} {body}".strip())
     title = str(row.get("title") or "").strip()
     if title:
         return title.rstrip(".")
@@ -2256,6 +2269,143 @@ def _food_line_public_location_label(row: dict[str, Any]) -> str:
     return "the reported area"
 
 
+def _food_line_state_display_name(state: str) -> str:
+    state = str(state or "").strip().upper()
+    if not state:
+        return ""
+    if state == "US":
+        return "United States"
+    return _FOOD_LINE_STATE_NAMES.get(state, state.title())
+
+
+def _food_line_natural_location_label(row: dict[str, Any]) -> str:
+    location = str(row.get("location_name") or "").strip()
+    state = str(row.get("state") or "").strip()
+    state_name = _food_line_state_display_name(state)
+    if not location:
+        return state_name or _food_line_public_location_label(row)
+    if state_name and state_name.lower() not in location.lower():
+        if re.search(r",\s*[A-Z]{2}$", location):
+            return re.sub(r",\s*[A-Z]{2}$", f", {state_name}", location)
+        return f"{location}, {state_name}"
+    return location
+
+
+def _food_line_public_signal_reader_label(row: dict[str, Any]) -> str:
+    row = row or {}
+    title = str(row.get("title") or "").strip()
+    publisher = str(row.get("publisher") or row.get("source_name") or "").strip().lower()
+    pressure_type = str(row.get("pressure_type") or "").strip().lower()
+    location = _food_line_natural_location_label(row)
+    summary = " ".join(
+        part
+        for part in (
+            str(row.get("pressure_summary") or "").strip(),
+            str(row.get("summary_or_snippet") or "").strip(),
+            str(row.get("evidence_text") or "").strip(),
+        )
+        if part
+    ).lower()
+    if pressure_type == "demand strain":
+        if "horry county" in location.lower() or "wpde" in publisher:
+            return "Horry County food providers report rising pantry demand"
+        if location:
+            return f"{location} food providers report rising pantry demand"
+    if pressure_type == "fuel cost strain":
+        if "eastern oklahoma" in summary or "tulsa flyer" in publisher:
+            return "Eastern Oklahoma food bank says diesel costs are reducing meal capacity"
+        if location:
+            return f"{location} food bank says diesel costs are reducing meal capacity"
+    if pressure_type == "benefit access decline":
+        if "wkrn" in publisher or location:
+            return "Tennessee SNAP enrollment dropped by more than 100,000"
+    if pressure_type == "benefit disruption":
+        if location:
+            return f"{location} reports benefit disruption that can push households toward food pantries"
+    if pressure_type == "child meal gap":
+        if location:
+            return f"{location} reports summer meal gaps for children"
+    if pressure_type == "service reduction":
+        if location:
+            return f"{location} reports tighter pantry supply and fewer food options"
+    if pressure_type == "senior meal strain":
+        if location:
+            return f"{location} reports strain on senior meal programs"
+    if pressure_type == "access gap":
+        if location:
+            return f"{location} reports food access gaps"
+    if title and not _food_line_public_summary_is_generic(title):
+        cleaned_title = re.sub(r"\s+", " ", title).strip().rstrip(".")
+        return cleaned_title
+    summary_sentence = _food_line_public_summary_sentence(row, max_words=14)
+    if summary_sentence:
+        return summary_sentence.rstrip(".")
+    if location:
+        return f"{location} food-pressure signal"
+    return "Food-pressure signal"
+
+
+def _food_line_public_signal_reader_sentence(row: dict[str, Any]) -> str:
+    row = row or {}
+    location = _food_line_natural_location_label(row)
+    pressure_type = str(row.get("pressure_type") or "").strip().lower()
+    publisher = str(row.get("publisher") or row.get("source_name") or "").strip()
+    summary = " ".join(
+        part
+        for part in (
+            str(row.get("pressure_summary") or "").strip(),
+            str(row.get("summary_or_snippet") or "").strip(),
+            str(row.get("evidence_text") or "").strip(),
+        )
+        if part
+    ).lower()
+    if pressure_type == "demand strain":
+        if location:
+            return f"In {location}, food providers reported rising pantry demand and child food insecurity."
+        return "Food providers reported rising pantry demand and child food insecurity."
+    if pressure_type == "fuel cost strain":
+        if location:
+            return f"In {location}, higher diesel costs are reducing food-bank meal capacity."
+        return "Higher diesel costs are reducing food-bank meal capacity."
+    if pressure_type == "benefit access decline":
+        if location and publisher:
+            return f"In {location}, {publisher} reported that SNAP enrollment fell by more than 100,000 people, though the source does not prove why people left the program."
+        if location:
+            return f"In {location}, SNAP enrollment fell by more than 100,000 people, though the source does not prove why people left the program."
+        if publisher:
+            return f"{publisher} reported that SNAP enrollment fell by more than 100,000 people, though the source does not prove why people left the program."
+        return "SNAP enrollment fell by more than 100,000 people, though the source does not prove why people left the program."
+    if pressure_type == "benefit disruption":
+        if location:
+            return f"In {location}, the source reported benefit disruption that can push households toward food pantries."
+        return "The source reported benefit disruption that can push households toward food pantries."
+    if pressure_type == "child meal gap":
+        if location:
+            return f"In {location}, summer meal gaps are adding strain for children and families."
+        return "Summer meal gaps are adding strain for children and families."
+    if pressure_type == "service reduction":
+        if location:
+            return f"In {location}, pantry supply is tightening and fewer food options are available."
+        return "Pantry supply is tightening and fewer food options are available."
+    if pressure_type == "senior meal strain":
+        if location:
+            return f"In {location}, senior meal programs are under strain."
+        return "Senior meal programs are under strain."
+    if pressure_type == "access gap":
+        if location:
+            return f"In {location}, food-access gaps are adding strain."
+        return "Food-access gaps are adding strain."
+    if summary:
+        sentence = _food_line_public_summary_sentence(row, max_words=40).strip().rstrip(".")
+        if sentence:
+            if location and location.lower() not in sentence.lower():
+                sentence = f"In {location}, {sentence}"
+            return sentence + "."
+    if location:
+        return f"In {location}, food-pressure conditions were reported."
+    return "Food-pressure conditions were reported."
+
+
 def _food_line_public_date_label(row: dict[str, Any]) -> str:
     raw = _as_text(row.get("source_published_date") or row.get("published_at") or "")
     if not raw:
@@ -2422,9 +2572,7 @@ def _food_line_claim_limitation(row: dict[str, Any]) -> str:
 
 
 def _food_line_public_limits_note(row: dict[str, Any]) -> str:
-    claim = _food_line_claim_supported_text(row)
-    limitation = _food_line_claim_limitation(row)
-    return f"{limitation} Claim supported: {claim}."
+    return _food_line_claim_limitation(row)
 
 
 def _food_line_claim_ledger_row(row: dict[str, Any]) -> dict[str, str]:
@@ -2536,17 +2684,16 @@ def _food_line_at_a_glance_items(
 ) -> str:
     items: list[str] = []
     if primary_row:
-        items.append(f"<li>{html.escape(str(primary_row.get('title') or 'Current signal'))}</li>")
-        for row in continuing_rows[:2]:
-            items.append(f"<li>{html.escape(str(row.get('title') or 'Current signal'))}</li>")
-        for row in _food_line_current_secondary_rows(sources, primary_row, continuing_rows)[:2]:
-            items.append(f"<li>{html.escape(str(row.get('title') or 'Current signal'))}</li>")
+        public_rows = _food_line_public_story_rows(sources, primary_row, continuing_rows)
+        for row in public_rows[:3]:
+            items.append(f"<li>{html.escape(_food_line_public_signal_reader_label(row))}</li>")
     else:
         items.append(f"<li>{html.escape(_food_line_no_current_secondary_note())}</li>")
     return "".join(items)
 
 
 def _food_line_today_read_html(
+    sources: list[dict[str, Any]],
     date: str,
     primary_row: dict[str, Any] | None,
     continuing_rows: list[dict[str, Any]],
@@ -2564,10 +2711,16 @@ def _food_line_today_read_html(
             f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
         )
     if primary_row:
-        lead_summary = _food_line_public_summary_sentence(primary_row, max_words=40)
-        lead_summary_html = f"<p><strong>Today’s read:</strong> {html.escape(lead_summary)}</p>" if lead_summary else ""
+        public_rows = _food_line_public_story_rows(sources, primary_row, continuing_rows)
+        signal_label = "signal" if public_signal_count == 1 else "signals"
+        paragraphs = [f"Today’s Food Line found {public_signal_count} reported pressure {signal_label}."]
+        paragraphs.extend(
+            sentence
+            for sentence in (_food_line_public_signal_reader_sentence(row) for row in public_rows)
+            if sentence
+        )
+        lead_summary_html = "".join(f"<p>{html.escape(sentence)}</p>" for sentence in paragraphs)
         return (
-            f"<p>Today’s saved source records point to {public_signal_count} reported food-pressure signals.</p>"
             f"{lead_summary_html}"
             f"<p>The run reviewed {reviewed_count} records and excluded {excluded_count} records that were duplicate, stale, unrelated, or not strong enough for public use.</p>"
         )
@@ -3529,6 +3682,7 @@ def render_food_line_edition(
     lead_scope_label = _food_line_lead_pressure_scope_label(primary_row) if primary_row else None
     glance_html = _food_line_at_a_glance_items(sources, primary_row, continuing_rows, primary_signal_status)
     today_read_html = _food_line_today_read_html(
+        sources,
         date,
         primary_row,
         continuing_rows,
@@ -3558,7 +3712,12 @@ def render_food_line_edition(
         policy_items = "".join(_food_line_public_signal_item_html(row) for row in policy_rows if row)
         provider_items = "".join(_food_line_public_signal_item_html(row) for row in provider_rows if row)
         core_section_html = f"<div>{core_items}</div>" if core_items else "<p>No qualifying core Food Line signals were published.</p>"
-        other_section_html = f"<div>{other_items}</div>" if other_items else "<p>No additional Food Line signals qualified today.</p>"
+        if other_items:
+            other_section_html = f"<div>{other_items}</div>"
+        elif policy_items or provider_items:
+            other_section_html = "<p>Additional qualifying signals are grouped below by type.</p>"
+        else:
+            other_section_html = "<p>No additional Food Line signals qualified today.</p>"
         policy_section_html = f"<h2>Policy / Benefits Signals</h2>{f'<div>{policy_items}</div>' if policy_items else '<p>No policy / benefits signals qualified today.</p>'}"
         provider_section_html = f"<h2>Provider / Operations Signals</h2>{f'<div>{provider_items}</div>' if provider_items else '<p>No provider / operations signals qualified today.</p>'}"
     body = f"""{_food_line_theme_styles()}

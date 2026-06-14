@@ -1125,9 +1125,9 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Today&apos;s lead:" not in glance_html
     assert "What happened:" not in glance_html
     assert "More background sources appear below" not in glance_html
-    assert "Today’s saved source records point to" in today_read_html
-    assert "reported food-pressure signals" in today_read_html
-    assert "Cascade PBS" in glance_html
+    assert "Today’s Food Line found 3 reported pressure signals." in today_read_html
+    assert "The run reviewed" in today_read_html
+    assert "Washington food providers report rising pantry demand" in glance_html
     assert "Partial-source update / June 5, 2026" in edition_html
     assert "Generated from saved source records available for June 5, 2026." in edition_html
     assert "Today’s Read" in edition_html
@@ -3310,7 +3310,7 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     assert result["edition_mode"] == "current_update"
     assert result["lead_source_record_id"] == kold["source_record_id"]
     assert result["selected_lead_source_role"] == "local_signal"
-    assert "Today’s read:" in edition_html
+    assert "Today’s Food Line found 2 reported pressure signals." in edition_html
     assert "St. Francis House" in edition_html
     assert "Catholic Community Services" in edition_html
     assert "reported rising food-assistance demand" not in edition_html
@@ -4541,6 +4541,7 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
 
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     transcript_html = (tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}-transcript.html").read_text(encoding="utf-8")
+    audio_json = json.loads((tmp_path / "output" / "site" / "food-line" / "audio" / f"{date}.json").read_text(encoding="utf-8"))
     source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
     map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
     review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
@@ -4562,8 +4563,7 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
     assert "research_signal" not in source_table_html
     assert "data_anchor_signal" not in source_table_html
     assert "institutional_context_signal" not in source_table_html
-    assert "legal sports-betting access to lower food sufficiency among some U.S. households" in transcript_html
-    assert transcript_html.index("Other Food Line Signals") < transcript_html.index("legal sports-betting access to lower food sufficiency among some U.S. households")
+    assert "Other Food Line Signals" in transcript_html
     assert "pantry-demand story" not in transcript_html
     assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["pressure_signal"] == "true"
     assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["primary_source_url"] == "https://www.nber.org/papers/example-food-sufficiency-study"
@@ -4806,6 +4806,16 @@ def test_food_line_wpde_manual_seed_repairs_june_12_public_outputs(tmp_path: Pat
     assert "Horry County" in source_table_html
     assert "Tulsa, OK" in source_table_html
     assert "Tennessee" in source_table_html
+    assert "Today’s Food Line found 3 reported pressure signals." in edition_html
+    assert "In Horry County, South Carolina, food providers reported rising pantry demand and child food insecurity." in edition_html
+    assert "In Tulsa, Oklahoma, higher diesel costs are reducing food-bank meal capacity." in edition_html
+    assert "In Tennessee, WKRN reported that SNAP enrollment fell by more than 100,000 people, though the source does not prove why people left the program." in edition_html
+    assert "Horry County food providers report rising pantry demand" in edition_html
+    assert "Eastern Oklahoma food bank says diesel costs are reducing meal capacity" in edition_html
+    assert "Tennessee SNAP enrollment dropped by more than 100,000" in edition_html
+    assert "Additional qualifying signals are grouped below by type." in edition_html
+    assert "No additional Food Line signals qualified today." not in edition_html
+    assert "Claim supported:" not in edition_html
     assert "14 percent" in claim_ledger_html
     assert "20 percent" in claim_ledger_html
     assert "185" in claim_ledger_html

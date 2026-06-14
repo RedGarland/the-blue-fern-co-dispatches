@@ -13,6 +13,23 @@ from pathlib import Path
 from typing import Any
 
 from bluefern_dispatches.cascadia_weekly import format_coverage_label
+from bluefern_dispatches.care_line_render import (
+    render_care_line_claim_ledger_html,
+    render_care_line_edition_body,
+    render_care_line_source_table_html,
+)
+from bluefern_dispatches.care_line_sources import (
+    DISPATCH_NAME as CARE_LINE_DISPATCH_NAME,
+    DISPATCH_SLUG as CARE_LINE_DISPATCH_SLUG,
+    DISPATCH_TAGLINE as CARE_LINE_DISPATCH_TAGLINE,
+    build_public_edition_report as care_line_public_edition_report,
+    load_manual_source_records as load_care_line_manual_sources,
+    load_pressure_source_registry as load_care_line_pressure_registry,
+    summary_for_records as care_line_summary_for_records,
+    record_is_public as care_line_record_is_public,
+    validate_manual_source_records as validate_care_line_manual_sources,
+    validate_pressure_source_registry as validate_care_line_pressure_registry,
+)
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 
@@ -34,6 +51,12 @@ ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized fo
 CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
 CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
 AMERICAN_PRESSURE_PUBLIC_DESCRIPTION = "Source-based reporting on the pressures reshaping household life across the United States."
+CARE_LINE_PUBLIC_DESCRIPTION = (
+    "The Care Line Dispatch monitors source-backed reports of healthcare access pressure across the United States - "
+    "hospital and clinic strain, rural access loss, coverage disruption, medical affordability, pharmacy access, "
+    "staffing pressure, and public-health capacity cuts. It is designed for public reading, research, and accountability."
+)
+CARE_LINE_RSS_DESCRIPTION = "Source-backed signals of where American healthcare access is under strain."
 AMERICAN_PRESSURE_NO_SIGNAL = "No source-backed signal in this edition."
 AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
     "source_record_id",
@@ -51,16 +74,17 @@ AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_IDENTIFIED = "Reviewed week | No qualifying source-backed regional signals identified"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying source-backed regional signals surfaced"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
-EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "all")
-ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line")
+EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line", "all")
+ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
 DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
     "gaza": {"label": "Gaza", "public_visible": True},
     "cascadia": {"label": "Cascadia", "public_visible": True},
     "american-pressure": {"label": "American Pressure", "public_visible": True},
     "food-line": {"label": "Food Line Dispatch", "public_visible": True},
+    "care-line": {"label": "The Care Line Dispatch", "public_visible": True},
 }
 DISPATCH_LABELS = {slug: str(meta.get("label") or slug) for slug, meta in DISPATCH_CATALOG.items()}
-ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line")
+ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
 
 
 def dispatch_public_visible(slug: str) -> bool:
@@ -109,6 +133,7 @@ class DispatchConfig:
     stories: list[StoryRecord]
     body_html: str | None = None
     detail_artifacts: list[str] | None = None
+    raw_records: list[dict[str, Any]] | None = None
 
 
 GAZA_BODY_HTML = """<p><strong>Dispatches From Gaza</strong></p>
@@ -207,6 +232,166 @@ def _normalize_american_pressure_fixture_rows(
             continue
         valid_rows.append(row)
     return valid_rows
+
+
+def _care_line_fixtures(root: Path, edition_date: str) -> tuple[Any, Path | None]:
+    base = root / "data" / "dispatches" / "care-line" / "sources"
+    direct = base / edition_date / "manual_sources.json"
+    if direct.exists():
+        return json.loads(direct.read_text(encoding="utf-8")), direct
+    if not base.exists():
+        return [], None
+    dated = sorted(path for path in base.glob("*/manual_sources.json") if path.is_file())
+    if not dated:
+        return [], None
+    chosen = dated[-1]
+    return json.loads(chosen.read_text(encoding="utf-8")), chosen
+
+
+def _latest_care_line_fixture_date(root: Path) -> str | None:
+    base = root / "data" / "dispatches" / "care-line" / "sources"
+    if not base.exists():
+        return None
+    dated = sorted(path.parent.name for path in base.glob("*/manual_sources.json") if path.is_file())
+    return dated[-1] if dated else None
+
+
+def _normalize_care_line_fixture_rows(
+    raw_payload: Any,
+    fixture_path: Path | None,
+    warnings: list[str],
+    errors: list[str],
+) -> list[dict[str, Any]]:
+    if fixture_path is None:
+        return []
+    path_label = str(fixture_path)
+    expected = "expected JSON root to be a list of records or an object with a 'sources' list"
+    if isinstance(raw_payload, list):
+        rows = raw_payload
+    elif isinstance(raw_payload, dict):
+        rows = raw_payload.get("sources")
+        if not isinstance(rows, list):
+            errors.append(f"care-line manual sources file has invalid shape: {path_label}; {expected}")
+            return []
+    else:
+        errors.append(f"care-line manual sources file has invalid shape: {path_label}; {expected}")
+        return []
+    valid_rows: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            warnings.append(f"care-line fixture record {index + 1} in {path_label} is not an object; got {type(row).__name__}")
+            continue
+        valid_rows.append(row)
+    return valid_rows
+
+
+def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings: list[str], errors: list[str]) -> DispatchConfig:
+    data_root = root / "data" / "dispatches" / "care-line"
+    registry_file = data_root / "pressure_source_registry.json"
+    direct_fixture = data_root / "sources" / edition_date / "manual_sources.json"
+    any_fixture = data_root / "sources"
+    if not registry_file.exists() and not direct_fixture.exists() and not any_fixture.exists():
+        warnings.append("care-line data tree is not present; skipping care-line dispatch build")
+        return DispatchConfig(
+            slug=CARE_LINE_DISPATCH_SLUG,
+            name=CARE_LINE_DISPATCH_NAME,
+            edition_date=edition_date,
+            tagline=CARE_LINE_DISPATCH_TAGLINE,
+            logo="care-line-logo.png",
+            sources=[],
+            stories=[],
+            body_html=render_care_line_edition_body([], edition_date),
+            detail_artifacts=[],
+            raw_records=[],
+        )
+    try:
+        registry = load_care_line_pressure_registry(root)
+        errors.extend(validate_care_line_pressure_registry(registry))
+    except FileNotFoundError as exc:
+        errors.append(str(exc))
+        registry = []
+    except Exception as exc:
+        errors.append(f"care-line registry validation failed: {exc}")
+        registry = []
+    raw_payload, fixture_path = _care_line_fixtures(root, edition_date)
+    rows = _normalize_care_line_fixture_rows(raw_payload, fixture_path, warnings, errors)
+    errors.extend(validate_care_line_manual_sources(rows))
+    if not rows:
+        warnings.append("care-line has no fixture records; rendering a limited pilot edition")
+    if fixture_path is None:
+        warnings.append("care-line fixture file missing under data/dispatches/care-line/sources")
+
+    sources: list[SourceRecord] = []
+    stories: list[StoryRecord] = []
+    for index, row in enumerate(rows, start=1):
+        source_id = str(row.get("source_record_id") or f"care-line-src-{index:03d}")
+        story_id = f"care-line-story-{index:03d}"
+        included = row.get("qualifies_for_public_inclusion") is True and row.get("pressure_signal") is True
+        if included:
+            sources.append(
+                SourceRecord(
+                    source_id=source_id,
+                    title=str(row.get("title") or ""),
+                    url=str(row.get("url") or ""),
+                    publisher=str(row.get("publisher") or ""),
+                    published_at=str(row.get("published_at") or None) if row.get("published_at") is not None else None,
+                    retrieved_at=str(row.get("retrieved_at") or now),
+                    archive_path=None,
+                    used_in_story_ids=[story_id],
+                    claim_ids=[f"care-line-claim-{index:03d}"],
+                    dispatch_slug=CARE_LINE_DISPATCH_SLUG,
+                    edition_date=edition_date,
+                )
+            )
+            stories.append(
+                StoryRecord(
+                    story_id=story_id,
+                    title=str(row.get("title") or ""),
+                    summary=str(row.get("claim_supported") or row.get("pressure_summary") or row.get("summary_or_snippet") or ""),
+                    category=str(row.get("public_inclusion_bucket") or "Other Care Line Signals"),
+                    score=100 if row.get("included_as_lead") is True else 90,
+                    scoring_reasons=[str(row.get("pressure_reason") or "source-backed pilot record")],
+                    included_in_public_summary=True,
+                    included_in_detail_dataset=False,
+                    source_ids=[source_id],
+                )
+            )
+        else:
+            sources.append(
+                SourceRecord(
+                    source_id=source_id,
+                    title=str(row.get("title") or ""),
+                    url=str(row.get("url") or ""),
+                    publisher=str(row.get("publisher") or ""),
+                    published_at=str(row.get("published_at") or None) if row.get("published_at") is not None else None,
+                    retrieved_at=str(row.get("retrieved_at") or now),
+                    archive_path=None,
+                    used_in_story_ids=[],
+                    claim_ids=[],
+                    dispatch_slug=CARE_LINE_DISPATCH_SLUG,
+                    edition_date=edition_date,
+                )
+            )
+
+    if not sources:
+        warnings.append("care-line has no source-backed fixture records; rendering a no-signal page")
+    if not registry:
+        warnings.append("care-line pressure source registry is empty")
+
+    public_summary = care_line_summary_for_records(rows) if rows else CARE_LINE_DISPATCH_TAGLINE
+    body_html = render_care_line_edition_body(rows, edition_date)
+    return DispatchConfig(
+        slug=CARE_LINE_DISPATCH_SLUG,
+        name=CARE_LINE_DISPATCH_NAME,
+        edition_date=edition_date,
+        tagline=CARE_LINE_DISPATCH_TAGLINE,
+        logo="care-line-logo.png",
+        sources=sources,
+        stories=stories,
+        body_html=body_html,
+        detail_artifacts=[],
+        raw_records=rows,
+    )
 
 
 def _source_category_to_story_category(source_category_hint: str) -> str:
@@ -362,6 +547,7 @@ def seed_dispatches(
         date = (now or "").split("T")[0] or "2026-05-03"
     dispatch_seed_dates = dispatch_seed_dates or {}
     ap_date = dispatch_seed_dates.get("american-pressure", date)
+    care_line_date = dispatch_seed_dates.get("care-line") or _latest_care_line_fixture_date(root) or date
     gaza_sources = [
         SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", date),
         SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", date),
@@ -383,6 +569,7 @@ def seed_dispatches(
             detail_artifacts=[],
         ),
         _build_american_pressure_dispatch(root, now, ap_date, warnings, errors),
+        _build_care_line_dispatch(root, now, care_line_date, warnings, errors),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
@@ -476,6 +663,8 @@ def copy_asset(src: Path, dst: Path, dry_run: bool, wrote: list[str], warnings: 
 def real_dispatch_edition_files(root: Path, slug: str, edition_date: str) -> list[Path]:
     edition_dir = root / "output" / "dispatches" / slug / "editions" / edition_date
     required_names = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
+    if slug == CARE_LINE_DISPATCH_SLUG:
+        required_names.extend(["source_table.html", "claim_ledger.html"])
     files = [edition_dir / name for name in required_names]
     if all(path.exists() for path in files):
         return sorted(path for path in edition_dir.iterdir() if path.is_file())
@@ -504,6 +693,8 @@ def copy_real_dispatch_edition(root: Path, slug: str, edition_date: str, site_ro
 def existing_public_edition_files(site_root: Path, slug: str, edition_date: str) -> list[Path]:
     edition_dir = site_root / slug / "editions" / edition_date
     required_names = ["index.html", "edition_manifest.json", "sources_manifest.json", "curation_manifest.json"]
+    if slug == CARE_LINE_DISPATCH_SLUG:
+        required_names.extend(["source_table.html", "claim_ledger.html"])
     files = [edition_dir / name for name in required_names]
     if all(path.exists() for path in files):
         return files
@@ -536,7 +727,29 @@ def ensure_public_html_favicons(site_root: Path, dry_run: bool, wrote: list[str]
             path.write_text(updated, encoding="utf-8")
 
 
-def page(title: str, canonical: str, css_href: str, body: str, site_name: str = "Dispatches From The Blue Fern Co.") -> str:
+def page(
+    title: str,
+    canonical: str,
+    css_href: str,
+    body: str,
+    site_name: str = "Dispatches From The Blue Fern Co.",
+    *,
+    description: str | None = None,
+    og_image: str | None = None,
+    og_image_alt: str | None = None,
+) -> str:
+    description_meta = ""
+    if description:
+        description_meta = (
+            f'  <meta name="description" content="{html.escape(description)}">\n'
+            f'  <meta property="og:description" content="{html.escape(description)}">\n'
+            f'  <meta name="twitter:description" content="{html.escape(description)}">\n'
+        )
+    image_meta = ""
+    if og_image:
+        image_meta = f'  <meta property="og:image" content="{html.escape(og_image)}">\n  <meta name="twitter:image" content="{html.escape(og_image)}">\n'
+        if og_image_alt:
+            image_meta += f'  <meta property="og:image:alt" content="{html.escape(og_image_alt)}">\n  <meta name="twitter:image:alt" content="{html.escape(og_image_alt)}">\n'
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -547,7 +760,7 @@ def page(title: str, canonical: str, css_href: str, body: str, site_name: str = 
   <meta property="og:url" content="{html.escape(canonical)}">
   <meta property="og:site_name" content="{html.escape(site_name)}">
   <meta name="twitter:card" content="summary_large_image">
-{favicon_links()}
+{description_meta}{image_meta}{favicon_links()}
   <link rel="stylesheet" href="{css_href}">
 </head>
 <body>
@@ -595,13 +808,16 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
         "gaza": "Daily source-backed briefings from Gaza.",
         "cascadia": "Weekly source-backed regional briefings for Washington, Oregon, and Idaho.",
         "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
+        "care-line": CARE_LINE_DISPATCH_TAGLINE,
     }
     for dispatch in dispatches:
-        if dispatch.slug not in {"gaza", "cascadia"}:
+        if dispatch.slug not in {"gaza", "cascadia", "care-line"}:
             continue
         card_style = ""
         if dispatch.slug == "cascadia":
             card_style = ' style="--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\');"'
+        elif dispatch.slug == "care-line":
+            card_style = ' style="--dispatch-card-watermark: url(\'/care-line/assets/care-line-logo.png\');"'
         else:
             card_style = ' style="--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\');"'
         card_rows.append(
@@ -620,7 +836,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
       </li>"""
     card_rows.append(food_line_card)
     cards = "\n".join(card_rows)
-    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "cascadia", "food-line"))}
+    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "cascadia", "food-line", "care-line"))}
   <main class="home">
     <section class="hero root-hero">
       <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">
@@ -647,8 +863,28 @@ def render_dispatch_index(dispatch: DispatchConfig) -> str:
         if dispatch.slug == "cascadia"
         else AMERICAN_PRESSURE_PUBLIC_DESCRIPTION
         if dispatch.slug == "american-pressure"
+        else CARE_LINE_PUBLIC_DESCRIPTION
+        if dispatch.slug == CARE_LINE_DISPATCH_SLUG
         else "Structured briefings compiled from traceable source records."
     )
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="home">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
+    <p class="lede">{html.escape(description)}</p>
+    <p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>
+    <p><a href="editions/{dispatch.edition_date}/">Read the latest briefing</a></p>
+    <p><a href="editions/{dispatch.edition_date}/source_table.html">Open the source table</a> | <a href="editions/{dispatch.edition_date}/claim_ledger.html">Open the claim ledger</a></p>
+    <h2>Recent Editions</h2>
+    <ul class="edition-list">
+      <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(dispatch.name)} - {dispatch.edition_date}</a></li>
+    </ul>
+  </main>
+{footer("")}"""
+        return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -812,6 +1048,8 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
 def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) -> bool:
     if slug == "food-line":
         return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
+    if slug == CARE_LINE_DISPATCH_SLUG:
+        return bool(care_line_public_edition_report(site_root, edition_date).get("listable"))
     if slug == "gaza":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         if not manifest_path.exists():
@@ -864,6 +1102,8 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
         return True
     if slug == "food-line":
         return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
+    if slug == CARE_LINE_DISPATCH_SLUG:
+        return bool(care_line_public_edition_report(site_root, edition_date).get("listable"))
     if slug == "american-pressure":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         index_path = site_root / slug / "editions" / edition_date / "index.html"
@@ -1022,6 +1262,9 @@ def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date
 
 def public_edition_subtitle(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
     if dispatch.slug != "cascadia":
+        if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+            manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+            return str(manifest.get("public_archive_subtitle") or manifest.get("public_summary") or "").strip()
         return ""
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
     if manifest.get("public_story_count") == 0:
@@ -1369,6 +1612,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         if dispatch.slug == "cascadia"
         else AMERICAN_PRESSURE_PUBLIC_DESCRIPTION
         if dispatch.slug == "american-pressure"
+        else CARE_LINE_PUBLIC_DESCRIPTION
+        if dispatch.slug == CARE_LINE_DISPATCH_SLUG
         else "Structured briefings compiled from traceable source records."
     )
     site_root = site_root or Path("output") / "site"
@@ -1392,6 +1637,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     </section>"""
     elif dispatch.slug == "cascadia":
         map_link = '\n    <p><a href="map/">Open latest Cascadia pressure map</a></p>'
+    elif dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        map_link = '\n    <p>No map is published in this pilot phase.</p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
@@ -1399,6 +1646,21 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     cascadia_intro = ""
     if dispatch.slug == "cascadia":
         cascadia_intro = "<p>A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>"
+    care_line_intro = ""
+    care_line_at_a_glance = ""
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        latest_summary = public_edition_subtitle(site_root, dispatch, latest) if latest else ""
+        if latest_summary:
+            care_line_intro = f"<p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>"
+            care_line_at_a_glance = (
+                "\n    <section class=\"section\">"
+                "<h2>At A Glance</h2>"
+                f"<p>{html.escape(latest_summary)}</p>"
+                f'<p><a href="editions/{latest}/source_table.html">Source table</a> | <a href="editions/{latest}/claim_ledger.html">Claim ledger</a></p>'
+                "</section>"
+            )
+        else:
+            care_line_intro = f"<p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>"
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -1414,6 +1676,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     {map_link}
     {dashboard_link}
     {explainer_block}
+    {care_line_intro}
+    {care_line_at_a_glance}
     {signal_pack_note}
     <h2>Recent Editions</h2>
     <ul class="edition-list">
@@ -1454,6 +1718,22 @@ def ensure_cascadia_source_tables(site_root: Path, dry_run: bool, wrote: list[st
 
 
 def render_archive(dispatch: DispatchConfig) -> str:
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="archive">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">Archive</p>
+    <p class="lede">{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>
+    <p><a href="editions/{dispatch.edition_date}/">Read the latest briefing</a></p>
+    <p><a href="editions/{dispatch.edition_date}/source_table.html">Open the source table</a> | <a href="editions/{dispatch.edition_date}/claim_ledger.html">Open the claim ledger</a></p>
+    <ul class="edition-list">
+      <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(dispatch.name)} - {dispatch.edition_date}</a></li>
+    </ul>
+  </main>
+{footer("")}"""
+        return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="archive">
     <section class="hero">
@@ -1474,6 +1754,31 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str],
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
         gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        items = "\n".join(
+            render_edition_list_item(site_root, dispatch, date)
+            for date in edition_dates
+        )
+        latest = edition_dates[0] if edition_dates else ""
+        latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+        subtitle = public_edition_subtitle(site_root, dispatch, latest) if latest else ""
+        source_link_block = f'<p><a href="editions/{latest}/source_table.html">Source table</a> | <a href="editions/{latest}/claim_ledger.html">Claim ledger</a></p>' if latest else ""
+        body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="archive">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">Archive</p>
+    <p class="lede">{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>
+    {latest_link}
+    <p>{html.escape(subtitle or CARE_LINE_PUBLIC_DESCRIPTION)}</p>
+    {source_link_block}
+    <ul class="edition-list">
+{items}
+    </ul>
+  </main>
+{footer("")}"""
+        return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
     items = "\n".join(
         render_edition_list_item(site_root, dispatch, date)
         for date in edition_dates
@@ -1623,6 +1928,22 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     backup_dir = backup_root / dispatch.slug / dispatch.edition_date
     source_manifest_public = public_dir / "sources_manifest.json"
     curation_manifest_public = public_dir / "curation_manifest.json"
+    extra_public_artifacts: list[str] = []
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
+        extra_public_artifacts = [
+            str(public_dir / "source_table.html"),
+            str(public_dir / "claim_ledger.html"),
+        ]
+    public_artifacts = [str(public_dir / "index.html"), str(source_manifest_public), str(curation_manifest_public), *extra_public_artifacts]
+    def _record_value(record: Any, key: str, default: Any = None) -> Any:
+        if isinstance(record, dict):
+            return record.get(key, default)
+        return getattr(record, key, default)
+
+    claim_count = len([story for story in dispatch.stories if story.included_in_public_summary])
+    qualified_public_claim_count = claim_count
+    lead_signal_count = len([story for story in dispatch.stories if story.score >= 100]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0
     edition_manifest = {
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
@@ -1637,12 +1958,18 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "story_count": len(dispatch.stories),
         "source_manifest_path": str(source_manifest_public),
         "curation_manifest_path": str(curation_manifest_public),
-        "free_public_artifacts": [
-            str(public_dir / "index.html"),
-            str(source_manifest_public),
-            str(curation_manifest_public),
-        ],
+        "free_public_artifacts": public_artifacts,
         "paid_or_detail_artifacts": [],
+        "claim_count": len([row for row in care_line_records if _record_value(row, "qualifies_for_public_inclusion") is True]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else len(dispatch.stories),
+        "qualified_public_claim_count": len([row for row in care_line_records if _record_value(row, "qualifies_for_public_inclusion") is True]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "lead_signal_count": lead_signal_count,
+        "public_rendered": True if dispatch.slug == CARE_LINE_DISPATCH_SLUG else True,
+        "stale_current_signal_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "resource_only_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "public_summary": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "public_archive_subtitle": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "source_table_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/source_table.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "claim_ledger_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/claim_ledger.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "future_paid_fields_todo": [
             "county_fips",
             "state",
@@ -1701,6 +2028,10 @@ def build_site(
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
     copy_asset(root / "assets" / "food-line-logo.png", site_root / "food-line" / "assets" / "food-line-logo.png", dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "food-line-dispatch-social.png", site_root / "food-line" / "assets" / "food-line-dispatch-social.png", dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "care-line-logo.png", site_root / "care-line" / "assets" / "care-line-logo.png", dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "care-line-dispatch-social.png", site_root / "care-line" / "assets" / "care-line-dispatch-social.png", dry_run, wrote, warnings)
+    copy_asset(root / "assets" / "care-line-mark.png", site_root / "care-line" / "assets" / "care-line-mark.png", dry_run, wrote, warnings)
 
     try:
         from bluefern_dispatches.cascadia_detention_watch import build_detention_watch
@@ -1750,7 +2081,7 @@ def build_site(
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = (
             (
-                dispatch.slug in {"cascadia", "gaza", "american-pressure", "food-line"}
+                dispatch.slug in {"cascadia", "gaza", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}
                 and copy_real_dispatch_edition(root, dispatch.slug, dispatch.edition_date, site_root, dry_run, wrote)
             )
             if not skip_current_edition
@@ -1810,12 +2141,20 @@ def build_site(
             write_text(dispatch_public_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
-            if dispatch.slug in {"gaza", "american-pressure", "food-line"}:
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+                care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
+                write_text(dispatch_public_edition / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                write_text(dispatch_public_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+            if dispatch.slug in {"gaza", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}:
                 dispatch_output_edition = root / "output" / "dispatches" / dispatch.slug / "editions" / dispatch.edition_date
                 write_text(dispatch_output_edition / "index.html", edition_html, dry_run, wrote)
                 if dispatch.slug == "american-pressure":
                     write_text(dispatch_output_edition / "edition.html", edition_html, dry_run, wrote)
                     write_text(dispatch_output_edition / "edition.md", dispatch.body_html or "", dry_run, wrote)
+                if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+                    care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
+                    write_text(dispatch_output_edition / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                    write_text(dispatch_output_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
                 write_text(dispatch_output_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
@@ -1823,11 +2162,22 @@ def build_site(
             write_text(backup_dir / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
             write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+                care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
+                write_text(backup_dir / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                write_text(backup_dir / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
-        if dispatch.slug in {"gaza", "cascadia", "american-pressure", "food-line"}:
+        if dispatch.slug in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}:
             if dispatch.slug == "cascadia":
                 remove_unlistable_public_cascadia_editions(site_root, dry_run, wrote)
                 ensure_cascadia_source_tables(site_root, dry_run, wrote, warnings)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+                report = care_line_public_edition_report(site_root, dispatch.edition_date)
+                if not report.get("listable"):
+                    warnings.append(
+                        f"care-line edition {dispatch.edition_date} did not meet listability checks: "
+                        f"{'; '.join(str(item) for item in report.get('reasons') or []) or 'no specific reason recorded'}"
+                    )
             edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
@@ -1866,7 +2216,7 @@ def _expected_dispatches_for_date_checks(
     if expect_dispatches:
         dispatches_to_check = expect_dispatches
     elif expect_date and only_dispatches:
-        dispatches_to_check = tuple(slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure", "food-line"})
+        dispatches_to_check = tuple(slug for slug in only_dispatches if slug in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG})
     else:
         dispatches_to_check = ALL_EXPECT_DISPATCHES
     if only_dispatches:
@@ -1952,7 +2302,7 @@ def collect_public_site_files(
         relative_parts = path.relative_to(site_root).parts
         if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
-        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line"} and relative_parts[1] == "editions":
+        if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG} and relative_parts[1] == "editions":
             slug = relative_parts[0]
             edition_date = relative_parts[2]
             max_public_date = public_max_dates.get(slug)
@@ -2000,6 +2350,9 @@ def validate_pages_publish(
     if ((not only_dispatches) or ("gaza" in only_dispatches)) and not planning_mode:
         if not (site_root / "gaza" / "archive.html").exists():
             errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
+    if ((not only_dispatches) or (CARE_LINE_DISPATCH_SLUG in only_dispatches)) and not planning_mode:
+        if not (site_root / CARE_LINE_DISPATCH_SLUG / "archive.html").exists():
+            errors.append(f"Care Line archive does not exist: {site_root / CARE_LINE_DISPATCH_SLUG / 'archive.html'}")
     if ((not only_dispatches) or ("american-pressure" in only_dispatches)) and not planning_mode:
         if not (site_root / "american-pressure" / "archive.html").exists():
             errors.append(f"American Pressure archive does not exist: {site_root / 'american-pressure' / 'archive.html'}")
@@ -2073,7 +2426,7 @@ def copy_public_site_to_pages(
 
 
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
-    tracked_slugs = ("cascadia", "food-line")
+    tracked_slugs = ("cascadia", "food-line", CARE_LINE_DISPATCH_SLUG)
     if not any((pages_repo / slug / "editions").exists() for slug in tracked_slugs):
         return []
     removed: list[dict[str, str]] = []
@@ -2238,6 +2591,9 @@ def validate_pages_repo_after_copy(
     if (not only_dispatches) or ("gaza" in only_dispatches):
         if not (pages_repo / "gaza" / "archive.html").exists():
             errors.append(f"Pages repo Gaza archive does not exist: {pages_repo / 'gaza' / 'archive.html'}")
+    if (not only_dispatches) or (CARE_LINE_DISPATCH_SLUG in only_dispatches):
+        if not (pages_repo / CARE_LINE_DISPATCH_SLUG / "archive.html").exists():
+            errors.append(f"Pages repo Care Line archive does not exist: {pages_repo / CARE_LINE_DISPATCH_SLUG / 'archive.html'}")
     if ("food-line" in only_dispatches) or ("food-line" in expect_dispatches):
         if not (pages_repo / "food-line" / "archive.html").exists():
             errors.append(f"Pages repo Food Line archive does not exist: {pages_repo / 'food-line' / 'archive.html'}")
@@ -2260,6 +2616,9 @@ def validate_pages_repo_after_copy(
         if "food-line" in dispatches_to_check and public_edition_is_listable(site_root, "food-line", expect_date):
             if not (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"expected Food Line edition missing: {expect_date}")
+        if CARE_LINE_DISPATCH_SLUG in dispatches_to_check and public_edition_is_listable(site_root, CARE_LINE_DISPATCH_SLUG, expect_date):
+            if not (pages_repo / CARE_LINE_DISPATCH_SLUG / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected Care Line edition missing: {expect_date}")
         if "food-line" in dispatches_to_check and not public_edition_is_listable(site_root, "food-line", expect_date):
             if (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"unexpected Food Line edition present for skipped day: {expect_date}")

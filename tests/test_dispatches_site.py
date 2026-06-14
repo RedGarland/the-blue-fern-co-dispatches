@@ -95,6 +95,12 @@ def copy_repo_assets(repo: Path, work: Path) -> None:
             (work_assets / asset.name).write_bytes(asset.read_bytes())
 
 
+def copy_care_line_data(repo: Path, work: Path) -> None:
+    source_root = repo / "data" / "dispatches" / "care-line"
+    target_root = work / "data" / "dispatches" / "care-line"
+    shutil.copytree(source_root, target_root)
+
+
 @pytest.fixture(scope="session")
 def built_site_template(tmp_path_factory):
     import os
@@ -103,12 +109,18 @@ def built_site_template(tmp_path_factory):
     test_root = tmp_path_factory.mktemp("dispatches-site-template")
     work = test_root / "repo"
     copy_repo_assets(repo, work)
+    copy_care_line_data(repo, work)
     backup_root = test_root / "dispatches-bluefern-backups"
     previous_seed = os.environ.get("BLUEFERN_SEED_EDITION_DATE")
     os.environ["BLUEFERN_SEED_EDITION_DATE"] = "2026-05-03"
     try:
         add_cascadia_dispatch_edition(work, "2026-05-03")
-        result = build_site(work, dry_run=False, backup_root=backup_root)
+        result = build_site(
+            work,
+            dry_run=False,
+            backup_root=backup_root,
+            dispatch_seed_dates={"care-line": "2026-05-23"},
+        )
         yield work, backup_root, result
     finally:
         if previous_seed is None:
@@ -156,12 +168,16 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert 'href="/gaza/"' in html
     assert 'href="/cascadia/"' in html
     assert 'href="/food-line/"' in html
+    assert 'href="/care-line/"' in html
     assert 'href="/american-pressure/"' not in html
     assert "The Cascadia Briefing" in html
     assert "Food Line Dispatch" in html
+    assert "The Care Line Dispatch" in html
+    assert "Source-backed signals of where American healthcare access is under strain." in html
     assert "Daily source-backed food insecurity pressure signals across the United States" in html
     assert '<img class="dispatch-card-logo" src="/food-line/assets/food-line-logo.png"' not in html
     assert '--dispatch-card-watermark: url(\'/food-line/assets/food-line-logo.png\')' in html
+    assert '--dispatch-card-watermark: url(\'/care-line/assets/care-line-logo.png\')' in html
     assert '--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\')' in html
     assert '--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\')' in html
     assert 'href="/cascadia/detention-watch/"' not in html
@@ -196,6 +212,11 @@ def test_favicon_assets_are_copied_and_linked_from_public_html(built_site):
         site / "cascadia" / "index.html",
         site / "cascadia" / "archive.html",
         site / "cascadia" / "editions" / "2026-05-03" / "index.html",
+        site / "care-line" / "index.html",
+        site / "care-line" / "archive.html",
+        site / "care-line" / "editions" / "2026-05-23" / "index.html",
+        site / "care-line" / "editions" / "2026-05-23" / "source_table.html",
+        site / "care-line" / "editions" / "2026-05-23" / "claim_ledger.html",
     ]
     for page in pages:
         assert_favicon_links(read(page))
@@ -305,6 +326,9 @@ def test_dispatch_pages_link_back_to_dispatches_home(built_site):
         site / "cascadia" / "index.html",
         site / "cascadia" / "archive.html",
         site / "cascadia" / "editions" / "2026-05-03" / "index.html",
+        site / "care-line" / "index.html",
+        site / "care-line" / "archive.html",
+        site / "care-line" / "editions" / "2026-05-23" / "index.html",
     ]
 
     for page in pages:
@@ -313,8 +337,10 @@ def test_dispatch_pages_link_back_to_dispatches_home(built_site):
 
     gaza_edition = read(site / "gaza" / "editions" / "2026-05-03" / "index.html")
     cascadia_edition = read(site / "cascadia" / "editions" / "2026-05-03" / "index.html")
+    care_line_edition = read(site / "care-line" / "editions" / "2026-05-23" / "index.html")
     assert 'href="/gaza/">Dispatches From Gaza</a>' in gaza_edition
     assert 'href="/cascadia/">The Cascadia Briefing</a>' in cascadia_edition
+    assert 'href="/care-line/">The Care Line Dispatch</a>' in care_line_edition
 
 
 def test_cascadia_page_and_dated_edition_url(built_site):
@@ -803,6 +829,7 @@ def test_cascadia_expect_date_does_not_require_same_date_gaza(built_site):
         site_root,
         "2026-05-10",
         expect_dispatches=("cascadia",),
+        only_dispatches=("cascadia",),
     )
 
     assert pre_errors == []
@@ -833,7 +860,7 @@ def test_cascadia_expect_date_reports_cascadia_missing_only(built_site):
 
 
 def test_expect_dispatch_all_expands_to_full_site_expectation():
-    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia", "american-pressure", "food-line")
+    assert normalize_expect_dispatches(("all",)) == ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
 
 
 def test_american_pressure_expect_date_does_not_require_same_date_cascadia_or_gaza(built_site):

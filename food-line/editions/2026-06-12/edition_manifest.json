@@ -2,13 +2,13 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-12",
-  "generated_at": "2026-06-14T03:19:24.000888+00:00",
-  "source_count": 30,
+  "generated_at": "2026-06-14T04:05:36.498301+00:00",
+  "source_count": 31,
   "story_count": 1,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
-    "source_count": 30,
+    "source_count": 31,
     "source_families": [
       "disaster_emergency",
       "economic_data",
@@ -18,7 +18,7 @@
       "state_official"
     ],
     "local_signal_count": 26,
-    "state_signal_count": 27,
+    "state_signal_count": 28,
     "national_context_count": 3
   },
   "lead_source_record_id": "wpde-grand-strand-food-insecurity-20260612",
@@ -27,12 +27,12 @@
   "primary_signal_status": "new_primary",
   "primary_disqualification_reason": "",
   "public_rendered": true,
-  "public_signal_count": 2,
+  "public_signal_count": 3,
   "qualified_primary_count": 1,
-  "claim_count": 2,
+  "claim_count": 3,
   "claim_ledger_path": "/food-line/editions/2026-06-12/claim_ledger.html",
   "source_table_path": "/food-line/editions/2026-06-12/source_table.html",
-  "qualified_source_count": 2,
+  "qualified_source_count": 3,
   "excluded_source_count": 28,
   "correction_status": "none",
   "validation_status": "ok",
@@ -64,7 +64,7 @@
   "source_roles_count": {
     "daily_signal": 0,
     "background_context": 0,
-    "policy_context": 0,
+    "policy_context": 1,
     "provider_signal": 1,
     "local_signal": 26,
     "map_signal": 0,
@@ -75,7 +75,7 @@
     "baseline_condition": 1
   },
   "local_signal_count": 26,
-  "state_signal_count": 27,
+  "state_signal_count": 28,
   "national_context_count": 3,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
@@ -89,7 +89,7 @@
   "pressure_source_count_by_family": {
     "disaster_emergency": 0,
     "economic_data": 0,
-    "local_news": 2,
+    "local_news": 3,
     "public_radio": 0,
     "school_meals_child_nutrition": 0,
     "state_official": 0
@@ -103,6 +103,7 @@
     "OK": 1,
     "PA": 0,
     "SC": 1,
+    "TN": 1,
     "TX": 0,
     "US": 0,
     "WA": 0
@@ -115,20 +116,20 @@
   "rejected_news_reasons": [],
   "rejected_news_by_source": {},
   "collected_source_count_by_source_id": {},
-  "pressure_verified_count": 2,
+  "pressure_verified_count": 3,
   "pressure_demoted_unverified_count": 28,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
-    "manual_review": 2,
+    "manual_review": 3,
     "page_text_excerpt": 8,
     "rss_item_text": 20
   },
   "collected_count_by_extraction_quality": {
     "high": 20,
-    "medium": 10
+    "medium": 11
   },
   "verified_pressure_count_by_extraction_quality": {
-    "medium": 2
+    "medium": 3
   },
   "demoted_count_by_extraction_quality": {
     "high": 20,

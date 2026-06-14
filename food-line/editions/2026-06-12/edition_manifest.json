@@ -2,13 +2,13 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-12",
-  "generated_at": "2026-06-14T01:09:45.109270+00:00",
-  "source_count": 29,
+  "generated_at": "2026-06-14T03:19:24.000888+00:00",
+  "source_count": 30,
   "story_count": 1,
   "source_adequacy": {
     "status": "daily",
     "label": "Daily edition",
-    "source_count": 29,
+    "source_count": 30,
     "source_families": [
       "disaster_emergency",
       "economic_data",
@@ -17,8 +17,8 @@
       "school_meals_child_nutrition",
       "state_official"
     ],
-    "local_signal_count": 18,
-    "state_signal_count": 26,
+    "local_signal_count": 26,
+    "state_signal_count": 27,
     "national_context_count": 3
   },
   "lead_source_record_id": "wpde-grand-strand-food-insecurity-20260612",
@@ -27,12 +27,12 @@
   "primary_signal_status": "new_primary",
   "primary_disqualification_reason": "",
   "public_rendered": true,
-  "public_signal_count": 1,
+  "public_signal_count": 2,
   "qualified_primary_count": 1,
-  "claim_count": 1,
+  "claim_count": 2,
   "claim_ledger_path": "/food-line/editions/2026-06-12/claim_ledger.html",
   "source_table_path": "/food-line/editions/2026-06-12/source_table.html",
-  "qualified_source_count": 1,
+  "qualified_source_count": 2,
   "excluded_source_count": 28,
   "correction_status": "none",
   "validation_status": "ok",
@@ -64,18 +64,18 @@
   "source_roles_count": {
     "daily_signal": 0,
     "background_context": 0,
-    "policy_context": 2,
-    "provider_signal": 0,
-    "local_signal": 18,
-    "map_signal": 6,
+    "policy_context": 0,
+    "provider_signal": 1,
+    "local_signal": 26,
+    "map_signal": 0,
     "resource_context": 2,
     "research_signal": 0,
     "institutional_context_signal": 0,
     "data_anchor_signal": 0,
     "baseline_condition": 1
   },
-  "local_signal_count": 18,
-  "state_signal_count": 26,
+  "local_signal_count": 26,
+  "state_signal_count": 27,
   "national_context_count": 3,
   "editorial_status": "daily_signal",
   "pressure_status": "pressure_detected",
@@ -89,7 +89,7 @@
   "pressure_source_count_by_family": {
     "disaster_emergency": 0,
     "economic_data": 0,
-    "local_news": 1,
+    "local_news": 2,
     "public_radio": 0,
     "school_meals_child_nutrition": 0,
     "state_official": 0
@@ -100,6 +100,7 @@
     "ID": 0,
     "MS": 0,
     "OH": 0,
+    "OK": 1,
     "PA": 0,
     "SC": 1,
     "TX": 0,
@@ -115,23 +116,23 @@
   "rejected_news_by_source": {},
   "collected_source_count_by_source_id": {},
   "pressure_verified_count": 2,
-  "pressure_demoted_unverified_count": 27,
+  "pressure_demoted_unverified_count": 28,
   "pressure_registry_only_count": 0,
   "pressure_evidence_basis_counts": {
-    "manual_review": 1,
+    "manual_review": 2,
     "page_text_excerpt": 8,
     "rss_item_text": 20
   },
   "collected_count_by_extraction_quality": {
     "high": 20,
-    "medium": 9
+    "medium": 10
   },
   "verified_pressure_count_by_extraction_quality": {
     "medium": 2
   },
   "demoted_count_by_extraction_quality": {
     "high": 20,
-    "medium": 7
+    "medium": 8
   },
   "fetch_failure_count_by_source_id": {},
   "no_evidence_count_by_source_id": {},
@@ -199,6 +200,8 @@
   "discovery_gap_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.json",
   "discovery_gap_report_markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.md",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
+  "qualified_but_not_public_count": 0,
+  "qualified_but_not_public_warning": "",
   "bluesky_post_text": "Food Line Dispatch, June 12, 2026: WPDE / ABC 15 reported that Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food... Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
   "bluesky_post_ready": true
 }

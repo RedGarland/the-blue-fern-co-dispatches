@@ -3,42 +3,47 @@
   "edition_date": "2026-06-12",
   "markers": [
     {
-      "source_record_id": "tulsa-flyer-food-bank-fuel-costs-20260612",
-      "location_name": "Tulsa, OK",
-      "state": "OK",
+      "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+      "location_name": "Horry County",
+      "state": "SC",
       "county_name": "",
-      "category": "acute strain / service disruption",
-      "publisher": "Tulsa Flyer",
+      "category": "elevated demand",
+      "publisher": "WPDE / ABC 15",
       "source_family": "local_news",
       "source_purpose": "current_news",
       "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
+      "pressure_signal": true,
+      "pressure_summary": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
       "extraction_quality": "medium",
       "expected_text_basis": "page_text",
       "pressure_verification_required": true,
-      "evidence_text": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away",
-      "evidence_excerpt": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away",
+      "evidence_text": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
+      "evidence_excerpt": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
       "evidence_text_basis": "manual_review",
       "pressure_match_terms": [
-        "fuel costs",
-        "meals away"
+        "more families",
+        "food insecurity",
+        "inflation"
       ],
-      "pressure_verification_status": "demoted_context",
+      "pressure_verification_status": "source_text_verified",
       "issue_tags": [],
-      "affected_groups": [],
-      "pressure_type": "service reduction",
-      "evidence_level": "background context",
+      "affected_groups": [
+        "children",
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
       "freshness_role": "fresh_daily_signal",
       "source_role_allowed": "context_only",
       "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Food Bank of Eastern Oklahoma says fuel costs are taking meals away",
-      "source_url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
-      "note": "",
+      "pressure_reason": "matched demand strain",
+      "source_title": "Grand Strand food providers say inflation is driving more families to pantries",
+      "source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+      "note": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
       "dispatch_date": "2026-06-12",
       "latitude": null,
-      "longitude": null
+      "longitude": null,
+      "coordinate_basis": "state centroid"
     },
     {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
@@ -1113,7 +1118,51 @@
       "longitude": null
     }
   ],
-  "pressure_markers": [],
+  "pressure_markers": [
+    {
+      "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+      "location_name": "Horry County",
+      "state": "SC",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "WPDE / ABC 15",
+      "source_family": "local_news",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
+      "evidence_excerpt": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
+      "evidence_text_basis": "manual_review",
+      "pressure_match_terms": [
+        "more families",
+        "food insecurity",
+        "inflation"
+      ],
+      "pressure_verification_status": "source_text_verified",
+      "issue_tags": [],
+      "affected_groups": [
+        "children",
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Grand Strand food providers say inflation is driving more families to pantries",
+      "source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+      "note": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
+      "dispatch_date": "2026-06-12",
+      "latitude": null,
+      "longitude": null,
+      "coordinate_basis": "state centroid"
+    }
+  ],
   "context_records": [
     {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
@@ -1274,45 +1323,6 @@
     }
   ],
   "excluded_records": [
-    {
-      "source_record_id": "tulsa-flyer-food-bank-fuel-costs-20260612",
-      "location_name": "Tulsa, OK",
-      "state": "OK",
-      "county_name": "",
-      "category": "acute strain / service disruption",
-      "publisher": "Tulsa Flyer",
-      "source_family": "local_news",
-      "source_purpose": "current_news",
-      "source_role": "local_signal",
-      "pressure_signal": false,
-      "pressure_summary": "",
-      "extraction_quality": "medium",
-      "expected_text_basis": "page_text",
-      "pressure_verification_required": true,
-      "evidence_text": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away",
-      "evidence_excerpt": "Food Bank of Eastern Oklahoma is facing record fuel costs while trying to expand summer meal delivery across 24 counties. Diesel spending is about $24,000 to $26,000 a month, up from about $12,000 to $14,000 in typical summer months, and the added fuel costs take meals away",
-      "evidence_text_basis": "manual_review",
-      "pressure_match_terms": [
-        "fuel costs",
-        "meals away"
-      ],
-      "pressure_verification_status": "demoted_context",
-      "issue_tags": [],
-      "affected_groups": [],
-      "pressure_type": "service reduction",
-      "evidence_level": "background context",
-      "freshness_role": "fresh_daily_signal",
-      "source_role_allowed": "context_only",
-      "pressure_required": false,
-      "pressure_reason": "insufficient specific pressure evidence",
-      "source_title": "Food Bank of Eastern Oklahoma says fuel costs are taking meals away",
-      "source_url": "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs/",
-      "note": "",
-      "dispatch_date": "2026-06-12",
-      "latitude": null,
-      "longitude": null,
-      "reason": "context_only_or_no_pressure_evidence"
-    },
     {
       "source_record_id": "food-line-auto-cf0a04e90027d7c6",
       "location_name": "United States",
@@ -2416,19 +2426,19 @@
   ],
   "diagnostics": {
     "total_source_count": 29,
-    "pressure_signal_count": 0,
-    "pressure_marker_count": 0,
+    "pressure_signal_count": 1,
+    "pressure_marker_count": 1,
     "baseline_record_count": 1,
     "context_record_count": 3,
     "excluded_context_count": 3,
-    "excluded_record_count": 29,
+    "excluded_record_count": 28,
     "unmapped_pressure_count": 0,
     "exclusion_reasons": {
-      "context_only_or_no_pressure_evidence": 28,
+      "context_only_or_no_pressure_evidence": 27,
       "baseline_condition": 1
     },
-    "pressure_verified_count": 1,
-    "pressure_demoted_unverified_count": 28,
+    "pressure_verified_count": 2,
+    "pressure_demoted_unverified_count": 27,
     "pressure_registry_only_count": 0,
     "pressure_evidence_basis_counts": {
       "manual_review": 1,
@@ -2440,11 +2450,11 @@
       "medium": 9
     },
     "verified_pressure_count_by_extraction_quality": {
-      "medium": 1
+      "medium": 2
     },
     "demoted_count_by_extraction_quality": {
       "high": 20,
-      "medium": 8
+      "medium": 7
     },
     "exclusion_reason_counts": {
       "stale": 23,
@@ -2452,18 +2462,62 @@
       "unrelated": 0,
       "outside product geography": 0,
       "resource-only / no pressure signal": 2,
-      "weak pressure signal": 3,
+      "weak pressure signal": 2,
       "missing usable date": 0,
       "missing usable location": 0,
       "insufficient source traceability": 0,
       "background/context only": 1,
       "other": 0
     },
-    "exclusion_reason_summary": "Exclusion breakdown: stale 23; duplicate 1; resource-only or no pressure signal 2; weak pressure signal 3; background or context material 1.",
-    "marker_count": 0,
-    "plotted_marker_count": 0,
+    "exclusion_reason_summary": "Exclusion breakdown: stale 23; duplicate 1; resource-only or no pressure signal 2; weak pressure signal 2; background or context material 1.",
+    "marker_count": 1,
+    "plotted_marker_count": 1,
     "skipped_marker_count": 0,
     "skipped_markers": []
   },
-  "mapped_markers": []
+  "mapped_markers": [
+    {
+      "source_record_id": "wpde-grand-strand-food-insecurity-20260612",
+      "location_name": "Horry County",
+      "state": "SC",
+      "county_name": "",
+      "category": "elevated demand",
+      "publisher": "WPDE / ABC 15",
+      "source_family": "local_news",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "pressure_signal": true,
+      "pressure_summary": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
+      "extraction_quality": "medium",
+      "expected_text_basis": "page_text",
+      "pressure_verification_required": true,
+      "evidence_text": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
+      "evidence_excerpt": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher",
+      "evidence_text_basis": "manual_review",
+      "pressure_match_terms": [
+        "more families",
+        "food insecurity",
+        "inflation"
+      ],
+      "pressure_verification_status": "source_text_verified",
+      "issue_tags": [],
+      "affected_groups": [
+        "children",
+        "low-income households"
+      ],
+      "pressure_type": "demand strain",
+      "evidence_level": "news report",
+      "freshness_role": "fresh_daily_signal",
+      "source_role_allowed": "context_only",
+      "pressure_required": false,
+      "pressure_reason": "matched demand strain",
+      "source_title": "Grand Strand food providers say inflation is driving more families to pantries",
+      "source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14",
+      "note": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.",
+      "dispatch_date": "2026-06-12",
+      "latitude": 33.836081,
+      "longitude": -81.163725,
+      "coordinate_basis": "state centroid"
+    }
+  ]
 }

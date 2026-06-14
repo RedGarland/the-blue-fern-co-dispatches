@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-12",
-  "generated_at": "2026-06-13T19:39:01.495343+00:00",
+  "generated_at": "2026-06-14T01:09:45.109270+00:00",
   "source_count": 29,
   "story_count": 1,
   "source_adequacy": {
@@ -184,6 +184,20 @@
     "food-line-auto-9013087c4ebc5f32"
   ],
   "food_line_publish_blocked_reason": "",
+  "discovery_gap_check": {
+    "run": true,
+    "report_found": true,
+    "report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.json",
+    "report_markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.md",
+    "likely_qualifying_count": 0,
+    "unreviewed_likely_qualifying_count": 0,
+    "warning": ""
+  },
+  "discovery_gap_likely_qualifying_count": 0,
+  "discovery_gap_unreviewed_likely_qualifying_count": 0,
+  "discovery_gap_warning": "",
+  "discovery_gap_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.json",
+  "discovery_gap_report_markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-12\\discovery_gap_report.md",
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
   "bluesky_post_text": "Food Line Dispatch, June 12, 2026: WPDE / ABC 15 reported that Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure, while the Lowcountry Food... Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-12/",
   "bluesky_post_ready": true

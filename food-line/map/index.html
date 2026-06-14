@@ -201,11 +201,11 @@
     <p><a href="/food-line/editions/2026-06-12/">Open latest Food Line edition</a></p>
   </section>
   <section class="food-line-map-shell">
-    <div id="foodLineMap" class="food-line-map" data-rendered-marker-count="0" data-skipped-marker-count="0"></div>
+    <div id="foodLineMap" class="food-line-map" data-rendered-marker-count="1" data-skipped-marker-count="0"></div>
     <div class="food-line-map-panel">
       <h2>Legend</h2>
       <ul class="fl-legend"><li><span class="food-line-dot" style="background:#9a4b4b;"></span>acute strain / service disruption</li><li><span class="food-line-dot" style="background:#b6784f;"></span>elevated demand</li><li><span class="food-line-dot" style="background:#5d7f62;"></span>summer meal / child nutrition</li><li><span class="food-line-dot" style="background:#6d6287;"></span>senior hunger</li><li><span class="food-line-dot" style="background:#3f5878;"></span>rural access</li><li><span class="food-line-dot" style="background:#5b6f8a;"></span>benefit disruption</li><li><span class="food-line-dot" style="background:#61717c;"></span>context / monitoring only</li></ul>
-      <p><strong>Plotted markers:</strong> 0 | <strong>Skipped markers:</strong> 0</p>
+      <p><strong>Plotted markers:</strong> 1 | <strong>Skipped markers:</strong> 0</p>
       <p>Locations are source-backed pressure signals, not a complete census of food insecurity.</p>
     </div>
   </section>
@@ -218,7 +218,7 @@
   </footer>
 <script>
 const CATEGORY_COLORS = {"acute strain / service disruption": "#9a4b4b", "elevated demand": "#b6784f", "summer meal / child nutrition": "#5d7f62", "senior hunger": "#6d6287", "rural access": "#3f5878", "benefit disruption": "#5b6f8a", "context / monitoring only": "#61717c"};
-const FALLBACK_MARKERS = [];
+const FALLBACK_MARKERS = [{"source_record_id": "wpde-grand-strand-food-insecurity-20260612", "location_name": "Horry County", "state": "SC", "county_name": "", "category": "elevated demand", "publisher": "WPDE / ABC 15", "source_family": "local_news", "source_purpose": "current_news", "source_role": "local_signal", "pressure_signal": true, "pressure_summary": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.", "extraction_quality": "medium", "expected_text_basis": "page_text", "pressure_verification_required": true, "evidence_text": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher", "evidence_excerpt": "WPDE \u2014 Food insecurity is rising above levels seen during the COVID-19 pandemic. In Horry County, Feeding America\u2019s most recent Map the Meal Gap report shows about 14 percent of residents are food insecure and about 20 percent of Horry County\u2019s children are considered food insecure. The Lowcountry Food Bank said some mobile distributions in Conway that usually served about 100 families had 185. Inflation and higher", "evidence_text_basis": "manual_review", "pressure_match_terms": ["more families", "food insecurity", "inflation"], "pressure_verification_status": "source_text_verified", "issue_tags": [], "affected_groups": ["children", "low-income households"], "pressure_type": "demand strain", "evidence_level": "news report", "freshness_role": "fresh_daily_signal", "source_role_allowed": "context_only", "pressure_required": false, "pressure_reason": "matched demand strain", "source_title": "Grand Strand food providers say inflation is driving more families to pantries", "source_url": "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14", "note": "WPDE / ABC 15 reported rising food-assistance demand in Horry County, affecting children, low-income households.", "dispatch_date": "2026-06-12", "latitude": 33.836081, "longitude": -81.163725, "coordinate_basis": "state centroid"}];
 const MAP_DATA_URL = "map_data.json";
 function esc(value) {
   return String(value || "").replace(/[&<>"]/g, function(c) { return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c] || c; });

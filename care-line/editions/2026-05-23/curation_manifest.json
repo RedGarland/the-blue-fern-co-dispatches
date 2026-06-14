@@ -1,0 +1,53 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "Medicaid cuts threaten hundreds of hospitals, new report finds",
+    "summary": "Medicaid cuts could threaten hospital access and stability.",
+    "category": "Core Healthcare Access Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "Hospital financing pressure can reduce access even before a formal closure occurs."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-2026-05-23-heraldstandard-hospital-funding"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "care-line-story-002",
+    "title": "River Hills Community Health Center announces closure of Centerville clinic",
+    "summary": "A local clinic closure reduces care access in Centerville.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 90,
+    "scoring_reasons": [
+      "Clinic closure adds travel burden and reduces local appointment access."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-2026-05-23-kcrg-centerville-clinic-closure"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "care-line-story-003",
+    "title": "Patients worry after Los Alamos Medical Center halts labor, delivery services",
+    "summary": "Labor and delivery service reductions create a direct maternity access problem.",
+    "category": "Maternity / Family Care Signals",
+    "score": 90,
+    "scoring_reasons": [
+      "Stopping labor and delivery services creates immediate access barriers for families."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-2026-05-23-searchlightnm-labor-delivery-halt"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

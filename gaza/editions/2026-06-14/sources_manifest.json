@@ -1,53 +1,245 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-06-14T07:30:18.829358+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-06-14-aljazeera-middle-east-2210e1897f30",
+    "source_id": "gaza-2026-06-14-aljazeera-middle-east-2210e1897f30",
+    "title": "UK court to rule on Palestine Action 'terrorist' label: What we know",
+    "url": "https://www.aljazeera.com/news/2026/6/14/uk-court-to-rule-on-palestine-action-terrorist-label-what-we-know?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/6/14/uk-court-to-rule-on-palestine-action-terrorist-label-what-we-know?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-14T08:34:29+00:00",
+    "retrieved_at": "2026-06-14T13:00:35.998283+00:00",
+    "summary_or_snippet": "Court of Appeal to rule whether government's proscription of action group was unlawful.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-14"
+    "edition_date": "2026-06-14",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-14-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|uk court to rule on palestine action terrorist label what we know",
+    "title_fingerprint": "uk court to rule on palestine action terrorist label what we know",
+    "claim_fingerprint": "al jazeera|uk court to rule on palestine action terrorist label what we know|conflict"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-06-14T07:30:18.829358+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-06-14-bbc-middle-east-20133d91769b",
+    "source_id": "gaza-2026-06-14-bbc-middle-east-20133d91769b",
+    "title": "'They destroyed the future': Palestinian anger at rise in Israeli demolitions in East Jerusalem",
+    "url": "https://www.bbc.com/news/articles/cewpwjr9rj4o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/articles/cewpwjr9rj4o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-06-12T05:01:48+00:00",
+    "retrieved_at": "2026-06-14T13:00:35.998283+00:00",
+    "summary_or_snippet": "Palestinian homes are being pulled down in occupied East Jerusalem to make way for a park.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "bbc-middle-east",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-14"
+    "edition_date": "2026-06-14",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-14-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 24,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "bbc|they destroyed the future palestinian anger at rise in israeli demolitions in east jerusalem",
+    "title_fingerprint": "they destroyed the future palestinian anger at rise in israeli demolitions in east jerusalem",
+    "claim_fingerprint": "bbc|they destroyed the future palestinian anger at rise in israeli demolitions in east jerusalem|conflict"
   },
   {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-06-14T07:30:18.829358+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-003"
-    ],
+    "source_record_id": "gaza-2026-06-14-guardian-world-5967b9505ecb",
+    "source_id": "gaza-2026-06-14-guardian-world-5967b9505ecb",
+    "title": "Growing risk that thousands buried in Gaza's rubble may never be identified, says Red Cross",
+    "url": "https://www.theguardian.com/world/2026/jun/14/growing-risk-thousands-buried-gaza-rubble-never-identified-red-cross",
+    "canonical_url": "https://www.theguardian.com/world/2026/jun/14/growing-risk-thousands-buried-gaza-rubble-never-identified-red-cross",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-06-14T08:00:37+00:00",
+    "retrieved_at": "2026-06-14T13:00:35.998283+00:00",
+    "summary_or_snippet": "Exclusive: Recovery efforts remain slow and passing of time makes it more likely they will be skeletonised The International Committee of the Red Cross has said the risk that the thousands of Palestinians buried beneath Gaza's rubble may never be identified is increasing by the day, as recovery efforts remain slow and many victims have yet to be retrieved, the Guardian can reveal. \"There is no doubt that these bodies could soon become difficult to identify,\" said Pat Griffiths, the ICRC spokesperson in Jerusalem. \"The longer it takes for human remains to be recovered, the more difficult it can be to identify them. The longer the deceased lie beneath the rubble, the more likely they will be in advanced stages of decomposition - even skeletonised - when eventually recovered.\"",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "guardian-world",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "traceability_note": "",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-14"
+    "edition_date": "2026-06-14",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-14-004"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "guardian|growing risk that thousands buried in gaza s rubble may never be identified says red cross",
+    "title_fingerprint": "growing risk that thousands buried in gaza s rubble may never be identified says red cross",
+    "claim_fingerprint": "guardian|growing risk that thousands buried in gaza s rubble may never be identified says red cross|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-06-14-aljazeera-middle-east-75d0202a45c6",
+    "source_id": "gaza-2026-06-14-aljazeera-middle-east-75d0202a45c6",
+    "title": "Two killed in Israeli strike on Gaza",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/6/14/aje-onl-nf_two-killed-in-gaza-in-deadly-israeli-strike-130626?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/6/14/aje-onl-nf_two-killed-in-gaza-in-deadly-israeli-strike-130626?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-14T01:11:06+00:00",
+    "retrieved_at": "2026-06-14T13:00:35.998283+00:00",
+    "summary_or_snippet": "An Israeli strike on southern Gaza has killed two people and injured another, according to Palestinian authorities.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-14",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-14-007"
+    ],
+    "claim_ids": [],
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|two killed in israeli strike on gaza",
+    "title_fingerprint": "two killed in israeli strike on gaza",
+    "claim_fingerprint": "al jazeera|two killed in israeli strike on gaza|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-06-14-bbc-middle-east-76ecad4666a5",
+    "source_id": "gaza-2026-06-14-bbc-middle-east-76ecad4666a5",
+    "title": "Israel bulldozes Palestinian homes in East Jerusalem",
+    "url": "https://www.bbc.com/news/videos/cx2xvw78nl3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.com/news/videos/cx2xvw78nl3o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-06-12T13:39:03+00:00",
+    "retrieved_at": "2026-06-14T13:00:35.998283+00:00",
+    "summary_or_snippet": "Yolande Knell reports on the Israeli bulldozing of Palestinian homes in East Jerusalem.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "bbc-middle-east",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-14",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-14-008"
+    ],
+    "claim_ids": [],
+    "candidate_score": 24,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "bbc|israel bulldozes palestinian homes in east jerusalem",
+    "title_fingerprint": "israel bulldozes palestinian homes in east jerusalem",
+    "claim_fingerprint": "bbc|israel bulldozes palestinian homes in east jerusalem|conflict"
   }
 ]

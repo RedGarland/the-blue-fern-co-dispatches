@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 13 Jun 2026 13:01:09 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 14 Jun 2026 13:01:03 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 14, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-14-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-14-transcript.html</guid>
+    <pubDate>Sun, 14 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Two killed in Israeli strike on Gaza. An Israeli strike on southern Gaza has killed two people and injured another, according to Palestinian authorities. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-14.mp3" length="1918464" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 13, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-13-transcript.html</link>

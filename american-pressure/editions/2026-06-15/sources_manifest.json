@@ -1,0 +1,172 @@
+[
+  {
+    "source_id": "ap-2026-05-23-housing-fox10-az-summer-electricity-bills",
+    "title": "Arizona summer electricity bills to rise: Tips and financial aid options",
+    "url": "https://www.fox10phoenix.com/news/arizona-summer-electricity-bills-rise-tips-financial-aid-options",
+    "publisher": "FOX 10 Phoenix",
+    "published_at": "2026-05-19T15:59:00-07:00",
+    "retrieved_at": "2026-05-23T23:00:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-001"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-001"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-environment-caltrans-540m-transport-investments",
+    "title": "California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities",
+    "url": "https://dot.ca.gov/news-releases/news-release-2026-010",
+    "publisher": "Caltrans",
+    "published_at": "2026-05-22T00:00:00-07:00",
+    "retrieved_at": "2026-05-23T23:00:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-002"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-002"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage",
+    "title": "Buffalo County residents assess damage after Saturday storm",
+    "url": "https://www.ksnblocal4.com/2026/05/18/buffalo-county-residents-assess-damage-after-saturday-storm/",
+    "publisher": "KSNB Local4",
+    "published_at": "2026-05-18T12:08:00-05:00",
+    "retrieved_at": "2026-05-23T23:00:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-003"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-003"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-labor-oregon-warn-rndc-146",
+    "title": "WARN Listings (Republic National Distributing Company, 146 Oregon layoffs)",
+    "url": "https://ccwd.hecc.oregon.gov/Layoff/WARN",
+    "publisher": "Oregon Rapid Response Activity Tracking System",
+    "published_at": "2026-05-19T00:00:00Z",
+    "retrieved_at": "2026-05-23T23:00:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-004"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-004"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand",
+    "title": "Food bank demand surges in Santa Cruz County as costs strain families",
+    "url": "https://www.ksbw.com/article/santa-cruz-county-food-bank-inflation-california/71286879",
+    "publisher": "KSBW",
+    "published_at": "2026-05-13T09:49:00-07:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-005"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-005"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs",
+    "title": "Watertown adopts budget with tax increase, layoffs",
+    "url": "https://www.wwnytv.com/2026/05/21/watertown-adopts-budget-with-tax-increase-layoffs/",
+    "publisher": "WWNYTV",
+    "published_at": "2026-05-21T17:32:00-04:00",
+    "retrieved_at": "2026-05-23T23:45:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-006"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-006"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt",
+    "title": "Patients worry after Los Alamos Medical Center halts labor, delivery services",
+    "url": "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/",
+    "publisher": "Searchlight New Mexico",
+    "published_at": "2026-05-17T00:00:00-06:00",
+    "retrieved_at": "2026-05-23T23:45:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-007"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-007"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1",
+    "title": "Business and Nonbusiness Cases Filed, by Chapter of the Bankruptcy Code, District, and County (F-5A)",
+    "url": "https://www.uscourts.gov/data-table-numbers/f-5a",
+    "publisher": "United States Courts",
+    "published_at": "2026-03-31T00:00:00Z",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-008"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-008"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026",
+    "title": "Map Element - Medicaid & CHIP Enrollment",
+    "url": "https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment",
+    "publisher": "Medicaid.gov",
+    "published_at": "2026-03-27T00:00:00Z",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-009"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-009"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  },
+  {
+    "source_id": "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties",
+    "title": "Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather",
+    "url": "https://governor.iowa.gov/press-release/2026-05-22/gov-reynolds-issues-disaster-proclamation-may-22-2026-five-counties-response-severe-weather",
+    "publisher": "Office of the Governor of Iowa",
+    "published_at": "2026-05-22T00:00:00-05:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "american-pressure-story-010"
+    ],
+    "claim_ids": [
+      "american-pressure-claim-010"
+    ],
+    "dispatch_slug": "american-pressure",
+    "edition_date": "2026-06-15"
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "story_id": "american-pressure-story-001",
+    "title": "Arizona summer electricity bills to rise: Tips and financial aid options",
+    "summary": "Arizona Corporation Commission warned of significant summer electricity bill increases and highlighted payment-assistance and disconnection-protection options for households.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-housing-fox10-az-summer-electricity-bills"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-002",
+    "title": "California Invests $540 Million to Support Zero Emission Projects, Transit System Improvements, Storm Resiliency and Walkable Communities",
+    "summary": "Caltrans announced statewide transportation allocations including storm-resiliency and infrastructure hardening investments linked to weather and disaster pressure on communities.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-environment-caltrans-540m-transport-investments"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-003",
+    "title": "Buffalo County residents assess damage after Saturday storm",
+    "summary": "Buffalo County reported downed power lines, poles, and trees after severe storms, with residents and emergency management assessing recovery impacts.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-environment-ksnb-buffalo-county-storm-damage"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-004",
+    "title": "WARN Listings (Republic National Distributing Company, 146 Oregon layoffs)",
+    "summary": "Oregon WARN listings show Republic National Distributing Company notice 9509 dated 2026-05-19 with 146 affected workers, indicating near-term labor-income pressure.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-labor-oregon-warn-rndc-146"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-005",
+    "title": "Food bank demand surges in Santa Cruz County as costs strain families",
+    "summary": "Second Harvest Food Bank of Santa Cruz County reported a sharp rise in demand tied to higher living costs, with more than 80,000 people served in the prior month.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-food-ksbw-santa-cruz-food-bank-demand"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-006",
+    "title": "Watertown adopts budget with tax increase, layoffs",
+    "summary": "Watertown City Council adopted a budget with an 8 percent property-tax increase and layoffs, signaling immediate local fiscal strain likely to tighten household budgets and service capacity.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-financial-watertown-budget-tax-increase-layoffs"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-007",
+    "title": "Patients worry after Los Alamos Medical Center halts labor, delivery services",
+    "summary": "Local reporting documents patient concern and travel burden after Los Alamos Medical Center halted labor and delivery services, indicating an active health-access disruption in the review window.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-health-searchlightnm-los-alamos-labor-delivery-halt"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-008",
+    "title": "Business and Nonbusiness Cases Filed, by Chapter of the Bankruptcy Code, District, and County (F-5A)",
+    "summary": "U.S. Courts bankruptcy statistics table F-5A provides county- and district-level filing counts for the reporting period ending March 31, 2026, supporting debt-distress monitoring.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-financial-uscourts-bankruptcy-f5a-q1"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-009",
+    "title": "Map Element - Medicaid & CHIP Enrollment",
+    "summary": "Medicaid.gov reports January 2026 state-level Medicaid and CHIP enrollment totals and child enrollment shares, supporting health-access pressure tracking.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-health-medicaid-chip-enrollment-map-jan2026"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "american-pressure-story-010",
+    "title": "Gov. Reynolds issues disaster proclamation on May 22, 2026, for five counties in response to severe weather",
+    "summary": "Iowa activated state disaster programs after severe weather, including household grants for temporary housing, personal property, car repairs, and food replacement.",
+    "category": "local-systems-note",
+    "score": 50,
+    "scoring_reasons": [
+      "source-backed fixture record"
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "ap-2026-05-23-local-system-iowa-disaster-proclamation-5-counties"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

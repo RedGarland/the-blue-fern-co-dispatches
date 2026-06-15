@@ -1,0 +1,51 @@
+{
+  "dispatch_name": "The American Pressure Dispatch",
+  "dispatch_slug": "american-pressure",
+  "public_visible": true,
+  "edition_date": "2026-06-15",
+  "generated_at": "2026-06-15T07:30:13.104116+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/american-pressure/editions/2026-06-15/",
+  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15",
+  "local_backup_path": "output\\tmp-backups-pages\\american-pressure\\2026-06-15",
+  "template_version": "dispatches-static-v1",
+  "source_count": 10,
+  "story_count": 10,
+  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15\\sources_manifest.json",
+  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15\\sources_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\american-pressure\\editions\\2026-06-15\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 10,
+  "qualified_public_claim_count": 0,
+  "lead_signal_count": 0,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "public_summary": "",
+  "public_archive_title": "",
+  "public_archive_subtitle": "",
+  "source_table_path": "",
+  "claim_ledger_path": "",
+  "future_paid_fields_todo": [
+    "county_fips",
+    "state",
+    "county",
+    "food_pressure_score",
+    "health_access_pressure_score",
+    "household_cost_pressure_score",
+    "environmental_pressure_score",
+    "local_system_strain_score",
+    "source_count",
+    "confidence_label",
+    "latest_update_date",
+    "movement_since_last_period"
+  ],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-06-07.json"
+  ],
+  "errors": []
+}

@@ -1,0 +1,155 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-06-14",
+  "generated_at": "2026-06-15T07:30:02.881647+00:00",
+  "source_count": 1,
+  "story_count": 0,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 1,
+    "source_families": [
+      "policy_research"
+    ],
+    "local_signal_count": 0,
+    "state_signal_count": 0,
+    "national_context_count": 1
+  },
+  "lead_source_record_id": null,
+  "lead_source_canonical_url": "",
+  "previous_edition_date": "2026-06-13",
+  "primary_signal_status": "none",
+  "primary_disqualification_reason": "no pressure signal qualified today",
+  "public_rendered": true,
+  "public_signal_count": 0,
+  "qualified_primary_count": 0,
+  "claim_count": 0,
+  "claim_ledger_path": "/food-line/editions/2026-06-14/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-06-14/source_table.html",
+  "qualified_source_count": 0,
+  "excluded_source_count": 1,
+  "correction_status": "none",
+  "validation_status": "ok",
+  "future_date_blocked": false,
+  "future_date_override_used": false,
+  "edition_mode": "no_current_update",
+  "continuing_context_count": 0,
+  "continuing_pressure_count": 0,
+  "context_count": 0,
+  "excluded_count": 1,
+  "exclusion_reason_counts": {
+    "stale": 1,
+    "duplicate": 0,
+    "unrelated": 0,
+    "outside product geography": 0,
+    "resource-only / no pressure signal": 0,
+    "weak pressure signal": 0,
+    "missing usable date": 0,
+    "missing usable location": 0,
+    "insufficient source traceability": 0,
+    "background/context only": 0,
+    "other": 0
+  },
+  "exclusion_reason_summary": "Exclusion breakdown: stale 1.",
+  "skip_reason": "",
+  "continuing_pressure_source_record_ids": [],
+  "continuing_pressure_source_urls": [],
+  "lead_issue_tags": [],
+  "source_roles_count": {
+    "daily_signal": 0,
+    "background_context": 0,
+    "policy_context": 0,
+    "provider_signal": 0,
+    "local_signal": 0,
+    "map_signal": 0,
+    "resource_context": 0,
+    "research_signal": 1,
+    "institutional_context_signal": 0,
+    "data_anchor_signal": 0
+  },
+  "local_signal_count": 0,
+  "state_signal_count": 0,
+  "national_context_count": 1,
+  "editorial_status": "sparse",
+  "pressure_status": "sparse",
+  "why_this_lead": "no pressure signal qualified today",
+  "selected_lead_source_role": null,
+  "selected_lead_pressure_type": null,
+  "selected_lead_affected_groups": [],
+  "pressure_source_count_by_family": {
+    "policy_research": 0
+  },
+  "pressure_source_count_by_state": {
+    "US": 0
+  },
+  "news_item_count": 0,
+  "provider_pressure_count": 0,
+  "official_pressure_count": 0,
+  "baseline_source_count": 0,
+  "rejected_news_count": 0,
+  "rejected_news_reasons": [],
+  "rejected_news_by_source": {},
+  "collected_source_count_by_source_id": {},
+  "pressure_verified_count": 0,
+  "pressure_demoted_unverified_count": 1,
+  "pressure_registry_only_count": 0,
+  "pressure_evidence_basis_counts": {
+    "manual_source_text": 1
+  },
+  "collected_count_by_extraction_quality": {
+    "medium": 1
+  },
+  "verified_pressure_count_by_extraction_quality": {},
+  "demoted_count_by_extraction_quality": {
+    "medium": 1
+  },
+  "fetch_failure_count_by_source_id": {},
+  "no_evidence_count_by_source_id": {},
+  "rejected_by_source_purpose_count": 0,
+  "demoted_by_source_purpose_count": 0,
+  "registry_source_purpose_refresh": {
+    "path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\pressure_source_registry.json",
+    "changed": false,
+    "blocked_count": 0,
+    "source_purpose_counts": {
+      "current_news": 19,
+      "disaster_alert": 1,
+      "donation_page": 2,
+      "official_notice": 1,
+      "provider_update": 3,
+      "resource_page": 1
+    },
+    "current_or_evergreen_counts": {
+      "current": 24,
+      "evergreen": 3
+    }
+  },
+  "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+  "stale_public_story_count": 1,
+  "excluded_stale_source_count": 1,
+  "freshness_window_days": 3,
+  "stale_source_ids": [
+    "food-line-manual-2026-06-14-gamblingharm-sports-betting-food-sufficiency"
+  ],
+  "food_line_publish_blocked_reason": "No fresh current-story Food Line sources remained after freshness filtering.",
+  "discovery_gap_check": {
+    "run": false,
+    "report_found": false,
+    "report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-14\\discovery_gap_report.json",
+    "report_markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-14\\discovery_gap_report.md",
+    "likely_qualifying_count": 0,
+    "unreviewed_likely_qualifying_count": 0,
+    "warning": ""
+  },
+  "discovery_gap_likely_qualifying_count": 0,
+  "discovery_gap_unreviewed_likely_qualifying_count": 0,
+  "discovery_gap_warning": "",
+  "discovery_gap_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-14\\discovery_gap_report.json",
+  "discovery_gap_report_markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\food-line\\discovery_gap\\2026-06-14\\discovery_gap_report.md",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/",
+  "qualified_but_not_public_count": 0,
+  "qualified_but_not_public_warning": "",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
+}

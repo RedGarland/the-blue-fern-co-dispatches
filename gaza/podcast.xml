@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 14 Jun 2026 13:01:03 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 15 Jun 2026 13:01:03 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 15, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-15-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-15-transcript.html</guid>
+    <pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Palestinian death toll in Gaza tops 73,000, officials say, as Israel strikes despite ceasefire. Israel says it is targeting Hamas and other militants who pose a threat, and in response to ceasefire violations, including occasional attacks. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-15.mp3" length="1676160" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 14, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-14-transcript.html</link>

@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-15",
+  "generated_at": "2026-06-15T13:01:03.254032Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-15.mp3",
+  "audio_url": "/gaza/audio/2026-06-15.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1638,
+  "tts_input_word_count": 251,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1676160,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-15T13:01:03.254009Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-15-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-15/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 15, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian death toll in Gaza tops 73,000, officials say, as Israel strikes despite ceasefire. Israel says it is targeting Hamas and other militants who pose a threat, and in response to ceasefire violations, including occasional attacks. This was reported by PBS NewsHour.\n\n2. 6 Gazans killed by Israeli fire, death toll tops 73,000. At least 992 Palestinians killed, 3,144 injured since ceasefire, Health Ministry says. This was reported by Anadolu Agency.\n\n3. Gaza death toll tops 73,000 as Israel ignores ceasefire. Israel has continued daily attacks on Gaza despite a \"ceasefire\" that was supposed to come into force in October, killing almost 1000 Palestinians. This was reported by The New Arab.\n\n4. Egypt, Jordan welcome US-Iran agreement, call it 'important step' for regional stability. Cairo hopes agreement will refocus attention on tragic conditions facing Palestinians in Gaza and West Bank. This was reported by Anadolu Agency.\n\n5. UK Court of Appeal upholds ban on Palestine Action as 'terrorist' group. Judge says the group's behaviour was not that of a non-violent, direct action organisation. This was reported by Al Jazeera.\n\n6. Israel is dismantling the occupied West Bank's economy: ICG. \"The economic conditions necessary for any Palestinian future other than permanent subjugation are being dismantled,\" says the International Crisis Group. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 15, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-15-pbs-newshour-world-5f8f783717e1",
+      "publisher": "PBS NewsHour",
+      "url": "https://www.pbs.org/newshour/world/palestinian-death-toll-in-gaza-tops-73000-officials-say-as-israel-strikes-despite-ceasefire",
+      "title": "Palestinian death toll in Gaza tops 73,000, officials say, as Israel strikes despite ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-15-anadolu-middle-east-19af336a91ff",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/6-gazans-killed-by-israeli-fire-death-toll-tops-73-000/3967454",
+      "title": "6 Gazans killed by Israeli fire, death toll tops 73,000"
+    },
+    {
+      "source_record_id": "gaza-2026-06-15-the-new-arab-d78d6e701644",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/gaza-death-toll-tops-73000-israel-ignores-ceasefire",
+      "title": "Gaza death toll tops 73,000 as Israel ignores ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-15-anadolu-middle-east-0ad0a17f8611",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/egypt-jordan-welcome-us-iran-agreement-call-it-important-step-for-regional-stability/3967290",
+      "title": "Egypt, Jordan welcome US-Iran agreement, call it 'important step' for regional stability"
+    },
+    {
+      "source_record_id": "gaza-2026-06-15-aljazeera-middle-east-17dcbce63ab3",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/15/uk-court-says-proscribing-palestine-action-as-terrorist-group-was-lawful?traffic_source=rss",
+      "title": "UK Court of Appeal upholds ban on Palestine Action as 'terrorist' group"
+    },
+    {
+      "source_record_id": "gaza-2026-06-15-the-new-arab-2ce466c95aa6",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israel-dismantling-occupied-west-banks-economy-icg",
+      "title": "Israel is dismantling the occupied West Bank's economy: ICG"
+    }
+  ]
+}

@@ -25,6 +25,7 @@ from bluefern_dispatches.care_line_sources import (
     build_public_edition_report as care_line_public_edition_report,
     load_manual_source_records as load_care_line_manual_sources,
     load_pressure_source_registry as load_care_line_pressure_registry,
+    public_archive_title_for_records as care_line_public_archive_title_for_records,
     summary_for_records as care_line_summary_for_records,
     record_is_public as care_line_record_is_public,
     validate_manual_source_records as validate_care_line_manual_sources,
@@ -873,14 +874,14 @@ def render_dispatch_index(dispatch: DispatchConfig) -> str:
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>
-    <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
+    <p class="eyebrow">{html.escape(dispatch.tagline)}</p>
     <p class="lede">{html.escape(description)}</p>
-    <p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>
+    <p><a href="archive.html">Browse the Care Line archive</a></p>
     <p><a href="editions/{dispatch.edition_date}/">Read the latest briefing</a></p>
     <p><a href="editions/{dispatch.edition_date}/source_table.html">Open the source table</a> | <a href="editions/{dispatch.edition_date}/claim_ledger.html">Open the claim ledger</a></p>
     <h2>Recent Editions</h2>
     <ul class="edition-list">
-      <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(dispatch.name)} - {dispatch.edition_date}</a></li>
+      <li><span class="edition-date">{dispatch.edition_date}</span><a href="editions/{dispatch.edition_date}/">{html.escape(CARE_LINE_DISPATCH_TAGLINE)}</a></li>
     </ul>
   </main>
 {footer("")}"""
@@ -1251,6 +1252,13 @@ def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> di
 
 def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
     if dispatch.slug != "cascadia":
+        if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+            manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+            return str(
+                manifest.get("public_archive_title")
+                or manifest.get("public_summary")
+                or edition_date
+            ).strip()
         return edition_date
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
     if manifest.get("coverage_label"):
@@ -1299,8 +1307,8 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
             actions += ' | <a href="editions/{0}/map.html">View map</a>'.format(date)
         actions += "</span>"
     return (
-        f'      <li><span class="edition-date">{html.escape(label)}</span>'
-        f'<a href="editions/{date}/">{html.escape(dispatch.name)} - {html.escape(label)}</a>{actions}{subtitle_html}</li>'
+        f'      <li><span class="edition-date">{html.escape(date)}</span>'
+        f'<a href="editions/{date}/">{html.escape(label)}</a>{actions}{subtitle_html}</li>'
     )
 
 
@@ -1648,10 +1656,11 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         cascadia_intro = "<p>A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>"
     care_line_intro = ""
     care_line_at_a_glance = ""
+    care_line_archive_link = ""
     if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         latest_summary = public_edition_subtitle(site_root, dispatch, latest) if latest else ""
+        care_line_archive_link = '<p><a href="archive.html">Browse the Care Line archive</a></p>'
         if latest_summary:
-            care_line_intro = f"<p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>"
             care_line_at_a_glance = (
                 "\n    <section class=\"section\">"
                 "<h2>At A Glance</h2>"
@@ -1659,16 +1668,20 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
                 f'<p><a href="editions/{latest}/source_table.html">Source table</a> | <a href="editions/{latest}/claim_ledger.html">Claim ledger</a></p>'
                 "</section>"
             )
-        else:
-            care_line_intro = f"<p>{html.escape(CARE_LINE_PUBLIC_DESCRIPTION)}</p>"
+        map_link = (
+            '\n    <p>No map is published in this pilot phase. Future Care Line maps will show where current source-backed '
+            'healthcare-access pressure signals were found. Areas without markers should not be read as places without '
+            'healthcare strain.</p>'
+        )
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>
-    <p class="eyebrow">{html.escape(dispatch.tagline)} archive</p>
+    <p class="eyebrow">{html.escape(dispatch.tagline)}</p>
     {cascadia_intro}
     <p class="lede">{html.escape(description)}</p>
+    {care_line_archive_link}
     <h2>Latest Briefing</h2>
     {latest_link}
     {gaza_audio_link}
@@ -1676,7 +1689,6 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     {map_link}
     {dashboard_link}
     {explainer_block}
-    {care_line_intro}
     {care_line_at_a_glance}
     {signal_pack_note}
     <h2>Recent Editions</h2>
@@ -1967,6 +1979,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "stale_current_signal_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "resource_only_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "public_summary": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "public_archive_title": care_line_public_archive_title_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "public_archive_subtitle": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "source_table_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/source_table.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "claim_ledger_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/claim_ledger.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",

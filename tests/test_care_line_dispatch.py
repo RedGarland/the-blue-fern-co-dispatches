@@ -106,15 +106,21 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert manifest["public_rendered"] is True
     assert manifest["source_table_path"].endswith("source_table.html")
     assert manifest["claim_ledger_path"].endswith("claim_ledger.html")
+    assert manifest["public_archive_title"] == "Medicaid cuts and hospital-access pressure"
 
     assert "The Care Line Dispatch" in index_html
     assert "Source-backed signals of where American healthcare access is under strain." in index_html
+    assert "Browse the Care Line archive" in index_html
+    assert "Source-backed signals of where American healthcare access is under strain. archive" not in index_html
+    assert "No map is published in this pilot phase. Future Care Line maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain." in index_html
     assert 'href="editions/2026-05-23/"' in index_html
     assert 'href="source_table.html"' in edition_html
     assert 'href="claim_ledger.html"' in edition_html
 
     assert "2026-05-23" in archive_html
     assert 'href="editions/2026-05-23/"' in archive_html
+    assert "Medicaid cuts and hospital-access pressure" in archive_html
+    assert "The Care Line Dispatch - 2026-05-23" not in archive_html
 
     assert "At A Glance" in edition_html
     assert "Hospital / Clinic Operations Signals" in edition_html

@@ -1,0 +1,79 @@
+[
+  {
+    "source_id": "care-line-2026-05-23-heraldstandard-hospital-funding",
+    "title": "Medicaid cuts threaten hundreds of hospitals, new report finds",
+    "url": "https://www.heraldstandard.com/news/local-news/2026/may/07/medicaid-cuts-threaten-hundreds-of-hospitals-new-report-finds/",
+    "publisher": "Herald-Standard",
+    "published_at": "2026-05-07T00:00:00-04:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-001"
+    ],
+    "claim_ids": [
+      "care-line-claim-001"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-05-23"
+  },
+  {
+    "source_id": "care-line-2026-05-23-kcrg-centerville-clinic-closure",
+    "title": "River Hills Community Health Center announces closure of Centerville clinic",
+    "url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+    "publisher": "KCRG",
+    "published_at": "2026-05-12T21:45:00-05:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-002"
+    ],
+    "claim_ids": [
+      "care-line-claim-002"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-05-23"
+  },
+  {
+    "source_id": "care-line-2026-05-23-searchlightnm-labor-delivery-halt",
+    "title": "Patients worry after Los Alamos Medical Center halts labor, delivery services",
+    "url": "https://searchlightnm.org/patients-worry-after-los-alamos-medical-center-halts-labor-delivery-services/",
+    "publisher": "Searchlight New Mexico",
+    "published_at": "2026-05-17T00:00:00-06:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-003"
+    ],
+    "claim_ids": [
+      "care-line-claim-003"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-05-23"
+  },
+  {
+    "source_id": "care-line-2026-05-23-kcrg-centerville-clinic-closure-stale",
+    "title": "River Hills Community Health Center announces closure of Centerville clinic",
+    "url": "https://www.kcrg.com/2026/05/13/river-hills-community-health-center-announces-closure-centerville-clinic/",
+    "publisher": "KCRG",
+    "published_at": "2026-05-12T21:45:00-05:00",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [],
+    "claim_ids": [],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-05-23"
+  },
+  {
+    "source_id": "care-line-2026-05-23-medicaidgov-enrollment-map",
+    "title": "Map Element - Medicaid & CHIP Enrollment",
+    "url": "https://www.medicaid.gov/medicaid/map-element-medicaid-and-chip-enrollment",
+    "publisher": "Medicaid.gov",
+    "published_at": "2026-03-27T00:00:00Z",
+    "retrieved_at": "2026-05-23T23:30:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [],
+    "claim_ids": [],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-05-23"
+  }
+]

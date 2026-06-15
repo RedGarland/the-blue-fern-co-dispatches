@@ -315,6 +315,80 @@ def public_claim_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
+def _lead_public_record(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    public_records = [record for record in records if record_is_public(record)]
+    if not public_records:
+        return None
+    for record in public_records:
+        if _record_value(record, "included_as_lead") is True:
+            return record
+    return public_records[0]
+
+
+def _care_line_title_topic(claim: str) -> str:
+    text = claim.strip().rstrip(".")
+    if not text:
+        return ""
+    lower = text.lower()
+    for marker in (" could ", " may ", " might ", " would ", " should ", " threatens ", " threaten ", " threatens to "):
+        index = lower.find(marker)
+        if index > 0:
+            text = text[:index].rstrip(" ,;:-")
+            break
+    return text
+
+
+def _care_line_pressure_label(record: dict[str, Any]) -> str:
+    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
+    labels = {
+        "hospital_closure": "hospital-access pressure",
+        "service_line_cut": "service-line pressure",
+        "rural_access_strain": "rural-access pressure",
+        "er_crowding_or_diversion": "ER access pressure",
+        "clinic_access_strain": "clinic-access pressure",
+        "maternity_care_loss": "maternity-care pressure",
+        "coverage_disruption": "coverage pressure",
+        "medicaid_access_pressure": "Medicaid-access pressure",
+        "medical_debt_or_affordability": "care-affordability pressure",
+        "staffing_shortage_access": "staffing pressure",
+        "pharmacy_access_pressure": "pharmacy-access pressure",
+        "public_health_capacity_cut": "public-health capacity pressure",
+        "behavioral_health_access_strain": "behavioral-health access pressure",
+        "ambulance_or_ems_strain": "EMS access pressure",
+        "specialty_care_delay": "specialty-care delay pressure",
+    }
+    if pressure_type in labels:
+        return labels[pressure_type]
+    bucket = str(_record_value(record, "public_inclusion_bucket") or "").strip().lower()
+    if "hospital / clinic operations" in bucket:
+        return "healthcare-access pressure"
+    if "insurance / affordability" in bucket:
+        return "coverage pressure"
+    if "rural access" in bucket:
+        return "rural-access pressure"
+    if "maternity / family care" in bucket:
+        return "family-care pressure"
+    if "emergency / ems" in bucket:
+        return "EMS access pressure"
+    if "public health capacity" in bucket:
+        return "public-health capacity pressure"
+    return "healthcare-access pressure"
+
+
+def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
+    lead = _lead_public_record(records)
+    if lead is None:
+        return DISPATCH_TAGLINE
+    claim = _care_line_title_topic(str(_record_value(lead, "claim_supported") or _record_value(lead, "pressure_summary") or _record_value(lead, "summary_or_snippet") or ""))
+    pressure_label = _care_line_pressure_label(lead)
+    if claim:
+        return f"{claim} and {pressure_label}"
+    title = str(_record_value(lead, "title") or "").strip()
+    if title:
+        return title
+    return DISPATCH_TAGLINE
+
+
 def summary_for_records(records: list[dict[str, Any]]) -> str:
     public_rows = public_claim_rows(records)
     if not public_rows:

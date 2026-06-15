@@ -8,12 +8,16 @@
   <meta property="og:url" content="https://dispatches.thebluefernco.com/">
   <meta property="og:site_name" content="Dispatches From The Blue Fern Co.">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html">Dispatches From The Blue Fern Co.</a>
-    <nav><a href="/gaza/">Gaza</a><a href="/cascadia/">Cascadia</a></nav>
+    <nav><a href="/gaza/">Gaza</a><a href="/cascadia/">Cascadia</a><a href="/food-line/">Food Line Dispatch</a><a href="/care-line/">The Care Line Dispatch</a></nav>
   </header>
   <main class="home">
     <section class="hero root-hero">
@@ -21,16 +25,28 @@
     </section>
     <p class="lede">Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability.</p>
     <ul class="dispatch-grid">
-      <li class="dispatch-card">
+      <li class="dispatch-card" style="--dispatch-card-watermark: url('/gaza/assets/gaza-logo.png');">
         <a href="/gaza/">
-          <span class="edition-date">Daily briefing</span>
+          <span class="edition-date">Daily source-backed briefings from Gaza.</span>
           <strong>Dispatches From Gaza</strong>
         </a>
       </li>
-      <li class="dispatch-card">
+      <li class="dispatch-card" style="--dispatch-card-watermark: url('/care-line/assets/care-line-logo.png');">
+        <a href="/care-line/">
+          <span class="edition-date">Source-backed signals of where American healthcare access is under strain.</span>
+          <strong>The Care Line Dispatch</strong>
+        </a>
+      </li>
+      <li class="dispatch-card" style="--dispatch-card-watermark: url('/cascadia/assets/cascadia-logo-placeholder.png');">
         <a href="/cascadia/">
-          <span class="edition-date">Regional systems briefing</span>
+          <span class="edition-date">Weekly source-backed regional briefings for Washington, Oregon, and Idaho.</span>
           <strong>The Cascadia Briefing</strong>
+        </a>
+      </li>
+      <li class="dispatch-card" style="--dispatch-card-watermark: url('/food-line/assets/food-line-logo.png');">
+        <a href="/food-line/">
+          <span class="edition-date">Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.</span>
+          <strong>Food Line Dispatch</strong>
         </a>
       </li>
     </ul>

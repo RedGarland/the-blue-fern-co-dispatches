@@ -11,6 +11,8 @@ from bluefern_dispatches.care_line_sources import (
     PUBLIC_BUCKETS,
     DISPATCH_NAME,
     DISPATCH_TAGLINE,
+    care_line_public_card_copy,
+    public_bucket_note_labels,
     public_claim_rows,
     record_is_public,
     source_table_rows,
@@ -45,15 +47,18 @@ def _document_shell(title: str, canonical: str, body: str, description: str) -> 
 def _section_cards(records: list[dict[str, Any]], bucket: str) -> str:
     rows = [record for record in records if str(record.get("public_inclusion_bucket") or "") == bucket and record_is_public(record)]
     if not rows:
-        return f"<p>No qualifying public signals were placed in this bucket for this edition.</p>"
+        return ""
     cards: list[str] = []
     for record in rows:
+        copy = care_line_public_card_copy(record)
         cards.append(
             f"""      <article class="care-line-signal-card">
-        <p class="eyebrow">{html.escape(str(record.get("pressure_type") or "signal"))}</p>
-        <h3>{html.escape(str(record.get("title") or ""))}</h3>
-        <p>{html.escape(str(record.get("claim_supported") or record.get("pressure_summary") or ""))}</p>
-        <p class="source-meta">{html.escape(str(record.get("publisher") or ""))} | {html.escape(str(record.get("location_name") or record.get("state") or ""))}</p>
+        <p class="eyebrow">{html.escape(copy["pressure_label"])}</p>
+        <h3>{html.escape(copy["source_title"])}</h3>
+        <p><strong>What changed:</strong> {html.escape(copy["what_changed"])}</p>
+        <p><strong>Who may be affected:</strong> {html.escape(copy["who_may_be_affected"])}</p>
+        <p><strong>Why it matters:</strong> {html.escape(copy["why_it_matters"])}</p>
+        <p><strong>Limit:</strong> {html.escape(copy["limit"])}</p>
         <p><a href="{html.escape(str(record.get("url") or ""))}" target="_blank" rel="noopener noreferrer">Open source</a></p>
       </article>"""
         )
@@ -61,30 +66,72 @@ def _section_cards(records: list[dict[str, Any]], bucket: str) -> str:
 
 
 def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: str) -> str:
+    public_rows = [record for record in records if record_is_public(record)]
     claim_rows = public_claim_rows(records)
+    if not public_rows:
+        body = f"""<section class="hero">
+      <p class="eyebrow">Pilot Edition | {html.escape(edition_date)}</p>
+      <h1>{html.escape(DISPATCH_NAME)}</h1>
+      <p class="lede">{html.escape(DISPATCH_TAGLINE)}</p>
+      <p>{html.escape(POSITIONING_NOTE)}</p>
+      <p><a href="source_table.html">Open the source table</a> | <a href="claim_ledger.html">Open the claim ledger</a></p>
+    </section>
+    <section class="section">
+      <h2>Plain-English Summary</h2>
+      <p>No current public signals were qualified for this pilot edition.</p>
+    </section>
+    <section class="section">
+      <h2>At A Glance</h2>
+      <ul class="edition-list">
+      <li>No qualified public claims in this pilot edition.</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Source Mix</h2>
+      <p>No qualified public sources</p>
+      <ul>
+        <li>No qualified public claims were published.</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>Source Note</h2>
+      <p>Each public claim is tied to saved source records. The source table shows all pilot records, including those excluded from public inclusion.</p>
+      <p>{html.escape(MAP_NOTE)}</p>
+      <p><a href="source_table.html">source table</a> | <a href="claim_ledger.html">claim ledger</a> | <a href="../">Archive</a></p>
+    </section>"""
+        return body
+
     at_a_glance = "\n".join(
         f"      <li>{html.escape(row['supporting_source'])} - {html.escape(row['publisher'])}</li>" for row in claim_rows
-    ) or "      <li>No qualified public claims in this pilot edition.</li>"
+    )
     public_summary = summary_for_records(records)
     sections = []
     for bucket in PUBLIC_BUCKETS:
+        cards = _section_cards(records, bucket)
+        if not cards:
+            continue
         sections.append(
             f"""    <section class="section">
       <h2>{html.escape(bucket)}</h2>
       <div class="signal-grid">
-{_section_cards(records, bucket)}
+{cards}
       </div>
     </section>"""
         )
+
+    empty_bucket_labels = public_bucket_note_labels(records)
+    empty_bucket_note = ""
+    if empty_bucket_labels:
+        empty_bucket_note = (
+            "\n    <section class=\"section\">"
+            f"<p>Other monitored categories had no qualifying public signal in this edition: {html.escape(', '.join(empty_bucket_labels))}.</p>"
+            "</section>"
+        )
+
     bucket_summary = Counter(
         str(record.get("source_family") or "") for record in records if record_is_public(record)
     )
     family_mix = ", ".join(f"{html.escape(key)} ({value})" for key, value in sorted(bucket_summary.items()) if key) or "No qualified public sources"
-    source_links = []
-    for record in claim_rows:
-        source_links.append(f'<li><a href="{html.escape(record["url"])}" target="_blank" rel="noopener noreferrer">{html.escape(record["supporting_source"])}</a></li>')
-    if not source_links:
-        source_links.append("<li>No qualified public claims were published.</li>")
     source_mix_html = f"""
     <section class="section">
       <h2>Source Mix</h2>
@@ -93,6 +140,7 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
 {''.join(f'        <li>{html.escape(row["publisher"])} - {html.escape(row["freshness_role"] or "current")}</li>' for row in claim_rows) or '        <li>No qualified public claims were published.</li>'}
       </ul>
     </section>"""
+
     body = f"""<section class="hero">
       <p class="eyebrow">Pilot Edition | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)}</h1>
@@ -111,12 +159,13 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
       </ul>
     </section>
     {''.join(sections)}
+    {empty_bucket_note}
     {source_mix_html}
     <section class="section">
       <h2>Source Note</h2>
       <p>Each public claim is tied to saved source records. The source table shows all pilot records, including those excluded from public inclusion.</p>
       <p>{html.escape(MAP_NOTE)}</p>
-      <p><a href="source_table.html">Source table</a> | <a href="claim_ledger.html">Claim ledger</a> | <a href="../">Archive</a></p>
+      <p><a href="source_table.html">source table</a> | <a href="claim_ledger.html">claim ledger</a> | <a href="../">Archive</a></p>
     </section>"""
     return body
 

@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 15 Jun 2026 13:01:03 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 16 Jun 2026 13:01:02 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 16, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-16-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-16-transcript.html</guid>
+    <pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Israel kills 2 Palestinians in strike on civilians in central Gaza. Israeli drone targets gathering north of Nuseirat refugee camp in new violation of ceasefire in place since October 2025. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-16.mp3" length="1822464" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 15, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-15-transcript.html</link>

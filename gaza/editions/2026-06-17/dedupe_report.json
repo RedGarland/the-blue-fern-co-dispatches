@@ -1,0 +1,337 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-17",
+  "candidates_seen": 10,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-06-17-003",
+      "title": "Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-005",
+      "title": "Death toll in Gaza since 'ceasefire' with Israel goes past 1,000",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-011",
+      "title": "Israel approves Jewish religious school construction in occupied West Bank's Hebron",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-007",
+      "title": "Instead of sanctioning Israel, FIFA pushes Palestine youth match",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-006",
+      "title": "Hamas reports 'broad consensus' with mediators on implementing 2nd phase of Gaza ceasefire plan",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-004",
+      "title": "Adam Johnson exposes US media's Gaza narrative",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-008",
+      "title": "Young Palestinian women learn AI to tell stories of war on Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-002",
+      "title": "Freed Palestinian prisoner meets son conceived with smuggled sperm",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-012",
+      "title": "Son of Gaza doctor Abu Safiya speaks out after appeal rejection",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-06-17-009",
+      "title": "2 Palestinians killed by Israeli fire in Gaza, death toll surpasses 73,000",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-15-007",
+      "prior_edition_date": "2026-06-15",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-06-17-011",
+      "title": "Israel approves Jewish religious school construction in occupied West Bank's Hebron",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-06-17-003",
+      "title": "Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-009",
+      "title": "2 Palestinians killed by Israeli fire in Gaza, death toll surpasses 73,000",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-15-007",
+      "prior_edition_date": "2026-06-15",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-005",
+      "title": "Death toll in Gaza since 'ceasefire' with Israel goes past 1,000",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-011",
+      "title": "Israel approves Jewish religious school construction in occupied West Bank's Hebron",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-007",
+      "title": "Instead of sanctioning Israel, FIFA pushes Palestine youth match",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-006",
+      "title": "Hamas reports 'broad consensus' with mediators on implementing 2nd phase of Gaza ceasefire plan",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-004",
+      "title": "Adam Johnson exposes US media's Gaza narrative",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-008",
+      "title": "Young Palestinian women learn AI to tell stories of war on Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-002",
+      "title": "Freed Palestinian prisoner meets son conceived with smuggled sperm",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-17-012",
+      "title": "Son of Gaza doctor Abu Safiya speaks out after appeal rejection",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-06-16",
+    "2026-06-15",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-12",
+    "2026-06-11",
+    "2026-06-10",
+    "2026-06-09",
+    "2026-06-08",
+    "2026-06-07",
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

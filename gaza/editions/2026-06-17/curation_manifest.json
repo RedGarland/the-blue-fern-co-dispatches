@@ -1,0 +1,565 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-17-003",
+    "title": "Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza",
+    "summary": "Attack on crowded beachfront in Khan Younis targets civilians seeking relief from summer heat, as. Israel's ceasefire violations continue across enclave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 85,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-496acc99e7f3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-496acc99e7f3"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-2-beachgoers-wounds-6-in-southern-gaza/3970081"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis"
+    ],
+    "top_story_relevance_score": 85,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-009",
+    "title": "2 Palestinians killed by Israeli fire in Gaza, death toll surpasses 73,000",
+    "summary": "At least 1,005 Palestinians killed, 3,157 injured since ceasefire, Health Ministry says.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 73,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-475b7be2a980"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-475b7be2a980"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/2-palestinians-killed-by-israeli-fire-in-gaza-death-toll-surpasses-73-000/3969940"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 73,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-15-007",
+    "prior_edition_date": "2026-06-15",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-005",
+    "title": "Death toll in Gaza since 'ceasefire' with Israel goes past 1,000",
+    "summary": "More than 1,000 people in Gaza have been killed since a US-brokered 'ceasefire' between Hamas and. Israel was agreed.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-5d74a8f6b8d8"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-5d74a8f6b8d8"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/17/death-toll-in-gaza-since-ceasefire-with-israel-goes-past-1000?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-011",
+    "title": "Israel approves Jewish religious school construction in occupied West Bank's Hebron",
+    "summary": "Decision marks 1st implementation of Israel's move to take away Palestinian municipality's building and planning authority, in violation of Hebron Agreement.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 58,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-c85853412f5c"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-c85853412f5c"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-approves-jewish-religious-school-construction-in-occupied-west-bank-s-hebron/3969779"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-007",
+    "title": "Instead of sanctioning Israel, FIFA pushes Palestine youth match",
+    "summary": "FIFA is reportedly considering a Palestinian-Israeli youth match despite calls to ban. Israel over Gaza, where hundreds of footballers have been killed.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 51,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-the-new-arab-45ef2165e8c2"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-the-new-arab-45ef2165e8c2"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/instead-sanctioning-israel-fifa-pushes-palestine-youth-match"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 51,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-006",
+    "title": "Hamas reports 'broad consensus' with mediators on implementing 2nd phase of Gaza ceasefire plan",
+    "summary": "Group says discussions addressed issue of Palestinian weapons 'within logical and acceptable approach for all parties'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-2d0c0d60561d"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-anadolu-middle-east-2d0c0d60561d"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/hamas-reports-broad-consensus-with-mediators-on-implementing-2nd-phase-of-gaza-ceasefire-plan/3970024"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-004",
+    "title": "Adam Johnson exposes US media's Gaza narrative",
+    "summary": "Book Club: Adam Johnson's 'How to Sell a Genocide' examines how the US liberal media helped normalise. Israel's destruction of Gaza and marginalise Palestinians.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-the-new-arab-57b4f5413b01"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-the-new-arab-57b4f5413b01"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/features/adam-johnson-exposes-us-medias-gaza-narrative"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-008",
+    "title": "Young Palestinian women learn AI to tell stories of war on Gaza",
+    "summary": "",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-dd2c817cb3f4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-dd2c817cb3f4"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/17/young-palestinian-women-learn-ai-to-tell-stories-of-war-on-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-002",
+    "title": "Freed Palestinian prisoner meets son conceived with smuggled sperm",
+    "summary": "After spending 25 years in Israeli prisons, Abdul Karim al-Rimawi embraced his son Majd for the first time.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-1ab1e07d352a"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-aljazeera-middle-east-1ab1e07d352a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/17/freed-palestinian-prisoner-meets-son-conceived-with-smuggled-sperm?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-17-012",
+    "title": "Son of Gaza doctor Abu Safiya speaks out after appeal rejection",
+    "summary": "Son of Gaza doctor Hussam Abu Safiya has condemned. Israel's decision to keep his father detained without charge, telling. The New Arab he fears for his health.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 30,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-17-the-new-arab-e2e0c08f998b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-17-the-new-arab-e2e0c08f998b"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/son-gaza-doctor-abu-safiya-speaks-out-after-appeal-rejection"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-17T20:19:46.891070+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 30,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

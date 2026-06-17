@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 16 Jun 2026 13:01:02 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 17 Jun 2026 20:20:06 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 17, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-17-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-17-transcript.html</guid>
+    <pubDate>Wed, 17 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza. Attack on crowded beachfront in Khan Younis targets civilians seeking relief from summer heat, as. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-17.mp3" length="1906560" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 16, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-16-transcript.html</link>

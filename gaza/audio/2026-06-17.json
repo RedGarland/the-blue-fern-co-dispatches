@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-17",
+  "generated_at": "2026-06-17T20:20:06.858213Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-17.mp3",
+  "audio_url": "/gaza/audio/2026-06-17.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1766,
+  "tts_input_word_count": 264,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1906560,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-17T20:20:06.858188Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-17-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-17/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 17, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza. Attack on crowded beachfront in Khan Younis targets civilians seeking relief from summer heat, as. Israel's ceasefire violations continue across enclave. This was reported by Anadolu Agency.\n\n2. Death toll in Gaza since 'ceasefire' with Israel goes past 1,000. More than 1,000 people in Gaza have been killed since a US-brokered 'ceasefire' between Hamas and. Israel was agreed. This was reported by Al Jazeera.\n\n3. Israel approves Jewish religious school construction in occupied West Bank's Hebron. Decision marks 1st implementation of Israel's move to take away Palestinian municipality's building and planning authority, in violation of Hebron Agreement. This was reported by Anadolu Agency.\n\n4. Instead of sanctioning Israel, FIFA pushes Palestine youth match. FIFA is reportedly considering a Palestinian-Israeli youth match despite calls to ban. Israel over Gaza, where hundreds of footballers have been killed. This was reported by The New Arab.\n\n5. Hamas reports 'broad consensus' with mediators on implementing 2nd phase of Gaza ceasefire plan. Group says discussions addressed issue of Palestinian weapons 'within logical and acceptable approach for all parties'. This was reported by Anadolu Agency.\n\n6. Adam Johnson exposes US media's Gaza narrative. Book Club: Adam Johnson's 'How to Sell a Genocide' examines how the US liberal media helped normalise. Israel's destruction of Gaza and marginalise Palestinians. This was reported by The New Arab.\n\nFor the full source-backed dispatch, read the June 17, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-17-anadolu-middle-east-496acc99e7f3",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israeli-drone-strike-kills-2-beachgoers-wounds-6-in-southern-gaza/3970081",
+      "title": "Israeli drone strike kills 2 beachgoers, wounds 6 in southern Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-06-17-aljazeera-middle-east-5d74a8f6b8d8",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/17/death-toll-in-gaza-since-ceasefire-with-israel-goes-past-1000?traffic_source=rss",
+      "title": "Death toll in Gaza since 'ceasefire' with Israel goes past 1,000"
+    },
+    {
+      "source_record_id": "gaza-2026-06-17-anadolu-middle-east-c85853412f5c",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israel-approves-jewish-religious-school-construction-in-occupied-west-bank-s-hebron/3969779",
+      "title": "Israel approves Jewish religious school construction in occupied West Bank's Hebron"
+    },
+    {
+      "source_record_id": "gaza-2026-06-17-the-new-arab-45ef2165e8c2",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/instead-sanctioning-israel-fifa-pushes-palestine-youth-match",
+      "title": "Instead of sanctioning Israel, FIFA pushes Palestine youth match"
+    },
+    {
+      "source_record_id": "gaza-2026-06-17-anadolu-middle-east-2d0c0d60561d",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/hamas-reports-broad-consensus-with-mediators-on-implementing-2nd-phase-of-gaza-ceasefire-plan/3970024",
+      "title": "Hamas reports 'broad consensus' with mediators on implementing 2nd phase of Gaza ceasefire plan"
+    },
+    {
+      "source_record_id": "gaza-2026-06-17-the-new-arab-57b4f5413b01",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/features/adam-johnson-exposes-us-medias-gaza-narrative",
+      "title": "Adam Johnson exposes US media's Gaza narrative"
+    }
+  ]
+}

@@ -1088,7 +1088,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
     review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
     kltv = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-c531de22a923a8d8")
-    lead = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
+    lead = next(row for row in review_rows if row["source_record_id"] == "food-line-auto-d746124a0786b5f9")
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
     source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
@@ -1098,7 +1098,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert result["public_rendered"] is True
     assert result["skip_reason"] == ""
     assert result["primary_disqualification_reason"] == ""
-    assert result["lead_source_record_id"] == "food-line-auto-9013087c4ebc5f32"
+    assert result["lead_source_record_id"] == "food-line-auto-d746124a0786b5f9"
     assert result["selected_lead_source_role"] == "local_signal"
     assert result["selected_lead_pressure_type"] == "demand strain"
     assert result["selected_lead_pressure_scope_label"] == "Local / operational"
@@ -1113,7 +1113,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert kltv["primary_eligible"] == "true"
     assert kltv["primary_disqualification_reason"] == ""
     assert lead["source_title"].startswith("Local food pantries are preparing for increased demand")
-    assert lead["location_name"] == "Toledo"
+    assert lead["location_name"] == "Toledo, OH"
     assert lead["pressure_signal"] == "true"
     assert lead["pressure_verification_status"] == "source_text_verified"
     assert lead["source_published_date"] == "2026-06-05"
@@ -1125,7 +1125,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "Today&apos;s lead:" not in glance_html
     assert "What happened:" not in glance_html
     assert "More background sources appear below" not in glance_html
-    assert "Today’s Food Line found 3 reported pressure signals." in today_read_html
+    assert "Today’s Food Line found 5 reported pressure signals." in today_read_html
     assert "The run reviewed" in today_read_html
     assert "Washington food providers report rising pantry demand" in glance_html
     assert "Partial-source update / June 5, 2026" in edition_html
@@ -1150,7 +1150,7 @@ def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagno
     assert "KLTV" in source_table_html
     assert "USDA FNS" in source_table_html
     assert "USDA ERS" in source_table_html
-    assert "3 sources were used on the public page" in source_table_html
+    assert "5 sources were used on the public page" in source_table_html
     assert "2 additional background reference sources" in source_table_html
     assert "Background reference" in source_table_html
     assert "Yes" in source_table_html
@@ -4026,13 +4026,13 @@ def test_food_line_13abc_style_pantry_snap_story_publishes_when_fresh_and_clean(
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     result = run_food_line_dispatch(tmp_path, date)
     review = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
-    lead = next(row for row in review if row["source_record_id"] == "food-line-auto-9013087c4ebc5f32")
+    lead = next(row for row in review if row["source_record_id"] == "food-line-auto-d746124a0786b5f9")
     edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
 
     assert result["public_rendered"] is True
     assert result["skip_reason"] == ""
     assert result["primary_disqualification_reason"] == ""
-    assert result["lead_source_record_id"] == "food-line-auto-9013087c4ebc5f32"
+    assert result["lead_source_record_id"] == "food-line-auto-d746124a0786b5f9"
     assert result["selected_lead_source_role"] == "local_signal"
     assert result["selected_lead_pressure_type"] == "demand strain"
     assert result["selected_lead_pressure_scope_label"] == "Local / operational"
@@ -4565,6 +4565,12 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
     assert "institutional_context_signal" not in source_table_html
     assert "Other Food Line Signals" in transcript_html
     assert "pantry-demand story" not in transcript_html
+    assert food_line._food_line_claim_confidence(
+        {
+            "source_role": "research_signal",
+            "evidence_level": "research report",
+        }
+    ) == "moderate"
     assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["pressure_signal"] == "true"
     assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["primary_source_url"] == "https://www.nber.org/papers/example-food-sufficiency-study"
     assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["secondary_source_url"] == "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/"

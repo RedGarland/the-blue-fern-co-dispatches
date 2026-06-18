@@ -1,0 +1,626 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-18-008",
+    "title": "Israel has killed more than 1,000 people in Gaza since ceasefire",
+    "summary": "The number of Palestinians killed by Israel since an October 2025 so-called 'truce' brokered by US President Donald Trump was 1,008, the health ministry said.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 85,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-the-new-arab-ff68b80ca5b4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-the-new-arab-ff68b80ca5b4"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 85,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-17-005",
+    "prior_edition_date": "2026-06-17",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-006",
+    "title": "Israel kills at least three Palestinians in Gaza City drone strike",
+    "summary": "Gaza's Health Ministry says at least 1,007 Palestinians have been killed by Israel since the so-called 'ceasefire'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 73,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-5898873c55a6"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-5898873c55a6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/18/israel-kills-at-least-three-palestinians-in-gaza-city-drone-strike?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 73,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-17-009",
+    "prior_edition_date": "2026-06-17",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-004",
+    "title": "Over 1,000 people killed during Gaza ceasefire, Palestinian authorities say",
+    "summary": "Israeli operations in the Gaza Strip have killed 1,005 Palestinians since a ceasefire was reached between. Israel and the militant group Hamas last October, according to Gaza Health Ministry.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-npr-world-da9d8e33a46b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-npr-world-da9d8e33a46b"
+    ],
+    "source_urls": [
+      "https://www.npr.org/2026/06/18/g-s1-128734/over-1-000-people-killed-during-gaza-ceasefire-palestinian-authorities-say"
+    ],
+    "publisher_names": [
+      "NPR"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-17-009",
+    "prior_edition_date": "2026-06-17",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-009",
+    "title": "These are the Palestinians that Israel has killed during Gaza's 'ceasefire'",
+    "summary": "Israel has killed more than 1,000 Palestinians since agreeing to a US-brokered 'ceasefire' in its genocidal war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-d47232c59da3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-d47232c59da3"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/18/these-are-the-palestinians-that-israel-has-killed-during-gazas?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-17-005",
+    "prior_edition_date": "2026-06-17",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-002",
+    "title": "More than 1,000 killed in Israel attacks on Gaza since ceasefire",
+    "summary": "An Israeli attack on a vehicle in Gaza City has killed at least three Palestinians.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-718edc5b9498"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-718edc5b9498"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/18/more-than-1000-killed-in-israel-attacks-on-gaza-since-ceasefire?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-17-009",
+    "prior_edition_date": "2026-06-17",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-007",
+    "title": "Israel orders demolition of 9 Palestinian homes in Hebron amid West Bank escalation",
+    "summary": "West Bank has seen increase in attacks by Israeli forces, occupiers against Palestinians since October 2023.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-f0bda9eeade1"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-f0bda9eeade1"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-orders-demolition-of-9-palestinian-homes-in-hebron-amid-west-bank-escalation/3971197"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-29-004",
+    "prior_edition_date": "2026-05-29",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-003",
+    "title": "8 countries condemn occupier violence against Palestinians in occupied West Bank",
+    "summary": "Foreign ministers say attacks violate sanctity of religious sites, international law.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-49f1348ffa6e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-49f1348ffa6e"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/8-countries-condemn-occupier-violence-against-palestinians-in-occupied-west-bank/3971235"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-001",
+    "title": "Israel 'football-shaped cluster bomb' sparks alarm in Lebanon",
+    "summary": "A suspected football-shaped cluster bomb left behind by Israel has triggered fears for children in south Lebanon, amid reports of similar incidents in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-the-new-arab-a5462366f259"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-the-new-arab-a5462366f259"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-football-shaped-cluster-bomb-sparks-alarm-lebanon"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-011",
+    "title": "Patients die in Gaza waiting for medical evacuations Israel keeps blocking",
+    "summary": "Despite having medical referrals to leave Gaza, Palestinians are not allowed to leave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 45,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-b534a86d3b0a"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-aljazeera-middle-east-b534a86d3b0a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/6/18/patients-die-in-gaza-waiting-for-medical-evacuations-israel-keeps-blocking?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 45,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-005",
+    "title": "Gaza border closures separate Palestinian families indefinitely",
+    "summary": "According to local estimates, about 950 wives are stranded in Gaza, including mothers of around 1,500 children.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-the-new-arab-157b4e37f8fc"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-the-new-arab-157b4e37f8fc"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-border-closures-separate-palestinian-families-indefinitely"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-18-010",
+    "title": "Gaza administration committee says reconstruction priorities finalized, ready to begin work",
+    "summary": "Committee discusses damage assessment with EU, UN and World Bank representatives.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-1dcb78e14bc0"
+    ],
+    "source_ids": [
+      "gaza-2026-06-18-anadolu-middle-east-1dcb78e14bc0"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/gaza-administration-committee-says-reconstruction-priorities-finalized-ready-to-begin-work/3971047"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

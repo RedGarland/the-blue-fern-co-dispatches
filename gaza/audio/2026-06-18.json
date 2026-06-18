@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-18",
+  "generated_at": "2026-06-18T18:48:20.456249Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-18.mp3",
+  "audio_url": "/gaza/audio/2026-06-18.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1648,
+  "tts_input_word_count": 256,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1809792,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-18T18:48:20.456227Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-18-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-18/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 18, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel has killed more than 1,000 people in Gaza since ceasefire. The number of Palestinians killed by Israel since an October 2025 so-called 'truce' brokered by US President Donald Trump was 1,008, the health ministry said. This was reported by The New Arab.\n\n2. Israel kills at least three Palestinians in Gaza City drone strike. Gaza's Health Ministry says at least 1,007 Palestinians have been killed by Israel since the so-called 'ceasefire'. This was reported by Al Jazeera.\n\n3. Over 1,000 people killed during Gaza ceasefire, Palestinian authorities say. Israeli operations in the Gaza Strip have killed 1,005 Palestinians since a ceasefire was reached between. Israel and the militant group Hamas last October, according to Gaza Health Ministry. This was reported by NPR.\n\n4. More than 1,000 killed in Israel attacks on Gaza since ceasefire. An Israeli attack on a vehicle in Gaza City has killed at least three Palestinians. This was reported by Al Jazeera.\n\n5. Israel orders demolition of 9 Palestinian homes in Hebron amid West Bank escalation. West Bank has seen increase in attacks by Israeli forces, occupiers against Palestinians since October 2023. This was reported by Anadolu Agency.\n\n6. 8 countries condemn occupier violence against Palestinians in occupied West Bank. Foreign ministers say attacks violate sanctity of religious sites, international law. This was reported by Anadolu Agency.\n\nFor the full source-backed dispatch, read the June 18, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-18-the-new-arab-ff68b80ca5b4",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+      "title": "Israel has killed more than 1,000 people in Gaza since ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-18-aljazeera-middle-east-5898873c55a6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/18/israel-kills-at-least-three-palestinians-in-gaza-city-drone-strike?traffic_source=rss",
+      "title": "Israel kills at least three Palestinians in Gaza City drone strike"
+    },
+    {
+      "source_record_id": "gaza-2026-06-18-npr-world-da9d8e33a46b",
+      "publisher": "NPR",
+      "url": "https://www.npr.org/2026/06/18/g-s1-128734/over-1-000-people-killed-during-gaza-ceasefire-palestinian-authorities-say",
+      "title": "Over 1,000 people killed during Gaza ceasefire, Palestinian authorities say"
+    },
+    {
+      "source_record_id": "gaza-2026-06-18-aljazeera-middle-east-718edc5b9498",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/6/18/more-than-1000-killed-in-israel-attacks-on-gaza-since-ceasefire?traffic_source=rss",
+      "title": "More than 1,000 killed in Israel attacks on Gaza since ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-18-anadolu-middle-east-f0bda9eeade1",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israel-orders-demolition-of-9-palestinian-homes-in-hebron-amid-west-bank-escalation/3971197",
+      "title": "Israel orders demolition of 9 Palestinian homes in Hebron amid West Bank escalation"
+    },
+    {
+      "source_record_id": "gaza-2026-06-18-anadolu-middle-east-49f1348ffa6e",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/8-countries-condemn-occupier-violence-against-palestinians-in-occupied-west-bank/3971235",
+      "title": "8 countries condemn occupier violence against Palestinians in occupied West Bank"
+    }
+  ]
+}

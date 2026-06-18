@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 17 Jun 2026 20:20:06 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 18 Jun 2026 18:48:20 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 18, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-18-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-18-transcript.html</guid>
+    <pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Israel has killed more than 1,000 people in Gaza since ceasefire. The number of Palestinians killed by Israel since an October 2025 so-called 'truce' brokered by US President Donald Trump was 1,008, the health ministry said. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-18.mp3" length="1809792" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 17, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-17-transcript.html</link>

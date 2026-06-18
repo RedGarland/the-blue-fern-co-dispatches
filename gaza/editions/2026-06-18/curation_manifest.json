@@ -38,7 +38,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -95,7 +95,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -107,17 +107,19 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-17-009",
-    "prior_edition_date": "2026-06-17",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-18-008",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
   },
   {
     "story_id": "gaza-story-2026-06-18-004",
     "title": "Over 1,000 people killed during Gaza ceasefire, Palestinian authorities say",
-    "summary": "Israeli operations in the Gaza Strip have killed 1,005 Palestinians since a ceasefire was reached between. Israel and the militant group Hamas last October, according to Gaza Health Ministry.",
+    "summary": "Israeli operations in the Gaza Strip have killed 1,005 Palestinians since a ceasefire was reached between Israel and the militant group Hamas last October, according to Gaza Health Ministry.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 70,
@@ -152,7 +154,7 @@
     "publisher_names": [
       "NPR"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -164,12 +166,14 @@
     "claim_status": "independently_reported",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-17-009",
-    "prior_edition_date": "2026-06-17",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-18-008",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
   },
   {
     "story_id": "gaza-story-2026-06-18-009",
@@ -209,7 +213,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -221,15 +225,13 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "skip",
+    "include_decision": "merge_into_existing",
     "public_rendered": false,
-    "prior_story_matched": "gaza-story-2026-06-17-005",
-    "prior_edition_date": "2026-06-17",
-    "dedupe_classification": "duplicate_skip",
+    "prior_story_matched": "gaza-story-2026-06-18-008",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "duplicate_merged",
     "dedupe_reasons": [
-      "same_topic",
-      "new_source_or_summary_detail",
-      "non_material_continuation"
+      "gaza_ceasefire_casualty"
     ]
   },
   {
@@ -270,7 +272,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -282,12 +284,14 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-17-009",
-    "prior_edition_date": "2026-06-17",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-18-008",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
   },
   {
     "story_id": "gaza-story-2026-06-18-007",
@@ -326,7 +330,7 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -383,7 +387,7 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -440,7 +444,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -495,7 +499,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -550,7 +554,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -605,7 +609,7 @@
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-18T18:48:02.641002+00:00",
+    "generated_at": "2026-06-18T19:27:55.041403+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

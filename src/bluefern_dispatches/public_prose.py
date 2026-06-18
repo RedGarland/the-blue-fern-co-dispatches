@@ -22,15 +22,59 @@ INCOMPLETE_MODAL_ENDINGS = (
     "that would create.",
 )
 
+SENTENCE_STITCH_JOINERS = (
+    "under",
+    "while",
+    "between",
+    "with",
+    "by",
+    "from",
+    "to",
+    "of",
+    "in",
+    "on",
+    "for",
+    "about",
+    "amid",
+)
+
+_SENTENCE_STITCH_RE = re.compile(
+    rf"\b({'|'.join(SENTENCE_STITCH_JOINERS)})\.\s+(?=([\"'“‘]*[A-Z]))",
+)
+
 
 def _split_sentences(text: str) -> list[str]:
     return [part.strip() for part in re.split(r"(?<=[.!?])\s+", text.strip()) if part.strip()]
+
+
+def _repair_sentence_stitching(text: str) -> str:
+    value = str(text or "")
+    while True:
+        updated = _SENTENCE_STITCH_RE.sub(lambda match: f"{match.group(1)} ", value)
+        if updated == value:
+            break
+        value = updated
+    return value
+
+
+def _ensure_terminal_punctuation(text: str) -> str:
+    value = str(text or "").rstrip()
+    if not value:
+        return ""
+    if value.endswith(("!", "?")):
+        return value
+    if value.endswith("."):
+        return value
+    if value.endswith(('"', "'", "”", "’")) and len(value) >= 2 and value[-2] in ".!?":
+        return value
+    return f"{value}."
 
 
 def sanitize_public_prose(text: str) -> str:
     value = " ".join(str(text or "").split())
     if not value:
         return ""
+    value = _repair_sentence_stitching(value)
     kept: list[str] = []
     for sentence in _split_sentences(value):
         lowered = sentence.lower()
@@ -39,7 +83,8 @@ def sanitize_public_prose(text: str) -> str:
         if any(lowered.endswith(ending) for ending in INCOMPLETE_MODAL_ENDINGS):
             continue
         kept.append(sentence)
-    return " ".join(kept).strip()
+    cleaned = " ".join(kept).strip()
+    return _ensure_terminal_punctuation(cleaned)
 
 
 def find_public_prose_violations(text: str) -> list[str]:

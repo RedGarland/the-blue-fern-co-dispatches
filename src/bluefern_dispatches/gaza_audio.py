@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from bluefern_dispatches.public_prose import sanitize_public_prose
+
 BASE_URL = "https://dispatches.thebluefernco.com"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MAX_STORIES = 6
@@ -149,9 +151,7 @@ def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
 
 
 def _clean_public_text(value: str) -> str:
-    text = str(value or "").strip()
-    text = re.sub(r"\s+", " ", text)
-    return text.strip()
+    return sanitize_public_prose(str(value or ""))
 
 
 def _count_words(value: str) -> int:

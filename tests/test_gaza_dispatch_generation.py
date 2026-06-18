@@ -1316,7 +1316,8 @@ def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_f
     assert result["ok"] is True
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-22" / "index.html")
     assert "<h2>Today" in html and "Read</h2>" in html
-    assert "limited update for Gaza" in html
+    assert "Today’s saved source records point to 1 reported development." in html
+    assert "Aid access timing changed after checkpoint delays." in html
     assert "Example News" in html
     assert "humanitarian" in html
     assert "Gaza" in html
@@ -2407,4 +2408,129 @@ def test_run_gaza_dispatch_preserves_audio_callout_when_audio_artifacts_exist(mo
     assert "Read audio transcript" in html
     assert "Audio file not generated yet." in html
     assert "/gaza/audio/podcast.xml" in html
+
+
+def test_gaza_public_prose_cleans_sentence_stitching_in_html(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    edition_date = "2026-06-16"
+    write_manual_sources(
+        work,
+        edition_date,
+        [
+                {
+                    "source_record_id": "gaza-src-2026-06-16-001",
+                    "title": "Palestinian detainees face review in Gaza",
+                    "url": "https://example.com/gaza-under",
+                    "publisher": "Reuters",
+                    "published_at": "2026-06-16T09:00:00Z",
+                    "retrieved_at": "2026-06-16T09:05:00Z",
+                    "summary_or_snippet": "In Gaza, under. Israel's 'unlawful combatant' law remained in force for Palestinian detainees.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "rights",
+                    "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-06-16-002",
+                "title": "Gaza response while clause",
+                "url": "https://example.com/gaza-while",
+                "publisher": "The New Arab",
+                "published_at": "2026-06-16T10:00:00Z",
+                "retrieved_at": "2026-06-16T10:05:00Z",
+                "summary_or_snippet": "while. Israel violently lashes out at critics of the ceasefire.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-06-16-003",
+                "title": "Gaza talks between clause",
+                "url": "https://example.com/gaza-between",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-06-16T11:00:00Z",
+                "retrieved_at": "2026-06-16T11:05:00Z",
+                "summary_or_snippet": "between. Israel and the militant group Hamas remained divided on access terms.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "diplomacy",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+    result = run_gaza_dispatch(work, edition_date, from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / edition_date / "index.html")
+    lowered = html.lower()
+    assert "under. israel" not in lowered
+    assert "while. israel" not in lowered
+    assert "between. israel" not in lowered
+    assert "while israel violently lashes out" in lowered
+    assert "between israel and the militant group hamas" in lowered
+
+
+def test_gaza_public_prose_collapses_same_event_ceasefire_reports_and_preserves_traceability(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    edition_date = "2026-06-18"
+    records = [
+        {
+            "source_record_id": "gaza-2026-06-18-the-new-arab-ff68b80ca5b4",
+            "title": "Israel has killed more than 1,000 people in Gaza since ceasefire",
+            "url": "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+            "publisher": "The New Arab",
+            "published_at": "2026-06-18T12:00:00Z",
+            "retrieved_at": "2026-06-18T12:05:00Z",
+            "summary_or_snippet": "The number of Palestinians killed by Israel since an October 2025 so-called 'truce' brokered by US President Donald Trump was 1,008, the health ministry said.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "conflict",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-2026-06-18-aljazeera-middle-east-5898873c55a6",
+            "title": "Israel kills at least three Palestinians in Gaza City drone strike",
+            "url": "https://www.aljazeera.com/news/2026/6/18/israel-kills-at-least-three-palestinians-in-gaza-city-drone-strike?traffic_source=rss",
+            "publisher": "Al Jazeera",
+            "published_at": "2026-06-18T12:10:00Z",
+            "retrieved_at": "2026-06-18T12:15:00Z",
+            "summary_or_snippet": "Gaza's Health Ministry says at least 1,007 Palestinians have been killed by Israel since the so-called 'ceasefire'.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "conflict",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-2026-06-18-npr-world-da9d8e33a46b",
+            "title": "Over 1,000 people killed during Gaza ceasefire, Palestinian authorities say",
+            "url": "https://www.npr.org/2026/06/18/g-s1-128734/over-1-000-people-killed-during-gaza-ceasefire-palestinian-authorities-say",
+            "publisher": "NPR",
+            "published_at": "2026-06-18T12:20:00Z",
+            "retrieved_at": "2026-06-18T12:25:00Z",
+            "summary_or_snippet": "Israeli operations in the Gaza Strip have killed 1,005 Palestinians since a ceasefire was reached between Israel and the militant group Hamas last October, according to Gaza Health Ministry.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "conflict",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, edition_date, records)
+    result = run_gaza_dispatch(work, edition_date, from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / edition_date / "index.html")
+    today_read = html.split("<h2>Today", 1)[1].split("<h2>At A Glance</h2>", 1)[0]
+    at_a_glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
+    assert today_read.count("<p>") == 2
+    assert today_read.count("Multiple outlets reported it") == 1
+    assert at_a_glance.count("<li>") == 1
+    assert at_a_glance.count("1,000") <= 1
+    for url in (
+        "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+        "https://www.aljazeera.com/news/2026/6/18/israel-kills-at-least-three-palestinians-in-gaza-city-drone-strike?traffic_source=rss",
+        "https://www.npr.org/2026/06/18/g-s1-128734/over-1-000-people-killed-during-gaza-ceasefire-palestinian-authorities-say",
+    ):
+        assert url in html
 

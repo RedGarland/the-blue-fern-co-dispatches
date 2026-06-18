@@ -1,0 +1,620 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-16-003",
+    "title": "Israel kills 2 Palestinians in strike on civilians in central Gaza",
+    "summary": "Israeli drone targets gathering north of Nuseirat refugee camp in new violation of ceasefire in place since October 2025.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 78,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-ebbbf6fde357"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-ebbbf6fde357"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-kills-2-palestinians-in-strike-on-civilians-in-central-gaza/3968679"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 78,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-006",
+    "title": "Israeli Supreme Court rejects appeal against Palestinian doctor's detention, lawyer says",
+    "summary": "Court approves continued detention of Abu Safiya, who served as director of Gaza's Kamal Adwan Hospital, under Israel's 'unlawful combatant' law without charges, attorney Nasser Odeh says.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 75,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-cbfe1f4a74e1"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-cbfe1f4a74e1"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-supreme-court-rejects-appeal-against-palestinian-doctor-s-detention-lawyer-says/3968404"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 75,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-010",
+    "title": "Israeli occupiers destroy sole water supply line to Palestinian village in occupied West Bank",
+    "summary": "Attack cuts off water to Umm Safa village near Ramallah amid expanding settler assaults.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-be76b64ad9b7"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-be76b64ad9b7"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-occupiers-destroy-sole-water-supply-line-to-palestinian-village-in-occupied-west-bank/3968115"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-008",
+    "title": "'I would have burned': US citizen recounts Israeli occupier attack in West Bank town",
+    "summary": "West Bank town of Deir Dibwan, where 70% of residents are US citizens, faces Israeli occupier attacks.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-a0b018eba2cb"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-a0b018eba2cb"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/world/i-would-have-burned-us-citizen-recounts-israeli-occupier-attack-in-west-bank-town/3968383"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-007",
+    "title": "US and Iran takes steps forward, Israel continues Lebanon attack",
+    "summary": "Iran and the US are both progressing forward with the deal, while Israel violently lashes out with attacks on Lebanon and Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-the-new-arab-6efd70198a63"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-the-new-arab-6efd70198a63"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/us-and-iran-takes-steps-forward-israel-continues-lebanon-attack"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-005",
+    "title": "Palestine weekly wrap: World sanctions settlers, Israel funds settlements",
+    "summary": "Amnesty calls West Bank ethnic cleansing 'state-sponsored' and international allies bar Finance Minister Smotrich.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-aljazeera-middle-east-cc7662dc45be"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-aljazeera-middle-east-cc7662dc45be"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/16/palestine-weekly-wrap-world-sanctions-settlers-israel-funds-settlements?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-004",
+    "title": "Gazans fear exclusion from US-Iran regional agreement",
+    "summary": "For many in Gaza, attention has focused less on the diplomatic breakthrough in the Iran-US deal than on what was omitted from the initial announcement.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-the-new-arab-057225ecc52f"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-the-new-arab-057225ecc52f"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gazans-fear-exclusion-us-iran-regional-agreement"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-011",
+    "title": "Palestine Action vows to fight on after UK court backs ban",
+    "summary": "The UK's Court of Appeal overturned the High Court's decision, deeming the proscription of Palestine Action to be lawful, with its co-founder vowing to appeal.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-the-new-arab-1efb79cbb423"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-the-new-arab-1efb79cbb423"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/palestine-action-vows-fight-after-uk-court-backs-ban"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-009",
+    "title": "Israeli forces kill four in Gaza ahead of truce talks in Egypt",
+    "summary": "The latest killings came as Donald Trump's Gaza envoy travelled to Cairo for talks with mediators about how to advance plans to bring an end to the war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-the-new-arab-556bcbe77d08"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-the-new-arab-556bcbe77d08"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/israeli-forces-kill-four-gaza-ahead-truce-talks-egypt"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-16-003",
+    "prior_edition_date": "2026-06-16",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-001",
+    "title": "The UK's new PM must avoid Starmer's Gaza mistakes",
+    "summary": "Gaza has become a test of Britain's democracy. The next Prime Minister must restore respect for the rule of law at home and abroad, writes Mona Deeley.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-the-new-arab-fddb3de8462b"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-the-new-arab-fddb3de8462b"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/opinion/uks-new-pm-must-avoid-starmers-gaza-mistakes"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-16-012",
+    "title": "Israeli government plans to fund extremist occupier group in occupied West Bank with $1.89M: Report",
+    "summary": "Funding to be transferred through Settlement and National Missions Ministry, according to Yedioth Ahronoth.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-8e34c06e57c4"
+    ],
+    "source_ids": [
+      "gaza-2026-06-16-anadolu-middle-east-8e34c06e57c4"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-government-plans-to-fund-extremist-occupier-group-in-occupied-west-bank-with-189m-report/3967716"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-18T19:27:50.512839+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

@@ -35,6 +35,7 @@ from bluefern_dispatches.gaza_sources import clean_feed_text
 from bluefern_dispatches.gaza_sources import gaza_relevance_decision
 from bluefern_dispatches.gaza_sources import is_palestinian_development_text
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
+from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 
 
@@ -904,8 +905,26 @@ def _story_section_label(story: dict[str, Any], source: dict[str, Any] | None) -
     return "Other Gaza Developments"
 
 
+def _story_source_publishers(story: dict[str, Any], source_by_id: dict[str, dict[str, Any]]) -> list[str]:
+    publishers: list[str] = []
+    seen: set[str] = set()
+    for source_id in story.get("source_record_ids") or []:
+        source = source_by_id.get(str(source_id))
+        if not source:
+            continue
+        publisher = str(source.get("publisher") or "").strip()
+        if not publisher:
+            continue
+        key = publisher.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        publishers.append(publisher)
+    return publishers
+
+
 def _cleanup_summary_paragraphs(summary: str) -> list[str]:
-    text = clean_feed_text(str(summary or "")).strip()
+    text = sanitize_public_prose(clean_feed_text(str(summary or ""))).strip()
     if not text:
         return []
     text = _repair_malformed_punctuation_before_entities(text)
@@ -1031,7 +1050,7 @@ def _repair_missing_sentence_boundaries(text: str) -> str:
 
 def _sanitize_story_summary(title: str, summary: str) -> str:
     clean_title = clean_feed_text(str(title or "")).strip()
-    clean_summary = clean_feed_text(str(summary or "")).strip()
+    clean_summary = sanitize_public_prose(clean_feed_text(str(summary or ""))).strip()
     if not clean_summary:
         return ""
     if clean_title and clean_summary.lower() == clean_title.lower():
@@ -1044,6 +1063,7 @@ def _sanitize_story_summary(title: str, summary: str) -> str:
     clean_summary = _repair_missing_sentence_boundaries(clean_summary)
     clean_summary = _repair_malformed_punctuation_before_entities(clean_summary)
     clean_summary = _drop_incomplete_summary_tail(clean_summary)
+    clean_summary = sanitize_public_prose(clean_summary)
     cleaned_lines = _cleanup_summary_paragraphs(clean_summary)
     clean_summary = " ".join(cleaned_lines).strip()
     if clean_title and clean_summary.lower() == clean_title.lower():
@@ -1062,7 +1082,17 @@ def _build_today_read(stories: list[dict[str, Any]], source_by_id: dict[str, dic
     if not stories:
         return []
     if len(stories) < 2:
-        return ["Today’s source records support a limited update for Gaza; readers should rely on the story entries below for the verified details."]
+        story = stories[0]
+        lead = "Today’s saved source records point to 1 reported development."
+        cleaned = _cleanup_summary_paragraphs(str(story.get("summary") or ""))
+        if cleaned:
+            line = cleaned[0]
+        else:
+            line = _story_summary_fallback(str(story.get("title") or ""))
+        publishers = _story_source_publishers(story, source_by_id)
+        if len(publishers) > 1:
+            line = f"{line} Multiple outlets reported it: {', '.join(publishers[:3])}."
+        return [lead, line]
     section_labels = []
     for story in stories:
         source = source_by_id.get(str((story.get("source_record_ids") or [""])[0]))
@@ -1079,11 +1109,13 @@ def _build_today_read(stories: list[dict[str, Any]], source_by_id: dict[str, dic
     for story in stories[:4]:
         cleaned = _cleanup_summary_paragraphs(str(story.get("summary") or ""))
         if cleaned:
-            summary_lines.append(cleaned[0])
-            continue
-        fallback = _story_summary_fallback(str(story.get("title") or ""))
-        if fallback:
-            summary_lines.append(fallback)
+            line = cleaned[0]
+        else:
+            line = _story_summary_fallback(str(story.get("title") or ""))
+        publishers = _story_source_publishers(story, source_by_id)
+        if len(publishers) > 1:
+            line = f"{line} Multiple outlets reported it: {', '.join(publishers[:3])}."
+        summary_lines.append(line)
     if not summary_lines:
         return ["Today’s source records support a limited update for Gaza; readers should rely on the story entries below for the verified details."]
     output = [lead, *summary_lines[:3]]

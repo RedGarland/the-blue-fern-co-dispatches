@@ -409,3 +409,42 @@ def test_alternating_voice_wav_with_gentle_chime_sets_metadata(tmp_path: Path, m
     assert metadata["segue_chime"] == "gentle"
     assert metadata["segue_chime_count"] >= 1
     assert metadata["audio_duration_seconds"] is not None
+
+
+def test_audio_script_repairs_sentence_stitching_and_terminal_punctuation():
+    curation = [
+        {
+            "title": "Gaza legal review under clause",
+            "summary": "under. Israel's 'unlawful combatant' law remained in force.",
+            "source_record_ids": ["s1"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "Gaza response while clause",
+            "summary": "while. Israel violently lashes out at critics of the ceasefire.",
+            "source_record_ids": ["s2"],
+            "included_in_public_summary": True,
+        },
+        {
+            "title": "Gaza talks between clause",
+            "summary": "between. Israel and the militant group Hamas remained divided on access terms.",
+            "source_record_ids": ["s3"],
+            "included_in_public_summary": True,
+        },
+    ]
+    sources_by_id = {
+        "s1": {"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"},
+        "s2": {"source_record_id": "s2", "publisher": "The New Arab", "url": "https://example.com/s2", "title": "S2"},
+        "s3": {"source_record_id": "s3", "publisher": "Al Jazeera", "url": "https://example.com/s3", "title": "S3"},
+    }
+
+    script, used = build_gaza_audio_script(edition_date="2026-06-16", curation_rows=curation, sources_by_id=sources_by_id)
+
+    assert "under. Israel" not in script
+    assert "while. Israel" not in script
+    assert "between. Israel" not in script
+    assert "under Israel's 'unlawful combatant' law" in script
+    assert "while Israel violently lashes out" in script
+    assert "between Israel and the militant group Hamas" in script
+    assert script.endswith(".")
+    assert len(used) == 3

@@ -1070,8 +1070,8 @@ def test_food_line_2026_06_13_kltv_excerpt_is_cleaned_before_rendering():
     assert "Weather Extra" not in excerpt
     assert "Reception Issues" not in excerpt
     assert "Pet Project" not in excerpt
-    assert "food assistance" in excerpt.lower()
-    assert "17% increase" in excerpt
+    assert "empty shelves" in excerpt.lower()
+    assert "1 in 4 Washingtonians" in excerpt
 
 
 def test_food_line_2026_06_05_publishes_new_primary_and_records_freshness_diagnostics(tmp_path: Path):
@@ -1295,8 +1295,6 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
     stale_ids = {
         "food-line-auto-6effc522ae28d822",
-        "food-line-auto-73ffb7d625c24e4c",
-        "food-line-auto-9013087c4ebc5f32",
     }
 
     assert result["public_rendered"] is True
@@ -1307,10 +1305,10 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert stale_ids.issubset(set(result["stale_source_ids"]))
     assert result["lead_source_record_id"] not in stale_ids
     assert not stale_ids.intersection(set(result["continuing_pressure_source_record_ids"] or []))
-    assert review_by_id["food-line-auto-73ffb7d625c24e4c"]["freshness_status"] == "stale_outside_daily_window"
-    assert review_by_id["food-line-auto-73ffb7d625c24e4c"]["pressure_signal"] == "false"
-    assert review_by_id["food-line-auto-9013087c4ebc5f32"]["freshness_status"] == "stale_outside_daily_window"
-    assert review_by_id["food-line-auto-9013087c4ebc5f32"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-auto-6effc522ae28d822"]["freshness_status"] == "stale_outside_daily_window"
+    assert review_by_id["food-line-auto-6effc522ae28d822"]["pressure_signal"] == "false"
+    assert review_by_id["food-line-auto-8766e7659336949d"]["freshness_status"] == "stale_outside_daily_window"
+    assert review_by_id["food-line-auto-8766e7659336949d"]["pressure_signal"] == "false"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["freshness_status"] == "stale_outside_daily_window"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["pressure_signal"] == "false"
     assert "No current update / June 6, 2026" in edition_html

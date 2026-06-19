@@ -56,12 +56,36 @@ Goal:
 
 - Use Codex and GitHub together for review, triage, and workflow automation.
 - Keep human approval in control of publication.
+- Make AI assistance advisory, not authoritative.
 
 Expected outcomes:
 
 - issue templates route tasks cleanly
 - PR templates capture validation evidence
 - optional AI review assists without bypassing traceability rules
+- issue-to-branch-to-PR stays the default path for implementation work
+- no AI agent may merge, publish, push, or sync Pages without explicit instruction
+- AI review comments are resolved through new commits, not manual untracked edits
+- release and publish remain separate explicit steps after validation
+
+Recommended roles:
+
+- Codex implementation agent
+- Assistant prompt/review coordinator
+- GitHub Actions validation gate
+- Optional AI reviewer
+- Human release approver
+
+## AI Review Operating Model
+
+- AI agents may assist with implementation, review, summarization, and test suggestions.
+- AI agents are advisory unless the user explicitly changes the workflow.
+- AI agents must not be treated as release authority.
+- Human approval remains required before public release.
+- GitHub Actions and publish-scope validation remain the authoritative gates.
+- Dry-run success is not permission to publish.
+- Pages repo sync requires explicit instruction and publish-scope validation.
+- AI tools must report what they changed, what they checked, and what they intentionally did not touch.
 
 ## Intended Development Process
 

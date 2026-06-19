@@ -36,6 +36,11 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - Run `scripts/validate_publish_scope.py` before any publish, release, or Pages-sync task.
 - Treat dry-run success as a check, not permission to publish.
 - Require explicit allow flags for Pages sync, audio, map, and Bluesky artifacts.
+- If acting as an implementation agent, do not self-approve your own work.
+- If acting as a reviewer, do not make unrelated edits.
+- If asked to review, focus on source traceability, stale-source leakage, future-edition leakage, generated artifact drift, Pages sync safety, audio/transcript/podcast consistency, map and Bluesky gating, and unrelated dirty files.
+- Always distinguish implementation findings from release/publish readiness.
+- Never infer publish permission from PR approval, test success, or dry-run success.
 - If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
 - Report clearly whether the task is complete, blocked, or needs follow-up.
 

@@ -53,6 +53,15 @@
 - [ ] This PR does not publish unless explicitly stated.
 - [ ] This PR does not sync the Pages repo unless explicitly stated.
 
+## Optional AI Review
+
+- [ ] AI implementation agent used
+- [ ] AI reviewer used
+- [ ] AI review findings summarized
+- [ ] AI-suggested changes were committed intentionally
+- [ ] No AI-suggested publish/sync action was taken without explicit approval
+- [ ] Human release approval still required
+
 ## Dirty Worktree Check
 
 - [ ] Unrelated dirty files excluded
@@ -62,4 +71,3 @@
 ## Risks / Follow-up
 
 <!-- Note any caveats, residual risks, or next steps -->
-

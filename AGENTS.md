@@ -33,6 +33,9 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - Run the narrowest useful validation first.
 - Verify any staged files before committing.
 - Separate source changes from generated Pages-repo changes.
+- Run `scripts/validate_publish_scope.py` before any publish, release, or Pages-sync task.
+- Treat dry-run success as a check, not permission to publish.
+- Require explicit allow flags for Pages sync, audio, map, and Bluesky artifacts.
 - If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
 - Report clearly whether the task is complete, blocked, or needs follow-up.
 
@@ -108,6 +111,7 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 ## Publishing And Pushing
 
 - Do not publish or push unless the user explicitly asks.
+- Do not treat implementation validation as release authorization.
 - Keep source-repo generation separate from Pages-repo publishing.
 - Never push Pages content from the source repo.
 - Use cache-busting and direct artifact checks when validating live public output.
@@ -124,4 +128,3 @@ Always return:
 6. Publish/push status
 7. Risks or follow-up needed
 8. Intentionally not touched
-

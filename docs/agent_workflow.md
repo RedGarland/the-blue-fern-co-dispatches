@@ -39,12 +39,16 @@ Goal:
 - Separate implementation from release.
 - Require reviewable pull requests before public publication.
 - Keep Pages publishing out of ordinary source-repo edits.
+- Require `scripts/validate_publish_scope.py` before any Pages sync or public release.
 
 Expected outcomes:
 
 - source changes land in PRs
 - publish steps happen only after explicit approval
 - Pages repo changes are isolated and checked separately
+- publish gates fail closed when the declared dispatch, edition date, or artifact family does not match the worktree
+- dry-run success does not imply permission to publish
+- audio, map, Bluesky, and Pages edits require explicit allow flags
 
 ## Phase 4: Optional AI Review / Codex GitHub Integration
 
@@ -81,6 +85,8 @@ Expected outcomes:
 - unrelated dirty files in commits
 - source-wrapper URLs replacing original source URLs
 - generated artifact drift
+- accidental publish of the wrong dispatch family or edition date
+- release-step leakage from implementation work
 - audio/podcast/archive mismatch
 - manual prompt context loss
 
@@ -92,4 +98,3 @@ Expected outcomes:
 - Never assume dry-run output is publishable without inspecting review output and logs.
 - Clearly separate pre-existing dirty files from task-created files.
 - Prefer traceable, source-backed changes over broad edits.
-

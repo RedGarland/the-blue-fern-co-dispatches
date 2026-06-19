@@ -1,0 +1,101 @@
+name: Dispatch bug report
+description: Report a source-traceability, rendering, or publish-safety bug
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: input
+    id: live_or_local
+    attributes:
+      label: Live URL or local path
+      description: Provide the live URL or the local file path where the issue appears.
+      placeholder: https://dispatches.thebluefernco.com/... or C:\\path\\to\\file
+    validations:
+      required: true
+  - type: dropdown
+    id: dispatch_family
+    attributes:
+      label: Dispatch family
+      description: Which dispatch does the bug affect?
+      options:
+        - Gaza
+        - Food Line
+        - Care Line
+        - Cascadia
+        - American Pressure
+        - Sitewide
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: edition_date
+    attributes:
+      label: Edition date
+      description: Use YYYY-MM-DD if the bug is edition-specific.
+      placeholder: "2026-06-19"
+    validations:
+      required: false
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: What happened?
+      placeholder: Describe the bug you saw.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened instead?
+      placeholder: Describe the expected result.
+    validations:
+      required: true
+  - type: dropdown
+    id: suspected_category
+    attributes:
+      label: Suspected issue category
+      description: Pick the closest category.
+      options:
+        - stale source leak
+        - future edition leak
+        - formatting/layout
+        - old label regression
+        - missing source table
+        - claim ledger issue
+        - audio/transcript issue
+        - podcast XML issue
+        - map issue
+        - archive/homepage issue
+        - Pages sync/deploy issue
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence, screenshots, or log snippets
+      description: Include any useful logs, snippets, or screenshots.
+      placeholder: Paste the evidence here.
+    validations:
+      required: false
+  - type: dropdown
+    id: should_block_publish
+    attributes:
+      label: Should publishing be blocked?
+      description: Indicate whether the issue should block publishing.
+      options:
+        - Yes
+        - No
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What should be true after the bug is fixed?
+      placeholder: Describe the fix criteria.
+    validations:
+      required: true
+

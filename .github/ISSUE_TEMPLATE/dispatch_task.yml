@@ -1,0 +1,105 @@
+name: Dispatch task
+description: Request a source-traceable dispatch implementation or workflow change
+title: "[Dispatch] "
+labels:
+  - codex-task
+body:
+  - type: dropdown
+    id: dispatch_family
+    attributes:
+      label: Dispatch family
+      description: Which dispatch area does this task affect?
+      options:
+        - Gaza
+        - Food Line
+        - Care Line
+        - Cascadia
+        - American Pressure
+        - Sitewide
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: edition_date
+    attributes:
+      label: Target edition date
+      description: Use YYYY-MM-DD if the task targets a specific edition.
+      placeholder: "2026-06-19"
+    validations:
+      required: false
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: Task type
+      description: What kind of change is needed?
+      options:
+        - classification/discovery
+        - rendering/layout
+        - source traceability
+        - claim ledger
+        - audio/transcript
+        - podcast XML
+        - map
+        - archive/homepage
+        - publishing/deployment
+        - tests/validation
+        - documentation/governance
+    validations:
+      required: true
+  - type: textarea
+    id: desired_change
+    attributes:
+      label: Desired change
+      description: Describe the intended outcome in plain language.
+      placeholder: What should change?
+    validations:
+      required: true
+  - type: textarea
+    id: source_safety
+    attributes:
+      label: Source-safety concerns
+      description: Call out stale sources, wrappers, redirects, search results, or other risks.
+      placeholder: What could go wrong with source safety?
+    validations:
+      required: true
+  - type: textarea
+    id: expected_artifacts
+    attributes:
+      label: Expected artifacts
+      description: List the files or outputs expected to change.
+      placeholder: Which outputs should change?
+    validations:
+      required: true
+  - type: textarea
+    id: tests_expected
+    attributes:
+      label: Tests expected
+      description: List the tests or validation checks that should run.
+      placeholder: Which tests or checks are expected?
+    validations:
+      required: true
+  - type: textarea
+    id: publish_expectations
+    attributes:
+      label: Publish/deploy expectations
+      description: State whether publish, push, or Pages sync is expected or forbidden.
+      placeholder: Should this be published or only validated locally?
+    validations:
+      required: true
+  - type: textarea
+    id: do_not_touch
+    attributes:
+      label: Explicit do not touch areas
+      description: List any dispatches, files, or repos that must remain untouched.
+      placeholder: What must not change?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Define what success looks like.
+      placeholder: How will we know this task is done?
+    validations:
+      required: true
+

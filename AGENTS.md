@@ -1,6 +1,8 @@
-﻿# AGENTS.md
+# AGENTS.md
 
-## Required Project Docs
+## Required Docs
+
+Read these before making project changes:
 
 - `README.md`
 - `PROJECT_SUMMARY.md`
@@ -8,68 +10,118 @@
 - `docs/project-contract.md`
 - `docs/pages-publish-safety.md`
 
-## Project Identity
+## Project Purpose
 
-- Project: **Dispatches From The Blue Fern Co.**
-- Purpose: source-based public dispatch system with traceable reporting and reproducible static output.
-- Public domain/publishing context:
-  - `https://dispatches.thebluefernco.com/`
-  - Gaza public root: `https://dispatches.thebluefernco.com/gaza/`
-- This source repository generates public artifacts under `output/site/`.
-- Publishing/deploy output is staged in a separate local Pages repository: `bluefern-dispatches-pages` (branch: `gh-pages`).
+Dispatches From The Blue Fern Co. is a source-based public dispatch system with traceable reporting and reproducible static output.
 
-## Required Standing Rules
+## Prime Directive
 
-1. No fact without a traceable source.
-2. Do not invent source claims, URLs, or unsupported narrative details.
-3. Preserve source tables, provenance, and auditability across manifests and rendered public outputs.
-4. Gaza content must remain daily, public, and free.
-5. Only touch the dispatch area explicitly named by the user task. For example, a Gaza task should not modify Cascadia, American Pressure, FDA, or unrelated publishing logic unless the task explicitly says to do so.
-6. Prefer narrow, test-backed changes.
-7. Do not weaken, delete, or bypass tests to make failures pass.
-8. Preserve public URLs and path conventions unless explicitly instructed to change them.
-9. Keep source-repo changes distinct from generated Pages-repo output changes.
-10. If public output changes, verify expected generated HTML/feed paths and that `output/detail` and `output/paid` are never exposed under `output/site`.
+All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 
-## VS Code / Local Workflow
+## Required Behavior Before Editing
 
-- Assume work is local in VS Code for this repository.
-- Prefer direct local edits in the active workspace.
-- Shell conventions:
-  - Use PowerShell commands.
-  - Use the project virtual environment when available (`.venv`).
-  - Set `PYTHONPATH` when running project modules:
+- Inspect the current worktree with `git status --short`.
+- Identify the exact dispatch, edition date, or workflow scope requested by the user.
+- Read only the files needed for that scope.
+- Do not assume dry-run output is publishable without checking review output and logs.
+- Do not touch unrelated dirty files.
+- Do not modify generated/public artifacts unless the task explicitly requires it.
+- Do not edit Pages repo output from a source-repo task unless explicitly requested.
 
-```powershell
-$env:PYTHONPATH="src"
-```
+## Required Behavior After Editing
 
-- Testing strategy:
-  - Run targeted pytest subsets first (`-k` or specific files).
-  - Run broader suites only when the change is cross-cutting.
-  - Keep tests focused on the edited scope.
+- Run the narrowest useful validation first.
+- Verify any staged files before committing.
+- Separate source changes from generated Pages-repo changes.
+- If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
+- Report clearly whether the task is complete, blocked, or needs follow-up.
 
-## Final Response Format (Expected)
+## Dispatch-Specific Rules
 
-Use this structure in final task summaries:
+### Gaza
+
+- Gaza is daily, public, and free.
+- Gaza content must remain source-backed and traceable.
+- Do not introduce future-dated or stale public stories.
+- Do not expose private or detail-only artifacts in public output.
+- Audio, transcript, podcast XML, and flash briefing artifacts must stay consistent with the edition date and source records.
+
+### Food Line
+
+- Food Line is a pressure dispatch, not a resource map.
+- Distinguish pressure signals from resource-only stories.
+- Do not allow stale, background, context-only, or resource-only sources into current-story sections.
+- Preserve source tables, claim ledgers, manifests, cleaned excerpts, and source traceability.
+- Prefer original publisher/article/report URLs over wrapper, redirect, or search-result URLs when available.
+- Never publish a Food Line edition without inspecting the review output and logs.
+
+### Care Line
+
+- Care Line must follow the same source-traceability and pressure-signal discipline as Food Line.
+- Do not let wrapper-like source rows, marketing pages, or untraceable snippets become public claims.
+- Public claims must support healthcare-access pressure, not just a general healthcare story.
+
+### Cascadia
+
+- Cascadia remains separate from Gaza, Food Line, Care Line, and American Pressure.
+- Keep weekly public output distinct from private detail packages.
+- Never copy detail-only records into public site output.
+- Preserve source IDs, source URLs, and coverage windows in manifests.
+
+### American Pressure
+
+- Keep intake/review artifacts separate from durable source records.
+- Do not merge unapproved candidates into public weekly output.
+- Treat source selection, story selection, and publishing as separate steps.
+
+### Sitewide and Generated Artifacts
+
+- Keep generated output reproducible and traceable.
+- Do not add `output/detail` or `output/paid` content to public site output.
+- Do not publish or push unless explicitly requested.
+- Do not assume a clean `git status` means the live site changed.
+- When public output changes, verify source output, Pages repo output, and live URL as applicable.
+
+## Dirty Worktree Rules
+
+- Never run `git add .`.
+- Never run broad destructive cleanup commands.
+- Do not revert or delete unrelated user changes.
+- If unrelated dirty files exist, leave them untouched and clearly identify them in the final report.
+- Keep task-created files isolated from pre-existing dirty files.
+
+## Testing And Validation
+
+- Prefer targeted tests first, then broader tests only if the change is cross-cutting.
+- Use isolated pytest basetemp directories.
+- Run lightweight parse checks for YAML/markdown/templates when creating governance or workflow files.
+- Do not skip or weaken tests to make failures pass.
+- Do not run expensive dispatch generation unless the task requires it.
+
+## Commits
+
+- Commit only when the user asked for a commit or the task explicitly requires it.
+- Stage only the files that belong to the task.
+- Verify the staged file list before committing.
+- Keep source-repo commits separate from Pages-repo publish commits.
+
+## Publishing And Pushing
+
+- Do not publish or push unless the user explicitly asks.
+- Keep source-repo generation separate from Pages-repo publishing.
+- Never push Pages content from the source repo.
+- Use cache-busting and direct artifact checks when validating live public output.
+
+## Response Format
+
+Always return:
 
 1. Files changed
 2. What changed
-3. Tests run
-4. Generated/public files checked
-5. Risks or follow-up needed
-6. Any files intentionally not touched
+3. Commands run
+4. Test results
+5. Generated/public files checked
+6. Publish/push status
+7. Risks or follow-up needed
+8. Intentionally not touched
 
-## Project-Specific Caution (Source vs Pages)
-
-- A separate Pages repository/folder exists for generated publishing output.
-- Do not edit or publish Pages output from a source-repo task unless explicitly instructed.
-- If publishing is requested, stop and clearly separate:
-  - source-repo commands (generation/validation)
-  - Pages-repo commands (commit/push/deploy)
-
-## Practical Guardrails
-
-- Keep edits scoped to the user-requested area only.
-- Avoid broad repository rewrites or formatting sweeps.
-- When uncertain about scope boundaries, prefer asking before touching adjacent dispatch pipelines.

@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
@@ -35,6 +35,9 @@ from bluefern_dispatches.food_line_sources import (  # noqa: E402
     INVALID_XML_ENTITY_RE,
     CURRENT_PRESSURE_EVIDENCE_TERMS,
     DISCOVERY_CONTEXT_TERMS,
+    SOURCE_PURPOSE_DONATION_TERMS,
+    SOURCE_PURPOSE_EVERGREEN_TERMS,
+    SOURCE_PURPOSE_RESOURCE_TERMS,
     _extract_page_evidence,
     _extract_page_metadata_date,
     _fetch,
@@ -64,6 +67,17 @@ NEGATIVE_TERMS = [
     "donation drive",
     "volunteer",
 ]
+DATE_BOUNDED_QUERY_ROOTS = (
+    ('"food insecurity"', "local_news", "date_bounded"),
+    ('"food pantries" "increased need"', "food_bank_provider", "date_bounded"),
+    ('"food bank" "increased demand"', "food_bank_provider", "date_bounded"),
+    ('"SNAP" "food insecurity"', "state_policy_news", "date_bounded"),
+    ('"food donations" "food insecurity"', "nonprofit_news", "date_bounded"),
+    ('"school meals" "food pantry"', "school_meals_child_nutrition", "date_bounded"),
+    ('"summer meals" "food bank"', "school_meals_child_nutrition", "date_bounded"),
+    ('"food pantry" "working families"', "local_news", "date_bounded"),
+    ('"rural" "food pantry" "food insecurity"', "public_radio", "date_bounded"),
+)
 GAP_QUERY_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 GAP_TRACKING_QUERY_PARAMS = {
     "utm_source",
@@ -132,6 +146,163 @@ GAP_DIRECT_PRESSURE_TERMS = (
     "food insecurity percent",
     "food insecurity percentage",
 )
+
+
+def _gap_wrapper_kind(candidate: dict[str, Any]) -> str:
+    text = _gap_text_blob(candidate)
+    donation_terms = (
+        *SOURCE_PURPOSE_DONATION_TERMS,
+        "food drive",
+        "fill-a-bus",
+        "stock the shelves",
+        "stock-the-shelves",
+        "charity drive",
+        "team up",
+        "launches campaign",
+    )
+    if any(term in text for term in donation_terms):
+        return "donation_page"
+    if any(term in text for term in SOURCE_PURPOSE_RESOURCE_TERMS):
+        return "resource_page"
+    if any(term in text for term in SOURCE_PURPOSE_EVERGREEN_TERMS):
+        return "evergreen_context"
+    if any(term in text for term in ("our programs", "program description", "programs and services", "eligibility", "how to apply")):
+        return "program_description"
+    return ""
+
+
+def _gap_entity_phrases(candidate: dict[str, Any]) -> list[str]:
+    text = _normalize_source_text(
+        " ".join(
+            part
+            for part in (
+                str(candidate.get("title") or ""),
+                str(candidate.get("source_name") or ""),
+                str(candidate.get("publisher") or ""),
+                str(candidate.get("location_name") or ""),
+                str(candidate.get("county_name") or ""),
+                str(candidate.get("state") or ""),
+            )
+            if part
+        ),
+        limit=700,
+    )
+    if not text:
+        return []
+    phrases: list[str] = []
+    pattern = re.compile(r"\b(?:[A-Z][\w&.'-]*|[A-Z]{2,})(?:\s+(?:[A-Z][\w&.'-]*|[A-Z]{2,})){1,5}\b")
+    for match in pattern.finditer(text):
+        phrase = _normalize_source_text(match.group(0))
+        lowered = phrase.lower()
+        if not phrase or len(phrase) < 4:
+            continue
+        if lowered in GAP_WRAPPER_GENERIC_PHRASES:
+            continue
+        tokens = [token for token in re.findall(r"[a-z0-9]+", lowered) if token]
+        if tokens and all(token in GAP_WRAPPER_ENTITY_STOPWORDS for token in tokens):
+            continue
+        if phrase not in phrases:
+            phrases.append(phrase)
+    return phrases
+
+
+def _gap_secondary_queries_from_wrapper(candidate: dict[str, Any]) -> list[str]:
+    wrapper_kind = _gap_wrapper_kind(candidate)
+    if not wrapper_kind:
+        return []
+    text = _gap_text_blob(candidate)
+    pressure_hits = _gap_direct_pressure_hits(text)
+    if not pressure_hits:
+        pressure_hits = _gap_relevance_terms(text)
+    if not pressure_hits:
+        pressure_hits = ["food insecurity", "food bank demand", "empty shelves"]
+    entities = _gap_entity_phrases(candidate)
+    location_phrases: list[str] = []
+    for part in (
+        candidate.get("location_name"),
+        candidate.get("county_name"),
+        candidate.get("state"),
+    ):
+        phrase = _normalize_source_text(str(part or ""))
+        if phrase and phrase.lower() != "none" and phrase not in location_phrases:
+            location_phrases.append(phrase)
+    queries: list[str] = []
+    for entity in entities[:3]:
+        for clue in pressure_hits[:2]:
+            queries.append(f'"{entity}" "{clue}"')
+    for location in location_phrases[:2]:
+        for clue in pressure_hits[:2]:
+            queries.append(f'"{location}" "{clue}"')
+    if wrapper_kind == "donation_page":
+        lead = entities[0] if entities else _normalize_source_text(str(candidate.get("publisher") or candidate.get("source_name") or ""))
+        if lead:
+            queries.append(f'"{lead}" food bank demand')
+    elif wrapper_kind == "resource_page":
+        lead = location_phrases[0] if location_phrases else _normalize_source_text(str(candidate.get("publisher") or candidate.get("source_name") or ""))
+        if lead:
+            queries.append(f'"{lead}" food pantry demand')
+    elif wrapper_kind == "evergreen_context":
+        lead = entities[0] if entities else _normalize_source_text(str(candidate.get("source_name") or candidate.get("publisher") or ""))
+        if lead:
+            queries.append(f'"{lead}" food insecurity')
+    elif wrapper_kind == "program_description":
+        lead = entities[0] if entities else _normalize_source_text(str(candidate.get("source_name") or candidate.get("publisher") or ""))
+        if lead:
+            queries.append(f'"{lead}" hunger relief')
+    return list(dict.fromkeys(query for query in queries if query))
+
+GAP_WRAPPER_ENTITY_STOPWORDS = {
+    "donate",
+    "donation",
+    "donations",
+    "fundraiser",
+    "campaign",
+    "resource",
+    "resources",
+    "find",
+    "help",
+    "food",
+    "bank",
+    "pantry",
+    "pantries",
+    "shelves",
+    "monthly",
+    "recurring",
+    "giving",
+    "program",
+    "programs",
+    "hunger",
+    "relief",
+    "summer",
+    "meals",
+    "meal",
+    "drive",
+    "stock",
+    "shelves",
+    "community",
+    "news",
+    "report",
+    "story",
+}
+
+GAP_WRAPPER_GENERIC_PHRASES = {
+    "donate now",
+    "monthly giving",
+    "recurring donations",
+    "ways to give",
+    "find food",
+    "find a food bank",
+    "get help",
+    "apply for benefits",
+    "food distribution schedule",
+    "food pantry locator",
+    "our programs",
+    "hunger facts",
+    "hunger and poverty",
+    "hunger & poverty",
+    "research overview",
+    "issue explainer",
+}
 
 
 def _utc_now() -> str:
@@ -939,6 +1110,12 @@ def _gap_direct_pressure_hits(text: str) -> list[str]:
         (r"\bdeliver(?:y|ies) affected\b", "deliveries affected"),
         (r"\bmeals? reduced\b", "meals reduced"),
         (r"\bincreased need\b", "increased need"),
+        (r"\bmore families rely on food pantries\b", "more families rely on food pantries"),
+        (r"\bfamilies rely on food pantries\b", "families rely on food pantries"),
+        (r"\bsummer need\b", "summer need"),
+        (r"\brural distance\b", "rural distance"),
+        (r"\btransportation barrier(?:s)?\b", "transportation barrier"),
+        (r"\bworking families\b", "working families"),
         (r"\bfood insecurity (?:percent|percentage)\b", "food insecurity percentage"),
         (r"\bfood insecurity (?:is|was|at) \d", "food insecurity percentage"),
         (r"\bout of food\b", "out of food"),
@@ -1147,8 +1324,11 @@ def score_food_line_discovery_gap_candidate(
         score += 4
         reasons.append("direct pressure signal: " + ", ".join(direct_hits[:4]))
     if resource_hits:
-        score -= 4
-        penalties.append("resource/donation framing")
+        if not direct_hits:
+            score -= 4
+            penalties.append("resource/donation framing")
+        else:
+            reasons.append("resource wrapper with direct pressure signal")
     if known_local_domain:
         score += 1
         reasons.append("local or news domain")
@@ -1164,10 +1344,15 @@ def classify_food_line_discovery_gap_candidate(
     score, reasons, penalties = score_food_line_discovery_gap_candidate(candidate, known_local_domain=known_local_domain)
     text = _gap_text_blob(candidate)
     direct_pressure = bool(_gap_direct_pressure_hits(text))
+    wrapper_kind = _nonempty(candidate.get("wrapper_kind") or _gap_wrapper_kind(candidate))
+    secondary_queries_generated = list(candidate.get("secondary_queries_generated") or _gap_secondary_queries_from_wrapper(candidate))
     resource_only = "resource/donation framing" in penalties
+    donation_wrapper = bool(wrapper_kind)
+    source_role = "discovery_lead" if donation_wrapper else "discovery_candidate"
+    public_eligible = bool(direct_pressure and score >= 4 and not donation_wrapper)
     if known_status in {"already_included", "already_excluded", "duplicate"}:
         classification = "duplicate_or_known"
-    elif direct_pressure and resource_only:
+    elif wrapper_kind and (direct_pressure or secondary_queries_generated):
         classification = "needs_review"
     elif direct_pressure and score >= 4:
         classification = "likely_qualifying"
@@ -1191,8 +1376,15 @@ def classify_food_line_discovery_gap_candidate(
         reason_bits.append("known domain new article")
     elif known_status == "unknown_domain_new_article":
         reason_bits.append("unknown domain new article")
+    if wrapper_kind:
+        reason_bits.append(f"wrapper lead detected: {wrapper_kind}")
     if classification == "likely_resource_only" and not direct_pressure:
         reason_bits.append("resource/donation framing without direct pressure evidence")
+    elif classification == "needs_review" and wrapper_kind:
+        if direct_pressure:
+            reason_bits.append("wrapper framing with pressure clues; use secondary queries instead of publication")
+        elif secondary_queries_generated:
+            reason_bits.append("wrapper framing generated secondary queries for follow-up discovery")
     elif classification == "needs_review" and resource_only and direct_pressure:
         reason_bits.append("mixed resource and pressure signals; needs review")
     return {
@@ -1200,6 +1392,11 @@ def classify_food_line_discovery_gap_candidate(
         "score": score,
         "reason": "; ".join(reason_bits) if reason_bits else "no strong pressure markers",
         "known_status": known_status,
+        "source_role": source_role,
+        "donation_wrapper": donation_wrapper,
+        "public_eligible": public_eligible,
+        "wrapper_kind": wrapper_kind,
+        "secondary_queries_generated": secondary_queries_generated,
     }
 
 
@@ -1296,15 +1493,18 @@ def run_food_line_discovery_gap_check(
     edition_date = validate_date(date)
     config = load_food_line_discovery_gap_queries(root)
     query_terms = list(config.get("queries") or [])
-    if max_queries is not None and max_queries >= 0:
-        query_terms = query_terms[:max_queries]
+    query_terms.extend(row["query"] for row in _date_bounded_queries(date))
+    query_terms = list(dict.fromkeys(query_terms))
+    initial_query_terms = list(query_terms)
+    pending_queries = list(query_terms)
+    executed_queries: list[str] = []
+    secondary_query_terms: list[str] = []
+    max_secondary_queries = 12
     if fast:
         resolver_timeout_seconds = min(resolver_timeout_seconds, 8)
         skip_sitemap_fallback = True
         if max_candidates is None:
             max_candidates = 25
-        if max_queries is None:
-            query_terms = query_terms[:5]
         max_sitemap_lookups_per_domain = min(max_sitemap_lookups_per_domain, 1)
         max_sitemap_urls_per_domain = min(max_sitemap_urls_per_domain, 20)
     resolver_state = _gap_new_resolver_state(
@@ -1321,7 +1521,13 @@ def run_food_line_discovery_gap_check(
     raw_candidates: list[dict[str, Any]] = []
     seen_urls: set[str] = set()
     discovered_at = _utc_now()
-    for query in query_terms:
+    while pending_queries:
+        query = pending_queries.pop(0)
+        if query in executed_queries:
+            continue
+        if max_queries is not None and max_queries >= 0 and len(executed_queries) >= max_queries:
+            break
+        executed_queries.append(query)
         rss_url = _gap_query_url(query)
         payload, fetch_error = _fetch_url(fetch, rss_url)
         if fetch_error or not payload:
@@ -1345,6 +1551,16 @@ def run_food_line_discovery_gap_check(
                 continue
             publisher = _nonempty(item.get("publisher") or _gap_domain(candidate_url))
             publisher_url = _gap_normalize_url(_nonempty(item.get("publisher_url")))
+            wrapper_kind = _gap_wrapper_kind(item)
+            wrapper_secondary_queries = _gap_secondary_queries_from_wrapper(item)
+            for secondary_query in wrapper_secondary_queries:
+                if len(secondary_query_terms) >= max_secondary_queries:
+                    break
+                if max_queries is not None and max_queries >= 0 and len(executed_queries) + len(pending_queries) >= max_queries:
+                    break
+                if secondary_query not in executed_queries and secondary_query not in pending_queries and secondary_query not in secondary_query_terms:
+                    pending_queries.append(secondary_query)
+                    secondary_query_terms.append(secondary_query)
             normalized_url = candidate_url
             known_status = "unknown_domain_new_article"
             if normalized_url in known["included_urls"]:
@@ -1382,6 +1598,9 @@ def run_food_line_discovery_gap_check(
                     "known_status": known_status,
                     "query_url": rss_url,
                     "raw_candidate": dict(item),
+                    "wrapper_kind": wrapper_kind,
+                    "pressure_clues_found": _gap_direct_pressure_hits(_gap_text_blob(item)),
+                    "secondary_queries_generated": wrapper_secondary_queries,
                 }
             )
     grouped: dict[str, dict[str, Any]] = {}
@@ -1404,6 +1623,14 @@ def run_food_line_discovery_gap_check(
                 current["summary_or_snippet"] = candidate.get("summary_or_snippet")
             if current.get("known_status") == "unknown_domain_new_article" and candidate.get("known_status") != "unknown_domain_new_article":
                 current["known_status"] = candidate.get("known_status")
+            if not current.get("wrapper_kind") and candidate.get("wrapper_kind"):
+                current["wrapper_kind"] = candidate.get("wrapper_kind")
+            current["pressure_clues_found"] = list(
+                dict.fromkeys([*(current.get("pressure_clues_found") or []), *(candidate.get("pressure_clues_found") or [])])
+            )
+            current["secondary_queries_generated"] = list(
+                dict.fromkeys([*(current.get("secondary_queries_generated") or []), *(candidate.get("secondary_queries_generated") or [])])
+            )
         current["discovered_queries"] = list(dict.fromkeys(current.get("discovered_queries") or []))
     candidates: list[dict[str, Any]] = []
     known_local_domains = known["known_domains"]
@@ -1432,12 +1659,19 @@ def run_food_line_discovery_gap_check(
             "published_at": candidate.get("published_at") or "",
             "summary_or_snippet": candidate.get("summary_or_snippet") or "",
             "known_status": str(candidate.get("known_status") or "unknown_domain_new_article"),
+            "wrapper_kind": candidate.get("wrapper_kind") or "",
+            "pressure_clues_found": candidate.get("pressure_clues_found") or [],
+            "secondary_queries_generated": candidate.get("secondary_queries_generated") or [],
+            "source_role": classification["source_role"],
+            "donation_wrapper": bool(classification["donation_wrapper"]),
+            "public_eligible": bool(classification["public_eligible"]),
             "score": classification["score"],
             "reason": classification["reason"],
             "classification": classification["classification"],
         }
         candidates.append(row)
     candidates.sort(key=lambda row: (row["classification"], -int(row["score"] or 0), str(row["title"] or ""), str(row["url"] or "")))
+    wrapper_candidate_count = sum(1 for row in candidates if _nonempty(row.get("wrapper_kind")))
     grouped_by_class = {
         "likely_qualifying": [row for row in candidates if row["classification"] == "likely_qualifying"],
         "needs_review": [row for row in candidates if row["classification"] == "needs_review"],
@@ -1452,10 +1686,13 @@ def run_food_line_discovery_gap_check(
         "date": edition_date,
         "generated_at": discovered_at,
         "query_source": "google_news_rss",
-        "query_count": len(query_terms),
-        "queries": query_terms,
+        "query_count": len(executed_queries),
+        "queries": executed_queries,
+        "initial_queries": initial_query_terms,
+        "secondary_query_count": len(secondary_query_terms),
+        "secondary_queries": secondary_query_terms,
+        "wrapper_candidate_count": wrapper_candidate_count,
         "exclude_domains": sorted(exclude_domains),
-        "query_count": len(query_terms),
         "candidate_count": len(candidates),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
@@ -1509,8 +1746,9 @@ def run_food_line_discovery_gap_check(
     summary = {
         "ok": True,
         "date": edition_date,
-        "query_count": len(query_terms),
+        "query_count": len(executed_queries),
         "candidate_count": len(candidates),
+        "wrapper_candidate_count": wrapper_candidate_count,
         "resolved_url_count": int(resolver_state.get("resolved_url_count") or 0),
         "unresolved_url_count": int(resolver_state.get("unresolved_url_count") or 0),
         "rejected_unrelated_resolved_url_count": int(resolver_state.get("rejected_unrelated_resolved_url_count") or 0),
@@ -1525,7 +1763,10 @@ def run_food_line_discovery_gap_check(
         "report_path": str(report_json_path),
         "report_markdown_path": str(report_md_path),
         "query_errors": query_errors,
-        "queries": query_terms,
+        "queries": executed_queries,
+        "initial_queries": initial_query_terms,
+        "secondary_query_count": len(secondary_query_terms),
+        "secondary_queries": secondary_query_terms,
         "query_source": "google_news_rss",
         "published_pages": False,
         "bluesky_posted": False,
@@ -1550,6 +1791,30 @@ def _expand_queries(queries: list[dict[str, Any]], states: list[str]) -> list[di
                 }
             )
     return expanded
+
+
+def _date_bounded_queries(edition_date: str) -> list[dict[str, Any]]:
+    try:
+        day = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
+    except ValueError:
+        return []
+    after = (day - timedelta(days=1)).isoformat()
+    before = (day + timedelta(days=1)).isoformat()
+    rows: list[dict[str, Any]] = []
+    for query, source_family, category in DATE_BOUNDED_QUERY_ROOTS:
+        rows.append(
+            {
+                "template": f"{query} after:{after} before:{before}",
+                "query_template": f"{query} after:{{after}} before:{{before}}",
+                "query": f"{query} after:{after} before:{before}",
+                "category": category,
+                "source_family": source_family,
+                "after": after,
+                "before": before,
+                "date_bounded": True,
+            }
+        )
+    return rows
 
 
 def _load_json_object(path: Path) -> dict[str, Any]:
@@ -1977,6 +2242,9 @@ def _candidate_fields_from_discovery(
     page_metadata_date: str = "",
     evidence_text: str = "",
     evidence_text_basis: str = "",
+    source_role: str = "",
+    donation_wrapper: bool = False,
+    public_eligible: bool = True,
 ) -> dict[str, Any]:
     return {
         "source_id": _candidate_id(discovered_url, publisher, source_family),
@@ -2009,11 +2277,16 @@ def _candidate_fields_from_discovery(
         "discovery_count": discovery_count,
         "last_recommendation": last_recommendation,
         "last_recommendation_reason": last_recommendation_reason,
+        "source_origin": "google_news_discovery",
+        "registry_status": "non_registry_discovered_source",
         "retrieved_at": retrieved_at,
         "published_at": published_at,
         "page_metadata_date": page_metadata_date,
         "evidence_text": evidence_text,
         "evidence_text_basis": evidence_text_basis,
+        "source_role": source_role or ("discovery_lead" if donation_wrapper else "discovery_candidate"),
+        "donation_wrapper": bool(donation_wrapper),
+        "public_eligible": bool(public_eligible),
         "test_count": 0,
         "enable_count": 0,
         "reject_count": 0,
@@ -2375,7 +2648,7 @@ def _discover_candidates_from_seed(
             item_negative = _find_terms(item_text, NEGATIVE_TERMS)
             if not item_terms and not item_negative and not useful_text_available:
                 continue
-            query_string = next((q["query"] for q in queries if q["state"] == _nonempty(seed.get("state") or "US").upper()), "")
+            query_string = next((q.get("query", "") for q in queries if q.get("state") == _nonempty(seed.get("state") or "US").upper()), "")
             add_discovery(
                 discovered_url=item_url if item_url.startswith(("http://", "https://")) else seed_url,
                 source_name=item_title,
@@ -2403,7 +2676,7 @@ def _discover_candidates_from_seed(
             if not link_url:
                 continue
             title = page_evidence.get("title") or _nonempty(seed.get("source_name") or seed_url)
-            query_string = next((q["query"] for q in queries if q["state"] == _nonempty(seed.get("state") or "US").upper()), "")
+            query_string = next((q.get("query", "") for q in queries if q.get("state") == _nonempty(seed.get("state") or "US").upper()), "")
             add_discovery(
                 discovered_url=link_url,
                 source_name=title,
@@ -2418,7 +2691,7 @@ def _discover_candidates_from_seed(
                 non_promotable_reason=seed_purpose["non_promotable_reason"],
             )
     if not discovered_links and useful_text_available and (pressure_terms or not negative_terms):
-        query_string = next((q["query"] for q in queries if q["state"] == _nonempty(seed.get("state") or "US").upper()), "")
+        query_string = next((q.get("query", "") for q in queries if q.get("state") == _nonempty(seed.get("state") or "US").upper()), "")
         add_discovery(
             discovered_url=seed_url,
             source_name=page_evidence.get("title") or _nonempty(seed.get("source_name") or seed_url),
@@ -2497,9 +2770,18 @@ def discover_food_line_sources(
     blocklist = _load_discovery_blocklist(root)
     priority = _load_discovery_priority(root)
     query_rows = _load_discovery_query_rows(root)
+    date_bounded_queries = _date_bounded_queries(date)
     expanded_queries = _expand_queries(query_rows, states)
-    query_by_template = {row["query_template"]: row for row in query_rows}
-    query_results: dict[str, Counter[str]] = {row["query_template"]: Counter() for row in query_rows}
+    query_rows_for_metrics = list(query_rows) + list(date_bounded_queries)
+    query_by_template: dict[str, dict[str, Any]] = {}
+    for row in query_rows_for_metrics:
+        template_key = str(row.get("template") or "").strip()
+        query_template_key = str(row.get("query_template") or template_key).strip()
+        if template_key and template_key not in query_by_template:
+            query_by_template[template_key] = row
+        if query_template_key and query_template_key not in query_by_template:
+            query_by_template[query_template_key] = row
+    query_results: dict[str, Counter[str]] = {str(row["query_template"]): Counter() for row in query_rows_for_metrics if str(row.get("query_template") or "").strip()}
     queries = []
     for query in expanded_queries:
         template = query["template"]
@@ -2512,6 +2794,7 @@ def discover_food_line_sources(
         if excluded_families and str(query.get("source_family") or "").lower() in excluded_families:
             continue
         queries.append(query)
+    queries.extend(date_bounded_queries)
     fetch = resolve_food_line_fetcher(fetcher)
     discovery_review_path = root / "output" / "review" / "food-line" / date / "source_discovery_review.csv"
     discovery_audit_path = root / "data" / "dispatches" / "food-line" / "sources" / date / "source_discovery_audit.json"

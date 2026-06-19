@@ -117,6 +117,14 @@ def test_food_line_discovery_gap_queries_load_from_config():
     assert "youtube.com" in config["exclude_domains"]
 
 
+def test_food_line_discovery_gap_adds_date_bounded_google_news_queries():
+    rows = food_line_gap._date_bounded_queries("2026-06-12")
+    assert len(rows) >= 3
+    assert rows[0]["query"].endswith("after:2026-06-11 before:2026-06-13")
+    assert all("{after}" in row["query_template"] and "{before}" in row["query_template"] for row in rows)
+    assert all(row["category"] == "date_bounded" for row in rows)
+
+
 def test_food_line_discovery_gap_url_normalization_detects_duplicates():
     one = food_line_gap._gap_normalize_url("https://example.com/story/?utm_source=rss&utm_medium=email")
     two = food_line_gap._gap_normalize_url("https://example.com/story")
@@ -484,6 +492,12 @@ def test_food_line_discovery_gap_scoring_classifies_pressure_and_resource_items(
         "publisher": "Example News",
         "candidate_url": "https://example.com/fill-a-bus-food-drive",
     }
+    wrapper_pressure = {
+        "title": "Food drive helps families after pantry lines grow long",
+        "summary_or_snippet": "A food drive is underway, but the pantry says more families rely on food pantries and lines are getting longer.",
+        "publisher": "Example News",
+        "candidate_url": "https://example.com/food-drive-with-pressure",
+    }
     empty_shelves = {
         "title": "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer",
         "summary_or_snippet": "St. Francis House had empty shelves in May, the June USDA delivery was smaller than May's, and the pantry is down 64% compared with January.",
@@ -546,6 +560,11 @@ def test_food_line_discovery_gap_scoring_classifies_pressure_and_resource_items(
         known_status="unknown_domain_new_article",
         known_local_domain=False,
     )
+    wrapper_pressure_result = food_line_gap.classify_food_line_discovery_gap_candidate(
+        wrapper_pressure,
+        known_status="unknown_domain_new_article",
+        known_local_domain=False,
+    )
     empty_shelves_result = food_line_gap.classify_food_line_discovery_gap_candidate(
         empty_shelves,
         known_status="known_domain_new_article",
@@ -586,6 +605,10 @@ def test_food_line_discovery_gap_scoring_classifies_pressure_and_resource_items(
     assert resource_result["classification"] == "likely_resource_only"
     assert food_drive_result["classification"] in {"likely_resource_only", "needs_review"}
     assert food_drive_result["classification"] != "likely_qualifying"
+    assert food_drive_result["source_role"] == "discovery_lead"
+    assert food_drive_result["donation_wrapper"] is True
+    assert food_drive_result["public_eligible"] is False
+    assert wrapper_pressure_result["classification"] == "needs_review"
     assert empty_shelves_result["classification"] == "likely_qualifying"
     assert fuel_costs_result["classification"] == "likely_qualifying"
     assert cant_keep_on_shelf_result["classification"] == "likely_qualifying"
@@ -598,6 +621,82 @@ def test_food_line_discovery_gap_scoring_classifies_pressure_and_resource_items(
     assert empty_shelves_result["score"] >= 4
     assert fuel_costs_result["score"] >= 4
     assert cant_keep_on_shelf_result["score"] >= 4
+    assert wrapper_pressure_result["classification"] == "needs_review"
+    assert wrapper_pressure_result["score"] >= 4
+    assert "wrapper lead detected: donation_page" in wrapper_pressure_result["reason"]
+    assert wrapper_pressure_result["source_role"] == "discovery_lead"
+    assert wrapper_pressure_result["donation_wrapper"] is True
+    assert wrapper_pressure_result["public_eligible"] is False
+
+
+def test_food_line_discovery_gap_wrapper_pages_generate_secondary_queries():
+    wrapper = {
+        "title": "Food drive helps families after pantry lines grow long",
+        "summary_or_snippet": "A food drive is underway, but the pantry says more families rely on food pantries and the lines keep getting longer.",
+        "publisher": "Lowcountry Food Bank",
+        "source_name": "Lowcountry Food Bank",
+        "location_name": "Horry County, SC",
+        "county_name": "Horry County",
+        "state": "SC",
+        "candidate_url": "https://example.com/food-drive-with-pressure",
+    }
+    wrapper_kind = food_line_gap._gap_wrapper_kind(wrapper)
+    secondary_queries = food_line_gap._gap_secondary_queries_from_wrapper(wrapper)
+    result = food_line_gap.classify_food_line_discovery_gap_candidate(
+        {
+            **wrapper,
+            "wrapper_kind": wrapper_kind,
+            "secondary_queries_generated": secondary_queries,
+        },
+        known_status="unknown_domain_new_article",
+        known_local_domain=False,
+    )
+    assert wrapper_kind == "donation_page"
+    assert secondary_queries
+    assert any("Lowcountry Food Bank" in query for query in secondary_queries)
+    assert any("Horry County" in query or "SC" in query for query in secondary_queries)
+    assert any(
+        clue in query
+        for query in secondary_queries
+        for clue in ("food bank demand", "food insecurity", "more families rely on food pantries")
+    )
+    assert result["classification"] == "needs_review"
+    assert "wrapper framing" in result["reason"]
+    assert result["source_role"] == "discovery_lead"
+    assert result["donation_wrapper"] is True
+    assert result["public_eligible"] is False
+
+
+def test_food_line_discovery_gap_candidate_fields_include_registry_metadata():
+    row = food_line_gap._candidate_fields_from_discovery(
+        discovered_url="https://example.com/story",
+        source_name="Example Source",
+        publisher="Example Source",
+        source_family="local_news",
+        source_type="rss",
+        state="TX",
+        location_name="Austin, TX",
+        location_scope="state_local",
+        reason="matched food bank pressure",
+        pressure_terms=["food bank", "demand"],
+        notes="discovered from Google News",
+        source_purpose="current_news",
+        current_or_evergreen="current",
+        promotable=True,
+        non_promotable_reason="",
+        source_quality_score=8,
+        source_quality_tier="high",
+        auto_discovered=True,
+        first_discovered_at="2026-06-12T00:00:00Z",
+        last_discovered_at="2026-06-12T00:00:00Z",
+        discovery_count=1,
+        last_recommendation="enable",
+        last_recommendation_reason="matched food pressure",
+    )
+    assert row["source_origin"] == "google_news_discovery"
+    assert row["registry_status"] == "non_registry_discovered_source"
+    assert row["source_seed_url"] == ""
+    assert row["discovery_seed_url"] == ""
 
 
 def test_food_line_discovery_gap_report_writes_json_and_markdown_and_skips_publish_and_bluesky(tmp_path: Path, monkeypatch):
@@ -708,6 +807,8 @@ def test_food_line_discovery_gap_report_writes_json_and_markdown_and_skips_publi
     assert report["needs_review_count"] == 1
     assert report["likely_resource_only_count"] == 2
     assert report["duplicate_or_known_count"] == 2
+    assert report["wrapper_candidate_count"] == 1
+    assert report["secondary_query_count"] >= 1
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"
     assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["url"] == "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs"
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["resolved_url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"
@@ -726,7 +827,10 @@ def test_food_line_discovery_gap_report_writes_json_and_markdown_and_skips_publi
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["classification"] == "likely_qualifying"
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["known_status"] == "known_domain_new_article"
     assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["classification"] == "likely_qualifying"
-    assert rows["Food bank struggles to meet rising demand amid low inventory"]["classification"] in {"needs_review", "likely_resource_only"}
+    assert rows["Food bank struggles to meet rising demand amid low inventory"]["classification"] == "needs_review"
+    assert rows["Food bank struggles to meet rising demand amid low inventory"]["source_role"] == "discovery_lead"
+    assert rows["Food bank struggles to meet rising demand amid low inventory"]["donation_wrapper"] is True
+    assert rows["Food bank struggles to meet rising demand amid low inventory"]["public_eligible"] is False
     assert rows["Unresolved Google News item"]["classification"] in {"needs_review", "likely_resource_only"}
     assert rows["Summer meal schedule for families in June"]["classification"] == "likely_resource_only"
     assert rows["Existing excluded story"]["classification"] == "duplicate_or_known"

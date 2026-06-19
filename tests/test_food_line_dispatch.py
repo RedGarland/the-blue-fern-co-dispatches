@@ -6449,6 +6449,26 @@ def test_food_line_source_purpose_blocks_donation_evergreen_and_resource_pages(t
     assert "not current pressure evidence" in by_id["fa-donation"]["notes"].lower()
 
 
+def test_food_line_public_inclusion_rejects_wrapper_discovery_leads():
+    row = {
+        "source_id": "wrapper-lead",
+        "source_role": "discovery_lead",
+        "donation_wrapper": True,
+        "public_eligible": False,
+        "source_public_story_eligible": True,
+        "supported_product_geography": True,
+        "location_scope": "state_local",
+        "pressure_signal": True,
+        "pressure_verification_status": "source_text_verified",
+        "pressure_type": "demand strain",
+        "url": "https://example.com/wrapper",
+        "source_family": "local_news",
+    }
+    reason = food_line._food_line_public_inclusion_reason(row)
+    assert reason == "discovery lead only / not public eligible"
+    assert food_line._food_line_qualifies_for_public_inclusion(row) is False
+
+
 def test_food_line_discovery_prefilters_obvious_non_pressure_pages_and_dedupes(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-11"

@@ -662,6 +662,20 @@ SOURCE_PURPOSE_CURRENT_TERMS = (
     "article",
     "story",
 )
+SOURCE_PURPOSE_RESEARCH_TERMS = (
+    "study",
+    "research",
+    "survey",
+    "analysis",
+    "findings",
+    "data release",
+    "dataset",
+    "statistics",
+    "dashboard",
+    "food insecurity varies",
+    "food security varies",
+    "food insecurity across u.s. ethnic groups",
+)
 SOURCE_PURPOSE_DISASTER_TERMS = (
     "d-snap",
     "disaster",
@@ -718,7 +732,23 @@ def _is_research_or_data_signal(
     family = str(row.get("source_family") or "").strip().lower()
     if family in {"economic_data", "policy_research"}:
         return True
-    return source_purpose in {"research_report", "data_release"}
+    if source_purpose in {"research_report", "data_release"}:
+        return True
+    source_name = _normalize_source_text(
+        " ".join(
+            part
+            for part in (
+                str(row.get("source_name") or ""),
+                str(row.get("title") or ""),
+                str(row.get("publisher") or ""),
+                str(row.get("summary_or_snippet") or ""),
+                str(row.get("evidence_text") or ""),
+            )
+            if part
+        ),
+        limit=400,
+    ).lower()
+    return any(term in source_name for term in SOURCE_PURPOSE_RESEARCH_TERMS)
 
 
 def _smooth_public_pressure_summary(
@@ -1076,7 +1106,7 @@ def _current_or_evergreen_for_purpose(source_purpose: str) -> str:
 
 
 def _source_purpose_promotable(source_purpose: str) -> bool:
-    return source_purpose in SOURCE_PURPOSE_CURRENT_VALUES
+    return source_purpose in SOURCE_PURPOSE_CURRENT_VALUES or source_purpose in {"research_report", "data_release"}
 
 
 def _append_note(existing: str, note: str) -> str:
@@ -1270,6 +1300,7 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     donation_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_DONATION_TERMS)
     evergreen_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_EVERGREEN_TERMS)
     resource_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_RESOURCE_TERMS)
+    research_hit = any(term in content_text or term in source_name or term in page_signal_text for term in SOURCE_PURPOSE_RESEARCH_TERMS)
     current_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_CURRENT_TERMS)
     concrete_pressure_hit = any(
         term in content_text or term in source_name or term in page_signal_text or term in url
@@ -1298,7 +1329,11 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     disaster_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_DISASTER_TERMS)
     current_news_families = {"national_news", "local_news", "public_radio", "nonprofit_news"}
 
-    if family in current_news_families:
+    if family in current_news_families and research_hit and not current_hit:
+        source_purpose = "research_report"
+    elif research_hit and not current_hit and not resource_hit and not donation_hit and not evergreen_hit:
+        source_purpose = "research_report"
+    elif family in current_news_families:
         if current_hit or disaster_hit or (resource_hit and concrete_pressure_hit):
             source_purpose = "current_news"
         elif resource_hit:
@@ -1850,14 +1885,16 @@ def evaluate_food_line_pressure(
     evidence_level = "background context"
     family = str(row.get("source_family") or "").strip().lower()
     if pressure_signal:
+        if source_purpose == "research_report":
+            evidence_level = "research report"
+        elif source_purpose == "data_release" or family == "economic_data":
+            evidence_level = "official data/statistic"
         if family == "food_bank_provider":
             evidence_level = "provider reported strain"
         elif family in {"state_official", "federal_official", "state_policy_news"}:
             evidence_level = "official notice"
         elif family in {"local_news", "national_news", "public_radio", "nonprofit_news"}:
             evidence_level = "news report"
-        elif family == "economic_data":
-            evidence_level = "official data/statistic"
         else:
             evidence_level = "direct reported hardship"
     state = str(row.get("state") or "").strip().upper()
@@ -1887,12 +1924,17 @@ def evaluate_food_line_pressure(
     elif family in {"state_official", "federal_official", "state_policy_news"}:
         source_role = "policy_context"
     elif family in {"national_news", "local_news", "public_radio", "nonprofit_news"}:
-        source_role = "daily_signal" if pressure_signal else "map_signal"
+        source_role = "research_signal" if research_or_data_signal else ("daily_signal" if pressure_signal else "map_signal")
     else:
         source_role = "pressure_evidence" if pressure_signal else "resource_context"
     if pressure_required and not pressure_signal and negative_hit and family not in BASELINE_FAMILIES:
         source_role = "rejected_context"
     location_scope = "outside_product_geography" if not supported_geography else ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
+    state = str(row.get("state") or "").strip().upper()
+    map_eligible = bool(pressure_signal) and (
+        source_role not in {"data_anchor_signal", "institutional_context_signal"}
+        and (source_role != "research_signal" or (supported_geography and state not in {"", "US"}))
+    )
     return {
         "pressure_signal": bool(pressure_signal),
         "pressure_type": pressure_type,
@@ -1931,6 +1973,7 @@ def evaluate_food_line_pressure(
             if source_purpose == "donation_page"
             else (f"excluded by negative filter: {negative_hit}" if negative_hit and pressure_required and family not in BASELINE_FAMILIES else "")
         ),
+        "map_eligible": map_eligible,
     }
 
 
@@ -2191,6 +2234,8 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
                     "latitude": row.get("latitude"),
                     "longitude": row.get("longitude"),
                     "county_name": str(row.get("county_name") or "").strip(),
+                    "source_origin": str(row.get("source_origin") or "registry").strip(),
+                    "registry_status": str(row.get("registry_status") or "registry_source").strip(),
                     "source_purpose": purpose["source_purpose"],
                     "current_or_evergreen": purpose["current_or_evergreen"],
                     "promotable": purpose["promotable"] == "true",
@@ -2228,6 +2273,8 @@ def load_food_line_candidate_registry(root: Path) -> list[dict[str, Any]]:
                 "state": str(row.get("state") or DEFAULT_STATE).strip().upper(),
                 "location_name": str(row.get("location_name") or DEFAULT_LOCATION).strip(),
                 "location_scope": str(row.get("location_scope") or ("national" if str(row.get("state") or DEFAULT_STATE).strip().upper() in {"", "US"} else "state_local")).strip(),
+                "source_origin": str(row.get("source_origin") or "google_news_discovery").strip(),
+                "registry_status": str(row.get("registry_status") or "non_registry_discovered_source").strip(),
                 "candidate_reason": str(row.get("candidate_reason") or "").strip(),
                 "expected_text_basis": _normalize_expected_text_basis(row.get("expected_text_basis"), "manual"),
                 "extraction_quality_guess": _normalize_quality(row.get("extraction_quality_guess"), "unknown"),
@@ -2457,6 +2504,8 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "summary_or_snippet": summary or "Source-backed food insecurity context signal.",
                     "source_type": source_kind,
                     "collector_source_type": source_kind,
+                    "source_origin": "registry",
+                    "registry_status": "registry_source",
                     "extraction_quality": extraction_quality,
                     "expected_text_basis": str(source.get("expected_text_basis") or "manual"),
                     "pressure_verification_required": bool(source.get("pressure_verification_required")),
@@ -2491,7 +2540,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "evidence_level": str(pressure_eval.get("evidence_level") or "background context"),
                     "freshness_role": str(pressure_eval.get("freshness_role") or "dated_recent_signal"),
                     "source_role": str(pressure_eval.get("source_role") or "resource_context"),
-                    "map_eligible": bool(pressure_eval.get("pressure_signal")) and str(pressure_eval.get("source_role") or "") not in {"data_anchor_signal", "research_signal", "institutional_context_signal"},
+                    "map_eligible": bool(pressure_eval.get("map_eligible")),
                     "claim_supported": str(pressure_eval.get("pressure_summary") or summary or evidence_text or title or "").strip(),
                     "limitations": "",
                     "included": False,

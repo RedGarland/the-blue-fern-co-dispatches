@@ -585,6 +585,8 @@ def _food_line_public_inclusion_reason(row: dict[str, Any]) -> str:
         return "outside product geography"
     source_role = str(row.get("source_role") or "").strip()
     source_family = str(row.get("source_family") or "").strip().lower()
+    if bool(row.get("donation_wrapper")) or source_role == "discovery_lead" or bool(row.get("public_eligible") is False):
+        return "discovery lead only / not public eligible"
     if _food_line_source_background_reference(row):
         return "background/context only"
     if not str(row.get("url") or "").strip():
@@ -2533,6 +2535,8 @@ def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
 def _food_line_claim_confidence(row: dict[str, Any]) -> str:
     role = str(row.get("source_role") or "").strip().lower()
     evidence_level = str(row.get("evidence_level") or "").strip().lower()
+    if role in {"research_signal"} or evidence_level in {"research report", "official data/statistic"}:
+        return "moderate"
     if role in {"local_signal", "daily_signal"} and evidence_level in {"direct reported hardship", "local reporting", "provider reported strain", "news report"}:
         return "moderate"
     if role in {"provider_signal", "policy_context", "resource_context"} or evidence_level in {"provider reported strain", "official notice", "policy/benefit change", "official data/statistic"}:

@@ -1646,7 +1646,7 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     elif dispatch.slug == "cascadia":
         map_link = '\n    <p><a href="map/">Open latest Cascadia pressure map</a></p>'
     elif dispatch.slug == CARE_LINE_DISPATCH_SLUG:
-        map_link = '\n    <p>No map is published in this pilot phase.</p>'
+        map_link = '\n    <p>No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain.</p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
@@ -1669,9 +1669,8 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
                 "</section>"
             )
         map_link = (
-            '\n    <p>No map is published in this pilot phase. Future Care Line maps will show where current source-backed '
-            'healthcare-access pressure signals were found. Areas without markers should not be read as places without '
-            'healthcare strain.</p>'
+            '\n    <p>No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access '
+            'pressure signals were found. Areas without markers should not be read as places without healthcare strain.</p>'
         )
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">

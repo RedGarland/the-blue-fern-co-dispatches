@@ -467,8 +467,14 @@ def care_line_public_card_copy(record: dict[str, Any]) -> dict[str, str]:
     title = str(_record_value(record, "title") or "").strip()
     claim = str(_record_value(record, "claim_supported") or "").strip()
     limitation = str(_record_value(record, "limitations") or "").strip()
+    publisher = str(_record_value(record, "publisher") or "").strip()
+    pressure_label = public_pressure_label(record)
+    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
+    published_at = str(_record_value(record, "published_at") or "").strip()
+    source_meta = " | ".join(part for part in (publisher, pressure_label, location, published_at[:10]) if part)
     return {
-        "pressure_label": public_pressure_label(record),
+        "pressure_label": pressure_label,
+        "source_meta": source_meta,
         "source_title": title or "Source record",
         "what_changed": _care_line_what_changed(record),
         "who_may_be_affected": _care_line_who_may_be_affected(record),
@@ -541,7 +547,7 @@ def summary_for_records(records: list[dict[str, Any]]) -> str:
     if not public_rows:
         return DISPATCH_TAGLINE
     lead = public_rows[0]["claim"] or public_rows[0]["supporting_source"]
-    return f"{lead} This pilot edition uses real, traceable source records."
+    return f"{lead} This edition uses real, traceable source records."
 
 
 def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str, Any]:

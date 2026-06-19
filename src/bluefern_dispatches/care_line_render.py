@@ -6,7 +6,6 @@ from typing import Any
 
 from bluefern_dispatches.care_line_sources import (
     DISPATCH_SLUG,
-    MAP_NOTE,
     POSITIONING_NOTE,
     PUBLIC_BUCKETS,
     DISPATCH_NAME,
@@ -55,6 +54,7 @@ def _section_cards(records: list[dict[str, Any]], bucket: str) -> str:
             f"""      <article class="care-line-signal-card">
         <p class="eyebrow">{html.escape(copy["pressure_label"])}</p>
         <h3>{html.escape(copy["source_title"])}</h3>
+        <p class="source-meta">{html.escape(copy["source_meta"])}</p>
         <p><strong>What changed:</strong> {html.escape(copy["what_changed"])}</p>
         <p><strong>Who may be affected:</strong> {html.escape(copy["who_may_be_affected"])}</p>
         <p><strong>Why it matters:</strong> {html.escape(copy["why_it_matters"])}</p>
@@ -70,7 +70,7 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     claim_rows = public_claim_rows(records)
     if not public_rows:
         body = f"""<section class="hero">
-      <p class="eyebrow">Pilot Edition | {html.escape(edition_date)}</p>
+      <p class="eyebrow">Edition | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)}</h1>
       <p class="lede">{html.escape(DISPATCH_TAGLINE)}</p>
       <p>{html.escape(POSITIONING_NOTE)}</p>
@@ -78,12 +78,12 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     </section>
     <section class="section">
       <h2>Plain-English Summary</h2>
-      <p>No current public signals were qualified for this pilot edition.</p>
+      <p>No current public signals were qualified for this edition.</p>
     </section>
     <section class="section">
       <h2>At A Glance</h2>
       <ul class="edition-list">
-      <li>No qualified public claims in this pilot edition.</li>
+      <li>No qualified public claims in this edition.</li>
       </ul>
     </section>
     <section class="section">
@@ -95,8 +95,8 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     </section>
     <section class="section">
       <h2>Source Note</h2>
-      <p>Each public claim is tied to saved source records. The source table shows all pilot records, including those excluded from public inclusion.</p>
-      <p>{html.escape(MAP_NOTE)}</p>
+      <p>Each public claim is tied to saved source records. The source table preserves all edition records, including those excluded from public inclusion.</p>
+      <p>Care Line does not publish a map in this release. The source table and claim ledger preserve the traceable record for readers and researchers.</p>
       <p><a href="source_table.html">source table</a> | <a href="claim_ledger.html">claim ledger</a> | <a href="../">Archive</a></p>
     </section>"""
         return body
@@ -105,6 +105,9 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
         f"      <li>{html.escape(row['supporting_source'])} - {html.escape(row['publisher'])}</li>" for row in claim_rows
     )
     public_summary = summary_for_records(records)
+    public_story_count = len(public_rows)
+    source_family_count = len({str(record.get("source_family") or "") for record in public_rows if str(record.get("source_family") or "").strip()})
+    source_family_label = "source family" if source_family_count == 1 else "source families"
     sections = []
     for bucket in PUBLIC_BUCKETS:
         cards = _section_cards(records, bucket)
@@ -136,17 +139,23 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     <section class="section">
       <h2>Source Mix</h2>
       <p>{html.escape(family_mix)}</p>
+      <p>{public_story_count} public signal{'s' if public_story_count != 1 else ''} from {source_family_count} {source_family_label}.</p>
       <ul>
 {''.join(f'        <li>{html.escape(row["publisher"])} - {html.escape(row["freshness_role"] or "current")}</li>' for row in claim_rows) or '        <li>No qualified public claims were published.</li>'}
       </ul>
     </section>"""
 
     body = f"""<section class="hero">
-      <p class="eyebrow">Pilot Edition | {html.escape(edition_date)}</p>
+      <p class="eyebrow">Edition | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)}</h1>
       <p class="lede">{html.escape(DISPATCH_TAGLINE)}</p>
       <p>{html.escape(POSITIONING_NOTE)}</p>
       <p><a href="source_table.html">Open the source table</a> | <a href="claim_ledger.html">Open the claim ledger</a></p>
+    </section>
+    <section class="section">
+      <h2>Today's Read</h2>
+      <p>{html.escape(public_summary)}</p>
+      <p>The source table preserves excluded and context-only records alongside public signals so readers can trace why each record was or was not used.</p>
     </section>
     <section class="section">
       <h2>Plain-English Summary</h2>
@@ -163,8 +172,8 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     {source_mix_html}
     <section class="section">
       <h2>Source Note</h2>
-      <p>Each public claim is tied to saved source records. The source table shows all pilot records, including those excluded from public inclusion.</p>
-      <p>{html.escape(MAP_NOTE)}</p>
+      <p>Each public claim is tied to saved source records. The source table shows all edition records, including those excluded from public inclusion.</p>
+      <p>Care Line does not publish a map in this release. The source table and claim ledger preserve the traceable record for readers and researchers.</p>
       <p><a href="source_table.html">source table</a> | <a href="claim_ledger.html">claim ledger</a> | <a href="../">Archive</a></p>
     </section>"""
     return body
@@ -199,6 +208,7 @@ def render_care_line_source_table_html(records: list[dict[str, Any]], edition_da
       <p class="eyebrow">Source Table | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)} Source Table</h1>
       <p>{html.escape(POSITIONING_NOTE)}</p>
+      <p>This table preserves the public signals, excluded context, and stale records that informed the edition.</p>
       <p><a href="./">Back to edition</a> | <a href="claim_ledger.html">Open claim ledger</a></p>
     </section>
     <section class="section">
@@ -261,6 +271,7 @@ def render_care_line_claim_ledger_html(records: list[dict[str, Any]], edition_da
       <p class="eyebrow">Claim Ledger | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)} Claim Ledger</h1>
       <p>{html.escape(POSITIONING_NOTE)}</p>
+      <p>This ledger keeps the public claims, supporting interpretations, and traceability limits in one place.</p>
       <p><a href="./">Back to edition</a> | <a href="source_table.html">Open source table</a></p>
     </section>
     <section class="section">

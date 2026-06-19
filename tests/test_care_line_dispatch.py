@@ -112,8 +112,7 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "The Care Line Dispatch" in index_html
     assert "Source-backed signals of where American healthcare access is under strain." in index_html
     assert "Browse the Care Line archive" in index_html
-    assert "Source-backed signals of where American healthcare access is under strain. archive" not in index_html
-    assert "No map is published in this pilot phase. Future Care Line maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain." in index_html
+    assert "No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain." in index_html
     assert 'href="editions/2026-05-23/"' in index_html
     assert 'href="source_table.html"' in edition_html
     assert 'href="claim_ledger.html"' in edition_html
@@ -123,6 +122,7 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "Medicaid cuts and hospital-access pressure" in archive_html
     assert "The Care Line Dispatch - 2026-05-23" not in archive_html
 
+    assert "Today's Read" in edition_html
     assert "At A Glance" in edition_html
     assert "Core Healthcare Access Signals" in edition_html
     assert "Hospital / Clinic Operations Signals" in edition_html
@@ -132,12 +132,14 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "Emergency / EMS Signals" not in edition_html
     assert "Public Health Capacity Signals" not in edition_html
     assert "Other Care Line Signals" not in edition_html
-    assert "No qualifying public signals were placed in this bucket for this edition." not in edition_html
+    assert "Pilot Edition" not in edition_html
+    assert "No current public signals were qualified for this edition." not in edition_html
     assert "Other monitored categories had no qualifying public signal in this edition: insurance affordability, rural access, emergency and EMS, public health capacity, other Care Line signals." in edition_html
     assert "CLINIC_ACCESS_STRAIN" not in edition_html
     assert "MATERNITY_CARE_LOSS" not in edition_html
     assert "Clinic access strain" in edition_html
     assert "Maternity care loss" in edition_html
+    assert "Herald-Standard | Hospital closure | Pennsylvania | 2026-05-07" in edition_html
     assert "What changed:</strong> A new report warned that Medicaid cuts could threaten hundreds of hospitals." in edition_html
     assert "Who may be affected:</strong> Clinic patients in and around Centerville." in edition_html
     assert "Who may be affected:</strong> Pregnant patients, families, and patients needing local maternity care near Los Alamos." in edition_html
@@ -145,6 +147,8 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "Why it matters:</strong> Loss of local labor and delivery services can force patients to travel farther for time-sensitive care." in edition_html
     assert "Limit:</strong> The article does not quantify total patient displacement." in edition_html
     assert "Source Note" in edition_html
+    assert "Care Line does not publish a map in this release." in edition_html
+    assert "The source table and claim ledger preserve the traceable record for readers and researchers." in edition_html
     assert "stale current signal" not in claim_ledger_html
     assert "resource_only_baseline" not in claim_ledger_html
     assert "Medicaid cuts" in claim_ledger_html
@@ -155,6 +159,8 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "care-line-2026-05-23-kcrg-centerville-clinic-closure-stale" in source_table_html
     assert "care-line-2026-05-23-medicaidgov-enrollment-map" in source_table_html
     assert "No" in source_table_html
+    assert "This table preserves the public signals, excluded context, and stale records that informed the edition." in source_table_html
+    assert "This ledger keeps the public claims, supporting interpretations, and traceability limits in one place." in claim_ledger_html
 
     report = build_public_edition_report(work / "output" / "site", "2026-05-23")
     assert report["listable"] is True
@@ -166,7 +172,7 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
 def test_care_line_render_no_current_update_path_preserves_fallback_copy():
     html = render_care_line_edition_body([], "2026-05-23")
 
-    assert "No current public signals were qualified for this pilot edition." in html
+    assert "No current public signals were qualified for this edition." in html
     assert "Other monitored categories had no qualifying public signal in this edition:" not in html
     assert "No qualifying public signals were placed in this bucket for this edition." not in html
     assert "source_table.html" in html

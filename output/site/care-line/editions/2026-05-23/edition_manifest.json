@@ -3,7 +3,7 @@
   "dispatch_slug": "care-line",
   "public_visible": true,
   "edition_date": "2026-05-23",
-  "generated_at": "2026-06-14T22:19:31.704915+00:00",
+  "generated_at": "2026-06-19T06:50:19.556234+00:00",
   "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-05-23/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-05-23",
   "local_backup_path": "output\\tmp-backups-pages\\care-line\\2026-05-23",
@@ -26,15 +26,13 @@
   "public_rendered": true,
   "stale_current_signal_count": 0,
   "resource_only_count": 0,
-  "public_summary": "Medicaid cuts could threaten hospital access and stability. This pilot edition uses real, traceable source records.",
+  "public_summary": "Medicaid cuts could threaten hospital access and stability. This edition uses real, traceable source records.",
   "public_archive_title": "Medicaid cuts and hospital-access pressure",
-  "public_archive_subtitle": "Medicaid cuts could threaten hospital access and stability. This pilot edition uses real, traceable source records.",
+  "public_archive_subtitle": "Medicaid cuts could threaten hospital access and stability. This edition uses real, traceable source records.",
   "source_table_path": "/care-line/editions/2026-05-23/source_table.html",
   "claim_ledger_path": "/care-line/editions/2026-05-23/claim_ledger.html",
   "future_paid_fields_todo": [],
   "detail_artifacts_publicly_exposed": false,
-  "warnings": [
-    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-06-07.json"
-  ],
+  "warnings": [],
   "errors": []
 }

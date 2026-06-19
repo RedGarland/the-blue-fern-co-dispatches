@@ -663,6 +663,8 @@ def _care_line_title_topic(claim: str) -> str:
     text = claim.strip().rstrip(".")
     if not text:
         return ""
+    if text.lower().startswith("google news"):
+        return ""
     lower = text.lower()
     for marker in (" could ", " may ", " might ", " would ", " should ", " threatens ", " threaten ", " threatens to "):
         index = lower.find(marker)
@@ -702,8 +704,10 @@ def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
     pressure_label = _care_line_pressure_label(lead)
     if claim:
         return f"{claim} and {pressure_label}"
+    if pressure_label:
+        return pressure_label[:1].upper() + pressure_label[1:]
     title = str(_record_value(lead, "title") or "").strip()
-    if title:
+    if title and not title.lower().startswith("google news"):
         return title
     return DISPATCH_TAGLINE
 
@@ -713,6 +717,11 @@ def summary_for_records(records: list[dict[str, Any]]) -> str:
     if not public_rows:
         return DISPATCH_TAGLINE
     lead = public_rows[0]["claim"] or public_rows[0]["supporting_source"]
+    if str(lead).strip().lower().startswith("google news"):
+        pressure_label = _care_line_pressure_label(public_rows[0] if public_rows else {})
+        if pressure_label:
+            return f"{pressure_label[:1].upper() + pressure_label[1:]} This edition uses real, traceable source records."
+        return DISPATCH_TAGLINE
     return f"{lead} This edition uses real, traceable source records."
 
 

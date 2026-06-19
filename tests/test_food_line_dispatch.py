@@ -7913,6 +7913,22 @@ def test_food_line_discovered_candidates_are_processed_by_candidate_tester(tmp_p
     assert any(row["candidate_url"] == feed_url for row in review)
 
 
+def test_food_line_daily_wrapper_logs_before_python_and_supports_date_and_dry_run() -> None:
+    wrapper_path = Path(__file__).resolve().parents[1] / "run_food_line_daily.ps1"
+    wrapper_text = wrapper_path.read_text(encoding="utf-8")
+    lower_text = wrapper_text.lower()
+
+    assert "logs\\food-line\\daily_ops" in wrapper_text
+    assert "--date" in wrapper_text
+    assert "--dry-run" in wrapper_text
+    assert "start-process" in lower_text
+    assert "redirectstandardoutput" in lower_text
+    assert "redirectstandarderror" in lower_text
+    assert "new-item -itemtype file" in lower_text
+    assert "set-content" in lower_text
+    assert lower_text.index("new-item -itemtype file") < lower_text.index('-label "dispatch"')
+
+
 
 def test_food_line_discovery_registry_uses_the_maine_monitor_target_sitemap_shard() -> None:
     import json

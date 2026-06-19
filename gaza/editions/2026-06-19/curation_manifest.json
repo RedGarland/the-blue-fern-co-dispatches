@@ -1,0 +1,454 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-19-006",
+    "title": "Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire",
+    "summary": "Pakistan, China, UK and Russia call for unrestricted aid access as US blames Hamas for ongoing suffering in enclave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 76,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "ceasefire_diplomacy",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-a25c6d29cd9c"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-a25c6d29cd9c"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/world/some-un-security-council-members-warn-gaza-humanitarian-crisis-worsening-despite-ceasefire/3971465"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 76,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-003",
+    "title": "Paper shortages pushes Gaza's students to write on aid boxes",
+    "summary": "Israel has destroyed more than 284 schools and 63 university buildings across Gaza, disrupting access to education and hindering students' studies.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-the-new-arab-ffe8fdadb87f"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-the-new-arab-ffe8fdadb87f"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/paper-shortages-pushes-gazas-students-write-aid-boxes"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-002",
+    "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town",
+    "summary": "Occupiers raid Deir Dibwan hours after Israeli army, police forces deployed in area.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-7dc7274731af"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-7dc7274731af"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-occupiers-seize-palestinian-vehicle-block-entrances-in-west-bank-town/3971506"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-005",
+    "title": "US-Iran talks in Switzerland delayed, Israel strikes Lebanon",
+    "summary": "US Vice President JD Vance delayed a planned trip to Switzerland to lead a new round of talks with Iran, as. Israel continues attacking Gaza and Lebanon.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-the-new-arab-6d428f2f9503"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-the-new-arab-6d428f2f9503"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/us-iran-talks-switzerland-delayed-israel-strikes-lebanon"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-001",
+    "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
+    "summary": "\"The continued killing of children is not the consequence of a lack of options. It is the consequence of a lack of political will.\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-the-new-arab-0edcf11fecfd"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-the-new-arab-0edcf11fecfd"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/gaza-ceasefire-deadly-illusion-unicef"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-008",
+    "title": "Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis",
+    "summary": "'Palestinians in Gaza have waited long enough, suffered far too much, and cannot be asked to wait any longer,' says Riyad Mansour.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-ed3899853781"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-ed3899853781"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/world/palestinian-envoy-urges-un-security-council-to-end-gaza-humanitarian-crisis/3971463"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-004",
+    "title": "Oxfam official urges UN Security Council to move from words to action on Gaza amid ceasefire 'failing'",
+    "summary": "Khalidi urges Security Council to use political, diplomatic and legal tools to end atrocities amid 'failing' ceasefire.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-7111a67b585c"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-7111a67b585c"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/oxfam-official-urges-un-security-council-to-move-from-words-to-action-on-gaza-amid-ceasefire-failing-/3971477"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-007",
+    "title": "Muslim-majority countries slam Israel for W. Bank mosque attacks",
+    "summary": "Eight Muslim-majority countries lambasted. Israel for being responsible for the latest uptick in arson attacks on West Bank mosques.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 48,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-the-new-arab-24416b46df22"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-the-new-arab-24416b46df22"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/muslim-majority-countries-slam-israel-w-bank-mosque-attacks"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

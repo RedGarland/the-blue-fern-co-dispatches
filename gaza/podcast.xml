@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 18 Jun 2026 18:48:20 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 19 Jun 2026 13:01:04 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 19, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-19-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-19-transcript.html</guid>
+    <pubDate>Fri, 19 Jun 2026 00:00:00 +0000</pubDate>
+    <description>Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire.. Pakistan, China, UK and Russia call for unrestricted aid access as US blames Hamas for ongoing suffering in enclave. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-19.mp3" length="1741056" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 18, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-18-transcript.html</link>

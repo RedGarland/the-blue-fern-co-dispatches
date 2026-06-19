@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-19",
+  "generated_at": "2026-06-19T13:01:04.380791Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-19.mp3",
+  "audio_url": "/gaza/audio/2026-06-19.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1669,
+  "tts_input_word_count": 264,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1741056,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-19T13:01:04.380768Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-19-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-19/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 19, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire.. Pakistan, China, UK and Russia call for unrestricted aid access as US blames Hamas for ongoing suffering in enclave. This was reported by Anadolu Agency.\n\n2. Paper shortages pushes Gaza's students to write on aid boxes.. Israel has destroyed more than 284 schools and 63 university buildings across Gaza, disrupting access to education and hindering students' studies. This was reported by The New Arab.\n\n3. Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town.. Occupiers raid Deir Dibwan hours after Israeli army, police forces deployed in area. This was reported by Anadolu Agency.\n\n4. US-Iran talks in Switzerland delayed, Israel strikes Lebanon.. US Vice President JD Vance delayed a planned trip to Switzerland to lead a new round of talks with Iran, as. Israel continues attacking Gaza and Lebanon. This was reported by The New Arab.\n\n5. Gaza 'ceasefire' is a 'deadly illusion': UNICEF.. \"The continued killing of children is not the consequence of a lack of options. It is the consequence of a lack of political will.\". This was reported by The New Arab.\n\n6. Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis.. 'Palestinians in Gaza have waited long enough, suffered far too much, and cannot be asked to wait any longer,' says Riyad Mansour. This was reported by Anadolu Agency.\n\nFor the full source-backed dispatch, read the June 19, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-19-anadolu-middle-east-a25c6d29cd9c",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/world/some-un-security-council-members-warn-gaza-humanitarian-crisis-worsening-despite-ceasefire/3971465",
+      "title": "Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire"
+    },
+    {
+      "source_record_id": "gaza-2026-06-19-the-new-arab-ffe8fdadb87f",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/paper-shortages-pushes-gazas-students-write-aid-boxes",
+      "title": "Paper shortages pushes Gaza's students to write on aid boxes"
+    },
+    {
+      "source_record_id": "gaza-2026-06-19-anadolu-middle-east-7dc7274731af",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/middle-east/israeli-occupiers-seize-palestinian-vehicle-block-entrances-in-west-bank-town/3971506",
+      "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town"
+    },
+    {
+      "source_record_id": "gaza-2026-06-19-the-new-arab-6d428f2f9503",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/us-iran-talks-switzerland-delayed-israel-strikes-lebanon",
+      "title": "US-Iran talks in Switzerland delayed, Israel strikes Lebanon"
+    },
+    {
+      "source_record_id": "gaza-2026-06-19-the-new-arab-0edcf11fecfd",
+      "publisher": "The New Arab",
+      "url": "https://www.newarab.com/news/gaza-ceasefire-deadly-illusion-unicef",
+      "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF"
+    },
+    {
+      "source_record_id": "gaza-2026-06-19-anadolu-middle-east-ed3899853781",
+      "publisher": "Anadolu Agency",
+      "url": "https://www.aa.com.tr/en/world/palestinian-envoy-urges-un-security-council-to-end-gaza-humanitarian-crisis/3971463",
+      "title": "Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis"
+    }
+  ]
+}

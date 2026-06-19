@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -71,6 +72,7 @@ SOURCE_ROLES = {
     "baseline_condition",
     "background_context",
     "resource_context",
+    "discovery_lead",
 }
 
 PUBLIC_BUCKETS = [
@@ -112,6 +114,37 @@ PUBLIC_BUCKET_LABELS = {
     "Emergency / EMS Signals": "emergency and EMS",
     "Public Health Capacity Signals": "public health capacity",
     "Other Care Line Signals": "other Care Line signals",
+}
+
+SOURCE_ROLE_PUBLIC_LABELS = {
+    "local_signal": "local signal",
+    "hospital_operations_signal": "hospital operations signal",
+    "clinic_operations_signal": "clinic operations signal",
+    "insurance_affordability_signal": "insurance affordability signal",
+    "rural_access_signal": "rural access signal",
+    "maternity_family_signal": "maternity and family care signal",
+    "emergency_ems_signal": "emergency and EMS signal",
+    "public_health_signal": "public health signal",
+    "policy_context": "policy context",
+    "baseline_condition": "baseline condition",
+    "background_context": "background context",
+    "resource_context": "resource context",
+    "discovery_lead": "discovery lead",
+    "additional_signal": "additional signal",
+}
+
+VERIFICATION_STATUS_PUBLIC_LABELS = {
+    "stale_current_signal": "stale signal",
+    "resource_only_baseline": "resource-only baseline",
+    "wrapper_candidate": "wrapper lead",
+    "qualified": "qualified",
+    "excluded": "excluded",
+}
+
+FRESHNESS_ROLE_PUBLIC_LABELS = {
+    "current_signal": "current signal",
+    "stale_current_signal": "stale signal",
+    "background_context": "background context",
 }
 
 REQUIRED_REGISTRY_FIELDS = {
@@ -241,17 +274,35 @@ def validate_pressure_source_registry(registry: list[dict[str, Any]]) -> list[st
 
 
 def load_manual_source_records(root: Path, edition_date: str) -> list[dict[str, Any]]:
-    path = root / MANUAL_SOURCES_PATH / edition_date / "manual_sources.json"
-    if not path.exists():
-        return []
-    payload = _load_json(path)
-    if isinstance(payload, list):
-        rows = payload
-    elif isinstance(payload, dict) and isinstance(payload.get("sources"), list):
-        rows = payload["sources"]
-    else:
-        raise ValueError(f"Care Line manual sources file has invalid shape: {path}")
-    return [row for row in rows if isinstance(row, dict)]
+    def _load_path(path: Path) -> list[dict[str, Any]]:
+        if not path.exists():
+            return []
+        payload = _load_json(path)
+        if isinstance(payload, list):
+            rows = payload
+        elif isinstance(payload, dict) and isinstance(payload.get("sources"), list):
+            rows = payload["sources"]
+        else:
+            raise ValueError(f"Care Line manual sources file has invalid shape: {path}")
+        return [row for row in rows if isinstance(row, dict)]
+
+    rows: list[dict[str, Any]] = []
+    for filename in ("manual_sources.json", "discovered_sources.json"):
+        rows.extend(_load_path(root / MANUAL_SOURCES_PATH / edition_date / filename))
+    return _dedupe_source_records(rows)
+
+
+def _dedupe_source_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for record in records:
+        record_id = str(record.get("source_record_id") or "").strip()
+        if record_id and record_id in seen_ids:
+            continue
+        if record_id:
+            seen_ids.add(record_id)
+        deduped.append(record)
+    return deduped
 
 
 def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
@@ -299,6 +350,108 @@ def record_is_public(record: dict[str, Any]) -> bool:
     return True
 
 
+def care_line_review_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
+    rows = list(records)
+    public_rows = [record for record in rows if record_is_public(record)]
+    excluded_rows = [record for record in rows if not record_is_public(record)]
+    wrapper_rows = [
+        record
+        for record in rows
+        if bool(_record_value(record, "wrapper_candidate")) or str(_record_value(record, "source_role") or "").strip() == "discovery_lead"
+    ]
+    stale_rows = [
+        record
+        for record in rows
+        if str(_record_value(record, "freshness_role") or "").strip() == "stale_current_signal"
+        or str(_record_value(record, "freshness_status") or "").strip().lower() == "stale"
+        or str(_record_value(record, "exclusion_reason") or "").strip() == "stale_current_signal"
+    ]
+    weak_rows = [
+        record
+        for record in rows
+        if str(_record_value(record, "source_public_story_eligible") or "").strip().lower() == "false"
+        or bool(_record_value(record, "wrapper_candidate"))
+        or str(_record_value(record, "source_role") or "").strip() == "discovery_lead"
+    ]
+    not_traceable_rows = [
+        record
+        for record in rows
+        if not str(_record_value(record, "source_traceability_role") or "").strip()
+        and not record_is_public(record)
+    ]
+    source_family_counts = Counter(
+        str(_record_value(record, "source_family") or "").strip()
+        for record in rows
+        if str(_record_value(record, "source_family") or "").strip()
+    )
+    state_counts = Counter(
+        str(_record_value(record, "state") or "").strip().upper()
+        for record in rows
+        if str(_record_value(record, "state") or "").strip()
+    )
+    exclusion_reason_counts = Counter(
+        str(_record_value(record, "exclusion_reason") or "excluded").strip()
+        for record in excluded_rows
+    )
+    secondary_query_count = sum(
+        len([str(item).strip() for item in _record_value(record, "secondary_queries_generated") or [] if str(item).strip()])
+        for record in wrapper_rows
+    )
+    qualified_but_not_public_count = sum(
+        1
+        for record in rows
+        if not record_is_public(record)
+        and (
+            bool(_record_value(record, "wrapper_candidate"))
+            or str(_record_value(record, "source_role") or "").strip() == "discovery_lead"
+            or _record_value(record, "source_public_story_eligible") is False
+        )
+    )
+    return {
+        "source_count": len(rows),
+        "public_signal_count": len(public_rows),
+        "claim_count": len(public_rows),
+        "excluded_source_count": len(excluded_rows),
+        "excluded_count": len(excluded_rows),
+        "wrapper_candidate_count": len(wrapper_rows),
+        "secondary_query_count": secondary_query_count,
+        "qualified_but_not_public_count": qualified_but_not_public_count,
+        "stale_count": len(stale_rows),
+        "weak_count": len(weak_rows),
+        "not_traceable_count": len(not_traceable_rows),
+        "source_families": sorted(source_family_counts),
+        "pressure_source_count_by_family": dict(sorted(source_family_counts.items())),
+        "pressure_source_count_by_state": dict(sorted(state_counts.items())),
+        "exclusion_reason_counts": dict(sorted(exclusion_reason_counts.items())),
+        "exclusion_reason_summary": "; ".join(f"{key}={value}" for key, value in sorted(exclusion_reason_counts.items())) if exclusion_reason_counts else "",
+    }
+
+
+def no_current_update_summary(records: list[dict[str, Any]] | None = None) -> str:
+    rows = list(records or [])
+    if not rows:
+        return (
+            "No current Care Line update was published because no source records were reviewed for this edition date."
+        )
+    diagnostics = care_line_review_diagnostics(rows)
+    parts: list[str] = []
+    if diagnostics["stale_count"]:
+        parts.append("the reviewed source records were stale")
+    if diagnostics["weak_count"]:
+        parts.append("the reviewed source records were weak, PR, marketing, or resource-only")
+    if diagnostics["not_traceable_count"]:
+        parts.append("the reviewed source records were not traceable enough for public use")
+    if not parts:
+        parts.append("no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records")
+    if len(parts) == 1:
+        reason = parts[0]
+    elif len(parts) == 2:
+        reason = f"{parts[0]} and {parts[1]}"
+    else:
+        reason = ", ".join(parts[:-1]) + f", and {parts[-1]}"
+    return f"No current Care Line update was published because {reason}."
+
+
 def source_table_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for record in records:
@@ -310,11 +463,13 @@ def source_table_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "location": str(_record_value(record, "location_name") or _record_value(record, "state") or ""),
                 "source_link": str(_record_value(record, "url") or ""),
                 "source_family": str(_record_value(record, "source_family") or ""),
-                "how_used": str(_record_value(record, "source_role") or ""),
-                "issue": str(_record_value(record, "pressure_type") or ""),
+                "how_used": _public_status_label(str(_record_value(record, "source_role") or ""), SOURCE_ROLE_PUBLIC_LABELS),
+                "issue": public_pressure_label(record),
                 "what_happened": str(_record_value(record, "pressure_summary") or _record_value(record, "summary_or_snippet") or ""),
                 "what_the_source_says": str(_record_value(record, "claim_supported") or _record_value(record, "evidence_text") or ""),
-                "verification_status": "qualified" if record_is_public(record) else str(_record_value(record, "exclusion_reason") or "excluded"),
+                "verification_status": "qualified"
+                if record_is_public(record)
+                else _public_status_label(str(_record_value(record, "exclusion_reason") or "excluded"), VERIFICATION_STATUS_PUBLIC_LABELS),
                 "who_may_be_affected": ", ".join(str(item) for item in _record_value(record, "affected_groups") or [] if str(item).strip()),
                 "used_on_public_page": "Yes" if record_is_public(record) else "No",
                 "freshness_status": str(_record_value(record, "freshness_status") or ""),
@@ -341,7 +496,7 @@ def public_claim_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "retrieved_at": str(_record_value(record, "retrieved_at") or ""),
                 "evidence_level": str(_record_value(record, "evidence_level") or ""),
                 "confidence": str(_record_value(record, "confidence") or ""),
-                "freshness_role": str(_record_value(record, "freshness_role") or ""),
+                "freshness_role": _public_status_label(str(_record_value(record, "freshness_role") or ""), FRESHNESS_ROLE_PUBLIC_LABELS),
                 "location_scope": str(_record_value(record, "location_scope") or ""),
                 "limitation": str(_record_value(record, "limitations") or ""),
             }
@@ -360,6 +515,11 @@ def public_pressure_label(record: dict[str, Any]) -> str:
 
 def public_bucket_label(bucket: str) -> str:
     return PUBLIC_BUCKET_LABELS.get(bucket, bucket.replace("Signals", "").replace("/", "and").strip().lower())
+
+
+def _public_status_label(value: str, mapping: dict[str, str]) -> str:
+    key = str(value or "").strip()
+    return mapping.get(key, key.replace("_", " ").strip().lower())
 
 
 def public_bucket_note_labels(records: list[dict[str, Any]]) -> list[str]:
@@ -554,10 +714,6 @@ def summary_for_records(records: list[dict[str, Any]]) -> str:
     return f"{lead} This edition uses real, traceable source records."
 
 
-def no_current_update_summary() -> str:
-    return NO_CURRENT_UPDATE_SUMMARY
-
-
 def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str, Any]:
     edition_dir = site_root / DISPATCH_SLUG / "editions" / edition_date
     manifest_path = edition_dir / "edition_manifest.json"
@@ -627,8 +783,6 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
             report["reasons"].append("no_current_update editions require zero qualified public claims")
     else:
         report["reasons"].append("edition_mode is missing or invalid")
-    if report["stale_current_signal_count"] > 0:
-        report["reasons"].append("stale current signals remain in the public edition")
     if report["resource_only_count"] > 0 and report["qualified_public_claim_count"] <= 0:
         report["reasons"].append("resource-only records were not filtered")
     if report["skip_reason"]:
@@ -645,7 +799,6 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
             (report["edition_mode"] == "current_update" and report["source_count"] > 0 and report["story_count"] > 0 and report["claim_count"] > 0 and report["qualified_public_claim_count"] > 0)
             or (report["edition_mode"] == "no_current_update" and report["qualified_public_claim_count"] == 0)
         )
-        and report["stale_current_signal_count"] == 0
         and not report["skip_reason"]
     )
     return report

@@ -11,6 +11,7 @@ from bluefern_dispatches.care_line_sources import (
     DISPATCH_NAME,
     DISPATCH_TAGLINE,
     care_line_public_card_copy,
+    no_current_update_summary,
     public_bucket_note_labels,
     public_claim_rows,
     record_is_public,
@@ -69,6 +70,7 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     public_rows = [record for record in records if record_is_public(record)]
     claim_rows = public_claim_rows(records)
     if not public_rows:
+        no_current_summary = no_current_update_summary(records)
         body = f"""<section class="hero">
       <p class="eyebrow">Edition | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)}</h1>
@@ -78,7 +80,7 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     </section>
     <section class="section">
       <h2>Plain-English Summary</h2>
-      <p>No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records.</p>
+      <p>{html.escape(no_current_summary)}</p>
     </section>
     <section class="section">
       <h2>At A Glance</h2>

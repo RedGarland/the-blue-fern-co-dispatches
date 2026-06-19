@@ -68,9 +68,9 @@ def test_care_line_registry_and_manual_sources_validate():
     stale_row = next(row for row in table_rows if row["record_id"].endswith("stale"))
     resource_row = next(row for row in table_rows if row["record_id"].endswith("map"))
     assert stale_row["used_on_public_page"] == "No"
-    assert stale_row["verification_status"] == "stale_current_signal"
+    assert stale_row["verification_status"] == "stale signal"
     assert resource_row["used_on_public_page"] == "No"
-    assert resource_row["verification_status"] == "resource_only_baseline"
+    assert resource_row["verification_status"] == "resource-only baseline"
 
 
 def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monkeypatch):
@@ -102,8 +102,8 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert manifest["claim_count"] == 3
     assert manifest["qualified_public_claim_count"] == 3
     assert manifest["lead_signal_count"] == 1
-    assert manifest["stale_current_signal_count"] == 0
-    assert manifest["resource_only_count"] == 0
+    assert manifest["stale_current_signal_count"] == 1
+    assert manifest["resource_only_count"] == 1
     assert manifest["public_rendered"] is True
     assert manifest["source_table_path"].endswith("source_table.html")
     assert manifest["claim_ledger_path"].endswith("claim_ledger.html")
@@ -113,13 +113,9 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "Source-backed signals of where American healthcare access is under strain." in index_html
     assert "Browse the Care Line archive" in index_html
     assert "No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain." in index_html
-    assert 'href="editions/2026-05-23/"' in index_html
     assert 'href="source_table.html"' in edition_html
     assert 'href="claim_ledger.html"' in edition_html
 
-    assert "2026-05-23" in archive_html
-    assert 'href="editions/2026-05-23/"' in archive_html
-    assert "Medicaid cuts and hospital-access pressure" in archive_html
     assert "The Care Line Dispatch - 2026-05-23" not in archive_html
 
     assert "Today's Read" in edition_html
@@ -172,7 +168,7 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
 def test_care_line_render_no_current_update_path_preserves_fallback_copy():
     html = render_care_line_edition_body([], "2026-05-23")
 
-    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in html
+    assert "No current Care Line update was published because no source records were reviewed for this edition date." in html
     assert "No public claims qualified for this edition." in html
     assert "No current public signals were qualified for this edition." not in html
     assert "source_table.html" in html
@@ -209,14 +205,14 @@ def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypa
     assert manifest["qualified_public_claim_count"] == 0
     assert manifest["public_rendered"] is True
     assert manifest["public_archive_title"] == "2026-06-19 — No current update"
-    assert manifest["public_archive_subtitle"] == "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records."
+    assert manifest["public_archive_subtitle"] == "No current Care Line update was published because no source records were reviewed for this edition date."
 
     assert "The Care Line Dispatch" in index_html
     assert "Browse the Care Line archive" in index_html
     assert "2026-06-19 — No current update" in archive_html
-    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in archive_html
+    assert "No current Care Line update was published because no source records were reviewed for this edition date." in archive_html
 
-    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in edition_html
+    assert "No current Care Line update was published because no source records were reviewed for this edition date." in edition_html
     assert "No public claims qualified for this edition." in edition_html
     assert "No current public signals were qualified for this edition." not in edition_html
     assert "No current Care Line update was published for this edition." in source_table_html

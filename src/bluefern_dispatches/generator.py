@@ -29,6 +29,7 @@ from bluefern_dispatches.care_line_sources import (
     public_archive_title_for_records as care_line_public_archive_title_for_records,
     summary_for_records as care_line_summary_for_records,
     record_is_public as care_line_record_is_public,
+    care_line_review_diagnostics as care_line_review_diagnostics,
     validate_manual_source_records as validate_care_line_manual_sources,
     validate_pressure_source_registry as validate_care_line_pressure_registry,
 )
@@ -239,8 +240,14 @@ def _normalize_american_pressure_fixture_rows(
 def _care_line_fixtures(root: Path, edition_date: str) -> tuple[Any, Path | None]:
     base = root / "data" / "dispatches" / "care-line" / "sources"
     direct = base / edition_date / "manual_sources.json"
-    if direct.exists():
-        return json.loads(direct.read_text(encoding="utf-8")), direct
+    discovered = base / edition_date / "discovered_sources.json"
+    if direct.exists() or discovered.exists():
+        rows: list[Any] = []
+        if direct.exists():
+            rows.extend(json.loads(direct.read_text(encoding="utf-8")))
+        if discovered.exists():
+            rows.extend(json.loads(discovered.read_text(encoding="utf-8")))
+        return rows, direct if direct.exists() else discovered
     return [], None
 
 
@@ -248,7 +255,13 @@ def _latest_care_line_fixture_date(root: Path) -> str | None:
     base = root / "data" / "dispatches" / "care-line" / "sources"
     if not base.exists():
         return None
-    dated = sorted(path.parent.name for path in base.glob("*/manual_sources.json") if path.is_file())
+    dated = sorted(
+        {
+            path.parent.name
+            for path in list(base.glob("*/manual_sources.json")) + list(base.glob("*/discovered_sources.json"))
+            if path.is_file()
+        }
+    )
     return dated[-1] if dated else None
 
 
@@ -1938,10 +1951,12 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     care_line_records: list[Any] = []
     care_line_public_records: list[Any] = []
     care_line_edition_mode = ""
+    care_line_diagnostics: dict[str, Any] = {}
     if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
         care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
         care_line_edition_mode = "current_update" if care_line_public_records else "no_current_update"
+        care_line_diagnostics = care_line_review_diagnostics(care_line_records)
         extra_public_artifacts = [
             str(public_dir / "source_table.html"),
             str(public_dir / "claim_ledger.html"),
@@ -1977,13 +1992,23 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "claim_count": claim_count if dispatch.slug != CARE_LINE_DISPATCH_SLUG else len(care_line_public_records),
         "qualified_public_claim_count": qualified_public_claim_count if dispatch.slug != CARE_LINE_DISPATCH_SLUG else len(care_line_public_records),
         "lead_signal_count": lead_signal_count,
+        "public_signal_count": len(care_line_public_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "public_rendered": True if dispatch.slug == CARE_LINE_DISPATCH_SLUG else True,
-        "stale_current_signal_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
-        "resource_only_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "stale_current_signal_count": len([row for row in care_line_records if str(_record_value(row, "freshness_role") or "") == "stale_current_signal"]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "resource_only_count": len([row for row in care_line_records if str(_record_value(row, "exclusion_reason") or "") == "resource_only_baseline"]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "wrapper_candidate_count": int(care_line_diagnostics.get("wrapper_candidate_count") or 0) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "secondary_query_count": int(care_line_diagnostics.get("secondary_query_count") or 0) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "qualified_but_not_public_count": int(care_line_diagnostics.get("qualified_but_not_public_count") or 0) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "source_families": list(care_line_diagnostics.get("source_families") or []) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else [],
+        "pressure_source_count_by_family": care_line_diagnostics.get("pressure_source_count_by_family") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
+        "pressure_source_count_by_state": care_line_diagnostics.get("pressure_source_count_by_state") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
+        "exclusion_reason_counts": care_line_diagnostics.get("exclusion_reason_counts") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
+        "exclusion_reason_summary": care_line_diagnostics.get("exclusion_reason_summary") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "discovery_gap_check": care_line_diagnostics if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
         "public_summary": (
             care_line_summary_for_records(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
+            else care_line_no_current_update_summary(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG
             else ""
         ),
@@ -1997,7 +2022,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "public_archive_subtitle": (
             care_line_summary_for_records(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
+            else care_line_no_current_update_summary(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG
             else ""
         ),

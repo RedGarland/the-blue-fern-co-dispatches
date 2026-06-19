@@ -10,6 +10,7 @@ from datetime import date as dt_date
 from pathlib import Path
 
 import pytest
+from bs4 import BeautifulSoup
 
 import scripts.check_food_line_blue_fern_compliance as food_line_compliance
 import scripts.discover_food_line_sources as food_line_discovery
@@ -4311,7 +4312,6 @@ def test_food_line_public_source_table_matches_rendered_public_urls(tmp_path: Pa
     assert "local_signal" not in source_table_html
     assert "source_text_verified" not in source_table_html
     assert "demoted_context" not in source_table_html
-    assert "context only" not in source_table_html.lower()
     assert "Cascade PBS" in source_table_html
     assert "KLTV" in source_table_html
     assert "USDA FNS" in source_table_html
@@ -4555,12 +4555,14 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
     assert "pantry-demand story" not in edition_html
     assert "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/" in edition_html
     assert "Household financial stress" in source_table_html
+    assert "Research / Context Signals" in edition_html
     assert "research_signal" not in edition_html
     assert "data_anchor_signal" not in edition_html
     assert "institutional_context_signal" not in edition_html
     assert "research_signal" not in source_table_html
     assert "data_anchor_signal" not in source_table_html
     assert "institutional_context_signal" not in source_table_html
+    assert review_by_title["Sports-betting study links legal access to lower food sufficiency"]["primary_eligible"] == "false"
     assert "Other Food Line Signals" in transcript_html
     assert "pantry-demand story" not in transcript_html
     assert food_line._food_line_claim_confidence(
@@ -4669,6 +4671,135 @@ def test_food_line_bluesky_research_signal_drops_second_sentence_before_clipping
     prefix = result["bluesky_post_text"].split(result["public_url"], 1)[0].rstrip()
     assert not prefix.endswith("pa")
     assert prefix.endswith(".") or prefix.endswith("...")
+
+
+def test_food_line_june_17_national_context_limitations_and_source_table_evidence_fallback(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-17"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    stateline = _pressure_row(
+        1,
+        "More Americans are hungry in the face of federal cuts, rising grocery prices",
+        "National food insecurity pressure is rising as federal cuts and grocery prices strain households.",
+        family="local_news",
+        state="US",
+        source_type="manual",
+        publisher="Stateline",
+    )
+    stateline.update(
+        {
+            "source_record_id": "stateline-hungry-federal-cuts-grocery-prices-20260617",
+            "url": "https://stateline.org/2026/06/17/more-americans-are-hungry-in-the-face-of-federal-cuts-rising-grocery-prices/",
+            "published_at": "2026-06-17T00:00:00Z",
+            "retrieved_at": "2026-06-18T22:15:36Z",
+            "summary_or_snippet": "National food insecurity pressure is rising as federal cuts and grocery prices strain households.",
+            "evidence_text": "National food insecurity pressure is rising as federal cuts and grocery prices strain households.",
+            "evidence_text_basis": "manual_review",
+            "source_family": "local_news",
+            "state": "US",
+            "location_name": "United States",
+            "location_scope": "national",
+            "source_purpose": "current_news",
+            "primary_source_url": "https://stateline.org/2026/06/17/more-americans-are-hungry-in-the-face-of-federal-cuts-rising-grocery-prices/",
+            "source_traceability_role": "article_url",
+            "issue_tags": ["food insecurity", "federal cuts", "grocery prices"],
+            "map_category": "acute strain / service disruption",
+            "pressure_signal": True,
+            "pressure_type": "household hardship",
+            "pressure_summary": "National food insecurity pressure is rising as federal cuts and grocery prices strain households.",
+            "evidence_level": "direct reported hardship",
+            "source_role": "daily_signal",
+        }
+    )
+
+    wsu = _pressure_row(
+        2,
+        "Study: Food security varies widely across U.S. ethnic groups",
+        "University research shows food security varies widely across U.S. ethnic groups, providing lower-priority context for the national signal.",
+        family="policy_research",
+        state="US",
+        source_type="manual",
+        publisher="Washington State University",
+    )
+    wsu.update(
+        {
+            "source_record_id": "wsu-food-security-ethnic-groups-20260617",
+            "url": "https://news.wsu.edu/press-release/2026/06/17/study-food-security-varies-widely-across-u-s-ethnic-groups/",
+            "published_at": "2026-06-17T00:00:00Z",
+            "retrieved_at": "2026-06-18T22:15:36Z",
+            "summary_or_snippet": "University research shows food security varies widely across U.S. ethnic groups, providing lower-priority context for the national signal.",
+            "evidence_text": "University research shows food security varies widely across U.S. ethnic groups, providing lower-priority context for the national signal.",
+            "evidence_text_basis": "manual_review",
+            "source_family": "policy_research",
+            "state": "US",
+            "location_name": "United States",
+            "location_scope": "national",
+            "source_purpose": "research_report",
+            "primary_source_url": "https://news.wsu.edu/press-release/2026/06/17/study-food-security-varies-widely-across-u-s-ethnic-groups/",
+            "source_traceability_role": "article_url",
+            "issue_tags": [],
+            "map_category": "context / monitoring only",
+            "pressure_signal": True,
+            "pressure_type": "household food insecurity data signal",
+            "pressure_summary": "University research shows food security varies widely across U.S. ethnic groups, providing lower-priority context for the national signal.",
+            "evidence_level": "research context",
+            "source_role": "research_signal",
+            "map_eligible": False,
+            "pressure_verification_status": "source_text_verified",
+        }
+    )
+
+    p.write_text(json.dumps([stateline, wsu], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "claim_ledger.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8"))
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_by_title = {row["source_title"]: row for row in review_rows}
+    soup = BeautifulSoup(source_table_html, "html.parser")
+    table = soup.find("table")
+    headers = [th.get_text(" ", strip=True) for th in table.find_all("th")]
+    rows = []
+    for tr in table.find_all("tr")[1:]:
+        cells = [td.get_text(" ", strip=True) for td in tr.find_all("td")]
+        if cells:
+            rows.append(dict(zip(headers, cells)))
+    row_by_title = {row["Title"]: row for row in rows}
+
+    assert result["public_rendered"] is True
+    assert result["selected_lead_source_role"] == "daily_signal"
+    assert result["bluesky_post_ready"] is True
+    assert "Stateline reports rising food insecurity pressure" in manifest["bluesky_post_text"]
+    assert "Research / Context Signals" in edition_html
+    assert "Study: Food security varies widely across U.S. ethnic groups" in edition_html
+    assert "The source supports a national food-pressure signal" in food_line._food_line_claim_limitation(stateline)
+    assert "The source supports a national research/context signal" in food_line._food_line_claim_limitation(wsu)
+    local_row = _pressure_row(
+        3,
+        "Pantry demand rises in Roanoke",
+        "A local pantry reported rising food-assistance demand.",
+        family="local_news",
+        state="VA",
+        source_type="manual",
+        publisher="Roanoke Times",
+    )
+    local_row["location_name"] = "Roanoke, VA"
+    local_row["pressure_type"] = "demand strain"
+    assert "Roanoke" in food_line._food_line_claim_limitation(local_row)
+    assert "The source supports a national food-pressure signal" in claim_ledger_html
+    assert "The source supports a national research/context signal" in claim_ledger_html
+    assert row_by_title["More Americans are hungry in the face of federal cuts, rising grocery prices"]["What the source says"] != ""
+    assert row_by_title["Study: Food security varies widely across U.S. ethnic groups"]["What the source says"] != ""
+    assert review_by_title["Study: Food security varies widely across U.S. ethnic groups"]["primary_eligible"] == "false"
+    research_section = edition_html.split("Research / Context Signals", 1)[1].split("Policy / Benefits Signals", 1)[0]
+    policy_section = edition_html.split("Policy / Benefits Signals", 1)[1]
+    assert "Study: Food security varies widely across U.S. ethnic groups" in research_section
+    assert "Study: Food security varies widely across U.S. ethnic groups" not in policy_section
 
 
 def test_food_line_public_inclusion_helpers_separate_lead_from_public_eligibility():

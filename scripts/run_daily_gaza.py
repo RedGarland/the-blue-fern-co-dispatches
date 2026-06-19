@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import ssl
 import urllib.request
 from datetime import date
 from pathlib import Path
@@ -445,7 +446,8 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> d
     def _fetch(url: str) -> tuple[int | None, str, str | None]:
         request = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
         try:
-            with urllib.request.urlopen(request, timeout=30) as response:
+            context = ssl._create_unverified_context()
+            with urllib.request.urlopen(request, timeout=30, context=context) as response:
                 status = getattr(response, "status", 200)
                 body = response.read().decode("utf-8", errors="replace")
             return status, body, None

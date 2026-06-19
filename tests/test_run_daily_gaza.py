@@ -278,7 +278,7 @@ def test_push_is_opt_in(isolated, monkeypatch, capsys):
     monkeypatch.setattr(
         daily.urllib.request,
         "urlopen",
-        lambda request, timeout=30: live_response(
+        lambda request, timeout=30, context=None: live_response(
             "<html><body>Dispatches From Gaza Today's Read Source Mix 2026-05-07</body></html>"
             if "/gaza/editions/" in request.full_url
             else "<html><body>2026-05-07</body></html>"
@@ -353,7 +353,7 @@ def test_gaza_daily_scoped_publish_stays_inside_gaza_and_reaches_push_stage(isol
             return completed(args, stdout=args[-1])
         return completed(args, stdout="ok")
 
-    def fake_urlopen(request, timeout=30):
+    def fake_urlopen(request, timeout=30, context=None):
         if "/gaza/editions/2026-06-19/" in request.full_url:
             return live_response("<html><body>offline</body></html>", status=503)
         return live_response("<html><body>2026-06-19</body></html>", status=200)

@@ -32,6 +32,17 @@ function Write-FoodLineLogSection {
   }
 }
 
+function Format-FoodLineArgument {
+  param(
+    [Parameter(Mandatory = $true)][string]$Value
+  )
+
+  if ($Value -match '[\s"]') {
+    return '"' + ($Value -replace '"', '\"') + '"'
+  }
+  return $Value
+}
+
 function Invoke-FoodLineLoggedProcess {
   param(
     [Parameter(Mandatory = $true)][string]$LogPath,
@@ -45,14 +56,15 @@ function Invoke-FoodLineLoggedProcess {
   $logDir = Split-Path -Parent $LogPath
   $stdoutPath = Join-Path $logDir "$logBase.$Label.stdout.tmp"
   $stderrPath = Join-Path $logDir "$logBase.$Label.stderr.tmp"
+  $argumentLine = ($Arguments | ForEach-Object { Format-FoodLineArgument $_ }) -join ' '
 
-  Write-FoodLineLogLine -Path $LogPath -Message "$Label command: `"$FilePath`" $($Arguments -join ' ')"
+  Write-FoodLineLogLine -Path $LogPath -Message "$Label command: `"$FilePath`" $argumentLine"
   Write-FoodLineLogLine -Path $LogPath -Message "$Label working_directory: $WorkingDirectory"
 
   try {
     $process = Start-Process `
       -FilePath $FilePath `
-      -ArgumentList $Arguments `
+      -ArgumentList $argumentLine `
       -WorkingDirectory $WorkingDirectory `
       -Wait `
       -PassThru `
@@ -105,14 +117,14 @@ try {
   }
 
   Set-Content -LiteralPath $LogPath -Encoding utf8 -Value @(
-    "[$(Get-Date -Format o)] Food Line daily wrapper start"
-    "[$(Get-Date -Format o)] project_root: $ProjectRoot"
-    "[$(Get-Date -Format o)] pages_repo: $PagesRepo"
-    "[$(Get-Date -Format o)] log_path: $LogPath"
-    "[$(Get-Date -Format o)] cwd: $ProjectRoot"
-    "[$(Get-Date -Format o)] python_executable: $PythonExe"
-    "[$(Get-Date -Format o)] command_args: $($commandArgs -join ' ')"
-    "[$(Get-Date -Format o)] dry_run: $($DryRun.IsPresent)"
+    "[$(Get-Date -Format o)] Food Line scheduled run started"
+    "[$(Get-Date -Format o)] RepoRoot: $ProjectRoot"
+    "[$(Get-Date -Format o)] WorkingDirectory: $ProjectRoot"
+    "[$(Get-Date -Format o)] PowerShell: $($PSVersionTable.PSVersion.ToString())"
+    "[$(Get-Date -Format o)] Python executable: $PythonExe"
+    "[$(Get-Date -Format o)] Command: $(($commandArgs | ForEach-Object { Format-FoodLineArgument $_ }) -join ' ')"
+    "[$(Get-Date -Format o)] Date: $EditionDate"
+    "[$(Get-Date -Format o)] DryRun: $($DryRun.IsPresent)"
   )
 
   if (-not (Test-Path -LiteralPath $PythonExe)) {
@@ -127,15 +139,19 @@ try {
     -WorkingDirectory $ProjectRoot
 
   if ($dispatchExitCode -eq 1) {
-    Write-FoodLineLogLine -Path $LogPath -Message "dispatch result: no qualifying food-line content for $EditionDate"
+    Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run completed successfully"
     Write-Host "No qualifying food-line content for $EditionDate (exit code 1 - expected, skipping publish/push)"
     exit 0
   } elseif ($dispatchExitCode -ne 0) {
+    Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run failed"
     throw "Food Line dispatch run failed for $EditionDate (exit code $dispatchExitCode)"
   }
 
   if ($DryRun) {
-    Write-FoodLineLogLine -Path $LogPath -Message "wrapper result: dry-run completed without publish/push"
+    Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run completed successfully"
     Write-Host "Food Line dry-run completed for $EditionDate (skipping publish/push)"
     exit 0
   }
@@ -179,9 +195,14 @@ try {
     throw "Food Line Pages push failed for $EditionDate (exit code $gitExitCode)"
   }
 
-  Write-FoodLineLogLine -Path $LogPath -Message "wrapper result: success"
+  Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+  Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run completed successfully"
 } catch {
   if ($LogPath) {
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run failed"
+    if (-not (Select-String -LiteralPath $LogPath -Pattern 'Python exit code:' -Quiet)) {
+      Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: unknown"
+    }
     Write-FoodLineLogLine -Path $LogPath -Message "wrapper error: $($_.Exception.Message)"
   } else {
     Write-Host "Food Line wrapper failed before log initialization: $($_.Exception.Message)"

@@ -50,6 +50,8 @@ SOURCE_FAMILIES = {
     "clinic_notice",
     "state_health_department",
     "state_medicaid_agency",
+    "state_policy_news",
+    "nonprofit_news",
     "cms_data",
     "hrsa_data",
     "public_health_department",

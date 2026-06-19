@@ -1,0 +1,318 @@
+{
+  "ok": true,
+  "dispatch_slug": "care-line",
+  "edition_date": "2026-06-19",
+  "discovered_sources_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-06-19\\discovered_sources.json",
+  "discovery_report_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-06-19\\discovery_report.json",
+  "query_count": 42,
+  "query_rows": [
+    {
+      "query": "\"hospital closure\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22hospital+closure%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 100
+    },
+    {
+      "query": "\"hospital cuts services\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22hospital+cuts+services%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 8
+    },
+    {
+      "query": "\"rural hospital\" \"financial crisis\" \"access\"",
+      "url": "https://news.google.com/rss/search?q=%22rural+hospital%22+%22financial+crisis%22+%22access%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 7
+    },
+    {
+      "query": "\"emergency room boarding\" \"hospital\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22emergency+room+boarding%22+%22hospital%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 18
+    },
+    {
+      "query": "\"ER diversion\" \"hospital\"",
+      "url": "https://news.google.com/rss/search?q=%22ER+diversion%22+%22hospital%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 24
+    },
+    {
+      "query": "\"clinic closure\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22clinic+closure%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 82
+    },
+    {
+      "query": "\"appointment backlog\" \"clinic\"",
+      "url": "https://news.google.com/rss/search?q=%22appointment+backlog%22+%22clinic%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 8
+    },
+    {
+      "query": "\"maternity ward closing\"",
+      "url": "https://news.google.com/rss/search?q=%22maternity+ward+closing%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 15
+    },
+    {
+      "query": "\"labor and delivery unit closing\"",
+      "url": "https://news.google.com/rss/search?q=%22labor+and+delivery+unit+closing%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 9
+    },
+    {
+      "query": "\"OB unit closure\"",
+      "url": "https://news.google.com/rss/search?q=%22OB+unit+closure%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 4
+    },
+    {
+      "query": "\"Medicaid cuts\" \"patients\" \"clinic\"",
+      "url": "https://news.google.com/rss/search?q=%22Medicaid+cuts%22+%22patients%22+%22clinic%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 48
+    },
+    {
+      "query": "\"insurance coverage loss\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22insurance+coverage+loss%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 9
+    },
+    {
+      "query": "\"medical debt\" \"hospital\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=%22medical+debt%22+%22hospital%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 100
+    },
+    {
+      "query": "\"health care staffing shortage\" \"clinic access\"",
+      "url": "https://news.google.com/rss/search?q=%22health+care+staffing+shortage%22+%22clinic+access%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"pharmacy closure\" \"prescription access\"",
+      "url": "https://news.google.com/rss/search?q=%22pharmacy+closure%22+%22prescription+access%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 8
+    },
+    {
+      "query": "\"public health department cuts\"",
+      "url": "https://news.google.com/rss/search?q=%22public+health+department+cuts%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 1
+    },
+    {
+      "query": "\"ambulance delay\" \"EMS coverage\"",
+      "url": "https://news.google.com/rss/search?q=%22ambulance+delay%22+%22EMS+coverage%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "site:.org \"hospital closure\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22hospital+closure%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 100
+    },
+    {
+      "query": "site:.org \"maternity ward closing\"",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22maternity+ward+closing%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 5
+    },
+    {
+      "query": "site:.org \"pharmacy closure\" \"prescription\"",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22pharmacy+closure%22+%22prescription%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 100
+    },
+    {
+      "query": "site:.org \"Medicaid\" \"coverage loss\" \"patients\"",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22Medicaid%22+%22coverage+loss%22+%22patients%22&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 100
+    },
+    {
+      "query": "\"hospital closure\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22hospital+closure%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 7
+    },
+    {
+      "query": "\"hospital cuts services\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22hospital+cuts+services%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"rural hospital\" \"financial crisis\" \"access\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22rural+hospital%22+%22financial+crisis%22+%22access%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 1
+    },
+    {
+      "query": "\"emergency room boarding\" \"hospital\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22emergency+room+boarding%22+%22hospital%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"ER diversion\" \"hospital\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22ER+diversion%22+%22hospital%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"clinic closure\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22clinic+closure%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"appointment backlog\" \"clinic\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22appointment+backlog%22+%22clinic%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"maternity ward closing\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22maternity+ward+closing%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"labor and delivery unit closing\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22labor+and+delivery+unit+closing%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"OB unit closure\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22OB+unit+closure%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"Medicaid cuts\" \"patients\" \"clinic\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22Medicaid+cuts%22+%22patients%22+%22clinic%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"insurance coverage loss\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22insurance+coverage+loss%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"medical debt\" \"hospital\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22medical+debt%22+%22hospital%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 6
+    },
+    {
+      "query": "\"health care staffing shortage\" \"clinic access\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22health+care+staffing+shortage%22+%22clinic+access%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"pharmacy closure\" \"prescription access\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22pharmacy+closure%22+%22prescription+access%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"public health department cuts\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22public+health+department+cuts%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "\"ambulance delay\" \"EMS coverage\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=%22ambulance+delay%22+%22EMS+coverage%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "site:.org \"hospital closure\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22hospital+closure%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 6
+    },
+    {
+      "query": "site:.org \"maternity ward closing\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22maternity+ward+closing%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "site:.org \"pharmacy closure\" \"prescription\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22pharmacy+closure%22+%22prescription%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 0
+    },
+    {
+      "query": "site:.org \"Medicaid\" \"coverage loss\" \"patients\" after:2026-06-18 before:2026-06-20",
+      "url": "https://news.google.com/rss/search?q=site%3A.org+%22Medicaid%22+%22coverage+loss%22+%22patients%22+after%3A2026-06-18+before%3A2026-06-20&hl=en-US&gl=US&ceid=US:en",
+      "error": "",
+      "results": 1
+    }
+  ],
+  "source_count": 177,
+  "public_signal_count": 9,
+  "claim_count": 9,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "source_families": [
+    "local_news",
+    "nonprofit_news",
+    "state_policy_news"
+  ],
+  "pressure_source_count_by_family": {
+    "local_news": 116,
+    "nonprofit_news": 30,
+    "state_policy_news": 31
+  },
+  "pressure_source_count_by_state": {
+    "US": 177
+  },
+  "exclusion_reason_counts": {
+    "resource_only_baseline": 21,
+    "stale_current_signal": 147
+  },
+  "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147",
+  "qualified_but_not_public_count": 168,
+  "discovery_gap_check": {
+    "source_count": 177,
+    "public_signal_count": 9,
+    "claim_count": 9,
+    "excluded_source_count": 168,
+    "excluded_count": 168,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 168,
+    "stale_count": 147,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "local_news",
+      "nonprofit_news",
+      "state_policy_news"
+    ],
+    "pressure_source_count_by_family": {
+      "local_news": 116,
+      "nonprofit_news": 30,
+      "state_policy_news": 31
+    },
+    "pressure_source_count_by_state": {
+      "US": 177
+    },
+    "exclusion_reason_counts": {
+      "resource_only_baseline": 21,
+      "stale_current_signal": 147
+    },
+    "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147"
+  },
+  "no_current_update_summary": "No current Care Line update was published because the reviewed source records were stale."
+}

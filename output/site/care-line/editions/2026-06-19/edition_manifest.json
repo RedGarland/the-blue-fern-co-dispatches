@@ -1,0 +1,96 @@
+{
+  "dispatch_name": "The Care Line Dispatch",
+  "dispatch_slug": "care-line",
+  "public_visible": true,
+  "edition_date": "2026-06-19",
+  "generated_at": "2026-06-19T08:30:51.816688+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-06-19/",
+  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19",
+  "local_backup_path": "output\\tmp-backups-pages\\care-line\\2026-06-19",
+  "template_version": "dispatches-static-v1",
+  "source_count": 177,
+  "story_count": 9,
+  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\sources_manifest.json",
+  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\sources_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\curation_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\source_table.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\care-line\\editions\\2026-06-19\\claim_ledger.html"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 9,
+  "qualified_public_claim_count": 9,
+  "lead_signal_count": 0,
+  "public_signal_count": 9,
+  "public_rendered": true,
+  "stale_current_signal_count": 147,
+  "resource_only_count": 21,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 168,
+  "source_families": [
+    "local_news",
+    "nonprofit_news",
+    "state_policy_news"
+  ],
+  "pressure_source_count_by_family": {
+    "local_news": 116,
+    "nonprofit_news": 30,
+    "state_policy_news": 31
+  },
+  "pressure_source_count_by_state": {
+    "US": 177
+  },
+  "exclusion_reason_counts": {
+    "resource_only_baseline": 21,
+    "stale_current_signal": 147
+  },
+  "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147",
+  "discovery_gap_check": {
+    "source_count": 177,
+    "public_signal_count": 9,
+    "claim_count": 9,
+    "excluded_source_count": 168,
+    "excluded_count": 168,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 168,
+    "stale_count": 147,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "local_news",
+      "nonprofit_news",
+      "state_policy_news"
+    ],
+    "pressure_source_count_by_family": {
+      "local_news": 116,
+      "nonprofit_news": 30,
+      "state_policy_news": 31
+    },
+    "pressure_source_count_by_state": {
+      "US": 177
+    },
+    "exclusion_reason_counts": {
+      "resource_only_baseline": 21,
+      "stale_current_signal": 147
+    },
+    "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147"
+  },
+  "public_summary": "Google News This edition uses real, traceable source records.",
+  "public_archive_title": "Google News and hospital-access pressure",
+  "public_archive_subtitle": "Google News This edition uses real, traceable source records.",
+  "edition_mode": "current_update",
+  "reviewed_source_count": 177,
+  "excluded_source_count": 168,
+  "source_table_path": "/care-line/editions/2026-06-19/source_table.html",
+  "claim_ledger_path": "/care-line/editions/2026-06-19/claim_ledger.html",
+  "future_paid_fields_todo": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-06-14.json"
+  ],
+  "errors": []
+}

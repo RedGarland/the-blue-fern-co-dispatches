@@ -4553,7 +4553,8 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
     assert "Sports-betting study links legal access to lower food sufficiency" in edition_html
     assert "legal sports-betting access to lower food sufficiency among some U.S. households" in edition_html
     assert "pantry-demand story" not in edition_html
-    assert "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/" in edition_html
+    assert "https://www.nber.org/papers/example-food-sufficiency-study" in edition_html
+    assert "https://gamblingharm.org/legal-sports-betting-food-insecurity-study/" not in edition_html
     assert "Household financial stress" in source_table_html
     assert "Research / Context Signals" in edition_html
     assert "research_signal" not in edition_html
@@ -4583,6 +4584,84 @@ def test_food_line_us_research_signal_renders_publicly_without_map_marker(tmp_pa
     assert all(
         marker.get("source_title") != "Sports-betting study links legal access to lower food sufficiency"
         for marker in map_data["pressure_markers"]
+    )
+
+
+def test_food_line_hospital_linked_caregiver_research_prefers_primary_source_url_and_stays_contextual(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    wrapper_url = "https://news.example.org/2026/06/13/caregivers-food-insecurity-hospitalization-study/"
+    primary_url = "https://www.example.edu/research/caregiver-food-insecurity-hospitalization/"
+    research = _pressure_row(
+        1,
+        "Study: caregiver food insecurity during hospitalization of sick children",
+        (
+            "University researchers reported caregiver food insecurity during hospitalization of sick children, "
+            "including families of children with cancer and blood disorders."
+        ),
+        family="policy_research",
+        state="US",
+        source_type="manual",
+        publisher="Example University",
+    )
+    research.update(
+        {
+            "location_name": "United States",
+            "url": wrapper_url,
+            "primary_source_url": primary_url,
+            "secondary_source_url": wrapper_url,
+            "source_traceability_role": "secondary_explainer_with_primary_reference",
+            "source_purpose": "research_report",
+            "evidence_text_basis": "manual_review",
+            "evidence_text": (
+                "University researchers reported caregiver food insecurity during hospitalization of sick children, "
+                "including families of children with cancer and blood disorders."
+            ),
+            "pressure_summary": "University researchers reported caregiver food insecurity during hospitalization of sick children.",
+            "pressure_type": "hospital-linked caregiver food insecurity",
+            "pressure_signal": True,
+            "source_role": "research_signal",
+            "map_eligible": False,
+            "pressure_verification_status": "source_text_verified",
+            "issue_tags": [],
+            "map_category": "context / monitoring only",
+            "source_family": "policy_research",
+        }
+    )
+
+    p.write_text(json.dumps([research], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    review_rows = list(csv.DictReader((tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv").open(encoding="utf-8")))
+    review_by_title = {row["source_title"]: row for row in review_rows}
+    map_data = json.loads((tmp_path / "output" / "site" / "food-line" / "map" / "map_data.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["public_rendered"] is True
+    assert result["selected_lead_source_role"] == "research_signal"
+    assert result["pressure_signal_count"] == 1
+    assert result["pressure_marker_count"] == 0
+    assert "Research / Context Signals" in edition_html
+    assert "hospital-linked caregiver food insecurity" not in edition_html
+    assert "research_signal" not in edition_html
+    assert "research_signal" not in source_table_html
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["source_url"] == primary_url
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["primary_source_url"] == primary_url
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["secondary_source_url"] == wrapper_url
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["source_traceability_role"] == "secondary_explainer_with_primary_reference"
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["pressure_type"] == "hospital-linked caregiver food insecurity"
+    assert review_by_title["Study: caregiver food insecurity during hospitalization of sick children"]["primary_eligible"] == "false"
+    assert not map_data.get("pressure_markers")
+    assert any(
+        record.get("source_title") == "Study: caregiver food insecurity during hospitalization of sick children"
+        and record.get("reason") == "not_map_eligible"
+        for record in map_data["excluded_records"]
     )
 
 
@@ -7266,6 +7345,8 @@ def test_food_line_source_discovery_queries_load():
     assert any("themainemonitor.org giant freezer help Aroostook food pantries" in row["template"] for row in queries)
     assert any("miamiherald.com/news/local Miami food bank demand SNAP 60%" in row["template"] for row in queries)
     assert any("ALICE food costs" in row["template"] for row in queries)
+    assert any("caregiver food insecurity hospitalization" in row["template"] for row in queries)
+    assert any("hospitalized children food insecurity research" in row["template"] for row in queries)
 
 
 def test_food_line_discovery_source_configuration_includes_target_outlet_seeds():

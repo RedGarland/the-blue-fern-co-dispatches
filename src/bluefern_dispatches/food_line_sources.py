@@ -105,6 +105,10 @@ DISCOVERY_CONTEXT_TERMS = (
     "low food security",
     "very low food security",
     "food insufficiency",
+    "caregiver food insecurity",
+    "hospital-linked caregiver food insecurity",
+    "food insecurity during hospitalization",
+    "hospitalization of sick children",
     "community food security",
     "nutritional insecurity",
     "SNAP",
@@ -155,6 +159,9 @@ CURRENT_PRESSURE_EVIDENCE_TERMS = (
     "food bank demand",
     "food pantry demand",
     "pantry demand",
+    "caregiver food insecurity",
+    "food insecurity during hospitalization",
+    "hospital-linked caregiver food insecurity",
     "requests for food assistance",
     "food bank saw increased need",
     "food banks saw increased need",
@@ -344,6 +351,19 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
         ),
     ),
     (
+        "hospital-linked caregiver food insecurity",
+        (
+            "caregiver food insecurity",
+            "food insecurity during hospitalization",
+            "hospital-linked caregiver food insecurity",
+            "caregivers experience food insecurity during hospitalization",
+            "caregivers of hospitalized children",
+            "hospitalization of sick children",
+            "children with cancer",
+            "children with blood disorders",
+        ),
+    ),
+    (
         "access gap",
         (
             "food desert",
@@ -447,6 +467,10 @@ DEFAULT_NEGATIVE_KEYWORDS = [
 
 DEFAULT_AFFECTED_GROUP_KEYWORDS = {
     "children": ["children", "child", "students", "families with children"],
+    "caregivers": ["caregiver", "caregivers"],
+    "families of hospitalized children": ["hospitalized children", "children in hospital", "children in the hospital", "sick children"],
+    "children with cancer": ["children with cancer", "pediatric cancer"],
+    "children with blood disorders": ["blood disorders", "children with blood disorders"],
     "seniors": ["senior", "older adult", "home-delivered"],
     "SNAP households": ["snap", "ebt"],
     "WIC households": ["wic"],
@@ -672,6 +696,10 @@ SOURCE_PURPOSE_RESEARCH_TERMS = (
     "dataset",
     "statistics",
     "dashboard",
+    "caregiver food insecurity",
+    "food insecurity during hospitalization",
+    "hospital-linked caregiver food insecurity",
+    "caregivers of hospitalized children",
     "food insecurity varies",
     "food security varies",
     "food insecurity across u.s. ethnic groups",
@@ -1676,6 +1704,18 @@ def _build_pressure_summary(
             location_name=place,
             pressure_type=pressure_type,
         )
+    if research_or_data_signal and pressure_type == "hospital-linked caregiver food insecurity":
+        if any(term in lowered for term in ("caregiver food insecurity", "hospitalization", "hospitalized children", "children with cancer", "children with blood disorders")):
+            sentence = f"{subject} reported on research linking caregiver food insecurity to hospitalization-related stress among some U.S. households"
+            if groups_text:
+                sentence += f", especially among {groups_text}"
+            sentence += ". The signal points to hospital-related caregiving pressure as a food-pressure pathway."
+            return _smooth_public_pressure_summary(
+                sentence,
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
 
     if pressure_type == "demand strain":
         if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to")):
@@ -2203,6 +2243,9 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
             max_age_days = int(row.get("max_age_days") or DEFAULT_MAX_AGE_DAYS.get(source_type, 14))
             source_name = str(row.get("source_name") or row.get("name") or row.get("source_id") or "").strip()
             purpose = classify_food_line_source_purpose(row)
+            primary_source_url = str(row.get("primary_source_url") or row.get("study_url") or row.get("report_url") or "").strip()
+            source_url = str(row.get("url") or "").strip()
+            preferred_url = primary_source_url or source_url
             normalized.append(
                 {
                     "source_id": str(row.get("source_id") or "").strip(),
@@ -2210,7 +2253,7 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
                     "name": source_name,
                     "source_family": source_family,
                     "source_type": source_type,
-                    "url": str(row.get("url") or "").strip(),
+                    "url": preferred_url,
                     "publisher": str(row.get("publisher") or row.get("source_name") or row.get("name") or "").strip(),
                     "state": str(row.get("state") or DEFAULT_STATE).strip().upper(),
                     "location_name": str(row.get("location_name") or DEFAULT_LOCATION).strip(),
@@ -2231,6 +2274,13 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
                     "notes": str(row.get("notes") or "").strip(),
                     "summary_fallback": str(row.get("summary_fallback") or "").strip(),
                     "title_fallback": str(row.get("title_fallback") or row.get("source_name") or row.get("name") or row.get("source_id") or "").strip(),
+                    "primary_source_url": primary_source_url,
+                    "secondary_source_url": str(
+                        row.get("secondary_source_url")
+                        or row.get("article_url")
+                        or (source_url if primary_source_url and source_url and source_url != primary_source_url else "")
+                    ).strip(),
+                    "source_traceability_role": str(row.get("source_traceability_role") or row.get("traceability_role") or "").strip(),
                     "latitude": row.get("latitude"),
                     "longitude": row.get("longitude"),
                     "county_name": str(row.get("county_name") or "").strip(),

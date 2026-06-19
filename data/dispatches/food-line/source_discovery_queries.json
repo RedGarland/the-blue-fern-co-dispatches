@@ -134,52 +134,52 @@
     "query_template": "{state} food bank demand OR food pantry demand",
     "category": "provider",
     "source_family": "food_bank_provider",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 503,
+    "candidates_found": 503,
+    "candidates_inserted": 100,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
-    "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rejects": 3,
+    "rolling_query_quality_score": 10.92
   },
   {
     "template": "{state} food pantry closure OR pantry hours cut",
     "query_template": "{state} food pantry closure OR pantry hours cut",
     "category": "provider",
     "source_family": "food_bank_provider",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 1009,
+    "candidates_found": 1009,
+    "candidates_inserted": 100,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
-    "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rejects": 3,
+    "rolling_query_quality_score": 7.95
   },
   {
     "template": "{state} SNAP benefits delayed OR SNAP delay notice",
     "query_template": "{state} SNAP benefits delayed OR SNAP delay notice",
     "category": "official",
     "source_family": "state_official",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 1567,
+    "candidates_found": 1567,
+    "candidates_inserted": 70,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
-    "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rejects": 3,
+    "rolling_query_quality_score": 6.32
   },
   {
     "template": "{state} SNAP benefits disrupted OR EBT outage",
     "query_template": "{state} SNAP benefits disrupted OR EBT outage",
     "category": "official",
     "source_family": "state_official",
-    "runs": 0,
-    "candidates_found": 0,
-    "candidates_inserted": 0,
+    "runs": 1867,
+    "candidates_found": 1867,
+    "candidates_inserted": 72,
     "candidates_promoted": 0,
     "candidates_verified_pressure": 0,
-    "rejects": 0,
-    "rolling_query_quality_score": 0.0
+    "rejects": 5,
+    "rolling_query_quality_score": 6.14
   },
   {
     "template": "{state} WIC access disruption OR WIC benefits delayed",
@@ -440,5 +440,31 @@
     "candidates_verified_pressure": 0,
     "rejects": 0,
     "rolling_query_quality_score": 5.0
+  },
+  {
+    "template": "{state} caregiver food insecurity hospitalization",
+    "query_template": "{state} caregiver food insecurity hospitalization",
+    "category": "research",
+    "source_family": "policy_research",
+    "runs": 0,
+    "candidates_found": 0,
+    "candidates_inserted": 0,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 0.0
+  },
+  {
+    "template": "{state} hospitalized children food insecurity research",
+    "query_template": "{state} hospitalized children food insecurity research",
+    "category": "research",
+    "source_family": "policy_research",
+    "runs": 0,
+    "candidates_found": 0,
+    "candidates_inserted": 0,
+    "candidates_promoted": 0,
+    "candidates_verified_pressure": 0,
+    "rejects": 0,
+    "rolling_query_quality_score": 0.0
   }
 ]

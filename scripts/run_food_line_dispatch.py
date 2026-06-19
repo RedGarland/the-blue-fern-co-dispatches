@@ -866,6 +866,7 @@ def _food_line_public_issue_label(row: dict[str, Any], usage_label: str) -> str:
         "price pressure": "Price pressure",
         "child meal gap": "Child meal gap",
         "senior meal strain": "Senior meal strain",
+        "hospital-linked caregiver food insecurity": "Hospital-linked caregiver food insecurity",
         "rural grocery access": "Rural grocery access",
         "disaster disruption": "Disaster disruption",
         "household hardship": "Household financial stress" if _food_line_is_nonlocal_data_signal(row) else "Household hardship",
@@ -1570,10 +1571,16 @@ def _normalize_source_row(row: dict[str, Any], index: int) -> tuple[dict[str, An
     reasons: list[str] = []
     if not isinstance(row, dict):
         return None, ["invalid field type: record is not an object"]
+    source_url = _as_text(row.get("url") or row.get("source_url"))
+    primary_source_url = _as_text(row.get("primary_source_url") or row.get("study_url") or row.get("report_url"))
+    secondary_source_url = _as_text(row.get("secondary_source_url") or row.get("article_url"))
+    preferred_source_url = primary_source_url or source_url
+    if primary_source_url and not secondary_source_url and source_url and canonical_url(source_url) != canonical_url(primary_source_url):
+        secondary_source_url = source_url
     normalized = {
         "source_record_id": _as_text(row.get("source_record_id") or row.get("id")),
         "title": _as_text(row.get("title")),
-        "url": _as_text(row.get("url") or row.get("source_url")),
+        "url": preferred_source_url,
         "publisher": _as_text(row.get("publisher") or "Unknown publisher"),
         "published_at": _as_text(row.get("published_at") or row.get("published_date")),
         "published_date_basis": _as_text(row.get("published_date_basis") or row.get("date_basis") or row.get("source_published_date_basis")),
@@ -1605,8 +1612,8 @@ def _normalize_source_row(row: dict[str, Any], index: int) -> tuple[dict[str, An
         "country": _as_text(row.get("country")),
         "source_purpose": _as_text(row.get("source_purpose")),
         "supported_product_geography": row.get("supported_product_geography", True),
-        "primary_source_url": _as_text(row.get("primary_source_url") or row.get("study_url") or row.get("report_url")),
-        "secondary_source_url": _as_text(row.get("secondary_source_url") or row.get("article_url")),
+        "primary_source_url": primary_source_url or preferred_source_url,
+        "secondary_source_url": secondary_source_url,
         "source_traceability_role": _as_text(row.get("source_traceability_role") or row.get("traceability_role")),
     }
     for key in ("source_record_id", "title", "url", "published_at", "summary_or_snippet", "source_family", "state", "map_category", "location_name"):
@@ -2602,6 +2609,8 @@ def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
         return f"This points to summer meal gaps adding strain in {location}."
     if pressure_type == "senior meal strain":
         return f"This points to senior meal strain in {location}."
+    if pressure_type == "hospital-linked caregiver food insecurity":
+        return f"This points to caregiver food insecurity linked to hospitalization in {location}."
     if pressure_type == "access gap":
         return f"This points to local food-access gaps in {location}."
     if pressure_type == "household hardship":
@@ -2664,6 +2673,8 @@ def _food_line_claim_limitation(row: dict[str, Any]) -> str:
         return "The source documents summer meal strain, but it does not prove a statewide trend."
     if pressure_type == "senior meal strain":
         return "The source documents senior meal strain, but it does not measure every local access barrier."
+    if pressure_type == "hospital-linked caregiver food insecurity":
+        return "The source documents caregiver food insecurity linked to hospitalization, but it does not prove a current service disruption or local access failure."
     if research_context:
         if scope in {"national", "us"} or str(row.get("state") or "").strip().upper() == "US":
             return "The source supports a national research/context signal, but it does not prove a current service disruption or local access failure."

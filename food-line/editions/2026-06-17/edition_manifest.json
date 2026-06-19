@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-17",
-  "generated_at": "2026-06-18T22:20:38.712190+00:00",
+  "generated_at": "2026-06-19T05:31:04.259357+00:00",
   "source_count": 41,
   "story_count": 1,
   "source_adequacy": {
@@ -212,6 +212,6 @@
   "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/",
   "qualified_but_not_public_count": 0,
   "qualified_but_not_public_warning": "",
-  "bluesky_post_text": "Food Line Dispatch, June 17, 2026: Stateline reported that National food insecurity pressure is rising as federal cuts and grocery prices increase. Source-backed public briefing: https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/",
+  "bluesky_post_text": "Food Line Dispatch, June 17, 2026: Stateline reports rising food insecurity pressure. A Washington State University research release adds national context on food-security disparities. https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/",
   "bluesky_post_ready": true
 }

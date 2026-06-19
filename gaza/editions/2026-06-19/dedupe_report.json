@@ -1,44 +1,11 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-19",
-  "candidates_seen": 8,
+  "candidates_seen": 12,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-06-19-006",
-      "title": "Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-19-003",
-      "title": "Paper shortages pushes Gaza's students to write on aid boxes",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-06-19-002",
-      "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-19-005",
-      "title": "US-Iran talks in Switzerland delayed, Israel strikes Lebanon",
+      "title": "Gaza: Sneeze and you might get shot, warns UNICEF in alert on child killings",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -49,7 +16,7 @@
     },
     {
       "story_id": "gaza-story-2026-06-19-001",
-      "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
+      "title": "Civilians in Gaza 'under fire from Israel's killer cranes'",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -59,8 +26,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-19-008",
-      "title": "Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis",
+      "story_id": "gaza-story-2026-06-19-010",
+      "title": "Paper shortages push Gaza's students to write on aid boxes",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -71,7 +38,7 @@
     },
     {
       "story_id": "gaza-story-2026-06-19-004",
-      "title": "Oxfam official urges UN Security Council to move from words to action on Gaza amid ceasefire 'failing'",
+      "title": "Death of new commander puts spotlight back on Israeli battalion linked to killing of Hind Rajab in Gaza",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -81,7 +48,51 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-19-007",
+      "story_id": "gaza-story-2026-06-19-011",
+      "title": "Israel-Hezbollah ceasefire set after US-Iran talks delayed",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-008",
+      "title": "Paris grants honorary citizenship to Palestinians, journalists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-005",
+      "title": "Ms Rachel calls for release of Gaza doctor Hussam Abu Safiya",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-003",
+      "title": "Chile's Palestinians push back against Israel policy shift",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-012",
       "title": "Muslim-majority countries slam Israel for W. Bank mosque attacks",
       "classification": "major_update",
       "material_update": true,
@@ -92,25 +103,82 @@
       "public_rendered": true
     }
   ],
-  "duplicate_skipped": [],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-06-19-006",
+      "title": "Security Council LIVE: Gaza in the spotlight as dire conditions continue",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-007",
+      "title": "UNICEF calls Gaza ceasefire 'deadly illusion' as 265 Palestinian children killed since October",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-009",
+      "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-06-19-002",
-      "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town",
+      "story_id": "gaza-story-2026-06-19-005",
+      "title": "Ms Rachel calls for release of Gaza doctor Hussam Abu Safiya",
       "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
         "new_source_url_different_publisher"
       ],
       "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_story_matched": "gaza-story-2026-06-09-003",
+      "prior_edition_date": "2026-06-09",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-003",
+      "title": "Chile's Palestinians push back against Israel policy shift",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-002",
       "prior_edition_date": "2026-05-28",
       "include_decision": "include",
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-19-007",
+      "story_id": "gaza-story-2026-06-19-012",
       "title": "Muslim-majority countries slam Israel for W. Bank mosque attacks",
       "classification": "major_update",
       "material_update": true,
@@ -124,54 +192,97 @@
       "public_rendered": true
     }
   ],
-  "merged_sources": 0,
-  "duplicate_groups": [],
+  "merged_sources": 3,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-06-19-002",
+      "merged_story_ids": [
+        "gaza-story-2026-06-19-006"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-19-un-news-middle-east-c5508e948028"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-06-19-002",
+      "merged_story_ids": [
+        "gaza-story-2026-06-19-007"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-19-anadolu-middle-east-30b2c4ab8364"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-06-19-002",
+      "merged_story_ids": [
+        "gaza-story-2026-06-19-009"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-19-the-new-arab-0edcf11fecfd"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    }
+  ],
   "reasons": [
     {
       "story_id": "gaza-story-2026-06-19-006",
-      "title": "Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
+      "title": "Security Council LIVE: Gaza in the spotlight as dire conditions continue",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
       ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
     },
     {
-      "story_id": "gaza-story-2026-06-19-003",
-      "title": "Paper shortages pushes Gaza's students to write on aid boxes",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
+      "story_id": "gaza-story-2026-06-19-007",
+      "title": "UNICEF calls Gaza ceasefire 'deadly illusion' as 265 Palestinian children killed since October",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
       ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-009",
+      "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-19-002",
+      "prior_edition_date": "2026-06-19",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
     },
     {
       "story_id": "gaza-story-2026-06-19-002",
-      "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-05-28-004",
-      "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-19-005",
-      "title": "US-Iran talks in Switzerland delayed, Israel strikes Lebanon",
+      "title": "Gaza: Sneeze and you might get shot, warns UNICEF in alert on child killings",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -185,7 +296,7 @@
     },
     {
       "story_id": "gaza-story-2026-06-19-001",
-      "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
+      "title": "Civilians in Gaza 'under fire from Israel's killer cranes'",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -198,8 +309,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-19-008",
-      "title": "Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis",
+      "story_id": "gaza-story-2026-06-19-010",
+      "title": "Paper shortages push Gaza's students to write on aid boxes",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -213,7 +324,7 @@
     },
     {
       "story_id": "gaza-story-2026-06-19-004",
-      "title": "Oxfam official urges UN Security Council to move from words to action on Gaza amid ceasefire 'failing'",
+      "title": "Death of new commander puts spotlight back on Israeli battalion linked to killing of Hind Rajab in Gaza",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -226,7 +337,63 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-19-007",
+      "story_id": "gaza-story-2026-06-19-011",
+      "title": "Israel-Hezbollah ceasefire set after US-Iran talks delayed",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-008",
+      "title": "Paris grants honorary citizenship to Palestinians, journalists",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-005",
+      "title": "Ms Rachel calls for release of Gaza doctor Hussam Abu Safiya",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-09-003",
+      "prior_edition_date": "2026-06-09",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-003",
+      "title": "Chile's Palestinians push back against Israel policy shift",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-002",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-19-012",
       "title": "Muslim-majority countries slam Israel for W. Bank mosque attacks",
       "classification": "major_update",
       "material_update": true,

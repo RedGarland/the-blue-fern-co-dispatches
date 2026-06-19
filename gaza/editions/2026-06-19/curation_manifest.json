@@ -1,49 +1,107 @@
 [
   {
-    "story_id": "gaza-story-2026-06-19-006",
-    "title": "Some UN Security Council members warn Gaza humanitarian crisis worsening despite ceasefire",
-    "summary": "Pakistan, China, UK and Russia call for unrestricted aid access as US blames Hamas for ongoing suffering in enclave.",
-    "category": "conflict",
+    "story_id": "gaza-story-2026-06-19-002",
+    "title": "Gaza: Sneeze and you might get shot, warns UNICEF in alert on child killings",
+    "summary": "After another deadly night of clashes in Lebanon, aid agencies issued a new alert for Gaza, where 265 Palestinian children have been killed since a ceasefire was announced in October 2025.",
+    "category": "humanitarian",
     "story_scope": "core_gaza",
-    "score": 76,
+    "score": 91,
     "scoring_reasons": [
       "humanitarian_impact",
-      "aid_access",
       "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-un-news-middle-east-9ab48b360ffe"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-un-news-middle-east-9ab48b360ffe"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/06/1167760"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 91,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-001",
+    "title": "Civilians in Gaza 'under fire from Israel's killer cranes'",
+    "summary": "The Palestinian Centre for Human Rights said 23 military cranes equipped with machine guns and cameras have been deployed inside the Gaza Strip.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 79,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
       "accountability_legal",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
-      "aid_access": 12,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 8,
       "source_reliability": 14,
-      "date_confidence": 10
+      "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-a25c6d29cd9c"
+      "gaza-2026-06-19-the-new-arab-2ef777eb9e72"
     ],
     "source_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-a25c6d29cd9c"
+      "gaza-2026-06-19-the-new-arab-2ef777eb9e72"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/world/some-un-security-council-members-warn-gaza-humanitarian-crisis-worsening-despite-ceasefire/3971465"
+      "https://www.newarab.com/news/civilians-gaza-under-fire-israels-killer-cranes"
     ],
     "publisher_names": [
-      "Anadolu Agency"
+      "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
-      "gaza"
+      "gaza",
+      "palestin"
     ],
-    "top_story_relevance_score": 76,
+    "top_story_relevance_score": 79,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -58,8 +116,129 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-003",
-    "title": "Paper shortages pushes Gaza's students to write on aid boxes",
+    "story_id": "gaza-story-2026-06-19-006",
+    "title": "Security Council LIVE: Gaza in the spotlight as dire conditions continue",
+    "summary": "The Security Council debated conditions in Gaza at the request of its 10 elected members amid concern that the territory's humanitarian crisis is being overshadowed by wider regional developments. The meeting took place under a ceasefire that has existed in name since October 2025 - but nearly 1,000 Palestinians have been killed, and most Gazans remain displaced. Relief chief Tom Fletcher told ambassadors that \"fragile gains\" since the truce are \"the bare minimum of what Palestinians need.\" Full coverage here, and wider Meetings Coverage can be found here.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 81,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-un-news-middle-east-c5508e948028"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-un-news-middle-east-c5508e948028"
+    ],
+    "source_urls": [
+      "https://news.un.org/feed/view/en/story/2026/06/1167750"
+    ],
+    "publisher_names": [
+      "UN News"
+    ],
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 81,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-19-002",
+    "prior_edition_date": "2026-06-19",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-007",
+    "title": "UNICEF calls Gaza ceasefire 'deadly illusion' as 265 Palestinian children killed since October",
+    "summary": "Spokesperson says a child has been killed on average every day by Israeli forces since the 'truce'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 72,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-30b2c4ab8364"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-anadolu-middle-east-30b2c4ab8364"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/unicef-calls-gaza-ceasefire-deadly-illusion-as-265-palestinian-children-killed-since-october/3972264"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 72,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-19-002",
+    "prior_edition_date": "2026-06-19",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-010",
+    "title": "Paper shortages push Gaza's students to write on aid boxes",
     "summary": "Israel has destroyed more than 284 schools and 63 university buildings across Gaza, disrupting access to education and hindering students' studies.",
     "category": "conflict",
     "story_scope": "core_gaza",
@@ -84,18 +263,18 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-the-new-arab-ffe8fdadb87f"
+      "gaza-2026-06-19-the-new-arab-c3403aa42d83"
     ],
     "source_ids": [
-      "gaza-2026-06-19-the-new-arab-ffe8fdadb87f"
+      "gaza-2026-06-19-the-new-arab-c3403aa42d83"
     ],
     "source_urls": [
-      "https://www.newarab.com/news/paper-shortages-pushes-gazas-students-write-aid-boxes"
+      "https://www.newarab.com/news/paper-shortages-push-gazas-students-write-aid-boxes"
     ],
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -114,22 +293,22 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-002",
-    "title": "Israeli occupiers seize Palestinian vehicle, block entrances in West Bank town",
-    "summary": "Occupiers raid Deir Dibwan hours after Israeli army, police forces deployed in area.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 65,
+    "story_id": "gaza-story-2026-06-19-004",
+    "title": "Death of new commander puts spotlight back on Israeli battalion linked to killing of Hind Rajab in Gaza",
+    "summary": "Israeli commander killed in southern Lebanon renews scrutiny of unit's alleged role in killing of six-year-old Palestinian girl Hind Rajab in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
     "scoring_reasons": [
-      "humanitarian_impact",
+      "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
+      "humanitarian_impact": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
@@ -139,24 +318,23 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-7dc7274731af"
+      "gaza-2026-06-19-anadolu-middle-east-5483d5cb7b61"
     ],
     "source_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-7dc7274731af"
+      "gaza-2026-06-19-anadolu-middle-east-5483d5cb7b61"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/israeli-occupiers-seize-palestinian-vehicle-block-entrances-in-west-bank-town/3971506"
+      "https://www.aa.com.tr/en/middle-east/death-of-new-commander-puts-spotlight-back-on-israeli-battalion-linked-to-killing-of-hind-rajab-in-gaza/3972296"
     ],
     "publisher_names": [
       "Anadolu Agency"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza",
-      "palestin",
-      "west bank"
+      "palestin"
     ],
-    "top_story_relevance_score": 65,
+    "top_story_relevance_score": 59,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -165,14 +343,14 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-05-28-004",
-    "prior_edition_date": "2026-05-28",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-005",
-    "title": "US-Iran talks in Switzerland delayed, Israel strikes Lebanon",
+    "story_id": "gaza-story-2026-06-19-011",
+    "title": "Israel-Hezbollah ceasefire set after US-Iran talks delayed",
     "summary": "US Vice President JD Vance delayed a planned trip to Switzerland to lead a new round of talks with Iran, as. Israel continues attacking Gaza and Lebanon.",
     "category": "conflict",
     "story_scope": "core_gaza",
@@ -197,18 +375,18 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-the-new-arab-6d428f2f9503"
+      "gaza-2026-06-19-the-new-arab-59442dba200a"
     ],
     "source_ids": [
-      "gaza-2026-06-19-the-new-arab-6d428f2f9503"
+      "gaza-2026-06-19-the-new-arab-59442dba200a"
     ],
     "source_urls": [
-      "https://www.newarab.com/news/us-iran-talks-switzerland-delayed-israel-strikes-lebanon"
+      "https://www.newarab.com/news/israel-hezbollah-ceasefire-set-after-us-iran-talks-delayed"
     ],
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -227,7 +405,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-001",
+    "story_id": "gaza-story-2026-06-19-009",
     "title": "Gaza 'ceasefire' is a 'deadly illusion': UNICEF",
     "summary": "\"The continued killing of children is not the consequence of a lack of options. It is the consequence of a lack of political will.\".",
     "category": "conflict",
@@ -264,7 +442,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -275,52 +453,53 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-19-002",
+    "prior_edition_date": "2026-06-19",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
   },
   {
     "story_id": "gaza-story-2026-06-19-008",
-    "title": "Palestinian envoy urges UN Security Council to end Gaza humanitarian crisis",
-    "summary": "'Palestinians in Gaza have waited long enough, suffered far too much, and cannot be asked to wait any longer,' says Riyad Mansour.",
+    "title": "Paris grants honorary citizenship to Palestinians, journalists",
+    "summary": "Paris grants honorary citizenship to Palestinian civilians and journalists, highlighting support for Gaza and calls for peace.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 56,
     "scoring_reasons": [
-      "humanitarian_impact",
-      "accountability_legal",
+      "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
+      "humanitarian_impact": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
-      "date_confidence": 10
+      "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-ed3899853781"
+      "gaza-2026-06-19-the-new-arab-f3bac9506e9e"
     ],
     "source_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-ed3899853781"
+      "gaza-2026-06-19-the-new-arab-f3bac9506e9e"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/world/palestinian-envoy-urges-un-security-council-to-end-gaza-humanitarian-crisis/3971463"
+      "https://www.newarab.com/news/paris-grants-honorary-citizenship-palestinians-journalists"
     ],
     "publisher_names": [
-      "Anadolu Agency"
+      "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -340,63 +519,117 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-004",
-    "title": "Oxfam official urges UN Security Council to move from words to action on Gaza amid ceasefire 'failing'",
-    "summary": "Khalidi urges Security Council to use political, diplomatic and legal tools to end atrocities amid 'failing' ceasefire.",
+    "story_id": "gaza-story-2026-06-19-005",
+    "title": "Ms Rachel calls for release of Gaza doctor Hussam Abu Safiya",
+    "summary": "Children's educator Ms Rachel has renewed calls for the release of detained Gaza paediatrician Dr Hussam Abu Safiya, who has spent 530 days in Israeli prison.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 49,
+    "score": 50,
     "scoring_reasons": [
-      "ceasefire_diplomacy",
-      "accountability_legal",
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-19-the-new-arab-df25491cad8e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-19-the-new-arab-df25491cad8e"
+    ],
+    "source_urls": [
+      "https://www.newarab.com/news/ms-rachel-calls-release-gaza-doctor-hussam-abu-safiya"
+    ],
+    "publisher_names": [
+      "The New Arab"
+    ],
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-09-003",
+    "prior_edition_date": "2026-06-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-19-003",
+    "title": "Chile's Palestinians push back against Israel policy shift",
+    "summary": "",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
-      "ceasefire_diplomacy": 8,
+      "ceasefire_diplomacy": 0,
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
-      "date_confidence": 10
+      "date_confidence": 18
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-7111a67b585c"
+      "gaza-2026-06-19-aljazeera-middle-east-f2a7a9bafb35"
     ],
     "source_ids": [
-      "gaza-2026-06-19-anadolu-middle-east-7111a67b585c"
+      "gaza-2026-06-19-aljazeera-middle-east-f2a7a9bafb35"
     ],
     "source_urls": [
-      "https://www.aa.com.tr/en/middle-east/oxfam-official-urges-un-security-council-to-move-from-words-to-action-on-gaza-amid-ceasefire-failing-/3971477"
+      "https://www.aljazeera.com/video/newsfeed/2026/6/19/chiles-palestinians-push-back-against-israel-policy-shift?traffic_source=rss"
     ],
     "publisher_names": [
-      "Anadolu Agency"
+      "Al Jazeera"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
-      "gaza"
+      "gaza",
+      "palestin"
     ],
-    "top_story_relevance_score": 49,
-    "substantive_ground": true,
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
-    "core_ground_development": true,
+    "core_ground_development": false,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-05-28-002",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-19-007",
+    "story_id": "gaza-story-2026-06-19-012",
     "title": "Muslim-majority countries slam Israel for W. Bank mosque attacks",
     "summary": "Eight Muslim-majority countries lambasted. Israel for being responsible for the latest uptick in arson attacks on West Bank mosques.",
     "category": "palestinian_development",
@@ -432,7 +665,7 @@
     "publisher_names": [
       "The New Arab"
     ],
-    "generated_at": "2026-06-19T13:00:43.977633+00:00",
+    "generated_at": "2026-06-19T17:40:53.190802+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"

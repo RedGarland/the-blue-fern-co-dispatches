@@ -2,24 +2,24 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-19",
-  "generated_at": "2026-06-19T13:00:43.977633+00:00",
+  "generated_at": "2026-06-19T17:40:53.190802+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-19/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-19",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-19",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-19",
   "template_version": "gaza-source-record-v1",
-  "source_count": 9,
-  "story_count": 8,
-  "source_adequacy_status": "limited_source_update",
-  "source_adequacy_label": "Limited-source update",
-  "publisher_count": 2,
+  "source_count": 12,
+  "story_count": 9,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 4,
   "publishers": [
+    "Al Jazeera",
     "Anadolu Agency",
-    "The New Arab"
+    "The New Arab",
+    "UN News"
   ],
-  "source_adequacy_warnings": [
-    "This is a limited-source update generated from 9 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
-  ],
+  "source_adequacy_warnings": [],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-19\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-19\\curation_manifest.json",
   "free_public_artifacts": [
@@ -34,10 +34,7 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
-    "suppressed 3 repeated/stale candidate sources via cross-edition dedupe",
-    "This is a limited-source update generated from 9 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-19\\manual_sources.template.json",
-    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3)"
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": []
 }

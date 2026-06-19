@@ -76,6 +76,24 @@ def completed(args, returncode=0, payload=None, stdout=None):
     return subprocess.CompletedProcess(args, returncode, text, "")
 
 
+def live_response(body: str, status: int = 200):
+    class _Response:
+        def __init__(self, payload: str, response_status: int):
+            self._payload = payload.encode("utf-8")
+            self.status = response_status
+
+        def read(self):
+            return self._payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    return _Response(body, status)
+
+
 @pytest.fixture()
 def isolated(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
@@ -238,12 +256,33 @@ def test_push_is_opt_in(isolated, monkeypatch, capsys):
             write_generated_output(root, "2026-05-07")
         if "publish_github_pages.py" in command and "--dry-run" not in args:
             write_pages_output(root, "2026-05-07")
-            return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"})
+            return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages", "committed": True})
         if "publish_github_pages.py" in command:
             return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        if args[:3] == ["git", "status", "--porcelain=v1"]:
+            return completed(args, stdout="")
+        if args[:3] == ["git", "fetch", "origin"]:
+            return completed(args, stdout="fetched")
+        if args[:2] == ["git", "status"]:
+            return completed(args, stdout="On branch gh-pages")
+        if args[:3] == ["git", "push", "origin"]:
+            return completed(args, stdout="pushed")
+        if args[:2] == ["git", "rev-parse"] and args[-1] == "origin/gh-pages":
+            return completed(args, stdout="remote-sha")
+        if args[:2] == ["git", "ls-tree"]:
+            return completed(args, stdout=args[-1])
         return completed(args, stdout="ok")
 
     monkeypatch.setattr(daily, "run_command", fake_run)
+    monkeypatch.setattr(
+        daily.urllib.request,
+        "urlopen",
+        lambda request, timeout=30: live_response(
+            "<html><body>Dispatches From Gaza Today's Read Source Mix 2026-05-07</body></html>"
+            if "/gaza/editions/" in request.full_url
+            else "<html><body>2026-05-07</body></html>"
+        ),
+    )
 
     code = daily.main(["--date", "2026-05-07", "--skip-tests", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
@@ -251,6 +290,35 @@ def test_push_is_opt_in(isolated, monkeypatch, capsys):
     assert code == 0
     assert ["git", "push", "origin", "gh-pages"] in calls
     assert summary["pushed"] is True
+    assert summary["pages_push_ok"] is True
+    assert summary["remote_tree_verify_ok"] is True
+    assert summary["live_http_ok"] is True
+    assert summary["live_archive_ok"] is True
+    assert summary["overall_ok"] is True
+
+
+def test_push_rejection_appends_manual_repair_guidance(isolated, monkeypatch):
+    root = isolated
+    pages_repo = root / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+    calls = []
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append(args)
+        if args[:2] == ["git", "status"]:
+            return completed(args, stdout="On branch gh-pages")
+        if args[:3] == ["git", "push", "origin"]:
+            return completed(args, returncode=1, stdout="rejected non-fast-forward")
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    ok, messages, detail = daily.push_pages_repo(pages_repo, "gh-pages")
+
+    assert ok is False
+    assert messages
+    assert calls[-1] == ["git", "push", "origin", "gh-pages"]
+    assert "pages_repo_not_synced_with_origin" in detail
 
 
 def test_email_report_sends_on_success(isolated, monkeypatch, capsys):
@@ -609,6 +677,54 @@ def test_daily_summary_uses_existing_receipt_skip_result(isolated, monkeypatch, 
     assert summary["bluesky_reason"] == "skipped_existing_receipt"
     assert summary["bluesky_post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/existing"
     assert summary["bluesky_embed_type"] == "app.bsky.embed.external"
+
+
+def test_dry_run_bluesky_records_preview_without_publishing(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    captured = {"kwargs": None}
+
+    def fake_bluesky(**kwargs):
+        captured["kwargs"] = kwargs
+        return {
+            "status": "skipped",
+            "post_uri": None,
+            "reason": "dry_run",
+            "post_text": "In the June 7 Gaza briefing: Khan Younis strikes; Gaza civil defence reported 10 killed; and West Bank developments.",
+            "embed_type": "app.bsky.embed.external",
+            "card_title": "Dispatches from Gaza - June 7, 2026",
+            "card_description": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+            "source_artifact_paths": ["output/dispatches/gaza/editions/2026-06-07/curation_manifest.json"],
+            "edition_date_verified": True,
+            "stale_content_guard_status": "passed",
+            "thumb_status": "not_attempted",
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert captured["kwargs"] is not None
+    assert captured["kwargs"]["allow_publish"] is False
+    assert summary["bluesky_status"] == "skipped"
+    assert summary["bluesky_reason"] == "dry_run"
+    assert summary["bluesky_post_text"] == "In the June 7 Gaza briefing: Khan Younis strikes; Gaza civil defence reported 10 killed; and West Bank developments."
+    assert summary["bluesky_edition_date_verified"] is True
+    assert summary["bluesky_stale_content_guard_status"] == "passed"
 
 
 def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys):

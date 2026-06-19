@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import urllib.request
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,7 @@ from scripts.publish_gaza_historical import (
     manual_push_command,
     parse_json_stdout,
     pages_publish_command,
+    pages_sync_repair_message,
     required_output_paths,
     run_command,
     validate_generated_output,
@@ -80,6 +82,12 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "publish_blocked",
     "publish_blocked_reason",
     "pages_repo_updated",
+    "local_pages_copy_ok",
+    "pages_commit_ok",
+    "pages_push_ok",
+    "remote_tree_verify_ok",
+    "live_http_ok",
+    "live_archive_ok",
     "pages_branch",
     "pages_commit_sha",
     "pushed",
@@ -372,7 +380,109 @@ def push_pages_repo(pages_repo: Path, pages_branch: str) -> tuple[bool, list[str
         return False, messages, status.stderr.strip() or status.stdout.strip()
     push = run_command(["git", "push", "origin", pages_branch], cwd=pages_repo)
     messages.append(push.stdout.strip() or push.stderr.strip())
-    return push.returncode == 0, messages, push.stdout.strip() or push.stderr.strip()
+    if push.returncode != 0:
+        detail = push.stdout.strip() or push.stderr.strip() or f"git push origin {pages_branch} failed"
+        lower = detail.lower()
+        if any(token in lower for token in ("non-fast-forward", "fetch first", "rejected", "update your local branch")):
+            detail = (
+                f"{detail}\n"
+                f"{pages_sync_repair_message(pages_repo, pages_branch)}"
+            )
+        return False, messages, detail
+    return True, messages, push.stdout.strip() or push.stderr.strip()
+
+
+def verify_remote_pages_tree(pages_repo: Path, pages_branch: str, edition_date: str) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "ok": False,
+        "fetched": False,
+        "remote_commit_sha": None,
+        "edition_file_ok": False,
+        "archive_ok": False,
+        "rss_ok": False,
+        "errors": [],
+    }
+    fetch = run_command(["git", "fetch", "origin", pages_branch], cwd=pages_repo)
+    result["fetched"] = fetch.returncode == 0
+    if fetch.returncode != 0:
+        result["errors"].append(fetch.stderr.strip() or fetch.stdout.strip() or f"git fetch origin {pages_branch} failed")
+        return result
+
+    remote_ref = f"origin/{pages_branch}"
+    remote_sha = run_command(["git", "rev-parse", remote_ref], cwd=pages_repo)
+    if remote_sha.returncode != 0:
+        result["errors"].append(remote_sha.stderr.strip() or remote_sha.stdout.strip() or f"could not resolve {remote_ref}")
+        return result
+    result["remote_commit_sha"] = remote_sha.stdout.strip()
+
+    edition_path = f"gaza/editions/{edition_date}/index.html"
+    archive_path = "gaza/archive.html"
+    rss_path = "gaza/rss.xml"
+    edition_tree = run_command(["git", "ls-tree", "--name-only", remote_ref, "--", edition_path], cwd=pages_repo)
+    archive_tree = run_command(["git", "ls-tree", "--name-only", remote_ref, "--", archive_path], cwd=pages_repo)
+    rss_tree = run_command(["git", "ls-tree", "--name-only", remote_ref, "--", rss_path], cwd=pages_repo)
+    result["edition_file_ok"] = edition_tree.returncode == 0 and edition_path in edition_tree.stdout.split()
+    result["archive_ok"] = archive_tree.returncode == 0 and archive_path in archive_tree.stdout.split()
+    result["rss_ok"] = rss_tree.returncode == 0 and rss_path in rss_tree.stdout.split()
+    if not result["edition_file_ok"]:
+        result["errors"].append(f"remote tree is missing {edition_path}")
+    if not result["archive_ok"]:
+        result["errors"].append(f"remote tree is missing {archive_path}")
+    if not result["rss_ok"]:
+        result["errors"].append(f"remote tree is missing {rss_path}")
+    if result["errors"]:
+        return result
+    result["ok"] = True
+    return result
+
+
+def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> dict[str, Any]:
+    edition_url = f"{public_urls.get('edition')}?v=careline-claim-audit"
+    archive_url = f"{public_urls.get('archive')}?v=careline-claim-audit"
+    edition_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
+    archive_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
+
+    def _fetch(url: str) -> tuple[int | None, str, str | None]:
+        request = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                status = getattr(response, "status", 200)
+                body = response.read().decode("utf-8", errors="replace")
+            return status, body, None
+        except Exception as exc:  # noqa: BLE001
+            return None, "", str(exc)
+
+    status, body, error = _fetch(edition_url)
+    edition_result["status"] = status
+    edition_result["error"] = error
+    if error is None and status == 200:
+        edition_result["marker_found"] = (
+            "Dispatches From Gaza" in body
+            and (
+                "Limited-source update" in body
+                or "Today’s Read" in body
+                or "Today's Read" in body
+                or "Source Mix" in body
+            )
+        )
+        edition_result["ok"] = bool(edition_result["marker_found"])
+
+    status, body, error = _fetch(archive_url)
+    archive_result["status"] = status
+    archive_result["error"] = error
+    if error is None and status == 200:
+        archive_result["marker_found"] = edition_date in body
+        archive_result["ok"] = bool(archive_result["marker_found"])
+
+    return {
+        "edition_url": edition_url,
+        "archive_url": archive_url,
+        "edition": edition_result,
+        "archive": archive_result,
+        "live_http_ok": edition_result["ok"],
+        "live_archive_ok": archive_result["ok"],
+        "ok": bool(edition_result["ok"] and archive_result["ok"]),
+    }
 
 
 def open_local_edition(path: Path) -> None:
@@ -433,6 +543,12 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "publish_blocked": False,
         "publish_blocked_reason": None,
         "pages_repo_updated": False,
+        "local_pages_copy_ok": False,
+        "pages_commit_ok": False,
+        "pages_push_ok": None,
+        "remote_tree_verify_ok": None,
+        "live_http_ok": None,
+        "live_archive_ok": None,
         "pages_branch": args.pages_branch,
         "pages_commit_sha": None,
         "pushed": False,
@@ -457,6 +573,28 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "public_story_count": 0,
         "pages_dry_run_ok": False,
     }
+
+
+def compute_overall_ok(summary: dict[str, Any], *, push_requested: bool, dry_run: bool) -> bool:
+    if not summary.get("pipeline_ok"):
+        return False
+    if summary.get("generation_ok") is not True:
+        return False
+    if summary.get("validation_ok") is False:
+        return False
+    if dry_run:
+        return bool(summary.get("publish_ok"))
+    if not push_requested:
+        return bool(summary.get("publish_ok"))
+    required_fields = (
+        "local_pages_copy_ok",
+        "pages_commit_ok",
+        "pages_push_ok",
+        "remote_tree_verify_ok",
+        "live_http_ok",
+        "live_archive_ok",
+    )
+    return all(summary.get(field) is True for field in required_fields)
 
 
 def write_run_manifest(summary: dict[str, Any]) -> None:
@@ -529,6 +667,12 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"publish_blocked: {str(summary.get('publish_blocked')).lower()}",
         f"publish_blocked_reason: {summary.get('publish_blocked_reason')}",
         f"pages_repo_updated: {summary.get('pages_repo_updated')}",
+        f"local_pages_copy_ok: {summary.get('local_pages_copy_ok')}",
+        f"pages_commit_ok: {summary.get('pages_commit_ok')}",
+        f"pages_push_ok: {summary.get('pages_push_ok')}",
+        f"remote_tree_verify_ok: {summary.get('remote_tree_verify_ok')}",
+        f"live_http_ok: {summary.get('live_http_ok')}",
+        f"live_archive_ok: {summary.get('live_archive_ok')}",
         f"pages_branch: {summary.get('pages_branch')}",
         f"pages_commit_sha: {summary.get('pages_commit_sha')}",
         f"pushed: {str(summary.get('pushed')).lower()}",
@@ -628,7 +772,7 @@ def main(argv: list[str] | None = None) -> int:
 
     def finish(pipeline_code: int) -> int:
         summary["pipeline_ok"] = pipeline_code == 0
-        summary["overall_ok"] = summary["pipeline_ok"]
+        summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))
         if summary.get("email_requested"):
             summary["email_ok"] = False
         if not args.email_report:
@@ -652,7 +796,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         summary["email_report_sent"] = True
         summary["email_ok"] = True
-        summary["overall_ok"] = summary["pipeline_ok"]
+        summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))
         summary["ok"] = summary["overall_ok"]
         log_line(log_path, "Email notification succeeded.")
         write_summary(summary)
@@ -859,6 +1003,13 @@ def main(argv: list[str] | None = None) -> int:
     if pages_payload.get("committed_branch") not in (args.pages_branch, None):
         summary["errors"].append(f"Pages commit targeted {pages_payload.get('committed_branch')}, expected {args.pages_branch}")
     summary["pages_repo_updated"] = bool(pages_payload.get("copied"))
+    summary["local_pages_copy_ok"] = bool(pages_payload.get("copied"))
+    pages_commit_message = str(pages_payload.get("message") or "").strip().lower()
+    summary["pages_commit_ok"] = bool(pages_payload.get("committed")) or pages_commit_message in {"no changes to commit", "dry run; no commit created"}
+    summary["pages_push_ok"] = None
+    summary["remote_tree_verify_ok"] = None
+    summary["live_http_ok"] = None
+    summary["live_archive_ok"] = None
     summary["publish_ok"] = True
     summary["pages_commit_sha"] = pages_payload.get("commit_sha")
     summary["pages_branch"] = pages_payload.get("target_pages_branch", args.pages_branch)
@@ -872,11 +1023,36 @@ def main(argv: list[str] | None = None) -> int:
         pushed, messages, push_result = push_pages_repo(pages_repo, args.pages_branch)
         summary["push_output"] = messages
         summary["pushed"] = pushed
+        summary["pages_push_ok"] = pushed
         log_line(log_path, f"Push attempted result={pushed}")
         if not pushed:
+            log_line(log_path, push_result)
             summary["errors"].append(push_result or f"git push origin {args.pages_branch} failed")
             summary["publish_blocked"] = True
             summary["publish_blocked_reason"] = "pages-push-failed"
+            return finish(1)
+        remote_verify = verify_remote_pages_tree(pages_repo, args.pages_branch, args.date)
+        summary["remote_tree_verify_ok"] = bool(remote_verify.get("ok"))
+        summary["errors"].extend(remote_verify.get("errors") or [])
+        log_line(log_path, f"Remote tree verification ok={summary['remote_tree_verify_ok']} remote_commit={remote_verify.get('remote_commit_sha')}")
+        if not remote_verify.get("ok"):
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "pages-remote-tree-verify-failed"
+            return finish(1)
+        live_verify = verify_live_public_urls(args.date, summary.get("public_urls") or {})
+        summary["live_http_ok"] = bool(live_verify.get("live_http_ok"))
+        summary["live_archive_ok"] = bool(live_verify.get("live_archive_ok"))
+        log_line(log_path, f"Live verification ok={live_verify.get('ok')} edition_ok={summary['live_http_ok']} archive_ok={summary['live_archive_ok']}")
+        if not live_verify.get("ok"):
+            summary["errors"].append(
+                f"live verification failed: edition={live_verify['edition_url']} archive={live_verify['archive_url']}"
+            )
+            if not live_verify.get("live_http_ok"):
+                summary["errors"].append(f"live edition verification failed: {live_verify['edition']}")
+            if not live_verify.get("live_archive_ok"):
+                summary["errors"].append(f"live archive verification failed: {live_verify['archive']}")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "pages-live-verification-failed"
             return finish(1)
 
     bluesky_result = maybe_post_gaza_dispatch_to_bluesky(

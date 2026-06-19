@@ -2592,6 +2592,55 @@ def manual_push_command(pages_repo: Path, pages_branch: str) -> str:
     return f'cd "{pages_repo}"\ngit status\ngit push origin {pages_branch}'
 
 
+def pages_sync_repair_message(pages_repo: Path, pages_branch: str) -> str:
+    return (
+        f"pages_repo_not_synced_with_origin: reset the Pages checkout at {pages_repo} to origin/{pages_branch} "
+        "before publishing. Do not run git pull --rebase blindly. Abort any active rebase if present, fetch origin, "
+        f"reset the Pages checkout to origin/{pages_branch}, then rerun the publish/copy step for only the intended product/date."
+    )
+
+
+def _git_porcelain_paths(pages_repo: Path) -> list[str]:
+    status = run_git(["status", "--porcelain=v1", "--untracked-files=all"], pages_repo)
+    if status.returncode != 0:
+        raise RuntimeError(status.stderr.strip() or status.stdout.strip() or "git status failed")
+    paths: list[str] = []
+    for line in status.stdout.splitlines():
+        line = line.rstrip()
+        if not line:
+            continue
+        path = line[3:] if len(line) > 3 else line
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        paths.append(path)
+    return paths
+
+
+def _pages_repo_active_operation_markers(pages_repo: Path) -> list[str]:
+    markers: list[str] = []
+    for marker in ("rebase-merge", "rebase-apply", "MERGE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD"):
+        marker_path = git_stdout(["rev-parse", "--git-path", marker], pages_repo)
+        if marker_path and Path(marker_path).exists():
+            markers.append(marker)
+    return markers
+
+
+def _pages_repo_sync_relation(pages_repo: Path, pages_branch: str) -> str:
+    local = git_stdout(["rev-parse", "HEAD"], pages_repo)
+    remote = git_stdout(["rev-parse", f"origin/{pages_branch}"], pages_repo)
+    if not local or not remote:
+        return "unknown"
+    if local == remote:
+        return "synced"
+    local_ancestor = run_git(["merge-base", "--is-ancestor", "HEAD", f"origin/{pages_branch}"], pages_repo)
+    if local_ancestor.returncode == 0:
+        return "behind"
+    remote_ancestor = run_git(["merge-base", "--is-ancestor", f"origin/{pages_branch}", "HEAD"], pages_repo)
+    if remote_ancestor.returncode == 0:
+        return "ahead"
+    return "diverged"
+
+
 def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
     current_branch = git_stdout(["branch", "--show-current"], pages_repo) or None
     result: dict[str, Any] = {
@@ -2607,10 +2656,29 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> d
     if dry_run:
         return result
 
+    active_markers = _pages_repo_active_operation_markers(pages_repo)
+    if active_markers:
+        result["errors"].append(
+            f"pages_repo_has_active_rebase_or_merge_state: active git state detected ({', '.join(active_markers)}); "
+            "abort the rebase/merge/cherry-pick before publishing."
+        )
+        return result
+
+    try:
+        dirty_paths = _git_porcelain_paths(pages_repo)
+    except RuntimeError as exc:
+        result["errors"].append(str(exc))
+        return result
+    if dirty_paths:
+        result["errors"].append(
+            f"{pages_sync_repair_message(pages_repo, pages_branch)} Uncommitted Pages worktree changes detected: {', '.join(dirty_paths[:10])}"
+        )
+        return result
+
     remotes = git_stdout(["remote"], pages_repo) or ""
     if "origin" in remotes.split():
         result["fetch_attempted"] = True
-        fetch = run_git(["fetch", "origin"], pages_repo)
+        fetch = run_git(["fetch", "origin", pages_branch], pages_repo)
         result["fetched"] = fetch.returncode == 0
         if fetch.returncode != 0:
             result["warnings"].append(fetch.stderr.strip() or fetch.stdout.strip() or "git fetch origin failed; continuing with local refs")
@@ -2631,6 +2699,21 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> d
         result["errors"].append(checkout.stderr.strip() or checkout.stdout.strip() or f"could not checkout {pages_branch}")
         return result
     result["checked_out_branch"] = git_stdout(["branch", "--show-current"], pages_repo) or pages_branch
+
+    if remotes:
+        fetch = run_git(["fetch", "origin", pages_branch], pages_repo)
+        result["fetch_attempted"] = True
+        result["fetched"] = result["fetched"] or fetch.returncode == 0
+        if fetch.returncode != 0:
+            result["errors"].append(fetch.stderr.strip() or fetch.stdout.strip() or f"git fetch origin {pages_branch} failed")
+            return result
+        relation = _pages_repo_sync_relation(pages_repo, pages_branch)
+        if relation != "synced":
+            result["errors"].append(
+                f"{pages_sync_repair_message(pages_repo, pages_branch)} local HEAD is {relation} origin/{pages_branch}."
+            )
+            return result
+
     return result
 
 
@@ -2684,6 +2767,58 @@ def validate_pages_repo_after_copy(
             if (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"unexpected Food Line edition present for skipped day: {expect_date}")
     return errors
+
+
+def _git_status_changed_paths(pages_repo: Path) -> list[Path]:
+    status_lines = _git_porcelain_paths(pages_repo)
+    changed: list[Path] = []
+    for line in status_lines:
+        normalized = line.replace("\\", "/")
+        if normalized.startswith(".git/"):
+            continue
+        changed.append(Path(normalized))
+    return changed
+
+
+def validate_pages_repo_copy_scope(pages_repo: Path, only_dispatches: tuple[str, ...]) -> list[str]:
+    errors: list[str] = []
+    allowed_dispatches = set(only_dispatches) if only_dispatches else set(ONLY_DISPATCH_CHOICES)
+    try:
+        changed_paths = _git_status_changed_paths(pages_repo)
+    except RuntimeError as exc:
+        return [str(exc)]
+    for rel_path in changed_paths:
+        top_level = rel_path.parts[0] if rel_path.parts else ""
+        if top_level in {"detail", "paid"}:
+            errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_path.as_posix()}")
+            continue
+        if top_level in DISPATCH_LABELS and top_level not in allowed_dispatches:
+            errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_path.as_posix()}")
+    return sorted(set(errors))
+
+
+def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | None, only_dispatches: tuple[str, ...] = ()) -> list[str]:
+    errors: list[str] = []
+    site_root = root / "output" / "site"
+    if not expect_date:
+        return errors
+    if not only_dispatches or "gaza" in only_dispatches:
+        source = site_root / "gaza" / "editions" / expect_date / "index.html"
+        target = pages_repo / "gaza" / "editions" / expect_date / "index.html"
+        if source.exists() and target.exists() and source.read_bytes() != target.read_bytes():
+            errors.append(f"pages copy mismatch: Gaza edition index differs for {expect_date}")
+    if ("gaza" in only_dispatches or not only_dispatches):
+        for rel in (
+            ("gaza", "archive.html"),
+            ("gaza", "rss.xml"),
+        ):
+            source = site_root / rel[0] / rel[1]
+            target = pages_repo / rel[0] / rel[1]
+            if source.exists() and target.exists() and source.read_bytes() != target.read_bytes():
+                errors.append(f"pages copy mismatch: {rel[0]}/{rel[1]} differs from source output")
+            if target.exists() and expect_date not in target.read_text(encoding="utf-8", errors="replace"):
+                errors.append(f"pages copy validation failed: {rel[0]}/{rel[1]} does not contain {expect_date}")
+    return sorted(set(errors))
 
 
 def validate_cascadia_pages_copy_consistency(
@@ -2886,6 +3021,8 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
+        errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches))
+        errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
         if not dry_run:
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
@@ -2898,22 +3035,23 @@ def publish_pages(
                     only_dispatches=only_dispatches,
                 )
             )
-        commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
-        if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
-            errors.append(commit_result["message"])
-        pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
-        removed_keys = {(item.get("dispatch", ""), item.get("edition_date", "")) for item in removed_non_publishable}
-        for slug, edition_date in sorted(pages_editions_before):
-            if (slug, edition_date) in removed_keys:
-                continue
-            if (slug, edition_date) in pages_editions_after:
-                preserved_pages_editions.append(
-                    {
-                        "dispatch": slug,
-                        "edition_date": edition_date,
-                        "reason": "preexisting_pages_public_edition_preserved",
-                    }
-                )
+        if not errors:
+            commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
+            if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
+                errors.append(commit_result["message"])
+            pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
+            removed_keys = {(item.get("dispatch", ""), item.get("edition_date", "")) for item in removed_non_publishable}
+            for slug, edition_date in sorted(pages_editions_before):
+                if (slug, edition_date) in removed_keys:
+                    continue
+                if (slug, edition_date) in pages_editions_after:
+                    preserved_pages_editions.append(
+                        {
+                            "dispatch": slug,
+                            "edition_date": edition_date,
+                            "reason": "preexisting_pages_public_edition_preserved",
+                        }
+                    )
 
     return {
         "ok": not errors,
@@ -2946,6 +3084,8 @@ def publish_pages(
         "would_commit": bool(commit),
         "committed": commit_result["committed"],
         "commit_sha": commit_result["commit_sha"],
+        "local_pages_copy_ok": bool(copied) and not errors,
+        "pages_commit_ok": commit_result["committed"],
         "message": commit_result["message"],
         "would_push": False,
         "pushed": False,

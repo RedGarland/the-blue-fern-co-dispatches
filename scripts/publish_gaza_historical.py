@@ -10,8 +10,14 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from bluefern_dispatches.generator import pages_sync_repair_message
+
+
 DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 DEFAULT_REMOTE_URL = "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
 DEFAULT_PAGES_BRANCH = "gh-pages"
@@ -298,7 +304,13 @@ def push_pages_repo(pages_repo: Path, pages_branch: str) -> tuple[bool, list[str
         return False, messages, ""
     push = run_command(["git", "push", "origin", pages_branch], cwd=pages_repo)
     messages.append(push.stdout.strip() or push.stderr.strip())
-    return push.returncode == 0, messages, push.stdout.strip() or push.stderr.strip()
+    if push.returncode != 0:
+        detail = push.stdout.strip() or push.stderr.strip() or f"git push origin {pages_branch} failed"
+        lower = detail.lower()
+        if any(token in lower for token in ("non-fast-forward", "fetch first", "rejected", "update your local branch")):
+            detail = f"{detail}\n{pages_sync_repair_message(pages_repo, pages_branch)}"
+        return False, messages, detail
+    return True, messages, push.stdout.strip() or push.stderr.strip()
 
 
 def open_local_edition(path: Path) -> None:

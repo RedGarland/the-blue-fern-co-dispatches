@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import bluefern_dispatches.generator as generator
 from bluefern_dispatches.generator import (
     BASE_URL,
     CASCADIA_LOGO_ASSET,
@@ -568,6 +569,99 @@ def make_pages_repo(path):
     (git_dir / "refs" / "heads" / "main").write_text("fake-main-commit\n", encoding="utf-8")
     (path / ".keep").write_text("keep\n", encoding="utf-8")
     return path
+
+
+def test_pages_sync_repair_message_is_explicit_about_resetting_to_origin(tmp_path):
+    message = generator.pages_sync_repair_message(tmp_path / "pages", "gh-pages")
+    assert "pages_repo_not_synced_with_origin" in message
+    assert "Do not run git pull --rebase blindly" in message
+    assert "reset the Pages checkout" in message
+    assert "origin/gh-pages" in message
+
+
+def test_ensure_pages_branch_rejects_active_rebase_state(monkeypatch, tmp_path):
+    pages_repo = make_pages_repo(tmp_path / "pages")
+    monkeypatch.setattr(generator, "git_stdout", lambda args, cwd: "main" if args == ["branch", "--show-current"] else None)
+    monkeypatch.setattr(generator, "_pages_repo_active_operation_markers", lambda cwd: ["rebase-merge"])
+    monkeypatch.setattr(generator, "_git_porcelain_paths", lambda cwd: [])
+
+    result = generator.ensure_pages_branch(pages_repo, "gh-pages", dry_run=False)
+
+    assert result["errors"]
+    assert "pages_repo_has_active_rebase_or_merge_state" in result["errors"][0]
+
+
+def test_ensure_pages_branch_rejects_pages_repo_that_is_behind_origin(monkeypatch, tmp_path):
+    pages_repo = make_pages_repo(tmp_path / "pages")
+
+    def fake_git_stdout(args, cwd):
+        if args == ["branch", "--show-current"]:
+            return "main"
+        if args == ["remote"]:
+            return "origin"
+        if args == ["rev-parse", "HEAD"]:
+            return "local-sha"
+        if args == ["rev-parse", "origin/gh-pages"]:
+            return "remote-sha"
+        return None
+
+    def fake_run_git(args, cwd):
+        if args[:1] == ["fetch"]:
+            return subprocess.CompletedProcess(args, 0, "", "")
+        if args[:1] == ["checkout"]:
+            return subprocess.CompletedProcess(args, 0, "", "")
+        if args == ["merge-base", "--is-ancestor", "HEAD", "origin/gh-pages"]:
+            return subprocess.CompletedProcess(args, 0, "", "")
+        if args == ["merge-base", "--is-ancestor", "origin/gh-pages", "HEAD"]:
+            return subprocess.CompletedProcess(args, 1, "", "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(generator, "git_stdout", fake_git_stdout)
+    monkeypatch.setattr(generator, "git_ref_exists", lambda ref, cwd: True)
+    monkeypatch.setattr(generator, "_pages_repo_active_operation_markers", lambda cwd: [])
+    monkeypatch.setattr(generator, "_git_porcelain_paths", lambda cwd: [])
+    monkeypatch.setattr(generator, "run_git", fake_run_git)
+
+    result = generator.ensure_pages_branch(pages_repo, "gh-pages", dry_run=False)
+
+    assert result["errors"]
+    assert "pages_repo_not_synced_with_origin" in result["errors"][0]
+    assert "local HEAD is behind origin/gh-pages" in result["errors"][0]
+
+
+def test_validate_pages_repo_copy_scope_flags_detail_and_unrelated_changes(monkeypatch, tmp_path):
+    pages_repo = make_pages_repo(tmp_path / "pages")
+    monkeypatch.setattr(
+        generator,
+        "_git_status_changed_paths",
+        lambda cwd: [Path("detail/private.html"), Path("gaza/index.html"), Path("food-line/index.html")],
+    )
+
+    errors = generator.validate_pages_repo_copy_scope(pages_repo, ("gaza",))
+
+    assert any("paid/detail artifacts were copied into the Pages repo" in error for error in errors)
+    assert any("unexpected publish changes" in error and "food-line/index.html" in error for error in errors)
+
+
+def test_validate_pages_copy_parity_detects_public_copy_drift(tmp_path):
+    root = tmp_path / "root"
+    pages_repo = tmp_path / "pages"
+    source = root / "output" / "site" / "gaza" / "editions" / "2026-05-07"
+    target = pages_repo / "gaza" / "editions" / "2026-05-07"
+    source.mkdir(parents=True, exist_ok=True)
+    target.mkdir(parents=True, exist_ok=True)
+    (source / "index.html").write_text("source edition", encoding="utf-8")
+    (target / "index.html").write_text("target edition", encoding="utf-8")
+    (root / "output" / "site" / "gaza").mkdir(parents=True, exist_ok=True)
+    (root / "output" / "site" / "gaza" / "archive.html").write_text("2026-05-07 archive", encoding="utf-8")
+    (root / "output" / "site" / "gaza" / "rss.xml").write_text("2026-05-07 rss", encoding="utf-8")
+    (pages_repo / "gaza").mkdir(parents=True, exist_ok=True)
+    (pages_repo / "gaza" / "archive.html").write_text("2026-05-07 archive", encoding="utf-8")
+    (pages_repo / "gaza" / "rss.xml").write_text("2026-05-07 rss", encoding="utf-8")
+
+    errors = generator.validate_pages_copy_parity(root, pages_repo, "2026-05-07")
+
+    assert any("Gaza edition index differs" in error for error in errors)
 
 
 def test_pages_dry_run_does_not_write_to_pages_repo(built_site):

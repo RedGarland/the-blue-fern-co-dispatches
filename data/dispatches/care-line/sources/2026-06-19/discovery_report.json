@@ -260,8 +260,8 @@
     }
   ],
   "source_count": 177,
-  "public_signal_count": 9,
-  "claim_count": 9,
+  "public_signal_count": 0,
+  "claim_count": 0,
   "wrapper_candidate_count": 0,
   "secondary_query_count": 0,
   "source_families": [
@@ -278,22 +278,22 @@
     "US": 177
   },
   "exclusion_reason_counts": {
-    "resource_only_baseline": 21,
-    "stale_current_signal": 147
+    "stale_current_signal": 147,
+    "wrapper_candidate": 30
   },
-  "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147",
-  "qualified_but_not_public_count": 168,
+  "exclusion_reason_summary": "stale_current_signal=147; wrapper_candidate=30",
+  "qualified_but_not_public_count": 177,
   "discovery_gap_check": {
     "source_count": 177,
-    "public_signal_count": 9,
-    "claim_count": 9,
-    "excluded_source_count": 168,
-    "excluded_count": 168,
-    "wrapper_candidate_count": 0,
+    "public_signal_count": 0,
+    "claim_count": 0,
+    "excluded_source_count": 177,
+    "excluded_count": 177,
+    "wrapper_candidate_count": 177,
     "secondary_query_count": 0,
-    "qualified_but_not_public_count": 168,
+    "qualified_but_not_public_count": 177,
     "stale_count": 147,
-    "weak_count": 0,
+    "weak_count": 177,
     "not_traceable_count": 0,
     "source_families": [
       "local_news",
@@ -309,10 +309,10 @@
       "US": 177
     },
     "exclusion_reason_counts": {
-      "resource_only_baseline": 21,
-      "stale_current_signal": 147
+      "stale_current_signal": 147,
+      "wrapper_candidate": 30
     },
-    "exclusion_reason_summary": "resource_only_baseline=21; stale_current_signal=147"
+    "exclusion_reason_summary": "stale_current_signal=147; wrapper_candidate=30"
   },
-  "no_current_update_summary": "No current Care Line update was published because the reviewed source records were stale."
+  "no_current_update_summary": "No current Care Line update was published because the reviewed source records were stale and the reviewed source records were weak, PR, marketing, or resource-only."
 }

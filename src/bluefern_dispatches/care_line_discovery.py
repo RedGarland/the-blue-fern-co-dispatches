@@ -279,6 +279,13 @@ def _wrapper_kind(candidate: dict[str, Any]) -> str:
     return ""
 
 
+def _is_google_news_wrapper(candidate: dict[str, Any]) -> bool:
+    url = _normalize_url(_nonempty(candidate.get("url")))
+    if not url:
+        return False
+    return urllib.parse.urlsplit(url).netloc.lower() == "news.google.com"
+
+
 def _entity_phrases(candidate: dict[str, Any]) -> list[str]:
     text = _normalize_source_text(
         " ".join(
@@ -512,7 +519,8 @@ def classify_care_line_discovery_candidate(
     pressure_type = str(candidate.get("pressure_type") or _pressure_type_from_text(text)).strip()
     source_role, public_bucket = _pressure_role_and_bucket(pressure_type)
     direct_pressure = bool(positive_hits)
-    wrapper_candidate = bool(wrapper_kind)
+    google_news_wrapper = _is_google_news_wrapper(candidate)
+    wrapper_candidate = bool(wrapper_kind or google_news_wrapper)
     source_traceability_role = "article_url"
     extraction_quality = str(candidate.get("extraction_quality") or "high")
     source_freshness_status = str(candidate.get("source_freshness_status") or "current")
@@ -556,6 +564,8 @@ def classify_care_line_discovery_candidate(
         reason_bits.append("hard negative terms: " + ", ".join(negative_hits[:4]))
     if wrapper_kind:
         reason_bits.append(f"wrapper lead detected: {wrapper_kind}")
+    if google_news_wrapper:
+        reason_bits.append("Google News wrapper lead detected")
     if known_status == "already_included":
         reason_bits.append("already included")
     elif known_status == "already_excluded":
@@ -729,6 +739,7 @@ def discover_care_line_sources(
             known_local_domain = bool(domain) and domain in known["known_domains"]
             classification = classify_care_line_discovery_candidate(
                 {
+                    "url": candidate_url,
                     "title": title,
                     "summary_or_snippet": summary,
                     "evidence_text": evidence_text,

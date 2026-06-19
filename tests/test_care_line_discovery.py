@@ -208,6 +208,16 @@ def test_care_line_discovery_classifies_direct_pressure_and_wrapper_records():
         },
         known_status="unknown_domain_new_article",
     )
+    google_news_wrapper = classify_care_line_discovery_candidate(
+        {
+            "title": "Google News",
+            "summary_or_snippet": "Google News",
+            "publisher": "news.google.com",
+            "source_name": "news.google.com",
+            "url": "https://news.google.com/rss/articles/CBMi-test?oc=5",
+        },
+        known_status="unknown_domain_new_article",
+    )
 
     assert advice["classification"] == "likely_resource_only"
     assert marketing["classification"] == "needs_review"
@@ -216,6 +226,10 @@ def test_care_line_discovery_classifies_direct_pressure_and_wrapper_records():
     assert wrapper["source_role"] == "discovery_lead"
     assert wrapper["public_eligible"] is False
     assert wrapper["secondary_queries_generated"]
+    assert google_news_wrapper["classification"] == "needs_review"
+    assert google_news_wrapper["source_role"] == "discovery_lead"
+    assert google_news_wrapper["source_traceability_role"] == "wrapper_url"
+    assert google_news_wrapper["public_eligible"] is False
 
 
 def test_care_line_discovery_writes_current_signal_pack_and_builds_current_update_edition(monkeypatch):

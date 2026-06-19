@@ -2357,11 +2357,15 @@ def collect_public_site_files(
         return []
     files = []
     food_line_reported: set[str] = set()
+    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
     for path in site_root.rglob("*"):
         if not path.is_file():
             continue
         relative_parts = path.relative_to(site_root).parts
-        if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
+        if gaza_only_publish:
+            if not relative_parts or relative_parts[0] != "gaza":
+                continue
+        elif only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
         if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG} and relative_parts[1] == "editions":
             slug = relative_parts[0]
@@ -2467,6 +2471,7 @@ def copy_public_site_to_pages(
         ".pytest_cache/",
         f"{pages_repo / '.git'}",
     ]
+    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
     for source in collect_public_site_files(
         site_root,
         only_dispatches=only_dispatches,
@@ -2479,10 +2484,11 @@ def copy_public_site_to_pages(
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
-    cname = pages_repo / "CNAME"
-    copied.append(str(cname))
-    if not dry_run:
-        cname.write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    if not gaza_only_publish:
+        cname = pages_repo / "CNAME"
+        copied.append(str(cname))
+        if not dry_run:
+            cname.write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
     return copied, skipped
 
 
@@ -2783,12 +2789,16 @@ def _git_status_changed_paths(pages_repo: Path) -> list[Path]:
 def validate_pages_repo_copy_scope(pages_repo: Path, only_dispatches: tuple[str, ...]) -> list[str]:
     errors: list[str] = []
     allowed_dispatches = set(only_dispatches) if only_dispatches else set(ONLY_DISPATCH_CHOICES)
+    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
     try:
         changed_paths = _git_status_changed_paths(pages_repo)
     except RuntimeError as exc:
         return [str(exc)]
     for rel_path in changed_paths:
         top_level = rel_path.parts[0] if rel_path.parts else ""
+        if gaza_only_publish and top_level != "gaza":
+            errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_path.as_posix()}")
+            continue
         if top_level in {"detail", "paid"}:
             errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_path.as_posix()}")
             continue
@@ -2802,22 +2812,35 @@ def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | 
     site_root = root / "output" / "site"
     if not expect_date:
         return errors
-    if not only_dispatches or "gaza" in only_dispatches:
-        source = site_root / "gaza" / "editions" / expect_date / "index.html"
-        target = pages_repo / "gaza" / "editions" / expect_date / "index.html"
-        if source.exists() and target.exists() and source.read_bytes() != target.read_bytes():
-            errors.append(f"pages copy mismatch: Gaza edition index differs for {expect_date}")
-    if ("gaza" in only_dispatches or not only_dispatches):
-        for rel in (
-            ("gaza", "archive.html"),
-            ("gaza", "rss.xml"),
-        ):
-            source = site_root / rel[0] / rel[1]
-            target = pages_repo / rel[0] / rel[1]
+    gaza_files = [
+        ("gaza/index.html", "gaza edition index"),
+        ("gaza/archive.html", "gaza archive"),
+        ("gaza/rss.xml", "gaza rss"),
+    ]
+    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    if not only_dispatches or "gaza" in only_dispatches or gaza_only_publish:
+        for rel_path, label in gaza_files:
+            source = site_root / rel_path
+            target = pages_repo / rel_path
+            if source.exists() and not target.exists():
+                errors.append(f"pages copy mismatch: {label} missing for {expect_date}")
+                continue
             if source.exists() and target.exists() and source.read_bytes() != target.read_bytes():
-                errors.append(f"pages copy mismatch: {rel[0]}/{rel[1]} differs from source output")
-            if target.exists() and expect_date not in target.read_text(encoding="utf-8", errors="replace"):
-                errors.append(f"pages copy validation failed: {rel[0]}/{rel[1]} does not contain {expect_date}")
+                errors.append(f"pages copy mismatch: {label} differs for {expect_date}")
+            if target.exists() and expect_date not in target.read_text(encoding="utf-8", errors="replace") and rel_path != "gaza/index.html":
+                errors.append(f"pages copy validation failed: {rel_path} does not contain {expect_date}")
+        gaza_audio_dir = site_root / "gaza" / "audio"
+        if gaza_audio_dir.exists():
+            for source in gaza_audio_dir.rglob("*"):
+                if not source.is_file():
+                    continue
+                rel_path = source.relative_to(site_root)
+                target = pages_repo / rel_path
+                if source.exists() and not target.exists():
+                    errors.append(f"pages copy mismatch: {rel_path.as_posix()} missing from Pages repo")
+                    continue
+                if target.exists() and source.read_bytes() != target.read_bytes():
+                    errors.append(f"pages copy mismatch: {rel_path.as_posix()} differs from source output")
     return sorted(set(errors))
 
 

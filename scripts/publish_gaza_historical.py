@@ -147,7 +147,14 @@ def generation_command(edition_date: str, dry_run: bool) -> list[str]:
     return args
 
 
-def pages_publish_command(pages_repo: Path, remote_url: str, pages_branch: str, edition_date: str, dry_run: bool) -> list[str]:
+def pages_publish_command(
+    pages_repo: Path,
+    remote_url: str,
+    pages_branch: str,
+    edition_date: str,
+    dry_run: bool,
+    only_dispatches: tuple[str, ...] = ("gaza",),
+) -> list[str]:
     args = [sys.executable, "scripts\\publish_github_pages.py"]
     if dry_run:
         args.append("--dry-run")
@@ -161,6 +168,8 @@ def pages_publish_command(pages_repo: Path, remote_url: str, pages_branch: str, 
         "--expect-dispatch",
         "gaza",
     ])
+    for dispatch in only_dispatches:
+        args.extend(["--only-dispatch", dispatch])
     if not dry_run:
         args.extend(["--remote-url", remote_url, "--commit", "--no-push"])
     return args

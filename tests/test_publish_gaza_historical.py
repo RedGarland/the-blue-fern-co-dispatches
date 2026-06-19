@@ -158,6 +158,7 @@ def test_valid_manual_sources_runs_generation_and_pages_dry_run(isolated_root, m
     assert any("publish_github_pages.py" in " ".join(call) and "--pages-branch" in call and "gh-pages" in call for call in calls)
     assert any("publish_github_pages.py" in " ".join(call) and "--expect-date" in call and "2026-04-30" in call for call in calls)
     assert any("publish_github_pages.py" in " ".join(call) and "--expect-dispatch" in call and "gaza" in call for call in calls)
+    assert any("publish_github_pages.py" in " ".join(call) and "--only-dispatch" in call and "gaza" in call for call in calls)
 
 
 def test_generated_edition_requires_visible_source_links(isolated_root):

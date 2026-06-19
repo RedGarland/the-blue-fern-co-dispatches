@@ -163,6 +163,7 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert publish_calls
     assert all("--expect-date" in call and "2026-05-07" in call for call in publish_calls)
     assert all("--expect-dispatch" in call and "gaza" in call for call in publish_calls)
+    assert all("--only-dispatch" in call and "gaza" in call for call in publish_calls)
 
 
 def test_missing_source_file_triggers_auto_collection_when_both(isolated, monkeypatch, capsys):
@@ -295,6 +296,94 @@ def test_push_is_opt_in(isolated, monkeypatch, capsys):
     assert summary["live_http_ok"] is True
     assert summary["live_archive_ok"] is True
     assert summary["overall_ok"] is True
+
+
+def test_gaza_daily_scoped_publish_stays_inside_gaza_and_reaches_push_stage(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-06-19")
+    dry_run_payloads: list[dict[str, object]] = []
+    calls: list[list[str]] = []
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append(args)
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-06-19")
+            return completed(args, payload={"ok": True})
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            payload = {
+                "ok": True,
+                "errors": [],
+                "paid_detail_excluded_from_public": True,
+                "target_pages_branch": "gh-pages",
+                "files_that_would_be_copied": [
+                    "C:\\repo\\gaza\\index.html",
+                    "C:\\repo\\gaza\\archive.html",
+                    "C:\\repo\\gaza\\rss.xml",
+                    "C:\\repo\\gaza\\editions\\2026-06-19\\index.html",
+                ],
+            }
+            dry_run_payloads.append(payload)
+            return completed(args, payload=payload)
+        if "publish_github_pages.py" in command:
+            write_pages_output(root, "2026-06-19")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "errors": [],
+                    "copied": True,
+                    "committed": True,
+                    "commit_sha": "abc1234",
+                    "target_pages_branch": "gh-pages",
+                    "committed_branch": "gh-pages",
+                },
+            )
+        if args[:3] == ["git", "status", "--porcelain=v1"]:
+            return completed(args, stdout="")
+        if args[:3] == ["git", "fetch", "origin"]:
+            return completed(args, stdout="fetched")
+        if args[:2] == ["git", "status"]:
+            return completed(args, stdout="On branch gh-pages")
+        if args[:3] == ["git", "push", "origin"]:
+            return completed(args, stdout="pushed")
+        if args[:2] == ["git", "rev-parse"] and args[-1] == "origin/gh-pages":
+            return completed(args, stdout="remote-sha")
+        if args[:2] == ["git", "ls-tree"]:
+            return completed(args, stdout=args[-1])
+        return completed(args, stdout="ok")
+
+    def fake_urlopen(request, timeout=30):
+        if "/gaza/editions/2026-06-19/" in request.full_url:
+            return live_response("<html><body>offline</body></html>", status=503)
+        return live_response("<html><body>2026-06-19</body></html>", status=200)
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+    monkeypatch.setattr(daily.urllib.request, "urlopen", fake_urlopen)
+
+    code = daily.main(["--date", "2026-06-19", "--skip-tests", "--push", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert dry_run_payloads
+    dry_run_files = dry_run_payloads[0]["files_that_would_be_copied"]
+    assert any("gaza/index.html" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert any("gaza/archive.html" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert any("gaza/rss.xml" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert any("gaza/editions/2026-06-19/index.html" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert not any("/care-line/" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert not any("/cascadia/" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert not any("/food-line/" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert not any("/american-pressure/" in str(path).replace("\\", "/") for path in dry_run_files)
+    assert not any(str(path).endswith("/index.html") and "/gaza/" not in str(path).replace("\\", "/") for path in dry_run_files)
+    assert any("--only-dispatch" in call and "gaza" in call for call in calls if "publish_github_pages.py" in " ".join(call))
+    assert summary["local_pages_copy_ok"] is True
+    assert summary["pages_commit_ok"] is True
+    assert summary["pages_push_ok"] is True
+    assert summary["remote_tree_verify_ok"] is True
+    assert summary["live_http_ok"] is False
+    assert summary["live_archive_ok"] is True
+    assert summary["overall_ok"] is False
 
 
 def test_push_rejection_appends_manual_repair_guidance(isolated, monkeypatch):

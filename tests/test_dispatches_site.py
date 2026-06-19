@@ -634,25 +634,72 @@ def test_validate_pages_repo_copy_scope_flags_detail_and_unrelated_changes(monke
     monkeypatch.setattr(
         generator,
         "_git_status_changed_paths",
-        lambda cwd: [Path("detail/private.html"), Path("gaza/index.html"), Path("food-line/index.html")],
+        lambda cwd: [
+            Path("detail/private.html"),
+            Path("gaza/index.html"),
+            Path("food-line/index.html"),
+            Path("index.html"),
+            Path("assets/site.css"),
+            Path("CNAME"),
+        ],
     )
 
     errors = generator.validate_pages_repo_copy_scope(pages_repo, ("gaza",))
 
-    assert any("paid/detail artifacts were copied into the Pages repo" in error for error in errors)
+    assert any("gaza_publish_scope_violation" in error and "detail/private.html" in error for error in errors)
     assert any("unexpected publish changes" in error and "food-line/index.html" in error for error in errors)
+    assert any("gaza_publish_scope_violation" in error and "index.html" in error for error in errors)
+    assert any("gaza_publish_scope_violation" in error and "assets/site.css" in error for error in errors)
+    assert any("gaza_publish_scope_violation" in error and "CNAME" in error for error in errors)
+
+
+def test_gaza_only_dry_run_copy_scope_excludes_root_and_other_dispatch_files(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-03",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    copied = result["files_that_would_be_copied"]
+    assert copied
+    assert any("/gaza/" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/editions/2026-05-03/index.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/archive.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/rss.xml" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/index.html" in path.replace("\\", "/") for path in copied)
+    assert not any("/american-pressure/" in path.replace("\\", "/") for path in copied)
+    assert not any("/care-line/" in path.replace("\\", "/") for path in copied)
+    assert not any("/cascadia/" in path.replace("\\", "/") for path in copied)
+    assert not any("/food-line/" in path.replace("\\", "/") for path in copied)
+    assert not any(path.endswith("/index.html") and "/gaza/" not in path.replace("\\", "/") for path in copied)
+    assert not any(path.endswith("/CNAME") or path.endswith("\\CNAME") for path in copied)
+    assert not any("/assets/" in path.replace("\\", "/") and "/gaza/" not in path.replace("\\", "/") for path in copied)
 
 
 def test_validate_pages_copy_parity_detects_public_copy_drift(tmp_path):
     root = tmp_path / "root"
     pages_repo = tmp_path / "pages"
+    source_index = root / "output" / "site" / "gaza" / "index.html"
+    target_index = pages_repo / "gaza" / "index.html"
     source = root / "output" / "site" / "gaza" / "editions" / "2026-05-07"
     target = pages_repo / "gaza" / "editions" / "2026-05-07"
+    source_index.parent.mkdir(parents=True, exist_ok=True)
     source.mkdir(parents=True, exist_ok=True)
+    target_index.parent.mkdir(parents=True, exist_ok=True)
     target.mkdir(parents=True, exist_ok=True)
+    source_index.write_text("source landing", encoding="utf-8")
+    target_index.write_text("target landing", encoding="utf-8")
     (source / "index.html").write_text("source edition", encoding="utf-8")
     (target / "index.html").write_text("target edition", encoding="utf-8")
-    (root / "output" / "site" / "gaza").mkdir(parents=True, exist_ok=True)
     (root / "output" / "site" / "gaza" / "archive.html").write_text("2026-05-07 archive", encoding="utf-8")
     (root / "output" / "site" / "gaza" / "rss.xml").write_text("2026-05-07 rss", encoding="utf-8")
     (pages_repo / "gaza").mkdir(parents=True, exist_ok=True)
@@ -661,7 +708,7 @@ def test_validate_pages_copy_parity_detects_public_copy_drift(tmp_path):
 
     errors = generator.validate_pages_copy_parity(root, pages_repo, "2026-05-07")
 
-    assert any("Gaza edition index differs" in error for error in errors)
+    assert any("gaza edition index differs" in error for error in errors)
 
 
 def test_pages_dry_run_does_not_write_to_pages_repo(built_site):
@@ -1225,6 +1272,8 @@ def test_pages_publish_copies_gaza_audio_and_feed_artifacts(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "index.html").write_text("<html>Root home</html>", encoding="utf-8")
+    (pages_repo / "CNAME").write_text(CNAME_VALUE + "\n", encoding="utf-8")
     gaza_audio_dir = site_root / "gaza" / "audio"
     gaza_audio_dir.mkdir(parents=True, exist_ok=True)
     (gaza_audio_dir / "index.html").write_text("<html>Audio archive</html>", encoding="utf-8")
@@ -1248,6 +1297,8 @@ def test_pages_publish_copies_gaza_audio_and_feed_artifacts(built_site):
     assert (pages_repo / "gaza" / "audio" / "2026-05-31-transcript.html").exists()
     assert (pages_repo / "gaza" / "podcast.xml").exists()
     assert (pages_repo / "gaza" / "flash-briefing.json").exists()
+    assert (pages_repo / "index.html").read_text(encoding="utf-8") == "<html>Root home</html>"
+    assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
     assert not (pages_repo / "detail").exists()
     assert not (pages_repo / "paid").exists()
     assert "output/paid/" in result["files_that_would_be_skipped"]

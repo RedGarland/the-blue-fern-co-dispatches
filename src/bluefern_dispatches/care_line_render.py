@@ -78,25 +78,25 @@ def render_care_line_edition_body(records: list[dict[str, Any]], edition_date: s
     </section>
     <section class="section">
       <h2>Plain-English Summary</h2>
-      <p>No current public signals were qualified for this edition.</p>
+      <p>No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records.</p>
     </section>
     <section class="section">
       <h2>At A Glance</h2>
       <ul class="edition-list">
-      <li>No qualified public claims in this edition.</li>
+      <li>No public claims qualified for this edition.</li>
       </ul>
     </section>
     <section class="section">
       <h2>Source Mix</h2>
-      <p>No qualified public sources</p>
+      <p>No current public signals qualified.</p>
       <ul>
-        <li>No qualified public claims were published.</li>
+        <li>No public claims were published.</li>
       </ul>
     </section>
     <section class="section">
       <h2>Source Note</h2>
       <p>Each public claim is tied to saved source records. The source table preserves all edition records, including those excluded from public inclusion.</p>
-      <p>Care Line does not publish a map in this release. The source table and claim ledger preserve the traceable record for readers and researchers.</p>
+      <p>Care Line does not publish a map in this release. The source table and claim ledger preserve the traceable record for readers and researchers even when no public claims qualify.</p>
       <p><a href="source_table.html">source table</a> | <a href="claim_ledger.html">claim ledger</a> | <a href="../">Archive</a></p>
     </section>"""
         return body
@@ -203,7 +203,7 @@ def render_care_line_source_table_html(records: list[dict[str, Any]], edition_da
         <td>{html.escape(row['public_story_eligible'])}</td>
       </tr>"""
         )
-    table_rows = "\n".join(body_rows)
+    table_rows = "\n".join(body_rows) or "      <tr><td colspan=\"16\">No current Care Line update was published for this edition.</td></tr>"
     body = f"""<section class="hero">
       <p class="eyebrow">Source Table | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)} Source Table</h1>
@@ -266,7 +266,7 @@ def render_care_line_claim_ledger_html(records: list[dict[str, Any]], edition_da
         <td>{html.escape(row['limitation'])}</td>
       </tr>"""
     )
-    table_rows = "\n".join(body_rows) or "      <tr><td colspan=\"12\">No qualified public claims in this edition.</td></tr>"
+    table_rows = "\n".join(body_rows) or "      <tr><td colspan=\"12\">No current Care Line update was published for this edition.</td></tr>"
     body = f"""<section class="hero">
       <p class="eyebrow">Claim Ledger | {html.escape(edition_date)}</p>
       <h1>{html.escape(DISPATCH_NAME)} Claim Ledger</h1>

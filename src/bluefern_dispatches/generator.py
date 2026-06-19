@@ -22,6 +22,7 @@ from bluefern_dispatches.care_line_sources import (
     DISPATCH_NAME as CARE_LINE_DISPATCH_NAME,
     DISPATCH_SLUG as CARE_LINE_DISPATCH_SLUG,
     DISPATCH_TAGLINE as CARE_LINE_DISPATCH_TAGLINE,
+    no_current_update_summary as care_line_no_current_update_summary,
     build_public_edition_report as care_line_public_edition_report,
     load_manual_source_records as load_care_line_manual_sources,
     load_pressure_source_registry as load_care_line_pressure_registry,
@@ -240,13 +241,7 @@ def _care_line_fixtures(root: Path, edition_date: str) -> tuple[Any, Path | None
     direct = base / edition_date / "manual_sources.json"
     if direct.exists():
         return json.loads(direct.read_text(encoding="utf-8")), direct
-    if not base.exists():
-        return [], None
-    dated = sorted(path for path in base.glob("*/manual_sources.json") if path.is_file())
-    if not dated:
-        return [], None
-    chosen = dated[-1]
-    return json.loads(chosen.read_text(encoding="utf-8")), chosen
+    return [], None
 
 
 def _latest_care_line_fixture_date(root: Path) -> str | None:
@@ -318,7 +313,7 @@ def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings:
     rows = _normalize_care_line_fixture_rows(raw_payload, fixture_path, warnings, errors)
     errors.extend(validate_care_line_manual_sources(rows))
     if not rows:
-        warnings.append("care-line has no fixture records; rendering a limited pilot edition")
+        warnings.append("care-line has no fixture records; rendering a no-current-update edition")
     if fixture_path is None:
         warnings.append("care-line fixture file missing under data/dispatches/care-line/sources")
 
@@ -375,11 +370,11 @@ def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings:
             )
 
     if not sources:
-        warnings.append("care-line has no source-backed fixture records; rendering a no-signal page")
+        warnings.append("care-line has no source-backed fixture records; rendering a no-current-update page")
     if not registry:
         warnings.append("care-line pressure source registry is empty")
 
-    public_summary = care_line_summary_for_records(rows) if rows else CARE_LINE_DISPATCH_TAGLINE
+    public_summary = care_line_summary_for_records(rows) if rows else care_line_no_current_update_summary()
     body_html = render_care_line_edition_body(rows, edition_date)
     return DispatchConfig(
         slug=CARE_LINE_DISPATCH_SLUG,
@@ -1940,8 +1935,13 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     source_manifest_public = public_dir / "sources_manifest.json"
     curation_manifest_public = public_dir / "curation_manifest.json"
     extra_public_artifacts: list[str] = []
+    care_line_records: list[Any] = []
+    care_line_public_records: list[Any] = []
+    care_line_edition_mode = ""
     if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
+        care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
+        care_line_edition_mode = "current_update" if care_line_public_records else "no_current_update"
         extra_public_artifacts = [
             str(public_dir / "source_table.html"),
             str(public_dir / "claim_ledger.html"),
@@ -1955,6 +1955,9 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     claim_count = len([story for story in dispatch.stories if story.included_in_public_summary])
     qualified_public_claim_count = claim_count
     lead_signal_count = len([story for story in dispatch.stories if story.score >= 100]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
+        claim_count = len(care_line_public_records)
+        qualified_public_claim_count = len(care_line_public_records)
     edition_manifest = {
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
@@ -1971,15 +1974,36 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "curation_manifest_path": str(curation_manifest_public),
         "free_public_artifacts": public_artifacts,
         "paid_or_detail_artifacts": [],
-        "claim_count": len([row for row in care_line_records if _record_value(row, "qualifies_for_public_inclusion") is True]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else len(dispatch.stories),
-        "qualified_public_claim_count": len([row for row in care_line_records if _record_value(row, "qualifies_for_public_inclusion") is True]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "claim_count": claim_count if dispatch.slug != CARE_LINE_DISPATCH_SLUG else len(care_line_public_records),
+        "qualified_public_claim_count": qualified_public_claim_count if dispatch.slug != CARE_LINE_DISPATCH_SLUG else len(care_line_public_records),
         "lead_signal_count": lead_signal_count,
         "public_rendered": True if dispatch.slug == CARE_LINE_DISPATCH_SLUG else True,
         "stale_current_signal_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "resource_only_count": 0 if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
-        "public_summary": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
-        "public_archive_title": care_line_public_archive_title_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
-        "public_archive_subtitle": care_line_summary_for_records(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "public_summary": (
+            care_line_summary_for_records(care_line_records)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
+            else care_line_no_current_update_summary()
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
+            else ""
+        ),
+        "public_archive_title": (
+            care_line_public_archive_title_for_records(care_line_records)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
+            else f"{dispatch.edition_date} — No current update"
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
+            else ""
+        ),
+        "public_archive_subtitle": (
+            care_line_summary_for_records(care_line_records)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
+            else care_line_no_current_update_summary()
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
+            else ""
+        ),
+        "edition_mode": care_line_edition_mode if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "reviewed_source_count": len(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
+        "excluded_source_count": len([row for row in care_line_records if not care_line_record_is_public(row)]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "source_table_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/source_table.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "claim_ledger_path": f"/{dispatch.slug}/editions/{dispatch.edition_date}/claim_ledger.html" if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "future_paid_fields_todo": [

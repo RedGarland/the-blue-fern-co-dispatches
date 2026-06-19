@@ -172,8 +172,57 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
 def test_care_line_render_no_current_update_path_preserves_fallback_copy():
     html = render_care_line_edition_body([], "2026-05-23")
 
-    assert "No current public signals were qualified for this edition." in html
-    assert "Other monitored categories had no qualifying public signal in this edition:" not in html
-    assert "No qualifying public signals were placed in this bucket for this edition." not in html
+    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in html
+    assert "No public claims qualified for this edition." in html
+    assert "No current public signals were qualified for this edition." not in html
     assert "source_table.html" in html
     assert "claim_ledger.html" in html
+
+
+def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = _work_root()
+    backup_root = work / "backup"
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-06-19")
+
+    result = build_site(
+        work,
+        dry_run=False,
+        backup_root=backup_root,
+        dispatch_seed_dates={"care-line": "2026-06-19"},
+    )
+
+    assert result["ok"] is True
+    site_root = work / "output" / "site" / "care-line"
+    edition_dir = site_root / "editions" / "2026-06-19"
+    manifest = json.loads((edition_dir / "edition_manifest.json").read_text(encoding="utf-8"))
+    index_html = (site_root / "index.html").read_text(encoding="utf-8")
+    archive_html = (site_root / "archive.html").read_text(encoding="utf-8")
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    source_table_html = (edition_dir / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (edition_dir / "claim_ledger.html").read_text(encoding="utf-8")
+
+    assert manifest["edition_mode"] == "no_current_update"
+    assert manifest["source_count"] == 0
+    assert manifest["story_count"] == 0
+    assert manifest["claim_count"] == 0
+    assert manifest["qualified_public_claim_count"] == 0
+    assert manifest["public_rendered"] is True
+    assert manifest["public_archive_title"] == "2026-06-19 — No current update"
+    assert manifest["public_archive_subtitle"] == "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records."
+
+    assert "The Care Line Dispatch" in index_html
+    assert "Browse the Care Line archive" in index_html
+    assert "2026-06-19 — No current update" in archive_html
+    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in archive_html
+
+    assert "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal qualified from the reviewed source records." in edition_html
+    assert "No public claims qualified for this edition." in edition_html
+    assert "No current public signals were qualified for this edition." not in edition_html
+    assert "No current Care Line update was published for this edition." in source_table_html
+    assert "No current Care Line update was published for this edition." in claim_ledger_html
+
+    report = build_public_edition_report(work / "output" / "site", "2026-06-19")
+    assert report["listable"] is True
+    assert report["edition_mode"] == "no_current_update"
+    assert report["qualified_public_claim_count"] == 0

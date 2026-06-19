@@ -12,6 +12,10 @@ POSITIONING_NOTE = (
     "The Care Line tracks source-backed reported signals of healthcare access pressure available at publish time. "
     "It should not be read as a complete national measure of healthcare quality, healthcare access, or unmet medical need."
 )
+NO_CURRENT_UPDATE_SUMMARY = (
+    "No current Care Line update was published because no fresh source-backed healthcare-access pressure signal "
+    "qualified from the reviewed source records."
+)
 MAP_NOTE = (
     "Map markers show where current source-backed signals were found. Areas without markers may still be experiencing "
     "healthcare access problems; they may lack recent public reporting, accessible records, or source coverage in this run."
@@ -550,6 +554,10 @@ def summary_for_records(records: list[dict[str, Any]]) -> str:
     return f"{lead} This edition uses real, traceable source records."
 
 
+def no_current_update_summary() -> str:
+    return NO_CURRENT_UPDATE_SUMMARY
+
+
 def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str, Any]:
     edition_dir = site_root / DISPATCH_SLUG / "editions" / edition_date
     manifest_path = edition_dir / "edition_manifest.json"
@@ -573,6 +581,7 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
         "claim_count": 0,
         "qualified_public_claim_count": 0,
         "lead_signal_count": 0,
+        "edition_mode": "",
         "stale_current_signal_count": 0,
         "resource_only_count": 0,
         "skip_reason": "",
@@ -598,6 +607,7 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
     report["claim_count"] = int(manifest.get("claim_count") or 0)
     report["qualified_public_claim_count"] = int(manifest.get("qualified_public_claim_count") or 0)
     report["lead_signal_count"] = int(manifest.get("lead_signal_count") or 0)
+    report["edition_mode"] = str(manifest.get("edition_mode") or "").strip()
     report["stale_current_signal_count"] = int(manifest.get("stale_current_signal_count") or 0)
     report["resource_only_count"] = int(manifest.get("resource_only_count") or 0)
     report["skip_reason"] = str(manifest.get("skip_reason") or "")
@@ -607,10 +617,16 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
         report["reasons"].append("edition_date mismatch")
     if not report["public_rendered"]:
         report["reasons"].append("public_rendered is false")
-    if report["source_count"] <= 0 or report["story_count"] <= 0 or report["claim_count"] <= 0:
-        report["reasons"].append("source, story, or claim counts are missing")
-    if report["qualified_public_claim_count"] <= 0:
-        report["reasons"].append("no qualified public claims")
+    if report["edition_mode"] == "current_update":
+        if report["source_count"] <= 0 or report["story_count"] <= 0 or report["claim_count"] <= 0:
+            report["reasons"].append("source, story, or claim counts are missing")
+        if report["qualified_public_claim_count"] <= 0:
+            report["reasons"].append("no qualified public claims")
+    elif report["edition_mode"] == "no_current_update":
+        if report["qualified_public_claim_count"] != 0:
+            report["reasons"].append("no_current_update editions require zero qualified public claims")
+    else:
+        report["reasons"].append("edition_mode is missing or invalid")
     if report["stale_current_signal_count"] > 0:
         report["reasons"].append("stale current signals remain in the public edition")
     if report["resource_only_count"] > 0 and report["qualified_public_claim_count"] <= 0:
@@ -624,10 +640,11 @@ def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str,
         and report["dispatch_slug_value"] == DISPATCH_SLUG
         and (not report["edition_date_value"] or report["edition_date_value"] == edition_date)
         and report["public_rendered"] is True
-        and report["source_count"] > 0
-        and report["story_count"] > 0
-        and report["claim_count"] > 0
-        and report["qualified_public_claim_count"] > 0
+        and report["edition_mode"] in {"current_update", "no_current_update"}
+        and (
+            (report["edition_mode"] == "current_update" and report["source_count"] > 0 and report["story_count"] > 0 and report["claim_count"] > 0 and report["qualified_public_claim_count"] > 0)
+            or (report["edition_mode"] == "no_current_update" and report["qualified_public_claim_count"] == 0)
+        )
         and report["stale_current_signal_count"] == 0
         and not report["skip_reason"]
     )

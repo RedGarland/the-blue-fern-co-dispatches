@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-06-20-001",
+    "story_id": "gaza-story-2026-06-20-002",
     "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza",
     "summary": "Wishah among at least 260 journalists killed since. Israel's war on Gaza began in October 2023 Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since. Israel's war on Gaza began in October 2023. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website.",
     "category": "conflict",
@@ -38,7 +38,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-06-20T21:04:53.072405+00:00",
+    "generated_at": "2026-06-20T22:10:55.974536+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -52,13 +52,13 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-06-01-002",
+    "prior_edition_date": "2026-06-01",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-20-004",
+    "story_id": "gaza-story-2026-06-20-005",
     "title": "Parents and two daughters killed in Israeli strike in Gaza",
     "summary": "Israel has repeatedly violated the October ceasefire brokered by the US.",
     "category": "conflict",
@@ -95,7 +95,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T21:04:53.072405+00:00",
+    "generated_at": "2026-06-20T22:10:55.974536+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -114,7 +114,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-20-003",
+    "story_id": "gaza-story-2026-06-20-004",
     "title": "Israeli strike kills children in Gaza despite ceasefire claims",
     "summary": "",
     "category": "conflict",
@@ -151,7 +151,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T21:04:53.072405+00:00",
+    "generated_at": "2026-06-20T22:10:55.974536+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -164,7 +164,7 @@
     "core_ground_development": true,
     "include_decision": "merge_into_existing",
     "public_rendered": false,
-    "prior_story_matched": "gaza-story-2026-06-20-004",
+    "prior_story_matched": "gaza-story-2026-06-20-005",
     "prior_edition_date": "2026-06-20",
     "dedupe_classification": "duplicate_merged",
     "dedupe_reasons": [
@@ -172,7 +172,7 @@
     ]
   },
   {
-    "story_id": "gaza-story-2026-06-20-002",
+    "story_id": "gaza-story-2026-06-20-003",
     "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
     "summary": "Al Jazeera condemned. Israel's 'deliberate' targeting of Wishah, the network's 12th media worker killed during Gaza war.",
     "category": "conflict",
@@ -208,7 +208,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T21:04:53.072405+00:00",
+    "generated_at": "2026-06-20T22:10:55.974536+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -219,11 +219,68 @@
     "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-20-002",
+    "prior_edition_date": "2026-06-20",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "same_event_named_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-20-001",
+    "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+    "summary": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-20-bbc-middle-east-aed29a70b613"
+    ],
+    "source_ids": [
+      "gaza-2026-06-20-bbc-middle-east-aed29a70b613"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "generated_at": "2026-06-20T22:10:55.974536+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-06-05-004",
+    "prior_edition_date": "2026-06-05",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

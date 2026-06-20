@@ -18,14 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 20 Jun 2026 21:05:05 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 20 Jun 2026 22:11:09 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</guid>
     <pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate>
     <description>Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza.. Wishah among at least 260 journalists killed since. Transcript and source links are available from The Blue Fern Co.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-20.mp3" length="1291392" type="audio/mpeg" />
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-20.mp3" length="1332096" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

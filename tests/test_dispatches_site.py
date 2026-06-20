@@ -732,6 +732,37 @@ def test_pages_dry_run_does_not_write_to_pages_repo(built_site):
     assert (pages_repo / ".git").exists()
 
 
+def test_pages_dry_run_with_new_edition_reports_copies_without_parity_failure(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-03",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    copied = result["files_that_would_be_copied"]
+    assert result["ok"] is True
+    assert result["local_pages_copy_ok"] is True
+    assert result["errors"] == []
+    assert copied
+    assert any("gaza/index.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/archive.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/rss.xml" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/editions/2026-05-03/index.html" in path.replace("\\", "/") for path in copied)
+    assert not (pages_repo / "gaza" / "index.html").exists()
+    assert not (pages_repo / "gaza" / "archive.html").exists()
+    assert not (pages_repo / "gaza" / "rss.xml").exists()
+
+
 def test_pages_copy_creates_cname_and_preserves_git(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")

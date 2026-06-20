@@ -3218,8 +3218,8 @@ def publish_pages(
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches))
-        errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
         if not dry_run:
+            errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
             errors.extend(

@@ -1,0 +1,35 @@
+{
+  "blocked_domains": [],
+  "blocked_url_patterns": [
+    "donate",
+    "monthly-giving",
+    "memorial-donation",
+    "tribute-gift",
+    "restaurant",
+    "recipe",
+    "menu",
+    "festival",
+    "find-food",
+    "food-finder",
+    "food-bank-locator"
+  ],
+  "blocked_title_patterns": [
+    "donate",
+    "monthly giving",
+    "memorial donation",
+    "tribute gift",
+    "restaurant",
+    "recipe",
+    "menu",
+    "festival",
+    "find food",
+    "food finder",
+    "food bank locator"
+  ],
+  "blocked_purposes": [
+    "donation_page",
+    "evergreen_context",
+    "resource_page",
+    "program_description"
+  ]
+}

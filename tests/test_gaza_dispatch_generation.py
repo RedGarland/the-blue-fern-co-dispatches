@@ -1963,6 +1963,74 @@ def test_story_cleanup_drops_paragraph_that_exactly_repeats_headline():
     assert any(item.get("reason") == "summary_repeats_headline_or_is_malformed" for item in rejected)
 
 
+def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monkeypatch):
+    root = make_work_root(Path(__file__).resolve().parents[1])
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", root / "output" / "backups" / "gaza")
+    source_dir = root / "data" / "dispatches" / "gaza" / "sources" / "2026-06-20"
+    source_dir.mkdir(parents=True)
+    source_dir.joinpath("manual_sources.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-06-20-guardian-world-554da4348d06",
+                    "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza",
+                    "url": "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza",
+                    "publisher": "The Guardian",
+                    "published_at": "2026-06-20T19:49:11+00:00",
+                    "retrieved_at": "2026-06-20T21:04:51.242154+00:00",
+                    "summary_or_snippet": "Ahmed Wishah, a cameraman for Al Jazeera, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97",
+                    "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
+                    "url": "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-06-20T18:07:09+00:00",
+                    "retrieved_at": "2026-06-20T21:04:51.242154+00:00",
+                    "summary_or_snippet": "Al Jazeera said its cameraman Ahmed Wishah was killed in an Israeli attack in Gaza.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-family",
+                    "title": "Parents and two daughters killed in Israeli strike in Gaza",
+                    "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+                    "publisher": "Al Jazeera",
+                    "published_at": "2026-06-20T17:45:00+00:00",
+                    "retrieved_at": "2026-06-20T21:04:51.242154+00:00",
+                    "summary_or_snippet": "Israel has repeatedly violated the October ceasefire brokered by the US.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_gaza_dispatch(root, "2026-06-20", from_manual_sources=True, dry_run=False, render=True, all_steps=False)
+    html = (root / "output" / "site" / "gaza" / "editions" / "2026-06-20" / "index.html").read_text(encoding="utf-8")
+    glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
+    core = html.split("<h2>Core Gaza Developments</h2>", 1)[1]
+
+    assert result["ok"] is True
+    assert glance.count("Ahmed Wishah") == 1
+    assert core.count("<article><h3>") == 2
+    assert "Parents and two daughters killed in Israeli strike in Gaza" in html
+    assert "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza" in html
+    assert "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss" in html
+    assert "Source mix: 2 stories from 2 publishers." in html
+    assert "Publishers: Al Jazeera, The Guardian." in html
+
+
 def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)

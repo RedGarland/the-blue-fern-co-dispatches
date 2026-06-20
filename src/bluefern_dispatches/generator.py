@@ -2608,10 +2608,10 @@ def pages_sync_repair_message(pages_repo: Path, pages_branch: str) -> str:
 
 
 def _git_porcelain_paths(pages_repo: Path) -> list[str]:
+    if _pages_repo_is_fake_worktree(pages_repo):
+        return _lightweight_git_porcelain_paths(pages_repo)
     status = run_git(["status", "--porcelain=v1", "--untracked-files=all"], pages_repo)
     if status.returncode != 0:
-        if _pages_repo_uses_lightweight_git(pages_repo):
-            return _lightweight_git_porcelain_paths(pages_repo)
         raise RuntimeError(status.stderr.strip() or status.stdout.strip() or "git status failed")
     paths: list[str] = []
     for line in status.stdout.splitlines():
@@ -2637,6 +2637,18 @@ def _pages_repo_active_operation_markers(pages_repo: Path) -> list[str]:
 def _pages_repo_uses_lightweight_git(pages_repo: Path) -> bool:
     git_dir = pages_repo / ".git"
     return git_dir.is_dir() and not (git_dir / "objects").exists()
+
+
+def _pages_repo_is_fake_worktree(pages_repo: Path) -> bool:
+    if not _pages_repo_uses_lightweight_git(pages_repo):
+        return False
+    toplevel = git_stdout(["rev-parse", "--show-toplevel"], pages_repo)
+    if not toplevel:
+        return True
+    try:
+        return Path(toplevel).resolve() != pages_repo.resolve()
+    except OSError:
+        return True
 
 
 def _lightweight_git_dir(pages_repo: Path) -> Path:
@@ -2793,9 +2805,8 @@ def _pages_repo_sync_relation(pages_repo: Path, pages_branch: str) -> str:
     return "diverged"
 
 
-def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
-    lightweight_git = _pages_repo_uses_lightweight_git(pages_repo)
-    current_branch = git_stdout(["branch", "--show-current"], pages_repo) or None
+def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool, lightweight_git: bool = False) -> dict[str, Any]:
+    current_branch = _lightweight_git_current_branch(pages_repo) if lightweight_git else git_stdout(["branch", "--show-current"], pages_repo) or None
     result: dict[str, Any] = {
         "current_branch": current_branch,
         "target_pages_branch": pages_branch,
@@ -2809,7 +2820,7 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> d
     if dry_run:
         return result
 
-    if lightweight_git and current_branch is None:
+    if lightweight_git:
         return _ensure_pages_branch_lightweight(pages_repo, pages_branch, dry_run)
 
     active_markers = _pages_repo_active_operation_markers(pages_repo)
@@ -3061,13 +3072,13 @@ def list_pages_public_edition_folders(pages_repo: Path, only_dispatches: tuple[s
     return found
 
 
-def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str) -> dict[str, Any]:
+def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str, lightweight_git: bool = False) -> dict[str, Any]:
     if not commit:
         return {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"}
     if dry_run:
         return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": None, "message": "dry run; no commit created"}
 
-    if _pages_repo_uses_lightweight_git(pages_repo):
+    if lightweight_git:
         _lightweight_git_set_branch(pages_repo, pages_branch)
         _lightweight_git_write_ref(pages_repo, f"refs/heads/{pages_branch}", "fake-commit")
         return {
@@ -3113,6 +3124,7 @@ def publish_pages(
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
+    lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
     dispatch_seed_dates: dict[str, str] = {}
     ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
@@ -3168,7 +3180,7 @@ def publish_pages(
         "errors": [],
     }
     if not errors and (pages_repo / ".git").exists():
-        branch_result = ensure_pages_branch(pages_repo, pages_branch, dry_run=dry_run)
+        branch_result = ensure_pages_branch(pages_repo, pages_branch, dry_run=dry_run, lightweight_git=lightweight_git)
         errors.extend(branch_result["errors"])
         warnings.extend(branch_result["warnings"])
     would_copy = not errors
@@ -3220,7 +3232,13 @@ def publish_pages(
                 )
             )
         if not errors:
-            commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
+            commit_result = maybe_commit_pages_repo(
+                pages_repo,
+                dry_run=dry_run,
+                commit=commit,
+                pages_branch=pages_branch,
+                lightweight_git=lightweight_git,
+            )
             if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
                 errors.append(commit_result["message"])
             pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)

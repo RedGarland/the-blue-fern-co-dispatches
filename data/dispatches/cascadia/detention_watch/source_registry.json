@@ -1,0 +1,83 @@
+[
+  {
+    "source_id": "reg-ice-nwipc-facility",
+    "title": "ICE detention facilities listing",
+    "url": "https://www.ice.gov/detention-facilities",
+    "source_family": "official_federal",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Primary federal facility listing."
+  },
+  {
+    "source_id": "reg-wa-governor-news",
+    "title": "Washington Governor official news",
+    "url": "https://governor.wa.gov/news",
+    "source_family": "official_state",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "State executive statements relevant to detention policy or response."
+  },
+  {
+    "source_id": "reg-wa-ag-news",
+    "title": "Washington Attorney General newsroom",
+    "url": "https://www.atg.wa.gov/news/news-releases",
+    "source_family": "official_state",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "State legal office statements and actions."
+  },
+  {
+    "source_id": "reg-nwirp-resources",
+    "title": "NWIRP detention resources",
+    "url": "https://www.nwirp.org/",
+    "source_family": "advocacy_legal",
+    "check_frequency": "monthly",
+    "enabled": true,
+    "notes": "Regional legal advocacy and resource updates."
+  },
+  {
+    "source_id": "reg-aidnw-resources",
+    "title": "AID Northwest resources",
+    "url": "https://aidnw.org/",
+    "source_family": "support_org",
+    "check_frequency": "monthly",
+    "enabled": true,
+    "notes": "Regional support and service coordination context."
+  },
+  {
+    "source_id": "reg-trac-detention",
+    "title": "TRAC immigration detention quick facts",
+    "url": "https://trac.syr.edu/immigration/detention/",
+    "source_family": "academic_data",
+    "check_frequency": "monthly",
+    "enabled": true,
+    "notes": "Academic data tracker for detention context."
+  },
+  {
+    "source_id": "reg-courtlistener-query",
+    "title": "CourtListener detention query",
+    "url": "https://www.courtlistener.com/",
+    "source_family": "court_record",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Court records discovery entry point."
+  },
+  {
+    "source_id": "reg-kuow-immigration",
+    "title": "KUOW immigration coverage",
+    "url": "https://www.kuow.org/tags/immigration",
+    "source_family": "local_media",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Local public-media monitoring."
+  },
+  {
+    "source_id": "reg-ap-northwest",
+    "title": "Associated Press Pacific Northwest feed",
+    "url": "https://apnews.com/hub/pacific-northwest",
+    "source_family": "local_media",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Regional wire/local coverage watchlist."
+  }
+]

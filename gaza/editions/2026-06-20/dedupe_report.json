@@ -24,17 +24,6 @@
       ],
       "include_decision": "include",
       "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-20-001",
-      "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
     }
   ],
   "duplicate_skipped": [
@@ -65,6 +54,20 @@
       "prior_edition_date": "2026-06-20",
       "include_decision": "merge_into_existing",
       "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-20-001",
+      "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_named_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-20-002",
+      "prior_edition_date": "2026-06-20",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
     }
   ],
   "continuing_developments": [],
@@ -84,7 +87,7 @@
       "public_rendered": true
     }
   ],
-  "merged_sources": 2,
+  "merged_sources": 3,
   "duplicate_groups": [
     {
       "kept_story_id": "gaza-story-2026-06-20-005",
@@ -109,7 +112,21 @@
         "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97"
       ],
       "duplicate_reason": "same_event_named_casualty",
-      "normalized_event_key": "gaza_named_casualty_ahmed_wishah_al_jazeera_gaza",
+      "normalized_event_key": "gaza_named_casualty_ahmed_wishah_gaza",
+      "reasons": [
+        "same_event_named_casualty"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-06-20-002",
+      "merged_story_ids": [
+        "gaza-story-2026-06-20-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-20-bbc-middle-east-aed29a70b613"
+      ],
+      "duplicate_reason": "same_event_named_casualty",
+      "normalized_event_key": "gaza_named_casualty_ahmed_wishah_gaza",
       "reasons": [
         "same_event_named_casualty"
       ]
@@ -133,6 +150,20 @@
     {
       "story_id": "gaza-story-2026-06-20-003",
       "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_named_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-20-002",
+      "prior_edition_date": "2026-06-20",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-20-001",
+      "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
       "classification": "duplicate_merged",
       "material_update": false,
       "material_update_reasons": [],
@@ -169,20 +200,6 @@
       "duplicate_reasons": [],
       "prior_story_matched": "gaza-story-2026-06-18-008",
       "prior_edition_date": "2026-06-18",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-20-001",
-      "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     }

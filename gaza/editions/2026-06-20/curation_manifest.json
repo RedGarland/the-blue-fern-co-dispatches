@@ -38,7 +38,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-06-20T22:43:58.637271+00:00",
+    "generated_at": "2026-06-20T23:57:38.362274+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -95,7 +95,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T22:43:58.637271+00:00",
+    "generated_at": "2026-06-20T23:57:38.362274+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -151,7 +151,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T22:43:58.637271+00:00",
+    "generated_at": "2026-06-20T23:57:38.362274+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -208,7 +208,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T22:43:58.637271+00:00",
+    "generated_at": "2026-06-20T23:57:38.362274+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -265,7 +265,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-06-20T22:43:58.637271+00:00",
+    "generated_at": "2026-06-20T23:57:38.362274+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -276,11 +276,13 @@
     "claim_status": "independently_reported",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-20-002",
+    "prior_edition_date": "2026-06-20",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "same_event_named_casualty"
+    ]
   }
 ]

@@ -2,6 +2,7 @@
 
 import argparse
 import html
+import hashlib
 import json
 import os
 import re
@@ -2642,6 +2643,60 @@ def _lightweight_git_dir(pages_repo: Path) -> Path:
     return pages_repo / ".git"
 
 
+def _lightweight_git_snapshot_path(pages_repo: Path) -> Path:
+    return _lightweight_git_dir(pages_repo) / "bluefern-lightweight-snapshot.json"
+
+
+def _lightweight_git_file_hash(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _lightweight_git_snapshot_entries(pages_repo: Path) -> dict[str, str]:
+    git_dir = _lightweight_git_dir(pages_repo)
+    entries: dict[str, str] = {}
+    for path in pages_repo.rglob("*"):
+        if not path.is_file():
+            continue
+        if git_dir in path.parents:
+            continue
+        if path.name == ".keep" or path.name.startswith("."):
+            continue
+        entries[path.relative_to(pages_repo).as_posix()] = _lightweight_git_file_hash(path)
+    return entries
+
+
+def _lightweight_git_load_snapshot(pages_repo: Path) -> dict[str, str] | None:
+    snapshot_path = _lightweight_git_snapshot_path(pages_repo)
+    if not snapshot_path.exists():
+        return None
+    try:
+        data = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    snapshot: dict[str, str] = {}
+    for key, value in data.items():
+        if isinstance(key, str) and isinstance(value, str):
+            snapshot[key] = value
+    return snapshot
+
+
+def _lightweight_git_write_snapshot(pages_repo: Path, snapshot: dict[str, str]) -> None:
+    snapshot_path = _lightweight_git_snapshot_path(pages_repo)
+    snapshot_path.write_text(json.dumps(snapshot, sort_keys=True, indent=2), encoding="utf-8")
+
+
+def _lightweight_git_record_snapshot_if_missing(pages_repo: Path) -> None:
+    if _lightweight_git_snapshot_path(pages_repo).exists():
+        return
+    _lightweight_git_write_snapshot(pages_repo, _lightweight_git_snapshot_entries(pages_repo))
+
+
 def _lightweight_git_head_ref(pages_repo: Path) -> str | None:
     head_path = _lightweight_git_dir(pages_repo) / "HEAD"
     if not head_path.exists():
@@ -2690,21 +2745,21 @@ def _lightweight_git_set_branch(pages_repo: Path, branch: str) -> bool:
 
 
 def _lightweight_git_porcelain_paths(pages_repo: Path) -> list[str]:
-    git_dir = _lightweight_git_dir(pages_repo)
-    paths: list[str] = []
-    for path in pages_repo.rglob("*"):
-        if not path.is_file():
-            continue
-        if git_dir in path.parents:
-            continue
-        if path.name == ".keep" or path.name.startswith("."):
-            continue
-        paths.append(path.relative_to(pages_repo).as_posix())
-    return sorted(paths)
+    baseline = _lightweight_git_load_snapshot(pages_repo)
+    current = _lightweight_git_snapshot_entries(pages_repo)
+    if baseline is None:
+        _lightweight_git_write_snapshot(pages_repo, current)
+        return []
+    changed_paths = {rel_path for rel_path in set(baseline) ^ set(current)}
+    for rel_path in set(baseline) & set(current):
+        if baseline[rel_path] != current[rel_path]:
+            changed_paths.add(rel_path)
+    return sorted(changed_paths)
 
 
 def _ensure_pages_branch_lightweight(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
     current_branch = _lightweight_git_current_branch(pages_repo)
+    _lightweight_git_record_snapshot_if_missing(pages_repo)
     result: dict[str, Any] = {
         "current_branch": current_branch,
         "target_pages_branch": pages_branch,

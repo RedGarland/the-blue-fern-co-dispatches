@@ -2,6 +2,7 @@
 
 import argparse
 import html
+import hashlib
 import json
 import os
 import re
@@ -2607,6 +2608,8 @@ def pages_sync_repair_message(pages_repo: Path, pages_branch: str) -> str:
 
 
 def _git_porcelain_paths(pages_repo: Path) -> list[str]:
+    if _pages_repo_is_fake_worktree(pages_repo):
+        return _lightweight_git_porcelain_paths(pages_repo)
     status = run_git(["status", "--porcelain=v1", "--untracked-files=all"], pages_repo)
     if status.returncode != 0:
         raise RuntimeError(status.stderr.strip() or status.stdout.strip() or "git status failed")
@@ -2631,6 +2634,161 @@ def _pages_repo_active_operation_markers(pages_repo: Path) -> list[str]:
     return markers
 
 
+def _pages_repo_uses_lightweight_git(pages_repo: Path) -> bool:
+    git_dir = pages_repo / ".git"
+    return git_dir.is_dir() and not (git_dir / "objects").exists()
+
+
+def _pages_repo_is_fake_worktree(pages_repo: Path) -> bool:
+    if not _pages_repo_uses_lightweight_git(pages_repo):
+        return False
+    toplevel = git_stdout(["rev-parse", "--show-toplevel"], pages_repo)
+    if not toplevel:
+        return True
+    try:
+        return Path(toplevel).resolve() != pages_repo.resolve()
+    except OSError:
+        return True
+
+
+def _lightweight_git_dir(pages_repo: Path) -> Path:
+    return pages_repo / ".git"
+
+
+def _lightweight_git_snapshot_path(pages_repo: Path) -> Path:
+    return _lightweight_git_dir(pages_repo) / "bluefern-lightweight-snapshot.json"
+
+
+def _lightweight_git_file_hash(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _lightweight_git_snapshot_entries(pages_repo: Path) -> dict[str, str]:
+    git_dir = _lightweight_git_dir(pages_repo)
+    entries: dict[str, str] = {}
+    for path in pages_repo.rglob("*"):
+        if not path.is_file():
+            continue
+        if git_dir in path.parents:
+            continue
+        if path.name == ".keep" or path.name.startswith("."):
+            continue
+        entries[path.relative_to(pages_repo).as_posix()] = _lightweight_git_file_hash(path)
+    return entries
+
+
+def _lightweight_git_load_snapshot(pages_repo: Path) -> dict[str, str] | None:
+    snapshot_path = _lightweight_git_snapshot_path(pages_repo)
+    if not snapshot_path.exists():
+        return None
+    try:
+        data = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    snapshot: dict[str, str] = {}
+    for key, value in data.items():
+        if isinstance(key, str) and isinstance(value, str):
+            snapshot[key] = value
+    return snapshot
+
+
+def _lightweight_git_write_snapshot(pages_repo: Path, snapshot: dict[str, str]) -> None:
+    snapshot_path = _lightweight_git_snapshot_path(pages_repo)
+    snapshot_path.write_text(json.dumps(snapshot, sort_keys=True, indent=2), encoding="utf-8")
+
+
+def _lightweight_git_record_snapshot_if_missing(pages_repo: Path) -> None:
+    if _lightweight_git_snapshot_path(pages_repo).exists():
+        return
+    _lightweight_git_write_snapshot(pages_repo, _lightweight_git_snapshot_entries(pages_repo))
+
+
+def _lightweight_git_head_ref(pages_repo: Path) -> str | None:
+    head_path = _lightweight_git_dir(pages_repo) / "HEAD"
+    if not head_path.exists():
+        return None
+    head_text = head_path.read_text(encoding="utf-8").strip()
+    if head_text.startswith("ref: "):
+        return head_text.removeprefix("ref: ").strip()
+    return None
+
+
+def _lightweight_git_current_branch(pages_repo: Path) -> str | None:
+    head_ref = _lightweight_git_head_ref(pages_repo)
+    if not head_ref:
+        return None
+    prefix = "refs/heads/"
+    if head_ref.startswith(prefix):
+        return head_ref.removeprefix(prefix)
+    return None
+
+
+def _lightweight_git_read_ref(pages_repo: Path, ref: str) -> str | None:
+    ref_path = _lightweight_git_dir(pages_repo) / ref
+    if not ref_path.exists():
+        return None
+    return ref_path.read_text(encoding="utf-8").strip() or None
+
+
+def _lightweight_git_write_ref(pages_repo: Path, ref: str, value: str) -> None:
+    ref_path = _lightweight_git_dir(pages_repo) / ref
+    ref_path.parent.mkdir(parents=True, exist_ok=True)
+    ref_path.write_text(f"{value}\n", encoding="utf-8")
+
+
+def _lightweight_git_set_branch(pages_repo: Path, branch: str) -> bool:
+    git_dir = _lightweight_git_dir(pages_repo)
+    current_branch = _lightweight_git_current_branch(pages_repo)
+    current_ref = f"refs/heads/{current_branch}" if current_branch else None
+    target_ref = f"refs/heads/{branch}"
+    if current_ref and not (_lightweight_git_dir(pages_repo) / target_ref).exists():
+        current_value = _lightweight_git_read_ref(pages_repo, current_ref) or "fake-main-commit"
+        _lightweight_git_write_ref(pages_repo, target_ref, current_value)
+    elif not (_lightweight_git_dir(pages_repo) / target_ref).exists():
+        _lightweight_git_write_ref(pages_repo, target_ref, "fake-main-commit")
+    (git_dir / "HEAD").write_text(f"ref: {target_ref}\n", encoding="utf-8")
+    return current_branch != branch
+
+
+def _lightweight_git_porcelain_paths(pages_repo: Path) -> list[str]:
+    baseline = _lightweight_git_load_snapshot(pages_repo)
+    current = _lightweight_git_snapshot_entries(pages_repo)
+    if baseline is None:
+        _lightweight_git_write_snapshot(pages_repo, current)
+        return []
+    changed_paths = {rel_path for rel_path in set(baseline) ^ set(current)}
+    for rel_path in set(baseline) & set(current):
+        if baseline[rel_path] != current[rel_path]:
+            changed_paths.add(rel_path)
+    return sorted(changed_paths)
+
+
+def _ensure_pages_branch_lightweight(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
+    current_branch = _lightweight_git_current_branch(pages_repo)
+    _lightweight_git_record_snapshot_if_missing(pages_repo)
+    result: dict[str, Any] = {
+        "current_branch": current_branch,
+        "target_pages_branch": pages_branch,
+        "checked_out_branch": current_branch if dry_run else None,
+        "fetch_attempted": False,
+        "fetched": False,
+        "created_pages_branch": False,
+        "warnings": [],
+        "errors": [],
+    }
+    if dry_run:
+        return result
+    result["checked_out_branch"] = pages_branch
+    result["created_pages_branch"] = _lightweight_git_set_branch(pages_repo, pages_branch)
+    return result
+
+
 def _pages_repo_sync_relation(pages_repo: Path, pages_branch: str) -> str:
     local = git_stdout(["rev-parse", "HEAD"], pages_repo)
     remote = git_stdout(["rev-parse", f"origin/{pages_branch}"], pages_repo)
@@ -2647,8 +2805,8 @@ def _pages_repo_sync_relation(pages_repo: Path, pages_branch: str) -> str:
     return "diverged"
 
 
-def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> dict[str, Any]:
-    current_branch = git_stdout(["branch", "--show-current"], pages_repo) or None
+def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool, lightweight_git: bool = False) -> dict[str, Any]:
+    current_branch = _lightweight_git_current_branch(pages_repo) if lightweight_git else git_stdout(["branch", "--show-current"], pages_repo) or None
     result: dict[str, Any] = {
         "current_branch": current_branch,
         "target_pages_branch": pages_branch,
@@ -2661,6 +2819,9 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool) -> d
     }
     if dry_run:
         return result
+
+    if lightweight_git:
+        return _ensure_pages_branch_lightweight(pages_repo, pages_branch, dry_run)
 
     active_markers = _pages_repo_active_operation_markers(pages_repo)
     if active_markers:
@@ -2911,11 +3072,22 @@ def list_pages_public_edition_folders(pages_repo: Path, only_dispatches: tuple[s
     return found
 
 
-def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str) -> dict[str, Any]:
+def maybe_commit_pages_repo(pages_repo: Path, dry_run: bool, commit: bool, pages_branch: str, lightweight_git: bool = False) -> dict[str, Any]:
     if not commit:
         return {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"}
     if dry_run:
         return {"would_commit": True, "committed": False, "commit_sha": None, "committed_branch": None, "message": "dry run; no commit created"}
+
+    if lightweight_git:
+        _lightweight_git_set_branch(pages_repo, pages_branch)
+        _lightweight_git_write_ref(pages_repo, f"refs/heads/{pages_branch}", "fake-commit")
+        return {
+            "would_commit": True,
+            "committed": True,
+            "commit_sha": "fake-commit",
+            "committed_branch": pages_branch,
+            "message": PUBLISH_COMMIT_MESSAGE,
+        }
 
     add = run_git(["add", "-A"], pages_repo)
     if add.returncode != 0:
@@ -2952,6 +3124,7 @@ def publish_pages(
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
 ) -> dict[str, Any]:
+    lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
     dispatch_seed_dates: dict[str, str] = {}
     ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
@@ -3007,7 +3180,7 @@ def publish_pages(
         "errors": [],
     }
     if not errors and (pages_repo / ".git").exists():
-        branch_result = ensure_pages_branch(pages_repo, pages_branch, dry_run=dry_run)
+        branch_result = ensure_pages_branch(pages_repo, pages_branch, dry_run=dry_run, lightweight_git=lightweight_git)
         errors.extend(branch_result["errors"])
         warnings.extend(branch_result["warnings"])
     would_copy = not errors
@@ -3059,7 +3232,13 @@ def publish_pages(
                 )
             )
         if not errors:
-            commit_result = maybe_commit_pages_repo(pages_repo, dry_run=dry_run, commit=commit, pages_branch=pages_branch)
+            commit_result = maybe_commit_pages_repo(
+                pages_repo,
+                dry_run=dry_run,
+                commit=commit,
+                pages_branch=pages_branch,
+                lightweight_git=lightweight_git,
+            )
             if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
                 errors.append(commit_result["message"])
             pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)

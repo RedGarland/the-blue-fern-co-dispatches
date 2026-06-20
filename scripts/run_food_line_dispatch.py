@@ -2961,6 +2961,7 @@ def _food_line_claim_ledger_html(
             "<p>No current public Food Line claims were made for this edition because no source-backed food-pressure signal met the project’s freshness and evidence standards.</p>"
             f"<p>Records reviewed: {reviewed_count}. Qualified current records: {claim_count}. Excluded records: {excluded_count}.</p>"
         )
+    page_footer = footer("../../")
     return f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
 <main class="container briefing food-line-shell">
@@ -2986,7 +2987,7 @@ def _food_line_claim_ledger_html(
     <p><a href="./">Return to the edition</a></p>
   </section>
 </main>
-{footer("../../")}"""
+{page_footer}"""
 
 
 def _food_line_skip_reason() -> str:
@@ -3420,6 +3421,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
         audio_mp3_url = str(latest_audio.get("audio_mp3_url") or latest_audio.get("audio_url") or f"/food-line/audio/{edition_date}.mp3").strip()
         source_table_url = f"/food-line/editions/{edition_date}/source_table.html"
         podcast_enclosure_text = "present"
+        page_footer = footer("../")
         body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
 <main class="home food-line-shell">
@@ -3441,7 +3443,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
     <p><a href="../archive.html">Back to the Food Line archive</a></p>
   </section>
 </main>
-{footer("../")}"""
+{page_footer}"""
         _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body))
         return
     episode_line = (
@@ -3449,6 +3451,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
         if include_date
         else "No public audio episode was published for this run."
     )
+    page_footer = footer("../")
     body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
 <main class="home food-line-shell">
@@ -3467,7 +3470,7 @@ def _write_food_line_audio_status_page(root: Path, date: str, skip_reason: str, 
     <p><a href="../archive.html">Back to the Food Line archive</a></p>
   </section>
 </main>
-{footer("../")}"""
+{page_footer}"""
     _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", body))
 
 
@@ -3844,6 +3847,7 @@ def render_food_line_edition(
             context_section_html = "<h2>Research / Context Signals</h2><p>No research / context signals qualified today.</p>"
         policy_section_html = f"<h2>Policy / Benefits Signals</h2>{f'<div>{policy_items}</div>' if policy_items else '<p>No policy / benefits signals qualified today.</p>'}"
         provider_section_html = f"<h2>Provider / Operations Signals</h2>{f'<div>{provider_items}</div>' if provider_items else '<p>No provider / operations signals qualified today.</p>'}"
+    page_footer = footer("../../")
     body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
 <main class="container briefing food-line-shell">
@@ -3873,7 +3877,7 @@ def render_food_line_edition(
     {edition_nav_html}
   </section>
 </main>
-{footer("../../")}"""
+{page_footer}"""
     return _food_line_page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body)
 
 
@@ -3941,6 +3945,7 @@ def _source_table_html(
             page_rows,
         )
     )
+    page_footer = footer("../../")
     body = (
         f"{_food_line_theme_styles()}"
         f"{header(DISPATCH_NAME, '../../', '../../archive.html', '/food-line/')}"
@@ -3958,7 +3963,7 @@ def _source_table_html(
         "<tr>"
         "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Location</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
         "</tr>"
-        f"{rows}</table></section></main>{footer('../../')}"
+        f"{rows}</table></section></main>{page_footer}"
     )
     return _food_line_page(f"Food Line Source Table {date}", f"{BASE_URL}/food-line/editions/{date}/source_table.html", "../../assets/site.css", body)
 
@@ -4297,6 +4302,7 @@ def _render_map_index(date: str, map_data: dict[str, Any]) -> str:
     category_colors_json = json.dumps(FOOD_LINE_CATEGORY_COLORS)
     plotted_json = json.dumps(plotted)
     latest_edition_url = f"/food-line/editions/{date}/"
+    page_footer = footer("../")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -4326,9 +4332,9 @@ def _render_map_index(date: str, map_data: dict[str, Any]) -> str:
       <p><strong>Plotted markers:</strong> {len(plotted)} | <strong>Skipped markers:</strong> {len(skipped)}</p>
       <p>Locations are source-backed pressure signals, not a complete census of food insecurity.</p>
     </div>
-  </section>
+</section>
 </main>
-{footer("../")}
+{page_footer}
 <script>
 const CATEGORY_COLORS = {category_colors_json};
 const FALLBACK_MARKERS = {plotted_json};
@@ -4682,28 +4688,37 @@ def write_food_line_audio(
     transcript = "".join(transcript_parts)
     _write_text(audio_root / f"{date}-transcript.html", transcript)
     _write_json(audio_root / f"{date}.json", metadata)
-    audio_index = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
-<main class="home food-line-audio-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--audio", "../assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>Food Line Audio &mdash; {_human_date(date)}</h1>
-    <p>{html.escape((str(lead.get("publisher") or lead.get("source_name") or "the source").strip() + " reported that " + _audio_lead_summary(lead)) if lead else _food_line_public_story_sentence(lead))}</p>
-    <p><a href="podcast.xml">Open the podcast feed</a></p>
-  </section>
-  <section class="food-line-panel">
-    {"".join(_food_line_audio_index_sections_html(sections))}
-    <h2>Source links</h2>
-    {_food_line_audio_links_html(date, include_transcript_link=True, audio_mp3_url=audio_mp3_url)}
-    <h2>Podcast enclosure status</h2>
-    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>
-    {"<p><audio controls preload=\"none\" src=\"%s\"></audio></p>" % html.escape(audio_mp3_url) if audio_available and audio_mp3_url else ""}
-    <h2>Artwork note</h2>
-    <p>Artwork uses the official Food Line logo when it is available.</p>
-  </section>
-</main>
-{footer("../")}"""
+    page_footer = footer("../")
+    audio_index = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "../", "../archive.html", "/food-line/"),
+            '<main class="home food-line-audio-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--audio", "../assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            f"    <h1>Food Line Audio &mdash; {_human_date(date)}</h1>\n",
+            f"    <p>{html.escape((str(lead.get('publisher') or lead.get('source_name') or 'the source').strip() + ' reported that ' + _audio_lead_summary(lead)) if lead else _food_line_public_story_sentence(lead))}</p>\n",
+            '    <p><a href="podcast.xml">Open the podcast feed</a></p>\n',
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            "".join(_food_line_audio_index_sections_html(sections)),
+            '    <h2>Source links</h2>\n',
+            _food_line_audio_links_html(date, include_transcript_link=True, audio_mp3_url=audio_mp3_url),
+            '    <h2>Podcast enclosure status</h2>\n',
+            f"    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>\n",
+            (
+                f'    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>\n'
+                if audio_available and audio_mp3_url
+                else ""
+            ),
+            '    <h2>Artwork note</h2>\n',
+            '    <p>Artwork uses the official Food Line logo when it is available.</p>\n',
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
     _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index))
     write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=max_edition_date)
     return {
@@ -4760,44 +4775,53 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
         f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
         for public_date in public_dates
     )
-    idx_body = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "", None, None)}
-<main class="home food-line-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--home", "assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>{DISPATCH_NAME}</h1>
-    <p>{html.escape(mission)}</p>
-  </section>
-  <section class="food-line-panel">
-    <h2>Current coverage</h2>
-    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
-    <p><a href="audio/index.html">Audio and podcast feed</a></p>
-    <p><a href="archive.html">Browse the Food Line archive</a></p>
-    {"<p><a href=\"map/\">Pressure map</a></p>" if _food_line_map_is_available(root) else ""}
-    <p>This dispatch is source-backed and uses verified pressure signals only.</p>
-    <p>{html.escape(_food_line_reported_signal_limitation())}</p>
-  </section>
-</main>
-{footer("")}"""
-    archive_body = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "", "archive.html", "/food-line/")}
-<main class="home food-line-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--home", "assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>Food Line Archive</h1>
-    <p>Chronological archive of source-backed Food Line editions.</p>
-  </section>
-  <section class="food-line-panel">
-    <h2>Latest edition</h2>
-    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
-    <h2>Archive</h2>
-    <ul>{archive_entries_html}</ul>
-    <p><a href="index.html">Back to the Food Line home page</a></p>
-  </section>
-</main>
-{footer("")}"""
+    page_footer = footer("")
+    idx_body = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "", None, None),
+            '<main class="home food-line-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--home", "assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            f"    <h1>{DISPATCH_NAME}</h1>\n",
+            f"    <p>{html.escape(mission)}</p>\n",
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Current coverage</h2>\n',
+            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
+            '    <p><a href="audio/index.html">Audio and podcast feed</a></p>\n',
+            '    <p><a href="archive.html">Browse the Food Line archive</a></p>\n',
+            f"{'<p><a href=\"map/\">Pressure map</a></p>' if _food_line_map_is_available(root) else ''}\n",
+            '    <p>This dispatch is source-backed and uses verified pressure signals only.</p>\n',
+            f"    <p>{html.escape(_food_line_reported_signal_limitation())}</p>\n",
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
+    archive_body = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "", "archive.html", "/food-line/"),
+            '<main class="home food-line-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--home", "assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            '    <h1>Food Line Archive</h1>\n',
+            '    <p>Chronological archive of source-backed Food Line editions.</p>\n',
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Latest edition</h2>\n',
+            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
+            '    <h2>Archive</h2>\n',
+            f"    <ul>{archive_entries_html}</ul>\n",
+            '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
     _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
     _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
 

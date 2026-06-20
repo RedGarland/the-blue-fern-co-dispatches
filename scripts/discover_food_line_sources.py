@@ -1417,6 +1417,7 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
         url_resolution_reason = _normalize_source_text(str(row.get("url_resolution_reason") or "")).replace("|", "\\|")
         if url_resolution_reason:
             url_resolution = f"{url_resolution}: {url_resolution_reason}" if url_resolution else url_resolution_reason
+        escaped_row_url = _normalize_source_text(str(row.get("url") or "")).replace("|", "\\|")
         lines.append(
             "| "
             + " | ".join(
@@ -1427,7 +1428,7 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
                 )
                 for field in ("title", "publisher_domain", "url", "discovered_query", "score", "reason", "known_status")
             )
-            .replace(f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | ", f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | {url_resolution} | ")
+            .replace(f" | {escaped_row_url} | ", f" | {escaped_row_url} | {url_resolution} | ")
             + " |"
         )
     return "\n".join(lines)
@@ -3063,6 +3064,12 @@ def discover_food_line_sources(
 
     review_rows.sort(key=lambda row: (str(row.get("action") or ""), str(row.get("source_id") or ""), str(row.get("candidate_url") or "")))
     audit_rows.sort(key=lambda row: (str(row.get("action") or ""), str(row.get("source_id") or ""), str(row.get("candidate_url") or "")))
+    review_rows_for_csv = []
+    for row in review_rows:
+        csv_row = dict(row)
+        if "rejected_by_prefilter" in csv_row:
+            csv_row["rejected_by_prefilter"] = str(csv_row["rejected_by_prefilter"]).lower()
+        review_rows_for_csv.append(csv_row)
     _write_csv(
         discovery_review_path,
         [
@@ -3101,7 +3108,7 @@ def discover_food_line_sources(
             "action",
             "reason",
         ],
-        review_rows,
+        review_rows_for_csv,
     )
     discovery_audit_path.parent.mkdir(parents=True, exist_ok=True)
     discovery_audit_path.write_text(json.dumps(audit_rows, indent=2, ensure_ascii=False), encoding="utf-8")

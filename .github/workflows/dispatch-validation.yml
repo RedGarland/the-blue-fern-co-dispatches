@@ -22,10 +22,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install validation dependencies
-        run: python -m pip install --upgrade pip pyyaml pytest
+        run: python -m pip install --upgrade pip -r requirements.txt pyyaml pytest
 
       - name: Validate repository governance
         run: python scripts/validate_repo_governance.py

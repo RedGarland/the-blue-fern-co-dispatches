@@ -4682,6 +4682,7 @@ def write_food_line_audio(
     transcript = "".join(transcript_parts)
     _write_text(audio_root / f"{date}-transcript.html", transcript)
     _write_json(audio_root / f"{date}.json", metadata)
+    page_footer = footer("../")
     audio_index = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
 <main class="home food-line-audio-shell">
@@ -4703,7 +4704,7 @@ def write_food_line_audio(
     <p>Artwork uses the official Food Line logo when it is available.</p>
   </section>
 </main>
-{footer("../")}"""
+{page_footer}"""
     _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index))
     write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=max_edition_date)
     return {

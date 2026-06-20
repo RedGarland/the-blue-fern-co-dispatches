@@ -38,3 +38,18 @@ repair-and-reclone*.log
 reclone*.log
 
 _bundle_stage/
+
+# Local-only trust material and runtime state
+certs/
+status/
+
+# Sibling Pages workspaces
+bluefern-dispatches-pages-care-line-polish/
+bluefern-dispatches-pages-june17-fix/
+bluefern-dispatches-pages-publish/
+
+# Food Line large/generated operational artifacts
+data/dispatches/food-line/candidate_source_registry.json
+data/dispatches/food-line/discovery_gap/
+data/dispatches/food-line/editions/
+data/dispatches/food-line/sources/

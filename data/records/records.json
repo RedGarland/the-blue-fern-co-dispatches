@@ -75,6 +75,25 @@
     "public_exposed": true
   },
   {
+    "record_id": "gaza-story-2026-06-20-001",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-06-20",
+    "category": "conflict",
+    "title": "Parents and two daughters killed in Israeli strike in Gaza",
+    "public_summary": "Israel has repeatedly violated the October ceasefire brokered by the US.",
+    "detail_summary": null,
+    "score": 67,
+    "included_public": true,
+    "included_detail": false,
+    "source_ids": [
+      "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16"
+    ],
+    "generated_at": "2026-06-20T13:00:36.933703+00:00",
+    "is_free_public": true,
+    "public_exposed": true
+  },
+  {
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",
     "edition_id": "cascadia-2026-05-06",

@@ -1,0 +1,29 @@
+[
+  {
+    "source_id": "reg-ice-detention-listing",
+    "title": "ICE detention facilities listing",
+    "url": "https://example.org/ice-detention-facilities-listing",
+    "source_family": "official_federal",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Public facility listing used for baseline monitoring."
+  },
+  {
+    "source_id": "reg-tacoma-court-search",
+    "title": "Court records search: Tacoma immigration detention references",
+    "url": "https://example.org/tacoma-court-records-search",
+    "source_family": "court_record",
+    "check_frequency": "weekly",
+    "enabled": true,
+    "notes": "Court-record search reference used for baseline monitoring."
+  },
+  {
+    "source_id": "reg-tacoma-geo-record",
+    "title": "Tacoma detention facility geographic record",
+    "url": "https://example.org/tacoma-geographic-record",
+    "source_family": "official_state",
+    "check_frequency": "monthly",
+    "enabled": true,
+    "notes": "Geographic record used for monitoring context."
+  }
+]

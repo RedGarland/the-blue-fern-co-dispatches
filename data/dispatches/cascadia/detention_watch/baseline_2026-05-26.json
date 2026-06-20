@@ -1,0 +1,142 @@
+{
+  "edition_date": "2026-05-26",
+  "title": "Cascadia Detention Watch",
+  "summary": "No new weekly development is asserted in this baseline record. This starting record keeps sourced facts, reported concerns, and open questions separated.",
+  "facility_profile": {
+    "name": "Northwest ICE Processing Center",
+    "location": "Tacoma, Washington",
+    "notes": [
+      {
+        "text": "Facility name and location are documented in public records.",
+        "claim_class": "documented",
+        "source_refs": [
+          "src-ice-facility-page"
+        ]
+      },
+      {
+        "text": "The record preserves one unresolved monitoring question.",
+        "claim_class": "unknown",
+        "source_refs": [
+          "src-geo-facility-page"
+        ]
+      }
+    ]
+  },
+  "what_changed_this_week": [
+    {
+      "item": "No new weekly development is asserted in this baseline record.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    },
+    {
+      "item": "Cited public reporting continues to reference Tacoma detention operations.",
+      "claim_class": "reported",
+      "source_refs": [
+        "src-court-record-search"
+      ]
+    }
+  ],
+  "current_indicators": [
+    {
+      "indicator": "Official records updates",
+      "status": "documented",
+      "basis": "Public listing remains available in cited records.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    },
+    {
+      "indicator": "Court docket activity",
+      "status": "documented",
+      "basis": "Cited court search references Tacoma detention operations.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-court-record-search"
+      ]
+    },
+    {
+      "indicator": "Conditions claims",
+      "status": "unknown",
+      "basis": "No separate verified conditions claim is asserted in this baseline record.",
+      "claim_class": "unknown",
+      "source_refs": [
+        "src-geo-facility-page"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-05-26",
+      "event": "Baseline record established for local monitoring and review.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    }
+  ],
+  "documented_facts": [
+    {
+      "text": "The Tacoma detention facility is publicly listed in cited records.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    }
+  ],
+  "reported_allegations": [
+    {
+      "text": "Reported concerns remain under review in cited sources.",
+      "claim_class": "alleged",
+      "source_refs": [
+        "src-court-record-search"
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "text": "What remains unclear about current operating details?",
+      "label": "open_question",
+      "status": "open",
+      "source_refs": [
+        "src-geo-facility-page"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "src-ice-facility-page",
+      "title": "ICE detention facilities listing",
+      "url": "https://example.org/ice-detention-facilities-listing",
+      "source_type": "official_record",
+      "publisher": "U.S. Immigration and Customs Enforcement",
+      "published_at": "2026-05-26T08:00:00+00:00",
+      "retrieved_at": "2026-05-26T09:00:00+00:00"
+    },
+    {
+      "source_id": "src-court-record-search",
+      "title": "Court records search: Tacoma immigration detention references",
+      "url": "https://example.org/tacoma-court-records-search",
+      "source_type": "court_record",
+      "publisher": "Washington Courts",
+      "published_at": "2026-05-25T09:00:00+00:00",
+      "retrieved_at": "2026-05-26T09:30:00+00:00"
+    },
+    {
+      "source_id": "src-geo-facility-page",
+      "title": "Tacoma detention facility geographic record",
+      "url": "https://example.org/tacoma-geographic-record",
+      "source_type": "official_record",
+      "publisher": "Washington State Geographic Information Office",
+      "published_at": "2026-05-24T10:00:00+00:00",
+      "retrieved_at": "2026-05-26T10:00:00+00:00"
+    }
+  ],
+  "last_checked": "2026-05-26T17:00:00+00:00",
+  "generated_at": "2026-05-26T18:00:00+00:00",
+  "expected_next_review": "2026-06-02",
+  "method_note": "We separate what is documented, what is reported by cited sources, and what remains unknown.",
+  "review_status": "approved"
+}

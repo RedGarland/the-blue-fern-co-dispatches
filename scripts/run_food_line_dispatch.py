@@ -4776,44 +4776,52 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
         for public_date in public_dates
     )
     page_footer = footer("")
-    idx_body = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "", None, None)}
-<main class="home food-line-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--home", "assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>{DISPATCH_NAME}</h1>
-    <p>{html.escape(mission)}</p>
-  </section>
-  <section class="food-line-panel">
-    <h2>Current coverage</h2>
-    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
-    <p><a href="audio/index.html">Audio and podcast feed</a></p>
-    <p><a href="archive.html">Browse the Food Line archive</a></p>
-    {"<p><a href=\"map/\">Pressure map</a></p>" if _food_line_map_is_available(root) else ""}
-    <p>This dispatch is source-backed and uses verified pressure signals only.</p>
-    <p>{html.escape(_food_line_reported_signal_limitation())}</p>
-</section>
-</main>
-{page_footer}"""
-    archive_body = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "", "archive.html", "/food-line/")}
-<main class="home food-line-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--home", "assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>Food Line Archive</h1>
-    <p>Chronological archive of source-backed Food Line editions.</p>
-  </section>
-  <section class="food-line-panel">
-    <h2>Latest edition</h2>
-    {"<p><a href=\"editions/{0}/\">{1}</a></p>".format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else "<p>No public editions have been published yet.</p>"}
-    <h2>Archive</h2>
-    <ul>{archive_entries_html}</ul>
-    <p><a href="index.html">Back to the Food Line home page</a></p>
-</section>
-</main>
-{page_footer}"""
+    idx_body = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "", None, None),
+            '<main class="home food-line-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--home", "assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            f"    <h1>{DISPATCH_NAME}</h1>\n",
+            f"    <p>{html.escape(mission)}</p>\n",
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Current coverage</h2>\n',
+            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
+            '    <p><a href="audio/index.html">Audio and podcast feed</a></p>\n',
+            '    <p><a href="archive.html">Browse the Food Line archive</a></p>\n',
+            f"{'<p><a href=\"map/\">Pressure map</a></p>' if _food_line_map_is_available(root) else ''}\n",
+            '    <p>This dispatch is source-backed and uses verified pressure signals only.</p>\n',
+            f"    <p>{html.escape(_food_line_reported_signal_limitation())}</p>\n",
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
+    archive_body = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "", "archive.html", "/food-line/"),
+            '<main class="home food-line-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--home", "assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            '    <h1>Food Line Archive</h1>\n',
+            '    <p>Chronological archive of source-backed Food Line editions.</p>\n',
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Latest edition</h2>\n',
+            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
+            '    <h2>Archive</h2>\n',
+            f"    <ul>{archive_entries_html}</ul>\n",
+            '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
     _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
     _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
 

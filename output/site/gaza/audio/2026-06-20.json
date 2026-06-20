@@ -1,0 +1,50 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-20",
+  "generated_at": "2026-06-20T13:00:43.130644Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-06-20.mp3",
+  "audio_url": "/gaza/audio/2026-06-20.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 404,
+  "tts_input_word_count": 62,
+  "tts_story_count": 1,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 517632,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-06-20T13:00:43.130628Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-20/",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 20, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Parents and two daughters killed in Israeli strike in Gaza.. Israel has repeatedly violated the October ceasefire brokered by the US. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 20, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 1,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+      "title": "Parents and two daughters killed in Israeli strike in Gaza"
+    }
+  ]
+}

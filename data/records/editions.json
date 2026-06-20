@@ -68,5 +68,20 @@
     "backup_path": null,
     "generated_at": "2026-05-06T23:34:47.650288+00:00",
     "status": "public"
+  },
+  {
+    "edition_id": "gaza-2026-06-20",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "slug": "gaza",
+    "edition_date": "2026-06-20",
+    "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-20/",
+    "output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-20",
+    "backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-20",
+    "generated_at": "2026-06-20T13:00:36.933703+00:00",
+    "status": "public",
+    "is_free_public": true,
+    "public_exposed": true,
+    "has_detail_tier": false
   }
 ]

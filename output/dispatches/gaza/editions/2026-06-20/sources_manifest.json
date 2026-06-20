@@ -1,0 +1,52 @@
+[
+  {
+    "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+    "source_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+    "title": "Parents and two daughters killed in Israeli strike in Gaza",
+    "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-20T08:18:01+00:00",
+    "retrieved_at": "2026-06-20T13:00:35.292432+00:00",
+    "summary_or_snippet": "Israel has repeatedly violated the October ceasefire brokered by the US.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "rss",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-20",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-20-001"
+    ],
+    "claim_ids": [],
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|parents and two daughters killed in israeli strike in gaza",
+    "title_fingerprint": "parents and two daughters killed in israeli strike in gaza",
+    "claim_fingerprint": "al jazeera|parents and two daughters killed in israeli strike in gaza|conflict"
+  }
+]

@@ -42,6 +42,22 @@
     "reliability_tier": "wire-service-report"
   },
   {
+    "source_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+    "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-06-20",
+    "publisher": "Al Jazeera",
+    "title": "Parents and two daughters killed in Israeli strike in Gaza",
+    "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+    "published_at": "2026-06-20T08:18:01+00:00",
+    "retrieved_at": "2026-06-20T13:00:35.292432+00:00",
+    "archive_path": null,
+    "reliability_tier": "reported-public-source",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source"
+  },
+  {
     "source_id": "gaza-src-001",
     "dispatch_id": "dispatch-gaza",
     "edition_id": "gaza-2026-05-03",

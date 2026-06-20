@@ -302,5 +302,32 @@
     "last_seen_date": "2026-05-07",
     "update_count": 0,
     "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-20",
+    "story_id": "gaza-story-2026-06-20-001",
+    "title": "Parents and two daughters killed in Israeli strike in Gaza",
+    "normalized_title": "parents and two daughters killed in israeli strike in gaza",
+    "summary": "Israel has repeatedly violated the October ceasefire brokered by the US.",
+    "source_urls": [
+      "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
+    ],
+    "canonical_urls": [
+      "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "category": "conflict",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "34ae9ff3f5102abd",
+    "first_seen_date": "2026-06-18",
+    "last_seen_date": "2026-06-20",
+    "update_count": 1,
+    "latest_classification": "major_update"
   }
 ]

@@ -168,6 +168,7 @@ GAZA_EVENT_ROLE_PREFIXES = (
 GAZA_EVENT_LOCATION_TERMS = ("gaza", "gaza strip", "central gaza", "southern gaza", "northern gaza")
 GAZA_EVENT_CASUALTY_TERMS = ("killed", "kill", "dead", "death", "injured", "injure", "wounded", "wound")
 GAZA_EVENT_ORG_TERMS = ("al jazeera", "guardian", "reuters", "ap ", "bbc", "afp", "washington post", "new york times")
+GAZA_EVENT_PERSON_PATTERN = re.compile(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b")
 
 
 @dataclass
@@ -391,47 +392,72 @@ def _gaza_event_tokens(story: dict[str, Any]) -> set[str]:
     return tokens
 
 
+def _gaza_story_text(story: dict[str, Any]) -> str:
+    parts = [
+        str(story.get("title") or ""),
+        str(story.get("summary") or ""),
+    ]
+    for record in story.get("source_records") or []:
+        if not isinstance(record, dict):
+            continue
+        parts.extend(
+            [
+                str(record.get("title") or ""),
+                str(record.get("summary_or_snippet") or ""),
+                str(record.get("text") or ""),
+                str(record.get("body_text") or ""),
+                str(record.get("article_text") or ""),
+                str(record.get("content") or ""),
+            ]
+        )
+    return " ".join(part for part in parts if part).strip()
+
+
+def _gaza_named_casualty_person(text: str) -> str:
+    if not text:
+        return ""
+    lowered = normalize_text(text)
+    role_matches = [match for prefix in GAZA_EVENT_ROLE_PREFIXES for match in re.finditer(rf"\b{re.escape(prefix)}\b", text, flags=re.IGNORECASE)]
+    if not role_matches:
+        return ""
+    org_terms = {normalize_text(term) for term in GAZA_EVENT_ORG_TERMS}
+    article_terms = {"the", "a", "an"}
+    for match in role_matches:
+        for chunk in (
+            text[match.end() : min(len(text), match.end() + 220)],
+            text[max(0, match.start() - 120) : match.start()],
+        ):
+            for person_match in GAZA_EVENT_PERSON_PATTERN.finditer(chunk):
+                person = normalize_text(person_match.group(1))
+                if not person or person in org_terms:
+                    continue
+                if person.split()[0] in article_terms:
+                    continue
+                if person in lowered:
+                    return person
+    for person_match in GAZA_EVENT_PERSON_PATTERN.finditer(text):
+        person = normalize_text(person_match.group(1))
+        if person and person not in org_terms and person.split()[0] not in article_terms:
+            return person
+    return ""
+
+
 def _gaza_named_casualty_event_key(story: dict[str, Any]) -> str:
-    text = " ".join(
-        [
-            str(story.get("title") or ""),
-            str(story.get("summary") or ""),
-            " ".join(
-                str(record.get("title") or "")
-                for record in story.get("source_records") or []
-                if isinstance(record, dict)
-            ),
-        ]
-    )
+    text = _gaza_story_text(story)
     lowered = normalize_text(text)
     if "gaza" not in lowered:
         return ""
     if not any(term in lowered for term in GAZA_EVENT_CASUALTY_TERMS):
         return ""
-    person_match = None
-    for prefix in GAZA_EVENT_ROLE_PREFIXES:
-        pattern = rf"\b{re.escape(prefix)}\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b"
-        person_match = re.search(pattern, text)
-        if person_match:
-            break
-    if person_match is None:
-        return ""
-    person = normalize_text(person_match.group(1))
+    person = _gaza_named_casualty_person(text)
     if not person:
         return ""
-    org = ""
-    for term in GAZA_EVENT_ORG_TERMS:
-        if term in lowered:
-            org = normalize_text(term)
-            break
     location = ""
     for term in GAZA_EVENT_LOCATION_TERMS:
         if term in lowered:
             location = normalize_text(term)
             break
     parts = ["gaza_named_casualty", person.replace(" ", "_")]
-    if org:
-        parts.append(org.replace(" ", "_"))
     if location:
         parts.append(location.replace(" ", "_"))
     return "_".join(parts)

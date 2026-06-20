@@ -1998,6 +1998,19 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
                     "reliability_tier": "reported-public-source",
                 },
                 {
+                    "source_record_id": "gaza-2026-06-20-bbc-middle-east-aed29a70b613",
+                    "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+                    "url": "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss",
+                    "publisher": "BBC News",
+                    "published_at": "2026-06-20T21:57:36+00:00",
+                    "retrieved_at": "2026-06-20T22:10:54.052988+00:00",
+                    "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence.",
+                    "source_type": "rss",
+                    "region_scope": "Gaza",
+                    "category_hint": "conflict",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
                     "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-family",
                     "title": "Parents and two daughters killed in Israeli strike in Gaza",
                     "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
@@ -2027,8 +2040,9 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "Parents and two daughters killed in Israeli strike in Gaza" in html
     assert "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza" in html
     assert "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss" in html
-    assert "Source mix: 2 stories from 2 publishers." in html
-    assert "Publishers: Al Jazeera, The Guardian." in html
+    assert "https://www.bbc.com/news/articles/c4gy26p6pwzo" in html
+    assert "Source mix: 2 stories from 3 publishers." in html
+    assert "Publishers: Al Jazeera, BBC News, The Guardian." in html
 
 
 def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):

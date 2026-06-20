@@ -15,7 +15,7 @@
 - wire_international: 1
 
 ## Fetch failures
-- who-news: no matching Gaza items for 2026-06-20
+- <none>
 
 ## Warnings
 - This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.

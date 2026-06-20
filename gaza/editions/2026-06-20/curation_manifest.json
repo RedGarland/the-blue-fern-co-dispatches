@@ -2,7 +2,7 @@
   {
     "story_id": "gaza-story-2026-06-20-001",
     "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza",
-    "summary": "Wishah among at least 260 Palestinian journalists killed since. Israel's war on Gaza began in October 2023 Qatar-based news network Al Jazeera says one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since. Israel's war on Gaza began in October 2023. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website.",
+    "summary": "Wishah among at least 260 journalists killed since. Israel's war on Gaza began in October 2023 Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since. Israel's war on Gaza began in October 2023. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 85,
@@ -38,7 +38,7 @@
     "publisher_names": [
       "The Guardian"
     ],
-    "generated_at": "2026-06-20T20:32:37.480089+00:00",
+    "generated_at": "2026-06-20T21:04:53.072405+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -52,9 +52,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-01-002",
-    "prior_edition_date": "2026-06-01",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
     "dedupe_reasons": []
   },
   {
@@ -95,7 +95,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T20:32:37.480089+00:00",
+    "generated_at": "2026-06-20T21:04:53.072405+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -151,7 +151,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T20:32:37.480089+00:00",
+    "generated_at": "2026-06-20T21:04:53.072405+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -174,7 +174,7 @@
   {
     "story_id": "gaza-story-2026-06-20-002",
     "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
-    "summary": "Al Jazeera 'strongly condemns the heinous crime of targeting and killing' the Mubasher correspondent.",
+    "summary": "Al Jazeera condemned. Israel's 'deliberate' targeting of Wishah, the network's 12th media worker killed during Gaza war.",
     "category": "conflict",
     "story_scope": "core_gaza",
     "score": 53,
@@ -208,7 +208,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T20:32:37.480089+00:00",
+    "generated_at": "2026-06-20T21:04:53.072405+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

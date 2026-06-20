@@ -14,10 +14,8 @@
 - news_media: 4
 
 ## Fetch failures
-- who-news: tls_certificate_verification_failed (environment-sensitive)
-- bbc-middle-east: tls_certificate_verification_failed (environment-sensitive)
-- guardian-world: tls_certificate_verification_failed (environment-sensitive)
-- aljazeera-middle-east: tls_certificate_verification_failed (environment-sensitive)
+- who-news: no matching Gaza items for 2026-06-20
+- bbc-middle-east: no matching Gaza items for 2026-06-20
 
 ## Warnings
 - This is a limited-source update generated from 4 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.

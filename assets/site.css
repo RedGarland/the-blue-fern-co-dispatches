@@ -327,6 +327,10 @@ li + li { margin-top: 0.35rem; }
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
+  background-image: var(--dispatch-card-watermark);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: min(82%, 320px) auto;
 }
 
 .dispatch-card .eyebrow,

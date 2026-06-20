@@ -3064,6 +3064,12 @@ def discover_food_line_sources(
 
     review_rows.sort(key=lambda row: (str(row.get("action") or ""), str(row.get("source_id") or ""), str(row.get("candidate_url") or "")))
     audit_rows.sort(key=lambda row: (str(row.get("action") or ""), str(row.get("source_id") or ""), str(row.get("candidate_url") or "")))
+    review_rows_for_csv = []
+    for row in review_rows:
+        csv_row = dict(row)
+        if "rejected_by_prefilter" in csv_row:
+            csv_row["rejected_by_prefilter"] = str(csv_row["rejected_by_prefilter"]).lower()
+        review_rows_for_csv.append(csv_row)
     _write_csv(
         discovery_review_path,
         [
@@ -3102,7 +3108,7 @@ def discover_food_line_sources(
             "action",
             "reason",
         ],
-        review_rows,
+        review_rows_for_csv,
     )
     discovery_audit_path.parent.mkdir(parents=True, exist_ok=True)
     discovery_audit_path.write_text(json.dumps(audit_rows, indent=2, ensure_ascii=False), encoding="utf-8")

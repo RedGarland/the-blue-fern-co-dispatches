@@ -2218,12 +2218,9 @@ def _fetch(url: str, timeout: int = 15) -> bytes:
 
 def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
     data_root = root / "data" / "dispatches" / "food-line"
-    repo_root = Path(__file__).resolve().parents[2] / "data" / "dispatches" / "food-line"
     paths = [data_root / "source_registry.json", data_root / "pressure_source_registry.json"]
     if not paths[0].exists():
-        if food_line_test_mode_enabled():
-            return []
-        paths = [repo_root / "source_registry.json", repo_root / "pressure_source_registry.json"]
+        return []
     normalized: list[dict[str, Any]] = []
     for path in paths:
         if not path.exists():

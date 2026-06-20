@@ -4683,28 +4683,36 @@ def write_food_line_audio(
     _write_text(audio_root / f"{date}-transcript.html", transcript)
     _write_json(audio_root / f"{date}.json", metadata)
     page_footer = footer("../")
-    audio_index = f"""{_food_line_theme_styles()}
-{header(DISPATCH_NAME, "../", "../archive.html", "/food-line/")}
-<main class="home food-line-audio-shell">
-  <section class="food-line-hero">
-    {_food_line_logo_html("food-line-logo--audio", "../assets/")}
-    <p class="eyebrow">The Blue Fern Co.</p>
-    <h1>Food Line Audio &mdash; {_human_date(date)}</h1>
-    <p>{html.escape((str(lead.get("publisher") or lead.get("source_name") or "the source").strip() + " reported that " + _audio_lead_summary(lead)) if lead else _food_line_public_story_sentence(lead))}</p>
-    <p><a href="podcast.xml">Open the podcast feed</a></p>
-  </section>
-  <section class="food-line-panel">
-    {"".join(_food_line_audio_index_sections_html(sections))}
-    <h2>Source links</h2>
-    {_food_line_audio_links_html(date, include_transcript_link=True, audio_mp3_url=audio_mp3_url)}
-    <h2>Podcast enclosure status</h2>
-    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>
-    {"<p><audio controls preload=\"none\" src=\"%s\"></audio></p>" % html.escape(audio_mp3_url) if audio_available and audio_mp3_url else ""}
-    <h2>Artwork note</h2>
-    <p>Artwork uses the official Food Line logo when it is available.</p>
-  </section>
-</main>
-{page_footer}"""
+    audio_index = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "../", "../archive.html", "/food-line/"),
+            '<main class="home food-line-audio-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--audio", "../assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            f"    <h1>Food Line Audio &mdash; {_human_date(date)}</h1>\n",
+            f"    <p>{html.escape((str(lead.get('publisher') or lead.get('source_name') or 'the source').strip() + ' reported that ' + _audio_lead_summary(lead)) if lead else _food_line_public_story_sentence(lead))}</p>\n",
+            '    <p><a href="podcast.xml">Open the podcast feed</a></p>\n',
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            "".join(_food_line_audio_index_sections_html(sections)),
+            '    <h2>Source links</h2>\n',
+            _food_line_audio_links_html(date, include_transcript_link=True, audio_mp3_url=audio_mp3_url),
+            '    <h2>Podcast enclosure status</h2>\n',
+            f"    <p><strong>Podcast enclosure:</strong> {html.escape(podcast_enclosure_text)}</p>\n",
+            (
+                f'    <p><audio controls preload="none" src="{html.escape(audio_mp3_url)}"></audio></p>\n'
+                if audio_available and audio_mp3_url
+                else ""
+            ),
+            '    <h2>Artwork note</h2>\n',
+            '    <p>Artwork uses the official Food Line logo when it is available.</p>\n',
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
     _write_text(audio_root / "index.html", _food_line_page("Food Line Audio", f"{BASE_URL}/food-line/audio/index.html", "../assets/site.css", audio_index))
     write_food_line_podcast_feed(project_root=root, dry_run=False, max_edition_date=max_edition_date)
     return {

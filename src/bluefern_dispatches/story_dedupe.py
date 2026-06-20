@@ -151,6 +151,23 @@ OFFICIAL_TERMS = {
     "state",
     "tribal",
 }
+GAZA_EVENT_ROLE_PREFIXES = (
+    "cameraman",
+    "camera operator",
+    "correspondent",
+    "doctor",
+    "editor",
+    "journalist",
+    "media worker",
+    "nurse",
+    "photographer",
+    "reporter",
+    "teacher",
+    "worker",
+)
+GAZA_EVENT_LOCATION_TERMS = ("gaza", "gaza strip", "central gaza", "southern gaza", "northern gaza")
+GAZA_EVENT_CASUALTY_TERMS = ("killed", "kill", "dead", "death", "injured", "injure", "wounded", "wound")
+GAZA_EVENT_ORG_TERMS = ("al jazeera", "guardian", "reuters", "ap ", "bbc", "afp", "washington post", "new york times")
 
 
 @dataclass
@@ -337,6 +354,8 @@ def _normalize_event_token(token: str) -> str:
     text = re.sub(r"[^a-z0-9]+", "", str(token or "").lower())
     if not text:
         return ""
+    if text in {"attack", "attacks", "attacked", "attacking", "strike", "strikes", "struck", "airstrike", "airstrikes"}:
+        return "strike"
     if text.endswith("ies") and len(text) > 4:
         text = f"{text[:-3]}y"
     elif text.endswith("ing") and len(text) > 5:
@@ -370,6 +389,52 @@ def _gaza_event_tokens(story: dict[str, Any]) -> set[str]:
         if normalized and normalized not in GAZA_EVENT_STOPWORDS
     }
     return tokens
+
+
+def _gaza_named_casualty_event_key(story: dict[str, Any]) -> str:
+    text = " ".join(
+        [
+            str(story.get("title") or ""),
+            str(story.get("summary") or ""),
+            " ".join(
+                str(record.get("title") or "")
+                for record in story.get("source_records") or []
+                if isinstance(record, dict)
+            ),
+        ]
+    )
+    lowered = normalize_text(text)
+    if "gaza" not in lowered:
+        return ""
+    if not any(term in lowered for term in GAZA_EVENT_CASUALTY_TERMS):
+        return ""
+    person_match = None
+    for prefix in GAZA_EVENT_ROLE_PREFIXES:
+        pattern = rf"\b{re.escape(prefix)}\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b"
+        person_match = re.search(pattern, text)
+        if person_match:
+            break
+    if person_match is None:
+        return ""
+    person = normalize_text(person_match.group(1))
+    if not person:
+        return ""
+    org = ""
+    for term in GAZA_EVENT_ORG_TERMS:
+        if term in lowered:
+            org = normalize_text(term)
+            break
+    location = ""
+    for term in GAZA_EVENT_LOCATION_TERMS:
+        if term in lowered:
+            location = normalize_text(term)
+            break
+    parts = ["gaza_named_casualty", person.replace(" ", "_")]
+    if org:
+        parts.append(org.replace(" ", "_"))
+    if location:
+        parts.append(location.replace(" ", "_"))
+    return "_".join(parts)
 
 
 def merge_story(base: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
@@ -430,6 +495,9 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
     location = bool(re.search(r"\b(near cyprus|off cyprus|cyprus|international waters|maritime blockade)\b", text))
     if actor and action and obj and location:
         return "gaza_flotilla_interception_israeli_forces_cyprus"
+    named_casualty = _gaza_named_casualty_event_key(story)
+    if named_casualty:
+        return named_casualty
     casualty_terms = {"kill", "death", "dead", "casualty", "casualti", "injur", "injury", "wound"}
     ceasefire_terms = {"ceasefire", "ceasefir", "truce"}
     if ceasefire_terms & tokens and tokens & casualty_terms:
@@ -439,6 +507,14 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
 
 def _same_event_cluster_key(story: dict[str, Any]) -> str:
     return _gaza_event_key(story)
+
+
+def _same_event_duplicate_reason(event_key: str) -> str:
+    if event_key == "gaza_flotilla_interception_israeli_forces_cyprus":
+        return "same_event_flotilla_interception"
+    if event_key.startswith("gaza_named_casualty_"):
+        return "same_event_named_casualty"
+    return event_key or "within_edition_duplicate"
 
 
 def has_same_topic(left: dict[str, Any], right: dict[str, Any]) -> bool:
@@ -645,9 +721,7 @@ def collapse_within_edition(stories: list[dict[str, Any]], dispatch_slug: str) -
                 candidate_event_key = _same_event_cluster_key(story)
                 if existing_event_key and candidate_event_key and existing_event_key == candidate_event_key:
                     match_index = index
-                    duplicate_reason = existing_event_key
-                    if existing_event_key == "gaza_flotilla_interception_israeli_forces_cyprus":
-                        duplicate_reason = "same_event_flotilla_interception"
+                    duplicate_reason = _same_event_duplicate_reason(existing_event_key)
                     match_reasons = [duplicate_reason]
                     normalized_event_key = existing_event_key
                     break

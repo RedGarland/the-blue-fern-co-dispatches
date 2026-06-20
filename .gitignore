@@ -2,6 +2,16 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .pytest_tmp/
+.pytest-temp*/
+.pytest_tmp*/
+*.pyc
+.tmp*/
+tmp-archive-debug*/
+tmp-score-check/
+foodline-debug*/
+foodline-check-*/
+foodline-lead-*/
+foodline-row-*/
 src/bluefern_dispatches.egg-info/
 output/test-runs/
 output/local_worktree_cleanup_report.md

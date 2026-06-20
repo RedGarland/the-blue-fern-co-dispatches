@@ -1417,6 +1417,7 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
         url_resolution_reason = _normalize_source_text(str(row.get("url_resolution_reason") or "")).replace("|", "\\|")
         if url_resolution_reason:
             url_resolution = f"{url_resolution}: {url_resolution_reason}" if url_resolution else url_resolution_reason
+        escaped_row_url = _normalize_source_text(str(row.get("url") or "")).replace("|", "\\|")
         lines.append(
             "| "
             + " | ".join(
@@ -1427,7 +1428,7 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
                 )
                 for field in ("title", "publisher_domain", "url", "discovered_query", "score", "reason", "known_status")
             )
-            .replace(f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | ", f" | {_normalize_source_text(str(row.get('url') or '')).replace('|', '\\|')} | {url_resolution} | ")
+            .replace(f" | {escaped_row_url} | ", f" | {escaped_row_url} | {url_resolution} | ")
             + " |"
         )
     return "\n".join(lines)

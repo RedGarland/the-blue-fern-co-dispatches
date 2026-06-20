@@ -1,0 +1,148 @@
+{
+  "edition_date": "2026-05-26",
+  "summary": "This page is a starting record for tracking immigration detention issues connected to the Northwest ICE Processing Center in Tacoma, Washington. It gathers sourced facts, reported concerns, open questions, and monitoring categories in one place. It is designed for ongoing updates, not as a single breaking-news story.",
+  "why_this_matters": "Immigration detention infrastructure can affect court access, legal representation logistics, and local public-service planning in the Pacific Northwest.",
+  "facility_profile": {
+    "name": "Northwest ICE Processing Center / Northwest Detention Center",
+    "location": "Tacoma, Washington",
+    "region_scope": [
+      "WA",
+      "OR",
+      "ID"
+    ],
+    "notes": [
+      {
+        "label": "Facility identity",
+        "value": "The Tacoma facility is referenced in official and public records under both names above.",
+        "claim_class": "documented",
+        "source_refs": [
+          "src-ice-facility-page",
+          "src-geo-facility-page"
+        ]
+      },
+      {
+        "label": "Operator details",
+        "value": "Current operator responsibilities and contract details need confirmation from current official contracts or filings before being stated as settled facts.",
+        "claim_class": "unknown",
+        "source_refs": []
+      }
+    ]
+  },
+  "what_changed_this_week": [
+    {
+      "item": "This first version sets up the tracking record. It identifies the facility, the source types being monitored, and the questions that still need verification.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    },
+    {
+      "item": "No new weekly development is asserted in this baseline record.",
+      "claim_class": "reported",
+      "source_refs": [
+        "src-nijc-reporting"
+      ]
+    }
+  ],
+  "current_indicators": [
+    {
+      "indicator": "Official records updates",
+      "status": "monitoring",
+      "basis": "Monitoring official agency pages for changes.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    },
+    {
+      "indicator": "Court docket activity",
+      "status": "monitoring",
+      "basis": "Monitoring court filings and orders that reference Tacoma detention operations.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-courtlistener-tacoma"
+      ]
+    },
+    {
+      "indicator": "Conditions claims",
+      "status": "unknown",
+      "basis": "No verified conditions finding is asserted in this starting record.",
+      "claim_class": "unknown",
+      "source_refs": []
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-05-26",
+      "event": "Starting record initialized with tracked sources, indicators, and open questions.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page"
+      ]
+    }
+  ],
+  "documented_facts": [
+    {
+      "text": "The Tacoma detention facility is publicly listed and referenced in official and public source records.",
+      "claim_class": "documented",
+      "source_refs": [
+        "src-ice-facility-page",
+        "src-geo-facility-page"
+      ]
+    }
+  ],
+  "reported_allegations": [
+    {
+      "text": "Advocacy and legal organizations periodically publish allegations or concerns regarding detention conditions and process impacts; these are tracked as reported allegations unless corroborated by official records or court findings.",
+      "claim_class": "alleged",
+      "source_refs": [
+        "src-nijc-reporting"
+      ]
+    }
+  ],
+  "open_questions": [
+    {
+      "text": "What current official records identify contract structure and operator responsibilities for the Tacoma facility?",
+      "label": "open_question"
+    },
+    {
+      "text": "What recent court records materially changed detention procedures affecting Washington, Oregon, or Idaho residents?",
+      "label": "open_question"
+    }
+  ],
+  "method_note": "We separate what is documented, what is reported by cited sources, and what remains unknown. Claims without a source are left out or listed as open questions.",
+  "sources": [
+    {
+      "source_id": "src-ice-facility-page",
+      "title": "ICE detention facilities listing",
+      "url": "https://www.ice.gov/detention-facilities",
+      "source_type": "official_record",
+      "publisher": "U.S. Immigration and Customs Enforcement",
+      "published_at": "2026-05-26"
+    },
+    {
+      "source_id": "src-geo-facility-page",
+      "title": "Facility page: Northwest ICE Processing Center",
+      "url": "https://www.geogroup.com/FacilityDetail/FacilityID/11",
+      "source_type": "operator_record",
+      "publisher": "GEO Group",
+      "published_at": "2026-05-26"
+    },
+    {
+      "source_id": "src-courtlistener-tacoma",
+      "title": "Court records search: Tacoma immigration detention references",
+      "url": "https://www.courtlistener.com/",
+      "source_type": "court_record",
+      "publisher": "CourtListener",
+      "published_at": "2026-05-26"
+    },
+    {
+      "source_id": "src-nijc-reporting",
+      "title": "Immigration detention issue page",
+      "url": "https://immigrantjustice.org/issues/immigration-detention",
+      "source_type": "advocacy_legal_report",
+      "publisher": "National Immigrant Justice Center",
+      "published_at": "2026-05-26"
+    }
+  ]
+}

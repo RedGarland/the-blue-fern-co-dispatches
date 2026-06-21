@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-21",
-  "generated_at": "2026-06-21T13:00:45.729851Z",
+  "generated_at": "2026-06-21T20:18:12.641360Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-06-21.mp3",
   "audio_url": "/gaza/audio/2026-06-21.mp3",
@@ -21,24 +21,24 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 649,
-  "tts_input_word_count": 104,
-  "tts_story_count": 2,
+  "tts_input_character_count": 929,
+  "tts_input_word_count": 151,
+  "tts_story_count": 4,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 703488,
+  "audio_file_size_bytes": 1011456,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-06-21T13:00:45.729833Z",
+  "cost_logged_at": "2026-06-21T20:18:12.641321Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-21-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-21/",
-  "script_text": "This is the Gaza Dispatch audio briefing for June 21, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 'Kind, principled': Colleagues remember Gaza journalist killed by Israel. Ahmed Wishah is the 12th Al Jazeera journalist killed by Israel in Gaza since October 2023. This was reported by Al Jazeera.\n\n2. Mother of Al Jazeera's Ahmed Wishah mourns his killing. This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after. Israel killed him in Gaza. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 21, 2026 Gaza edition at dispatches.thebluefernco.com.",
-  "source_count": 2,
+  "script_text": "This is the Gaza Dispatch audio briefing for June 21, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 'Kind, principled': Colleagues remember Gaza journalist killed by Israel. Ahmed Wishah is the 12th Al Jazeera journalist killed by Israel in Gaza since October 2023. This was reported by Al Jazeera.\n\n2. Mother of Al Jazeera's Ahmed Wishah mourns his killing. This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after Israel killed him in Gaza. This was reported by Al Jazeera.\n\n3. Is the French judiciary against Palestine? A recent decision by a French court seems to deny the widely accepted right of occupied populations to resist. This was reported by Al Jazeera.\n\n4. Gaza bids farewell to slain journalist Ahmed Wishah. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 21, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
   "sources": [
     {
       "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-1886929b0f50",
@@ -51,6 +51,18 @@
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/video/newsfeed/2026/6/21/mother-of-al-jazeeras-ahmed-wishah-mourns-his-killing?traffic_source=rss",
       "title": "Mother of Al Jazeera's Ahmed Wishah mourns his killing"
+    },
+    {
+      "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-8eca631e666c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/opinions/2026/6/21/is-the-french-judiciary-against-palestine?traffic_source=rss",
+      "title": "Is the French judiciary against Palestine?"
+    },
+    {
+      "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-41760a307f19",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/6/21/gaza-bids-farewell-to-slain-journalist-ahmed-wishah?traffic_source=rss",
+      "title": "Gaza bids farewell to slain journalist Ahmed Wishah"
     }
   ]
 }

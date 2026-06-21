@@ -1,5 +1,102 @@
 [
   {
+    "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-41760a307f19",
+    "source_id": "gaza-2026-06-21-aljazeera-middle-east-41760a307f19",
+    "title": "Gaza bids farewell to slain journalist Ahmed Wishah",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/6/21/gaza-bids-farewell-to-slain-journalist-ahmed-wishah?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/6/21/gaza-bids-farewell-to-slain-journalist-ahmed-wishah?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-21T14:12:49+00:00",
+    "retrieved_at": "2026-06-21T20:17:59.498205+00:00",
+    "summary_or_snippet": "Gaza bids farewell to slain journalist Ahmed Wishah.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "rss",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-21",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-21-002"
+    ],
+    "claim_ids": [],
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|gaza bids farewell to slain journalist ahmed wishah",
+    "title_fingerprint": "gaza bids farewell to slain journalist ahmed wishah",
+    "claim_fingerprint": "al jazeera|gaza bids farewell to slain journalist ahmed wishah|conflict"
+  },
+  {
+    "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-8eca631e666c",
+    "source_id": "gaza-2026-06-21-aljazeera-middle-east-8eca631e666c",
+    "title": "Is the French judiciary against Palestine?",
+    "url": "https://www.aljazeera.com/opinions/2026/6/21/is-the-french-judiciary-against-palestine?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/opinions/2026/6/21/is-the-french-judiciary-against-palestine?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-21T13:46:16+00:00",
+    "retrieved_at": "2026-06-21T20:17:59.498205+00:00",
+    "summary_or_snippet": "A recent decision by a French court seems to deny the widely accepted right of occupied populations to resist.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "rss",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-21",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-21-003"
+    ],
+    "claim_ids": [],
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "al jazeera|is the french judiciary against palestine",
+    "title_fingerprint": "is the french judiciary against palestine",
+    "claim_fingerprint": "al jazeera|is the french judiciary against palestine|conflict"
+  },
+  {
     "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-1886929b0f50",
     "source_id": "gaza-2026-06-21-aljazeera-middle-east-1886929b0f50",
     "title": "'Kind, principled': Colleagues remember Gaza journalist killed by Israel",
@@ -23,7 +120,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-21",
     "used_in_story_ids": [
-      "gaza-story-2026-06-21-003"
+      "gaza-story-2026-06-21-005"
     ],
     "claim_ids": [],
     "candidate_score": 44,
@@ -72,7 +169,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-21",
     "used_in_story_ids": [
-      "gaza-story-2026-06-21-004"
+      "gaza-story-2026-06-21-006"
     ],
     "claim_ids": [],
     "candidate_score": 44,

@@ -1,10 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-21",
-  "candidates_seen": 2,
+  "candidates_seen": 4,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-06-21-001",
+      "story_id": "gaza-story-2026-06-21-003",
       "title": "'Kind, principled': Colleagues remember Gaza journalist killed by Israel",
       "classification": "new",
       "material_update": true,
@@ -15,8 +15,30 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-21-002",
+      "story_id": "gaza-story-2026-06-21-004",
       "title": "Mother of Al Jazeera's Ahmed Wishah mourns his killing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-21-002",
+      "title": "Is the French judiciary against Palestine?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-21-001",
+      "title": "Gaza bids farewell to slain journalist Ahmed Wishah",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -33,7 +55,7 @@
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-06-21-001",
+      "story_id": "gaza-story-2026-06-21-003",
       "title": "'Kind, principled': Colleagues remember Gaza journalist killed by Israel",
       "classification": "new",
       "material_update": true,
@@ -47,8 +69,36 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-06-21-002",
+      "story_id": "gaza-story-2026-06-21-004",
       "title": "Mother of Al Jazeera's Ahmed Wishah mourns his killing",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-21-002",
+      "title": "Is the French judiciary against Palestine?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-21-001",
+      "title": "Gaza bids farewell to slain journalist Ahmed Wishah",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

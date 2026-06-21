@@ -46,6 +46,37 @@ def test_audio_script_includes_source_attribution():
     assert len(used) == 1
 
 
+def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
+    curation = [
+        {
+            "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza",
+            "summary": (
+                "Wishah among at least 260 journalists killed since. "
+                "Israel's war on Gaza began in October 2023 Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since. "
+                "Israel's war on Gaza began in October 2023. "
+                "Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website."
+            ),
+            "source_record_ids": ["guardian", "aljazeera", "bbc"],
+            "included_in_public_summary": True,
+        }
+    ]
+    sources_by_id = {
+        "guardian": {"source_record_id": "guardian", "publisher": "The Guardian", "url": "https://example.com/g", "title": "Guardian"},
+        "aljazeera": {"source_record_id": "aljazeera", "publisher": "Al Jazeera", "url": "https://example.com/a", "title": "Al Jazeera"},
+        "bbc": {"source_record_id": "bbc", "publisher": "BBC News", "url": "https://example.com/b", "title": "BBC"},
+    }
+
+    script, used = build_gaza_audio_script(edition_date="2026-06-20", curation_rows=curation, sources_by_id=sources_by_id)
+
+    assert ".." not in script
+    assert script.count("Israel's war on Gaza began in October 2023") <= 1
+    attribution = script.split("This was reported by ", 1)[1].split(".", 1)[0]
+    assert "The Guardian" in attribution
+    assert "Al Jazeera" in attribution
+    assert "BBC News" in attribution
+    assert len(used) == 3
+
+
 def test_script_does_not_invent_sources_when_records_missing():
     curation = [{"title": "Gaza update", "summary": "Context from Gaza.", "source_record_ids": ["missing"], "included_in_public_summary": True}]
     script, used = build_gaza_audio_script(edition_date="2026-05-31", curation_rows=curation, sources_by_id={})

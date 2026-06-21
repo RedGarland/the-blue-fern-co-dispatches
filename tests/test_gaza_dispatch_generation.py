@@ -2050,7 +2050,10 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert audio_json["source_count"] == 4
     assert audio_json["tts_story_count"] == 2
     assert ".." not in audio_json["script_text"]
+    assert "Wishah among at least 260 journalists killed since." not in audio_json["script_text"]
+    assert "260. Palestinian journalists" not in audio_json["script_text"]
     assert audio_json["script_text"].count("Israel's war on Gaza began in October 2023") <= 1
+    assert audio_json["script_text"].count("journalists killed since") <= 1
     attribution = audio_json["script_text"].split("This was reported by ", 1)[1].split(".", 1)[0]
     assert "The Guardian" in attribution
     assert "Al Jazeera" in attribution

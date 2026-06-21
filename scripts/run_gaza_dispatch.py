@@ -1956,6 +1956,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    merged_story_by_id = {str(story.get("story_id") or ""): story for story in stories if str(story.get("story_id") or "")}
     decision_by_story = {str(item.get("story_id")): item for item in dedupe_result.decisions if isinstance(item, dict)}
     written_exclusion_by_story = {str(item.get("story_id") or ""): item for item in written_public_exclusions if str(item.get("story_id") or "")}
     curation_manifest_full: list[dict[str, Any]] = []
@@ -1977,6 +1978,18 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         row["prior_edition_date"] = decision.get("prior_edition_date")
         row["dedupe_classification"] = decision.get("classification") or row.get("dedupe_classification")
         row["dedupe_reasons"] = decision.get("duplicate_reasons") or row.get("dedupe_reasons") or []
+        merged_story = merged_story_by_id.get(story_id)
+        if merged_story:
+            for key in ("source_record_ids", "source_ids", "source_urls", "publisher_names", "canonical_urls"):
+                merged_values = list(merged_story.get(key) or [])
+                if merged_values:
+                    row[key] = merged_values
+            if merged_story.get("summary"):
+                row["summary"] = merged_story.get("summary")
+            if merged_story.get("score") is not None:
+                row["score"] = merged_story.get("score")
+            if merged_story.get("scoring_reasons"):
+                row["scoring_reasons"] = list(merged_story.get("scoring_reasons") or [])
         curation_manifest_full.append(row)
     stage_drop_diagnostics = _build_stage_drop_diagnostics(
         raw_sources=manual_records,

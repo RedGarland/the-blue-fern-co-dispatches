@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.generator import build_site
+from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from scripts.run_gaza_dispatch import build_source_diversity_report, curate_stories, normalize_sources, render_gaza_edition, run_gaza_dispatch
 
 
@@ -2033,6 +2034,9 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     html = (root / "output" / "site" / "gaza" / "editions" / "2026-06-20" / "index.html").read_text(encoding="utf-8")
     glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
     core = html.split("<h2>Core Gaza Developments</h2>", 1)[1]
+    audio_result = write_gaza_audio_outputs(root, "2026-06-20", dry_run=False, tts_provider="none")
+    transcript = audio_result.transcript_path.read_text(encoding="utf-8")
+    audio_json = json.loads(audio_result.metadata_path.read_text(encoding="utf-8"))
 
     assert result["ok"] is True
     assert glance.count("Ahmed Wishah") == 1
@@ -2043,6 +2047,14 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "https://www.bbc.com/news/articles/c4gy26p6pwzo" in html
     assert "Source mix: 2 stories from 3 publishers." in html
     assert "Publishers: Al Jazeera, BBC News, The Guardian." in html
+    assert audio_json["source_count"] == 4
+    assert audio_json["tts_story_count"] == 2
+    assert transcript.count("This was reported by Al Jazeera, The Guardian, and BBC News.") == 1
+    assert "reported by Al Jazeera, The Guardian, and BBC News" in transcript
+    assert 'href="https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&amp;at_campaign=rss"' in transcript
+    assert 'href="https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza"' in transcript
+    assert 'href="https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss"' in transcript
+    assert 'href="https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"' in transcript
 
 
 def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):

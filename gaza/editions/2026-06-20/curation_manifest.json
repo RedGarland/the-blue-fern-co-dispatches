@@ -48,7 +48,30 @@
       "Al Jazeera",
       "BBC News"
     ],
-    "generated_at": "2026-06-21T04:04:27.928700+00:00",
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-20-guardian-world-554da4348d06",
+        "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza",
+        "url": "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Wishah among at least 260 journalists killed since Israel's war on Gaza began in October 2023 Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since Israel's war on Gaza began in October 2023. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website."
+      },
+      {
+        "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97",
+        "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
+        "url": "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera condemned Israel's 'deliberate' targeting of Wishah, the network's 12th media worker killed during Gaza war."
+      },
+      {
+        "source_record_id": "gaza-2026-06-20-bbc-middle-east-aed29a70b613",
+        "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+        "url": "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence."
+      }
+    ],
+    "generated_at": "2026-06-21T04:25:43.725296+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -109,7 +132,23 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T04:04:27.928700+00:00",
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+        "title": "Parents and two daughters killed in Israeli strike in Gaza",
+        "url": "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel has repeatedly violated the October ceasefire brokered by the US."
+      },
+      {
+        "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-75a863948e21",
+        "title": "Israeli strike kills children in Gaza despite ceasefire claims",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/6/20/israeli-strike-kills-children-in-gaza-despite-ceasefire-claims?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli strike kills children in Gaza despite ceasefire claims"
+      }
+    ],
+    "generated_at": "2026-06-21T04:25:43.725296+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -165,7 +204,16 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T04:04:27.928700+00:00",
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-75a863948e21",
+        "title": "Israeli strike kills children in Gaza despite ceasefire claims",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/6/20/israeli-strike-kills-children-in-gaza-despite-ceasefire-claims?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli strike kills children in Gaza despite ceasefire claims"
+      }
+    ],
+    "generated_at": "2026-06-21T04:25:43.725296+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -222,7 +270,16 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T04:04:27.928700+00:00",
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97",
+        "title": "Al Jazeera cameraman Ahmed Wishah killed in Israeli attack in Gaza",
+        "url": "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Al Jazeera condemned Israel's 'deliberate' targeting of Wishah, the network's 12th media worker killed during Gaza war."
+      }
+    ],
+    "generated_at": "2026-06-21T04:25:43.725296+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -279,7 +336,16 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-06-21T04:04:27.928700+00:00",
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-20-bbc-middle-east-aed29a70b613",
+        "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+        "url": "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence."
+      }
+    ],
+    "generated_at": "2026-06-21T04:25:43.725296+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

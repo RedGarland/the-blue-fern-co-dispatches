@@ -574,10 +574,66 @@ def test_fewer_than_three_sources_does_not_render_as_normal_daily_briefing(monke
     manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-27" / "edition_manifest.json"))
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-27" / "index.html")
     assert result["ok"] is True
-    assert result["source_adequacy_status"] == "no_publishable_source_backed_update"
-    assert manifest["source_adequacy_status"] == "no_publishable_source_backed_update"
-    assert "No publishable source-backed update / May 27, 2026" in html
+    assert result["source_adequacy_status"] == "limited_source_update"
+    assert manifest["source_adequacy_status"] == "limited_source_update"
+    assert "Limited-source update / May 27, 2026" in html
+    assert "No publishable source-backed update / May 27, 2026" not in html
     assert "Daily briefing / May 27, 2026" not in html
+
+
+def test_june_21_related_wishah_records_render_as_limited_source_update_with_clean_summary(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-06-21",
+        [
+            {
+                "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-1886929b0f50",
+                "title": "'Kind, principled': Colleagues remember Gaza journalist killed by Israel",
+                "url": "https://www.aljazeera.com/news/2026/6/21/kind-principled-palestinian-journalists-remember-slain-gaza-journalist?traffic_source=rss",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-06-21T10:30:18+00:00",
+                "retrieved_at": "2026-06-21T13:00:35.431407+00:00",
+                "summary_or_snippet": "Ahmed Wishah is the 12th Al Jazeera journalist killed by Israel in Gaza since October 2023.",
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-2026-06-21-aljazeera-middle-east-51b8e7eeb9a2",
+                "title": "Mother of Al Jazeera's Ahmed Wishah mourns his killing",
+                "url": "https://www.aljazeera.com/video/newsfeed/2026/6/21/mother-of-al-jazeeras-ahmed-wishah-mourns-his-killing?traffic_source=rss",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-06-21T10:01:27+00:00",
+                "retrieved_at": "2026-06-21T13:00:35.431407+00:00",
+                "summary_or_snippet": "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after. Israel killed him in Gaza.",
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+
+    result = run_gaza_dispatch(work, "2026-06-21", from_manual_sources=True, dry_run=False, render=True, all_steps=False, allow_thin_edition=True)
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-06-21" / "index.html")
+    audio_result = write_gaza_audio_outputs(work, "2026-06-21", dry_run=False, tts_provider="none")
+    transcript = audio_result.transcript_path.read_text(encoding="utf-8")
+
+    assert result["ok"] is True
+    assert result["source_adequacy_status"] == "limited_source_update"
+    assert "Limited-source update / June 21, 2026" in html
+    assert "No publishable source-backed update / June 21, 2026" not in html
+    assert "Today’s saved source records point to 2 reported developments." in html
+    assert "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after Israel killed him in Gaza." in html
+    assert "after. Israel killed him in Gaza" not in html
+    assert html.count("<article><h3>") == 2
+    assert html.count("Ahmed Wishah") >= 2
+    assert "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after Israel killed him in Gaza." in transcript
+    assert "after. Israel killed him in Gaza" not in transcript
 
 
 def test_source_quality_reports_and_manual_template_written_for_limited_source(monkeypatch):
@@ -672,6 +728,7 @@ def test_zero_source_run_refuses_public_generation_and_keeps_failure_non_public(
     payload = json.loads(read(dispatch_manifest))
     report = json.loads(read(collection_report))
     assert result["ok"] is False
+    assert result["source_adequacy_status"] == "no_publishable_source_backed_update"
     assert not site_edition.exists()
     assert payload["public_exposed"] is False
     assert payload["source_count"] == 0

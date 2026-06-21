@@ -986,6 +986,12 @@ def _repair_malformed_punctuation_before_entities(text: str) -> str:
         if updated == fixed:
             break
         fixed = updated
+    fixed = re.sub(
+        r"\b(after|before|while|when|during)\.\s+([A-Z][A-Za-z0-9'/-]*)",
+        r"\1 \2",
+        fixed,
+        flags=re.IGNORECASE,
+    )
     fixed = fixed.replace(
         "The expansion in control by Israel would contradict the terms of the ceasefire. Israel and Hamas agreed to in October 2025.",
         "The expansion in Israeli control would contradict the terms of the ceasefire Israel and Hamas agreed to in October 2025.",
@@ -1236,6 +1242,7 @@ def compute_gaza_source_adequacy(sources: list[dict[str, Any]], stories: list[di
     ).lower()
     has_humanitarian_institutional = any(hint in all_text for hint in HUMANITARIAN_INSTITUTIONAL_HINTS)
     has_wire_international = any(hint in all_text for hint in WIRE_INTERNATIONAL_HINTS)
+    story_count = len(stories)
     core_ground_source_count = sum(1 for source in sources if _is_core_ground_source(source))
     context_only_source_count = sum(1 for source in sources if _is_context_only_source(source))
     claim_attributed_source_count = sum(
@@ -1252,7 +1259,7 @@ def compute_gaza_source_adequacy(sources: list[dict[str, Any]], stories: list[di
     if source_count >= GAZA_SOURCE_TARGET_MIN and publisher_count >= GAZA_PUBLISHER_TARGET_MIN:
         status = "daily_briefing"
         label = "Daily briefing"
-    elif source_count >= GAZA_LIMITED_MIN_SOURCES:
+    elif source_count > 0 and story_count > 0:
         status = "limited_source_update"
         label = "Limited-source update"
     else:

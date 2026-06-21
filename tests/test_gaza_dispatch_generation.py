@@ -2049,8 +2049,13 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "Publishers: Al Jazeera, BBC News, The Guardian." in html
     assert audio_json["source_count"] == 4
     assert audio_json["tts_story_count"] == 2
-    assert transcript.count("This was reported by Al Jazeera, The Guardian, and BBC News.") == 1
-    assert "reported by Al Jazeera, The Guardian, and BBC News" in transcript
+    assert ".." not in audio_json["script_text"]
+    assert audio_json["script_text"].count("Israel's war on Gaza began in October 2023") <= 1
+    attribution = audio_json["script_text"].split("This was reported by ", 1)[1].split(".", 1)[0]
+    assert "The Guardian" in attribution
+    assert "Al Jazeera" in attribution
+    assert "BBC News" in attribution
+    assert transcript.count("This was reported by") == 2
     assert 'href="https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&amp;at_campaign=rss"' in transcript
     assert 'href="https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza"' in transcript
     assert 'href="https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss"' in transcript

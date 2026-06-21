@@ -290,6 +290,42 @@ def _format_date_human(edition_date: str) -> str:
     return f"{dt.strftime('%B')} {dt.day}, {dt.year}"
 
 
+_AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE = re.compile(r"(?<=\d)\s+(?=[A-Z])")
+_AUDIO_WHITESPACE_RE = re.compile(r"\s+")
+
+
+def _normalize_audio_sentence_text(text: str) -> str:
+    cleaned = _clean_public_text(str(text or "").strip())
+    if not cleaned:
+        return ""
+    cleaned = html.unescape(cleaned)
+    cleaned = cleaned.replace("..", ".")
+    cleaned = _AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE.sub(". ", cleaned)
+    cleaned = _AUDIO_WHITESPACE_RE.sub(" ", cleaned).strip()
+    return cleaned
+
+
+def _audio_sentence_list(text: str) -> list[str]:
+    cleaned = _normalize_audio_sentence_text(text)
+    if not cleaned:
+        return []
+    sentences: list[str] = []
+    seen: set[str] = set()
+    for chunk in re.split(r"(?<=[.!?])\s+", cleaned):
+        sentence = chunk.strip()
+        if not sentence:
+            continue
+        sentence = sentence.replace("..", ".")
+        if sentence[-1] not in ".!?":
+            sentence = f"{sentence}."
+        normalized = re.sub(r"[.!?]+$", "", sentence).strip().lower()
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        sentences.append(sentence)
+    return sentences
+
+
 def build_gaza_audio_script(
     *,
     edition_date: str,
@@ -305,8 +341,8 @@ def build_gaza_audio_script(
     used_sources: dict[str, dict[str, Any]] = {}
 
     for idx, story in enumerate(selected, start=1):
-        title = _clean_public_text(str(story.get("title") or "Untitled update"))
-        summary = _clean_public_text(str(story.get("summary") or ""))
+        title = str(story.get("title") or "Untitled update").strip()
+        summary = str(story.get("summary") or "").strip()
         source_ids = _story_source_ids(story)
         source_rows = [sources_by_id[sid] for sid in source_ids if sid in sources_by_id]
         for sid in source_ids:
@@ -316,11 +352,20 @@ def build_gaza_audio_script(
         attribution = f"reported by {_join_words(publishers)}"
         if str(story.get("attribution_mode") or "").strip() == "military_claim_reported":
             attribution = f"according to {_join_words(publishers)} reporting on an IDF statement"
-        lead = f"{idx}. {title}."
-        if summary:
-            script_sections.append(f"{lead} {summary} This was {attribution}.")
+        narrative_sentences: list[str] = []
+        title_sentence = _audio_sentence_list(title)
+        if title_sentence:
+            narrative_sentences.extend(title_sentence[:1])
         else:
-            script_sections.append(f"{lead} This was {attribution}.")
+            narrative_sentences.append("Untitled update.")
+        for sentence in _audio_sentence_list(summary):
+            if title_sentence and sentence == title_sentence[0]:
+                continue
+            narrative_sentences.append(sentence)
+        narrative_sentences.append(f"This was {attribution}.")
+        story_text = " ".join(sentence.strip() for sentence in narrative_sentences if sentence.strip())
+        story_text = _normalize_audio_sentence_text(story_text)
+        script_sections.append(f"{idx}. {story_text}")
 
     script_sections.append(
         f"For the full source-backed dispatch, read the {_format_date_human(edition_date)} Gaza edition at dispatches.thebluefernco.com."

@@ -98,6 +98,33 @@ def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
     assert len(used) == 3
 
 
+def test_audio_script_uses_concise_story_level_summary_for_related_mourning_story():
+    curation = [
+        {
+            "title": "Mother of Al Jazeera's Ahmed Wishah mourns his killing",
+            "summary": "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after. Israel killed him in Gaza.",
+            "source_record_ids": ["aljazeera"],
+            "source_records": [
+                {
+                    "source_record_id": "aljazeera",
+                    "summary_or_snippet": "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after. Israel killed him in Gaza.",
+                }
+            ],
+            "included_in_public_summary": True,
+        }
+    ]
+    sources_by_id = {
+        "aljazeera": {"source_record_id": "aljazeera", "publisher": "Al Jazeera", "url": "https://example.com/a", "title": "Al Jazeera"},
+    }
+
+    script, used = build_gaza_audio_script(edition_date="2026-06-21", curation_rows=curation, sources_by_id=sources_by_id)
+
+    assert "after. Israel killed him in Gaza" not in script
+    assert "This is the moment the mother of Al Jazeera cameraman Ahmed Wishah first saw his body after Israel killed him in Gaza." in script
+    assert "This was reported by Al Jazeera." in script
+    assert len(used) == 1
+
+
 def test_script_does_not_invent_sources_when_records_missing():
     curation = [{"title": "Gaza update", "summary": "Context from Gaza.", "source_record_ids": ["missing"], "included_in_public_summary": True}]
     script, used = build_gaza_audio_script(edition_date="2026-05-31", curation_rows=curation, sources_by_id={})

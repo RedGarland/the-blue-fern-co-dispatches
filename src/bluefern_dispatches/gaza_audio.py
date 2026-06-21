@@ -314,6 +314,12 @@ def _normalize_audio_sentence_text(text: str) -> str:
         return ""
     cleaned = html.unescape(cleaned)
     cleaned = cleaned.replace("..", ".")
+    cleaned = re.sub(
+        r"\b(after|before|while|when|during)\.\s+([A-Z][A-Za-z0-9'/-]*)",
+        r"\1 \2",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
     cleaned = _AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE.sub(". ", cleaned)
     cleaned = _AUDIO_WHITESPACE_RE.sub(" ", cleaned).strip()
     return cleaned
@@ -428,13 +434,7 @@ def _story_audio_summary_text(story: dict[str, Any]) -> str:
     sentences = _audio_sentence_list(best_text)
     if not sentences:
         return ""
-    concise: list[str] = []
-    for sentence in sentences:
-        if sentence not in concise:
-            concise.append(sentence)
-        if len(concise) >= 2:
-            break
-    return " ".join(concise).strip()
+    return sentences[0]
 
 
 def build_gaza_audio_script(

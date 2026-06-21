@@ -2052,8 +2052,11 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert ".." not in audio_json["script_text"]
     assert "Wishah among at least 260 journalists killed since." not in audio_json["script_text"]
     assert "260. Palestinian journalists" not in audio_json["script_text"]
+    assert "Qatar-based news network Al Jazeera has said one of its journalists" not in audio_json["script_text"]
+    assert "to have been killed since." not in audio_json["script_text"]
     assert audio_json["script_text"].count("Israel's war on Gaza began in October 2023") <= 1
     assert audio_json["script_text"].count("journalists killed since") <= 1
+    assert "Multiple outlets reported that Ahmed Wishah, a cameraman for Al Jazeera, was killed in an Israeli strike on a house in the Bureij refugee camp in central Gaza." in audio_json["script_text"]
     attribution = audio_json["script_text"].split("This was reported by ", 1)[1].split(".", 1)[0]
     assert "The Guardian" in attribution
     assert "Al Jazeera" in attribution

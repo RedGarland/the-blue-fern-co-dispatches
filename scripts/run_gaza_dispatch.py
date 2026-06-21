@@ -460,6 +460,15 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 "source_ids": [source["source_record_id"]],
                 "source_urls": [source["url"]],
                 "publisher_names": [source["publisher"]],
+                "source_records": [
+                    {
+                        "source_record_id": source["source_record_id"],
+                        "title": source["title"],
+                        "url": source["url"],
+                        "publisher": source["publisher"],
+                        "summary_or_snippet": source.get("summary_or_snippet"),
+                    }
+                ],
                 "generated_at": now,
                 "relevance_terms_matched": relevance.get("matched_terms") or [],
                 "top_story_relevance_score": score,
@@ -1980,7 +1989,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         row["dedupe_reasons"] = decision.get("duplicate_reasons") or row.get("dedupe_reasons") or []
         merged_story = merged_story_by_id.get(story_id)
         if merged_story:
-            for key in ("source_record_ids", "source_ids", "source_urls", "publisher_names", "canonical_urls"):
+            for key in ("source_record_ids", "source_ids", "source_urls", "publisher_names", "canonical_urls", "source_records"):
                 merged_values = list(merged_story.get(key) or [])
                 if merged_values:
                     row[key] = merged_values

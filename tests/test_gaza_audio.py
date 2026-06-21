@@ -57,6 +57,20 @@ def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
                 "Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website."
             ),
             "source_record_ids": ["guardian", "aljazeera", "bbc"],
+            "source_records": [
+                {
+                    "source_record_id": "guardian",
+                    "summary_or_snippet": "Ahmed Wishah, a cameraman for Al Jazeera, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza.",
+                },
+                {
+                    "source_record_id": "aljazeera",
+                    "summary_or_snippet": "Al Jazeera said its cameraman Ahmed Wishah was killed in an Israeli attack in Gaza.",
+                },
+                {
+                    "source_record_id": "bbc",
+                    "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence.",
+                },
+            ],
             "included_in_public_summary": True,
         }
     ]
@@ -71,8 +85,12 @@ def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
     assert ".." not in script
     assert "Wishah among at least 260 journalists killed since." not in script
     assert "260. Palestinian journalists" not in script
+    assert "Qatar-based news network Al Jazeera has said one of its journalists" not in script
+    assert "to have been killed since." not in script
     assert script.count("Israel's war on Gaza began in October 2023") <= 1
     assert script.count("journalists killed since") <= 1
+    assert "Multiple outlets reported that Ahmed Wishah, a cameraman for Al Jazeera, was killed in an Israeli strike on a house in the Bureij refugee camp in central Gaza." in script
+    assert "Al Jazeera said Wishah was among at least 260 Palestinian journalists killed since Israel's war on Gaza began in October 2023." in script
     attribution = script.split("This was reported by ", 1)[1].split(".", 1)[0]
     assert "The Guardian" in attribution
     assert "Al Jazeera" in attribution

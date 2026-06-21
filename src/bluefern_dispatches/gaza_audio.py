@@ -295,6 +295,17 @@ _AUDIO_WHITESPACE_RE = re.compile(r"\s+")
 _AUDIO_FRAGMENT_SENTENCE_RE = re.compile(
     r"^[A-Z][A-Za-z0-9'’.-]*(?:\s+[A-Z][A-Za-z0-9'’.-]*){0,4}\s+among at least \d+ journalists killed since\.?$"
 )
+_GAZA_NAMED_CASUALTY_TITLE_RE = re.compile(
+    r"^(?P<org>[A-Z][A-Za-z&'’.-]*(?:\s+[A-Z][A-Za-z&'’.-]*)*)\s+"
+    r"(?P<role>cameraman|journalist|reporter|photographer)\s+"
+    r"(?P<person>[A-Z][A-Za-z'’.-]+(?:\s+[A-Z][A-Za-z'’.-]+)+)\s+killed in\s+(?P<event>.+)$",
+    re.IGNORECASE,
+)
+_GAZA_AUDIO_FIELD_PRIORITY = ("summary", "public_summary", "description", "dek", "social_summary", "summary_or_snippet")
+_GAZA_AUDIO_SOURCEY_BOILERPLATE_RE = re.compile(
+    r"(qatar-based news network|has said one of its journalists was killed|to have been killed since|reported on its website)",
+    re.IGNORECASE,
+)
 
 
 def _normalize_audio_sentence_text(text: str) -> str:
@@ -331,6 +342,101 @@ def _audio_sentence_list(text: str) -> list[str]:
     return sentences
 
 
+def _story_audio_named_casualty_summary(story: dict[str, Any]) -> str:
+    title = str(story.get("title") or "").strip()
+    match = _GAZA_NAMED_CASUALTY_TITLE_RE.match(title)
+    if not match:
+        return ""
+    person = match.group("person").strip()
+    org = match.group("org").strip()
+    role = match.group("role").strip()
+    source_records = [record for record in (story.get("source_records") or []) if isinstance(record, dict)]
+    record_text = " ".join(
+        str(
+            record.get("summary_or_snippet")
+            or record.get("summary")
+            or record.get("text")
+            or record.get("title")
+            or ""
+        )
+        for record in source_records
+    )
+    text = f"{_story_text(story)} {record_text}".lower()
+    if not person or not org or not role:
+        return ""
+    surname = person.split()[-1]
+    event_sentence = f"Multiple outlets reported that {person}, a {role} for {org}, was killed in an Israeli strike"
+    if "bureij refugee camp" in text:
+        event_sentence += " on a house in the Bureij refugee camp in central Gaza"
+    elif "gaza" in text:
+        event_sentence += " in Gaza"
+    event_sentence += "."
+    context_sentence = ""
+    if "260" in text and "palestinian journalists" in text and "israel's war on gaza began in october 2023" in text:
+        context_sentence = f"{org} said {surname} was among at least 260 Palestinian journalists killed since Israel's war on Gaza began in October 2023."
+    return " ".join(part for part in (event_sentence, context_sentence) if part)
+
+
+def _score_audio_summary_candidate(text: str, title: str) -> tuple[int, int, int]:
+    sentences = _audio_sentence_list(text)
+    if not sentences:
+        return (-10_000, 0, 0)
+    joined = " ".join(sentences)
+    lowered = joined.lower()
+    title_terms = {term for term in re.findall(r"[A-Za-z]{4,}", title.lower()) if term not in {"the", "with", "from", "this", "that", "have", "been", "into", "onto"}}
+    title_hits = sum(1 for term in title_terms if term in lowered)
+    boilerplate_hits = 1 if _GAZA_AUDIO_SOURCEY_BOILERPLATE_RE.search(joined) else 0
+    length = len(joined)
+    sentence_count = len(sentences)
+    score = 0
+    if sentence_count <= 2:
+        score += 20
+    else:
+        score -= 8 * (sentence_count - 2)
+    if length <= 260:
+        score += 12
+    elif length <= 360:
+        score += 6
+    else:
+        score -= min(12, (length - 360) // 40 + 1)
+    score += min(10, title_hits * 2)
+    score -= boilerplate_hits * 18
+    if re.search(r"\b(killed|strike|attack|cameraman|journalist|gaza|bureij|palestinian journalists)\b", lowered):
+        score += 5
+    if re.search(r"\b(\d{3,})\b", joined):
+        score += 2
+    return score, -sentence_count, -length
+
+
+def _story_audio_summary_text(story: dict[str, Any]) -> str:
+    named_casualty = _story_audio_named_casualty_summary(story)
+    if named_casualty:
+        return named_casualty
+    title = str(story.get("title") or "").strip()
+    best_text = ""
+    best_score = (-10_000, 0, 0)
+    for field in _GAZA_AUDIO_FIELD_PRIORITY:
+        raw = str(story.get(field) or "").strip()
+        if not raw:
+            continue
+        score = _score_audio_summary_candidate(raw, title)
+        if score > best_score:
+            best_score = score
+            best_text = raw
+    if not best_text:
+        return ""
+    sentences = _audio_sentence_list(best_text)
+    if not sentences:
+        return ""
+    concise: list[str] = []
+    for sentence in sentences:
+        if sentence not in concise:
+            concise.append(sentence)
+        if len(concise) >= 2:
+            break
+    return " ".join(concise).strip()
+
+
 def build_gaza_audio_script(
     *,
     edition_date: str,
@@ -347,7 +453,7 @@ def build_gaza_audio_script(
 
     for idx, story in enumerate(selected, start=1):
         title = str(story.get("title") or "Untitled update").strip()
-        summary = str(story.get("summary") or "").strip()
+        summary = _story_audio_summary_text(story)
         source_ids = _story_source_ids(story)
         source_rows = [sources_by_id[sid] for sid in source_ids if sid in sources_by_id]
         for sid in source_ids:

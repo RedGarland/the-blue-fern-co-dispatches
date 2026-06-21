@@ -48,7 +48,7 @@
       "Al Jazeera",
       "BBC News"
     ],
-    "generated_at": "2026-06-21T00:46:52.690573+00:00",
+    "generated_at": "2026-06-21T02:47:18.784119+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -62,9 +62,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-01-002",
-    "prior_edition_date": "2026-06-01",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
     "dedupe_reasons": []
   },
   {
@@ -109,7 +109,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T00:46:52.690573+00:00",
+    "generated_at": "2026-06-21T02:47:18.784119+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -165,7 +165,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T00:46:52.690573+00:00",
+    "generated_at": "2026-06-21T02:47:18.784119+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -222,7 +222,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-21T00:46:52.690573+00:00",
+    "generated_at": "2026-06-21T02:47:18.784119+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -279,7 +279,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-06-21T00:46:52.690573+00:00",
+    "generated_at": "2026-06-21T02:47:18.784119+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

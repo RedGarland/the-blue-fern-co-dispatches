@@ -11,7 +11,9 @@
       "civilian_harm",
       "displacement",
       "source_reliability",
-      "date_confidence"
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-06-20-003",
+      "merged_duplicate_story=gaza-story-2026-06-20-001"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -27,18 +29,26 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-20-guardian-world-554da4348d06"
+      "gaza-2026-06-20-guardian-world-554da4348d06",
+      "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97",
+      "gaza-2026-06-20-bbc-middle-east-aed29a70b613"
     ],
     "source_ids": [
-      "gaza-2026-06-20-guardian-world-554da4348d06"
+      "gaza-2026-06-20-guardian-world-554da4348d06",
+      "gaza-2026-06-20-aljazeera-middle-east-d44617db0c97",
+      "gaza-2026-06-20-bbc-middle-east-aed29a70b613"
     ],
     "source_urls": [
-      "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza"
+      "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza",
+      "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss",
+      "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss"
     ],
     "publisher_names": [
-      "The Guardian"
+      "The Guardian",
+      "Al Jazeera",
+      "BBC News"
     ],
-    "generated_at": "2026-06-20T23:57:38.362274+00:00",
+    "generated_at": "2026-06-21T00:46:52.690573+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -52,9 +62,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-06-01-002",
+    "prior_edition_date": "2026-06-01",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
   {
@@ -68,7 +78,8 @@
       "ceasefire_diplomacy",
       "civilian_harm",
       "source_reliability",
-      "date_confidence"
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-06-20-004"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
@@ -84,18 +95,21 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16"
+      "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+      "gaza-2026-06-20-aljazeera-middle-east-75a863948e21"
     ],
     "source_ids": [
-      "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16"
+      "gaza-2026-06-20-aljazeera-middle-east-22d1969a8c16",
+      "gaza-2026-06-20-aljazeera-middle-east-75a863948e21"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
+      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss",
+      "https://www.aljazeera.com/video/newsfeed/2026/6/20/israeli-strike-kills-children-in-gaza-despite-ceasefire-claims?traffic_source=rss"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T23:57:38.362274+00:00",
+    "generated_at": "2026-06-21T00:46:52.690573+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -151,7 +165,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T23:57:38.362274+00:00",
+    "generated_at": "2026-06-21T00:46:52.690573+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -208,7 +222,7 @@
     "publisher_names": [
       "Al Jazeera"
     ],
-    "generated_at": "2026-06-20T23:57:38.362274+00:00",
+    "generated_at": "2026-06-21T00:46:52.690573+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -265,7 +279,7 @@
     "publisher_names": [
       "BBC News"
     ],
-    "generated_at": "2026-06-20T23:57:38.362274+00:00",
+    "generated_at": "2026-06-21T00:46:52.690573+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

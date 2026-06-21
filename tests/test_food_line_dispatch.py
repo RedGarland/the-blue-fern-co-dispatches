@@ -3766,6 +3766,60 @@ def test_food_line_generic_snap_program_pages_stay_demoted_without_specific_pres
     assert review_by_id["food-line-src-003"]["pressure_signal"] == "false"
 
 
+def test_food_line_cli_publish_skips_no_public_edition_without_pages_publish(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    sentinel_result = {
+        "ok": True,
+        "edition_mode": "no_public_edition",
+        "public_rendered": False,
+        "skip_reason": "No new primary food-access signal qualified for public Food Line publication.",
+        "source_adequacy": {"status": "blocked_insufficient_current_story_sources"},
+        "discovery_gap_check": {"run": False, "report_found": False},
+        "public_url": None,
+    }
+
+    def fake_run_food_line_dispatch(*args, **kwargs):
+        return dict(sentinel_result)
+
+    def fail_publish(*args, **kwargs):
+        raise AssertionError("publish_food_line_pages should not be called for no_public_edition")
+
+    def fail_push(*args, **kwargs):
+        raise AssertionError("push_pages_repo should not be called for no_public_edition")
+
+    monkeypatch.setattr(food_line, "run_food_line_dispatch", fake_run_food_line_dispatch)
+    monkeypatch.setattr(food_line, "publish_food_line_pages", fail_publish)
+    monkeypatch.setattr(food_line, "push_pages_repo", fail_push)
+
+    rc = food_line.main(["--date", "2026-06-19", "--publish"])
+    out = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert out["ok"] is True
+    assert out["edition_mode"] == "no_public_edition"
+    assert out["publish_status"] == "no_public_edition"
+    assert out["publish_skipped_reason"] == "no_public_edition"
+    assert out["pages_publish_skipped_reason"] == "no_public_edition"
+    assert out["pages_publish_copied"] is False
+    assert out["pushed"] is False
+    assert out["skip_reason"] == sentinel_result["skip_reason"]
+    assert out["source_adequacy"]["status"] == "blocked_insufficient_current_story_sources"
+
+
+def test_food_line_publish_food_line_pages_fails_when_expected_edition_missing(monkeypatch: pytest.MonkeyPatch):
+    done = types.SimpleNamespace(
+        returncode=1,
+        stdout="",
+        stderr="expected Food Line Dispatch edition missing: 2026-06-19",
+    )
+    monkeypatch.setattr(food_line, "_run_cmd", lambda *args, **kwargs: done)
+
+    ok, errors, payload = food_line.publish_food_line_pages(Path.cwd(), "2026-06-19")
+
+    assert ok is False
+    assert errors == ["expected Food Line Dispatch edition missing: 2026-06-19"]
+    assert payload == {}
+
+
 def test_food_line_regression_sources_promote_with_verified_date_and_specific_pressure_evidence(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-08"

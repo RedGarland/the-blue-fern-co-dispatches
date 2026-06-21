@@ -5701,20 +5701,25 @@ def main(argv: list[str] | None = None) -> int:
             result["pages_publish_copied"] = False
             result["pushed"] = False
             if args.publish and result.get("ok") and not args.dry_run:
-                ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
-                result["pages_publish_copied"] = ok
-                result["pages_publish_result"] = publish_payload
-                if not ok:
-                    result["ok"] = False
-                    result["errors"] = errors
-                elif args.push:
-                    pushed, message = push_pages_repo()
-                    result["pushed"] = pushed
-                    if not pushed:
+                if str(result.get("edition_mode") or "") == "no_public_edition":
+                    result["publish_status"] = "no_public_edition"
+                    result["publish_skipped_reason"] = "no_public_edition"
+                    result["pages_publish_skipped_reason"] = "no_public_edition"
+                else:
+                    ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
+                    result["pages_publish_copied"] = ok
+                    result["pages_publish_result"] = publish_payload
+                    if not ok:
                         result["ok"] = False
-                        result["errors"] = [message]
-                    else:
-                        result["push_message"] = message
+                        result["errors"] = errors
+                    elif args.push:
+                        pushed, message = push_pages_repo()
+                        result["pushed"] = pushed
+                        if not pushed:
+                            result["ok"] = False
+                            result["errors"] = [message]
+                        else:
+                            result["push_message"] = message
             elif args.publish and args.dry_run:
                 result["publish_skipped_reason"] = "dry_run"
             elif args.publish and not result.get("ok"):

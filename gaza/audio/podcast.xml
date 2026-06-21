@@ -18,14 +18,22 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 21 Jun 2026 04:25:53 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 21 Jun 2026 13:00:45 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 21, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-21-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-21-transcript.html</guid>
+    <pubDate>Sun, 21 Jun 2026 00:00:00 +0000</pubDate>
+    <description>'Kind, principled': Colleagues remember Gaza journalist killed by Israel. Ahmed Wishah is the 12th Al Jazeera journalist killed by Israel in Gaza since October 2023. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-21.mp3" length="703488" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</guid>
     <pubDate>Sat, 20 Jun 2026 00:00:00 +0000</pubDate>
-    <description>Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza. Multiple outlets reported that Ahmed Wishah, a cameraman for Al Jazeera, was killed in an Israeli strike on a house in the Bureij refugee camp in central Gaza. Transcript and source links are available from The Blue Fern Co.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-20.mp3" length="981888" type="audio/mpeg" />
+    <description>Parents and two daughters killed in Israeli strike in Gaza.. Israel has repeatedly violated the October ceasefire brokered by the US. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-20.mp3" length="517632" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

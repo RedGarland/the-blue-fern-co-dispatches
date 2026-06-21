@@ -2,24 +2,23 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-20",
-  "generated_at": "2026-06-21T04:25:43.725296+00:00",
+  "generated_at": "2026-06-20T13:00:36.933703+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-20/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-20",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-20",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-20",
   "template_version": "gaza-source-record-v1",
-  "source_count": 5,
-  "story_count": 2,
-  "source_adequacy_status": "limited_source_update",
-  "source_adequacy_label": "Limited-source update",
-  "publisher_count": 3,
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy_status": "no_publishable_source_backed_update",
+  "source_adequacy_label": "No publishable source-backed update",
+  "publisher_count": 1,
   "publishers": [
-    "Al Jazeera",
-    "BBC News",
-    "The Guardian"
+    "Al Jazeera"
   ],
   "source_adequacy_warnings": [
-    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera."
   ],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-20\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-20\\curation_manifest.json",
@@ -35,8 +34,10 @@
   "has_detail_tier": false,
   "public_exposed": true,
   "warnings": [
-    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-20\\manual_sources.template.json"
+    "This is a limited-source update generated from 1 saved source record from 1 publisher. It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera.",
+    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-20\\manual_sources.template.json",
+    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ],
   "errors": []
 }

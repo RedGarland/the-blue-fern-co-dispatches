@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-20",
-  "generated_at": "2026-06-21T02:47:29.121057Z",
+  "generated_at": "2026-06-21T04:04:39.687565Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-06-20.mp3",
   "audio_url": "/gaza/audio/2026-06-20.mp3",
@@ -21,23 +21,23 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1003,
-  "tts_input_word_count": 165,
+  "tts_input_character_count": 950,
+  "tts_input_word_count": 157,
   "tts_story_count": 2,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1001088,
+  "audio_file_size_bytes": 1069824,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-06-21T02:47:29.121024Z",
+  "cost_logged_at": "2026-06-21T04:04:39.687538Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-20/",
-  "script_text": "This is the Gaza Dispatch audio briefing for June 20, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza. Wishah among at least 260 journalists killed since. Israel's war on Gaza began in October 2023. Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260. Palestinian journalists to have been killed since. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website. This was reported by The Guardian, Al Jazeera, and BBC News.\n\n2. Parents and two daughters killed in Israeli strike in Gaza. Israel has repeatedly violated the October ceasefire brokered by the US. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 20, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for June 20, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Al Jazeera cameraman Ahmed Wishah killed in Israeli strike on Gaza. Israel's war on Gaza began in October 2023. Qatar-based news network Al Jazeera has said one of its journalists was killed by an Israeli strike in Gaza on Saturday, becoming one of the at least 260 Palestinian journalists to have been killed since. Ahmed Wishah, a cameraman for the network, was killed in a strike targeting a house in the Bureij refugee camp in central Gaza, the broadcaster said on its website. This was reported by The Guardian, Al Jazeera, and BBC News.\n\n2. Parents and two daughters killed in Israeli strike in Gaza. Israel has repeatedly violated the October ceasefire brokered by the US. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the June 20, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 5,
   "sources": [
     {

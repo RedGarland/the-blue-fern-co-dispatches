@@ -47,6 +47,7 @@ status/
 bluefern-dispatches-pages-care-line-polish/
 bluefern-dispatches-pages-june17-fix/
 bluefern-dispatches-pages-publish/
+bluefern-dispatches-pages/
 
 # Food Line large/generated operational artifacts
 data/dispatches/food-line/candidate_source_registry.json

@@ -290,8 +290,11 @@ def _format_date_human(edition_date: str) -> str:
     return f"{dt.strftime('%B')} {dt.day}, {dt.year}"
 
 
-_AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE = re.compile(r"(?<=\d)\s+(?=[A-Z])")
+_AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE = re.compile(r"(?<=\b(?:19|20)\d{2})\s+(?=[A-Z])")
 _AUDIO_WHITESPACE_RE = re.compile(r"\s+")
+_AUDIO_FRAGMENT_SENTENCE_RE = re.compile(
+    r"^[A-Z][A-Za-z0-9'’.-]*(?:\s+[A-Z][A-Za-z0-9'’.-]*){0,4}\s+among at least \d+ journalists killed since\.?$"
+)
 
 
 def _normalize_audio_sentence_text(text: str) -> str:
@@ -318,6 +321,8 @@ def _audio_sentence_list(text: str) -> list[str]:
         sentence = sentence.replace("..", ".")
         if sentence[-1] not in ".!?":
             sentence = f"{sentence}."
+        if _AUDIO_FRAGMENT_SENTENCE_RE.match(sentence):
+            continue
         normalized = re.sub(r"[.!?]+$", "", sentence).strip().lower()
         if not normalized or normalized in seen:
             continue

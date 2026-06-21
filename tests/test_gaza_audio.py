@@ -69,7 +69,10 @@ def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
     script, used = build_gaza_audio_script(edition_date="2026-06-20", curation_rows=curation, sources_by_id=sources_by_id)
 
     assert ".." not in script
+    assert "Wishah among at least 260 journalists killed since." not in script
+    assert "260. Palestinian journalists" not in script
     assert script.count("Israel's war on Gaza began in October 2023") <= 1
+    assert script.count("journalists killed since") <= 1
     attribution = script.split("This was reported by ", 1)[1].split(".", 1)[0]
     assert "The Guardian" in attribution
     assert "Al Jazeera" in attribution

@@ -29,7 +29,7 @@ def write_manual_sources(work: Path, edition_date: str, records: list[dict] | No
             "url": "https://www.aa.com.tr/en/middle-east/un-says-israel-blocks-durable-shelter-materials-from-entering-gaza/3923572",
             "publisher": "Anadolu Agency",
             "published_at": f"{edition_date}T12:00:00Z",
-            "retrieved_at": "2026-05-07T00:00:00Z",
+            "retrieved_at": f"{edition_date}T00:00:00Z",
             "summary_or_snippet": "The source reports UN comments that aid agencies could not bring durable shelter materials into Gaza.",
             "source_type": "news",
             "region_scope": "Gaza",
@@ -914,6 +914,195 @@ def test_collection_report_tracks_source_window_and_later_same_day_updates(monke
     assert manifest["contains_post_edition_date_update"] is True
     assert run_manifest["contains_later_same_day_update"] is True
     assert run_manifest["contains_post_edition_date_update"] is True
+
+
+def test_prior_date_rerun_excludes_next_day_retrieval_by_default_and_keeps_same_day_update(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-src-2026-06-21-001",
+            "title": "Gaza aid access update",
+            "url": "https://example.com/gaza-aid-access-1",
+            "publisher": "Reuters",
+            "published_at": "2026-06-21T08:15:00Z",
+            "retrieved_at": "2026-06-21T13:00:35Z",
+            "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-21-002",
+            "title": "Gaza hospital access update",
+            "url": "https://example.com/gaza-hospital-access-2",
+            "publisher": "BBC News",
+            "published_at": "2026-06-21T15:05:00Z",
+            "retrieved_at": "2026-06-21T20:17:59Z",
+            "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-21-003",
+            "title": "Gaza relief update",
+            "url": "https://example.com/gaza-relief-update-3",
+            "publisher": "UN News",
+            "published_at": "2026-06-22T08:15:00Z",
+            "retrieved_at": "2026-06-22T19:05:59Z",
+            "summary_or_snippet": "Relief access was updated the next day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, "2026-06-21", rows)
+    result = run_gaza_dispatch(
+        work,
+        "2026-06-21",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-06-21" / "index.html")
+    sources_manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "sources_manifest.json"))
+    collection_report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "collection_report.json"))
+    next_day_source = next(row for row in sources_manifest if row["source_record_id"] == "gaza-src-2026-06-21-003")
+    same_day_source = next(row for row in sources_manifest if row["source_record_id"] == "gaza-src-2026-06-21-002")
+    assert "Gaza relief update" not in html
+    assert "Gaza hospital access update" in html
+    assert next_day_source["story_selection_excluded_reason"] == "post-edition-date retrieval excluded from prior-date Gaza rerun"
+    assert next_day_source["used_in_story_ids"] == []
+    assert not same_day_source["story_selection_excluded_reason"]
+    assert same_day_source["used_in_story_ids"]
+    assert collection_report["post_edition_date_source_count"] == 0
+    assert collection_report["post_edition_date_sources_included"] is False
+
+
+def test_prior_date_override_includes_next_day_retrieval_and_records_manifest_fields(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-src-2026-06-21-001",
+            "title": "Gaza aid access update",
+            "url": "https://example.com/gaza-aid-access-1",
+            "publisher": "Reuters",
+            "published_at": "2026-06-21T08:15:00Z",
+            "retrieved_at": "2026-06-21T13:00:35Z",
+            "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-21-002",
+            "title": "Gaza hospital access update",
+            "url": "https://example.com/gaza-hospital-access-2",
+            "publisher": "BBC News",
+            "published_at": "2026-06-21T15:05:00Z",
+            "retrieved_at": "2026-06-21T20:17:59Z",
+            "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-21-003",
+            "title": "Gaza relief update",
+            "url": "https://example.com/gaza-relief-update-3",
+            "publisher": "UN News",
+            "published_at": "2026-06-22T08:15:00Z",
+            "retrieved_at": "2026-06-22T19:05:59Z",
+            "summary_or_snippet": "Relief access was updated the next day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, "2026-06-21", rows)
+    result = run_gaza_dispatch(
+        work,
+        "2026-06-21",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+        allow_post_edition_date_sources=True,
+    )
+    assert result["ok"] is True
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-06-21" / "index.html")
+    edition_manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "edition_manifest.json"))
+    sources_manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "sources_manifest.json"))
+    next_day_source = next(row for row in sources_manifest if row["source_record_id"] == "gaza-src-2026-06-21-003")
+    assert "Gaza relief update" in html
+    assert not next_day_source["story_selection_excluded_reason"]
+    assert next_day_source["used_in_story_ids"]
+    assert edition_manifest["allow_post_edition_date_sources"] is True
+    assert edition_manifest["post_edition_date_sources_included"] is True
+    assert edition_manifest["post_edition_date_source_count"] == 1
+
+
+def test_current_day_run_can_still_use_same_day_retrievals(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-src-2026-06-22-001",
+            "title": "Gaza aid access update",
+            "url": "https://example.com/gaza-aid-access-1",
+            "publisher": "Reuters",
+            "published_at": "2026-06-22T08:15:00Z",
+            "retrieved_at": "2026-06-22T13:00:35Z",
+            "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-22-002",
+            "title": "Gaza hospital access update",
+            "url": "https://example.com/gaza-hospital-access-2",
+            "publisher": "BBC News",
+            "published_at": "2026-06-22T15:05:00Z",
+            "retrieved_at": "2026-06-22T20:17:59Z",
+            "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, "2026-06-22", rows)
+    result = run_gaza_dispatch(
+        work,
+        "2026-06-22",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
+    assert result["ok"] is True
+    sources_manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-22" / "sources_manifest.json"))
+    collection_report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-22" / "collection_report.json"))
+    assert all(not row["story_selection_excluded_reason"] for row in sources_manifest)
+    assert collection_report["contains_post_edition_date_update"] is False
 
 
 def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(monkeypatch):

@@ -10,12 +10,15 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+
+LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 
 from bluefern_dispatches.generator import (
     BASE_URL,
@@ -173,6 +176,22 @@ def write_text(path: Path, content: str, dry_run: bool, wrote: list[str]) -> Non
     path.write_text(content, encoding="utf-8")
 
 
+def _parse_metadata_dt(value: str) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        return datetime.fromisoformat(text).replace(tzinfo=timezone.utc)
+    candidate = text.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(candidate)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
 def copy_file(source: Path, target: Path, dry_run: bool, wrote: list[str], warnings: list[str]) -> None:
     if not source.exists():
         warnings.append(f"Missing file: {source}")
@@ -285,7 +304,12 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
     return any(term in text for term in core_terms)
 
 
-def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+def normalize_sources(
+    records: list[dict[str, Any]],
+    edition_date: str,
+    now: str,
+    allow_post_edition_date_sources: bool = False,
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     normalized: list[dict[str, Any]] = []
     errors: list[str] = []
     warnings: list[str] = []
@@ -305,6 +329,10 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
         source_id = str(record["source_record_id"]).strip()
         clean_title = clean_feed_text(str(record["title"]).strip())
         clean_summary = clean_feed_text(str(record["summary_or_snippet"]).strip())
+        retrieved_at = str(record.get("retrieved_at") or now).strip()
+        retrieved_dt = _parse_metadata_dt(retrieved_at)
+        retrieved_local_date = retrieved_dt.astimezone(LOS_ANGELES_TZ).date().isoformat() if retrieved_dt is not None else None
+        post_edition_date_source = bool(retrieved_local_date and retrieved_local_date > edition_date)
         is_relevant, relevance_reason = gaza_relevance_decision(
             {"title": clean_title, "summary_or_snippet": clean_summary, "url": url},
             None,
@@ -317,6 +345,9 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             warnings.append(f"deduped duplicate source record: {source_id}")
             continue
         seen.add(key)
+        boundary_exclusion_reason = None
+        if post_edition_date_source and not allow_post_edition_date_sources:
+            boundary_exclusion_reason = "post-edition-date retrieval excluded from prior-date Gaza rerun"
         selection_exclusion_reason = gaza_story_selection_exclusion_reason(
             {
                 "title": clean_title,
@@ -326,6 +357,8 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
                 "claim_status": record.get("claim_status"),
             }
         )
+        if boundary_exclusion_reason:
+            selection_exclusion_reason = boundary_exclusion_reason
         canonical_url = str(record.get("canonical_url") or "").strip()
         wrapper_url = str(record.get("wrapper_url") or "").strip()
         canonicalization_status = str(record.get("canonicalization_status") or "").strip()
@@ -347,7 +380,9 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
                 "wrapper_url": wrapper_url or None,
                 "publisher": str(record["publisher"]).strip(),
                 "published_at": str(record["published_at"]).strip(),
-                "retrieved_at": str(record.get("retrieved_at") or now).strip(),
+                "retrieved_at": retrieved_at,
+                "retrieved_local_date": retrieved_local_date,
+                "post_edition_date_source": post_edition_date_source,
                 "summary_or_snippet": clean_summary,
                 "source_type": str(record["source_type"]).strip(),
                 "region_scope": str(record["region_scope"]).strip(),
@@ -1611,6 +1646,8 @@ def build_manifests(
     warnings: list[str],
     errors: list[str],
     adequacy: dict[str, Any],
+    allow_post_edition_date_sources: bool = False,
+    post_edition_date_source_count: int = 0,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
     dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
@@ -1635,6 +1672,9 @@ def build_manifests(
         "publisher_count": int(adequacy.get("publisher_count") or 0),
         "publishers": list(adequacy.get("publishers") or []),
         "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+        "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
+        "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
+        "post_edition_date_source_count": int(post_edition_date_source_count),
         "source_manifest_path": str(site_dir / "sources_manifest.json"),
         "curation_manifest_path": str(site_dir / "curation_manifest.json"),
         "free_public_artifacts": [
@@ -1662,6 +1702,9 @@ def build_manifests(
         "publisher_count": int(adequacy.get("publisher_count") or 0),
         "publishers": list(adequacy.get("publishers") or []),
         "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+        "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
+        "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
+        "post_edition_date_source_count": int(post_edition_date_source_count),
         "old_project_dependency": False,
         "warnings": warnings,
         "errors": errors,
@@ -1757,10 +1800,13 @@ def update_shared_records(
             "url": source["url"],
             "published_at": source["published_at"],
             "retrieved_at": source["retrieved_at"],
+            "retrieved_local_date": source.get("retrieved_local_date"),
+            "post_edition_date_source": bool(source.get("post_edition_date_source")),
             "archive_path": None,
             "reliability_tier": source["reliability_tier"],
             "attribution_mode": str(source.get("attribution_mode") or ""),
             "claim_status": str(source.get("claim_status") or ""),
+            "story_selection_excluded_reason": str(source.get("story_selection_excluded_reason") or ""),
         }
         for source in sources
     ]
@@ -1809,7 +1855,16 @@ def update_shared_records(
     write_json(files["detail_packages"], read_record_file(files["detail_packages"]), dry_run, wrote)
 
 
-def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, dry_run: bool, render: bool, all_steps: bool, allow_thin_edition: bool = False) -> dict[str, Any]:
+def run_gaza_dispatch(
+    root: Path,
+    edition_date: str,
+    from_manual_sources: bool,
+    dry_run: bool,
+    render: bool,
+    all_steps: bool,
+    allow_thin_edition: bool = False,
+    allow_post_edition_date_sources: bool = False,
+) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     generated_at = utc_now()
     warnings: list[str] = []
@@ -1823,7 +1878,12 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     normalized_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "normalized" / edition_date
     curated_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "curated" / edition_date
     write_json(raw_dir / "raw_sources.json", manual_records, dry_run, wrote)
-    normalized, norm_warnings, norm_errors = normalize_sources(manual_records, edition_date, generated_at)
+    normalized, norm_warnings, norm_errors = normalize_sources(
+        manual_records,
+        edition_date,
+        generated_at,
+        allow_post_edition_date_sources=allow_post_edition_date_sources,
+    )
     warnings.extend(norm_warnings)
     errors.extend(norm_errors)
     normalized, cross_edition_report = filter_recent_duplicate_sources(root, edition_date, normalized, lookback_days=7)
@@ -1835,6 +1895,11 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         )
     if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
+    post_edition_date_source_count = sum(
+        1
+        for source in normalized
+        if bool(source.get("post_edition_date_source")) and not str(source.get("story_selection_excluded_reason") or "").strip()
+    )
     timing_metadata = build_gaza_collection_timing_metadata(
         normalized,
         edition_date,
@@ -1955,6 +2020,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "stage_counts": stage_counts,
         "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),
         "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
+        "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
+        "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
+        "post_edition_date_source_count": int(post_edition_date_source_count),
     }
     collection_report.update(timing_metadata)
     stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
@@ -2131,7 +2199,16 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized, adequacy, root=root)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
-            root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors, adequacy
+            root,
+            edition_date,
+            normalized,
+            curation_manifest_full,
+            generated_at,
+            warnings,
+            errors,
+            adequacy,
+            allow_post_edition_date_sources=allow_post_edition_date_sources,
+            post_edition_date_source_count=post_edition_date_source_count,
         )
         edition_manifest.update(timing_metadata)
         run_manifest.update(timing_metadata)
@@ -2144,7 +2221,16 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized, adequacy, root=root)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
-            root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors, adequacy
+            root,
+            edition_date,
+            normalized,
+            curation_manifest_full,
+            generated_at,
+            warnings,
+            errors,
+            adequacy,
+            allow_post_edition_date_sources=allow_post_edition_date_sources,
+            post_edition_date_source_count=post_edition_date_source_count,
         )
         edition_manifest.update(timing_metadata)
         run_manifest.update(timing_metadata)
@@ -2227,6 +2313,9 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "public_exposed": not errors,
         "backup_root": str(BACKUP_ROOT),
         "allow_thin_edition": bool(allow_thin_edition),
+        "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
+        "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
+        "post_edition_date_source_count": int(post_edition_date_source_count),
     }
 
 
@@ -2239,6 +2328,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--render", action="store_true", help="Render the public edition and manifests.")
     parser.add_argument("--all", action="store_true", help="Run all generation stages.")
     parser.add_argument("--allow-thin-edition", action="store_true", help="Allow publish when only thin Gaza coverage survives relevance gates.")
+    parser.add_argument(
+        "--allow-post-edition-date-sources",
+        action="store_true",
+        help="Allow sources retrieved after the edition date to be used in this Gaza rerun/backfill.",
+    )
     return parser.parse_args()
 
 
@@ -2253,6 +2347,7 @@ def main() -> int:
             render=args.render,
             all_steps=args.all,
             allow_thin_edition=args.allow_thin_edition,
+            allow_post_edition_date_sources=args.allow_post_edition_date_sources,
         )
     except Exception as exc:
         result = {"ok": False, "errors": [str(exc)]}

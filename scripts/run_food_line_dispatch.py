@@ -34,6 +34,7 @@ from bluefern_dispatches.food_line_sources import (
     _url_path_date,
     validate_food_line_source_freshness,
 )
+from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
 
@@ -56,6 +57,14 @@ _FOOD_LINE_STATE_NAMES = {
     "TX": "Texas",
     "VA": "Virginia",
 }
+
+
+def _food_line_discovery_expansion_audit(root: Path, date: str) -> dict[str, Any]:
+    try:
+        audit = read_food_line_discovery_expansion_audit(root, date)
+    except Exception:
+        return {}
+    return audit if isinstance(audit, dict) else {}
 
 
 def header(
@@ -5190,6 +5199,7 @@ def run_food_line_dispatch(
     else:
         source_freshness_status = "blocked_insufficient_current_story_sources"
         food_line_publish_blocked_reason = skip_reason
+    discovery_expansion_audit = _food_line_discovery_expansion_audit(root, date)
     manifest = {
         "dispatch_slug": DISPATCH_SLUG,
         "dispatch_name": DISPATCH_NAME,
@@ -5271,6 +5281,14 @@ def run_food_line_dispatch(
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
         "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
+        "discovery_expansion_audit_path": discovery_expansion_audit.get("discovery_audit_json_path"),
+        "discovery_expansion_audit_markdown_path": discovery_expansion_audit.get("discovery_audit_md_path"),
+        "discovery_expansion_candidate_path": discovery_expansion_audit.get("discovery_candidates_path"),
+        "discovery_confidence": discovery_expansion_audit.get("discovery_confidence"),
+        "discovery_confidence_reason": discovery_expansion_audit.get("discovery_confidence_reason"),
+        "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
+        "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
+        "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "public_signal_count": public_signal_count,
         "qualified_but_not_public_count": qualified_but_not_public_count,
@@ -5444,6 +5462,14 @@ def run_food_line_dispatch(
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
         "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
+        "discovery_expansion_audit_path": discovery_expansion_audit.get("discovery_audit_json_path"),
+        "discovery_expansion_audit_markdown_path": discovery_expansion_audit.get("discovery_audit_md_path"),
+        "discovery_expansion_candidate_path": discovery_expansion_audit.get("discovery_candidates_path"),
+        "discovery_confidence": discovery_expansion_audit.get("discovery_confidence"),
+        "discovery_confidence_reason": discovery_expansion_audit.get("discovery_confidence_reason"),
+        "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
+        "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
+        "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
         "pressure_review_path": str(pressure_review_path),
         "public_signal_count": public_signal_count,
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),

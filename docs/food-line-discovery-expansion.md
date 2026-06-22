@@ -177,3 +177,5 @@ It would show:
 - no silent disappearance from the audit
 
 That preserves traceability without weakening Food Line publication standards.
+
+For the intake bridge that feeds the daily dispatch path, see `docs/food-line-discovery-intake.md`.

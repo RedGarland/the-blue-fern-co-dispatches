@@ -34,6 +34,7 @@ from bluefern_dispatches.food_line_sources import (
     _url_path_date,
     validate_food_line_source_freshness,
 )
+from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
 from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
@@ -1677,10 +1678,14 @@ def _source_merge_url(row: dict[str, Any]) -> str:
     return primary or url
 
 
-def _merged_sources(root: Path, date: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+def _merged_sources(root: Path, date: str, *, include_discovery_candidates: bool = False) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
     manual_path = _manual_source_path(root, date)
     auto_path = _auto_source_path(root, date)
+    discovery_path = root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "discovery_sources.json"
     manual_rows, manual_rejected, diagnostics = _load_source_file(manual_path) if manual_path.exists() else ([], [], [])
+    discovery_rows, discovery_rejected, discovery_diagnostics = ([], [], [])
+    if include_discovery_candidates and discovery_path.exists():
+        discovery_rows, discovery_rejected, discovery_diagnostics = _load_source_file(discovery_path)
     auto_rows, auto_rejected, _ = _load_source_file(auto_path) if auto_path.exists() else ([], [], [])
     seen_urls: set[str] = set()
     seen_titles: set[str] = set()
@@ -1694,6 +1699,15 @@ def _merged_sources(root: Path, date: str) -> tuple[list[dict[str, Any]], list[d
         seen_urls.add(url_key)
         seen_titles.add(title_key)
         merged.append(row)
+    for row in discovery_rows:
+        url_key = _source_merge_url(row)
+        title_key = normalize_title(str(row.get("title") or ""))
+        if url_key in seen_urls or title_key in seen_titles:
+            diagnostics.append(f"discovery record skipped due to manual duplicate override: {row.get('source_record_id') or row.get('title')}")
+            continue
+        seen_urls.add(url_key)
+        seen_titles.add(title_key)
+        merged.append(row)
     for row in auto_rows:
         url_key = _source_merge_url(row)
         title_key = normalize_title(str(row.get("title") or ""))
@@ -1703,7 +1717,7 @@ def _merged_sources(root: Path, date: str) -> tuple[list[dict[str, Any]], list[d
         seen_urls.add(url_key)
         seen_titles.add(title_key)
         merged.append(row)
-    return merged, [*manual_rejected, *auto_rejected], diagnostics
+    return merged, [*manual_rejected, *discovery_rejected, *auto_rejected], [*diagnostics, *discovery_diagnostics]
 
 
 def source_adequacy(sources: list[dict[str, Any]]) -> dict[str, Any]:
@@ -4886,6 +4900,7 @@ def run_food_line_dispatch(
     *,
     collect: bool = False,
     collect_fetcher: Any | None = None,
+    use_discovery_candidates: bool = False,
     include_discovery_gap_summary: bool = False,
     generate_audio: bool = False,
     require_audio: bool = False,
@@ -4901,12 +4916,35 @@ def run_food_line_dispatch(
     public_max_date = None if allow_future_date else _food_line_local_today().isoformat()
     collect_result: dict[str, Any] | None = None
     registry_purpose_refresh = refresh_food_line_pressure_registry_source_purpose(root)
+    discovery_bridge_result: dict[str, Any] = {
+        "ok": True,
+        "discovery_expansion_used": False,
+        "discovery_candidate_count": 0,
+        "discovery_qualified_candidate_count": 0,
+        "discovery_context_candidate_count": 0,
+        "discovery_blocked_candidate_count": 0,
+        "discovery_duplicate_count": 0,
+        "discovery_confidence": "",
+        "discovery_confidence_reason": "",
+        "discovery_audit_path": "",
+        "discovery_candidates_path": "",
+        "discovery_candidates_intaked": 0,
+        "discovery_candidates_excluded": 0,
+        "discovery_candidates_manual_review_required": 0,
+        "discovery_no_current_update_state": "no_candidates_found",
+        "discovery_no_current_update_reason": "",
+        "discovery_source_input_path": "",
+        "discovery_review_path": "",
+        "discovery_source_rows": [],
+    }
+    if use_discovery_candidates:
+        discovery_bridge_result = run_food_line_discovery_intake_bridge(root, date)
     if collect:
         try:
             collect_result = collect_food_line_auto_sources(root, date, fetcher=collect_fetcher)
         except Exception as exc:  # noqa: BLE001
             collect_result = {"ok": False, "source_count": 0, "failed_sources": [{"source_id": "collector", "reason": str(exc)}]}
-    sources, rejected_records, source_diagnostics = _merged_sources(root, date)
+    sources, rejected_records, source_diagnostics = _merged_sources(root, date, include_discovery_candidates=use_discovery_candidates)
     for row in sources:
         row_url_date, _ = _url_path_date(str(row.get("url") or ""))
         preclassified = any(
@@ -5289,6 +5327,19 @@ def run_food_line_dispatch(
         "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
         "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
         "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
+        "discovery_expansion_used": bool(discovery_bridge_result.get("discovery_expansion_used")),
+        "discovery_candidate_count": int(discovery_bridge_result.get("discovery_candidate_count") or 0),
+        "discovery_qualified_candidate_count": int(discovery_bridge_result.get("discovery_qualified_candidate_count") or 0),
+        "discovery_context_candidate_count": int(discovery_bridge_result.get("discovery_context_candidate_count") or 0),
+        "discovery_blocked_candidate_count": int(discovery_bridge_result.get("discovery_blocked_candidate_count") or 0),
+        "discovery_duplicate_count": int(discovery_bridge_result.get("discovery_duplicate_count") or 0),
+        "discovery_candidates_intaked": int(discovery_bridge_result.get("discovery_candidates_intaked") or 0),
+        "discovery_candidates_excluded": int(discovery_bridge_result.get("discovery_candidates_excluded") or 0),
+        "discovery_candidates_manual_review_required": int(discovery_bridge_result.get("discovery_candidates_manual_review_required") or 0),
+        "discovery_source_input_path": discovery_bridge_result.get("discovery_source_input_path"),
+        "discovery_review_path": discovery_bridge_result.get("discovery_review_path"),
+        "discovery_no_current_update_state": discovery_bridge_result.get("discovery_no_current_update_state"),
+        "discovery_no_current_update_reason": discovery_bridge_result.get("discovery_no_current_update_reason"),
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "public_signal_count": public_signal_count,
         "qualified_but_not_public_count": qualified_but_not_public_count,
@@ -5470,6 +5521,19 @@ def run_food_line_dispatch(
         "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
         "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
         "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
+        "discovery_expansion_used": bool(discovery_bridge_result.get("discovery_expansion_used")),
+        "discovery_candidate_count": int(discovery_bridge_result.get("discovery_candidate_count") or 0),
+        "discovery_qualified_candidate_count": int(discovery_bridge_result.get("discovery_qualified_candidate_count") or 0),
+        "discovery_context_candidate_count": int(discovery_bridge_result.get("discovery_context_candidate_count") or 0),
+        "discovery_blocked_candidate_count": int(discovery_bridge_result.get("discovery_blocked_candidate_count") or 0),
+        "discovery_duplicate_count": int(discovery_bridge_result.get("discovery_duplicate_count") or 0),
+        "discovery_candidates_intaked": int(discovery_bridge_result.get("discovery_candidates_intaked") or 0),
+        "discovery_candidates_excluded": int(discovery_bridge_result.get("discovery_candidates_excluded") or 0),
+        "discovery_candidates_manual_review_required": int(discovery_bridge_result.get("discovery_candidates_manual_review_required") or 0),
+        "discovery_source_input_path": discovery_bridge_result.get("discovery_source_input_path"),
+        "discovery_review_path": discovery_bridge_result.get("discovery_review_path"),
+        "discovery_no_current_update_state": discovery_bridge_result.get("discovery_no_current_update_state"),
+        "discovery_no_current_update_reason": discovery_bridge_result.get("discovery_no_current_update_reason"),
         "pressure_review_path": str(pressure_review_path),
         "public_signal_count": public_signal_count,
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),
@@ -5595,6 +5659,7 @@ def run_range(
     end_date: str,
     *,
     collect: bool = False,
+    use_discovery_candidates: bool = False,
     include_discovery_gap_summary: bool = False,
     allow_future_date: bool = False,
     generate_audio: bool = True,
@@ -5618,6 +5683,7 @@ def run_range(
                 root,
                 day.isoformat(),
                 collect=collect,
+                use_discovery_candidates=use_discovery_candidates,
                 include_discovery_gap_summary=include_discovery_gap_summary,
                 generate_audio=generate_audio,
                 require_audio=require_audio,
@@ -5642,6 +5708,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
+    p.add_argument("--use-discovery-candidates", action="store_true", help="Bridge discovery_candidates.json into the daily Food Line intake path before generation.")
     p.add_argument(
         "--include-discovery-gap-summary",
         action="store_true",
@@ -5686,15 +5753,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.start_date or args.end_date:
             if not args.start_date or not args.end_date:
                 raise ValueError("--start-date and --end-date are required together")
-            result = {
-                "ok": True,
-                "runs": run_range(
-                    Path.cwd(),
-                    args.start_date,
-                    args.end_date,
-                    collect=bool(args.collect),
-                    include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
-                    allow_future_date=bool(args.allow_future_date),
+                result = {
+                    "ok": True,
+                    "runs": run_range(
+                        Path.cwd(),
+                        args.start_date,
+                        args.end_date,
+                        collect=bool(args.collect),
+                        use_discovery_candidates=bool(args.use_discovery_candidates),
+                        include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
+                        allow_future_date=bool(args.allow_future_date),
                     generate_audio=bool(args.generate_audio),
                     require_audio=bool(args.require_audio),
                     force_audio_regenerate=bool(args.force_audio_regenerate),
@@ -5712,6 +5780,7 @@ def main(argv: list[str] | None = None) -> int:
                 Path.cwd(),
                 args.date,
                 collect=bool(args.collect),
+                use_discovery_candidates=bool(args.use_discovery_candidates),
                 include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
                 generate_audio=bool(args.generate_audio),
                 require_audio=bool(args.require_audio),

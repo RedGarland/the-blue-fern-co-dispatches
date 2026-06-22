@@ -653,6 +653,68 @@ def test_validate_pages_repo_copy_scope_flags_detail_and_unrelated_changes(monke
     assert any("gaza_publish_scope_violation" in error and "CNAME" in error for error in errors)
 
 
+def test_validate_pages_repo_copy_scope_uses_explicit_changed_paths_for_gaza_only(tmp_path, monkeypatch):
+    pages_repo = make_pages_repo(tmp_path / "pages")
+    monkeypatch.setattr(
+        generator,
+        "_git_status_changed_paths",
+        lambda cwd: [Path("care-line/index.html"), Path("cascadia/editions/2026-05-17/index.html"), Path("assets/site.css")],
+    )
+    changed_paths = [
+        Path("gaza/index.html"),
+        Path("gaza/archive.html"),
+        Path("gaza/rss.xml"),
+        Path("gaza/editions/2026-06-22/index.html"),
+    ]
+
+    errors = generator.validate_pages_repo_copy_scope(pages_repo, ("gaza",), changed_paths=changed_paths)
+
+    assert errors == []
+
+
+def test_gaza_only_dry_run_ignores_preexisting_pages_repo_dirtiness_when_copy_plan_is_scoped(
+    built_site, monkeypatch
+):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        generator,
+        "_git_status_changed_paths",
+        lambda cwd: [
+            Path("care-line/index.html"),
+            Path("cascadia/editions/2026-05-17/index.html"),
+            Path("food-line/editions/2026-06-21/index.html"),
+            Path("assets/site.css"),
+        ],
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-03",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    copied = result["files_that_would_be_copied"]
+    assert result["ok"] is True
+    assert result["paid_detail_excluded_from_public"] is True
+    assert copied
+    assert any("gaza/editions/2026-05-03/index.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/archive.html" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/rss.xml" in path.replace("\\", "/") for path in copied)
+    assert any("gaza/index.html" in path.replace("\\", "/") for path in copied)
+    assert not any("/care-line/" in path.replace("\\", "/") for path in copied)
+    assert not any("/cascadia/" in path.replace("\\", "/") for path in copied)
+    assert not any("/food-line/" in path.replace("\\", "/") for path in copied)
+    assert not any(path.endswith("/CNAME") or path.endswith("\\CNAME") for path in copied)
+
+
 def test_gaza_only_dry_run_copy_scope_excludes_root_and_other_dispatch_files(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")

@@ -2947,24 +2947,40 @@ def _git_status_changed_paths(pages_repo: Path) -> list[Path]:
     return changed
 
 
-def validate_pages_repo_copy_scope(pages_repo: Path, only_dispatches: tuple[str, ...]) -> list[str]:
+def validate_pages_repo_copy_scope(
+    pages_repo: Path,
+    only_dispatches: tuple[str, ...],
+    changed_paths: Sequence[str | Path] | None = None,
+) -> list[str]:
     errors: list[str] = []
+    pages_repo = pages_repo.resolve()
     allowed_dispatches = set(only_dispatches) if only_dispatches else set(ONLY_DISPATCH_CHOICES)
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
-    try:
-        changed_paths = _git_status_changed_paths(pages_repo)
-    except RuntimeError as exc:
-        return [str(exc)]
-    for rel_path in changed_paths:
+    if changed_paths is None:
+        try:
+            changed_paths = _git_status_changed_paths(pages_repo)
+        except RuntimeError as exc:
+            return [str(exc)]
+    for raw_path in changed_paths:
+        candidate = Path(raw_path)
+        if candidate.is_absolute():
+            try:
+                candidate = candidate.relative_to(pages_repo)
+            except ValueError:
+                candidate = Path(str(raw_path).replace("\\", "/"))
+        rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
-        if gaza_only_publish and top_level != "gaza":
-            errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_path.as_posix()}")
+        rel_text = rel_path.as_posix()
+        if gaza_only_publish:
+            if top_level == "gaza":
+                continue
+            errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_text}")
             continue
         if top_level in {"detail", "paid"}:
-            errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_path.as_posix()}")
+            errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_text}")
             continue
         if top_level in DISPATCH_LABELS and top_level not in allowed_dispatches:
-            errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_path.as_posix()}")
+            errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_text}")
     return sorted(set(errors))
 
 
@@ -3217,7 +3233,7 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
-        errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches))
+        errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches, changed_paths=copied))
         if not dry_run:
             errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):

@@ -1,0 +1,109 @@
+{
+  "search": {
+    "provider": "google_news_rss",
+    "rss_url_template": "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en",
+    "exclude_domains": [
+      "facebook.com",
+      "x.com",
+      "twitter.com",
+      "instagram.com",
+      "youtube.com"
+    ]
+  },
+  "query_families": [
+    {
+      "query_family": "core_hunger",
+      "geographic_scope": "national",
+      "source_family": "local_news",
+      "templates": [
+        "\"food insecurity\"",
+        "\"food bank\"",
+        "\"food pantry\"",
+        "\"hunger relief\""
+      ]
+    },
+    {
+      "query_family": "pressure",
+      "geographic_scope": "national",
+      "source_family": "local_news",
+      "templates": [
+        "(\"food bank\" OR \"food pantry\") (demand OR strain OR shortage OR surge)",
+        "(\"food bank\" OR \"food pantry\") (\"increased need\" OR waitlist OR \"funding gap\")"
+      ]
+    },
+    {
+      "query_family": "policy_program",
+      "geographic_scope": "national",
+      "source_family": "state_policy_news",
+      "templates": [
+        "(SNAP OR EBT) (cuts OR changes OR benefits OR families)",
+        "(\"summer meals\" OR \"school meals\") (families OR children OR hunger)",
+        "(WIC OR TEFAP OR \"Meals on Wheels\") (cuts OR delays OR waitlist)"
+      ]
+    },
+    {
+      "query_family": "cost_pressure",
+      "geographic_scope": "national",
+      "source_family": "local_news",
+      "templates": [
+        "(\"grocery prices\" OR \"food costs\") (\"food pantry\" OR families)",
+        "(\"rent and groceries\" OR \"utility bills and groceries\") hunger"
+      ]
+    },
+    {
+      "query_family": "state_territory",
+      "geographic_scope": "state_or_territory",
+      "source_family": "local_news",
+      "templates": [
+        "\"food bank demand\" {geo} after:{after} before:{before}",
+        "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"SNAP cuts\" {geo} after:{after} before:{before}",
+        "\"summer meals\" {geo} families after:{after} before:{before}",
+        "\"grocery prices\" {geo} food pantry after:{after} before:{before}"
+      ]
+    },
+    {
+      "query_family": "metro",
+      "geographic_scope": "metro",
+      "source_family": "local_news",
+      "templates": [
+        "\"food bank demand\" {geo} after:{after} before:{before}",
+        "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"SNAP cuts\" {geo} after:{after} before:{before}",
+        "\"summer meals\" {geo} families after:{after} before:{before}",
+        "\"grocery prices\" {geo} food pantry after:{after} before:{before}"
+      ]
+    }
+  ],
+  "metros": [
+    {"name": "Charlotte"},
+    {"name": "Phoenix"},
+    {"name": "Seattle"},
+    {"name": "Portland"},
+    {"name": "Boise"},
+    {"name": "Spokane"},
+    {"name": "Los Angeles"},
+    {"name": "San Francisco Bay Area"},
+    {"name": "Denver"},
+    {"name": "Dallas"},
+    {"name": "Houston"},
+    {"name": "San Antonio"},
+    {"name": "Chicago"},
+    {"name": "Detroit"},
+    {"name": "Cleveland"},
+    {"name": "Pittsburgh"},
+    {"name": "Philadelphia"},
+    {"name": "New York"},
+    {"name": "Boston"},
+    {"name": "Atlanta"},
+    {"name": "Miami"},
+    {"name": "Tampa"},
+    {"name": "St. Louis"},
+    {"name": "Kansas City"},
+    {"name": "Minneapolis"},
+    {"name": "Nashville"},
+    {"name": "New Orleans"},
+    {"name": "Baltimore"},
+    {"name": "Washington DC"}
+  ]
+}

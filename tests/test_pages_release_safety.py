@@ -1,0 +1,293 @@
+from __future__ import annotations
+
+import json
+import subprocess
+from pathlib import Path
+
+import pytest
+
+import bluefern_dispatches.pages_release_safety as pages_release_safety
+
+
+def _run_git(repo: Path, *args: str) -> None:
+    subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, encoding="utf-8")
+
+
+def _git_output(repo: Path, *args: str) -> str:
+    result = subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, encoding="utf-8")
+    return result.stdout.strip()
+
+
+def _init_repo(root: Path, branch: str, *, empty_commit: bool = False) -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    _run_git(root, "init")
+    _run_git(root, "config", "user.email", "tests@example.test")
+    _run_git(root, "config", "user.name", "Tests")
+    if empty_commit:
+        _run_git(root, "commit", "--allow-empty", "-m", "initial")
+    else:
+        (root / "README.md").write_text("repo", encoding="utf-8")
+        _run_git(root, "add", "README.md")
+        _run_git(root, "commit", "-m", "initial")
+    _run_git(root, "checkout", "-b", branch)
+    return root
+
+
+def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
+    site_root = source_root / "output" / "site" / "food-line"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Food Line index</html>", encoding="utf-8")
+    (site_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    for date_text in dates:
+        edition = site_root / "editions" / date_text
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(json.dumps({"edition_date": date_text}), encoding="utf-8")
+        (edition / "sources_manifest.json").write_text(json.dumps([{"source_record_id": "src-1"}]), encoding="utf-8")
+        (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story-1"}]), encoding="utf-8")
+        (edition / "source_table.html").write_text("<table><tr><td>1</td></tr></table>", encoding="utf-8")
+        (edition / "claim_ledger.html").write_text("<html>Claims</html>", encoding="utf-8")
+
+
+def _commit_repo(repo: Path, message: str = "update") -> None:
+    _run_git(repo, "add", "-A")
+    _run_git(repo, "commit", "-m", message)
+
+
+@pytest.fixture()
+def release_repos(tmp_path: Path) -> tuple[Path, Path]:
+    source = _init_repo(tmp_path / "source", "add/pages-repo-default")
+    pages = _init_repo(tmp_path / "bluefern-dispatches-pages", "gh-pages", empty_commit=True)
+    return source, pages
+
+
+def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19", "2026-06-20"])
+    _commit_repo(source, "food line site")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19", "2026-06-20"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+    )
+
+    assert report["ok"] is True
+    assert report["commit_status"] == "dry-run"
+    assert report["push_status"] == "dry-run"
+    assert report["copied_paths"] == [
+        "food-line/index.html",
+        "food-line/archive.html",
+        "food-line/editions/2026-06-19/claim_ledger.html",
+        "food-line/editions/2026-06-19/curation_manifest.json",
+        "food-line/editions/2026-06-19/edition_manifest.json",
+        "food-line/editions/2026-06-19/index.html",
+        "food-line/editions/2026-06-19/source_table.html",
+        "food-line/editions/2026-06-19/sources_manifest.json",
+        "food-line/editions/2026-06-20/claim_ledger.html",
+        "food-line/editions/2026-06-20/curation_manifest.json",
+        "food-line/editions/2026-06-20/edition_manifest.json",
+        "food-line/editions/2026-06-20/index.html",
+        "food-line/editions/2026-06-20/source_table.html",
+        "food-line/editions/2026-06-20/sources_manifest.json",
+    ]
+    assert report["planned_pages_paths"] == report["copied_paths"]
+    assert not (pages / "food-line").exists()
+
+
+def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+
+    monkeypatch.setattr(pages_release_safety, "_pages_changed_paths", lambda _repo: ["food-line/index.html", "notes.txt"])
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+
+    assert report["ok"] is False
+    assert any("unexpected Pages repo changes outside the allowed Food Line scope" in error for error in report["errors"])
+    assert "notes.txt" in report["errors"][0]
+
+
+def test_missing_source_artifact_rejection(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    (source / "output" / "site" / "food-line" / "archive.html").unlink()
+    _commit_repo(source, "food line site without archive")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+    )
+
+    assert report["ok"] is False
+    assert any("missing required source artifact" in error for error in report["errors"])
+
+
+def test_wrong_source_branch_rejection(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    _run_git(source, "checkout", "-b", "unexpected-branch")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+    )
+
+    assert report["ok"] is False
+    assert any("source branch mismatch" in error for error in report["errors"])
+
+
+def test_wrong_pages_branch_rejection(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    _run_git(pages, "checkout", "-b", "not-gh-pages")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+    )
+
+    assert report["ok"] is False
+    assert any("pages repo branch mismatch" in error for error in report["errors"])
+
+
+def test_pages_dirty_state_rejection(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    (pages / "dirty.txt").write_text("dirty", encoding="utf-8")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=False,
+    )
+
+    assert report["ok"] is False
+    assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_commit_requires_clean_allowed_scope_and_cleans_repo(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        commit=True,
+    )
+
+    assert report["ok"] is True
+    assert report["commit_status"] == "committed"
+    assert report["push_status"] == "skipped"
+    assert report["commit_hash"]
+    assert pages_release_safety._repo_clean(pages)
+    assert (pages / "food-line" / "editions" / "2026-06-19" / "index.html").exists()
+    assert _git_output(pages, "branch", "--show-current") == "gh-pages"
+
+
+def test_push_requires_commit(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        push=True,
+    )
+
+    assert report["ok"] is False
+    assert "--push requires --commit." in report["errors"]
+
+
+def test_live_check_url_construction_and_only_mode(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    seen_urls: list[str] = []
+
+    def fake_status(url: str, timeout: int) -> int:
+        seen_urls.append(url)
+        return 200
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        live_check=True,
+        live_check_only=True,
+        cache_bust="abc 123",
+        fetch_status=fake_status,
+    )
+
+    assert report["ok"] is True
+    assert len(seen_urls) == 3
+    assert seen_urls[0] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/?cache_bust=abc+123"
+    assert seen_urls[1] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/sources_manifest.json?cache_bust=abc+123"
+    assert seen_urls[2] == "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/curation_manifest.json?cache_bust=abc+123"
+
+
+def test_date_validation_and_multiple_date_handling() -> None:
+    assert pages_release_safety._parse_dates(["2026-06-19", "2026-06-20", "2026-06-19"]) == ("2026-06-19", "2026-06-20")
+    assert pages_release_safety._parse_dates(["2026-06-19,2026-06-20"]) == ("2026-06-19", "2026-06-20")
+    with pytest.raises(ValueError):
+        pages_release_safety._parse_dates(["2026-06-31"])
+
+
+def test_script_does_not_require_audio_map_podcast_assets_support(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    extra_root = source / "output" / "site" / "food-line"
+    (extra_root / "audio").mkdir(parents=True, exist_ok=True)
+    (extra_root / "audio" / "clip.mp3").write_bytes(b"audio")
+    (extra_root / "map").mkdir(parents=True, exist_ok=True)
+    (extra_root / "map" / "index.html").write_text("map", encoding="utf-8")
+    (extra_root / "podcast.xml").write_text("<rss />", encoding="utf-8")
+    (source / "output" / "site" / "assets").mkdir(parents=True, exist_ok=True)
+    (source / "output" / "site" / "assets" / "site.css").write_text("body{}", encoding="utf-8")
+
+    plan = pages_release_safety._build_copy_plan(source, pages, "food-line", ["2026-06-19"])
+    planned = [path.relative_to(source).as_posix() for path in plan.source_paths]
+
+    assert "output/site/food-line/audio/clip.mp3" not in planned
+    assert "output/site/food-line/map/index.html" not in planned
+    assert "output/site/food-line/podcast.xml" not in planned
+    assert all("output/site/assets" not in path for path in planned)

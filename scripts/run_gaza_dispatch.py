@@ -30,6 +30,8 @@ from bluefern_dispatches.generator import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
+from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
+from bluefern_dispatches.gaza_sources import gaza_story_selection_exclusion_reason
 from bluefern_dispatches.gaza_sources import rank_gaza_candidates
 from bluefern_dispatches.gaza_sources import clean_feed_text
 from bluefern_dispatches.gaza_sources import gaza_relevance_decision
@@ -315,6 +317,15 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
             warnings.append(f"deduped duplicate source record: {source_id}")
             continue
         seen.add(key)
+        selection_exclusion_reason = gaza_story_selection_exclusion_reason(
+            {
+                "title": clean_title,
+                "summary_or_snippet": clean_summary,
+                "url": url,
+                "attribution_mode": record.get("attribution_mode"),
+                "claim_status": record.get("claim_status"),
+            }
+        )
         canonical_url = str(record.get("canonical_url") or "").strip()
         wrapper_url = str(record.get("wrapper_url") or "").strip()
         canonicalization_status = str(record.get("canonicalization_status") or "").strip()
@@ -348,8 +359,9 @@ def normalize_sources(records: list[dict[str, Any]], edition_date: str, now: str
                 "traceability_note": str(record.get("traceability_note") or "").strip(),
                 "dispatch_slug": DISPATCH_SLUG,
                 "edition_date": edition_date,
-                "used_in_story_ids": [f"gaza-story-{edition_date}-{len(normalized) + 1:03d}"],
+                "used_in_story_ids": [],
                 "claim_ids": [],
+                "story_selection_excluded_reason": selection_exclusion_reason,
             }
         )
     ranked = rank_gaza_candidates(normalized, edition_date)
@@ -426,6 +438,20 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
     top_story_candidates: list[dict[str, Any]] = []
     for index, source in enumerate(sources, start=1):
         source_score = int(source.get("candidate_score") or 0)
+        exclusion_reason = str(source.get("story_selection_excluded_reason") or "").strip()
+        if exclusion_reason:
+            rejected_or_downranked.append(
+                {
+                    "source_record_id": source.get("source_record_id"),
+                    "title": source.get("title"),
+                    "score_before": source_score,
+                    "score_after": source_score,
+                    "action": "rejected",
+                    "reason": exclusion_reason,
+                    "relevance_terms_matched": [],
+                }
+            )
+            continue
         relevance = _story_relevance_profile(source)
         score = max(1, source_score + int(relevance.get("score_adjustment") or 0))
         ranking_reasons = list(source.get("ranking_reasons") or [])
@@ -1786,6 +1812,7 @@ def update_shared_records(
 def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, dry_run: bool, render: bool, all_steps: bool, allow_thin_edition: bool = False) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     generated_at = utc_now()
+    scheduled_run_local_time = datetime.now().astimezone().isoformat(timespec="seconds")
     warnings: list[str] = []
     errors: list[str] = []
     wrote: list[str] = []
@@ -1809,6 +1836,17 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         )
     if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
+    timing_metadata = build_gaza_collection_timing_metadata(
+        normalized,
+        edition_date,
+        scheduled_run_local_time=scheduled_run_local_time,
+    )
+    story_selection_excluded_count = sum(1 for source in normalized if str(source.get("story_selection_excluded_reason") or "").strip())
+    story_selection_excluded_reasons: dict[str, int] = {}
+    for source in normalized:
+        reason = str(source.get("story_selection_excluded_reason") or "").strip()
+        if reason:
+            story_selection_excluded_reasons[reason] = int(story_selection_excluded_reasons.get(reason) or 0) + 1
     context = _load_collection_context(root, edition_date)
     context_stage = dict(context.get("stage_counts") or {})
     provider_diagnostics = list(context.get("provider_diagnostics") or []) or [
@@ -1905,6 +1943,8 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "rejected_missing_url_or_title": int(rejected_by_reason.get("rejected_missing_url", 0)) + int(rejected_by_reason.get("rejected_missing_title", 0)),
         "suppressed_duplicate": int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "final_story_count": 0,
+        "story_selection_excluded_count": story_selection_excluded_count,
+        "story_selection_excluded_reason_counts": story_selection_excluded_reasons,
         "low_relevance_survivors": low_relevance_survivors,
         "no_story_explanation": no_story_explanation,
         "no_story_credibility_decision": "no_candidates_found" if no_story_explanation == "no_candidates_found_from_attempted_providers" else no_story_explanation,
@@ -1917,6 +1957,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),
         "canonical_publisher_url_count": int(cross_edition_report.get("canonical_publisher_url_count", 0)),
     }
+    collection_report.update(timing_metadata)
     stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
     original_story_rows = [dict(story) for story in stories]
     public_stories, written_public_exclusions = _apply_written_public_story_filter(stories)
@@ -1972,6 +2013,19 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    story_usage: dict[str, list[str]] = {}
+    for story in stories:
+        story_id = str(story.get("story_id") or "").strip()
+        if not story_id:
+            continue
+        for source_id in story.get("source_record_ids") or []:
+            key = str(source_id or "").strip()
+            if not key:
+                continue
+            story_usage.setdefault(key, []).append(story_id)
+    for source in normalized:
+        source_id = str(source.get("source_record_id") or "").strip()
+        source["used_in_story_ids"] = sorted(dict.fromkeys(story_usage.get(source_id) or []))
     merged_story_by_id = {str(story.get("story_id") or ""): story for story in stories if str(story.get("story_id") or "")}
     decision_by_story = {str(item.get("story_id")): item for item in dedupe_result.decisions if isinstance(item, dict)}
     written_exclusion_by_story = {str(item.get("story_id") or ""): item for item in written_public_exclusions if str(item.get("story_id") or "")}
@@ -2080,6 +2134,8 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
             root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors, adequacy
         )
+        edition_manifest.update(timing_metadata)
+        run_manifest.update(timing_metadata)
         consistency_errors = _assert_gaza_artifact_consistency(edition_manifest, sources_manifest, curation_manifest, html_rendered=True)
         if consistency_errors:
             errors.extend(consistency_errors)
@@ -2091,6 +2147,8 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
             root, edition_date, normalized, curation_manifest_full, generated_at, warnings, errors, adequacy
         )
+        edition_manifest.update(timing_metadata)
+        run_manifest.update(timing_metadata)
         for base in (
             root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date,
             root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date,
@@ -2127,6 +2185,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
             "publisher_count": int(adequacy.get("publisher_count") or 0),
             "publishers": list(adequacy.get("publishers") or []),
             "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+            **timing_metadata,
             "free_public_artifacts": [],
             "paid_or_detail_artifacts": [],
             "detail_artifacts_publicly_exposed": False,

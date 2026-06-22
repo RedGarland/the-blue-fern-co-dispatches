@@ -166,6 +166,74 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert all("--only-dispatch" in call and "gaza" in call for call in publish_calls)
 
 
+def test_daily_summary_includes_source_window_and_later_same_day_update_metadata(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(
+        root,
+        "2026-05-07",
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-2026-05-07-001",
+                    "title": "Gaza aid access update",
+                    "url": "https://valid.test/gaza-source-1",
+                    "publisher": "Example News",
+                    "published_at": "2026-05-07T08:15:00Z",
+                    "retrieved_at": "2026-05-07T08:20:00Z",
+                    "summary_or_snippet": "A source-backed Gaza update.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                },
+                {
+                    "source_record_id": "gaza-src-2026-05-07-002",
+                    "title": "Gaza hospital access update",
+                    "url": "https://valid.test/gaza-source-2",
+                    "publisher": "BBC News",
+                    "published_at": "2026-05-07T12:30:00Z",
+                    "retrieved_at": "2026-05-07T15:45:00Z",
+                    "summary_or_snippet": "A later same-day source-backed Gaza update.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                },
+            ],
+            indent=2,
+        ),
+    )
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True, "warnings": [], "errors": []})
+        if "publish_github_pages.py" in command and "--dry-run" not in args:
+            write_pages_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"})
+        if "publish_github_pages.py" in command:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        return completed(args)
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    run_manifest = json.loads((root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "run_manifest.json").read_text(encoding="utf-8"))
+    assert code == 0
+    assert summary["scheduled_run_local_time"]
+    assert summary["source_window_start_utc"] == "2026-05-07T08:15:00Z"
+    assert summary["source_window_end_utc"] == "2026-05-07T12:30:00Z"
+    assert summary["first_source_retrieved_at"] == "2026-05-07T08:20:00Z"
+    assert summary["last_source_retrieved_at"] == "2026-05-07T15:45:00Z"
+    assert summary["contains_later_same_day_update"] is True
+    assert summary["later_same_day_update_count"] == 1
+    assert len(summary["retrieval_batches"]) == 2
+    assert run_manifest["contains_later_same_day_update"] is True
+
+
 def test_missing_source_file_triggers_auto_collection_when_both(isolated, monkeypatch, capsys):
     root = isolated
 

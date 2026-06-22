@@ -292,6 +292,18 @@ def _discovery_no_current_update_state(summary: dict[str, Any]) -> str:
     return "candidates_found_but_none_qualified"
 
 
+def _discovery_no_current_update_reason(summary: dict[str, Any], state: str) -> str:
+    candidate_count = int(summary.get("discovery_candidate_count") or 0)
+    qualified = int(summary.get("discovery_qualified_candidate_count") or 0)
+    if candidate_count <= 0:
+        return "No discovery candidates were retained."
+    if state == "qualified_candidates_found" and qualified > 0:
+        return "Discovery retained qualified candidates, but none passed normal Food Line publication checks."
+    if state in {"candidates_found_but_fetch_blocked", "candidates_found_but_review_incomplete"}:
+        return "Discovery retained candidates, but blocked or manual-review-required candidates did not pass normal publication checks."
+    return "Discovery retained candidates, but none were classified as qualified pressure signals."
+
+
 def run_food_line_discovery_intake_bridge(
     root: Path,
     edition_date: str,
@@ -305,6 +317,7 @@ def run_food_line_discovery_intake_bridge(
     review_path = _discovery_review_path(root, date_text)
     audit = read_food_line_discovery_expansion_audit(root, date_text)
     if not candidate_path.exists():
+        state = _discovery_no_current_update_state({"continuing_pressure_count": 0})
         summary = {
             "ok": True,
             "discovery_expansion_used": False,
@@ -320,8 +333,8 @@ def run_food_line_discovery_intake_bridge(
             "discovery_candidates_intaked": 0,
             "discovery_candidates_excluded": 0,
             "discovery_candidates_manual_review_required": 0,
-            "discovery_no_current_update_state": _discovery_no_current_update_state({"continuing_pressure_count": 0}),
-            "discovery_no_current_update_reason": "no discovery candidate file was available",
+            "discovery_no_current_update_state": state,
+            "discovery_no_current_update_reason": _discovery_no_current_update_reason({"discovery_candidate_count": 0}, state),
             "discovery_source_input_path": str(source_input_path),
             "discovery_review_path": str(review_path),
             "discovery_source_rows": [],
@@ -353,6 +366,16 @@ def run_food_line_discovery_intake_bridge(
         intaked_rows.append(discovery_row)
     source_count = len(intaked_rows)
     excluded_count = max(0, candidate_count - source_count)
+    no_current_update_state = _discovery_no_current_update_state(
+        {
+            "discovery_candidate_count": candidate_count,
+            "discovery_qualified_candidate_count": qualified_count,
+            "discovery_context_candidate_count": context_count,
+            "discovery_blocked_candidate_count": blocked_count,
+            "discovery_candidates_manual_review_required": manual_review_required_count,
+            "continuing_pressure_count": int(audit.get("continuing_pressure_count") or 0),
+        }
+    )
     summary = {
         "ok": True,
         "generated_at": _utc_now(),
@@ -369,20 +392,16 @@ def run_food_line_discovery_intake_bridge(
         "discovery_candidates_intaked": source_count,
         "discovery_candidates_excluded": excluded_count,
         "discovery_candidates_manual_review_required": manual_review_required_count,
-        "discovery_no_current_update_state": _discovery_no_current_update_state(
+        "discovery_no_current_update_state": no_current_update_state,
+        "discovery_no_current_update_reason": _discovery_no_current_update_reason(
             {
                 "discovery_candidate_count": candidate_count,
                 "discovery_qualified_candidate_count": qualified_count,
                 "discovery_context_candidate_count": context_count,
                 "discovery_blocked_candidate_count": blocked_count,
                 "discovery_candidates_manual_review_required": manual_review_required_count,
-                "continuing_pressure_count": int(audit.get("continuing_pressure_count") or 0),
-            }
-        ),
-        "discovery_no_current_update_reason": _nonempty(audit.get("no_current_update_reason")) or (
-            "discovery candidates were retained but none qualified for publication"
-            if candidate_count and not qualified_count
-            else "no discovery candidates were retained"
+            },
+            no_current_update_state,
         ),
         "discovery_source_input_path": str(source_input_path),
         "discovery_review_path": str(review_path),

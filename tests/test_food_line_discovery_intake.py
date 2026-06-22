@@ -282,6 +282,7 @@ def test_food_line_no_current_update_manifest_reports_none_qualified_and_blocked
             "discovery_candidates_path": str(candidate_path),
         },
     )
+    bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
     result = food_line_dispatch.run_food_line_dispatch(
         tmp_path,
         edition_date,
@@ -296,8 +297,92 @@ def test_food_line_no_current_update_manifest_reports_none_qualified_and_blocked
     assert result["discovery_blocked_candidate_count"] == 1
     assert result["discovery_candidates_manual_review_required"] == 2
     assert result["discovery_no_current_update_state"] == "candidates_found_but_none_qualified"
-    assert result["discovery_no_current_update_reason"]
+    assert bridge["discovery_no_current_update_reason"] == "Discovery retained candidates, but none were classified as qualified pressure signals."
+    assert result["discovery_no_current_update_reason"] == ""
     assert result["discovery_review_path"].endswith("discovery_intake.json")
+
+
+def test_food_line_no_current_update_manifest_reports_qualified_candidates_with_publication_check_reason(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-06-21"
+    candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
+    audit_path = tmp_path / "output" / "review" / "food-line" / edition_date / "discovery_audit.json"
+    candidates = [
+        _candidate_row(
+            candidate_id="food-line-discovery-qualified",
+            title="Charlotte nonprofits brace for summer hunger surge",
+            publisher="Axios Charlotte",
+            google_news_url="https://news.google.com/rss/articles/CBMiAXY?oc=5",
+            final_trace_url="https://www.axios.com/local/charlotte/2026/06/19/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes",
+            fetch_status="ok",
+            fetch_error="",
+            classification_status="qualified_pressure_signal",
+            exclusion_reason="",
+            manual_review_required=False,
+        )
+    ]
+    _write_json(candidate_path, candidates)
+    _write_json(
+        audit_path,
+        {
+            "discovery_confidence": "moderate",
+            "discovery_confidence_reason": "Pressure signals were found, but some candidates still need manual review or had fetch problems.",
+            "no_current_update": True,
+            "no_current_update_reason": "",
+            "discovery_audit_json_path": str(audit_path),
+            "discovery_candidates_path": str(candidate_path),
+        },
+    )
+    bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
+    manifest_flag, manifest_reason = food_line_dispatch._food_line_discovery_no_current_update_metadata(
+        "no_current_update",
+        bridge,
+    )
+
+    assert bridge["discovery_no_current_update_state"] == "qualified_candidates_found"
+    assert bridge["discovery_no_current_update_reason"] == "Discovery retained qualified candidates, but none passed normal Food Line publication checks."
+    assert manifest_flag is True
+    assert manifest_reason == bridge["discovery_no_current_update_reason"]
+    assert "no discovery candidates were retained" not in manifest_reason
+
+
+def test_food_line_no_current_update_manifest_reports_no_retained_candidates(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-06-21"
+    candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
+    audit_path = tmp_path / "output" / "review" / "food-line" / edition_date / "discovery_audit.json"
+    _write_json(candidate_path, [])
+    _write_json(
+        audit_path,
+        {
+            "discovery_confidence": "low",
+            "discovery_confidence_reason": "No retained candidates were discovered after running the expanded query families.",
+            "no_current_update": True,
+            "no_current_update_reason": "",
+            "discovery_audit_json_path": str(audit_path),
+            "discovery_candidates_path": str(candidate_path),
+        },
+    )
+    bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
+
+    assert bridge["discovery_candidate_count"] == 0
+    assert bridge["discovery_no_current_update_state"] == "no_candidates_found"
+    assert bridge["discovery_no_current_update_reason"] == "No discovery candidates were retained."
+
+
+def test_food_line_discovery_manifest_metadata_is_blank_for_current_update(tmp_path: Path):
+    bridge_result = {
+        "discovery_expansion_used": True,
+        "discovery_no_current_update_reason": "Discovery retained qualified candidates, but none passed normal Food Line publication checks.",
+    }
+
+    manifest_flag, manifest_reason = food_line_dispatch._food_line_discovery_no_current_update_metadata(
+        "current_update",
+        bridge_result,
+    )
+
+    assert manifest_flag is False
+    assert manifest_reason == ""
 
 
 def test_food_line_google_news_wrappers_stay_out_of_public_trace_urls(tmp_path: Path):

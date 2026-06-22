@@ -68,6 +68,16 @@ def _food_line_discovery_expansion_audit(root: Path, date: str) -> dict[str, Any
     return audit if isinstance(audit, dict) else {}
 
 
+def _food_line_discovery_no_current_update_metadata(
+    edition_mode: str,
+    discovery_bridge_result: dict[str, Any],
+) -> tuple[bool, str]:
+    discovery_expansion_used = bool(discovery_bridge_result.get("discovery_expansion_used"))
+    if edition_mode != "no_current_update" or not discovery_expansion_used:
+        return False, ""
+    return True, str(discovery_bridge_result.get("discovery_no_current_update_reason") or "").strip() or "No discovery candidates were retained."
+
+
 def header(
     brand: str,
     root_prefix: str,
@@ -5325,8 +5335,6 @@ def run_food_line_dispatch(
         "discovery_confidence": discovery_expansion_audit.get("discovery_confidence"),
         "discovery_confidence_reason": discovery_expansion_audit.get("discovery_confidence_reason"),
         "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
-        "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
-        "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
         "discovery_expansion_used": bool(discovery_bridge_result.get("discovery_expansion_used")),
         "discovery_candidate_count": int(discovery_bridge_result.get("discovery_candidate_count") or 0),
         "discovery_qualified_candidate_count": int(discovery_bridge_result.get("discovery_qualified_candidate_count") or 0),
@@ -5338,8 +5346,9 @@ def run_food_line_dispatch(
         "discovery_candidates_manual_review_required": int(discovery_bridge_result.get("discovery_candidates_manual_review_required") or 0),
         "discovery_source_input_path": discovery_bridge_result.get("discovery_source_input_path"),
         "discovery_review_path": discovery_bridge_result.get("discovery_review_path"),
+        "discovery_no_current_update": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[0],
         "discovery_no_current_update_state": discovery_bridge_result.get("discovery_no_current_update_state"),
-        "discovery_no_current_update_reason": discovery_bridge_result.get("discovery_no_current_update_reason"),
+        "discovery_no_current_update_reason": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[1],
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "public_signal_count": public_signal_count,
         "qualified_but_not_public_count": qualified_but_not_public_count,
@@ -5519,8 +5528,6 @@ def run_food_line_dispatch(
         "discovery_confidence": discovery_expansion_audit.get("discovery_confidence"),
         "discovery_confidence_reason": discovery_expansion_audit.get("discovery_confidence_reason"),
         "discovery_confidence_summary": discovery_expansion_audit.get("discovery_confidence_summary"),
-        "discovery_no_current_update": bool(discovery_expansion_audit.get("no_current_update")),
-        "discovery_no_current_update_reason": discovery_expansion_audit.get("no_current_update_reason"),
         "discovery_expansion_used": bool(discovery_bridge_result.get("discovery_expansion_used")),
         "discovery_candidate_count": int(discovery_bridge_result.get("discovery_candidate_count") or 0),
         "discovery_qualified_candidate_count": int(discovery_bridge_result.get("discovery_qualified_candidate_count") or 0),
@@ -5532,8 +5539,9 @@ def run_food_line_dispatch(
         "discovery_candidates_manual_review_required": int(discovery_bridge_result.get("discovery_candidates_manual_review_required") or 0),
         "discovery_source_input_path": discovery_bridge_result.get("discovery_source_input_path"),
         "discovery_review_path": discovery_bridge_result.get("discovery_review_path"),
+        "discovery_no_current_update": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[0],
         "discovery_no_current_update_state": discovery_bridge_result.get("discovery_no_current_update_state"),
-        "discovery_no_current_update_reason": discovery_bridge_result.get("discovery_no_current_update_reason"),
+        "discovery_no_current_update_reason": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[1],
         "pressure_review_path": str(pressure_review_path),
         "public_signal_count": public_signal_count,
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),

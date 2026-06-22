@@ -134,6 +134,18 @@ HIGH_RELEVANCE_KEYWORDS = (
     "icj",
 )
 LOW_RELEVANCE_KEYWORDS = ("sports", "football", "soccer", "flag", "culture", "symbolic")
+OPINION_COMMENTARY_URL_HINTS = (
+    "/opinion/",
+    "/opinions/",
+    "/editorial/",
+    "/editorials/",
+    "/commentary/",
+    "/commentaries/",
+    "/column/",
+    "/columns/",
+    "/op-ed/",
+    "/opeds/",
+)
 SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
 TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 
@@ -263,6 +275,33 @@ def story_claim_fingerprint(source_or_story: dict[str, Any]) -> str:
     publisher = normalize_publisher(str(source_or_story.get("publisher") or ""))
     category = normalize_title(str(source_or_story.get("category_hint") or source_or_story.get("category") or ""))
     return "|".join(part for part in (publisher, title, category) if part)
+
+
+def is_labeled_context_source(item: dict[str, Any], source: SourceDefinition | None = None) -> bool:
+    attribution_mode = str(item.get("attribution_mode") or "").strip().lower()
+    claim_status = str(item.get("claim_status") or "").strip().lower()
+    if attribution_mode == "gaza_adjacent_context" or claim_status == "gaza_adjacent_context":
+        return True
+    if source is not None:
+        source_state = str(source.source_state or "").strip().lower()
+        if source_state == "manual_only" and str(source.diagnostics_reason or "").strip().lower() == "context_only":
+            return True
+    return False
+
+
+def is_opinion_editorial_commentary_url(item: dict[str, Any]) -> bool:
+    url = str(item.get("url") or "").strip().lower()
+    if not url:
+        return False
+    return any(hint in url for hint in OPINION_COMMENTARY_URL_HINTS)
+
+
+def gaza_story_selection_exclusion_reason(item: dict[str, Any], source: SourceDefinition | None = None) -> str | None:
+    if is_opinion_editorial_commentary_url(item):
+        if is_labeled_context_source(item, source):
+            return "opinion/editorial/commentary source retained as labeled context"
+        return "opinion/editorial/commentary source excluded from Gaza story selection"
+    return None
 
 
 def _safe_parse_dt(value: str) -> datetime | None:
@@ -742,6 +781,8 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
     url = str(item.get("url") or "")
     source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
+    if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
+        return False, "opinion_editorial_commentary_url"
     strong_title = bool(STRONG_GAZA_TERMS.search(title))
     strong_summary = bool(STRONG_GAZA_TERMS.search(summary))
     strong_url = bool(STRONG_GAZA_TERMS.search(url))
@@ -763,6 +804,82 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     if GAZA_TERMS.search(haystack):
         return False, "gaza_mention_only_without_strong_topic_signal"
     return False, "not_gaza_relevant"
+
+
+def _parse_metadata_dt(value: str) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        return datetime.fromisoformat(text).replace(tzinfo=timezone.utc)
+    candidate = text.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(candidate)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _format_utc(dt: datetime | None) -> str | None:
+    if dt is None:
+        return None
+    return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def build_gaza_collection_timing_metadata(
+    sources: list[dict[str, Any]],
+    edition_date: str,
+    scheduled_run_local_time: str | None = None,
+) -> dict[str, Any]:
+    run_local_time = scheduled_run_local_time or datetime.now().astimezone().isoformat(timespec="seconds")
+    published_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("published_at") or "")) for source in sources) if dt is not None]
+    retrieved_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("retrieved_at") or "")) for source in sources) if dt is not None]
+    retrieval_batches: list[dict[str, Any]] = []
+    batches: dict[str, list[str]] = {}
+    for source in sources:
+        batch_key = str(source.get("retrieved_at") or "").strip()
+        if not batch_key:
+            continue
+        batches.setdefault(batch_key, []).append(str(source.get("source_record_id") or ""))
+    for batch_key, source_ids in sorted(
+        batches.items(),
+        key=lambda item: (_parse_metadata_dt(item[0]) or datetime.max.replace(tzinfo=timezone.utc), item[0]),
+    ):
+        batch_time = _parse_metadata_dt(batch_key)
+        retrieval_batches.append(
+            {
+                "retrieved_at": _format_utc(batch_time) or batch_key,
+                "source_record_ids": [source_id for source_id in source_ids if source_id],
+                "source_count": len([source_id for source_id in source_ids if source_id]),
+            }
+        )
+    first_retrieved = min(retrieved_datetimes) if retrieved_datetimes else None
+    last_retrieved = max(retrieved_datetimes) if retrieved_datetimes else None
+    source_window_start = min(published_datetimes) if published_datetimes else None
+    source_window_end = max(published_datetimes) if published_datetimes else None
+    later_same_day_update_count = 0
+    if retrieval_batches:
+        first_batch_time = _parse_metadata_dt(str(retrieval_batches[0].get("retrieved_at") or ""))
+        for batch in retrieval_batches[1:]:
+            batch_time = _parse_metadata_dt(str(batch.get("retrieved_at") or ""))
+            if batch_time is None:
+                continue
+            if batch_time.date().isoformat() == edition_date:
+                later_same_day_update_count += int(batch.get("source_count") or 0)
+            elif first_batch_time is not None and batch_time > first_batch_time:
+                later_same_day_update_count += int(batch.get("source_count") or 0)
+    return {
+        "scheduled_run_local_time": run_local_time,
+        "source_window_start_utc": _format_utc(source_window_start),
+        "source_window_end_utc": _format_utc(source_window_end),
+        "first_source_retrieved_at": _format_utc(first_retrieved),
+        "last_source_retrieved_at": _format_utc(last_retrieved),
+        "contains_later_same_day_update": later_same_day_update_count > 0,
+        "later_same_day_update_count": later_same_day_update_count,
+        "retrieval_batches": retrieval_batches,
+    }
 
 
 def _matched_terms(item: dict[str, str]) -> list[str]:

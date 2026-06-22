@@ -826,6 +826,97 @@ def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
     assert report["provider_diagnostics"][0]["items_with_gaza_terms"] == 3
 
 
+def test_collection_report_tracks_source_window_and_later_same_day_updates(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-src-2026-06-20-001",
+            "title": "Gaza aid access update",
+            "url": "https://example.com/gaza-aid-access-1",
+            "publisher": "Reuters",
+            "published_at": "2026-06-20T08:15:00Z",
+            "retrieved_at": "2026-06-20T08:20:00Z",
+            "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-20-002",
+            "title": "Gaza hospital access update",
+            "url": "https://example.com/gaza-hospital-access-2",
+            "publisher": "BBC News",
+            "published_at": "2026-06-20T12:05:00Z",
+            "retrieved_at": "2026-06-20T15:40:00Z",
+            "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, "2026-06-20", rows)
+    result = run_gaza_dispatch(work, "2026-06-20", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "collection_report.json"))
+    manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "edition_manifest.json"))
+    run_manifest = json.loads(read(work / "output" / "test-backups" / "gaza" / "2026-06-20" / "run_manifest.json"))
+    assert result["ok"] is True
+    assert report["scheduled_run_local_time"]
+    assert report["source_window_start_utc"] == "2026-06-20T08:15:00Z"
+    assert report["source_window_end_utc"] == "2026-06-20T12:05:00Z"
+    assert report["first_source_retrieved_at"] == "2026-06-20T08:20:00Z"
+    assert report["last_source_retrieved_at"] == "2026-06-20T15:40:00Z"
+    assert report["contains_later_same_day_update"] is True
+    assert report["later_same_day_update_count"] == 1
+    assert len(report["retrieval_batches"]) == 2
+    assert manifest["contains_later_same_day_update"] is True
+    assert run_manifest["contains_later_same_day_update"] is True
+
+
+def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-src-2026-06-20-101",
+            "title": "Gaza aid access update",
+            "url": "https://example.com/gaza-aid-access-101",
+            "publisher": "Reuters",
+            "published_at": "2026-06-20T08:15:00Z",
+            "retrieved_at": "2026-06-20T08:20:00Z",
+            "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-20-102",
+            "title": "Gaza hospital access update",
+            "url": "https://example.com/gaza-hospital-access-102",
+            "publisher": "BBC News",
+            "published_at": "2026-06-20T10:05:00Z",
+            "retrieved_at": "2026-06-20T08:20:00Z",
+            "summary_or_snippet": "Hospital access conditions in Gaza were updated in the same batch.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+    ]
+    write_manual_sources(work, "2026-06-20", rows)
+    result = run_gaza_dispatch(work, "2026-06-20", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "collection_report.json"))
+    assert result["ok"] is True
+    assert report["contains_later_same_day_update"] is False
+    assert report["later_same_day_update_count"] == 0
+    assert len(report["retrieval_batches"]) == 1
+
+
 def test_zero_story_run_refuses_public_generation(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
@@ -1789,6 +1880,62 @@ def test_curation_does_not_include_weak_unsupported_story_for_diversity():
     assert "Gaza hospital aid update" in titles
     assert "Domestic football commentary roundup" not in titles
     assert any(row.get("action") == "rejected" for row in rejected)
+
+
+def test_opinion_url_sources_are_marked_excluded_from_story_selection():
+    now = "2026-05-25T12:00:00Z"
+    records = [
+        {
+            "source_record_id": "src-opinion",
+            "title": "Opinion: Gaza aid access debate is still unresolved",
+            "summary_or_snippet": "An opinion column on Gaza aid access.",
+            "url": "https://example.com/opinion/gaza-aid-access-debate",
+            "publisher": "Example News",
+            "published_at": "2026-05-25T10:00:00Z",
+            "retrieved_at": now,
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "commentary",
+            "reliability_tier": "reported-public-source",
+        }
+    ]
+    normalized, warnings, errors = normalize_sources(records, "2026-05-25", now)
+    assert errors == []
+    assert warnings == []
+    assert normalized[0]["story_selection_excluded_reason"] == "opinion/editorial/commentary source excluded from Gaza story selection"
+    assert normalized[0]["used_in_story_ids"] == []
+    stories, rejected, _ = curate_stories(normalized, "2026-05-25", now)
+    assert stories == []
+    assert rejected[0]["reason"] == "opinion/editorial/commentary source excluded from Gaza story selection"
+
+
+def test_labeled_context_opinion_url_is_retained_for_metadata_but_not_story_selection():
+    now = "2026-05-25T12:00:00Z"
+    records = [
+        {
+            "source_record_id": "src-context-opinion",
+            "title": "Opinion: Gaza aid access debate is still unresolved",
+            "summary_or_snippet": "An opinion column on Gaza aid access.",
+            "url": "https://example.com/opinion/gaza-aid-access-debate",
+            "publisher": "Example News",
+            "published_at": "2026-05-25T10:00:00Z",
+            "retrieved_at": now,
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "commentary",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "gaza_adjacent_context",
+            "claim_status": "gaza_adjacent_context",
+        }
+    ]
+    normalized, warnings, errors = normalize_sources(records, "2026-05-25", now)
+    assert errors == []
+    assert warnings == []
+    assert normalized[0]["story_selection_excluded_reason"] == "opinion/editorial/commentary source retained as labeled context"
+    assert normalized[0]["used_in_story_ids"] == []
+    stories, rejected, _ = curate_stories(normalized, "2026-05-25", now)
+    assert stories == []
+    assert rejected[0]["reason"] == "opinion/editorial/commentary source retained as labeled context"
 
 
 def test_bbc_style_valid_raw_record_survives_normalization():

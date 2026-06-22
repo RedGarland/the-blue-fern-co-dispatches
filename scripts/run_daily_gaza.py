@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 from bluefern_dispatches.gaza_sources import collect_gaza_sources
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
@@ -108,6 +109,14 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "bluesky_edition_date_verified",
     "bluesky_stale_content_guard_status",
     "bluesky_thumb_status",
+    "scheduled_run_local_time",
+    "source_window_start_utc",
+    "source_window_end_utc",
+    "first_source_retrieved_at",
+    "last_source_retrieved_at",
+    "contains_later_same_day_update",
+    "later_same_day_update_count",
+    "retrieval_batches",
 )
 COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
@@ -235,6 +244,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                             "stage_counts": {"registry_sources": 1, "enabled_providers_configured": 1, "providers_attempted": 1, "providers_successful": 1 if manual_records else 0, "raw_candidates": len(manual_records)},
                             "raw_candidate_count": len(manual_records),
                             "accepted_candidate_count_before_dedupe": len(manual_records),
+                            **build_gaza_collection_timing_metadata(manual_records, args.date),
                         },
                     )
                     return manual_path, manual_records
@@ -271,6 +281,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                     "raw_candidate_count": len(manual_records),
                     "accepted_candidate_count_before_dedupe": len(manual_records),
                     "enabled_auto_provider_count": 0,
+                    **build_gaza_collection_timing_metadata(manual_records, args.date),
                 },
             )
             return manual_path, manual_records
@@ -326,6 +337,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
             "raw_candidate_count": int((collected.get("stage_counts") or {}).get("raw_candidates") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
             "accepted_candidate_count_before_dedupe": int((collected.get("stage_counts") or {}).get("accepted_before_rank") or 0) + (len(manual_records) if args.source_mode == "both" else 0),
             "enabled_auto_provider_count": int((collected.get("stage_counts") or {}).get("enabled_providers_configured") or 0),
+            **build_gaza_collection_timing_metadata(records, args.date),
         },
     )
     log_line(log_path, f"Source collection resolved {len(records)} records to {source_path}")
@@ -571,6 +583,14 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "bluesky_edition_date_verified": False,
         "bluesky_stale_content_guard_status": "not_evaluated",
         "bluesky_thumb_status": "not_attempted",
+        "scheduled_run_local_time": None,
+        "source_window_start_utc": None,
+        "source_window_end_utc": None,
+        "first_source_retrieved_at": None,
+        "last_source_retrieved_at": None,
+        "contains_later_same_day_update": False,
+        "later_same_day_update_count": 0,
+        "retrieval_batches": [],
         "planned_actions": [],
         "public_story_count": 0,
         "pages_dry_run_ok": False,
@@ -811,6 +831,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append(message)
         log_line(log_path, f"Source collection failed: {message}")
         return finish(1)
+    summary.update(build_gaza_collection_timing_metadata(records, args.date))
     if summary["errors"]:
         log_line(log_path, f"Source validation failed: {summary['errors']}")
         return finish(1)

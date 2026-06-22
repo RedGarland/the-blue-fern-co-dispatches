@@ -1,0 +1,41 @@
+[
+  {
+    "source_record_id": "axios-charlotte-summer-hunger-surge-20260619",
+    "title": "Charlotte nonprofits brace for summer hunger surge",
+    "url": "https://www.axios.com/local/charlotte/2026/06/19/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes",
+    "publisher": "Axios Charlotte",
+    "published_at": "2026-06-19T00:00:00Z",
+    "retrieved_at": "2026-06-20T00:00:00Z",
+    "summary_or_snippet": "Axios Charlotte reported that Charlotte nonprofits are preparing for a summer hunger spike as school meals end, Nourish Up serves about 12,000 households each month, and SNAP changes add pressure for families.",
+    "evidence_text": "Axios Charlotte reported that Charlotte nonprofits are preparing for a summer hunger spike as school meals end. Nourish Up serves about 12,000 households each month. About 68,000 Charlotte-Mecklenburg Schools students receive free meals during the school year, and the group says it needs more delivery drivers as summer demand rises and SNAP eligibility changes add pressure for families.",
+    "evidence_text_basis": "manual_review",
+    "source_type": "manual",
+    "provider_id": "manual",
+    "source_family": "local_news",
+    "region_scope": "local",
+    "location_name": "Charlotte, NC",
+    "state": "NC",
+    "country": "US",
+    "map_category": "summer meal / child nutrition",
+    "pressure_signal": true,
+    "pressure_type": "child meal gap",
+    "pressure_reason": "matched child meal gap; school meals ending and SNAP changes increase summer hunger pressure",
+    "affected_groups": [
+      "children",
+      "families",
+      "SNAP households",
+      "low-income households"
+    ],
+    "evidence_level": "news report",
+    "freshness_role": "fresh_daily_signal",
+    "source_role": "local_signal",
+    "map_eligible": true,
+    "location_scope": "local",
+    "date_basis": "published_at",
+    "source_purpose": "current_news",
+    "primary_source_url": "https://www.axios.com/local/charlotte/2026/06/19/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes",
+    "source_traceability_role": "article_url",
+    "pressure_summary": "Charlotte nonprofits are preparing for summer hunger as school meals end, Nourish Up serves roughly 12,000 households a month, and SNAP changes add pressure for families.",
+    "traceability_note": "Original publisher URL; manually reviewed because Axios returned HTTP 403 to automated fetches."
+  }
+]

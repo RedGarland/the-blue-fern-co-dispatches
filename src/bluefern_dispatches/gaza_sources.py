@@ -14,10 +14,11 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote
+from zoneinfo import ZoneInfo
 
 
 REQUIRED_SOURCE_FIELDS = {
@@ -148,6 +149,7 @@ OPINION_COMMENTARY_URL_HINTS = (
 )
 SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
 TLS_FAILURE_REASON = "tls_certificate_verification_failed"
+LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 
 
 @dataclass(frozen=True)
@@ -828,15 +830,30 @@ def _format_utc(dt: datetime | None) -> str | None:
     return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def _format_local(dt: datetime | None) -> str | None:
+    if dt is None:
+        return None
+    return dt.astimezone(LOS_ANGELES_TZ).isoformat(timespec="seconds")
+
+
+def _scheduled_run_local_dt(edition_date: str) -> datetime:
+    target = date.fromisoformat(edition_date)
+    return datetime.combine(target, time(6, 0), tzinfo=LOS_ANGELES_TZ)
+
+
 def build_gaza_collection_timing_metadata(
     sources: list[dict[str, Any]],
     edition_date: str,
-    scheduled_run_local_time: str | None = None,
+    actual_run_utc: str | None = None,
 ) -> dict[str, Any]:
-    run_local_time = scheduled_run_local_time or datetime.now().astimezone().isoformat(timespec="seconds")
+    scheduled_run_local_dt = _scheduled_run_local_dt(edition_date)
+    actual_run_dt = _parse_metadata_dt(actual_run_utc) or datetime.now(timezone.utc)
     published_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("published_at") or "")) for source in sources) if dt is not None]
     retrieved_datetimes = [dt for dt in (_parse_metadata_dt(str(source.get("retrieved_at") or "")) for source in sources) if dt is not None]
     retrieval_batches: list[dict[str, Any]] = []
+    later_same_day_batches: list[dict[str, Any]] = []
+    post_edition_date_batches: list[dict[str, Any]] = []
+    same_day_baseline_local_dt: datetime | None = None
     batches: dict[str, list[str]] = {}
     for source in sources:
         batch_key = str(source.get("retrieved_at") or "").strip()
@@ -848,36 +865,60 @@ def build_gaza_collection_timing_metadata(
         key=lambda item: (_parse_metadata_dt(item[0]) or datetime.max.replace(tzinfo=timezone.utc), item[0]),
     ):
         batch_time = _parse_metadata_dt(batch_key)
+        batch_time_local = batch_time.astimezone(LOS_ANGELES_TZ) if batch_time is not None else None
+        batch_date_local = batch_time_local.date().isoformat() if batch_time_local is not None else None
+        if batch_time_local is not None and batch_date_local == edition_date:
+            if same_day_baseline_local_dt is None or batch_time_local < same_day_baseline_local_dt:
+                same_day_baseline_local_dt = batch_time_local
+        if batch_time_local is not None and batch_time_local.date() > scheduled_run_local_dt.date():
+            classification = "post_edition_date_update"
+        elif (
+            batch_time_local is not None
+            and batch_time_local.date() == scheduled_run_local_dt.date()
+            and same_day_baseline_local_dt is not None
+            and batch_time_local > same_day_baseline_local_dt
+        ):
+            classification = "later_same_day_update"
+        else:
+            classification = "scheduled_or_pre_scheduled_batch"
         retrieval_batches.append(
             {
                 "retrieved_at": _format_utc(batch_time) or batch_key,
+                "retrieved_at_local": _format_local(batch_time),
+                "retrieved_local_date": batch_date_local,
+                "batch_classification": classification,
                 "source_record_ids": [source_id for source_id in source_ids if source_id],
                 "source_count": len([source_id for source_id in source_ids if source_id]),
             }
         )
+        if classification == "later_same_day_update":
+            later_same_day_batches.append(retrieval_batches[-1])
+        elif classification == "post_edition_date_update":
+            post_edition_date_batches.append(retrieval_batches[-1])
     first_retrieved = min(retrieved_datetimes) if retrieved_datetimes else None
     last_retrieved = max(retrieved_datetimes) if retrieved_datetimes else None
     source_window_start = min(published_datetimes) if published_datetimes else None
     source_window_end = max(published_datetimes) if published_datetimes else None
-    later_same_day_update_count = 0
-    if retrieval_batches:
-        first_batch_time = _parse_metadata_dt(str(retrieval_batches[0].get("retrieved_at") or ""))
-        for batch in retrieval_batches[1:]:
-            batch_time = _parse_metadata_dt(str(batch.get("retrieved_at") or ""))
-            if batch_time is None:
-                continue
-            if batch_time.date().isoformat() == edition_date:
-                later_same_day_update_count += int(batch.get("source_count") or 0)
-            elif first_batch_time is not None and batch_time > first_batch_time:
-                later_same_day_update_count += int(batch.get("source_count") or 0)
+    later_same_day_update_batch_count = len(later_same_day_batches)
+    later_same_day_update_source_count = sum(int(batch.get("source_count") or 0) for batch in later_same_day_batches)
+    post_edition_date_update_batch_count = len(post_edition_date_batches)
+    post_edition_date_update_source_count = sum(int(batch.get("source_count") or 0) for batch in post_edition_date_batches)
     return {
-        "scheduled_run_local_time": run_local_time,
+        "scheduled_run_local_time": _format_local(scheduled_run_local_dt),
+        "actual_run_local_time": _format_local(actual_run_dt),
         "source_window_start_utc": _format_utc(source_window_start),
         "source_window_end_utc": _format_utc(source_window_end),
         "first_source_retrieved_at": _format_utc(first_retrieved),
         "last_source_retrieved_at": _format_utc(last_retrieved),
-        "contains_later_same_day_update": later_same_day_update_count > 0,
-        "later_same_day_update_count": later_same_day_update_count,
+        "contains_later_same_day_update": later_same_day_update_source_count > 0,
+        "later_same_day_update_count": later_same_day_update_source_count,
+        "later_same_day_update_batch_count": later_same_day_update_batch_count,
+        "later_same_day_update_source_count": later_same_day_update_source_count,
+        "contains_post_edition_date_update": post_edition_date_update_source_count > 0,
+        "post_edition_date_update_count": post_edition_date_update_source_count,
+        "post_edition_date_update_batch_count": post_edition_date_update_batch_count,
+        "post_edition_date_update_source_count": post_edition_date_update_source_count,
+        "post_edition_date_retrieval_batches": post_edition_date_batches,
         "retrieval_batches": retrieval_batches,
     }
 

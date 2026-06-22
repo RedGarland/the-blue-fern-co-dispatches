@@ -1319,5 +1319,61 @@
     "current_or_evergreen": "current",
     "promotable": true,
     "non_promotable_reason": ""
+  },
+  {
+    "source_id": "axios-charlotte-summer-hunger-surge",
+    "source_name": "Charlotte nonprofits brace for summer hunger surge",
+    "publisher": "Axios Charlotte",
+    "source_type": "page",
+    "url": "https://www.axios.com/local/charlotte/2026/06/19/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes",
+    "source_family": "local_news",
+    "state": "NC",
+    "location_name": "Charlotte, NC",
+    "location_scope": "state_local",
+    "source_role_allowed": "pressure_evidence",
+    "pressure_required": true,
+    "freshness_mode": "pressure",
+    "max_age_days": 7,
+    "positive_keywords": [
+      "food insecurity",
+      "summer hunger",
+      "school meals",
+      "snap",
+      "nourish up",
+      "meals on wheels"
+    ],
+    "negative_keywords": [
+      "recipe",
+      "restaurant review",
+      "menu",
+      "cooking tips",
+      "chef",
+      "grocery sale"
+    ],
+    "affected_group_keywords": [
+      "families",
+      "children",
+      "snap households",
+      "working families",
+      "low-income households"
+    ],
+    "enabled": true,
+    "notes": "Axios Charlotte article about summer food insecurity pressure as school meals end and SNAP eligibility tightens.",
+    "summary_fallback": "Charlotte nonprofits prepare for a summer hunger spike as school meals end, grocery costs rise, and SNAP access tightens.",
+    "pressure_verification_required": true,
+    "extraction_quality": "medium",
+    "expected_text_basis": "page_text",
+    "default_issue_tags": [
+      "food insecurity",
+      "school meals",
+      "SNAP",
+      "summer hunger",
+      "Meals on Wheels"
+    ],
+    "default_map_category": "elevated demand",
+    "source_purpose": "current_news",
+    "current_or_evergreen": "current",
+    "promotable": true,
+    "non_promotable_reason": ""
   }
 ]

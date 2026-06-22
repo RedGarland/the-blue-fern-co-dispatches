@@ -352,7 +352,11 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
     return source_path, records
 
 
-def generation_command(edition_date: str, allow_thin_edition: bool = False) -> list[str]:
+def generation_command(
+    edition_date: str,
+    allow_thin_edition: bool = False,
+    allow_post_edition_date_sources: bool = False,
+) -> list[str]:
     cmd = [
         sys.executable,
         "scripts\\run_gaza_dispatch.py",
@@ -364,6 +368,8 @@ def generation_command(edition_date: str, allow_thin_edition: bool = False) -> l
     ]
     if allow_thin_edition:
         cmd.append("--allow-thin-edition")
+    if allow_post_edition_date_sources:
+        cmd.append("--allow-post-edition-date-sources")
     return cmd
 
 
@@ -769,6 +775,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--min-sources", type=int, default=1, help="Minimum valid source records required.")
     parser.add_argument("--source-mode", choices=sorted(SOURCE_MODES), default="both", help="Source collection mode.")
     parser.add_argument("--allow-thin-edition", action="store_true", help="Allow publish when only thin Gaza coverage survives relevance gates.")
+    parser.add_argument(
+        "--allow-post-edition-date-sources",
+        action="store_true",
+        help="Allow Gaza reruns/backfills to use sources retrieved after the local edition date.",
+    )
     parser.add_argument("--post-bluesky", action="store_true", help="Post a Gaza dispatch announcement to Bluesky after successful publish.")
     parser.add_argument("--no-post-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Post to Bluesky even when a successful receipt already exists for this edition.")
@@ -857,7 +868,13 @@ def main(argv: list[str] | None = None) -> int:
         return finish(1)
 
     summary["planned_actions"] = [
-        command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition))),
+        command_text(
+            generation_command(
+                args.date,
+                allow_thin_edition=bool(args.allow_thin_edition),
+                allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources),
+            )
+        ),
         command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
     ]
     pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
@@ -868,8 +885,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.push:
         summary["planned_actions"].extend(["git status", f"git push origin {args.pages_branch}"])
 
-    log_line(log_path, f"Pipeline command started: {command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))}")
-    generation = run_command(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition)))
+    log_line(
+        log_path,
+        f"Pipeline command started: {command_text(generation_command(args.date, allow_thin_edition=bool(args.allow_thin_edition), allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources)))}",
+    )
+    generation = run_command(
+        generation_command(
+            args.date,
+            allow_thin_edition=bool(args.allow_thin_edition),
+            allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources),
+        )
+    )
     log_line(log_path, f"Generation return code: {generation.returncode}")
     generation_payload: dict[str, Any] = {}
     try:

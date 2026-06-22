@@ -31,7 +31,7 @@ def write_manual_sources(root: Path, edition_date: str, text: str | None = None)
                 "url": "https://valid.test/gaza-source",
                 "publisher": "Example News",
                 "published_at": f"{edition_date}T12:00:00Z",
-                "retrieved_at": "2026-05-07T00:00:00Z",
+                "retrieved_at": f"{edition_date}T00:00:00Z",
                 "summary_or_snippet": "A source-backed Gaza update.",
                 "source_type": "news",
                 "region_scope": "Gaza",
@@ -164,6 +164,51 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert all("--expect-date" in call and "2026-05-07" in call for call in publish_calls)
     assert all("--expect-dispatch" in call and "gaza" in call for call in publish_calls)
     assert all("--only-dispatch" in call and "gaza" in call for call in publish_calls)
+
+
+def test_date_only_command_forwards_post_edition_date_override(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            assert "--allow-post-edition-date-sources" in args
+            write_generated_output(root, "2026-05-07")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "warnings": [],
+                    "source_adequacy_status": "limited_source_update",
+                    "publisher_count": 1,
+                    "publishers": ["Example News"],
+                    "source_adequacy_warnings": [],
+                },
+            )
+        if "publish_github_pages.py" in command and "--dry-run" not in args:
+            write_pages_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"})
+        if "publish_github_pages.py" in command:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        if "pytest" in command:
+            return completed(args, stdout="1 passed")
+        return completed(args)
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main([
+        "--date",
+        "2026-05-07",
+        "--skip-tests",
+        "--allow-post-edition-date-sources",
+        "--pages-repo",
+        str(root / "bluefern-dispatches-pages"),
+    ])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert summary["ok"] is True
 
 
 def test_daily_summary_includes_source_window_and_later_same_day_update_metadata(isolated, monkeypatch, capsys):

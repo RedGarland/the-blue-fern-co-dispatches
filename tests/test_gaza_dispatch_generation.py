@@ -830,14 +830,15 @@ def test_collection_report_tracks_source_window_and_later_same_day_updates(monke
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    monkeypatch.setattr("scripts.run_gaza_dispatch.utc_now", lambda: "2026-06-22T19:06:00+00:00")
     rows = [
         {
-            "source_record_id": "gaza-src-2026-06-20-001",
+            "source_record_id": "gaza-src-2026-06-21-001",
             "title": "Gaza aid access update",
             "url": "https://example.com/gaza-aid-access-1",
             "publisher": "Reuters",
-            "published_at": "2026-06-20T08:15:00Z",
-            "retrieved_at": "2026-06-20T08:20:00Z",
+            "published_at": "2026-06-21T08:15:00Z",
+            "retrieved_at": "2026-06-21T13:00:35Z",
             "summary_or_snippet": "Aid access conditions were updated in Gaza.",
             "source_type": "news",
             "region_scope": "Gaza",
@@ -845,41 +846,81 @@ def test_collection_report_tracks_source_window_and_later_same_day_updates(monke
             "reliability_tier": "reported-public-source",
         },
         {
-            "source_record_id": "gaza-src-2026-06-20-002",
+            "source_record_id": "gaza-src-2026-06-21-002",
             "title": "Gaza hospital access update",
             "url": "https://example.com/gaza-hospital-access-2",
             "publisher": "BBC News",
-            "published_at": "2026-06-20T12:05:00Z",
-            "retrieved_at": "2026-06-20T15:40:00Z",
+            "published_at": "2026-06-21T15:05:00Z",
+            "retrieved_at": "2026-06-21T20:17:59Z",
             "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
             "source_type": "news",
             "region_scope": "Gaza",
             "category_hint": "humanitarian",
             "reliability_tier": "reported-public-source",
         },
+        {
+            "source_record_id": "gaza-src-2026-06-21-003",
+            "title": "Gaza relief update",
+            "url": "https://example.com/gaza-relief-update-3",
+            "publisher": "UN News",
+            "published_at": "2026-06-21T16:30:00Z",
+            "retrieved_at": "2026-06-21T20:17:59Z",
+            "summary_or_snippet": "Relief access was updated later the same day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
+        {
+            "source_record_id": "gaza-src-2026-06-21-004",
+            "title": "Gaza nightly update",
+            "url": "https://example.com/gaza-nightly-update-4",
+            "publisher": "UN News",
+            "published_at": "2026-06-22T08:15:00Z",
+            "retrieved_at": "2026-06-22T19:05:59Z",
+            "summary_or_snippet": "Relief access was updated the next day.",
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+        },
     ]
-    write_manual_sources(work, "2026-06-20", rows)
-    result = run_gaza_dispatch(work, "2026-06-20", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
-    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "collection_report.json"))
-    manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "edition_manifest.json"))
-    run_manifest = json.loads(read(work / "output" / "test-backups" / "gaza" / "2026-06-20" / "run_manifest.json"))
+    write_manual_sources(work, "2026-06-21", rows)
+    result = run_gaza_dispatch(work, "2026-06-21", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "collection_report.json"))
+    manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "edition_manifest.json"))
+    run_manifest = json.loads(read(work / "output" / "test-backups" / "gaza" / "2026-06-21" / "run_manifest.json"))
     assert result["ok"] is True
-    assert report["scheduled_run_local_time"]
-    assert report["source_window_start_utc"] == "2026-06-20T08:15:00Z"
-    assert report["source_window_end_utc"] == "2026-06-20T12:05:00Z"
-    assert report["first_source_retrieved_at"] == "2026-06-20T08:20:00Z"
-    assert report["last_source_retrieved_at"] == "2026-06-20T15:40:00Z"
+    assert report["scheduled_run_local_time"] == "2026-06-21T06:00:00-07:00"
+    assert report["actual_run_local_time"] == "2026-06-22T12:06:00-07:00"
+    assert report["source_window_start_utc"] == "2026-06-21T08:15:00Z"
+    assert report["source_window_end_utc"] == "2026-06-22T08:15:00Z"
+    assert report["first_source_retrieved_at"] == "2026-06-21T13:00:35Z"
+    assert report["last_source_retrieved_at"] == "2026-06-22T19:05:59Z"
     assert report["contains_later_same_day_update"] is True
-    assert report["later_same_day_update_count"] == 1
-    assert len(report["retrieval_batches"]) == 2
+    assert report["later_same_day_update_count"] == 2
+    assert report["later_same_day_update_batch_count"] == 1
+    assert report["later_same_day_update_source_count"] == 2
+    assert report["contains_post_edition_date_update"] is True
+    assert report["post_edition_date_update_count"] == 1
+    assert report["post_edition_date_update_batch_count"] == 1
+    assert report["post_edition_date_update_source_count"] == 1
+    assert len(report["retrieval_batches"]) == 3
+    assert len(report["post_edition_date_retrieval_batches"]) == 1
+    assert report["retrieval_batches"][0]["batch_classification"] == "scheduled_or_pre_scheduled_batch"
+    assert report["retrieval_batches"][1]["batch_classification"] == "later_same_day_update"
+    assert report["retrieval_batches"][2]["batch_classification"] == "post_edition_date_update"
     assert manifest["contains_later_same_day_update"] is True
+    assert manifest["contains_post_edition_date_update"] is True
     assert run_manifest["contains_later_same_day_update"] is True
+    assert run_manifest["contains_post_edition_date_update"] is True
 
 
 def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    monkeypatch.setattr("scripts.run_gaza_dispatch.utc_now", lambda: "2026-06-20T13:00:00+00:00")
     rows = [
         {
             "source_record_id": "gaza-src-2026-06-20-101",
@@ -912,8 +953,16 @@ def test_collection_report_does_not_flag_later_same_day_update_for_single_batch(
     result = run_gaza_dispatch(work, "2026-06-20", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
     report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-20" / "collection_report.json"))
     assert result["ok"] is True
+    assert report["scheduled_run_local_time"] == "2026-06-20T06:00:00-07:00"
+    assert report["actual_run_local_time"] == "2026-06-20T06:00:00-07:00"
     assert report["contains_later_same_day_update"] is False
     assert report["later_same_day_update_count"] == 0
+    assert report["later_same_day_update_batch_count"] == 0
+    assert report["later_same_day_update_source_count"] == 0
+    assert report["contains_post_edition_date_update"] is False
+    assert report["post_edition_date_update_count"] == 0
+    assert report["post_edition_date_update_batch_count"] == 0
+    assert report["post_edition_date_update_source_count"] == 0
     assert len(report["retrieval_batches"]) == 1
 
 

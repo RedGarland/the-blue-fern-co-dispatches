@@ -1812,7 +1812,6 @@ def update_shared_records(
 def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, dry_run: bool, render: bool, all_steps: bool, allow_thin_edition: bool = False) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     generated_at = utc_now()
-    scheduled_run_local_time = datetime.now().astimezone().isoformat(timespec="seconds")
     warnings: list[str] = []
     errors: list[str] = []
     wrote: list[str] = []
@@ -1839,7 +1838,7 @@ def run_gaza_dispatch(root: Path, edition_date: str, from_manual_sources: bool, 
     timing_metadata = build_gaza_collection_timing_metadata(
         normalized,
         edition_date,
-        scheduled_run_local_time=scheduled_run_local_time,
+        actual_run_utc=generated_at,
     )
     story_selection_excluded_count = sum(1 for source in normalized if str(source.get("story_selection_excluded_reason") or "").strip())
     story_selection_excluded_reasons: dict[str, int] = {}

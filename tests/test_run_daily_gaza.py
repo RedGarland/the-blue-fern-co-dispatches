@@ -223,13 +223,20 @@ def test_daily_summary_includes_source_window_and_later_same_day_update_metadata
     summary = json.loads(capsys.readouterr().out)
     run_manifest = json.loads((root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "run_manifest.json").read_text(encoding="utf-8"))
     assert code == 0
-    assert summary["scheduled_run_local_time"]
+    assert summary["scheduled_run_local_time"] == "2026-05-07T06:00:00-07:00"
+    assert summary["actual_run_local_time"]
     assert summary["source_window_start_utc"] == "2026-05-07T08:15:00Z"
     assert summary["source_window_end_utc"] == "2026-05-07T12:30:00Z"
     assert summary["first_source_retrieved_at"] == "2026-05-07T08:20:00Z"
     assert summary["last_source_retrieved_at"] == "2026-05-07T15:45:00Z"
     assert summary["contains_later_same_day_update"] is True
     assert summary["later_same_day_update_count"] == 1
+    assert summary["later_same_day_update_batch_count"] == 1
+    assert summary["later_same_day_update_source_count"] == 1
+    assert summary["contains_post_edition_date_update"] is False
+    assert summary["post_edition_date_update_count"] == 0
+    assert summary["post_edition_date_update_batch_count"] == 0
+    assert summary["post_edition_date_update_source_count"] == 0
     assert len(summary["retrieval_batches"]) == 2
     assert run_manifest["contains_later_same_day_update"] is True
 

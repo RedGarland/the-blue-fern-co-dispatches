@@ -1,0 +1,11 @@
+{
+  "branch": "add/example-task",
+  "base": "add/pages-repo-default",
+  "commit_message": "Add example task",
+  "files": [
+    "scripts/example.py",
+    "tests/test_example.py"
+  ],
+  "push": false,
+  "allow_review_output": false
+}

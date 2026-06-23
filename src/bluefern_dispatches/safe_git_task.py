@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 
 DEFAULT_BASE_BRANCH = "add/pages-repo-default"
@@ -26,6 +27,16 @@ class RepoSnapshot:
     branch: str
     head: str
     status_lines: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class SafeTaskManifest:
+    branch: str
+    commit_message: str
+    files: tuple[str, ...]
+    base: str = DEFAULT_BASE_BRANCH
+    push: bool = False
+    allow_review_output: bool = False
 
 
 def _normalize_path(path: str | Path) -> str:
@@ -202,6 +213,13 @@ def _print_repo_state(label: str, repo: Path) -> None:
     print(_repo_status_text(repo))
 
 
+def _print_pr_guidance(*, base: str, branch: str, message: str) -> None:
+    print("Next PR info:")
+    print(f"- Base branch: {base}")
+    print(f"- Compare branch: {branch}")
+    print(f"- Title suggestion: {_suggest_title(message)}")
+
+
 def _current_dirty_summary(repo: Path, *, exclude: Sequence[str] = ()) -> list[str]:
     excluded = tuple(_normalize_path(item) for item in exclude)
     result: list[str] = []
@@ -219,6 +237,191 @@ def _branch_ref_exists(repo: Path, branch: str) -> bool:
 def _branch_based_on(repo: Path, branch: str, base_ref: str) -> bool:
     result = _run_git(repo, "merge-base", "--is-ancestor", base_ref, branch, check=False)
     return result.returncode == 0
+
+
+def _load_json_manifest(manifest_path: Path) -> dict[str, Any]:
+    try:
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"Manifest file does not exist: {manifest_path}") from exc
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Manifest is not valid JSON: {manifest_path}") from exc
+    if not isinstance(data, dict):
+        raise RuntimeError("Manifest must be a JSON object.")
+    return data
+
+
+def load_safe_task_manifest(manifest_path: str | Path) -> SafeTaskManifest:
+    path = Path(manifest_path)
+    payload = _load_json_manifest(path)
+
+    missing = [field for field in ("branch", "commit_message", "files") if field not in payload]
+    if missing:
+        raise RuntimeError("Manifest is missing required fields: " + ", ".join(missing))
+
+    branch = payload["branch"]
+    commit_message = payload["commit_message"]
+    files = payload["files"]
+    base = payload.get("base", DEFAULT_BASE_BRANCH)
+    push = payload.get("push", False)
+    allow_review_output = payload.get("allow_review_output", False)
+
+    if not isinstance(branch, str) or not branch.strip():
+        raise RuntimeError("Manifest field 'branch' must be a non-empty string.")
+    if not isinstance(commit_message, str) or not commit_message.strip():
+        raise RuntimeError("Manifest field 'commit_message' must be a non-empty string.")
+    if not isinstance(base, str) or not base.strip():
+        raise RuntimeError("Manifest field 'base' must be a non-empty string when provided.")
+    if not isinstance(files, list) or not files:
+        raise RuntimeError("Manifest field 'files' must be a non-empty list of paths.")
+    if not isinstance(push, bool):
+        raise RuntimeError("Manifest field 'push' must be a boolean when provided.")
+    if not isinstance(allow_review_output, bool):
+        raise RuntimeError("Manifest field 'allow_review_output' must be a boolean when provided.")
+
+    normalized_files: list[str] = []
+    for item in files:
+        if not isinstance(item, str) or not item.strip():
+            raise RuntimeError("Manifest field 'files' must contain only non-empty string paths.")
+        normalized_files.append(item)
+
+    return SafeTaskManifest(
+        branch=branch.strip(),
+        commit_message=commit_message.strip(),
+        files=tuple(normalized_files),
+        base=base.strip(),
+        push=push,
+        allow_review_output=allow_review_output,
+    )
+
+
+def _validate_safe_task_branch(branch: str) -> None:
+    if branch in FORBIDDEN_BRANCHES:
+        raise RuntimeError(f"Refusing protected branch: {branch}")
+
+
+def _print_manifest_plan(
+    *,
+    source_repo: Path,
+    pages_root: Path,
+    manifest: SafeTaskManifest,
+    effective_push: bool,
+    selected: Sequence[str],
+    warnings: Sequence[str],
+) -> None:
+    current_branch = _current_branch(source_repo)
+    print(f"Source repo: {source_repo}")
+    print(f"Pages repo: {pages_root}")
+    print(f"Current branch: {current_branch or '<detached>'}")
+    print(f"Base branch: {manifest.base}")
+    print(f"Feature branch: {manifest.branch}")
+    print(f"Commit message: {manifest.commit_message}")
+    print(f"Push requested: {'yes' if effective_push else 'no'}")
+    print("Planned actions:")
+    print(f"- fetch {manifest.base} from origin")
+    print(f"- switch to {manifest.base}")
+    print(f"- pull --ff-only origin {manifest.base}")
+    if _branch_ref_exists(source_repo, manifest.branch):
+        print(f"- switch to existing branch {manifest.branch}")
+        print(f"- check whether {manifest.branch} is based on current origin/{manifest.base}")
+    else:
+        print(f"- create branch {manifest.branch} from origin/{manifest.base}")
+    if selected:
+        print("- stage exact files:")
+        for item in selected:
+            print(f"  - {item}")
+    if warnings:
+        _print_lines("Warnings:", warnings)
+    print("Source repo dirty summary:")
+    dirty = _current_dirty_summary(source_repo, exclude=selected)
+    if dirty:
+        for line in dirty:
+            print(f"- {line}")
+    else:
+        print("- <clean>")
+    print("Pages repo status:")
+    _print_repo_state("Pages repo snapshot:", pages_root)
+    _print_pr_guidance(base=manifest.base, branch=manifest.branch, message=manifest.commit_message)
+
+
+def run_safe_task_manifest(
+    *,
+    manifest_path: str | Path,
+    pages_repo: str | None = None,
+    dry_run: bool = False,
+    push: bool = False,
+) -> int:
+    source_repo = _repo_root_from_cwd()
+    pages_root = _pages_repo_from_source(source_repo, pages_repo)
+
+    if source_repo.resolve() == pages_root.resolve():
+        print(f"Refusing to run from the Pages repo checkout: {pages_root}", file=sys.stderr)
+        return 1
+
+    try:
+        _validate_pages_repo(pages_root, require_clean=True, require_branch="gh-pages")
+        manifest = load_safe_task_manifest(manifest_path)
+        _validate_safe_task_branch(manifest.branch)
+        selected, warnings, errors = _validate_task_paths(
+            manifest.files,
+            allow_directory=False,
+            allow_review_output=manifest.allow_review_output,
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(str(exc), file=sys.stderr)
+        return 1
+
+    if errors:
+        print("Refusing to stage unsafe paths.", file=sys.stderr)
+        for error in errors:
+            print(error, file=sys.stderr)
+        return 1
+
+    effective_push = bool(manifest.push or push)
+
+    if dry_run:
+        try:
+            _print_manifest_plan(
+                source_repo=source_repo,
+                pages_root=pages_root,
+                manifest=manifest,
+                effective_push=effective_push,
+                selected=selected,
+                warnings=warnings,
+            )
+            return 0
+        except Exception as exc:  # noqa: BLE001
+            print(str(exc), file=sys.stderr)
+            return 1
+
+    try:
+        start_code = start_safe_task(branch=manifest.branch, base=manifest.base, pages_repo=pages_root.as_posix(), dry_run=False)
+        if start_code != 0:
+            return start_code
+
+        stage_code = stage_safe_task(
+            files=manifest.files,
+            allow_review_output=manifest.allow_review_output,
+            allow_directory=False,
+            allow_base_branch=False,
+            pages_repo=pages_root.as_posix(),
+            dry_run=False,
+        )
+        if stage_code != 0:
+            return stage_code
+
+        commit_code = commit_safe_task(
+            message=manifest.commit_message,
+            push=effective_push,
+            base=manifest.base,
+            allow_review_output=manifest.allow_review_output,
+            pages_repo=pages_root.as_posix(),
+            dry_run=False,
+        )
+        return commit_code
+    except Exception as exc:  # noqa: BLE001
+        print(str(exc), file=sys.stderr)
+        return 1
 
 
 def start_safe_task(*, branch: str, base: str = DEFAULT_BASE_BRANCH, pages_repo: str | None = None, dry_run: bool = False) -> int:
@@ -550,4 +753,24 @@ def main_commit(argv: Sequence[str] | None = None) -> int:
         allow_review_output=bool(args.allow_review_output),
         pages_repo=args.pages_repo,
         dry_run=bool(args.dry_run),
+    )
+
+
+def _build_run_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Run a manifest-driven safe Codex task sequence.")
+    parser.add_argument("--manifest", required=True, help="Path to a JSON safe-task manifest.")
+    parser.add_argument("--pages-repo", default=DEFAULT_PAGES_REPO_NAME, help="Local Pages repo path.")
+    parser.add_argument("--push", action="store_true", help="Allow a manifest task to push the feature branch.")
+    parser.add_argument("--dry-run", action="store_true", help="Validate and print the safe task plan without mutating git.")
+    return parser
+
+
+def main_run(argv: Sequence[str] | None = None) -> int:
+    parser = _build_run_parser()
+    args = parser.parse_args(list(argv) if argv is not None else None)
+    return run_safe_task_manifest(
+        manifest_path=args.manifest,
+        pages_repo=args.pages_repo,
+        dry_run=bool(args.dry_run),
+        push=bool(args.push),
     )

@@ -809,6 +809,37 @@ def test_bluesky_not_attempted_when_pipeline_fails(isolated, monkeypatch, capsys
     assert summary["bluesky_status"] == "skipped"
 
 
+def test_generation_failure_preserves_publisher_metadata(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            return completed(
+                args,
+                returncode=1,
+                payload={
+                    "ok": False,
+                    "errors": ["blocked for thin edition"],
+                    "source_adequacy_status": "limited_source_update",
+                    "publisher_count": 2,
+                    "publishers": ["Reuters", "AP"],
+                    "source_adequacy_warnings": ["No core in-Gaza ground-development source was identified; context-only coverage cannot carry the edition."],
+                },
+            )
+        return completed(args)
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert summary["publisher_count"] == 2
+    assert summary["publishers"] == ["Reuters", "AP"]
+    assert summary["source_adequacy_status"] == "limited_source_update"
+    assert any("No core in-Gaza ground-development source was identified" in warning for warning in summary["warnings"])
+
+
 def test_force_bluesky_post_flag_is_forwarded(isolated, monkeypatch, capsys):
     root = isolated
     write_manual_sources(root, "2026-05-07")

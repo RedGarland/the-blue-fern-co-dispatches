@@ -99,8 +99,114 @@ GROUND_DEVELOPMENT_TERMS = (
     "deir al-balah",
     "unrwa",
 )
+CORE_GROUND_CONTEXT_TERMS = (
+    "children",
+    "child",
+    "civilians",
+    "civilian",
+    "families",
+    "residents",
+    "people",
+)
+CORE_GROUND_SIGNAL_TERMS = (
+    "attack",
+    "attacks",
+    "airstrike",
+    "bombard",
+    "bombardment",
+    "casualties",
+    "civil defense",
+    "civil defence",
+    "civilian",
+    "civilians",
+    "destroyed",
+    "displaced",
+    "displacement",
+    "drone strike",
+    "evacuation",
+    "famine",
+    "field hospital",
+    "food",
+    "fuel",
+    "hunger",
+    "hospital",
+    "humanitarian",
+    "injured",
+    "inside gaza",
+    "killed",
+    "malnutrition",
+    "medical",
+    "nutrition",
+    "paramedic",
+    "power",
+    "rubble",
+    "sanitation",
+    "sewage",
+    "shelling",
+    "shelter",
+    "starvation",
+    "water",
+    "wastewater",
+    "blackout",
+    "clinic",
+    "ambulance",
+    "aid access",
+    "service disruption",
+    "crossing",
+    "corridor",
+    "reporting from gaza",
+    "from gaza",
+    "field reporting",
+    "field report",
+    "correspondent",
+    "on the ground",
+    "heat",
+    "heatwave",
+    "erasure",
+    "destruction",
+    "destroyed",
+    "destroying",
+    "demolition",
+    "demolished",
+    "territorial control",
+    "expands control",
+    "tent",
+    "tents",
+    "tent city",
+    "displacement camp",
+    "polluted sea",
+    "pollution",
+    "contamination",
+)
+CORE_GROUND_LEGAL_CONTEXT_TERMS = (
+    "commission of inquiry",
+    "inquiry",
+    "investigation",
+    "report",
+    "analysis",
+    "legal",
+    "court",
+    "icc",
+    "icj",
+    "genocide",
+    "war crimes",
+    "accountability",
+    "finding",
+    "findings",
+)
+CORE_GROUND_FIELD_TERMS = (
+    "inside gaza",
+    "from gaza",
+    "reporting from gaza",
+    "field reporting",
+    "field report",
+    "on the ground",
+    "correspondent",
+    "inside the gaza strip",
+    "gaza strip",
+)
 FLOTILLA_TERMS = ("flotilla", "activist return", "activists return", "aid boat", "aid ship")
-INCIDENTAL_OFF_TOPIC_TERMS = ("live blog", "as it happened", "australia", "liberal mp", "budget reply", "electoral reform", "coal", "ev")
+INCIDENTAL_OFF_TOPIC_TERMS = ("live blog", "as it happened", "australia", "liberal mp", "budget reply", "electoral reform", "coal")
 HUMANITARIAN_INSTITUTIONAL_HINTS = ("unrwa", "ocha", "un ", "united nations", "who", "wfp", "unicef", "icrc", "msf", "relief", "humanitarian")
 WIRE_INTERNATIONAL_HINTS = ("reuters", "ap", "associated press", "afp", "bbc", "al jazeera", "guardian", "nyt", "washington post", "anadolu", "aa.com.tr")
 GAZA_SOURCE_TARGET_MIN = 8
@@ -271,9 +377,30 @@ def _is_context_only_source(source: dict[str, Any]) -> bool:
     return "gaza-bound" in text or "outside gaza" in text or "libya" in text
 
 
-def _is_core_ground_source(source: dict[str, Any]) -> bool:
-    if _is_context_only_source(source):
+def _core_ground_text_match(text: str) -> bool:
+    if "gaza" not in text and not any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
         return False
+    flotilla_only = any(term in text for term in FLOTILLA_TERMS)
+    if flotilla_only and not any(term in text for term in ("airstrike", "strike", "injured", "killed", "hospital", "displaced", "displacement", "aid access")):
+        return False
+    if any(term in text for term in GROUND_DEVELOPMENT_TERMS):
+        return True
+    if any(term in text for term in CORE_GROUND_SIGNAL_TERMS):
+        if any(term in text for term in CORE_GROUND_CONTEXT_TERMS):
+            return True
+        if any(term in text for term in ("inside gaza", "from gaza", "reporting from gaza", "gaza strip")):
+            return True
+        return True
+    if any(term in text for term in ("inside gaza", "from gaza", "reporting from gaza", "gaza strip")) and any(
+        term in text for term in ("reporting", "correspondent", "field", "on the ground", "civilian", "children", "aid", "hospital")
+    ):
+        return True
+    return False
+
+
+def _gaza_ground_classification(source: dict[str, Any]) -> tuple[str, str]:
+    if _is_context_only_source(source):
+        return "context_only", "labeled_gaza_adjacent_context"
     text = " ".join(
         [
             str(source.get("title") or ""),
@@ -281,27 +408,63 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
             str(source.get("region_scope") or ""),
             str(source.get("category_hint") or ""),
             str(source.get("attribution_mode") or ""),
+            str(source.get("claim_status") or ""),
         ]
     ).lower()
     if "gaza" not in text and not any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
+        return "rejected_no_gaza_ground_signal", "no_gaza_anchor"
+    if str(source.get("post_edition_date_source") or "").lower() == "true":
+        return "stale", "retrieved_after_edition_date"
+    if any(term in text for term in CORE_GROUND_LEGAL_CONTEXT_TERMS) and not any(term in text for term in CORE_GROUND_SIGNAL_TERMS):
+        return "rejected_no_gaza_ground_signal", "inquiry_or_legal_context_without_current_ground_conditions"
+    if any(term in text for term in CORE_GROUND_FIELD_TERMS) and any(
+        term in text
+        for term in (
+            "civilian",
+            "civilians",
+            "children",
+            "families",
+            "displaced",
+            "displacement",
+            "food",
+            "fuel",
+            "humanitarian",
+            "hospital",
+            "injured",
+            "killed",
+            "medical",
+            "shelter",
+            "water",
+            "sanitation",
+            "sewage",
+            "aid access",
+            "service disruption",
+        )
+    ):
+        return "core_ground_development", "field_reporting_with_ground_conditions"
+    if _core_ground_text_match(text):
+        return "core_ground_development", "core_ground_signal"
+    return "rejected_no_gaza_ground_signal", "gaza_relevant_but_not_current_ground_development"
+
+
+def _is_core_ground_source(source: dict[str, Any]) -> bool:
+    text = " ".join(
+        [
+            str(source.get("title") or ""),
+            str(source.get("summary_or_snippet") or ""),
+            str(source.get("region_scope") or ""),
+            str(source.get("category_hint") or ""),
+            str(source.get("attribution_mode") or ""),
+            str(source.get("claim_status") or ""),
+        ]
+    ).lower()
+    if _is_context_only_source(source):
         return False
-    flotilla_only = any(term in text for term in FLOTILLA_TERMS)
-    if flotilla_only and not any(term in text for term in ("airstrike", "strike", "injured", "killed", "hospital", "displaced", "displacement", "aid access")):
+    if str(source.get("post_edition_date_source") or "").lower() == "true":
         return False
-    core_terms = (
-        *GROUND_DEVELOPMENT_TERMS,
-        "drone",
-        "territorial control",
-        "expands control",
-        "satellite",
-        "destruction",
-        "detention",
-        "military operation",
-        "weapons storage",
-        "shelter",
-        "refugee",
-    )
-    return any(term in text for term in core_terms)
+    if any(term in text for term in CORE_GROUND_LEGAL_CONTEXT_TERMS) and not any(term in text for term in CORE_GROUND_SIGNAL_TERMS):
+        return False
+    return _core_ground_text_match(text)
 
 
 def normalize_sources(
@@ -359,6 +522,18 @@ def normalize_sources(
         )
         if boundary_exclusion_reason:
             selection_exclusion_reason = boundary_exclusion_reason
+        ground_classification, ground_classification_reason = _gaza_ground_classification(
+            {
+                **record,
+                "title": clean_title,
+                "summary_or_snippet": clean_summary,
+                "region_scope": str(record["region_scope"]).strip(),
+                "category_hint": str(record["category_hint"]).strip(),
+                "attribution_mode": _infer_attribution_mode(record),
+                "claim_status": str(record.get("claim_status") or _infer_attribution_mode(record)).strip(),
+                "post_edition_date_source": post_edition_date_source,
+            }
+        )
         canonical_url = str(record.get("canonical_url") or "").strip()
         wrapper_url = str(record.get("wrapper_url") or "").strip()
         canonicalization_status = str(record.get("canonicalization_status") or "").strip()
@@ -397,6 +572,8 @@ def normalize_sources(
                 "used_in_story_ids": [],
                 "claim_ids": [],
                 "story_selection_excluded_reason": selection_exclusion_reason,
+                "ground_classification": ground_classification,
+                "ground_classification_reason": ground_classification_reason,
             }
         )
     ranked = rank_gaza_candidates(normalized, edition_date)
@@ -417,6 +594,11 @@ def _story_relevance_profile(source: dict[str, Any]) -> dict[str, Any]:
     ground_hits = [term for term in GROUND_DEVELOPMENT_TERMS if term in text]
     flotilla_hits = [term for term in FLOTILLA_TERMS if term in text]
     substantive_ground = len(ground_hits) > 0 or _is_core_ground_source(source)
+    negated_context_hits = [
+        term
+        for term in ("no gaza", "not gaza", "without gaza", "no palestinian", "without palestinian", "no gaza or palestinian", "outside gaza", "no palestine")
+        if term in title_summary
+    ]
     flotilla_only = len(flotilla_hits) > 0 and not substantive_ground
     score_adjustment = len(ground_hits) * 3 + len(matched_terms) * 6 - len(incidental_hits) * 10 - (6 if flotilla_only else 0)
     if not explicit:
@@ -427,6 +609,17 @@ def _story_relevance_profile(source: dict[str, Any]) -> dict[str, Any]:
             "ground_hits": ground_hits,
             "incidental_hits": incidental_hits,
             "reject_reason": "missing_explicit_gaza_or_palestine_relevance",
+            "substantive_ground": substantive_ground,
+            "flotilla_only": flotilla_only,
+        }
+    if negated_context_hits and not substantive_ground:
+        return {
+            "passes": False,
+            "score_adjustment": -90,
+            "matched_terms": matched_terms,
+            "ground_hits": ground_hits,
+            "incidental_hits": incidental_hits,
+            "reject_reason": "negated_gaza_context_without_ground_development",
             "substantive_ground": substantive_ground,
             "flotilla_only": flotilla_only,
         }
@@ -539,6 +732,8 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 "claim_status": str(source.get("claim_status") or source.get("attribution_mode") or ""),
                 "context_only": _is_context_only_source(source),
                 "core_ground_development": _is_core_ground_source(source),
+                "ground_classification": str(source.get("ground_classification") or ""),
+                "ground_classification_reason": str(source.get("ground_classification_reason") or ""),
             }
         )
         if not str(stories[-1].get("summary") or "").strip():
@@ -679,6 +874,73 @@ def _publisher_breakdown(rows: list[dict[str, Any]], key: str = "publisher") -> 
             continue
         counts[publisher] = counts.get(publisher, 0) + 1
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0].lower())))
+
+
+def _gaza_source_classification_counts(
+    sources: list[dict[str, Any]],
+    collection_report: dict[str, Any] | None = None,
+) -> dict[str, int]:
+    collection_report = collection_report or {}
+    diagnostics = list(collection_report.get("source_classification_diagnostics") or [])
+    if not diagnostics:
+        diagnostics = [
+            {
+                "classification": str(source.get("ground_classification") or "") or _gaza_ground_classification(source)[0],
+            }
+            for source in sources
+        ]
+    core_ground_development = sum(1 for row in diagnostics if str(row.get("classification") or "") == "core_ground_development")
+    context_only = sum(1 for row in diagnostics if str(row.get("classification") or "") == "context_only")
+    stale = sum(1 for row in diagnostics if str(row.get("classification") or "") == "stale")
+    duplicate = sum(1 for row in diagnostics if str(row.get("classification") or "") == "duplicate")
+    rejected_no_gaza_ground_signal = sum(1 for row in diagnostics if str(row.get("classification") or "") == "rejected_no_gaza_ground_signal")
+    return {
+        "core_ground_development": core_ground_development,
+        "context_only": context_only,
+        "stale": stale,
+        "duplicate": duplicate,
+        "rejected_no_gaza_ground_signal": rejected_no_gaza_ground_signal,
+    }
+
+
+def _gaza_source_classification_diagnostics(
+    sources: list[dict[str, Any]],
+    collection_report: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    diagnostics: list[dict[str, Any]] = []
+    for source in sources:
+        classification = str(source.get("ground_classification") or "")
+        if not classification:
+            classification, _reason = _gaza_ground_classification(source)
+        diagnostics.append(
+            {
+                "source_record_id": source.get("source_record_id"),
+                "title": source.get("title"),
+                "publisher": source.get("publisher"),
+                "url": source.get("url"),
+                "classification": classification,
+                "reason": str(source.get("ground_classification_reason") or ""),
+                "published_at": source.get("published_at"),
+                "retrieved_at": source.get("retrieved_at"),
+            }
+        )
+    collection_report = collection_report or {}
+    for row in collection_report.get("suppressed_candidates") or []:
+        diagnostics.append(
+            {
+                "source_record_id": row.get("source_record_id"),
+                "title": row.get("title"),
+                "publisher": row.get("publisher"),
+                "url": row.get("url"),
+                "classification": "duplicate",
+                "reason": str(row.get("reason") or "duplicate"),
+                "published_at": row.get("published_at"),
+                "retrieved_at": row.get("retrieved_at"),
+                "matched_prior_edition": row.get("matched_prior_edition"),
+                "matched_key_type": row.get("matched_key_type"),
+            }
+        )
+    return diagnostics
 
 
 def _record_key(row: dict[str, Any]) -> tuple[str, str]:
@@ -1378,6 +1640,8 @@ def _build_source_quality_report(
     provider_failures = list(collection_report.get("provider_failures") or [])
     rejected_counts = dict(collection_report.get("rejection_counts_by_reason") or {})
     source_family_counts = dict(collection_report.get("source_family_counts") or {})
+    source_classification_counts = dict(collection_report.get("source_classification_counts") or {})
+    blocked_candidate_diagnostics = list(collection_report.get("blocked_candidate_diagnostics") or [])
     duplicate_count = int(collection_report.get("suppressed_after_dedupe") or 0)
     warnings: list[str] = list(adequacy.get("warnings") or [])
     if int(adequacy.get("publisher_count") or 0) < GAZA_WARNING_MIN_PUBLISHERS:
@@ -1398,6 +1662,7 @@ def _build_source_quality_report(
         "context_only_source_count": int(adequacy.get("context_only_source_count") or 0),
         "claim_attributed_source_count": int(adequacy.get("claim_attributed_source_count") or 0),
         "source_family_counts": source_family_counts,
+        "source_classification_counts": source_classification_counts,
         "has_humanitarian_or_institutional_sources": bool(adequacy.get("has_humanitarian_or_institutional_sources")),
         "has_wire_or_international_sources": bool(adequacy.get("has_wire_or_international_sources")),
         "fetch_failures": provider_failures,
@@ -1406,6 +1671,7 @@ def _build_source_quality_report(
         "accepted_count": int(collection_report.get("kept_after_dedupe") or 0),
         "rejected_count": int(collection_report.get("rejected_count") or 0),
         "rejection_counts_by_reason": rejected_counts,
+        "blocked_candidate_diagnostics": blocked_candidate_diagnostics,
         "adequacy_status": str(adequacy.get("status") or ""),
         "warnings": sorted(set(warnings)),
         "recommendation": _source_quality_recommendation(adequacy),
@@ -1418,6 +1684,8 @@ def _source_quality_report_markdown(report: dict[str, Any]) -> str:
     failures = list(report.get("fetch_failures") or [])
     warnings = list(report.get("warnings") or [])
     family_counts = dict(report.get("source_family_counts") or {})
+    classification_counts = dict(report.get("source_classification_counts") or {})
+    blocked_candidates = list(report.get("blocked_candidate_diagnostics") or [])
     lines = [
         f"# Gaza Source Quality Report - {report.get('date')}",
         "",
@@ -1436,6 +1704,23 @@ def _source_quality_report_markdown(report: dict[str, Any]) -> str:
     if family_counts:
         for key, value in sorted(family_counts.items()):
             lines.append(f"- {key}: {value}")
+    else:
+        lines.append("- <none>")
+    lines.append("")
+    lines.append("## Source classifications")
+    if classification_counts:
+        for key, value in sorted(classification_counts.items()):
+            lines.append(f"- {key}: {value}")
+    else:
+        lines.append("- <none>")
+    lines.append("")
+    lines.append("## Blocked candidates")
+    if blocked_candidates:
+        for row in blocked_candidates:
+            title = row.get("title") or "<untitled>"
+            reason = row.get("reason") or row.get("classification") or "<unknown>"
+            publisher = row.get("publisher") or "<unknown publisher>"
+            lines.append(f"- {title} ({publisher}): {reason}")
     else:
         lines.append("- <none>")
     lines.append("")
@@ -2077,6 +2362,13 @@ def run_gaza_dispatch(
         collection_report.setdefault("warnings", []).append("enabled automatic providers exist but none were attempted")
     if not dict(collection_report.get("source_family_counts") or {}):
         collection_report["source_family_counts"] = _source_family_counts_from_sources(normalized)
+    collection_report["source_classification_counts"] = _gaza_source_classification_counts(normalized, collection_report)
+    collection_report["source_classification_diagnostics"] = _gaza_source_classification_diagnostics(normalized, collection_report)
+    collection_report["blocked_candidate_diagnostics"] = [
+        row
+        for row in collection_report["source_classification_diagnostics"]
+        if str(row.get("classification") or "") != "core_ground_development"
+    ]
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
@@ -2304,6 +2596,8 @@ def run_gaza_dispatch(
         "publisher_count": int(adequacy.get("publisher_count") or 0),
         "publishers": list(adequacy.get("publishers") or []),
         "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+        "source_classification_counts": dict(collection_report.get("source_classification_counts") or {}),
+        "source_classification_diagnostics": list(collection_report.get("source_classification_diagnostics") or []),
         "dry_run": dry_run,
         "wrote": wrote,
         "warnings": warnings,

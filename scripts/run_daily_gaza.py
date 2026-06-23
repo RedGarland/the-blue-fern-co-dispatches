@@ -903,6 +903,18 @@ def main(argv: list[str] | None = None) -> int:
     except Exception:
         generation_payload = {}
     if generation.returncode != 0:
+        if generation_payload:
+            summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status", summary.get("source_adequacy_status"))
+            summary["publisher_count"] = int(generation_payload.get("publisher_count") or summary.get("publisher_count") or 0)
+            summary["publishers"] = list(generation_payload.get("publishers") or summary.get("publishers") or [])
+            if "source_classification_counts" in generation_payload:
+                summary["source_classification_counts"] = dict(generation_payload.get("source_classification_counts") or {})
+            if "source_classification_diagnostics" in generation_payload:
+                summary["source_classification_diagnostics"] = list(generation_payload.get("source_classification_diagnostics") or [])
+            for warning in generation_payload.get("source_adequacy_warnings") or []:
+                text = str(warning).strip()
+                if text and text not in summary["warnings"]:
+                    summary["warnings"].append(text)
         summary["errors"].append(generation.stderr.strip() or generation.stdout.strip() or "Gaza generation failed")
         return finish(1)
     for warning in generation_payload.get("warnings") or []:
@@ -914,6 +926,10 @@ def main(argv: list[str] | None = None) -> int:
     summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status")
     summary["publisher_count"] = int(generation_payload.get("publisher_count") or 0)
     summary["publishers"] = list(generation_payload.get("publishers") or [])
+    if "source_classification_counts" in generation_payload:
+        summary["source_classification_counts"] = dict(generation_payload.get("source_classification_counts") or {})
+    if "source_classification_diagnostics" in generation_payload:
+        summary["source_classification_diagnostics"] = list(generation_payload.get("source_classification_diagnostics") or [])
     for warning in generation_payload.get("source_adequacy_warnings") or []:
         text = str(warning).strip()
         if text and text not in summary["warnings"]:

@@ -305,6 +305,82 @@ def test_new_arab_drone_strike_qualifies_as_core_ground_development():
     assert stories[0]["core_ground_development"] is True
 
 
+def test_reuters_style_gaza_humanitarian_story_qualifies_as_core_ground_development():
+    now = "2026-06-23T18:35:00+00:00"
+    records = [
+        {
+            "source_record_id": "reuters-2026-06-23-gaza-heat-displacement-polluted-sea",
+            "title": "Gaza heat and polluted sea water worsen displacement in tent camps",
+            "url": "https://www.reuters.com/world/middle-east/gaza-heat-polluted-sea-water-worsen-displacement-tent-camps-2026-06-23/",
+            "publisher": "Reuters",
+            "published_at": "2026-06-23T12:00:00Z",
+            "retrieved_at": now,
+            "summary_or_snippet": "Families in Gaza face heat, polluted seawater, displacement, and worsening sanitation in crowded tent camps.",
+            "source_type": "news",
+            "region_scope": "Gaza Strip",
+            "category_hint": "humanitarian",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "reported_public_source",
+        }
+    ]
+    normalized, _warnings, errors = normalize_sources(records, "2026-06-23", now)
+    assert errors == []
+    stories, _rejected, _top = curate_stories(normalized, "2026-06-23", now)
+    assert stories[0]["core_ground_development"] is True
+    assert stories[0]["ground_classification"] == "core_ground_development"
+
+
+def test_un_inquiry_story_stays_gaza_relevant_but_not_core_ground_development():
+    now = "2026-06-23T18:35:00+00:00"
+    records = [
+        {
+            "source_record_id": "bbc-2026-06-23-un-inquiry-genocide-children",
+            "title": "UN inquiry says Israel committing genocide in Gaza by deliberately targeting children",
+            "url": "https://www.bbc.com/news/world-middle-east-12345678",
+            "publisher": "BBC News",
+            "published_at": "2026-06-23T12:00:00Z",
+            "retrieved_at": now,
+            "summary_or_snippet": "The commission of inquiry described legal findings about Gaza but did not report a fresh ground development.",
+            "source_type": "news",
+            "region_scope": "Gaza Strip",
+            "category_hint": "accountability",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "reported_public_source",
+        }
+    ]
+    normalized, _warnings, errors = normalize_sources(records, "2026-06-23", now)
+    assert errors == []
+    stories, _rejected, _top = curate_stories(normalized, "2026-06-23", now)
+    assert stories[0]["core_ground_development"] is False
+    assert stories[0]["ground_classification"] == "rejected_no_gaza_ground_signal"
+    assert stories[0]["ground_classification_reason"] == "inquiry_or_legal_context_without_current_ground_conditions"
+
+
+def test_regional_diplomacy_story_remains_non_core_context():
+    now = "2026-06-23T18:35:00+00:00"
+    records = [
+        {
+            "source_record_id": "ap-2026-06-23-gaza-diplomacy-summit",
+            "title": "Regional diplomats discuss Gaza at summit in Cairo",
+            "url": "https://apnews.com/article/gaza-diplomacy-summit-cairo-2026-06-23",
+            "publisher": "AP News",
+            "published_at": "2026-06-23T12:00:00Z",
+            "retrieved_at": now,
+            "summary_or_snippet": "Officials discussed the political track around Gaza but did not describe a current ground-development story.",
+            "source_type": "news",
+            "region_scope": "Middle East",
+            "category_hint": "diplomacy",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "reported_public_source",
+        }
+    ]
+    normalized, _warnings, errors = normalize_sources(records, "2026-06-23", now)
+    assert errors == []
+    stories, _rejected, _top = curate_stories(normalized, "2026-06-23", now)
+    assert stories[0]["core_ground_development"] is False
+    assert stories[0]["ground_classification"] == "rejected_no_gaza_ground_signal"
+
+
 def test_i24news_military_claim_renders_claim_attribution_caveat(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
@@ -1845,6 +1921,39 @@ def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html")
     assert "Liberal MP is first to be suspended from lower house in five years - as it happened" not in html
     assert "Court extends detention of Gaza flotilla activists" in html
+
+
+def test_day_with_only_context_only_records_still_blocks_publication(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-06-23",
+        [
+            {
+                "source_record_id": "gaza-src-2026-06-23-001",
+                "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
+                "url": "https://example.com/gaza-bound-convoy-libya",
+                "publisher": "Jerusalem Post",
+                "published_at": "2026-06-23T10:00:00Z",
+                "retrieved_at": "2026-06-23T12:00:00Z",
+                "summary_or_snippet": "A convoy with Gaza in its framing was dissolved in Libya.",
+                "source_type": "news",
+                "region_scope": "Libya / Gaza-bound convoy context",
+                "category_hint": "humanitarian_access_context",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "gaza_adjacent_context",
+                "claim_status": "gaza_adjacent_context",
+            }
+        ],
+    )
+    blocked = run_gaza_dispatch(work, "2026-06-23", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert blocked["ok"] is False
+    assert any("No substantive Gaza/Palestinian ground-development story cleared threshold" in err for err in blocked["errors"])
+    collection_report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-06-23" / "collection_report.json"))
+    assert collection_report["source_classification_counts"]["context_only"] == 1
+    assert collection_report["blocked_candidate_diagnostics"][0]["classification"] == "context_only"
 
 
 def test_source_diversity_report_written_with_stage_counts(monkeypatch):

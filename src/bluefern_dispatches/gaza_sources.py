@@ -795,6 +795,9 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     if strong_title or strong_url:
         return True, "strong_title_or_url"
     haystack = " ".join([title, summary, url])
+    if any(marker in weak_markers for marker in ("no gaza", "not gaza", "without gaza", "no palestinian", "without palestinian", "no gaza or palestinian", "outside gaza", "no palestine")):
+        if not any(term in haystack.lower() for term in ("airstrike", "strike", "injured", "killed", "hospital", "displaced", "displacement", "aid", "humanitarian", "water", "food", "fuel", "sewage", "sanitation")):
+            return False, "negated_gaza_context_without_ground_development"
     if is_palestinian_development_text(haystack):
         return True, "palestinian_development_material"
     if (PALESTINIAN_DEVELOPMENT_TERMS.search(haystack) or PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack)) and not has_palestinian_anchor_text(haystack):

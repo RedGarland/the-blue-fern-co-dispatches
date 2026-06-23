@@ -1,6 +1,72 @@
 [
   {
     "story_id": "gaza-story-2026-06-22-002",
+    "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+    "summary": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 45,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-22-bbc-middle-east-aed29a70b613"
+    ],
+    "source_ids": [
+      "gaza-2026-06-22-bbc-middle-east-aed29a70b613"
+    ],
+    "source_urls": [
+      "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-22-bbc-middle-east-aed29a70b613",
+        "title": "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say",
+        "url": "https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence."
+      }
+    ],
+    "generated_at": "2026-06-23T19:08:21.501429+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 45,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": false,
+    "ground_classification": "rejected_no_gaza_ground_signal",
+    "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-22-004",
     "title": "What the World Cup looks like from Gaza",
     "summary": "Gaza's footballers train on broken pitches with no shoes. Why has FIFA's rebuilding plan gone nowhere?",
     "category": "conflict",
@@ -44,7 +110,7 @@
         "summary_or_snippet": "Gaza's footballers train on broken pitches with no shoes. Why has FIFA's rebuilding plan gone nowhere?"
       }
     ],
-    "generated_at": "2026-06-23T18:40:28.483797+00:00",
+    "generated_at": "2026-06-23T19:08:21.501429+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -65,7 +131,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-22-003",
+    "story_id": "gaza-story-2026-06-22-005",
     "title": "Gaza's surfers seek solace from war in the Mediterranean Sea",
     "summary": "Surfers still ride the waves off Gaza despite the ever-present threat of becoming an Israeli military target.",
     "category": "conflict",
@@ -109,7 +175,7 @@
         "summary_or_snippet": "Surfers still ride the waves off Gaza despite the ever-present threat of becoming an Israeli military target."
       }
     ],
-    "generated_at": "2026-06-23T18:40:28.483797+00:00",
+    "generated_at": "2026-06-23T19:08:21.501429+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -130,7 +196,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-06-22-001",
+    "story_id": "gaza-story-2026-06-22-003",
     "title": "Football, war and solidarity: Why Gaza fans turned to Spain this World Cup",
     "summary": "Football fans in Gaza showed overwhelming support for Spain against Saudi Arabia during Sunday's World Cup clash.",
     "category": "conflict",
@@ -174,7 +240,7 @@
         "summary_or_snippet": "Football fans in Gaza showed overwhelming support for Spain against Saudi Arabia during Sunday's World Cup clash."
       }
     ],
-    "generated_at": "2026-06-23T18:40:28.483797+00:00",
+    "generated_at": "2026-06-23T19:08:21.501429+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

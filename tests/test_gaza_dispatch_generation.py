@@ -935,8 +935,14 @@ def test_run_gaza_dispatch_excludes_rejected_and_stale_ground_classifications_fr
     )
 
     audit = json.loads(read(work / "output" / "review" / "gaza" / "source_coverage_audit.json"))
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-06-22" / "index.html")
     assert result["ok"] is True
     assert result["public_story_count"] == 1
+    assert result["rendered_public_story_count"] == 1
+    assert html.count("<article><h3>") == result["public_story_count"]
+    assert "Israeli strikes kill six people in Gaza including Al Jazeera cameraman, officials say" not in html
+    assert "Gaza's surfers seek solace from war in the Mediterranean Sea" not in html
+    assert "Football, war and solidarity: Why Gaza fans turned to Spain this World Cup" not in html
     assert result["story_count"] >= 1
     assert result["source_coverage_audit_rendered_public_story_count"] >= 1
     assert audit["rendered_public_story_count"] >= 1
@@ -2704,8 +2710,8 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "https://www.bbc.com/news/articles/c4gy26p6pwzo" not in html
     assert "Source mix: 2 stories from 3 publishers." in html
     assert "Publishers: Al Jazeera, BBC News, The Guardian." in html
-    assert audio_json["source_count"] == 4
-    assert audio_json["tts_story_count"] == 3
+    assert audio_json["source_count"] == 3
+    assert audio_json["tts_story_count"] == 2
     assert ".." not in audio_json["script_text"]
     assert "Wishah among at least 260 journalists killed since." not in audio_json["script_text"]
     assert "260. Palestinian journalists" not in audio_json["script_text"]
@@ -2718,8 +2724,7 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "The Guardian" in attribution
     assert "Al Jazeera" in attribution
     assert "BBC News" not in attribution
-    assert transcript.count("This was reported by") == 3
-    assert 'href="https://www.bbc.com/news/articles/c4gy26p6pwzo?at_medium=RSS&amp;at_campaign=rss"' in transcript
+    assert transcript.count("This was reported by") == 2
     assert 'href="https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza"' in transcript
     assert 'href="https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss"' in transcript
     assert 'href="https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"' in transcript

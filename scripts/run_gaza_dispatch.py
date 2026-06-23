@@ -2383,6 +2383,7 @@ def run_gaza_dispatch(
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    rendered_story_ids = {str(story.get("story_id") or "") for story in stories if str(story.get("story_id") or "")}
     story_usage: dict[str, list[str]] = {}
     for story in stories:
         story_id = str(story.get("story_id") or "").strip()
@@ -2405,13 +2406,16 @@ def run_gaza_dispatch(
         written_exclusion = written_exclusion_by_story.get(story_id)
         decision = decision_by_story.get(story_id) or {}
         include_decision = str(decision.get("include_decision") or "include")
+        is_rendered_public_story = story_id in rendered_story_ids
         if written_exclusion:
             include_decision = "exclude_written_public_edition"
         row = dict(story)
-        if written_exclusion:
+        if written_exclusion or not is_rendered_public_story:
             row["included_in_public_summary"] = False
+        if not is_rendered_public_story and not written_exclusion:
+            row["excluded_reason"] = "not included in rendered public Gaza edition"
         row["include_decision"] = include_decision
-        row["public_rendered"] = include_decision == "include"
+        row["public_rendered"] = is_rendered_public_story and include_decision == "include"
         if written_exclusion:
             row["excluded_reason"] = written_exclusion.get("reason")
         row["prior_story_matched"] = decision.get("prior_story_matched")

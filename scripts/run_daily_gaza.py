@@ -109,6 +109,15 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "bluesky_edition_date_verified",
     "bluesky_stale_content_guard_status",
     "bluesky_thumb_status",
+    "audio_expected",
+    "audio_present",
+    "audio_status",
+    "audio_publish_status",
+    "audio_files_in_copy_plan",
+    "audio_index_entries",
+    "podcast_entries",
+    "missing_audio_artifacts",
+    "audio_follow_up_command",
     "scheduled_run_local_time",
     "actual_run_local_time",
     "source_window_start_utc",
@@ -559,6 +568,15 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "rendered_public_story_count": 0,
         "rendered_public_story_source_ids": [],
         "rendered_public_story_sources": [],
+        "audio_expected": None,
+        "audio_present": None,
+        "audio_status": None,
+        "audio_publish_status": None,
+        "audio_files_in_copy_plan": [],
+        "audio_index_entries": [],
+        "podcast_entries": [],
+        "missing_audio_artifacts": [],
+        "audio_follow_up_command": None,
         "generation_ok": False,
         "generated": False,
         "archive_updated": False,
@@ -1046,6 +1064,19 @@ def main(argv: list[str] | None = None) -> int:
         summary["errors"].append(f"Pages publish dry-run reported errors: {pages_dry_run_payload.get('errors')}")
     if pages_dry_run_payload.get("paid_detail_excluded_from_public") is not True:
         summary["errors"].append("Pages dry-run did not confirm paid/detail exclusion")
+    for key in (
+        "audio_expected",
+        "audio_present",
+        "audio_status",
+        "audio_publish_status",
+        "audio_files_in_copy_plan",
+        "audio_index_entries",
+        "podcast_entries",
+        "missing_audio_artifacts",
+        "audio_follow_up_command",
+    ):
+        if key in pages_dry_run_payload:
+            summary[key] = pages_dry_run_payload.get(key)
     summary["pages_dry_run_ok"] = not summary["errors"]
     if summary["errors"]:
         summary["publish_blocked"] = True
@@ -1112,6 +1143,19 @@ def main(argv: list[str] | None = None) -> int:
     summary["local_pages_copy_ok"] = bool(pages_payload.get("copied"))
     pages_commit_message = str(pages_payload.get("message") or "").strip().lower()
     summary["pages_commit_ok"] = bool(pages_payload.get("committed")) or pages_commit_message in {"no changes to commit", "dry run; no commit created"}
+    for key in (
+        "audio_expected",
+        "audio_present",
+        "audio_status",
+        "audio_publish_status",
+        "audio_files_in_copy_plan",
+        "audio_index_entries",
+        "podcast_entries",
+        "missing_audio_artifacts",
+        "audio_follow_up_command",
+    ):
+        if key in pages_payload:
+            summary[key] = pages_payload.get(key)
     summary["pages_push_ok"] = None
     summary["remote_tree_verify_ok"] = None
     summary["live_http_ok"] = None

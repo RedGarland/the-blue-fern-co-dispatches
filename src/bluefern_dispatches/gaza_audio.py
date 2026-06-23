@@ -81,13 +81,30 @@ def _gaza_public_root(project_root: Path) -> Path:
     return project_root / "output" / "site" / "gaza"
 
 
+_GAZA_AUDIO_ARTIFACT_DATE_RE = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})(?:-transcript)?\.(?:json|mp3|html)$")
 
 
-def _discover_audio_entries(project_root: Path) -> list[dict[str, str]]:
+def _audio_public_dates(project_root: Path, *, max_edition_date: str | None = None) -> set[str]:
+    from bluefern_dispatches.generator import discover_public_edition_dates
+
+    return set(discover_public_edition_dates(project_root / "output" / "site", "gaza", max_edition_date=max_edition_date))
+
+
+def _audio_artifact_date(path: Path) -> str | None:
+    match = _GAZA_AUDIO_ARTIFACT_DATE_RE.match(path.name)
+    if match:
+        return match.group("date")
+    return None
+
+
+
+
+def _discover_audio_entries(project_root: Path, *, max_edition_date: str | None = None) -> list[dict[str, Any]]:
     root = _audio_root(project_root)
     if not root.exists():
         return []
-    rows: list[dict[str, str]] = []
+    allowed_dates = _audio_public_dates(project_root, max_edition_date=max_edition_date)
+    rows: list[dict[str, Any]] = []
     for path in sorted(root.glob("*.json"), reverse=True):
         try:
             payload = _read_json(path)
@@ -98,20 +115,144 @@ def _discover_audio_entries(project_root: Path) -> list[dict[str, str]]:
         date_text = str(payload.get("edition_date") or "").strip()
         if not DATE_RE.match(date_text):
             continue
+        if allowed_dates and date_text not in allowed_dates:
+            continue
+        transcript_path = root / f"{date_text}-transcript.html"
+        audio_url = str(payload.get("audio_url") or "").strip()
+        audio_path: Path | None = None
+        if audio_url.startswith("/gaza/audio/"):
+            audio_path = root / audio_url.removeprefix("/gaza/audio/")
+        elif audio_url:
+            audio_path = project_root / "output" / "site" / audio_url.lstrip("/")
         rows.append(
             {
                 "edition_date": date_text,
                 "transcript_url": f"/gaza/audio/{date_text}-transcript.html",
-                "audio_url": str(payload.get("audio_url") or "").strip(),
+                "audio_url": audio_url,
                 "edition_url": f"/gaza/editions/{date_text}/",
+                "transcript_exists": transcript_path.exists(),
+                "audio_exists": bool(audio_path and audio_path.exists()),
+                "metadata_exists": path.exists(),
             }
         )
     rows.sort(key=lambda row: row["edition_date"], reverse=True)
     return rows
 
 
-def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
-    entries = _discover_audio_entries(project_root)
+def gaza_audio_release_artifact_contract(project_root: Path, *, edition_date: str | None = None) -> dict[str, Any]:
+    site_root = project_root / "output" / "site"
+    audio_root = _audio_root(project_root)
+    gaza_root = _gaza_public_root(project_root)
+    allowed_dates = sorted(_audio_public_dates(project_root, max_edition_date=edition_date), reverse=True)
+    audio_index_entries: list[dict[str, Any]] = []
+    podcast_entries: list[dict[str, Any]] = []
+    copy_plan: list[str] = []
+    missing: list[str] = []
+
+    for date_text in allowed_dates:
+        metadata_path = audio_root / f"{date_text}.json"
+        transcript_path = audio_root / f"{date_text}-transcript.html"
+        payload: dict[str, Any] = {}
+        audio_url = ""
+        audio_path: Path | None = None
+        is_expected_date = bool(edition_date and date_text == edition_date)
+        if not metadata_path.exists():
+            if is_expected_date:
+                missing.append(metadata_path.relative_to(site_root).as_posix())
+                missing.append(transcript_path.relative_to(site_root).as_posix())
+                missing.append((audio_root / f"{date_text}.mp3").relative_to(site_root).as_posix())
+            continue
+        copy_plan.append(metadata_path.relative_to(site_root).as_posix())
+        try:
+            payload_obj = _read_json(metadata_path)
+        except Exception:  # noqa: BLE001
+            payload_obj = None
+        if isinstance(payload_obj, dict):
+            payload = payload_obj
+            audio_url = str(payload.get("audio_url") or "").strip()
+        if transcript_path.exists():
+            copy_plan.append(transcript_path.relative_to(site_root).as_posix())
+        else:
+            if is_expected_date or audio_url:
+                missing.append(transcript_path.relative_to(site_root).as_posix())
+        if audio_url.startswith("/gaza/audio/"):
+            audio_path = audio_root / audio_url.removeprefix("/gaza/audio/")
+        elif audio_url:
+            audio_path = site_root / audio_url.lstrip("/")
+        if is_expected_date and audio_path is None:
+            audio_path = audio_root / f"{date_text}.mp3"
+        has_audio = bool(audio_path and audio_path.exists())
+        if audio_url and has_audio:
+            copy_plan.append(audio_path.relative_to(site_root).as_posix())
+        elif audio_url:
+            missing.append(audio_path.relative_to(site_root).as_posix() if audio_path else audio_url)
+        if is_expected_date and not has_audio and audio_path is not None:
+            missing.append(audio_path.relative_to(site_root).as_posix())
+        audio_index_entries.append(
+            {
+                "edition_date": date_text,
+                "metadata_path": metadata_path.relative_to(site_root).as_posix(),
+                "transcript_path": transcript_path.relative_to(site_root).as_posix(),
+                "audio_path": audio_path.relative_to(site_root).as_posix() if audio_path else None,
+                "audio_url": audio_url,
+                "transcript_present": transcript_path.exists(),
+                "metadata_present": metadata_path.exists(),
+                "audio_present": has_audio,
+            }
+        )
+        podcast_entries.append(
+            {
+                "edition_date": date_text,
+                "metadata_path": metadata_path.relative_to(site_root).as_posix(),
+                "transcript_path": transcript_path.relative_to(site_root).as_posix(),
+                "audio_path": audio_path.relative_to(site_root).as_posix() if audio_path else None,
+                "audio_url": audio_url,
+                "transcript_present": transcript_path.exists(),
+                "metadata_present": metadata_path.exists(),
+                "audio_present": has_audio,
+            }
+        )
+
+    audio_index_path = audio_root / "index.html"
+    audio_podcast_path = audio_root / "podcast.xml"
+    gaza_podcast_path = gaza_root / "podcast.xml"
+    for path in (audio_index_path, audio_podcast_path, gaza_podcast_path):
+        if path.exists():
+            copy_plan.append(path.relative_to(site_root).as_posix())
+        else:
+            missing.append(path.relative_to(site_root).as_posix())
+
+    flash_briefing_path = gaza_root / "flash-briefing.json"
+    if flash_briefing_path.exists():
+        copy_plan.append(flash_briefing_path.relative_to(site_root).as_posix())
+
+    expected_date_audio_present = False
+    if edition_date:
+        expected_meta = audio_root / f"{edition_date}.json"
+        expected_transcript = audio_root / f"{edition_date}-transcript.html"
+        expected_audio = audio_root / f"{edition_date}.mp3"
+        expected_date_audio_present = expected_meta.exists() and expected_transcript.exists() and expected_audio.exists()
+
+    audio_present = bool(allowed_dates) and (not edition_date or expected_date_audio_present)
+    audio_status = "present" if audio_present else ("missing" if edition_date else "not_applicable")
+    audio_publish_status = "published" if audio_present else ("skipped_missing_audio" if edition_date else "not_applicable")
+    follow_up = f"python scripts/run_gaza_audio.py --date {edition_date} --tts-provider none" if edition_date else None
+    return {
+        "audio_expected": bool(edition_date),
+        "audio_present": audio_present,
+        "audio_status": audio_status,
+        "audio_publish_status": audio_publish_status,
+        "audio_files_in_copy_plan": sorted(set(copy_plan)),
+        "audio_index_entries": audio_index_entries,
+        "podcast_entries": podcast_entries,
+        "missing_audio_artifacts": sorted(set(missing)),
+        "audio_follow_up_command": follow_up,
+        "allowed_audio_dates": allowed_dates,
+    }
+
+
+def write_audio_index(project_root: Path, *, dry_run: bool = False, max_edition_date: str | None = None) -> Path:
+    entries = _discover_audio_entries(project_root, max_edition_date=max_edition_date)
     audio_root = _audio_root(project_root)
     index_path = audio_root / "index.html"
     items: list[str] = []
@@ -901,11 +1042,11 @@ def write_gaza_audio_outputs(
         transcript_path.write_text(transcript_html, encoding="utf-8")
         metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
         flash_path.write_text(json.dumps([flash_item], indent=2), encoding="utf-8")
-        write_audio_index(project_root, dry_run=False)
+        write_audio_index(project_root, dry_run=False, max_edition_date=date_text)
 
     from bluefern_dispatches.podcast_feed import write_gaza_podcast_feed
 
-    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=dry_run)
+    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=dry_run, max_edition_date=date_text)
     return GazaAudioResult(
         edition_date=date_text,
         transcript_path=transcript_path,

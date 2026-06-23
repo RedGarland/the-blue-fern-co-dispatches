@@ -12,7 +12,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
+from bluefern_dispatches.gaza_audio import gaza_audio_release_artifact_contract, write_gaza_audio_outputs
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -98,6 +98,7 @@ def main() -> int:
                 segue_chime=str(args.segue_chime or "none"),
                 tts_price_per_1m_chars=args.tts_price_per_1m_chars,
             )
+            contract = gaza_audio_release_artifact_contract(ROOT, edition_date=date_text)
             results.append(
                 {
                     "edition_date": result.edition_date,
@@ -115,6 +116,14 @@ def main() -> int:
                     "story_count": result.story_count,
                     "voice_mode": "alternating" if args.alternate_voices else "single",
                     "audio_format": audio_format,
+                    "audio_expected": contract.get("audio_expected"),
+                    "audio_present": contract.get("audio_present"),
+                    "audio_publish_status": contract.get("audio_publish_status"),
+                    "audio_files_in_copy_plan": contract.get("audio_files_in_copy_plan"),
+                    "audio_index_entries": contract.get("audio_index_entries"),
+                    "podcast_entries": contract.get("podcast_entries"),
+                    "missing_audio_artifacts": contract.get("missing_audio_artifacts"),
+                    "audio_follow_up_command": contract.get("audio_follow_up_command"),
                 }
             )
             if tts_provider != "none" and result.audio_status != "audio_file_ready":

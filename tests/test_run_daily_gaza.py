@@ -1137,3 +1137,53 @@ def test_daily_audio_flags_are_forwarded_to_gaza_audio_writer(isolated, monkeypa
     assert captured["tts_voice"] == "alloy"
     assert captured["audio_format"] == "mp3"
     assert summary["ok"] is True
+
+
+def test_daily_summary_carries_gaza_audio_release_contract(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            payload = {
+                "ok": True,
+                "errors": [],
+                "paid_detail_excluded_from_public": True,
+                "target_pages_branch": "gh-pages",
+                "audio_expected": True,
+                "audio_present": False,
+                "audio_status": "missing",
+                "audio_publish_status": "skipped_missing_audio",
+                "audio_files_in_copy_plan": ["gaza/audio/index.html"],
+                "audio_index_entries": [],
+                "podcast_entries": [],
+                "missing_audio_artifacts": [
+                    "output/site/gaza/audio/2026-05-07.json",
+                    "output/site/gaza/audio/2026-05-07-transcript.html",
+                    "output/site/gaza/audio/2026-05-07.mp3",
+                ],
+                "audio_follow_up_command": "python scripts/run_gaza_audio.py --date 2026-05-07 --tts-provider none",
+            }
+            return completed(args, payload=payload)
+        if "publish_github_pages.py" in command:
+            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
+            if "--dry-run" not in args:
+                write_pages_output(root, "2026-05-07")
+                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
+            return completed(args, payload=payload)
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert summary["audio_expected"] is True
+    assert summary["audio_present"] is False
+    assert summary["audio_status"] == "missing"
+    assert summary["audio_publish_status"] == "skipped_missing_audio"
+    assert summary["audio_follow_up_command"] == "python scripts/run_gaza_audio.py --date 2026-05-07 --tts-provider none"
+    assert summary["missing_audio_artifacts"]

@@ -2372,6 +2372,12 @@ def collect_public_site_files(
     food_line_reported: set[str] = set()
     public_exact_dates = public_exact_dates or {}
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    gaza_audio_allowlist: set[str] | None = None
+    if public_exact_dates.get("gaza"):
+        from bluefern_dispatches.gaza_audio import gaza_audio_release_artifact_contract
+
+        gaza_audio_contract = gaza_audio_release_artifact_contract(site_root.parents[1], edition_date=public_exact_dates.get("gaza"))
+        gaza_audio_allowlist = set(str(item) for item in gaza_audio_contract.get("audio_files_in_copy_plan") or [])
     for path in site_root.rglob("*"):
         if not path.is_file():
             continue
@@ -2383,7 +2389,11 @@ def collect_public_site_files(
             continue
         if relative_parts[:2] == ("gaza", "audio"):
             exact_date = public_exact_dates.get("gaza")
-            if exact_date and path.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not path.name.startswith(exact_date):
+            if exact_date and gaza_audio_allowlist is not None:
+                rel_text = path.relative_to(site_root).as_posix()
+                if rel_text not in gaza_audio_allowlist:
+                    continue
+            elif exact_date and path.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not path.name.startswith(exact_date):
                 continue
         if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG} and relative_parts[1] == "editions":
             slug = relative_parts[0]
@@ -3024,6 +3034,12 @@ def validate_pages_copy_parity(
         ("gaza/rss.xml", "gaza rss"),
     ]
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    gaza_audio_allowlist: set[str] | None = None
+    if public_exact_dates.get("gaza"):
+        from bluefern_dispatches.gaza_audio import gaza_audio_release_artifact_contract
+
+        gaza_audio_contract = gaza_audio_release_artifact_contract(root, edition_date=public_exact_dates.get("gaza"))
+        gaza_audio_allowlist = set(str(item) for item in gaza_audio_contract.get("audio_files_in_copy_plan") or [])
     if not only_dispatches or "gaza" in only_dispatches or gaza_only_publish:
         for rel_path, label in gaza_files:
             source = site_root / rel_path
@@ -3041,7 +3057,10 @@ def validate_pages_copy_parity(
                 if not source.is_file():
                     continue
                 exact_date = public_exact_dates.get("gaza")
-                if exact_date and source.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not source.name.startswith(exact_date):
+                rel_text = source.relative_to(site_root).as_posix()
+                if exact_date and gaza_audio_allowlist is not None and rel_text not in gaza_audio_allowlist:
+                    continue
+                if exact_date and gaza_audio_allowlist is None and source.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not source.name.startswith(exact_date):
                     continue
                 rel_path = source.relative_to(site_root)
                 target = pages_repo / rel_path
@@ -3202,6 +3221,11 @@ def publish_pages(
     root = root.resolve()
     site_root = root / "output" / "site"
     pages_repo = pages_repo.resolve()
+    gaza_audio_contract: dict[str, Any] = {}
+    if expect_date and gaza_targeted:
+        from bluefern_dispatches.gaza_audio import gaza_audio_release_artifact_contract
+
+        gaza_audio_contract = gaza_audio_release_artifact_contract(root, edition_date=expect_date)
     errors = list(build["errors"])
     validation_errors, validation_warnings = validate_pages_publish(
         root,
@@ -3225,6 +3249,11 @@ def publish_pages(
     )
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
+    if gaza_audio_contract:
+        if gaza_audio_contract.get("audio_status") == "missing":
+            warnings.append(
+                f"Gaza audio release artifacts are missing for {expect_date}; follow-up: {gaza_audio_contract.get('audio_follow_up_command')}"
+            )
     branch_result = {
         "current_branch": None,
         "target_pages_branch": pages_branch,
@@ -3366,6 +3395,16 @@ def publish_pages(
         "warnings": warnings,
         "errors": errors,
         "build": build,
+        "gaza_audio_release_artifact_contract": gaza_audio_contract,
+        "audio_expected": gaza_audio_contract.get("audio_expected"),
+        "audio_present": gaza_audio_contract.get("audio_present"),
+        "audio_status": gaza_audio_contract.get("audio_status"),
+        "audio_publish_status": gaza_audio_contract.get("audio_publish_status"),
+        "audio_files_in_copy_plan": gaza_audio_contract.get("audio_files_in_copy_plan", []),
+        "audio_index_entries": gaza_audio_contract.get("audio_index_entries", []),
+        "podcast_entries": gaza_audio_contract.get("podcast_entries", []),
+        "missing_audio_artifacts": gaza_audio_contract.get("missing_audio_artifacts", []),
+        "audio_follow_up_command": gaza_audio_contract.get("audio_follow_up_command"),
     }
 
 

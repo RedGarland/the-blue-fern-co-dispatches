@@ -248,7 +248,8 @@ def _metadata_files(project_root: Path) -> list[Path]:
     return sorted(rows, key=lambda p: p.name, reverse=True)
 
 
-def _load_items(project_root: Path) -> list[dict[str, Any]]:
+def _load_items(project_root: Path, *, max_edition_date: str | None = None) -> list[dict[str, Any]]:
+    allowed_dates = set(discover_public_edition_dates(_site_root(project_root), "gaza", max_edition_date=max_edition_date))
     items: list[dict[str, Any]] = []
     for path in _metadata_files(project_root):
         try:
@@ -260,6 +261,8 @@ def _load_items(project_root: Path) -> list[dict[str, Any]]:
         edition_date = str(payload.get("edition_date") or "").strip()
         transcript_url = str(payload.get("transcript_url") or "").strip()
         if not edition_date or not transcript_url:
+            continue
+        if allowed_dates and edition_date not in allowed_dates:
             continue
         items.append(payload)
     items.sort(key=lambda row: str(row.get("edition_date") or ""), reverse=True)
@@ -310,8 +313,8 @@ def _enclosure_tag_for_slug(project_root: Path, row: dict[str, Any], slug: str) 
     return f'<enclosure url="{escape(public_url)}" length="{length}" type="{escape(mime)}" />'
 
 
-def build_gaza_podcast_xml(project_root: Path) -> str:
-    rows = _load_items(project_root)
+def build_gaza_podcast_xml(project_root: Path, *, max_edition_date: str | None = None) -> str:
+    rows = _load_items(project_root, max_edition_date=max_edition_date)
     pub_date = format_datetime(datetime.now(timezone.utc))
     channel_items: list[str] = []
     for row in rows:
@@ -364,13 +367,13 @@ def build_gaza_podcast_xml(project_root: Path) -> str:
     )
 
 
-def write_gaza_podcast_feed(*, project_root: Path, dry_run: bool = False) -> Path:
+def write_gaza_podcast_feed(*, project_root: Path, dry_run: bool = False, max_edition_date: str | None = None) -> Path:
     gaza_root = _gaza_root(project_root)
     audio_root = _audio_root(project_root)
     path = gaza_root / "podcast.xml"
     mirrored_path = audio_root / "podcast.xml"
     _ = _write_podcast_artwork(project_root, dry_run=dry_run)
-    xml = build_gaza_podcast_xml(project_root)
+    xml = build_gaza_podcast_xml(project_root, max_edition_date=max_edition_date)
     if not dry_run:
         gaza_root.mkdir(parents=True, exist_ok=True)
         audio_root.mkdir(parents=True, exist_ok=True)

@@ -1387,14 +1387,19 @@ def backfill_public_editions_from_dispatch_output(
     dry_run: bool,
     wrote: list[str],
     only_dispatches: tuple[str, ...] = (),
+    public_exact_dates: dict[str, str] | None = None,
 ) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     backfilled: list[dict[str, str]] = []
     skipped: list[dict[str, str]] = []
     eligible_dispatches = list(ONLY_DISPATCH_CHOICES) if not only_dispatches else list(only_dispatches)
+    public_exact_dates = public_exact_dates or {}
     for slug in eligible_dispatches:
+        exact_date = public_exact_dates.get(slug)
         source_dirs = discover_edition_dirs(root / "output" / "dispatches", slug)
         for source_dir in source_dirs:
             edition_date = source_dir.name
+            if exact_date and edition_date != exact_date:
+                continue
             target_dir = site_root / slug / "editions" / edition_date
             if target_dir.exists():
                 continue
@@ -1459,6 +1464,7 @@ def reconcile_gaza_public_editions(
     dry_run: bool,
     wrote: list[str],
     pages_repo: Path | None = None,
+    public_exact_date: str | None = None,
 ) -> dict[str, list[dict[str, str]]]:
     discovered: list[dict[str, str]] = []
     backfilled: list[dict[str, str]] = []
@@ -1481,6 +1487,14 @@ def reconcile_gaza_public_editions(
             editions_by_date.setdefault(date, []).append((source_name, edition_dir))
 
     for edition_date in sorted(editions_by_date.keys()):
+        if public_exact_date and edition_date != public_exact_date:
+            skipped.append(
+                {
+                    "edition_date": edition_date,
+                    "reason": "outside_exact_public_date_scope",
+                }
+            )
+            continue
         target_dir = site_root / "gaza" / "editions" / edition_date
         if target_dir.exists():
             continue
@@ -2061,6 +2075,7 @@ def build_site(
     backup_root: Path = DEFAULT_BACKUP_ROOT,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
+    public_exact_dates: dict[str, str] | None = None,
     dispatch_seed_dates: dict[str, str] | None = None,
     pages_repo: Path | None = None,
 ) -> dict[str, Any]:
@@ -2080,6 +2095,7 @@ def build_site(
     public_urls = [f"{BASE_URL}/"]
     backfilled_public_editions: list[dict[str, str]] = []
     skipped_backfill_editions: list[dict[str, str]] = []
+    public_exact_dates = public_exact_dates or {}
     gaza_reconcile: dict[str, list[dict[str, str]]] = {
         "discovered": [],
         "backfilled": [],
@@ -2117,6 +2133,7 @@ def build_site(
         dry_run=dry_run,
         wrote=wrote,
         only_dispatches=only_dispatches,
+        public_exact_dates=public_exact_dates,
     )
     gaza_reconcile = reconcile_gaza_public_editions(
         root,
@@ -2124,6 +2141,7 @@ def build_site(
         dry_run=dry_run,
         wrote=wrote,
         pages_repo=pages_repo.resolve() if pages_repo is not None else None,
+        public_exact_date=public_exact_dates.get("gaza"),
     )
 
     # Keep root landing cards stable across scoped publishes.
@@ -2240,7 +2258,11 @@ def build_site(
                         f"care-line edition {dispatch.edition_date} did not meet listability checks: "
                         f"{'; '.join(str(item) for item in report.get('reasons') or []) or 'no specific reason recorded'}"
                     )
-            edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
+            exact_public_date = public_exact_dates.get(dispatch.slug)
+            if exact_public_date:
+                edition_dates = [exact_public_date] if public_edition_is_listable(site_root, dispatch.slug, exact_public_date) else []
+            else:
+                edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
@@ -2352,12 +2374,14 @@ def collect_public_site_files(
     site_root: Path,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
+    public_exact_dates: dict[str, str] | None = None,
     skip_diagnostics: list[dict[str, Any]] | None = None,
 ) -> list[Path]:
     if not site_root.exists():
         return []
     files = []
     food_line_reported: set[str] = set()
+    public_exact_dates = public_exact_dates or {}
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
     for path in site_root.rglob("*"):
         if not path.is_file():
@@ -2368,9 +2392,16 @@ def collect_public_site_files(
                 continue
         elif only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
+        if relative_parts[:2] == ("gaza", "audio"):
+            exact_date = public_exact_dates.get("gaza")
+            if exact_date and path.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not path.name.startswith(exact_date):
+                continue
         if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG} and relative_parts[1] == "editions":
             slug = relative_parts[0]
             edition_date = relative_parts[2]
+            exact_date = public_exact_dates.get(slug)
+            if exact_date and edition_date != exact_date:
+                continue
             max_public_date = public_max_dates.get(slug)
             if max_public_date and edition_date > max_public_date:
                 continue
@@ -2457,6 +2488,7 @@ def copy_public_site_to_pages(
     dry_run: bool,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
+    public_exact_dates: dict[str, str] | None = None,
     skip_diagnostics: list[dict[str, Any]] | None = None,
 ) -> tuple[list[str], list[str]]:
     copied: list[str] = []
@@ -2477,6 +2509,7 @@ def copy_public_site_to_pages(
         site_root,
         only_dispatches=only_dispatches,
         public_max_dates=public_max_dates,
+        public_exact_dates=public_exact_dates,
         skip_diagnostics=skip_diagnostics,
     ):
         target = pages_repo / source.relative_to(site_root)
@@ -2984,11 +3017,18 @@ def validate_pages_repo_copy_scope(
     return sorted(set(errors))
 
 
-def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | None, only_dispatches: tuple[str, ...] = ()) -> list[str]:
+def validate_pages_copy_parity(
+    root: Path,
+    pages_repo: Path,
+    expect_date: str | None,
+    only_dispatches: tuple[str, ...] = (),
+    public_exact_dates: dict[str, str] | None = None,
+) -> list[str]:
     errors: list[str] = []
     site_root = root / "output" / "site"
     if not expect_date:
         return errors
+    public_exact_dates = public_exact_dates or {}
     gaza_files = [
         ("gaza/index.html", "gaza edition index"),
         ("gaza/archive.html", "gaza archive"),
@@ -3010,6 +3050,9 @@ def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | 
         if gaza_audio_dir.exists():
             for source in gaza_audio_dir.rglob("*"):
                 if not source.is_file():
+                    continue
+                exact_date = public_exact_dates.get("gaza")
+                if exact_date and source.name not in {"index.html", "podcast.xml", "flash-briefing.json"} and not source.name.startswith(exact_date):
                     continue
                 rel_path = source.relative_to(site_root)
                 target = pages_repo / rel_path
@@ -3139,9 +3182,11 @@ def publish_pages(
     expect_date: str | None = None,
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
+    allow_gaza_backfill: bool = False,
 ) -> dict[str, Any]:
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
+    public_exact_dates: dict[str, str] = {}
     dispatch_seed_dates: dict[str, str] = {}
     ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
     if expect_date and ap_targeted:
@@ -3150,12 +3195,18 @@ def publish_pages(
         existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / expect_date
         if existing_dispatch_edition.exists():
             dispatch_seed_dates["american-pressure"] = expect_date
+    gaza_targeted = "gaza" in only_dispatches or "gaza" in expect_dispatches
+    if expect_date and gaza_targeted:
+        public_max_dates["gaza"] = expect_date
+    if expect_date and gaza_targeted and not allow_gaza_backfill:
+        public_exact_dates["gaza"] = expect_date
     build = build_site(
         root,
         dry_run=dry_run,
         backup_root=backup_root,
         only_dispatches=only_dispatches,
         public_max_dates=public_max_dates,
+        public_exact_dates=public_exact_dates,
         dispatch_seed_dates=dispatch_seed_dates,
         pages_repo=pages_repo,
     )
@@ -3230,12 +3281,21 @@ def publish_pages(
             dry_run=dry_run,
             only_dispatches=only_dispatches,
             public_max_dates=public_max_dates,
+            public_exact_dates=public_exact_dates,
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches, changed_paths=copied))
         if not dry_run:
-            errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
+            errors.extend(
+                validate_pages_copy_parity(
+                    root,
+                    pages_repo,
+                    expect_date,
+                    only_dispatches=only_dispatches,
+                    public_exact_dates=public_exact_dates,
+                )
+            )
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
             errors.extend(
@@ -3355,6 +3415,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Git branch GitHub Pages deploys from.")
     parser.add_argument("--expect-date", help="Optional YYYY-MM-DD date expected in generated public archives/editions.")
     parser.add_argument(
+        "--allow-gaza-backfill",
+        action="store_true",
+        help="Allow Gaza publishes to backfill/copy other listable Gaza editions instead of limiting to the expected date.",
+    )
+    parser.add_argument(
         "--expect-dispatch",
         action="append",
         choices=EXPECT_DISPATCH_CHOICES,
@@ -3388,9 +3453,11 @@ def main(argv: list[str] | None = None) -> int:
             expect_date=args.expect_date,
             expect_dispatches=expect_dispatches,
             only_dispatches=only_dispatches,
+            allow_gaza_backfill=args.allow_gaza_backfill,
         )
     else:
         public_max_dates: dict[str, str] = {}
+        public_exact_dates: dict[str, str] = {}
         dispatch_seed_dates: dict[str, str] = {}
         ap_targeted = "american-pressure" in only_dispatches or "american-pressure" in expect_dispatches
         if args.expect_date and ap_targeted:
@@ -3399,12 +3466,18 @@ def main(argv: list[str] | None = None) -> int:
             existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / args.expect_date
             if existing_dispatch_edition.exists():
                 dispatch_seed_dates["american-pressure"] = args.expect_date
+        gaza_targeted = "gaza" in only_dispatches or "gaza" in expect_dispatches
+        if args.expect_date and gaza_targeted:
+            public_max_dates["gaza"] = args.expect_date
+        if args.expect_date and gaza_targeted and not args.allow_gaza_backfill:
+            public_exact_dates["gaza"] = args.expect_date
         result = build_site(
             Path.cwd(),
             dry_run=args.dry_run,
             backup_root=Path(args.backup_root),
             only_dispatches=only_dispatches,
             public_max_dates=public_max_dates,
+            public_exact_dates=public_exact_dates,
             dispatch_seed_dates=dispatch_seed_dates,
         )
         result_errors = list(result.get("errors", []))

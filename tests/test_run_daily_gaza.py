@@ -925,6 +925,161 @@ def test_force_bluesky_post_flag_is_forwarded(isolated, monkeypatch, capsys):
     assert captured["kwargs"]["force_post"] is True
 
 
+def test_post_bluesky_only_skips_pages_publish_and_posts_without_mutation(isolated, monkeypatch, capsys):
+    root = isolated
+    calls = []
+    captured = {"kwargs": None}
+
+    def fake_verify_live_public_urls(edition_date, public_urls):
+        _ = (edition_date, public_urls)
+        return {
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition": {"ok": True, "status": 200, "marker_found": True, "error": None},
+            "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
+            "live_http_ok": True,
+            "live_archive_ok": True,
+            "ok": True,
+        }
+
+    def fake_bluesky(**kwargs):
+        captured["kwargs"] = kwargs
+        return {
+            "status": "success",
+            "post_uri": "at://did:plc:abc123/app.bsky.feed.post/ok",
+            "reason": None,
+            "embed_type": "app.bsky.embed.external",
+            "card_title": "Dispatches from Gaza - May 7, 2026",
+            "card_description": "Source-backed briefing.",
+            "post_text": "Gaza briefing",
+            "source_artifact_paths": ["output/dispatches/gaza/editions/2026-05-07/index.html"],
+            "edition_date_verified": True,
+            "stale_content_guard_status": "passed",
+            "thumb_status": "not_attempted",
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append((tuple(args), str(cwd)))
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "verify_live_public_urls", fake_verify_live_public_urls)
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky-only", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert calls == []
+    assert captured["kwargs"] is not None
+    assert captured["kwargs"]["allow_publish"] is True
+    assert captured["kwargs"]["post_requested"] is True
+    assert summary["mode"] == "bluesky-post-only"
+    assert summary["pages_publish_skipped"] is True
+    assert summary["pages_repo_updated"] is False
+    assert summary["pages_commit_ok"] is None
+    assert summary["bluesky_status"] == "success"
+    assert summary["bluesky_post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/ok"
+    assert summary["bluesky_edition_date_verified"] is True
+    assert summary["bluesky_stale_content_guard_status"] == "passed"
+
+
+def test_post_bluesky_only_skips_duplicate_receipt_without_force(isolated, monkeypatch, capsys):
+    root = isolated
+    calls = []
+    captured = {"kwargs": None}
+
+    def fake_verify_live_public_urls(edition_date, public_urls):
+        _ = (edition_date, public_urls)
+        return {
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition": {"ok": True, "status": 200, "marker_found": True, "error": None},
+            "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
+            "live_http_ok": True,
+            "live_archive_ok": True,
+            "ok": True,
+        }
+
+    def fake_bluesky(**kwargs):
+        captured["kwargs"] = kwargs
+        return {
+            "status": "skipped",
+            "post_uri": "at://did:plc:abc123/app.bsky.feed.post/existing",
+            "reason": "skipped_existing_receipt",
+            "embed_type": "app.bsky.embed.external",
+            "card_title": "Dispatches from Gaza - May 7, 2026",
+            "card_description": "Existing receipt description.",
+            "post_text": "Gaza briefing",
+            "source_artifact_paths": ["output/dispatches/gaza/editions/2026-05-07/index.html"],
+            "edition_date_verified": True,
+            "stale_content_guard_status": "passed",
+            "thumb_status": "uploaded",
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append((tuple(args), str(cwd)))
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "verify_live_public_urls", fake_verify_live_public_urls)
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky-only", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert calls == []
+    assert captured["kwargs"] is not None
+    assert captured["kwargs"]["force_post"] is False
+    assert summary["mode"] == "bluesky-post-only"
+    assert summary["pages_publish_skipped"] is True
+    assert summary["pages_repo_updated"] is False
+    assert summary["pages_commit_ok"] is None
+    assert summary["bluesky_status"] == "skipped"
+    assert summary["bluesky_reason"] == "skipped_existing_receipt"
+    assert summary["bluesky_post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/existing"
+
+
+def test_post_bluesky_only_blocks_when_live_edition_missing(isolated, monkeypatch, capsys):
+    root = isolated
+    calls = []
+
+    def fake_verify_live_public_urls(edition_date, public_urls):
+        _ = (edition_date, public_urls)
+        return {
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition": {"ok": False, "status": 404, "marker_found": False, "error": "not found"},
+            "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
+            "live_http_ok": False,
+            "live_archive_ok": True,
+            "ok": False,
+        }
+
+    def fake_bluesky(**kwargs):
+        _ = kwargs
+        raise AssertionError("Bluesky should not be called when live verification fails")
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append((tuple(args), str(cwd)))
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "verify_live_public_urls", fake_verify_live_public_urls)
+    monkeypatch.setattr(daily, "maybe_post_gaza_dispatch_to_bluesky", fake_bluesky)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky-only", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert calls == []
+    assert summary["mode"] == "bluesky-post-only"
+    assert summary["pages_publish_skipped"] is True
+    assert summary["pages_repo_updated"] is False
+    assert summary["pages_commit_ok"] is None
+    assert summary["bluesky_status"] == "skipped"
+    assert summary["publish_blocked"] is True
+    assert summary["publish_blocked_reason"] == "bluesky-post-only-live-verification-failed"
+
+
 def test_daily_summary_uses_existing_receipt_skip_result(isolated, monkeypatch, capsys):
     root = isolated
     write_manual_sources(root, "2026-05-07")

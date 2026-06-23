@@ -83,6 +83,7 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "publish_ok",
     "publish_blocked",
     "publish_blocked_reason",
+    "pages_publish_skipped",
     "pages_repo_updated",
     "local_pages_copy_ok",
     "pages_commit_ok",
@@ -551,10 +552,11 @@ def local_paths_for(args: argparse.Namespace) -> dict[str, str]:
 
 
 def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
+    mode = "bluesky-post-only" if args.post_bluesky_only else ("dry-run" if args.dry_run else "publish-local")
     return {
         "ok": False,
         "date": args.date,
-        "mode": "dry-run" if args.dry_run else "publish-local",
+        "mode": mode,
         "source_mode": args.source_mode,
         "source_file": str(source_file_for(args.date)),
         "source_count": 0,
@@ -595,9 +597,10 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "publish_ok": False,
         "publish_blocked": False,
         "publish_blocked_reason": None,
+        "pages_publish_skipped": bool(args.post_bluesky_only),
         "pages_repo_updated": False,
         "local_pages_copy_ok": False,
-        "pages_commit_ok": False,
+        "pages_commit_ok": None if args.post_bluesky_only else False,
         "pages_push_ok": None,
         "remote_tree_verify_ok": None,
         "live_http_ok": None,
@@ -645,6 +648,14 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def compute_overall_ok(summary: dict[str, Any], *, push_requested: bool, dry_run: bool) -> bool:
+    if summary.get("mode") == "bluesky-post-only":
+        if summary.get("errors"):
+            return False
+        if summary.get("bluesky_status") == "success":
+            return True
+        if summary.get("bluesky_status") == "skipped" and summary.get("bluesky_reason") in {"skipped_existing_receipt", "dry_run"}:
+            return True
+        return False
     if not summary.get("pipeline_ok"):
         return False
     if summary.get("generation_ok") is not True:
@@ -810,6 +821,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Allow Gaza reruns/backfills to use sources retrieved after the local edition date.",
     )
     parser.add_argument("--post-bluesky", action="store_true", help="Post a Gaza dispatch announcement to Bluesky after successful publish.")
+    parser.add_argument("--post-bluesky-only", action="store_true", help="Post a Gaza dispatch announcement to Bluesky without running generation or Pages publish.")
     parser.add_argument("--no-post-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Post to Bluesky even when a successful receipt already exists for this edition.")
     parser.add_argument("--generate-audio", action="store_true", help="Generate Gaza audio artifacts after dispatch generation.")
@@ -840,6 +852,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     if args.post_bluesky and args.no_post_bluesky:
         print(json.dumps({"ok": False, "errors": ["--post-bluesky and --no-post-bluesky cannot be used together"]}, indent=2))
+        return 1
+    if args.post_bluesky_only and args.no_post_bluesky:
+        print(json.dumps({"ok": False, "errors": ["--post-bluesky-only and --no-post-bluesky cannot be used together"]}, indent=2))
         return 1
     args.date = validate_date(args.date)
     args.pages_repo = str(Path(args.pages_repo))
@@ -879,6 +894,63 @@ def main(argv: list[str] | None = None) -> int:
         log_line(log_path, "Email notification succeeded.")
         write_summary(summary)
         return pipeline_code
+
+    if args.post_bluesky_only:
+        summary["planned_actions"] = ["bluesky post-only"]
+        live_verify = verify_live_public_urls(args.date, summary.get("public_urls") or {})
+        summary["live_http_ok"] = bool(live_verify.get("live_http_ok"))
+        summary["live_archive_ok"] = bool(live_verify.get("live_archive_ok"))
+        if not live_verify.get("ok"):
+            summary["errors"].append(
+                f"live verification failed: edition={live_verify['edition_url']} archive={live_verify['archive_url']}"
+            )
+            if not live_verify.get("live_http_ok"):
+                summary["errors"].append(f"live edition verification failed: {live_verify['edition']}")
+            if not live_verify.get("live_archive_ok"):
+                summary["errors"].append(f"live archive verification failed: {live_verify['archive']}")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "bluesky-post-only-live-verification-failed"
+            return finish(1)
+
+        bluesky_result = maybe_post_gaza_dispatch_to_bluesky(
+            edition_date=args.date,
+            public_url=(summary.get("public_urls") or {}).get("edition"),
+            run_succeeded=True,
+            post_requested=True,
+            project_root=ROOT,
+            force_post=bool(args.force_bluesky_post),
+            allow_publish=not bool(args.dry_run),
+        )
+        summary["bluesky_status"] = str(bluesky_result.get("status") or "skipped")
+        summary["bluesky_post_uri"] = bluesky_result.get("post_uri")
+        summary["bluesky_reason"] = bluesky_result.get("reason")
+        summary["bluesky_post_text"] = bluesky_result.get("post_text")
+        summary["bluesky_embed_type"] = bluesky_result.get("embed_type")
+        summary["bluesky_card_title"] = bluesky_result.get("card_title")
+        summary["bluesky_card_description"] = bluesky_result.get("card_description")
+        summary["bluesky_source_artifact_paths"] = list(bluesky_result.get("source_artifact_paths") or [])
+        summary["bluesky_edition_date_verified"] = bool(bluesky_result.get("edition_date_verified"))
+        summary["bluesky_stale_content_guard_status"] = bluesky_result.get("stale_content_guard_status")
+        summary["bluesky_thumb_status"] = bluesky_result.get("thumb_status") or "not_attempted"
+        allowed_skip_reasons = {"skipped_existing_receipt", "dry_run"}
+        if summary["bluesky_status"] == "failure" or summary["bluesky_status"] == "blocked" or (
+            summary["bluesky_status"] == "skipped" and summary.get("bluesky_reason") not in allowed_skip_reasons
+        ):
+            summary["errors"].append(f"Bluesky post failed: {summary['bluesky_reason']}")
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "bluesky-post-only-failed"
+            return finish(1)
+        summary["pages_publish_skipped"] = True
+        summary["pages_repo_updated"] = False
+        summary["local_pages_copy_ok"] = False
+        summary["pages_commit_ok"] = None
+        summary["pages_push_ok"] = None
+        summary["remote_tree_verify_ok"] = None
+        summary["publish_ok"] = summary["bluesky_status"] == "success" or (
+            summary["bluesky_status"] == "skipped" and summary.get("bluesky_reason") in allowed_skip_reasons
+        )
+        log_line(log_path, f"Bluesky post-only completed with status={summary['bluesky_status']} reason={summary['bluesky_reason']}")
+        return finish(0 if summary["publish_ok"] else 1)
 
     try:
         source_path, records = collect_or_load_sources(args, summary, log_path)

@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 import bluefern_dispatches.safe_git_task as safe_git_task
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -28,6 +33,20 @@ def _write(repo: Path, relative: str, text: str = "content") -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return path
+
+
+def _run_script_help(script_name: str) -> subprocess.CompletedProcess[str]:
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    return subprocess.run(
+        [sys.executable, str(REPO_ROOT / "scripts" / script_name), "--help"],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env=env,
+    )
 
 
 def _init_source_repo(root: Path) -> tuple[Path, Path]:
@@ -287,3 +306,21 @@ def test_commit_helper_dry_run_with_review_output_requires_flag(task_repos: tupl
     assert blocked == 1
     assert allowed == 0
     assert "Refusing staged output/review paths without --allow-review-output." in captured.err
+
+
+def test_start_script_help_works_without_pythonpath() -> None:
+    result = _run_script_help("start_safe_task.py")
+    assert result.returncode == 0
+    assert "usage:" in result.stdout.lower()
+
+
+def test_stage_script_help_works_without_pythonpath() -> None:
+    result = _run_script_help("stage_safe_task.py")
+    assert result.returncode == 0
+    assert "usage:" in result.stdout.lower()
+
+
+def test_commit_script_help_works_without_pythonpath() -> None:
+    result = _run_script_help("commit_safe_task.py")
+    assert result.returncode == 0
+    assert "usage:" in result.stdout.lower()

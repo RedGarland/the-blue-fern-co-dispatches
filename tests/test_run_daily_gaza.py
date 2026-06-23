@@ -44,7 +44,7 @@ def write_manual_sources(root: Path, edition_date: str, text: str | None = None)
     return path
 
 
-def write_generated_output(root: Path, edition_date: str, source_links: bool = True) -> None:
+def write_generated_output(root: Path, edition_date: str, source_links: bool = True, curation_rows: list[dict[str, object]] | None = None) -> None:
     edition = root / "output" / "site" / "gaza" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
     link = '<p><strong>Sources</strong></p><a href="https://valid.test/gaza-source">Example News source</a>' if source_links else "<p>No links.</p>"
@@ -58,6 +58,8 @@ def write_generated_output(root: Path, edition_date: str, source_links: bool = T
         encoding="utf-8",
     )
     (edition / "edition_manifest.json").write_text(json.dumps({"source_count": 1}), encoding="utf-8")
+    rows = curation_rows if curation_rows is not None else [{"story_id": "story", "included_in_public_summary": True, "public_rendered": True, "core_ground_development": True, "source_ids": ["gaza-src"]}]
+    (edition / "curation_manifest.json").write_text(json.dumps(rows), encoding="utf-8")
     gaza = root / "output" / "site" / "gaza"
     (gaza / "archive.html").write_text(edition_date, encoding="utf-8")
     (gaza / "rss.xml").write_text(edition_date, encoding="utf-8")
@@ -708,6 +710,49 @@ def test_generation_warnings_are_carried_into_daily_summary(isolated, monkeypatc
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert any("source diversity warning" in warning for warning in summary["warnings"])
+
+
+def test_validate_generated_output_counts_only_public_rendered_stories(isolated):
+    root = isolated
+    write_generated_output(
+        root,
+        "2026-05-07",
+        curation_rows=[
+            {
+                "story_id": "public-story",
+                "included_in_public_summary": True,
+                "public_rendered": True,
+                "core_ground_development": True,
+                "source_ids": ["gaza-src"],
+            },
+            {
+                "story_id": "rejected-story",
+                "included_in_public_summary": True,
+                "public_rendered": False,
+                "core_ground_development": False,
+                "source_ids": ["gaza-src"],
+            },
+            {
+                "story_id": "stale-story",
+                "included_in_public_summary": True,
+                "public_rendered": False,
+                "core_ground_development": False,
+                "source_ids": ["gaza-src"],
+            },
+            {
+                "story_id": "duplicate-story",
+                "included_in_public_summary": True,
+                "public_rendered": False,
+                "core_ground_development": False,
+                "source_ids": ["gaza-src"],
+            },
+        ],
+    )
+
+    validation = daily.validate_generated_output("2026-05-07")
+
+    assert validation["errors"] == []
+    assert validation["public_story_count"] == 1
 
 
 def test_email_report_exit_2_when_email_fails_after_pipeline_failure(isolated, monkeypatch, capsys):

@@ -552,6 +552,13 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "source_adequacy_status": None,
         "publisher_count": 0,
         "publishers": [],
+        "source_coverage_audit_path": None,
+        "source_coverage_audit_markdown_path": None,
+        "source_coverage_audit_warning_count": 0,
+        "source_coverage_audit_rendered_public_story_count": 0,
+        "rendered_public_story_count": 0,
+        "rendered_public_story_source_ids": [],
+        "rendered_public_story_sources": [],
         "generation_ok": False,
         "generated": False,
         "archive_updated": False,
@@ -915,6 +922,13 @@ def main(argv: list[str] | None = None) -> int:
                 summary["source_classification_counts"] = dict(generation_payload.get("source_classification_counts") or {})
             if "source_classification_diagnostics" in generation_payload:
                 summary["source_classification_diagnostics"] = list(generation_payload.get("source_classification_diagnostics") or [])
+            summary["source_coverage_audit_path"] = generation_payload.get("source_coverage_audit_path")
+            summary["source_coverage_audit_markdown_path"] = generation_payload.get("source_coverage_audit_markdown_path")
+            summary["source_coverage_audit_warning_count"] = int(generation_payload.get("source_coverage_audit_warning_count") or 0)
+            summary["source_coverage_audit_rendered_public_story_count"] = int(generation_payload.get("source_coverage_audit_rendered_public_story_count") or 0)
+            summary["rendered_public_story_count"] = int(generation_payload.get("rendered_public_story_count") or 0)
+            summary["rendered_public_story_source_ids"] = list(generation_payload.get("rendered_public_story_source_ids") or [])
+            summary["rendered_public_story_sources"] = list(generation_payload.get("rendered_public_story_sources") or [])
             for warning in generation_payload.get("source_adequacy_warnings") or []:
                 text = str(warning).strip()
                 if text and text not in summary["warnings"]:
@@ -934,6 +948,13 @@ def main(argv: list[str] | None = None) -> int:
         summary["source_classification_counts"] = dict(generation_payload.get("source_classification_counts") or {})
     if "source_classification_diagnostics" in generation_payload:
         summary["source_classification_diagnostics"] = list(generation_payload.get("source_classification_diagnostics") or [])
+    summary["source_coverage_audit_path"] = generation_payload.get("source_coverage_audit_path")
+    summary["source_coverage_audit_markdown_path"] = generation_payload.get("source_coverage_audit_markdown_path")
+    summary["source_coverage_audit_warning_count"] = int(generation_payload.get("source_coverage_audit_warning_count") or 0)
+    summary["source_coverage_audit_rendered_public_story_count"] = int(generation_payload.get("source_coverage_audit_rendered_public_story_count") or 0)
+    summary["rendered_public_story_count"] = int(generation_payload.get("rendered_public_story_count") or 0)
+    summary["rendered_public_story_source_ids"] = list(generation_payload.get("rendered_public_story_source_ids") or [])
+    summary["rendered_public_story_sources"] = list(generation_payload.get("rendered_public_story_sources") or [])
     for warning in generation_payload.get("source_adequacy_warnings") or []:
         text = str(warning).strip()
         if text and text not in summary["warnings"]:

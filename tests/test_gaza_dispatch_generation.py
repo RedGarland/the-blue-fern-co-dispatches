@@ -832,6 +832,117 @@ def test_collection_report_includes_provider_attempted_success_counts(monkeypatc
     assert report["final_story_count"] >= 1
 
 
+def test_run_gaza_dispatch_writes_source_coverage_audit_with_rendered_public_story_sources(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-06-22",
+        [
+            {
+                "source_record_id": "reuters-2026-06-22-gaza-polluted-sea",
+                "title": "Gazans flee scorching tents for a polluted sea",
+                "url": "https://www.reuters.com/world/middle-east/gazans-flee-scorching-tents-for-a-polluted-sea-2026-06-22/",
+                "publisher": "Reuters",
+                "published_at": "2026-06-22T12:00:00Z",
+                "retrieved_at": "2026-06-22T12:30:00Z",
+                "summary_or_snippet": "Displaced Gazans face heat, polluted sea water, damaged sewage infrastructure, and shortages of clean water in tent camps.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+            }
+        ],
+    )
+
+    result = run_gaza_dispatch(work, "2026-06-22", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+
+    audit_json = work / "output" / "review" / "gaza" / "source_coverage_audit.json"
+    audit_md = work / "output" / "review" / "gaza" / "source_coverage_audit.md"
+    audit = json.loads(read(audit_json))
+    assert result["ok"] is True
+    assert result["source_coverage_audit_path"] == str(audit_json)
+    assert result["source_coverage_audit_markdown_path"] == str(audit_md)
+    assert audit["rendered_public_story_source_ids"] == ["reuters-2026-06-22-gaza-polluted-sea"]
+    assert audit["rendered_public_story_sources"][0]["publisher"] == "Reuters"
+    assert audit["rendered_public_stories"][0]["story_id"].startswith("gaza-story-2026-06-22")
+
+
+def test_run_gaza_dispatch_excludes_rejected_and_stale_ground_classifications_from_public_story_count(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-06-22",
+        [
+            {
+                "source_record_id": "reuters-2026-06-22-gaza-polluted-sea",
+                "title": "Gazans flee scorching tents for a polluted sea",
+                "url": "https://www.reuters.com/world/middle-east/gazans-flee-scorching-tents-for-a-polluted-sea-2026-06-22/",
+                "publisher": "Reuters",
+                "published_at": "2026-06-22T12:00:00Z",
+                "retrieved_at": "2026-06-22T12:30:00Z",
+                "summary_or_snippet": "Displaced Gazans face heat, polluted sea water, damaged sewage infrastructure, and shortages of clean water in tent camps.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+            },
+            {
+                "source_record_id": "bbc-2026-06-22-gaza-inquiry",
+                "title": "UN inquiry says Israel committing genocide in Gaza by deliberately targeting children",
+                "url": "https://www.bbc.com/news/world-middle-east-12345678",
+                "publisher": "BBC News",
+                "published_at": "2026-06-22T12:00:00Z",
+                "retrieved_at": "2026-06-22T13:30:00Z",
+                "summary_or_snippet": "The commission of inquiry described legal findings about Gaza but did not report a fresh ground development.",
+                "source_type": "news",
+                "region_scope": "Gaza Strip",
+                "category_hint": "accountability",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+            },
+            {
+                "source_record_id": "aljazeera-2026-06-23-gaza-stale",
+                "title": "Gaza's surfers seek solace from war in the Mediterranean Sea",
+                "url": "https://www.aljazeera.com/sports/2026/6/22/gazas-surfers-seek-solace-from-war-in-the-mediterranean-sea?traffic_source=rss",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-06-22T12:16:51+00:00",
+                "retrieved_at": "2026-06-23T19:08:20.373891+00:00",
+                "summary_or_snippet": "The source is retrieved after the edition date and should be marked stale.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+            },
+        ],
+    )
+
+    result = run_gaza_dispatch(
+        work,
+        "2026-06-22",
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+        allow_post_edition_date_sources=True,
+    )
+
+    audit = json.loads(read(work / "output" / "review" / "gaza" / "source_coverage_audit.json"))
+    assert result["ok"] is True
+    assert result["public_story_count"] == 1
+    assert result["story_count"] >= 1
+    assert result["source_coverage_audit_rendered_public_story_count"] >= 1
+    assert audit["rendered_public_story_count"] >= 1
+    assert "reuters-2026-06-22-gaza-polluted-sea" in audit["rendered_public_story_source_ids"]
+
+
 def test_collection_report_carries_provider_rejection_diagnostics(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)

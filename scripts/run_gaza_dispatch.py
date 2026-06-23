@@ -15,6 +15,8 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
@@ -42,6 +44,7 @@ from bluefern_dispatches.gaza_sources import is_palestinian_development_text
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
 from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
+from scripts.audit_gaza_source_coverage import write_audit_report as write_gaza_source_coverage_audit
 
 
 DISPATCH_SLUG = "gaza"
@@ -2329,6 +2332,7 @@ def run_gaza_dispatch(
     if adequacy.get("warnings"):
         warnings.extend(str(item) for item in adequacy.get("warnings") or [])
     collection_report["final_story_count"] = len(stories)
+    collection_report["public_story_count"] = sum(1 for story in stories if bool(story.get("core_ground_development")))
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
     collection_report["palestinian_development_count"] = sum(
         1 for story in stories if str(story.get("story_scope") or "") == "palestinian_development"
@@ -2487,6 +2491,17 @@ def run_gaza_dispatch(
     if len(stories) == 0:
         errors.append("No source-backed Gaza stories survived curation/dedupe; refusing public edition generation.")
     write_json(curated_dir / "curation_manifest.json", curation_manifest_full, dry_run, wrote)
+    source_coverage_audit = write_gaza_source_coverage_audit(root, edition_date)
+    collection_report["source_coverage_audit_path"] = source_coverage_audit.get("json_report_path")
+    collection_report["source_coverage_audit_markdown_path"] = source_coverage_audit.get("markdown_report_path")
+    collection_report["source_coverage_audit_warning_count"] = len(source_coverage_audit.get("warnings") or [])
+    collection_report["source_coverage_audit_rendered_public_story_count"] = len(source_coverage_audit.get("rendered_public_stories") or [])
+    collection_report["rendered_public_story_source_ids"] = list(source_coverage_audit.get("rendered_public_story_source_ids") or [])
+    collection_report["rendered_public_story_sources"] = list(source_coverage_audit.get("rendered_public_story_sources") or [])
+    for warning in source_coverage_audit.get("warnings") or []:
+        text = str(warning).strip()
+        if text and text not in warnings:
+            warnings.append(text)
     should_render = render or all_steps
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized, adequacy, root=root)
@@ -2592,10 +2607,18 @@ def run_gaza_dispatch(
         "manual_source_path": str(manual_path),
         "source_count": len(normalized),
         "story_count": len(stories),
+        "public_story_count": int(collection_report.get("public_story_count") or 0),
         "source_adequacy_status": str(adequacy.get("status") or ""),
         "publisher_count": int(adequacy.get("publisher_count") or 0),
         "publishers": list(adequacy.get("publishers") or []),
         "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+        "source_coverage_audit_path": str(collection_report.get("source_coverage_audit_path") or ""),
+        "source_coverage_audit_markdown_path": str(collection_report.get("source_coverage_audit_markdown_path") or ""),
+        "source_coverage_audit_warning_count": int(collection_report.get("source_coverage_audit_warning_count") or 0),
+        "source_coverage_audit_rendered_public_story_count": int(collection_report.get("source_coverage_audit_rendered_public_story_count") or 0),
+        "rendered_public_story_count": int(collection_report.get("source_coverage_audit_rendered_public_story_count") or 0),
+        "rendered_public_story_source_ids": list(collection_report.get("rendered_public_story_source_ids") or []),
+        "rendered_public_story_sources": list(collection_report.get("rendered_public_story_sources") or []),
         "source_classification_counts": dict(collection_report.get("source_classification_counts") or {}),
         "source_classification_diagnostics": list(collection_report.get("source_classification_diagnostics") or []),
         "dry_run": dry_run,

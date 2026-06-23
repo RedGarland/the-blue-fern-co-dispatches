@@ -15,6 +15,52 @@ def _prepare_root(tmp_path: Path) -> Path:
     report_path = root / "data" / "dispatches" / "gaza" / "editions" / "2026-06-22" / "collection_report.json"
     report_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(FIXTURE, report_path)
+    site_edition = root / "output" / "site" / "gaza" / "editions" / "2026-06-22"
+    site_edition.mkdir(parents=True, exist_ok=True)
+    (site_edition / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "who-news",
+                    "title": "WHO reports health-system strain in Gaza",
+                    "url": "https://example.com/who",
+                    "publisher": "WHO",
+                    "reliability_tier": "official-humanitarian-source",
+                },
+                {
+                    "source_record_id": "reuters-middle-east-rss",
+                    "title": "Gazans flee scorching tents for a polluted sea",
+                    "url": "https://example.com/reuters",
+                    "publisher": "Reuters",
+                    "reliability_tier": "reported-public-source",
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (site_edition / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "gaza-story-2026-06-22-001",
+                    "title": "WHO reports health-system strain in Gaza",
+                    "public_rendered": True,
+                    "included_in_public_summary": True,
+                    "source_ids": ["who-news"],
+                },
+                {
+                    "story_id": "gaza-story-2026-06-22-002",
+                    "title": "Gazans flee scorching tents for a polluted sea",
+                    "public_rendered": False,
+                    "included_in_public_summary": True,
+                    "source_ids": ["reuters-middle-east-rss"],
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     return root
 
 
@@ -32,6 +78,7 @@ def test_audit_includes_all_providers_and_writes_outputs(tmp_path, monkeypatch):
     assert md_path.exists()
     assert len(report["providers"]) == 6
     assert len(report["target_source_coverage"]) >= 10
+    assert report["rendered_public_story_source_ids"] == ["who-news"]
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert len(payload["providers"]) == 6
     assert any(row["source_id"] == "manual_sources_json" for row in payload["providers"])
@@ -48,6 +95,7 @@ def test_markdown_reports_required_sections(tmp_path, monkeypatch):
     assert "## Manual-Only Sources Requiring Review/Backfill" in markdown
     assert "## Disabled or Blocked Sources With Reasons" in markdown
     assert "## Missing Target Reliable Sources" in markdown
+    assert "## Sources Contributing Rendered Public Stories" in markdown
     assert "WHO" in markdown
     assert "missing_from_registry" in markdown
     assert report["missing_target_sources"]

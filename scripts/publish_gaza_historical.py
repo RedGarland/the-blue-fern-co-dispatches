@@ -249,7 +249,12 @@ def validate_generated_output(edition_date: str) -> dict[str, Any]:
         if not isinstance(story, dict):
             errors.append("curation_manifest.json contains a non-object story record")
             continue
+        include_decision = str(story.get("include_decision") or "").strip().lower()
+        if story.get("public_rendered") is False or include_decision not in {"", "include"}:
+            continue
         if story.get("included_in_public_summary") is False:
+            continue
+        if not bool(story.get("core_ground_development")):
             continue
         public_story_count += 1
         story_source_ids = story.get("source_ids") or story.get("source_record_ids") or []

@@ -299,6 +299,14 @@ def _collection_report_path(root: Path, edition_date: str) -> Path:
     return root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json"
 
 
+def _curation_manifest_candidates(root: Path, edition_date: str) -> list[Path]:
+    return [
+        root / "data" / "dispatches" / DISPATCH_SLUG / "curated" / edition_date / "curation_manifest.json",
+        root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date / "curation_manifest.json",
+        root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "curation_manifest.json",
+    ]
+
+
 def _report_paths(root: Path) -> tuple[Path, Path]:
     return (
         root / "output" / "review" / DISPATCH_SLUG / "source_coverage_audit.json",
@@ -600,6 +608,65 @@ def _action_rows(provider_rows: list[dict[str, Any]], target_rows: list[dict[str
     return sorted(unique.values(), key=lambda row: (str(row.get("recommended_action") or ""), str(row.get("source_id") or row.get("target_name") or "")))
 
 
+def _load_first_existing_json(paths: list[Path]) -> tuple[Path | None, Any]:
+    for path in paths:
+        if path.exists():
+            return path, _read_json(path)
+    return None, None
+
+
+def _rendered_public_story_rows(root: Path, edition_date: str) -> tuple[Path | None, list[dict[str, Any]], list[str]]:
+    path, payload = _load_first_existing_json(_curation_manifest_candidates(root, edition_date))
+    if not isinstance(payload, list):
+        return path, [], []
+    rows = [row for row in payload if isinstance(row, dict) and bool(row.get("public_rendered", row.get("included_in_public_summary", True)))]
+    source_ids: list[str] = []
+    for row in rows:
+        for source_id in row.get("source_ids") or row.get("source_record_ids") or []:
+            text = str(source_id or "").strip()
+            if text:
+                source_ids.append(text)
+    return path, rows, sorted(dict.fromkeys(source_ids))
+
+
+def _public_source_rows(rendered_public_story_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: dict[str, int] = {}
+    rows: dict[str, dict[str, Any]] = {}
+    for story in rendered_public_story_rows:
+        source_ids = story.get("source_ids") or story.get("source_record_ids") or []
+        source_records = list(story.get("source_records") or [])
+        publisher_names = list(story.get("publisher_names") or [])
+        source_urls = list(story.get("source_urls") or [])
+        for index, source_id_value in enumerate(source_ids):
+            source_id = str(source_id_value or "").strip()
+            if not source_id:
+                continue
+            counts[source_id] = counts.get(source_id, 0) + 1
+            if source_id in rows:
+                continue
+            source_record = source_records[index] if index < len(source_records) and isinstance(source_records[index], dict) else {}
+            rows[source_id] = {
+                "source_id": source_id,
+                "title": str(source_record.get("title") or story.get("title") or ""),
+                "publisher": str(
+                    source_record.get("publisher")
+                    or (publisher_names[index] if index < len(publisher_names) else "")
+                    or (publisher_names[0] if publisher_names else "")
+                    or story.get("publisher")
+                    or ""
+                ),
+                "url": str(source_record.get("url") or (source_urls[index] if index < len(source_urls) else "") or (source_urls[0] if source_urls else "") or story.get("url") or ""),
+                "reliability_tier": str(source_record.get("reliability_tier") or story.get("reliability_tier") or ""),
+                "attribution_mode": str(source_record.get("attribution_mode") or story.get("attribution_mode") or ""),
+                "public_story_count": 0,
+            }
+    public_sources = list(rows.values())
+    for row in public_sources:
+        row["public_story_count"] = counts.get(str(row.get("source_id") or ""), 0)
+    public_sources.sort(key=lambda row: (str(row.get("publisher") or "").lower(), str(row.get("source_id") or "")))
+    return public_sources
+
+
 def _warnings(target_rows: list[dict[str, Any]]) -> list[str]:
     warnings: list[str] = []
     core_problems = [
@@ -630,7 +697,11 @@ def build_audit(root: Path, edition_date: str) -> dict[str, Any]:
     attempted_rows = collection_report.get("source_providers_attempted") or collection_report.get("provider_diagnostics") or []
     provider_rows = _provider_rows([row for row in attempted_rows if isinstance(row, dict)])
     target_rows = _target_rows(provider_rows)
+    rendered_manifest_path, rendered_public_story_rows, rendered_public_story_source_ids = _rendered_public_story_rows(root, edition_date)
+    rendered_public_story_sources = _public_source_rows(rendered_public_story_rows)
     warnings = _warnings(target_rows)
+    if rendered_public_story_rows and not rendered_public_story_source_ids:
+        warnings.append("Rendered public stories were found, but no source IDs could be resolved from the curation manifest.")
     summary_counts = _summary_counts(provider_rows, target_rows)
     recommended_actions = _action_rows(provider_rows, target_rows)
     missing_target_sources = [row for row in target_rows if row.get("status") == "missing_from_registry"]
@@ -651,10 +722,15 @@ def build_audit(root: Path, edition_date: str) -> dict[str, Any]:
         "dispatch_slug": DISPATCH_SLUG,
         "edition_date": edition_date,
         "collection_report_path": str(collection_report_path),
+        "curation_manifest_path": str(rendered_manifest_path) if rendered_manifest_path else None,
         "generated_at": _utc_now(),
         "summary_counts": summary_counts,
         "providers": provider_rows,
         "target_source_coverage": target_rows,
+        "rendered_public_story_count": len(rendered_public_story_rows),
+        "rendered_public_stories": rendered_public_story_rows,
+        "rendered_public_story_source_ids": rendered_public_story_source_ids,
+        "rendered_public_story_sources": rendered_public_story_sources,
         "recommended_actions": recommended_actions,
         "missing_target_sources": missing_target_sources,
         "manual_backfill_sources": manual_backfill_sources,
@@ -701,6 +777,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     manual_only = [row for row in targets if str(row.get("status") or "") == "present_manual_only" or str(row.get("source_state") or "") == "manual_only"]
     blocked_disabled = [row for row in targets if str(row.get("status") or "") in {"present_diagnostics_only", "present_disabled"}]
     missing = list(report.get("missing_target_sources") or [])
+    rendered_story_sources = list(report.get("rendered_public_story_sources") or [])
     recommended_actions = list(report.get("recommended_actions") or [])
     warnings = list(report.get("warnings") or [])
 
@@ -806,6 +883,19 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines.append("- None")
     lines.extend(
         [
+            "",
+            "## Sources Contributing Rendered Public Stories",
+            _render_table(
+                rendered_story_sources,
+                [
+                    ("source_id", "source_id"),
+                    ("publisher", "publisher"),
+                    ("public_story_count", "public_story_count"),
+                    ("reliability_tier", "reliability_tier"),
+                    ("attribution_mode", "attribution_mode"),
+                    ("url", "url"),
+                ],
+            ),
             "",
             "## Provider Rows",
             _render_table(

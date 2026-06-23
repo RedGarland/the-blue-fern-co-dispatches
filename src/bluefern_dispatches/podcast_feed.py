@@ -269,21 +269,37 @@ def _load_items(project_root: Path, *, max_edition_date: str | None = None) -> l
     return items[:MAX_ITEMS]
 
 
+def _gaza_audio_enclosure_url(project_root: Path, row: dict[str, Any]) -> str:
+    edition_date = str(row.get("edition_date") or "").strip()
+    if not edition_date:
+        return str(row.get("audio_url") or "").strip()
+    site_path = project_root / "output" / "site" / "gaza" / "audio" / f"{edition_date}.mp3"
+    audio_url = str(row.get("audio_url") or "").strip()
+    if audio_url:
+        return audio_url
+    if site_path.exists():
+        return f"/gaza/audio/{edition_date}.mp3"
+    return ""
+
+
 def _enclosure_tag(project_root: Path, row: dict[str, Any]) -> str:
+    edition_date = str(row.get("edition_date") or "").strip()
     audio_file_raw = row.get("audio_file")
-    if not isinstance(audio_file_raw, str) or not audio_file_raw.strip():
-        return ""
-    audio_file = audio_file_raw.strip()
-    if "/" in audio_file or "\\" in audio_file:
-        relative = audio_file.lstrip("/").replace("\\", "/")
-    else:
-        relative = f"gaza/audio/{audio_file}"
+    relative = ""
+    if isinstance(audio_file_raw, str) and audio_file_raw.strip():
+        audio_file = audio_file_raw.strip()
+        if "/" in audio_file or "\\" in audio_file:
+            relative = audio_file.lstrip("/").replace("\\", "/")
+        else:
+            relative = f"gaza/audio/{audio_file}"
+    elif edition_date:
+        relative = f"gaza/audio/{edition_date}.mp3"
     site_path = project_root / "output" / "site" / Path(relative)
     if not site_path.exists():
         return ""
     length = site_path.stat().st_size
     mime = str(row.get("audio_mime_type") or "audio/mpeg")
-    audio_url = str(row.get("audio_url") or "").strip()
+    audio_url = _gaza_audio_enclosure_url(project_root, row)
     if audio_url:
         public_url = BASE_URL + audio_url if audio_url.startswith("/") else audio_url
     else:

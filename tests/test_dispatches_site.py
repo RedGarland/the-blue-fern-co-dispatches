@@ -886,13 +886,20 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
 
 
-def add_gaza_audio_release_files(site_root: Path, edition_date: str, *, audio: bool = True) -> None:
+def add_gaza_audio_release_files(
+    site_root: Path,
+    edition_date: str,
+    *,
+    audio: bool = True,
+    audio_url: str | None = None,
+) -> None:
     audio_root = site_root / "gaza" / "audio"
     audio_root.mkdir(parents=True, exist_ok=True)
+    resolved_audio_url = audio_url if audio_url is not None else (f"/gaza/audio/{edition_date}.mp3" if audio else "")
     metadata = {
         "edition_date": edition_date,
         "transcript_url": f"/gaza/audio/{edition_date}-transcript.html",
-        "audio_url": f"/gaza/audio/{edition_date}.mp3" if audio else "",
+        "audio_url": resolved_audio_url,
     }
     (audio_root / f"{edition_date}.json").write_text(json.dumps(metadata), encoding="utf-8")
     (audio_root / f"{edition_date}-transcript.html").write_text(f"<html>{edition_date} transcript</html>", encoding="utf-8")
@@ -1594,7 +1601,7 @@ def test_gaza_exact_date_publish_preserves_prior_audio_archive_and_excludes_futu
         encoding="utf-8",
     )
     add_gaza_audio_release_files(site_root, "2026-06-20")
-    add_gaza_audio_release_files(site_root, "2026-06-22")
+    add_gaza_audio_release_files(site_root, "2026-06-22", audio_url="")
     add_gaza_audio_release_files(site_root, "2026-06-23")
     write_audio_index(work, dry_run=False, max_edition_date="2026-06-22")
     write_gaza_podcast_feed(project_root=work, dry_run=False, max_edition_date="2026-06-22")
@@ -1652,7 +1659,75 @@ def test_gaza_exact_date_publish_preserves_prior_audio_archive_and_excludes_futu
     assert any(entry["edition_date"] == "2026-06-20" for entry in contract["audio_index_entries"])
     assert any(entry["edition_date"] == "2026-06-22" for entry in contract["audio_index_entries"])
     assert not any(entry["edition_date"] == "2026-06-23" for entry in contract["audio_index_entries"])
+    assert any(entry["edition_date"] == "2026-06-22" and entry["audio_url"] == "/gaza/audio/2026-06-22.mp3" for entry in contract["audio_index_entries"])
+    assert any(entry["edition_date"] == "2026-06-22" and entry["audio_url"] == "/gaza/audio/2026-06-22.mp3" for entry in contract["podcast_entries"])
     assert not contract["missing_audio_artifacts"]
+
+
+def test_gaza_audio_release_uses_dated_mp3_when_metadata_url_is_blank(built_site, monkeypatch):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "index.html").write_text("<html>Root home</html>", encoding="utf-8")
+    (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    (pages_repo / "gaza").mkdir(parents=True, exist_ok=True)
+    (pages_repo / "gaza" / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (pages_repo / "gaza" / "rss.xml").write_text("<rss/>", encoding="utf-8")
+
+    add_gaza_site_edition(site_root, "2026-06-20")
+    add_gaza_site_edition(site_root, "2026-06-22")
+    add_gaza_audio_release_files(site_root, "2026-06-20")
+    add_gaza_audio_release_files(site_root, "2026-06-22", audio_url="")
+    add_gaza_audio_release_files(site_root, "2026-06-23")
+    write_audio_index(work, dry_run=False, max_edition_date="2026-06-22")
+    write_gaza_podcast_feed(project_root=work, dry_run=False, max_edition_date="2026-06-22")
+
+    def fake_build_site(*args, **kwargs):
+        return {
+            "ok": True,
+            "dry_run": kwargs.get("dry_run", False),
+            "warnings": [],
+            "errors": [],
+            "public_urls": [
+                "https://dispatches.thebluefernco.com/gaza/",
+                "https://dispatches.thebluefernco.com/gaza/editions/2026-06-22/",
+            ],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_archive_entries_written": [],
+            "gaza_editions_skipped": [],
+            "paid_detail_excluded_from_public": True,
+        }
+
+    monkeypatch.setattr(generator, "build_site", fake_build_site)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-06-22",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    contract = result["gaza_audio_release_artifact_contract"]
+    copied = [path.replace("\\", "/") for path in result["files_that_would_be_copied"]]
+    audio_index_html = (site_root / "gaza" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_xml = (site_root / "gaza" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+    root_podcast_xml = (site_root / "gaza" / "podcast.xml").read_text(encoding="utf-8")
+
+    assert result["ok"] is True
+    assert any("gaza/audio/2026-06-22.mp3" in path for path in copied)
+    assert any(entry["edition_date"] == "2026-06-22" and entry["audio_url"] == "/gaza/audio/2026-06-22.mp3" for entry in contract["audio_index_entries"])
+    assert any(entry["edition_date"] == "2026-06-22" and entry["audio_url"] == "/gaza/audio/2026-06-22.mp3" for entry in contract["podcast_entries"])
+    assert '/gaza/audio/2026-06-22.mp3' in audio_index_html
+    assert '/gaza/audio/2026-06-22.mp3' in podcast_xml
+    assert '/gaza/audio/2026-06-22.mp3' in root_podcast_xml
+    assert not any("2026-06-23" in path for path in copied if "gaza/audio" in path)
 
 
 def test_gaza_exact_date_publish_reports_missing_expected_audio_explicitly(built_site, monkeypatch):

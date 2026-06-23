@@ -97,6 +97,29 @@ def _audio_artifact_date(path: Path) -> str | None:
     return None
 
 
+def _gaza_audio_public_url(edition_date: str) -> str:
+    return f"/gaza/audio/{edition_date}.mp3"
+
+
+def _gaza_audio_mp3_path(audio_root: Path, edition_date: str) -> Path:
+    return audio_root / f"{edition_date}.mp3"
+
+
+def _resolve_gaza_audio_url(
+    audio_root: Path,
+    edition_date: str,
+    *,
+    audio_url: str | None = None,
+) -> tuple[str, Path]:
+    candidate = str(audio_url or "").strip()
+    audio_path = _gaza_audio_mp3_path(audio_root, edition_date)
+    if candidate:
+        return candidate, audio_path
+    if audio_path.exists():
+        return _gaza_audio_public_url(edition_date), audio_path
+    return "", audio_path
+
+
 
 
 def _discover_audio_entries(project_root: Path, *, max_edition_date: str | None = None) -> list[dict[str, Any]]:
@@ -118,12 +141,7 @@ def _discover_audio_entries(project_root: Path, *, max_edition_date: str | None 
         if allowed_dates and date_text not in allowed_dates:
             continue
         transcript_path = root / f"{date_text}-transcript.html"
-        audio_url = str(payload.get("audio_url") or "").strip()
-        audio_path: Path | None = None
-        if audio_url.startswith("/gaza/audio/"):
-            audio_path = root / audio_url.removeprefix("/gaza/audio/")
-        elif audio_url:
-            audio_path = project_root / "output" / "site" / audio_url.lstrip("/")
+        audio_url, audio_path = _resolve_gaza_audio_url(root, date_text, audio_url=payload.get("audio_url"))
         rows.append(
             {
                 "edition_date": date_text,
@@ -153,8 +171,6 @@ def gaza_audio_release_artifact_contract(project_root: Path, *, edition_date: st
         metadata_path = audio_root / f"{date_text}.json"
         transcript_path = audio_root / f"{date_text}-transcript.html"
         payload: dict[str, Any] = {}
-        audio_url = ""
-        audio_path: Path | None = None
         is_expected_date = bool(edition_date and date_text == edition_date)
         if not metadata_path.exists():
             if is_expected_date:
@@ -169,31 +185,26 @@ def gaza_audio_release_artifact_contract(project_root: Path, *, edition_date: st
             payload_obj = None
         if isinstance(payload_obj, dict):
             payload = payload_obj
-            audio_url = str(payload.get("audio_url") or "").strip()
+        raw_audio_url = str(payload.get("audio_url") or "").strip()
         if transcript_path.exists():
             copy_plan.append(transcript_path.relative_to(site_root).as_posix())
         else:
-            if is_expected_date or audio_url:
+            if is_expected_date or raw_audio_url:
                 missing.append(transcript_path.relative_to(site_root).as_posix())
-        if audio_url.startswith("/gaza/audio/"):
-            audio_path = audio_root / audio_url.removeprefix("/gaza/audio/")
-        elif audio_url:
-            audio_path = site_root / audio_url.lstrip("/")
-        if is_expected_date and audio_path is None:
-            audio_path = audio_root / f"{date_text}.mp3"
-        has_audio = bool(audio_path and audio_path.exists())
-        if audio_url and has_audio:
+        audio_url, audio_path = _resolve_gaza_audio_url(audio_root, date_text, audio_url=raw_audio_url)
+        has_audio = audio_path.exists()
+        if has_audio:
             copy_plan.append(audio_path.relative_to(site_root).as_posix())
         elif audio_url:
-            missing.append(audio_path.relative_to(site_root).as_posix() if audio_path else audio_url)
-        if is_expected_date and not has_audio and audio_path is not None:
+            missing.append(audio_path.relative_to(site_root).as_posix())
+        if is_expected_date and not has_audio:
             missing.append(audio_path.relative_to(site_root).as_posix())
         audio_index_entries.append(
             {
                 "edition_date": date_text,
                 "metadata_path": metadata_path.relative_to(site_root).as_posix(),
                 "transcript_path": transcript_path.relative_to(site_root).as_posix(),
-                "audio_path": audio_path.relative_to(site_root).as_posix() if audio_path else None,
+                "audio_path": audio_path.relative_to(site_root).as_posix(),
                 "audio_url": audio_url,
                 "transcript_present": transcript_path.exists(),
                 "metadata_present": metadata_path.exists(),
@@ -205,7 +216,7 @@ def gaza_audio_release_artifact_contract(project_root: Path, *, edition_date: st
                 "edition_date": date_text,
                 "metadata_path": metadata_path.relative_to(site_root).as_posix(),
                 "transcript_path": transcript_path.relative_to(site_root).as_posix(),
-                "audio_path": audio_path.relative_to(site_root).as_posix() if audio_path else None,
+                "audio_path": audio_path.relative_to(site_root).as_posix(),
                 "audio_url": audio_url,
                 "transcript_present": transcript_path.exists(),
                 "metadata_present": metadata_path.exists(),

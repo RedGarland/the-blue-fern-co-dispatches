@@ -1061,59 +1061,11 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     if slug == CARE_LINE_DISPATCH_SLUG:
         return bool(care_line_public_edition_report(site_root, edition_date).get("listable"))
     if slug == "gaza":
-        manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
-        if not manifest_path.exists():
-            return False
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return False
-        if not isinstance(manifest, dict):
-            return False
-        errors = manifest.get("errors")
-        if isinstance(errors, list) and any(
-            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
-            for item in errors
-        ):
-            return False
-        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
-        curation_manifest_path = site_root / slug / "editions" / edition_date / "curation_manifest.json"
-        sources_payload: list[dict[str, Any]] | None = None
-        curation_payload: list[dict[str, Any]] | None = None
-        if sources_manifest_path.exists():
-            try:
-                loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            if isinstance(loaded, list):
-                sources_payload = loaded
-        if curation_manifest_path.exists():
-            try:
-                loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            if isinstance(loaded, list):
-                curation_payload = loaded
-        source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
-        story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
-        if source_count <= 0 or story_count <= 0:
-            return False
-        # Cross-edition dedupe failures are recorded in project-local Gaza run artifacts.
-        dedupe_path = site_root.parents[1] / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
-        if dedupe_path.exists():
-            try:
-                dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
-            kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
-            if input_count > 0 and kept_count == 0:
-                return False
-        return True
-    if slug == "food-line":
-        return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
-    if slug == CARE_LINE_DISPATCH_SLUG:
-        return bool(care_line_public_edition_report(site_root, edition_date).get("listable"))
+        return _gaza_public_edition_is_listable_at_path(
+            site_root / slug / "editions" / edition_date,
+            site_root.parents[1],
+            edition_date,
+        )
     if slug == "american-pressure":
         manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
         index_path = site_root / slug / "editions" / edition_date / "index.html"
@@ -1228,6 +1180,57 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     if str(manifest.get("zero_story_review_status") or "").strip().lower() == "credible":
         return True
     return False
+
+
+def _gaza_public_edition_is_listable_at_path(edition_dir: Path, project_root: Path, edition_date: str) -> bool:
+    manifest_path = edition_dir / "edition_manifest.json"
+    if not manifest_path.exists():
+        return False
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(manifest, dict):
+        return False
+    errors = manifest.get("errors")
+    if isinstance(errors, list) and any(
+        "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
+        for item in errors
+    ):
+        return False
+    sources_manifest_path = edition_dir / "sources_manifest.json"
+    curation_manifest_path = edition_dir / "curation_manifest.json"
+    sources_payload: list[dict[str, Any]] | None = None
+    curation_payload: list[dict[str, Any]] | None = None
+    if sources_manifest_path.exists():
+        try:
+            loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if isinstance(loaded, list):
+            sources_payload = loaded
+    if curation_manifest_path.exists():
+        try:
+            loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if isinstance(loaded, list):
+            curation_payload = loaded
+    source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
+    story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
+    if source_count <= 0 or story_count <= 0:
+        return False
+    dedupe_path = project_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+    if dedupe_path.exists():
+        try:
+            dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
+        kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
+        if input_count > 0 and kept_count == 0:
+            return False
+    return True
 
 
 def _food_line_public_edition_skip_warning(report: dict[str, Any]) -> str:
@@ -1464,87 +1467,65 @@ def reconcile_gaza_public_editions(
     dry_run: bool,
     wrote: list[str],
     pages_repo: Path | None = None,
-    public_exact_date: str | None = None,
+    public_max_date: str | None = None,
 ) -> dict[str, list[dict[str, str]]]:
     discovered: list[dict[str, str]] = []
-    backfilled: list[dict[str, str]] = []
     skipped: list[dict[str, str]] = []
-    editions_by_date: dict[str, list[tuple[str, Path]]] = {}
+    archive_entries_by_date: dict[str, dict[str, str]] = {}
 
     candidates = [
-        ("output_dispatches", root / "output" / "dispatches" / "gaza" / "editions"),
-        ("output_site", site_root / "gaza" / "editions"),
+        ("output_dispatches", root / "output" / "dispatches" / "gaza" / "editions", root),
+        ("output_site", site_root / "gaza" / "editions", site_root.parents[1]),
     ]
     if pages_repo is not None:
-        candidates.append(("pages_repo", pages_repo / "gaza" / "editions"))
+        candidates.append(("pages_repo", pages_repo / "gaza" / "editions", pages_repo.parent))
 
-    for source_name, base in candidates:
+    for source_name, base, project_root in candidates:
         if not base.exists():
             continue
         for edition_dir in sorted([path for path in base.iterdir() if path.is_dir() and len(path.name) == 10], key=lambda item: item.name):
-            date = edition_dir.name
-            discovered.append({"edition_date": date, "source": source_name, "path": str(edition_dir)})
-            editions_by_date.setdefault(date, []).append((source_name, edition_dir))
-
-    for edition_date in sorted(editions_by_date.keys()):
-        if public_exact_date and edition_date != public_exact_date:
-            skipped.append(
-                {
-                    "edition_date": edition_date,
-                    "reason": "outside_exact_public_date_scope",
-                }
-            )
-            continue
-        target_dir = site_root / "gaza" / "editions" / edition_date
-        if target_dir.exists():
-            continue
-        chosen: tuple[str, Path] | None = None
-        for source_name in ("output_dispatches", "output_site", "pages_repo"):
-            for candidate_source, candidate_dir in editions_by_date[edition_date]:
-                if candidate_source != source_name:
-                    continue
-                if not _edition_has_required_public_artifacts(candidate_dir):
-                    continue
-                chosen = (candidate_source, candidate_dir)
-                break
-            if chosen:
-                break
-        if not chosen:
-            skipped.append(
-                {
-                    "edition_date": edition_date,
-                    "reason": "missing_required_public_artifacts",
-                }
-            )
-            continue
-        source_name, source_dir = chosen
-        _copytree_if_missing(source_dir, target_dir, dry_run=dry_run, wrote=wrote)
-        if public_edition_is_listable(site_root, "gaza", edition_date):
-            backfilled.append(
+            edition_date = edition_dir.name
+            discovered.append({"edition_date": edition_date, "source": source_name, "path": str(edition_dir)})
+            if public_max_date and edition_date > public_max_date:
+                skipped.append(
+                    {
+                        "edition_date": edition_date,
+                        "reason": "outside_max_public_date_scope",
+                        "source": source_name,
+                    }
+                )
+                continue
+            if not _edition_has_required_public_artifacts(edition_dir):
+                skipped.append(
+                    {
+                        "edition_date": edition_date,
+                        "reason": "missing_required_public_artifacts",
+                        "source": source_name,
+                    }
+                )
+                continue
+            if not _gaza_public_edition_is_listable_at_path(edition_dir, project_root, edition_date):
+                skipped.append(
+                    {
+                        "edition_date": edition_date,
+                        "reason": "non_publishable_or_failed_listability_rules",
+                        "source": source_name,
+                    }
+                )
+                continue
+            archive_entries_by_date.setdefault(
+                edition_date,
                 {
                     "edition_date": edition_date,
                     "source": source_name,
-                    "source_path": str(source_dir),
-                    "target_path": str(target_dir),
-                }
+                    "path": str(edition_dir),
+                },
             )
-        else:
-            skipped.append(
-                {
-                    "edition_date": edition_date,
-                    "reason": "non_publishable_or_failed_listability_rules",
-                }
-            )
-            if not dry_run and target_dir.exists():
-                shutil.rmtree(target_dir)
 
-    archive_entries = [
-        {"edition_date": date}
-        for date in discover_public_edition_dates(site_root, "gaza")
-    ]
+    archive_entries = [archive_entries_by_date[date] for date in sorted(archive_entries_by_date.keys(), reverse=True)]
     return {
         "discovered": discovered,
-        "backfilled": backfilled,
+        "backfilled": [],
         "skipped": skipped,
         "archive_entries": archive_entries,
     }
@@ -2095,6 +2076,7 @@ def build_site(
     public_urls = [f"{BASE_URL}/"]
     backfilled_public_editions: list[dict[str, str]] = []
     skipped_backfill_editions: list[dict[str, str]] = []
+    public_max_dates = public_max_dates or {}
     public_exact_dates = public_exact_dates or {}
     gaza_reconcile: dict[str, list[dict[str, str]]] = {
         "discovered": [],
@@ -2141,7 +2123,7 @@ def build_site(
         dry_run=dry_run,
         wrote=wrote,
         pages_repo=pages_repo.resolve() if pages_repo is not None else None,
-        public_exact_date=public_exact_dates.get("gaza"),
+        public_max_date=public_max_dates.get("gaza"),
     )
 
     # Keep root landing cards stable across scoped publishes.
@@ -2268,6 +2250,13 @@ def build_site(
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             if dispatch.slug == "american-pressure" and edition_dates:
                 _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
+            if dispatch.slug == "gaza":
+                archived_dates = [
+                    str(item.get("edition_date") or "").strip()
+                    for item in gaza_reconcile.get("archive_entries", [])
+                    if str(item.get("edition_date") or "").strip()
+                ]
+                edition_dates = archived_dates or discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)

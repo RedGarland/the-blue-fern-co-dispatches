@@ -1556,8 +1556,22 @@ def test_gaza_only_expected_date_keeps_archive_and_rss_to_listable_exact_date(bu
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
     (pages_repo / "index.html").write_text("<html>Root home</html>", encoding="utf-8")
     (pages_repo / "CNAME").write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
+    prior = pages_repo / "gaza" / "editions" / "2026-06-21"
+    prior.mkdir(parents=True, exist_ok=True)
+    (prior / "index.html").write_text("<html><body>Gaza daily prior</body></html>", encoding="utf-8")
+    (prior / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "gaza", "edition_date": "2026-06-21", "source_count": 1, "story_count": 1}),
+        encoding="utf-8",
+    )
+    (prior / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "gaza-src-prior", "url": "https://example.com/prior"}]),
+        encoding="utf-8",
+    )
+    (prior / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "gaza-story-prior", "source_ids": ["gaza-src-prior"]}]),
+        encoding="utf-8",
+    )
     add_gaza_site_edition(site_root, "2026-06-22")
-    add_gaza_site_edition(site_root, "2026-06-21")
     failed = site_root / "gaza" / "editions" / "2026-06-23"
     failed.mkdir(parents=True, exist_ok=True)
     (failed / "index.html").write_text("<html><body>failed edition</body></html>", encoding="utf-8")
@@ -1596,11 +1610,22 @@ def test_gaza_only_expected_date_keeps_archive_and_rss_to_listable_exact_date(bu
     )
 
     assert result["ok"] is True
+    copied = [path.replace("\\", "/") for path in result["files_copied"]]
+    assert any("gaza/editions/2026-06-22/index.html" in path for path in copied)
+    assert not any("gaza/editions/2026-06-21/" in path for path in copied)
+    assert not any("gaza/editions/2026-06-23/" in path for path in copied)
+    index = read(pages_repo / "gaza" / "index.html")
     archive = read(pages_repo / "gaza" / "archive.html")
     rss = read(pages_repo / "gaza" / "rss.xml")
+    assert "Recent Editions" in index
+    assert 'href="editions/2026-06-22/"' in index
+    assert 'href="editions/2026-06-21/"' in index
+    assert "2026-06-23" not in index
     assert "2026-06-22" in archive and "2026-06-22" in rss
-    assert "2026-06-21" not in archive and "2026-06-21" not in rss
+    assert "2026-06-21" in archive and "2026-06-21" in rss
     assert "2026-06-23" not in archive and "2026-06-23" not in rss
+    assert "2026-06-22" in "\n".join(json.dumps(item) for item in result["build"]["gaza_archive_entries_written"])
+    assert "2026-06-21" in "\n".join(json.dumps(item) for item in result["build"]["gaza_archive_entries_written"])
 
 
 def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site):

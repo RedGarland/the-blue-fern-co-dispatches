@@ -403,6 +403,7 @@ def test_cross_edition_dedupe_suppresses_repeated_url_and_writes_diagnostic(work
     assert kept == []
     assert report["suppressed_candidate_count"] == 1
     assert report["suppressed_candidates"][0]["matched_prior_edition"] == "2026-05-10"
+    assert report["suppressed_candidates"][0]["classification"] == "true_duplicate"
     assert report["suppressed_candidates"][0]["matched_key_type"] in {
         "canonical_url",
         "normalized_url",
@@ -410,6 +411,93 @@ def test_cross_edition_dedupe_suppresses_repeated_url_and_writes_diagnostic(work
         "title_fingerprint",
         "claim_fingerprint",
     }
+
+
+def test_cross_edition_dedupe_keeps_continuing_story_with_new_ground_detail(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-prior-001",
+                    "title": "Gaza hospital aid update",
+                    "url": "https://example.com/gaza-hospital-aid",
+                    "canonical_url": "https://example.com/gaza-hospital-aid",
+                    "publisher": "Reuters",
+                    "published_at": "2026-06-21T08:00:00+00:00",
+                    "retrieved_at": "2026-06-21T09:00:00+00:00",
+                    "summary_or_snippet": "Hospital and aid access in Gaza were reported.",
+                    "category_hint": "humanitarian",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-src-current-001",
+            "title": "Gaza hospital aid update",
+            "url": "https://example.com/gaza-hospital-aid-updated",
+            "canonical_url": "https://example.com/gaza-hospital-aid-updated",
+            "publisher": "Reuters",
+            "published_at": "2026-06-22T08:00:00+00:00",
+            "retrieved_at": "2026-06-22T09:00:00+00:00",
+            "summary_or_snippet": "Hospital fuel shortages, water access, and displaced families in Rafah deepened Gaza's humanitarian crisis.",
+            "category_hint": "humanitarian",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-06-22", candidates)
+
+    assert len(kept) == 1
+    assert kept[0]["duplicate_classification"] == "continuing_story_new_development"
+    assert kept[0]["duplicate_reason"] == "newer_same_topic_with_new_ground_detail"
+    assert report["suppressed_candidate_count"] == 0
+    assert report["duplicate_classification_counts"]["continuing_story_new_development"] == 0
+
+
+def test_cross_edition_dedupe_suppresses_true_same_title_and_url_duplicate(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-06-21" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-prior-002",
+                    "title": "Gaza hospital aid update",
+                    "url": "https://example.com/gaza-hospital-aid",
+                    "canonical_url": "https://example.com/gaza-hospital-aid",
+                    "publisher": "Reuters",
+                    "published_at": "2026-06-21T08:00:00+00:00",
+                    "retrieved_at": "2026-06-21T09:00:00+00:00",
+                    "summary_or_snippet": "Hospital and aid access in Gaza were reported.",
+                    "category_hint": "humanitarian",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-src-current-002",
+            "title": "Gaza hospital aid update",
+            "url": "https://example.com/gaza-hospital-aid",
+            "canonical_url": "https://example.com/gaza-hospital-aid",
+            "publisher": "Reuters",
+            "published_at": "2026-06-21T08:00:00+00:00",
+            "retrieved_at": "2026-06-22T09:00:00+00:00",
+            "summary_or_snippet": "Hospital and aid access in Gaza were reported.",
+            "category_hint": "humanitarian",
+        }
+    ]
+
+    kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-06-22", candidates)
+
+    assert kept == []
+    assert report["suppressed_candidate_count"] == 1
+    assert report["suppressed_candidates"][0]["classification"] == "true_duplicate"
+    assert report["suppressed_candidates"][0]["reason"] == "matched_recent_prior_edition"
 
 
 def test_retrieved_at_alone_does_not_make_repeated_source_fresh(work_root):

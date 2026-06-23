@@ -685,6 +685,7 @@ def format_lines(values: list[Any]) -> str:
 def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
     public_urls = summary.get("public_urls") or {}
     local_paths = summary.get("local_paths") or {}
+    classification_counts = summary.get("source_classification_counts") or {}
     lines = [
         f"date: {summary.get('date')}",
         f"ok: {str(summary.get('ok')).lower()}",
@@ -736,6 +737,9 @@ def build_email_body(summary: dict[str, Any], log_path: Path) -> str:
         f"bluesky_edition_date_verified: {summary.get('bluesky_edition_date_verified')}",
         f"bluesky_stale_content_guard_status: {summary.get('bluesky_stale_content_guard_status')}",
         f"bluesky_thumb_status: {summary.get('bluesky_thumb_status')}",
+        "",
+        "source classification counts:",
+        format_lines([f"{key}: {value}" for key, value in sorted(classification_counts.items())]) if classification_counts else "- <none>",
         "",
         "warnings:",
         format_lines(list(summary.get("warnings") or [])),

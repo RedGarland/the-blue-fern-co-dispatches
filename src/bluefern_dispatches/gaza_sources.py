@@ -14,6 +14,7 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -134,6 +135,75 @@ HIGH_RELEVANCE_KEYWORDS = (
     "icc",
     "icj",
 )
+GAZA_GROUND_DETAIL_TERMS = (
+    "airstrike",
+    "aid",
+    "ambulance",
+    "blackout",
+    "camp",
+    "children",
+    "clinic",
+    "civilians",
+    "corridor",
+    "crossing",
+    "destroyed",
+    "destroying",
+    "displaced",
+    "displacement",
+    "electricity",
+    "evacuation",
+    "families",
+    "famine",
+    "field hospital",
+    "food",
+    "fuel",
+    "heat",
+    "hospital",
+    "hunger",
+    "humanitarian",
+    "injured",
+    "killed",
+    "malnutrition",
+    "medical",
+    "northern gaza",
+    "patients",
+    "power",
+    "polluted sea",
+    "pollution",
+    "rubble",
+    "sanitation",
+    "service disruption",
+    "sewage",
+    "shelter",
+    "starvation",
+    "tent",
+    "water",
+    "wastewater",
+    "women",
+    "workers",
+    "deir al-balah",
+    "jabalia",
+    "khan younis",
+    "rafah",
+    "southern gaza",
+    "central gaza",
+)
+GAZA_GROUND_DETAIL_CATEGORY_HINTS = {
+    "aid",
+    "airstrike",
+    "airstrikes_and_civilian_harm",
+    "casualty",
+    "conflict",
+    "displacement",
+    "health",
+    "humanitarian",
+    "medical",
+    "nutrition",
+    "sanitation",
+    "service_disruption",
+    "territorial_control_and_destruction",
+    "water",
+}
 LOW_RELEVANCE_KEYWORDS = ("sports", "football", "soccer", "flag", "culture", "symbolic")
 OPINION_COMMENTARY_URL_HINTS = (
     "/opinion/",
@@ -279,6 +349,41 @@ def story_claim_fingerprint(source_or_story: dict[str, Any]) -> str:
     return "|".join(part for part in (publisher, title, category) if part)
 
 
+def _ground_detail_terms(text: str) -> set[str]:
+    lowered = re.sub(r"[^a-z0-9]+", " ", str(text or "").lower())
+    lowered = " ".join(lowered.split())
+    return {term for term in GAZA_GROUND_DETAIL_TERMS if term in lowered}
+
+
+def _detail_text(value: Any) -> str:
+    text = re.sub(r"[^a-z0-9]+", " ", str(value or "").lower())
+    return " ".join(text.split())
+
+
+def _candidate_ground_detail_profile(source: dict[str, Any]) -> set[str]:
+    text = " ".join(
+        [
+            str(source.get("title") or ""),
+            str(source.get("summary_or_snippet") or source.get("summary") or ""),
+            str(source.get("category_hint") or source.get("category") or ""),
+            str(source.get("region_scope") or ""),
+        ]
+    )
+    return _ground_detail_terms(text)
+
+
+def has_new_ground_detail(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
+    candidate_terms = _candidate_ground_detail_profile(candidate)
+    prior_terms = _candidate_ground_detail_profile(prior)
+    if candidate_terms - prior_terms:
+        return True
+    candidate_summary = _detail_text(candidate.get("summary_or_snippet") or candidate.get("summary") or "")
+    prior_summary = _detail_text(prior.get("summary_or_snippet") or prior.get("summary") or "")
+    if candidate_summary and prior_summary and SequenceMatcher(None, candidate_summary, prior_summary).ratio() < 0.86:
+        return True
+    return False
+
+
 def is_labeled_context_source(item: dict[str, Any], source: SourceDefinition | None = None) -> bool:
     attribution_mode = str(item.get("attribution_mode") or "").strip().lower()
     claim_status = str(item.get("claim_status") or "").strip().lower()
@@ -374,6 +479,8 @@ def filter_recent_duplicate_sources(
         source["dedupe_key"] = keys.get("publisher_title") or keys.get("canonical_url") or keys.get("normalized_url") or keys.get("title_fingerprint") or ""
         source["title_fingerprint"] = keys.get("title_fingerprint") or ""
         source["claim_fingerprint"] = claim
+        source["duplicate_classification"] = "new"
+        source["duplicate_reason"] = ""
 
         matches: list[tuple[str, str, dict[str, Any]]] = []
         for key_type in ("canonical_url", "normalized_url", "publisher_title", "title_fingerprint"):
@@ -388,18 +495,47 @@ def filter_recent_duplicate_sources(
             continue
 
         published_at = _safe_parse_dt(str(source.get("published_at") or ""))
-        suppress = True
-        reason = "matched recent prior edition"
         matched = matches[0]
         prior_src = matched[2]["source"]
         prior_published_at = _safe_parse_dt(str(prior_src.get("published_at") or ""))
-        if published_at and prior_published_at and published_at > prior_published_at and matched[0] in {"canonical_url", "normalized_url"}:
+        same_url = matched[0] in {"canonical_url", "normalized_url"}
+        same_topic = matched[0] in {"publisher_title", "title_fingerprint", "claim_fingerprint"}
+        new_detail = has_new_ground_detail(source, prior_src)
+        newer_publication = bool(published_at and prior_published_at and published_at > prior_published_at)
+        suppress = True
+        classification = "true_duplicate"
+        reason = "matched_recent_prior_edition"
+        if same_url and newer_publication and new_detail:
             suppress = False
-            reason = "newer publication timestamp than prior url match"
-        if str(source.get("published_at") or "").strip() == "":
+            classification = "continuing_story_new_development"
+            reason = "newer_same_url_with_new_ground_detail"
+        elif same_topic and newer_publication and new_detail:
+            suppress = False
+            classification = "continuing_story_new_development"
+            reason = "newer_same_topic_with_new_ground_detail"
+        elif newer_publication and not new_detail:
+            classification = "stale_rewrite_no_new_detail"
+            reason = "newer_publication_without_new_ground_detail"
+        elif same_topic and new_detail:
+            suppress = False
+            classification = "continuing_story_new_development"
+            reason = "same_topic_with_new_ground_detail"
+        elif same_url and new_detail:
+            suppress = False
+            classification = "continuing_story_new_development"
+            reason = "same_url_with_new_ground_detail"
+        elif str(source.get("published_at") or "").strip() == "":
             stale_risk.append({"title": source.get("title"), "publisher": source.get("publisher"), "url": source.get("url")})
+        elif matched[0] == "claim_fingerprint":
+            classification = "true_duplicate"
+            reason = "claim_fingerprint_match"
+        elif same_topic:
+            classification = "duplicate_topic_but_new_ground_detail" if new_detail else "true_duplicate"
+            reason = "same_topic_match"
         if _is_google_news_rss(str(source.get("url") or "")) and not str(source.get("canonical_url") or "").strip():
             source["google_news_wrapper_url"] = keys.get("normalized_url") or ""
+        source["duplicate_classification"] = classification
+        source["duplicate_reason"] = reason
         if suppress:
             source["repeated_from_edition_date"] = matched[2]["edition_date"]
             suppressed.append(
@@ -414,6 +550,7 @@ def filter_recent_duplicate_sources(
                     "matched_prior_title": prior_src.get("title"),
                     "matched_prior_url": prior_src.get("url"),
                     "reason": reason,
+                    "classification": classification,
                 }
             )
         else:
@@ -428,6 +565,10 @@ def filter_recent_duplicate_sources(
         "suppressed_candidate_count": len(suppressed),
         "suppressed_candidates": suppressed,
         "stale_risk_candidates": stale_risk,
+        "duplicate_classification_counts": {
+            key: sum(1 for row in suppressed if row.get("classification") == key)
+            for key in ("true_duplicate", "continuing_story_new_development", "duplicate_topic_but_new_ground_detail", "stale_rewrite_no_new_detail")
+        },
         "warnings": [],
         "google_wrapper_count": sum(
             1

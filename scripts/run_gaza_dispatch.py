@@ -2313,9 +2313,10 @@ def run_gaza_dispatch(
         "post_edition_date_source_count": int(post_edition_date_source_count),
     }
     collection_report.update(timing_metadata)
-    stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
-    original_story_rows = [dict(story) for story in stories]
-    public_stories, written_public_exclusions = _apply_written_public_story_filter(stories)
+    curated_stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
+    original_story_rows = [dict(story) for story in curated_stories]
+    public_candidate_stories = [story for story in curated_stories if bool(story.get("core_ground_development"))]
+    public_stories, written_public_exclusions = _apply_written_public_story_filter(public_candidate_stories)
     for excluded in written_public_exclusions:
         relevance_decisions.append(
             {
@@ -2331,6 +2332,7 @@ def run_gaza_dispatch(
     collection_report["source_adequacy"] = adequacy
     if adequacy.get("warnings"):
         warnings.extend(str(item) for item in adequacy.get("warnings") or [])
+    collection_report["curated_story_count"] = len(curated_stories)
     collection_report["final_story_count"] = len(stories)
     collection_report["public_story_count"] = sum(1 for story in stories if bool(story.get("core_ground_development")))
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
@@ -2345,10 +2347,15 @@ def run_gaza_dispatch(
     collection_report["top_story_relevance_score"] = int(top_story.get("top_story_relevance_score") or 0) if top_story else 0
     collection_report["top_story_relevance_terms_matched"] = list(top_story.get("relevance_terms_matched") or []) if top_story else []
     has_substantive_ground = any(bool(story.get("core_ground_development")) for story in stories)
+    qualifying_core_story_count = sum(1 for story in curated_stories if bool(story.get("core_ground_development")))
     collection_report["thin_edition_override_used"] = bool(allow_thin_edition)
     collection_report["blocked_for_thin_or_off_topic"] = False
     collection_report["thin_edition_reason"] = None
-    if stories and not has_substantive_ground:
+    if qualifying_core_story_count == 0 and len(curated_stories) > 0:
+        errors.append("No substantive Gaza/Palestinian ground-development story cleared threshold; publication blocked (use --allow-thin-edition to override).")
+        collection_report["blocked_for_thin_or_off_topic"] = True
+        collection_report["thin_edition_reason"] = "no_substantive_ground_story"
+    elif stories and not has_substantive_ground:
         if allow_thin_edition:
             warnings.append("thin Gaza edition override used: no substantive Gaza/Palestinian ground-development story cleared threshold.")
             collection_report["thin_edition_reason"] = "no_substantive_ground_story_override_used"

@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 20 Jun 2026 13:00:43 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 23 Jun 2026 21:49:32 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: June 22, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-22-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-22-transcript.html</guid>
+    <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+    <description>What the World Cup looks like from Gaza. Gaza's footballers train on broken pitches with no shoes. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-22.mp3" length="561024" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>

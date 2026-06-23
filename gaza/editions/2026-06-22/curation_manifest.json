@@ -22,7 +22,7 @@
       "source_reliability": 14,
       "date_confidence": 10
     },
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "source_record_ids": [
       "gaza-2026-06-22-bbc-middle-east-aed29a70b613"
@@ -45,7 +45,7 @@
         "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence."
       }
     ],
-    "generated_at": "2026-06-23T19:08:21.501429+00:00",
+    "generated_at": "2026-06-23T20:42:39.785797+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -58,11 +58,12 @@
     "core_ground_development": false,
     "ground_classification": "rejected_no_gaza_ground_signal",
     "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
+    "excluded_reason": "not included in rendered public Gaza edition",
     "include_decision": "include",
-    "public_rendered": true,
+    "public_rendered": false,
     "prior_story_matched": null,
     "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "dedupe_classification": null,
     "dedupe_reasons": []
   },
   {
@@ -110,7 +111,7 @@
         "summary_or_snippet": "Gaza's footballers train on broken pitches with no shoes. Why has FIFA's rebuilding plan gone nowhere?"
       }
     ],
-    "generated_at": "2026-06-23T19:08:21.501429+00:00",
+    "generated_at": "2026-06-23T20:42:39.785797+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -152,7 +153,7 @@
       "source_reliability": 14,
       "date_confidence": 18
     },
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "source_record_ids": [
       "gaza-2026-06-22-aljazeera-middle-east-21f52590ade2"
@@ -175,7 +176,7 @@
         "summary_or_snippet": "Surfers still ride the waves off Gaza despite the ever-present threat of becoming an Israeli military target."
       }
     ],
-    "generated_at": "2026-06-23T19:08:21.501429+00:00",
+    "generated_at": "2026-06-23T20:42:39.785797+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -188,11 +189,12 @@
     "core_ground_development": false,
     "ground_classification": "rejected_no_gaza_ground_signal",
     "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
+    "excluded_reason": "not included in rendered public Gaza edition",
     "include_decision": "include",
-    "public_rendered": true,
+    "public_rendered": false,
     "prior_story_matched": null,
     "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "dedupe_classification": null,
     "dedupe_reasons": []
   },
   {
@@ -217,7 +219,7 @@
       "source_reliability": 14,
       "date_confidence": 18
     },
-    "included_in_public_summary": true,
+    "included_in_public_summary": false,
     "included_in_detail_dataset": false,
     "source_record_ids": [
       "gaza-2026-06-22-aljazeera-middle-east-a1ad88348ab7"
@@ -240,7 +242,7 @@
         "summary_or_snippet": "Football fans in Gaza showed overwhelming support for Spain against Saudi Arabia during Sunday's World Cup clash."
       }
     ],
-    "generated_at": "2026-06-23T19:08:21.501429+00:00",
+    "generated_at": "2026-06-23T20:42:39.785797+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -253,11 +255,12 @@
     "core_ground_development": false,
     "ground_classification": "rejected_no_gaza_ground_signal",
     "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
+    "excluded_reason": "not included in rendered public Gaza edition",
     "include_decision": "include",
-    "public_rendered": true,
+    "public_rendered": false,
     "prior_story_matched": null,
     "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "dedupe_classification": null,
     "dedupe_reasons": []
   }
 ]

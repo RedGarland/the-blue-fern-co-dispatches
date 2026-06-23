@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-06-20T21:57:36+00:00",
-    "retrieved_at": "2026-06-23T19:08:20.373891+00:00",
+    "retrieved_at": "2026-06-23T20:42:38.550175+00:00",
     "retrieved_local_date": "2026-06-23",
     "post_edition_date_source": true,
     "summary_or_snippet": "The Israeli military accused Ahmed Wishah of being a \"Hamas sniper operative\", without providing evidence.",
@@ -78,9 +78,7 @@
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-22",
-    "used_in_story_ids": [
-      "gaza-story-2026-06-22-002"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
     "ground_classification": "rejected_no_gaza_ground_signal",
@@ -134,9 +132,7 @@
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-22",
-    "used_in_story_ids": [
-      "gaza-story-2026-06-22-003"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
     "ground_classification": "rejected_no_gaza_ground_signal",
@@ -244,9 +240,7 @@
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-22",
-    "used_in_story_ids": [
-      "gaza-story-2026-06-22-005"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
     "ground_classification": "rejected_no_gaza_ground_signal",

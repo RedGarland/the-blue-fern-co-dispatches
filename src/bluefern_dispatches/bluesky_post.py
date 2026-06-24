@@ -39,6 +39,7 @@ BEARER_RE = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._\-]+")
 JWT_FIELD_RE = re.compile(r'(?i)"(accessJwt|refreshJwt)"\s*:\s*"[^"]*"')
 MALFORMED_ENTITY_PERIOD_RE = re.compile(r"\b(by|of|to|from|against|gave|with|for|allows)\.\s+([A-Z][A-Za-z0-9'/-]*)")
 WEAK_TRAILING_FRAGMENT_RE = re.compile(r"\b(?:a|an|the|to|of|by|for|with|against|from)\.?$", re.IGNORECASE)
+_PUBLIC_PUNCTUATION_FIX_RE = re.compile(r"([!?])\.")
 MAX_HTTP_ERROR_DETAIL_LENGTH = 240
 BLUESKY_BLOB_MAX_BYTES = 1_000_000
 BLUESKY_COMPRESS_TARGET_BYTES = 950_000
@@ -534,15 +535,11 @@ def build_gaza_bluesky_post_text(
     if not topics and not public_summary:
         return BLUESKY_GAZA_POST_FALLBACK
     date_text = _format_post_date(clean_date)
-    source_count = int(context.get("source_count") or 0)
-    publisher_count = int(context.get("publisher_count") or 0)
-    summary_line = ""
-    if source_count and publisher_count:
-        summary_line = f"This is a limited-source update from {source_count} saved records across {publisher_count} publishers."
     url_suffix = f"\n\nPublic edition: {public_url}" if include_public_url and str(public_url or "").strip() else ""
+    footer = "Source-backed briefing from The Blue Fern Co."
 
     def _with_suffix(body: str) -> str:
-        body = WHITESPACE_RE.sub(" ", body.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n").strip()
+        body = _normalize_public_post_text(body)
         if url_suffix and len(f"{body}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return f"{body}{url_suffix}"
         return body
@@ -554,17 +551,17 @@ def build_gaza_bluesky_post_text(
             intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
         else:
             intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
-        candidate = _with_suffix(intro if not summary_line else f"{intro}\n\n{summary_line}")
-        if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != intro:
+        candidate = _with_suffix(f"{intro}\n\n{footer}")
+        if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != _normalize_public_post_text(intro):
             return candidate
         if len(f"{intro}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
-            return f"{intro}{url_suffix}" if url_suffix else intro
+            return _normalize_public_post_text(f"{intro}{url_suffix}" if url_suffix else intro)
     if public_summary:
         prefix = f"In the {date_text} Gaza briefing: "
-        available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - 1
+        available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - len(footer) - 5
         if available > 0:
             summary = _shorten_post_text_at_word_boundary(public_summary.rstrip(".") or public_summary, available).rstrip(".")
-            candidate = f"{prefix}{summary}."
+            candidate = f"{prefix}{summary}.\n\n{footer}"
             candidate = _with_suffix(candidate)
             if len(candidate) <= BLUESKY_MAX_POST_LENGTH:
                 return candidate
@@ -575,7 +572,7 @@ def build_gaza_bluesky_post_text(
         else:
             compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}; and {compact_topics[1]}."
         if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
-            return f"{compact}{url_suffix}" if url_suffix else compact
+            return _normalize_public_post_text(f"{compact}{url_suffix}" if url_suffix else compact)
     return BLUESKY_GAZA_POST_FALLBACK[:BLUESKY_MAX_POST_LENGTH]
 
 
@@ -609,7 +606,20 @@ def _clean_description_text(value: str, max_length: int) -> str:
         candidate = truncated.rstrip(" ,;:-")
     if WEAK_TRAILING_FRAGMENT_RE.search(candidate):
         candidate = re.sub(WEAK_TRAILING_FRAGMENT_RE, "", candidate).rstrip(" ,;:-")
+    candidate = _PUBLIC_PUNCTUATION_FIX_RE.sub(r"\1", candidate)
     return candidate
+
+
+def _normalize_public_post_text(value: str) -> str:
+    text = str(value or "").replace("\r\n", "\n").strip()
+    if not text:
+        return ""
+    text = _PUBLIC_PUNCTUATION_FIX_RE.sub(r"\1", text)
+    text = text.replace("..", ".")
+    text = WHITESPACE_RE.sub(" ", text.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n")
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    text = re.sub(r"\n[ \t]+", "\n", text)
+    return text.strip()
 
 
 def _first_usable_field(payload: Any, names: tuple[str, ...], max_length: int) -> str:

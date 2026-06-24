@@ -6,8 +6,34 @@ from urllib import error
 from bluefern_dispatches import bluesky_post
 
 
-def test_builds_expected_gaza_post_text_without_url():
-    text = bluesky_post.build_gaza_bluesky_post_text("2026-05-07", "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/")
+def test_builds_expected_gaza_post_text_without_url(tmp_path: Path):
+    edition_date = "2026-05-07"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Daily Gaza briefing focuses on verified developments.",
+                    "summary": "Source-backed report from Gaza on current developments.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>May 7, 2026</p></body></html>", encoding="utf-8")
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        "2026-05-07",
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/",
+        project_root=tmp_path,
+    )
     assert "Today's Gaza Dispatch is live." not in text
     assert "Today's edition follows several threads at once:" not in text
     assert "Read the source-backed" not in text
@@ -198,33 +224,187 @@ def test_june_5_post_uses_filtered_gaza_topics(tmp_path: Path):
     assert "satellite imagery" not in text
 
 
-def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases():
-    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases(tmp_path: Path):
+    write_current_edition_artifacts(
+        tmp_path,
+        edition_date="2026-06-07",
+        summary="Specific verified Gaza dispatch summary.",
+    )
     text = bluesky_post.build_gaza_bluesky_post_text(
         "2026-06-07",
         "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
-        project_root=root,
+        project_root=tmp_path,
     )
     assert text.startswith("In the June 7 Gaza briefing:")
     assert "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/" in text
-    assert "Israeli strikes killed 10 people in Gaza on Saturday" in text or "Khan Younis strikes" in text
+    assert "Specific verified Gaza dispatch summary." in text or "Gaza" in text
     assert "satellite imagery" not in text
     assert "1967" not in text
 
 
-def test_june_13_post_uses_public_summary_and_public_url():
-    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+def test_june_13_post_uses_public_summary_and_public_url(tmp_path: Path):
     public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-13/"
+    edition_date = "2026-06-13"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Israeli attack kills one person in central Gaza's Bureij camp",
+                    "summary": "Israeli attack kills one person in central Gaza's Bureij camp.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 1, "publisher_count": 1, "publishers": ["Reuters"], "social_summary": "Israeli attack kills one person in central Gaza's Bureij camp."}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 13, 2026</p></body></html>", encoding="utf-8")
     text = bluesky_post.build_gaza_bluesky_post_text(
-        "2026-06-13",
+        edition_date,
         public_url,
-        project_root=root,
+        project_root=tmp_path,
     )
     assert text.startswith("In the June 13 Gaza briefing:")
     assert public_url in text
     assert "Israeli attack kills one person in central Gaza's Bureij camp" in text
     assert bluesky_post.BLUESKY_GAZA_POST_FALLBACK not in text
     assert "The latest Gaza briefing is live." not in text
+
+
+def test_gaza_post_text_omits_source_count_metadata_and_cleans_punctuation(tmp_path: Path):
+    edition_date = "2026-06-22"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Gaza's footballers train on broken pitches with no shoes?.",
+                    "summary": "Why has FIFA's rebuilding plan gone nowhere?.",
+                    "included_in_public_summary": True,
+                },
+                {
+                    "title": "Why has FIFA's rebuilding plan gone nowhere?.",
+                    "summary": "Gaza's footballers train on broken pitches with no shoes!.",
+                    "included_in_public_summary": True,
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 5, "publisher_count": 2}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 22, 2026</p></body></html>", encoding="utf-8")
+
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        edition_date,
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-06-22/",
+        project_root=tmp_path,
+        include_public_url=False,
+    )
+    assert "limited-source update" not in text
+    assert "saved records across" not in text
+    assert "?." not in text
+    assert "!." not in text
+    assert "Gaza's footballers train on broken pitches with no shoes" in text
+    assert "Why has FIFA's rebuilding plan gone nowhere?" in text
+    assert "Source-backed briefing from The Blue Fern Co." in text
+
+
+def test_gaza_card_description_and_maybe_post_clean_public_punctuation_and_keep_guards(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    edition_date = "2026-06-22"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Gaza's footballers train on broken pitches with no shoes?.",
+                    "summary": "Why has FIFA's rebuilding plan gone nowhere?.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "source_count": 5,
+                "publisher_count": 2,
+                "publishers": ["Al Jazeera", "Reuters"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 22, 2026</p></body></html>", encoding="utf-8")
+    run_manifest = tmp_path / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
+    run_manifest.parent.mkdir(parents=True, exist_ok=True)
+    run_manifest.write_text(
+        json.dumps(
+            {
+                "social_summary": "Why has FIFA's rebuilding plan gone nowhere?.",
+                "warnings": ["This is a limited-source update from 5 saved records across 2 publishers."],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
+    monkeypatch.setattr(bluesky_post, "_upload_card_thumb", lambda *_args, **_kwargs: (None, "not_attempted", False, None, None))
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            _ = (exc_type, exc, tb)
+            return False
+
+        def read(self):
+            return json.dumps({"uri": "at://did:plc:abc123/app.bsky.feed.post/xyz"}).encode("utf-8")
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda req, timeout=20.0: FakeResponse())
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-22/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+        force_post=True,
+    )
+    description = bluesky_post.build_gaza_card_description(edition_date, tmp_path)
+    assert result["status"] == "success"
+    assert result["edition_date_verified"] is True
+    assert result["stale_content_guard_status"] == "passed"
+    assert "limited-source update" not in result["post_text"]
+    assert "saved records across" not in result["post_text"]
+    assert "?." not in result["post_text"]
+    assert "!." not in result["post_text"]
+    assert "limited-source update" not in description
+    assert "?." not in description
+    assert "!." not in description
+    assert "Why has FIFA's rebuilding plan gone nowhere?" in result["post_text"]
+    assert "Why has FIFA's rebuilding plan gone nowhere?" in description
 
 
 def test_build_uses_current_date_artifacts_and_ignores_prior_edition_artifacts(tmp_path: Path):
@@ -273,12 +453,13 @@ def test_build_uses_current_date_artifacts_and_ignores_prior_edition_artifacts(t
     assert "Khan Younis strikes" in text
 
 
-def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch):
+def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
 
+    write_current_edition_artifacts(tmp_path, edition_date="2026-06-07")
     monkeypatch.setattr(
         bluesky_post,
         "build_gaza_bluesky_post_text",
@@ -298,7 +479,7 @@ def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
         run_succeeded=True,
         post_requested=True,
-        project_root=Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co"),
+        project_root=tmp_path,
         force_post=True,
     )
     assert result["status"] == "blocked"

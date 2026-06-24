@@ -44,6 +44,16 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
 - Report clearly whether the task is complete, blocked, or needs follow-up.
 
+## Mandatory Git Preflight
+
+- Before coding, run `git status --short --branch` in the source repo.
+- If a sibling or nested Pages repo exists, inspect its `git status --short --branch` too.
+- Run `scripts/preflight_repo_state.py` before making changes when Git state clarity matters.
+- Treat any source, test, doc, public output, or unknown dirty path as risky until explicitly reviewed.
+- Treat review output, logs, cache, and virtualenv paths as local friction signals, not as proof that the worktree is safe.
+- Do not assume ignored files are harmless if they sit beside tracked source or public output.
+- Report the current dirty-state split between risky files and allowed local/generated files before editing when the task begins with repo hygiene or drift reduction.
+
 ## Dispatch-Specific Rules
 
 ### Gaza

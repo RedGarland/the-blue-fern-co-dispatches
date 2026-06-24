@@ -1,0 +1,53 @@
+[
+  {
+    "url": "https://www.trtworld.com/middle-east/gaza-health-system-strain-officials-warn-of-collapsing-care-18273645",
+    "google_news_url": "https://news.google.com/rss/articles/CBMiT2h0dHBzOi8vd3d3LnRydHdvcmxkLmNvbS9taWRkbGUtZWFzdC9nYXphLWhlYWx0aC1zeXN0ZW0tc3RyYWluLW9mZmljaWFscy13YXJuLW9mLWNvbGxhcHNpbmctY2FyZS0xODI3MzY0NQ?oc=5",
+    "title": "Gaza health system strain, officials warn of collapsing care",
+    "publisher": "TRT World",
+    "published_at": "2026-06-22T07:15:00+00:00",
+    "summary_or_snippet": "Health care access and hospital strain in Gaza.",
+    "discovery_source": "manual_seed_url"
+  },
+  {
+    "url": "https://www.aa.com.tr/en/middle-east/gaza-strike-leaves-casualties-at-residential-building-1f2a3b",
+    "google_news_url": "https://news.google.com/rss/articles/CBMiVmh0dHBzOi8vd3d3LmFhLmNvbS50ci9lbi9taWRkbGUtZWFzdC9nYXphLXN0cmlrZS1sZWF2ZXMtY2FzdWFsdGllcy1hdC1yZXNpZGVudGlhbC1idWlsZGluZy0xZjJhM2I?oc=5",
+    "title": "Gaza strike leaves casualties at residential building",
+    "publisher": "Anadolu",
+    "published_at": "2026-06-22T08:25:00+00:00",
+    "summary_or_snippet": "Casualty report after a strike in Gaza.",
+    "discovery_source": "manual_seed_url"
+  },
+  {
+    "url": "https://www.jpost.com/middle-east/article-842991",
+    "title": "Gaza families seek shelter as displacement grows",
+    "publisher": "Jerusalem Post",
+    "published_at": "2026-06-22T09:00:00+00:00",
+    "summary_or_snippet": "Shelter and displacement pressures continue.",
+    "discovery_source": "manual_seed_url"
+  },
+  {
+    "url": "https://imemc.org/article/gaza-medic-killed-in-strike-near-hospital",
+    "title": "Gaza medic killed in strike near hospital",
+    "publisher": "IMEMC",
+    "published_at": "2026-06-15T06:30:00+00:00",
+    "summary_or_snippet": "Hospital and medic casualty signal from Gaza.",
+    "discovery_source": "manual_seed_url"
+  },
+  {
+    "url": "https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning",
+    "title": "Gaza hospital access warning",
+    "publisher": "WHO",
+    "published_at": "2026-06-22T10:00:00+00:00",
+    "summary_or_snippet": "Official humanitarian source about hospital access in Gaza.",
+    "discovery_source": "manual_seed_url"
+  },
+  {
+    "url": "https://localnews.example.com/republish/gaza-hospital-access-warning",
+    "title": "Gaza hospital access warning",
+    "publisher": "Local News Syndication",
+    "published_at": "2026-06-22T10:00:00+00:00",
+    "summary_or_snippet": "Republished copy of an official Gaza hospital access warning.",
+    "discovery_source": "manual_seed_url",
+    "source_registry_status": "new_provider_candidate"
+  }
+]

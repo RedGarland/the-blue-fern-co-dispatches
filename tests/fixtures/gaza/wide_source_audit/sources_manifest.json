@@ -1,0 +1,21 @@
+[
+  {
+    "source_record_id": "gaza-2026-06-22-who-0001",
+    "title": "Gaza hospital access warning",
+    "url": "https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning",
+    "canonical_url": "https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning",
+    "normalized_url": "https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning",
+    "publisher": "WHO",
+    "published_at": "2026-06-22T10:00:00+00:00",
+    "retrieved_at": "2026-06-22T10:10:00+00:00",
+    "summary_or_snippet": "Official humanitarian source about hospital access in Gaza.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "health",
+    "reliability_tier": "official-humanitarian-source",
+    "dedupe_key": "who|gaza hospital access warning",
+    "title_fingerprint": "gaza hospital access warning",
+    "publisher_title_fingerprint": "who|gaza hospital access warning",
+    "duplicate_cluster": "https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning"
+  }
+]

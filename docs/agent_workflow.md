@@ -86,6 +86,8 @@ Recommended roles:
 - Dry-run success is not permission to publish.
 - Pages repo sync requires explicit instruction and publish-scope validation.
 - AI tools must report what they changed, what they checked, and what they intentionally did not touch.
+- When a task reveals a durable workflow rule or architecture principle, update the relevant project docs in the same PR instead of leaving the rule implicit in code or chat.
+- Discovery work should be documented as wide intake first, strict vetting second, with aggregators treated as discovery surfaces rather than evidence sources.
 
 ## Intended Development Process
 

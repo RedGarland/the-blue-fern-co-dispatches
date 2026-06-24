@@ -71,6 +71,22 @@ Required fields:
 - `category_hint`
 - `reliability_tier`
 
+## Source Discovery Policy
+
+Source intake must start wide and filter down. The diagnostic ladder is:
+
+1. intake
+2. canonicalization
+3. dedupe
+4. classification
+5. scoring
+6. rendering
+7. publishing
+
+Aggregators such as Google News are discovery surfaces, not final evidence sources. When a canonical publisher URL is available, that publisher URL is the evidence URL of record. Missing relevant sources are intake failures and must be logged with explicit miss or skip reasons.
+
+This wide-discovery, strict-vetting pattern should be reusable across Gaza, Food Line, and Care Line. If a task reveals a durable workflow rule or architecture principle, update the relevant project docs in the same PR.
+
 ### Publishing a historical Gaza edition
 
 1. Create:

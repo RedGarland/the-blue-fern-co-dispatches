@@ -3,6 +3,10 @@
 These are the current non-negotiable operating rules for this project.
 
 - No fact without a traceable source.
+- Source intake starts wide and filters down. Aggregators such as Google News are discovery surfaces only, and the canonical publisher URL is the evidence URL when available.
+- Missing relevant sources are intake failures and must be logged with explicit skip or miss reasons.
+- The diagnostic ladder is intake, canonicalization, dedupe, classification, scoring, rendering, publishing.
+- This wide-discovery, strict-vetting pattern must remain reusable across Gaza, Food Line, and Care Line.
 - Gaza is daily, public, and free.
 - Cascadia is weekly.
 - Cascadia edition date is the Sunday `coverage_end`.

@@ -12,6 +12,7 @@ from typing import Any
 from urllib import error, request
 from bluefern_dispatches.generator import BASE_URL
 from bluefern_dispatches.gaza_audio import select_gaza_audio_stories
+from bluefern_dispatches.gaza_public_quality import sanitize_gaza_public_text
 from bluefern_dispatches.public_prose import sanitize_public_prose
 
 BLUESKY_API_BASE = "https://bsky.social/xrpc"
@@ -537,15 +538,11 @@ def build_gaza_bluesky_post_text(
             fallback = f"{fallback}\n{str(public_url).strip()}"
         return fallback[:BLUESKY_MAX_POST_LENGTH]
     date_text = _format_post_date(clean_date)
-    source_count = int(context.get("source_count") or 0)
-    publisher_count = int(context.get("publisher_count") or 0)
-    summary_line = ""
-    if source_count and publisher_count:
-        summary_line = f"This is a limited-source update from {source_count} saved records across {publisher_count} publishers."
     url_suffix = f"\n\nPublic edition: {public_url}" if include_public_url and str(public_url or "").strip() else ""
 
     def _with_suffix(body: str) -> str:
         body = WHITESPACE_RE.sub(" ", body.replace("\n\n", "<<<BLANK>>>")).replace("<<<BLANK>>>", "\n\n").strip()
+        body, _ = sanitize_gaza_public_text(body)
         if url_suffix and len(f"{body}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return f"{body}{url_suffix}"
         return body
@@ -557,7 +554,7 @@ def build_gaza_bluesky_post_text(
             intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
         else:
             intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
-        candidate = _with_suffix(intro if not summary_line else f"{intro}\n\n{summary_line}")
+        candidate = _with_suffix(intro)
         if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != intro:
             return candidate
         if len(f"{intro}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
@@ -604,6 +601,7 @@ def _clean_description_text(value: str, max_length: int) -> str:
                 text = text[:idx].rstrip(" ,;:-")
                 break
     text = sanitize_public_prose(text)
+    text, _ = sanitize_gaza_public_text(text)
     if not text:
         return ""
     if len(text) <= max_length:

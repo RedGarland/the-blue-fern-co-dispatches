@@ -7,6 +7,7 @@ import pytest
 
 from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
+from bluefern_dispatches.gaza_public_quality import sanitize_gaza_public_text
 from scripts.run_gaza_dispatch import build_source_diversity_report, curate_stories, normalize_sources, render_gaza_edition, run_gaza_dispatch
 
 
@@ -43,6 +44,120 @@ def write_manual_sources(work: Path, edition_date: str, records: list[dict] | No
 
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def test_gaza_public_text_sanitizer_removes_newsletter_debris_and_repairs_punctuation():
+    cleaned, stripped = sanitize_gaza_public_text(
+        "UN findings remain in focus?. Plus, Mamdani-backed candidates sweep NYC Democratic primaries. Good morning. Sign up for the newsletter."
+    )
+    assert cleaned == "UN findings remain in focus?"
+    assert stripped
+    assert "Mamdani" not in cleaned
+    assert "Good morning" not in cleaned
+    assert "sign up" not in cleaned.lower()
+    assert "newsletter" not in cleaned.lower()
+    assert "?." not in cleaned
+
+
+def test_june_24_public_quality_contract_groups_un_inquiry_and_preserves_sources(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    edition_date = "2026-06-24"
+
+    def record(source_id: str, title: str, url: str, publisher: str, summary: str) -> dict:
+        return {
+            "source_record_id": source_id,
+            "title": title,
+            "url": url,
+            "publisher": publisher,
+            "published_at": f"{edition_date}T12:00:00Z",
+            "retrieved_at": f"{edition_date}T12:05:00Z",
+            "summary_or_snippet": summary,
+            "source_type": "news",
+            "region_scope": "Gaza",
+            "category_hint": "conflict",
+            "reliability_tier": "reported-public-source",
+        }
+
+    records = [
+        record(
+            "gaza-2026-06-24-un-a",
+            "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds | First Thing",
+            "https://example.com/un-inquiry-a",
+            "Publisher A",
+            "The UN inquiry reported deliberate attacks targeting children in Gaza. Plus, Mamdani-backed candidates sweep NYC Democratic primaries Good morning.",
+        ),
+        record(
+            "gaza-2026-06-24-un-b",
+            "UN commission of inquiry says Israel committing genocide in Gaza by deliberately targeting children",
+            "https://example.org/un-inquiry-b",
+            "Publisher B",
+            "The commission reported attacks on children in Gaza as part of its genocide finding.",
+        ),
+        record(
+            "gaza-2026-06-24-medical",
+            "Diabetes patients in Gaza face worsening medical shortages",
+            "https://example.net/gaza-diabetes",
+            "Publisher C",
+            "People with diabetes in Gaza face shortages of insulin and other medical supplies!.",
+        ),
+        record(
+            "gaza-2026-06-24-flotilla",
+            "Activists from Gaza-bound aid flotilla released after detention",
+            "https://example.edu/gaza-flotilla",
+            "Publisher D",
+            "Activists from a Gaza-bound aid flotilla were released after detention and returned home.",
+        ),
+    ]
+    write_manual_sources(work, edition_date, records)
+
+    result = run_gaza_dispatch(
+        work,
+        edition_date,
+        from_manual_sources=True,
+        dry_run=False,
+        render=False,
+        all_steps=True,
+        allow_thin_edition=True,
+    )
+
+    assert result["ok"] is True
+    assert result["public_content_quality_ok"] is True
+    assert result["public_story_count_before_dedupe"] == 4
+    assert result["public_story_count_after_dedupe"] == 3
+    html_text = read(work / "output" / "site" / "gaza" / "editions" / edition_date / "index.html")
+    glance = html_text.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
+    assert glance.count("<li>") == 3
+    assert html_text.count("<article><h3>") == 3
+    assert html_text.count("UN inquiry says Israel is committing genocide in Gaza by targeting children") == 2
+    assert 'href="https://example.com/un-inquiry-a"' in html_text
+    assert 'href="https://example.org/un-inquiry-b"' in html_text
+    for forbidden in ("Good morning", "Mamdani", "NYC Democratic primaries", "sign up", "newsletter", "First Thing", "?.", "!."):
+        assert forbidden not in html_text
+
+    report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / edition_date / "public_content_quality_report.json"))
+    manifest = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json"))
+    assert report["public_content_quality_ok"] is True
+    assert report["public_story_count_before_dedupe"] == 4
+    assert report["public_story_count_after_dedupe"] == 3
+    assert len(report["duplicate_story_groups"]) == 1
+    assert report["duplicate_story_groups"][0]["normalized_event_key"] == "gaza_un_inquiry_genocide_targeting_children"
+    assert report["forbidden_public_fragments_found"] == []
+    assert report["public_prose_punctuation_errors"] == []
+    assert report["stripped_newsletter_fragments"]
+    for key in (
+        "public_content_quality_ok",
+        "public_content_quality_errors",
+        "public_content_quality_warnings",
+        "duplicate_story_groups",
+        "stripped_newsletter_fragments",
+        "public_story_count_before_dedupe",
+        "public_story_count_after_dedupe",
+        "forbidden_public_fragments_found",
+        "public_prose_punctuation_errors",
+    ):
+        assert manifest[key] == report[key]
 
 
 def test_manual_source_generation_writes_public_edition_and_manifests(monkeypatch):
@@ -1979,7 +2094,7 @@ def test_manual_equatorial_guinea_asylum_story_rejected_as_no_palestinian_anchor
     assert "Equatorial Guinea" not in html
 
 
-def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_without_override(monkeypatch):
+def test_2026_05_25_off_topic_liveblog_is_excluded_but_flotilla_detention_remains_public(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
@@ -2016,23 +2131,11 @@ def test_2026_05_25_off_topic_liveblog_cannot_be_gaza_top_story_and_thin_blocks_
         ],
     )
 
-    blocked = run_gaza_dispatch(work, "2026-05-25", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
-    assert blocked["ok"] is False
-    assert any("No substantive Gaza/Palestinian ground-development story cleared threshold" in err for err in blocked["errors"])
-    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html").exists()
-
-    allowed = run_gaza_dispatch(
-        work,
-        "2026-05-25",
-        from_manual_sources=True,
-        dry_run=False,
-        render=False,
-        all_steps=True,
-        allow_thin_edition=True,
-    )
-    assert allowed["ok"] is False
-    assert any("No substantive Gaza/Palestinian ground-development story cleared threshold" in err for err in allowed["errors"])
-    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html").exists()
+    result = run_gaza_dispatch(work, "2026-05-25", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is True
+    html_text = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-25" / "index.html")
+    assert "Court extends detention of Gaza flotilla activists" in html_text
+    assert "Liberal MP is first to be suspended" not in html_text
 
 
 def test_day_with_only_context_only_records_still_blocks_publication(monkeypatch):

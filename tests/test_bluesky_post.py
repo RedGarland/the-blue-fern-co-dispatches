@@ -123,6 +123,24 @@ def test_focus_derivation_sanitizes_internal_or_incomplete_public_prose(tmp_path
     assert "would allow." not in text.lower()
 
 
+def test_gaza_post_strips_newsletter_debris_operational_counts_and_bad_punctuation(tmp_path: Path):
+    write_current_edition_artifacts(
+        tmp_path,
+        edition_date="2026-06-24",
+        story_summary=(
+            "UN inquiry findings remain in focus?. Plus, Mamdani-backed candidates sweep NYC Democratic primaries. "
+            "Good morning. Sign up for the newsletter."
+        ),
+    )
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-24/"
+    text = bluesky_post.build_gaza_bluesky_post_text("2026-06-24", public_url, project_root=tmp_path)
+
+    assert public_url in text
+    assert "UN inquiry findings remain in focus?" in text
+    for forbidden in ("limited-source", "saved records across", "Good morning", "Mamdani", "NYC Democratic primaries", "sign up", "newsletter", "?.", "!."):
+        assert forbidden.lower() not in text.lower()
+
+
 def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: Path):
     curated = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-05-31" / "curation_manifest.json"
     curated.parent.mkdir(parents=True, exist_ok=True)

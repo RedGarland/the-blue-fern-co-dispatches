@@ -153,12 +153,53 @@ def test_gaza_flotilla_same_event_titles_merge_into_one_group():
     assert len(result.stories) == 1
     merged_story = result.stories[0]
     assert len(merged_story["source_urls"]) == 3
-    assert len(result.report["duplicate_groups"]) == 2
+    assert len(result.report["duplicate_groups"]) == 1
     assert all(group["duplicate_reason"] == "same_event_flotilla_interception" for group in result.report["duplicate_groups"])
     assert all(group["normalized_event_key"] == "gaza_flotilla_interception_israeli_forces_cyprus" for group in result.report["duplicate_groups"])
     merged_decisions = [item for item in result.decisions if item.get("include_decision") == "merge_into_existing"]
     assert len(merged_decisions) == 2
     assert all(item.get("public_rendered") is False for item in merged_decisions)
+
+
+def test_gaza_un_inquiry_title_variants_merge_and_keep_distinct_developments():
+    root = make_root()
+    inquiry_a = story(
+        "inquiry-a",
+        "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds | First Thing",
+        "https://example.com/inquiry-a",
+        summary="A UN inquiry found that attacks targeting children form part of genocide in Gaza.",
+        category="conflict",
+        publisher="Publisher A",
+    )
+    inquiry_b = story(
+        "inquiry-b",
+        "UN commission of inquiry says Israel committing genocide in Gaza by deliberately targeting children",
+        "https://example.org/inquiry-b",
+        summary="The commission of inquiry reported deliberate attacks on children in Gaza.",
+        category="conflict",
+        publisher="Publisher B",
+    )
+    flotilla = story(
+        "flotilla",
+        "Gaza aid flotilla activists released after detention",
+        "https://example.net/flotilla",
+        category="conflict",
+    )
+    medical = story(
+        "medical",
+        "Gaza diabetes patients face severe medical shortages",
+        "https://example.net/medical",
+        category="conflict",
+    )
+
+    result = dedupe_public_stories(root, "gaza", "2026-06-24", [inquiry_a, inquiry_b, flotilla, medical])
+
+    assert len(result.stories) == 3
+    grouped = next(row for row in result.stories if "UN inquiry" in row["title"])
+    assert grouped["title"] == "UN inquiry says Israel is committing genocide in Gaza by targeting children"
+    assert set(grouped["source_urls"]) == {"https://example.com/inquiry-a", "https://example.org/inquiry-b"}
+    assert {row["story_id"] for row in result.stories if row is not grouped} == {"flotilla", "medical"}
+    assert result.report["duplicate_groups"][0]["normalized_event_key"] == "gaza_un_inquiry_genocide_targeting_children"
 
 
 def test_gaza_ceasefire_casualty_repeated_reports_merge_into_one_group():

@@ -103,6 +103,18 @@ def isolated(monkeypatch):
     monkeypatch.setattr(daily, "ROOT", root)
     monkeypatch.setattr(daily, "DEFAULT_PAGES_REPO", root / "bluefern-dispatches-pages")
     monkeypatch.setattr(historical, "ROOT", root)
+    quality_path = root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "public_content_quality_report.json"
+    quality_path.parent.mkdir(parents=True, exist_ok=True)
+    quality_path.write_text(
+        json.dumps(
+            {
+                "public_content_quality_ok": True,
+                "public_content_quality_errors": [],
+                "public_content_quality_warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
     try:
         yield root
     finally:
@@ -933,8 +945,8 @@ def test_post_bluesky_only_skips_pages_publish_and_posts_without_mutation(isolat
     def fake_verify_live_public_urls(edition_date, public_urls):
         _ = (edition_date, public_urls)
         return {
-            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
-            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=gaza-2026-05-07-testcommit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=gaza-2026-05-07-testcommit",
             "edition": {"ok": True, "status": 200, "marker_found": True, "error": None},
             "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
             "live_http_ok": True,
@@ -983,6 +995,100 @@ def test_post_bluesky_only_skips_pages_publish_and_posts_without_mutation(isolat
     assert summary["bluesky_stale_content_guard_status"] == "passed"
 
 
+def test_post_bluesky_only_blocks_before_live_check_when_public_quality_failed(isolated, monkeypatch, capsys):
+    root = isolated
+    quality_path = root / "data" / "dispatches" / "gaza" / "editions" / "2026-05-07" / "public_content_quality_report.json"
+    quality_path.write_text(
+        json.dumps(
+            {
+                "public_content_quality_ok": False,
+                "public_content_quality_errors": ["forbidden public fragment remains: newsletter"],
+                "public_content_quality_warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        daily,
+        "verify_live_public_urls",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("live verification must not run")),
+    )
+    monkeypatch.setattr(
+        daily,
+        "maybe_post_gaza_dispatch_to_bluesky",
+        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("Bluesky must not run")),
+    )
+
+    code = daily.main(["--date", "2026-05-07", "--post-bluesky-only", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+
+    assert code == 1
+    assert summary["publish_blocked"] is True
+    assert summary["publish_blocked_reason"] == "public-content-quality-failed"
+    assert summary["bluesky_reason"] == "public-content-quality-failed"
+
+
+def test_daily_run_blocks_pages_publish_when_generation_reports_failed_public_quality(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    calls: list[list[str]] = []
+
+    def fake_run(args, cwd=daily.ROOT):
+        _ = cwd
+        calls.append(args)
+        if "run_gaza_dispatch.py" in " ".join(args):
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "public_content_quality_ok": False,
+                    "public_content_quality_errors": ["forbidden public fragment remains: newsletter"],
+                    "public_content_quality_warnings": [],
+                },
+            )
+        raise AssertionError(f"no command after failed public quality is allowed: {args}")
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+    monkeypatch.setattr(
+        daily,
+        "maybe_post_gaza_dispatch_to_bluesky",
+        lambda **_kwargs: (_ for _ in ()).throw(AssertionError("Bluesky must not run")),
+    )
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--post-bluesky", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+    summary = json.loads(capsys.readouterr().out)
+
+    assert code == 1
+    assert len(calls) == 1
+    assert summary["publish_blocked"] is True
+    assert summary["publish_blocked_reason"] == "public-content-quality-failed"
+    assert summary["public_content_quality_ok"] is False
+
+
+def test_live_verification_cache_key_is_gaza_date_commit_specific(isolated, monkeypatch):
+    seen: list[str] = []
+    monkeypatch.setattr(
+        daily.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, "abc123def456\n", ""),
+    )
+
+    def fake_urlopen(request, timeout=30, context=None):
+        _ = (timeout, context)
+        seen.append(request.full_url)
+        if "/gaza/editions/" in request.full_url:
+            return live_response("Dispatches From Gaza Today's Read Source Mix")
+        return live_response("2026-05-07")
+
+    monkeypatch.setattr(daily.urllib.request, "urlopen", fake_urlopen)
+    result = daily.verify_live_public_urls("2026-05-07", daily.public_urls_for("2026-05-07"))
+
+    assert result["ok"] is True
+    assert result["cache_key"] == "gaza-2026-05-07-abc123def456"
+    assert all("v=gaza-2026-05-07-abc123def456" in url for url in seen)
+    assert all("careline-claim-audit" not in url for url in seen)
+
+
 def test_post_bluesky_only_skips_duplicate_receipt_without_force(isolated, monkeypatch, capsys):
     root = isolated
     calls = []
@@ -991,8 +1097,8 @@ def test_post_bluesky_only_skips_duplicate_receipt_without_force(isolated, monke
     def fake_verify_live_public_urls(edition_date, public_urls):
         _ = (edition_date, public_urls)
         return {
-            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
-            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=gaza-2026-05-07-testcommit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=gaza-2026-05-07-testcommit",
             "edition": {"ok": True, "status": 200, "marker_found": True, "error": None},
             "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
             "live_http_ok": True,
@@ -1046,8 +1152,8 @@ def test_post_bluesky_only_blocks_when_live_edition_missing(isolated, monkeypatc
     def fake_verify_live_public_urls(edition_date, public_urls):
         _ = (edition_date, public_urls)
         return {
-            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=careline-claim-audit",
-            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=careline-claim-audit",
+            "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/?v=gaza-2026-05-07-testcommit",
+            "archive_url": "https://dispatches.thebluefernco.com/gaza/archive.html?v=gaza-2026-05-07-testcommit",
             "edition": {"ok": False, "status": 404, "marker_found": False, "error": "not found"},
             "archive": {"ok": True, "status": 200, "marker_found": True, "error": None},
             "live_http_ok": False,

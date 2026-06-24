@@ -110,6 +110,9 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "bluesky_edition_date_verified",
     "bluesky_stale_content_guard_status",
     "bluesky_thumb_status",
+    "public_content_quality_ok",
+    "public_content_quality_errors",
+    "public_content_quality_warnings",
     "audio_expected",
     "audio_present",
     "audio_status",
@@ -474,8 +477,22 @@ def verify_remote_pages_tree(pages_repo: Path, pages_branch: str, edition_date: 
 
 
 def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> dict[str, Any]:
-    edition_url = f"{public_urls.get('edition')}?v=careline-claim-audit"
-    archive_url = f"{public_urls.get('archive')}?v=careline-claim-audit"
+    commit = "unknown"
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short=12", "HEAD"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            commit = result.stdout.strip()
+    except OSError:
+        pass
+    cache_key = f"gaza-{edition_date}-{commit}"
+    edition_url = f"{public_urls.get('edition')}?v={cache_key}"
+    archive_url = f"{public_urls.get('archive')}?v={cache_key}"
     edition_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
     archive_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
 
@@ -520,7 +537,30 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> d
         "live_http_ok": edition_result["ok"],
         "live_archive_ok": archive_result["ok"],
         "ok": bool(edition_result["ok"] and archive_result["ok"]),
+        "cache_key": cache_key,
     }
+
+
+def load_public_content_quality(edition_date: str) -> dict[str, Any]:
+    candidates = (
+        ROOT / "data" / "dispatches" / "gaza" / "editions" / edition_date / "public_content_quality_report.json",
+        ROOT / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json",
+        ROOT / "output" / "site" / "gaza" / "editions" / edition_date / "edition_manifest.json",
+    )
+    for path in candidates:
+        try:
+            payload = read_json(path)
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(payload, dict) and "public_content_quality_ok" in payload:
+            return payload
+    return {}
+
+
+def apply_public_content_quality(summary: dict[str, Any], payload: dict[str, Any]) -> None:
+    summary["public_content_quality_ok"] = payload.get("public_content_quality_ok")
+    summary["public_content_quality_errors"] = list(payload.get("public_content_quality_errors") or [])
+    summary["public_content_quality_warnings"] = list(payload.get("public_content_quality_warnings") or [])
 
 
 def open_local_edition(path: Path) -> None:
@@ -625,6 +665,9 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "bluesky_edition_date_verified": False,
         "bluesky_stale_content_guard_status": "not_evaluated",
         "bluesky_thumb_status": "not_attempted",
+        "public_content_quality_ok": None,
+        "public_content_quality_errors": [],
+        "public_content_quality_warnings": [],
         "scheduled_run_local_time": None,
         "actual_run_local_time": None,
         "source_window_start_utc": None,
@@ -897,6 +940,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.post_bluesky_only:
         summary["planned_actions"] = ["bluesky post-only"]
+        public_quality = load_public_content_quality(args.date)
+        apply_public_content_quality(summary, public_quality)
+        if public_quality.get("public_content_quality_ok") is not True:
+            summary["errors"].extend(summary["public_content_quality_errors"] or ["public content quality report is missing or not approved"])
+            summary["publish_blocked"] = True
+            summary["publish_blocked_reason"] = "public-content-quality-failed"
+            summary["bluesky_reason"] = "public-content-quality-failed"
+            return finish(1)
         live_verify = verify_live_public_urls(args.date, summary.get("public_urls") or {})
         summary["live_http_ok"] = bool(live_verify.get("live_http_ok"))
         summary["live_archive_ok"] = bool(live_verify.get("live_archive_ok"))
@@ -1005,6 +1056,10 @@ def main(argv: list[str] | None = None) -> int:
         generation_payload = {}
     if generation.returncode != 0:
         if generation_payload:
+            apply_public_content_quality(summary, generation_payload)
+            if summary["public_content_quality_ok"] is False:
+                summary["publish_blocked"] = True
+                summary["publish_blocked_reason"] = "public-content-quality-failed"
             summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status", summary.get("source_adequacy_status"))
             summary["publisher_count"] = int(generation_payload.get("publisher_count") or summary.get("publisher_count") or 0)
             summary["publishers"] = list(generation_payload.get("publishers") or summary.get("publishers") or [])
@@ -1031,6 +1086,12 @@ def main(argv: list[str] | None = None) -> int:
             summary["warnings"].append(text)
     summary["generated"] = True
     summary["generation_ok"] = True
+    apply_public_content_quality(summary, generation_payload)
+    if summary["public_content_quality_ok"] is False:
+        summary["errors"].extend(summary["public_content_quality_errors"] or ["public content quality validation failed"])
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "public-content-quality-failed"
+        return finish(1)
     summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status")
     summary["publisher_count"] = int(generation_payload.get("publisher_count") or 0)
     summary["publishers"] = list(generation_payload.get("publishers") or [])

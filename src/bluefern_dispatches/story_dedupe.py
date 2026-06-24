@@ -515,6 +515,11 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
         )
     )
     tokens = _gaza_event_tokens(story)
+    un_inquiry = bool(re.search(r"\b(un|united nations|commission of inquiry|inquiry)\b", text))
+    genocide_finding = "genocide" in text and bool(re.search(r"\b(find|finding|finds|found|commit|committing|continues)\b", text))
+    targeting_children = bool(re.search(r"\b(target|targeting|attack|attacks)\b", text)) and bool(re.search(r"\b(child|children)\b", text))
+    if un_inquiry and genocide_finding and targeting_children:
+        return "gaza_un_inquiry_genocide_targeting_children"
     actor = bool(re.search(r"\b(israeli forces?|israel|commandos?)\b", text))
     action = bool(re.search(r"\b(board|boarding|intercept|intercepting|storm|seize|seizing)\b", text))
     obj = bool(re.search(r"\b(gaza bound aid flotilla|gaza bound flotilla|global sumud flotilla|aid flotilla|flotilla|vessels?|boats?)\b", text))
@@ -536,6 +541,8 @@ def _same_event_cluster_key(story: dict[str, Any]) -> str:
 
 
 def _same_event_duplicate_reason(event_key: str) -> str:
+    if event_key == "gaza_un_inquiry_genocide_targeting_children":
+        return "same_event_un_inquiry_genocide_targeting_children"
     if event_key == "gaza_flotilla_interception_israeli_forces_cyprus":
         return "same_event_flotilla_interception"
     if event_key.startswith("gaza_named_casualty_"):
@@ -777,6 +784,9 @@ def collapse_within_edition(stories: list[dict[str, Any]], dispatch_slug: str) -
         preferred = story if _is_preferred_story(story, target) else target
         secondary = target if preferred is story else story
         merged_story = merge_story(preferred, secondary)
+        merged_event_key = _same_event_cluster_key(preferred) or _same_event_cluster_key(secondary)
+        if merged_event_key == "gaza_un_inquiry_genocide_targeting_children":
+            merged_story["title"] = "UN inquiry says Israel is committing genocide in Gaza by targeting children"
         included[match_index] = merged_story
         skipped.append(
             {
@@ -795,7 +805,25 @@ def collapse_within_edition(stories: list[dict[str, Any]], dispatch_slug: str) -
             "normalized_event_key": _same_event_cluster_key(preferred) or _same_event_cluster_key(secondary) or "",
             "reasons": match_reasons,
         }
-        groups.append(group)
+        existing_group = next(
+            (
+                item
+                for item in groups
+                if item.get("kept_story_id") == group["kept_story_id"]
+                and item.get("normalized_event_key") == group["normalized_event_key"]
+            ),
+            None,
+        )
+        if existing_group:
+            existing_group["merged_story_ids"] = unique_strings(
+                list(existing_group.get("merged_story_ids") or []) + group["merged_story_ids"]
+            )
+            existing_group["merged_source_ids"] = unique_strings(
+                list(existing_group.get("merged_source_ids") or []) + group["merged_source_ids"]
+            )
+            existing_group["reasons"] = unique_strings(list(existing_group.get("reasons") or []) + group["reasons"])
+        else:
+            groups.append(group)
     return included, skipped, groups
 
 

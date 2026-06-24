@@ -42,6 +42,11 @@ from bluefern_dispatches.gaza_sources import clean_feed_text
 from bluefern_dispatches.gaza_sources import gaza_relevance_decision
 from bluefern_dispatches.gaza_sources import is_palestinian_development_text
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
+from bluefern_dispatches.gaza_public_quality import (
+    build_gaza_public_quality_report,
+    public_quality_manifest_fields,
+    sanitize_gaza_public_records,
+)
 from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.story_dedupe import dedupe_public_stories
 from scripts.audit_gaza_source_coverage import write_audit_report as write_gaza_source_coverage_audit
@@ -209,6 +214,21 @@ CORE_GROUND_FIELD_TERMS = (
     "gaza strip",
 )
 FLOTILLA_TERMS = ("flotilla", "activist return", "activists return", "aid boat", "aid ship")
+FLOTILLA_PUBLIC_DEVELOPMENT_TERMS = (
+    "board",
+    "boarding",
+    "intercept",
+    "intercepting",
+    "storm",
+    "seize",
+    "seizing",
+    "detained",
+    "detention",
+    "released",
+    "release",
+    "returned",
+    "return home",
+)
 INCIDENTAL_OFF_TOPIC_TERMS = ("live blog", "as it happened", "australia", "liberal mp", "budget reply", "electoral reform", "coal")
 HUMANITARIAN_INSTITUTIONAL_HINTS = ("unrwa", "ocha", "un ", "united nations", "who", "wfp", "unicef", "icrc", "msf", "relief", "humanitarian")
 WIRE_INTERNATIONAL_HINTS = ("reuters", "ap", "associated press", "afp", "bbc", "al jazeera", "guardian", "nyt", "washington post", "anadolu", "aa.com.tr")
@@ -377,6 +397,8 @@ def _is_context_only_source(source: dict[str, Any]) -> bool:
             str(source.get("category_hint") or ""),
         ]
     ).lower()
+    if any(term in text for term in FLOTILLA_TERMS) and any(term in text for term in FLOTILLA_PUBLIC_DEVELOPMENT_TERMS):
+        return False
     return "gaza-bound" in text or "outside gaza" in text or "libya" in text
 
 
@@ -384,6 +406,8 @@ def _core_ground_text_match(text: str) -> bool:
     if "gaza" not in text and not any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
         return False
     flotilla_only = any(term in text for term in FLOTILLA_TERMS)
+    if flotilla_only and any(term in text for term in FLOTILLA_PUBLIC_DEVELOPMENT_TERMS):
+        return True
     if flotilla_only and not any(term in text for term in ("airstrike", "strike", "injured", "killed", "hospital", "displaced", "displacement", "aid access")):
         return False
     if any(term in text for term in GROUND_DEVELOPMENT_TERMS):
@@ -418,6 +442,8 @@ def _gaza_ground_classification(source: dict[str, Any]) -> tuple[str, str]:
         return "rejected_no_gaza_ground_signal", "no_gaza_anchor"
     if str(source.get("post_edition_date_source") or "").lower() == "true":
         return "stale", "retrieved_after_edition_date"
+    if any(term in text for term in FLOTILLA_TERMS) and any(term in text for term in FLOTILLA_PUBLIC_DEVELOPMENT_TERMS):
+        return "core_ground_development", "gaza_flotilla_public_development"
     if any(term in text for term in CORE_GROUND_LEGAL_CONTEXT_TERMS) and not any(term in text for term in CORE_GROUND_SIGNAL_TERMS):
         return "rejected_no_gaza_ground_signal", "inquiry_or_legal_context_without_current_ground_conditions"
     if any(term in text for term in CORE_GROUND_FIELD_TERMS) and any(
@@ -465,6 +491,8 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
         return False
     if str(source.get("post_edition_date_source") or "").lower() == "true":
         return False
+    if any(term in text for term in FLOTILLA_TERMS) and any(term in text for term in FLOTILLA_PUBLIC_DEVELOPMENT_TERMS):
+        return True
     if any(term in text for term in CORE_GROUND_LEGAL_CONTEXT_TERMS) and not any(term in text for term in CORE_GROUND_SIGNAL_TERMS):
         return False
     return _core_ground_text_match(text)
@@ -851,7 +879,10 @@ def _apply_written_public_story_filter(stories: list[dict[str, Any]]) -> tuple[l
             and reason_text == "not clearly Gaza-focused or Palestinian-context audio material"
             and WRITTEN_PALESTINIAN_CONTEXT_RE.search(text) is not None
         )
-        if eligible or written_context_ok:
+        flotilla_public_development = any(term in text.lower() for term in FLOTILLA_TERMS) and any(
+            term in text.lower() for term in FLOTILLA_PUBLIC_DEVELOPMENT_TERMS
+        )
+        if eligible or written_context_ok or flotilla_public_development:
             kept.append(story)
             continue
         excluded.append(
@@ -1934,6 +1965,7 @@ def build_manifests(
     warnings: list[str],
     errors: list[str],
     adequacy: dict[str, Any],
+    public_quality_report: dict[str, Any],
     allow_post_edition_date_sources: bool = False,
     post_edition_date_source_count: int = 0,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
@@ -1963,6 +1995,7 @@ def build_manifests(
         "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
         "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
         "post_edition_date_source_count": int(post_edition_date_source_count),
+        **public_quality_manifest_fields(public_quality_report),
         "source_manifest_path": str(site_dir / "sources_manifest.json"),
         "curation_manifest_path": str(site_dir / "curation_manifest.json"),
         "free_public_artifacts": [
@@ -1993,6 +2026,7 @@ def build_manifests(
         "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
         "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
         "post_edition_date_source_count": int(post_edition_date_source_count),
+        **public_quality_manifest_fields(public_quality_report),
         "old_project_dependency": False,
         "warnings": warnings,
         "errors": errors,
@@ -2314,6 +2348,7 @@ def run_gaza_dispatch(
     }
     collection_report.update(timing_metadata)
     curated_stories, relevance_decisions, top_story_candidates = curate_stories(normalized, edition_date, generated_at)
+    curated_stories, normalized, stripped_newsletter_fragments = sanitize_gaza_public_records(curated_stories, normalized)
     original_story_rows = [dict(story) for story in curated_stories]
     public_candidate_stories = [story for story in curated_stories if bool(story.get("core_ground_development"))]
     public_stories, written_public_exclusions = _apply_written_public_story_filter(public_candidate_stories)
@@ -2328,6 +2363,7 @@ def run_gaza_dispatch(
             }
         )
     stories = public_stories
+    stories_before_dedupe = [dict(story) for story in stories]
     adequacy = compute_gaza_source_adequacy(normalized, stories)
     collection_report["source_adequacy"] = adequacy
     if adequacy.get("warnings"):
@@ -2383,6 +2419,21 @@ def run_gaza_dispatch(
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json", collection_report, dry_run, wrote)
     dedupe_result = dedupe_public_stories(root, DISPATCH_SLUG, edition_date, stories, dry_run=dry_run, written=wrote)
     stories = dedupe_result.stories
+    collection_report["public_story_count"] = len(stories)
+    collection_report["public_story_count_before_dedupe"] = len(stories_before_dedupe)
+    collection_report["public_story_count_after_dedupe"] = len(stories)
+    public_quality_report = build_gaza_public_quality_report(
+        edition_date=edition_date,
+        stories_before_dedupe=stories_before_dedupe,
+        stories_after_dedupe=stories,
+        public_sources=normalized,
+        duplicate_story_groups=list(dedupe_result.report.get("duplicate_groups") or []),
+        stripped_newsletter_fragments=stripped_newsletter_fragments,
+    )
+    quality_report_path = root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "public_content_quality_report.json"
+    write_json(quality_report_path, public_quality_report, dry_run, wrote)
+    if not public_quality_report["public_content_quality_ok"]:
+        errors.extend(public_quality_report["public_content_quality_errors"])
     rendered_story_ids = {str(story.get("story_id") or "") for story in stories if str(story.get("story_id") or "")}
     story_usage: dict[str, list[str]] = {}
     for story in stories:
@@ -2516,6 +2567,18 @@ def run_gaza_dispatch(
     should_render = render or all_steps
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized, adequacy, root=root)
+        public_quality_report = build_gaza_public_quality_report(
+            edition_date=edition_date,
+            stories_before_dedupe=stories_before_dedupe,
+            stories_after_dedupe=stories,
+            public_sources=normalized,
+            duplicate_story_groups=list(dedupe_result.report.get("duplicate_groups") or []),
+            stripped_newsletter_fragments=stripped_newsletter_fragments,
+            rendered_html=html_content,
+        )
+        write_json(quality_report_path, public_quality_report, dry_run, wrote)
+        if not public_quality_report["public_content_quality_ok"]:
+            errors.extend(public_quality_report["public_content_quality_errors"])
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
             root,
             edition_date,
@@ -2525,6 +2588,7 @@ def run_gaza_dispatch(
             warnings,
             errors,
             adequacy,
+            public_quality_report,
             allow_post_edition_date_sources=allow_post_edition_date_sources,
             post_edition_date_source_count=post_edition_date_source_count,
         )
@@ -2547,6 +2611,7 @@ def run_gaza_dispatch(
             warnings,
             errors,
             adequacy,
+            public_quality_report,
             allow_post_edition_date_sources=allow_post_edition_date_sources,
             post_edition_date_source_count=post_edition_date_source_count,
         )
@@ -2588,6 +2653,7 @@ def run_gaza_dispatch(
             "publisher_count": int(adequacy.get("publisher_count") or 0),
             "publishers": list(adequacy.get("publishers") or []),
             "source_adequacy_warnings": list(adequacy.get("warnings") or []),
+            **public_quality_manifest_fields(public_quality_report),
             **timing_metadata,
             "free_public_artifacts": [],
             "paid_or_detail_artifacts": [],
@@ -2619,6 +2685,8 @@ def run_gaza_dispatch(
         "source_count": len(normalized),
         "story_count": len(stories),
         "public_story_count": int(collection_report.get("public_story_count") or 0),
+        "public_content_quality_report_path": str(quality_report_path),
+        **public_quality_manifest_fields(public_quality_report),
         "source_adequacy_status": str(adequacy.get("status") or ""),
         "publisher_count": int(adequacy.get("publisher_count") or 0),
         "publishers": list(adequacy.get("publishers") or []),

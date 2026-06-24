@@ -52,7 +52,12 @@ def test_builds_reader_friendly_prose_from_fixture_story_fields(tmp_path: Path):
     assert "1967" not in text
 
 
-def write_current_edition_artifacts(root: Path, edition_date: str = "2026-05-07", summary: str = "Specific verified Gaza dispatch summary.") -> None:
+def write_current_edition_artifacts(
+    root: Path,
+    edition_date: str = "2026-05-07",
+    summary: str = "Specific verified Gaza dispatch summary.",
+    story_summary: str = "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+) -> None:
     current = root / "output" / "dispatches" / "gaza" / "editions" / edition_date
     current.mkdir(parents=True, exist_ok=True)
     (current / "curation_manifest.json").write_text(
@@ -60,7 +65,7 @@ def write_current_edition_artifacts(root: Path, edition_date: str = "2026-05-07"
             [
                 {
                     "title": "Current edition summary",
-                    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+                    "summary": story_summary,
                     "included_in_public_summary": True,
                 }
             ]
@@ -73,19 +78,20 @@ def write_current_edition_artifacts(root: Path, edition_date: str = "2026-05-07"
     )
     site = root / "output" / "site" / "gaza" / "editions" / edition_date
     site.mkdir(parents=True, exist_ok=True)
-    (site / "index.html").write_text("<html><body><p>June 7, 2026</p></body></html>", encoding="utf-8")
+    (site / "index.html").write_text(f"<html><body><p>{edition_date}</p></body></html>", encoding="utf-8")
     run_manifest = root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
     run_manifest.parent.mkdir(parents=True, exist_ok=True)
     run_manifest.write_text(json.dumps({"social_summary": summary}), encoding="utf-8")
 
 
 def test_focus_fallback_when_no_topics_derived(tmp_path: Path):
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/"
     text = bluesky_post.build_gaza_bluesky_post_text(
         "2026-05-29",
-        "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/",
+        public_url,
         project_root=tmp_path,
     )
-    assert text == bluesky_post.BLUESKY_GAZA_POST_FALLBACK
+    assert text == f"{bluesky_post.BLUESKY_GAZA_POST_FALLBACK}\n{public_url}"
 
 
 def test_focus_derivation_sanitizes_internal_or_incomplete_public_prose(tmp_path: Path):
@@ -198,12 +204,16 @@ def test_june_5_post_uses_filtered_gaza_topics(tmp_path: Path):
     assert "satellite imagery" not in text
 
 
-def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases():
-    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases(tmp_path: Path):
+    write_current_edition_artifacts(
+        tmp_path,
+        edition_date="2026-06-07",
+        story_summary="Israeli strikes killed 10 people in Gaza on Saturday.",
+    )
     text = bluesky_post.build_gaza_bluesky_post_text(
         "2026-06-07",
         "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
-        project_root=root,
+        project_root=tmp_path,
     )
     assert text.startswith("In the June 7 Gaza briefing:")
     assert "https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/" in text
@@ -212,13 +222,17 @@ def test_june_7_post_uses_current_edition_artifacts_without_stale_phrases():
     assert "1967" not in text
 
 
-def test_june_13_post_uses_public_summary_and_public_url():
-    root = Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co")
+def test_june_13_post_uses_public_summary_and_public_url(tmp_path: Path):
+    write_current_edition_artifacts(
+        tmp_path,
+        edition_date="2026-06-13",
+        story_summary="Israeli attack kills one person in central Gaza's Bureij camp.",
+    )
     public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-13/"
     text = bluesky_post.build_gaza_bluesky_post_text(
         "2026-06-13",
         public_url,
-        project_root=root,
+        project_root=tmp_path,
     )
     assert text.startswith("In the June 13 Gaza briefing:")
     assert public_url in text
@@ -273,11 +287,12 @@ def test_build_uses_current_date_artifacts_and_ignores_prior_edition_artifacts(t
     assert "Khan Younis strikes" in text
 
 
-def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch):
+def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
     monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
     monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    write_current_edition_artifacts(tmp_path, edition_date="2026-06-07")
 
     monkeypatch.setattr(
         bluesky_post,
@@ -298,7 +313,7 @@ def test_force_bluesky_post_cannot_bypass_stale_content_guard(monkeypatch):
         public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-07/",
         run_succeeded=True,
         post_requested=True,
-        project_root=Path(r"C:\PythonProjects\Dispatches From The Blue Fern Co"),
+        project_root=tmp_path,
         force_post=True,
     )
     assert result["status"] == "blocked"

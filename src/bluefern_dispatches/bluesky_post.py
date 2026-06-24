@@ -532,7 +532,10 @@ def build_gaza_bluesky_post_text(
             break
     public_summary = _gaza_public_summary_for_bluesky(root, clean_date, max_length=180)
     if not topics and not public_summary:
-        return BLUESKY_GAZA_POST_FALLBACK
+        fallback = BLUESKY_GAZA_POST_FALLBACK
+        if include_public_url and str(public_url or "").strip():
+            fallback = f"{fallback}\n{str(public_url).strip()}"
+        return fallback[:BLUESKY_MAX_POST_LENGTH]
     date_text = _format_post_date(clean_date)
     source_count = int(context.get("source_count") or 0)
     publisher_count = int(context.get("publisher_count") or 0)
@@ -576,7 +579,10 @@ def build_gaza_bluesky_post_text(
             compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}; and {compact_topics[1]}."
         if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return f"{compact}{url_suffix}" if url_suffix else compact
-    return BLUESKY_GAZA_POST_FALLBACK[:BLUESKY_MAX_POST_LENGTH]
+    fallback = BLUESKY_GAZA_POST_FALLBACK
+    if include_public_url and str(public_url or "").strip():
+        fallback = f"{fallback}\n{str(public_url).strip()}"
+    return fallback[:BLUESKY_MAX_POST_LENGTH]
 
 
 def _clean_description_text(value: str, max_length: int) -> str:
@@ -1054,7 +1060,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
     result["post_text"] = text
     result["card_title"] = card_title
     result["card_description"] = card_description
-    if text == BLUESKY_GAZA_POST_FALLBACK:
+    if text == BLUESKY_GAZA_POST_FALLBACK or text.startswith(f"{BLUESKY_GAZA_POST_FALLBACK}\n"):
         result["status"] = "blocked"
         result["reason"] = "current-edition-public-summary-unavailable"
         result["stale_content_guard_status"] = "blocked"

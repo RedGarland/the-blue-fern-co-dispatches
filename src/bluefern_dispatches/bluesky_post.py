@@ -4,6 +4,7 @@ import json
 import os
 import re
 import hashlib
+import unicodedata
 from io import BytesIO
 from html import unescape
 from pathlib import Path
@@ -39,7 +40,10 @@ DATE_VALUE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 BEARER_RE = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._\-]+")
 JWT_FIELD_RE = re.compile(r'(?i)"(accessJwt|refreshJwt)"\s*:\s*"[^"]*"')
 MALFORMED_ENTITY_PERIOD_RE = re.compile(r"\b(by|of|to|from|against|gave|with|for|allows)\.\s+([A-Z][A-Za-z0-9'/-]*)")
-WEAK_TRAILING_FRAGMENT_RE = re.compile(r"\b(?:a|an|the|to|of|by|for|with|against|from)\.?$", re.IGNORECASE)
+WEAK_TRAILING_FRAGMENT_RE = re.compile(r"\b(?:a|an|the|and|or|of|to|in|on|with|by|for|against|from)\.?$", re.IGNORECASE)
+INVISIBLE_TEXT_RE = re.compile(r"[\u200b\u200c\u200d\u2060\ufeff\u202a-\u202e\u2066-\u2069]")
+SPACE_BEFORE_PUNCT_RE = re.compile(r"\s+([,.;:!?])")
+ARTICLE_FRAGMENT_BEFORE_PUNCT_RE = re.compile(r"\b(?:a|an|the)\s+([;:])", re.IGNORECASE)
 MAX_HTTP_ERROR_DETAIL_LENGTH = 240
 BLUESKY_BLOB_MAX_BYTES = 1_000_000
 BLUESKY_COMPRESS_TARGET_BYTES = 950_000
@@ -386,21 +390,11 @@ def _topic_text_fragments_from_record(record: dict[str, Any]) -> list[str]:
 
 
 def _story_post_snippet(record: dict[str, Any]) -> str:
-    text = _clean_description_text(
-        str(
-            record.get("social_summary")
-            or record.get("public_summary")
-            or record.get("summary")
-            or record.get("summary_or_snippet")
-            or record.get("description")
-            or record.get("title")
-            or ""
-        ),
-        180,
-    )
+    text = _best_story_social_text(record, 180, prefer_title=True)
     lowered = _record_text_blob(record)
     if not text:
         return ""
+    text = text.rstrip(" .,:;!-?")
     if "khan younis" in lowered and "strike" in lowered:
         return "Khan Younis strikes"
     if "civil defence" in lowered and "10 killed" in lowered:
@@ -409,8 +403,6 @@ def _story_post_snippet(record: dict[str, Any]) -> str:
         return "Cairo ceasefire talks"
     if "west bank" in lowered:
         return "West Bank developments"
-    if "flotilla" in lowered or "prison ship" in lowered:
-        return "flotilla detention"
     return text
 
 
@@ -547,13 +539,15 @@ def build_gaza_bluesky_post_text(
             return f"{body}{url_suffix}"
         return body
 
+    def _topic_sentence_intro(values: list[str]) -> str:
+        cleaned_topics = [str(item or "").strip().rstrip(" .,:;!-?") for item in values if str(item or "").strip()]
+        if not cleaned_topics:
+            return ""
+        sentences = [f"{topic}." for topic in cleaned_topics]
+        return f"In the {date_text} Gaza briefing: {' '.join(sentences)}"
+
     if topics:
-        if len(topics) == 1:
-            intro = f"In the {date_text} Gaza briefing: {topics[0]}."
-        elif len(topics) == 2:
-            intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
-        else:
-            intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
+        intro = _topic_sentence_intro(topics)
         candidate = _with_suffix(intro)
         if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != intro:
             return candidate
@@ -570,10 +564,7 @@ def build_gaza_bluesky_post_text(
                 return candidate
     if topics:
         compact_topics = topics[:2]
-        if len(compact_topics) == 1:
-            compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}."
-        else:
-            compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}; and {compact_topics[1]}."
+        compact = _topic_sentence_intro(compact_topics)
         if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return f"{compact}{url_suffix}" if url_suffix else compact
     fallback = BLUESKY_GAZA_POST_FALLBACK
@@ -582,8 +573,111 @@ def build_gaza_bluesky_post_text(
     return fallback[:BLUESKY_MAX_POST_LENGTH]
 
 
+def _split_sentences(text: str) -> list[str]:
+    return [part.strip() for part in re.split(r"(?<=[.!?])\s+", str(text or "").strip()) if part.strip()]
+
+
+def _normalize_bluesky_text(value: str) -> str:
+    text = unicodedata.normalize("NFKC", str(value or ""))
+    text = INVISIBLE_TEXT_RE.sub("", text)
+    text = "".join(char for char in text if char in "\t\n\r" or unicodedata.category(char)[0] != "C")
+    return text
+
+
+def _clean_bluesky_punctuation(text: str) -> str:
+    value = str(text or "")
+    if not value:
+        return ""
+    value = SPACE_BEFORE_PUNCT_RE.sub(r"\1", value)
+    value = ARTICLE_FRAGMENT_BEFORE_PUNCT_RE.sub(r"\1", value)
+    value = value.replace("?.", "?").replace("!.", "!").replace(" ;", ";").replace(" ,", ",").replace(" .", ".")
+    value = value.replace(";;", ";")
+    return WHITESPACE_RE.sub(" ", value).strip(" \t\r\n|")
+
+
+def _truncate_text_cleanly(text: str, max_length: int) -> str:
+    value = str(text or "").strip()
+    if len(value) <= max_length:
+        return value
+    kept: list[str] = []
+    for sentence in _split_sentences(value):
+        candidate = " ".join([*kept, sentence]).strip()
+        if len(candidate) > max_length:
+            break
+        kept.append(sentence)
+    if kept:
+        return " ".join(kept)
+    truncated = value[:max_length].rstrip()
+    if " " in truncated:
+        truncated = truncated.rsplit(" ", 1)[0].rstrip()
+    return truncated.rstrip(" ,;:-")
+
+
+def _strip_trailing_fragment(text: str) -> str:
+    value = str(text or "").rstrip(" ,;:-")
+    while True:
+        updated = re.sub(WEAK_TRAILING_FRAGMENT_RE, "", value).rstrip(" ,;:-")
+        if updated == value:
+            return updated
+        value = updated
+
+
+def _looks_like_generic_story_title(text: str) -> bool:
+    words = re.findall(r"[A-Za-z0-9']+", str(text or ""))
+    lowered_words = {word.casefold() for word in words}
+    if len(words) <= 4 and lowered_words & {"update", "updates", "summary", "briefing"}:
+        return True
+    return False
+
+
+def _story_text_candidates(record: dict[str, Any], *, prefer_title: bool) -> list[str]:
+    title = str(record.get("title") or "")
+    summary_fields = [
+        str(record.get("social_summary") or ""),
+        str(record.get("public_summary") or ""),
+        str(record.get("summary") or ""),
+        str(record.get("summary_or_snippet") or ""),
+        str(record.get("description") or ""),
+    ]
+    if prefer_title and title.strip() and not _looks_like_generic_story_title(title):
+        return [title, *summary_fields]
+    return [*summary_fields, title]
+
+
+def _best_story_social_text(record: dict[str, Any], max_length: int, *, prefer_title: bool) -> str:
+    for raw in _story_text_candidates(record, prefer_title=prefer_title):
+        cleaned = _clean_description_text(raw, max_length)
+        if cleaned:
+            return cleaned
+    return ""
+
+
+def _compose_story_description(rows: list[dict[str, Any]], max_length: int) -> str:
+    sentences: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        cleaned = _best_story_social_text(row, max_length, prefer_title=True)
+        if not cleaned:
+            continue
+        sentence = cleaned.rstrip(" .,:;!-?")
+        if not sentence:
+            continue
+        sentence = f"{sentence}."
+        key = sentence.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        candidate = " ".join([*sentences, sentence]).strip()
+        if len(candidate) > max_length:
+            break
+        sentences.append(sentence)
+        if len(sentences) >= 2:
+            break
+    return " ".join(sentences).strip()
+
+
 def _clean_description_text(value: str, max_length: int) -> str:
-    text = unescape(str(value or ""))
+    text = _normalize_bluesky_text(unescape(str(value or "")))
     text = TAG_RE.sub(" ", text)
     text = URL_RE.sub(" ", text)
     text = SOURCE_ID_RE.sub(" ", text)
@@ -600,20 +694,16 @@ def _clean_description_text(value: str, max_length: int) -> str:
             if idx > 0:
                 text = text[:idx].rstrip(" ,;:-")
                 break
+    text, _ = sanitize_gaza_public_text(text)
     text = sanitize_public_prose(text)
     text, _ = sanitize_gaza_public_text(text)
+    text = _clean_bluesky_punctuation(text)
     if not text:
         return ""
-    if len(text) <= max_length:
-        candidate = text
-    else:
-        truncated = text[:max_length].rstrip()
-        if " " in truncated:
-            truncated = truncated.rsplit(" ", 1)[0].rstrip()
-        candidate = truncated.rstrip(" ,;:-")
-    if WEAK_TRAILING_FRAGMENT_RE.search(candidate):
-        candidate = re.sub(WEAK_TRAILING_FRAGMENT_RE, "", candidate).rstrip(" ,;:-")
-    return candidate
+    candidate = _truncate_text_cleanly(text, max_length)
+    candidate = _strip_trailing_fragment(candidate)
+    candidate = _clean_bluesky_punctuation(candidate)
+    return candidate.rstrip(" ,;:-")
 
 
 def _first_usable_field(payload: Any, names: tuple[str, ...], max_length: int) -> str:
@@ -720,13 +810,12 @@ def build_gaza_card_description(edition_date: str, project_root: Path, max_lengt
     if not date_text:
         return BLUESKY_CARD_FALLBACK_DESCRIPTION
     context = _gaza_bluesky_context(project_root, date_text)
-    for row in context.get("story_rows") or []:
-        if not isinstance(row, dict):
-            continue
-        cleaned = _clean_description_text(
-            str(row.get("social_summary") or row.get("public_summary") or row.get("summary") or row.get("summary_or_snippet") or row.get("title") or ""),
-            max_length,
-        )
+    story_rows = [row for row in context.get("story_rows") or [] if isinstance(row, dict)]
+    composed = _compose_story_description(story_rows, max_length)
+    if composed:
+        return composed
+    for row in story_rows:
+        cleaned = _best_story_social_text(row, max_length, prefer_title=True)
         if cleaned:
             return cleaned
     edition_manifest = context.get("edition_manifest")

@@ -46,7 +46,7 @@ def test_builds_reader_friendly_prose_from_fixture_story_fields(tmp_path: Path):
         project_root=tmp_path,
     )
     assert text.startswith("In the May 29 Gaza briefing:")
-    assert "Displacement pressure increased in several areas." in text or "Palestinians were held without charge in reported detention cases." in text
+    assert "Reports describe expanded Israeli military control positions inside Gaza" in text or "Legal filing seeks independent review of strike evidence and records" in text
     assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-29/" in text
     assert "satellite imagery" not in text
     assert "1967" not in text
@@ -82,6 +82,48 @@ def write_current_edition_artifacts(
     run_manifest = root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
     run_manifest.parent.mkdir(parents=True, exist_ok=True)
     run_manifest.write_text(json.dumps({"social_summary": summary}), encoding="utf-8")
+
+
+def write_june_24_bluesky_artifacts(root: Path) -> None:
+    current = root / "output" / "dispatches" / "gaza" / "editions" / "2026-06-24"
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds | First Thing",
+                    "summary_or_snippet": (
+                        "Palestinian children 'deliberately targeted and killed', report's chair says. "
+                        "Plus, Mamdani-backed candidates sweep NYC Democratic primaries Good morning. "
+                        "Israel continues to commit genocide by deliberately targeting Palestinian children in Gaza, an \u2060 independent UN inquiry has found . "
+                        "What does the report say?"
+                    ),
+                    "included_in_public_summary": True,
+                    "region_scope": "Gaza",
+                },
+                {
+                    "title": "Four Gaza aid flotilla activists released from Libya detention",
+                    "summary_or_snippet": "Four Gaza aid flotilla activists were released from Libya detention and returned home.",
+                    "included_in_public_summary": True,
+                    "region_scope": "Gaza",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-06-24", "source_count": 2, "publisher_count": 2, "publishers": ["The Guardian", "Al Jazeera"]}),
+        encoding="utf-8",
+    )
+    site = root / "output" / "site" / "gaza" / "editions" / "2026-06-24"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text(
+        (
+            "<html><body><p>UN inquiry says Israel is committing genocide in Gaza by targeting children. "
+            "Four Gaza aid flotilla activists were released from Libya detention.</p></body></html>"
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_focus_fallback_when_no_topics_derived(tmp_path: Path):
@@ -136,9 +178,39 @@ def test_gaza_post_strips_newsletter_debris_operational_counts_and_bad_punctuati
     text = bluesky_post.build_gaza_bluesky_post_text("2026-06-24", public_url, project_root=tmp_path)
 
     assert public_url in text
-    assert "UN inquiry findings remain in focus?" in text
+    assert "UN inquiry findings remain in focus." in text
     for forbidden in ("limited-source", "saved records across", "Good morning", "Mamdani", "NYC Democratic primaries", "sign up", "newsletter", "?.", "!."):
         assert forbidden.lower() not in text.lower()
+
+
+def test_june_24_bluesky_text_quality_contract_uses_clean_titles_and_descriptions(tmp_path: Path):
+    write_june_24_bluesky_artifacts(tmp_path)
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-24/"
+
+    text = bluesky_post.build_gaza_bluesky_post_text("2026-06-24", public_url, project_root=tmp_path)
+    description = bluesky_post.build_gaza_card_description("2026-06-24", tmp_path)
+    card_title = bluesky_post._build_gaza_card_title("2026-06-24")
+
+    assert text.startswith("In the June 24 Gaza briefing:")
+    assert "UN inquiry" in text or "committing genocide" in text
+    assert "flotilla" in text.lower()
+    assert "UN inquiry" in description or "committing genocide" in description
+    assert "flotilla" in description.lower()
+    assert card_title == "Dispatches from Gaza - June 24, 2026"
+    assert "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds." in text
+    assert "Four Gaza aid flotilla activists released from Libya detention." in text
+
+    for value in (text, description):
+        assert "; and Four" not in value
+        assert "and Four Gaza" not in value
+        assert "an ;" not in value
+        assert " ; and" not in value
+        assert "found ." not in value
+        assert "\u2060" not in value
+        assert "Good morning" not in value
+        assert "Mamdani" not in value
+        assert "NYC Democratic primaries" not in value
+        assert "?." not in value
 
 
 def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: Path):
@@ -172,8 +244,8 @@ def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: 
         project_root=tmp_path,
     )
     assert text.startswith("In the May 31 Gaza briefing:")
-    assert "destroyed weapons storage facilities in Gaza" in text
-    assert "Gaza-bound convoy in Libya was dissolved after arrests." in text
+    assert "IDF says it destroyed Hamas weapons storage facilities in Gaza" in text
+    assert "Gaza-bound aid convoy dissolved in Libya after arrests" in text
     assert "inside Gaza" not in text.lower()
 
 

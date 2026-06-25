@@ -263,12 +263,12 @@ def _gaza_bluesky_context(project_root: Path, edition_date: str) -> dict[str, An
     expected_post_snippets: list[str] = []
     seen_snippets: set[str] = set()
     for row in selected_rows:
-        snippet = _story_post_snippet(row)
-        key = snippet.casefold().strip()
-        if not key or key in seen_snippets:
-            continue
-        seen_snippets.add(key)
-        expected_post_snippets.append(snippet)
+        for snippet in _expected_post_variants(row):
+            key = snippet.casefold().strip()
+            if not key or key in seen_snippets:
+                continue
+            seen_snippets.add(key)
+            expected_post_snippets.append(snippet)
 
     return {
         "source_artifact_paths": source_artifact_paths,
@@ -404,6 +404,23 @@ def _story_post_snippet(record: dict[str, Any]) -> str:
     if "west bank" in lowered:
         return "West Bank developments"
     return text
+
+
+def _expected_post_variants(record: dict[str, Any]) -> list[str]:
+    variants: list[str] = []
+    seen: set[str] = set()
+    for candidate in (
+        _best_story_social_text(record, 180, prefer_title=True),
+        _best_story_social_text(record, 180, prefer_title=False),
+        _story_post_snippet(record),
+    ):
+        cleaned = str(candidate or "").strip().rstrip(" .")
+        key = cleaned.casefold()
+        if not cleaned or key in seen:
+            continue
+        seen.add(key)
+        variants.append(cleaned)
+    return variants
 
 
 def _derive_gaza_focus_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
@@ -995,6 +1012,49 @@ def _normalize_sentence(text: str) -> str:
     return sentence.rstrip(".") + "."
 
 
+def _meaningful_token_set(text: str) -> set[str]:
+    tokens = re.findall(r"[a-z0-9]+", str(text or "").casefold())
+    stopwords = {
+        "a",
+        "an",
+        "and",
+        "are",
+        "as",
+        "at",
+        "by",
+        "for",
+        "from",
+        "in",
+        "into",
+        "is",
+        "it",
+        "of",
+        "on",
+        "or",
+        "the",
+        "to",
+        "with",
+    }
+    return {token for token in tokens if len(token) > 2 and token not in stopwords}
+
+
+def _extract_post_guard_segments(text: str) -> list[str]:
+    raw_text = str(text or "")
+    if "\n\n" in raw_text:
+        raw_body = raw_text.split("\n\n", 1)[0]
+    else:
+        raw_body = raw_text
+    body = " ".join(raw_body.split()).strip()
+    if ": " in body:
+        body = body.split(": ", 1)[1]
+    segments = [
+        part.strip(" .")
+        for part in re.split(r"(?<=[.!?])\s+|;", body)
+        if part.strip(" .")
+    ]
+    return [segment.removeprefix("and ").strip(" .") for segment in segments if segment.removeprefix("and ").strip(" .")]
+
+
 def _food_line_card_description(post_text: str, *, max_length: int = BLUESKY_CARD_MAX_DESCRIPTION_LENGTH) -> str:
     body = " ".join(str(post_text or "").split())
     if not body:
@@ -1049,28 +1109,24 @@ def _bluesky_stale_content_guard(post_text: str, context: dict[str, Any]) -> tup
         return False, "current-edition-summary-unavailable"
     if not list(context.get("story_rows") or []):
         return False, "current-edition-summary-unavailable"
-    if "\n\n" in raw_text:
-        raw_body = raw_text.split("\n\n", 1)[0]
-    else:
-        raw_body = raw_text
-    body = " ".join(raw_body.split()).casefold()
-    if ": " in body:
-        body = body.split(": ", 1)[1]
+    body = " ".join(raw_text.split()).casefold()
     for phrase in BLUESKY_STALE_SYNTHETIC_PHRASES:
         if phrase in body and phrase not in allowed_corpus:
             return False, "stale-content-guard-failed"
-    clause_text = body.rsplit(".", 1)[0] if "." in body else body
-    clauses = [part.strip(" .") for part in clause_text.split(";") if part.strip(" .")]
     expected_lookup = {snippet.casefold(): snippet for snippet in expected_snippets}
-    for clause in clauses:
-        clause = clause.removeprefix("and ").strip(" .")
-        if not clause:
+    expected_token_sets = [_meaningful_token_set(snippet) for snippet in expected_snippets]
+    for clause in _extract_post_guard_segments(raw_text):
+        lowered_clause = clause.casefold()
+        if not lowered_clause:
             continue
-        if clause in {"full briefing", "limited-source update"}:
+        if lowered_clause in {"full briefing", "limited-source update"}:
             continue
-        if clause.casefold() in expected_lookup:
+        if lowered_clause in expected_lookup:
             continue
-        if clause.casefold() in allowed_corpus:
+        if lowered_clause in allowed_corpus:
+            continue
+        clause_tokens = _meaningful_token_set(clause)
+        if clause_tokens and any(clause_tokens == token_set or clause_tokens.issubset(token_set) for token_set in expected_token_sets if token_set):
             continue
         return False, "stale-content-guard-failed"
     return True, "passed"

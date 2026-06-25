@@ -213,6 +213,42 @@ def test_june_24_bluesky_text_quality_contract_uses_clean_titles_and_description
         assert "?." not in value
 
 
+def test_june_24_title_first_post_text_passes_stale_content_guard(tmp_path: Path):
+    write_june_24_bluesky_artifacts(tmp_path)
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-06-24/"
+    text = bluesky_post.build_gaza_bluesky_post_text("2026-06-24", public_url, project_root=tmp_path)
+    context = bluesky_post._gaza_bluesky_context(tmp_path, "2026-06-24")
+
+    ok, status = bluesky_post._bluesky_stale_content_guard(text, context)
+
+    assert ok is True
+    assert status == "passed"
+    assert "UN inquiry" in text or "committing genocide" in text
+    assert "flotilla" in text.lower()
+    assert "an ;" not in text
+    assert " ; and" not in text
+    assert "found ." not in text
+    assert "\u2060" not in text
+    assert "Good morning" not in text
+    assert "Mamdani" not in text
+    assert "NYC Democratic primaries" not in text
+
+
+def test_june_24_stale_guard_still_blocks_unrelated_stale_story(tmp_path: Path):
+    write_june_24_bluesky_artifacts(tmp_path)
+    context = bluesky_post._gaza_bluesky_context(tmp_path, "2026-06-24")
+    text = (
+        "In the June 24 Gaza briefing: Satellite imagery showing changes on the ground. "
+        "Four Gaza aid flotilla activists released from Libya detention.\n\n"
+        "Public edition: https://dispatches.thebluefernco.com/gaza/editions/2026-06-24/"
+    )
+
+    ok, status = bluesky_post._bluesky_stale_content_guard(text, context)
+
+    assert ok is False
+    assert status == "stale-content-guard-failed"
+
+
 def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: Path):
     curated = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-05-31" / "curation_manifest.json"
     curated.parent.mkdir(parents=True, exist_ok=True)

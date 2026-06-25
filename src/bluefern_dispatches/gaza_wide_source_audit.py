@@ -18,6 +18,7 @@ REPORT_PREFIX = "gaza_wide_discovery"
 DEFAULT_OUTPUT_DIR = Path("output") / "review"
 GOOGLE_NEWS_BASE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 STALE_AFTER_DAYS = 3
+AGGREGATOR_DOMAINS = {"news.google.com"}
 
 OFFICIAL_HUMANITARIAN_PUBLISHERS = {
     "ocha",
@@ -179,6 +180,39 @@ def _domain_from_url(url: str) -> str:
         return ""
 
 
+def _looks_like_domain(value: str) -> bool:
+    return bool(re.fullmatch(r"[a-z0-9.-]+\.[a-z]{2,}", _normalize_text(value)))
+
+
+def _publisher_from_domain(domain: str) -> str:
+    normalized = _normalize_text(domain)
+    return KNOWN_PROVIDER_DOMAINS.get(normalized, domain)
+
+
+def _infer_visible_publisher_domain(*values: Any) -> str:
+    patterns = (
+        re.compile(r"(?:^|\s)[-–—|:]\s*([a-z0-9.-]+\.[a-z]{2,})(?:\s*)$", re.I),
+        re.compile(r"\b(?:via|source)\s+([a-z0-9.-]+\.[a-z]{2,})\b", re.I),
+    )
+    for value in values:
+        text = _nonempty(value)
+        if not text:
+            continue
+        for pattern in patterns:
+            match = pattern.search(text)
+            if match:
+                return _normalize_text(match.group(1))
+    return ""
+
+
+def _has_source_of_record_url(candidate: dict[str, Any]) -> bool:
+    for key in ("canonical_url", "url"):
+        value = _nonempty(candidate.get(key))
+        if value and not _is_google_news_url(value):
+            return True
+    return False
+
+
 def _date_prefix(value: Any) -> str:
     text = _nonempty(value)
     match = re.match(r"^(\d{4}-\d{2}-\d{2})", text)
@@ -274,7 +308,7 @@ def _source_tier_for_candidate(publisher: Any, url: Any) -> str:
     if _looks_syndicated({"publisher": publisher, "url": url}):
         return "republication"
     if _is_google_news_url(_nonempty(url)):
-        return "aggregator"
+        return "unknown_or_uncategorized"
     return "unknown_or_uncategorized"
 
 
@@ -387,7 +421,7 @@ def _default_query_surfaces(root: Path, edition_date: str) -> list[dict[str, Any
                 "query_url": _query_url(query),
                 "publisher": "",
                 "source_registry_status": "aggregator_discovery_surface",
-                "source_tier": "aggregator",
+                "source_tier": "unknown_or_uncategorized",
                 "surface_label": label,
             }
         )
@@ -434,15 +468,20 @@ def _discover_from_feed_surface(surface: dict[str, Any], *, fetch_rss_items_fn: 
         if _is_google_news_url(item_url):
             aggregator_url = item_url
             canonical_url, _reason = gaza_sources.extract_canonical_from_google_wrapper(item_url)
-            discovered_url = canonical_url or item_url
+            discovered_url = canonical_url or ""
         else:
             canonical_url = gaza_sources.canonicalize_url(item_url)
             discovered_url = canonical_url or item_url
+        inferred_domain = _infer_visible_publisher_domain(title, summary)
+        publisher = _nonempty(item.get("publisher") or surface.get("publisher") or "")
+        if not publisher and inferred_domain:
+            publisher = _publisher_from_domain(inferred_domain)
+        source_of_record_url = discovered_url if discovered_url and not _is_google_news_url(discovered_url) else ""
         rows.append(
             {
-                "url": discovered_url,
-                "canonical_url": canonical_url or discovered_url,
-                "publisher": _nonempty(item.get("publisher") or surface.get("publisher") or ""),
+                "url": source_of_record_url,
+                "canonical_url": canonical_url if canonical_url and not _is_google_news_url(canonical_url) else "",
+                "publisher": publisher,
                 "title": title,
                 "published_at": published_at,
                 "retrieved_at": _utc_now(),
@@ -455,8 +494,9 @@ def _discover_from_feed_surface(surface: dict[str, Any], *, fetch_rss_items_fn: 
                 "source_tier": surface["source_tier"],
                 "surface_type": surface["surface_type"],
                 "registry_source_id": surface["registry_source_id"],
-                "normalized_url": gaza_sources.canonicalize_url(discovered_url),
+                "normalized_url": gaza_sources.canonicalize_url(source_of_record_url),
                 "original_url": item_url,
+                "inferred_publisher_domain": inferred_domain,
             }
         )
     return rows, warnings
@@ -471,42 +511,53 @@ def _seed_to_candidate(seed: dict[str, Any], *, default_surface_type: str, retri
         aggregator_url = aggregator_url or url
         if not canonical_url:
             canonical_url, _reason = gaza_sources.extract_canonical_from_google_wrapper(aggregator_url)
-    if not canonical_url and url:
+        if _is_google_news_url(url):
+            url = ""
+    if canonical_url and _is_google_news_url(canonical_url):
+        canonical_url = ""
+    if not canonical_url and url and not _is_google_news_url(url):
         canonical_url = gaza_sources.canonicalize_url(url)
     if canonical_url and not url:
         url = canonical_url
-    normalized_url = gaza_sources.canonicalize_url(url or canonical_url or "")
+    source_of_record_url = url if url and not _is_google_news_url(url) else canonical_url
+    normalized_url = gaza_sources.canonicalize_url(source_of_record_url or "")
+    inferred_domain = _infer_visible_publisher_domain(row.get("title"), row.get("summary_or_snippet"), row.get("publisher"))
     publisher = _nonempty(row.get("publisher"))
+    if not publisher and inferred_domain:
+        publisher = _publisher_from_domain(inferred_domain)
     title = gaza_sources.clean_feed_text(row.get("title", ""))
     published_at = _nonempty(row.get("published_at"))
     source_registry_status = _nonempty(row.get("source_registry_status") or row.get("registry_status") or "")
-    source_tier = _nonempty(row.get("source_tier") or _source_tier_for_candidate(publisher, url or canonical_url or aggregator_url))
+    source_tier = _nonempty(row.get("source_tier") or _source_tier_for_candidate(publisher, source_of_record_url or inferred_domain))
     if not source_registry_status:
-        domain = _domain_from_url(url or canonical_url or aggregator_url)
+        domain = _domain_from_url(source_of_record_url or "") or inferred_domain
         publisher_key = _normalize_publisher(publisher)
-        if publisher_key in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in KNOWN_PROVIDER_DOMAINS:
+        if aggregator_url and not source_of_record_url:
+            source_registry_status = "canonical_resolution_needed" if domain else "unresolved_aggregator_candidate"
+        elif publisher_key in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in KNOWN_PROVIDER_DOMAINS:
             source_registry_status = "known_provider"
         elif not url and not canonical_url and not aggregator_url:
             source_registry_status = "manual_seed"
         else:
             source_registry_status = "new_provider_candidate"
     return {
-        "url": url or canonical_url or aggregator_url,
-        "canonical_url": canonical_url or url or aggregator_url,
+        "url": source_of_record_url,
+        "canonical_url": canonical_url or source_of_record_url,
         "publisher": publisher,
         "title": title,
         "published_at": published_at,
         "retrieved_at": _nonempty(row.get("retrieved_at") or retrieved_at or _utc_now()),
         "summary_or_snippet": gaza_sources.clean_feed_text(row.get("summary_or_snippet", "")),
         "discovery_source": _nonempty(row.get("discovery_source") or default_surface_type),
-        "discovery_query": _nonempty(row.get("discovery_query") or row.get("query") or url or aggregator_url),
+        "discovery_query": _nonempty(row.get("discovery_query") or row.get("query") or source_of_record_url or aggregator_url),
         "google_news_url": aggregator_url,
         "aggregator_url": aggregator_url,
         "source_registry_status": source_registry_status,
         "source_tier": source_tier,
         "surface_type": default_surface_type,
         "normalized_url": normalized_url,
-        "original_url": _nonempty(row.get("original_url") or row.get("discovered_url") or url or ""),
+        "original_url": _nonempty(row.get("original_url") or row.get("discovered_url") or source_of_record_url or aggregator_url or ""),
+        "inferred_publisher_domain": inferred_domain,
     }
 
 
@@ -594,13 +645,23 @@ def _infer_source_registry_status(candidate: dict[str, Any], registry_by_publish
         return status
     publisher = _normalize_publisher(candidate.get("publisher"))
     domain = _domain_from_url(candidate.get("url") or candidate.get("canonical_url") or candidate.get("original_url") or "")
-    if publisher in registry_by_publisher or domain in registry_by_domain:
-        source = registry_by_publisher.get(publisher) or registry_by_domain.get(domain) or {}
+    inferred_domain = _normalize_text(candidate.get("inferred_publisher_domain"))
+    if domain in AGGREGATOR_DOMAINS:
+        domain = ""
+    if inferred_domain in AGGREGATOR_DOMAINS:
+        inferred_domain = ""
+    lookup_domain = domain or inferred_domain
+    if _is_google_news_url(candidate.get("aggregator_url") or "") and not _has_source_of_record_url(candidate):
+        if publisher in registry_by_publisher or lookup_domain in registry_by_domain or publisher in OFFICIAL_HUMANITARIAN_PUBLISHERS or lookup_domain in KNOWN_PROVIDER_DOMAINS:
+            return "canonical_resolution_needed"
+        return "unresolved_aggregator_candidate"
+    if publisher in registry_by_publisher or lookup_domain in registry_by_domain:
+        source = registry_by_publisher.get(publisher) or registry_by_domain.get(lookup_domain) or {}
         state = _normalize_text(source.get("source_state"))
         if state:
             return f"registered_{state}"
         return "registered_provider"
-    if publisher in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in KNOWN_PROVIDER_DOMAINS:
+    if publisher in OFFICIAL_HUMANITARIAN_PUBLISHERS or lookup_domain in KNOWN_PROVIDER_DOMAINS:
         return "known_provider"
     if candidate.get("surface_type") == "google_news_rss":
         return "aggregator_discovery_surface"
@@ -618,7 +679,7 @@ def _signal_flags(candidate: dict[str, Any]) -> tuple[list[str], int, bool, bool
         if any(term in text for term in terms):
             flags.append(flag)
             score += 4 if flag in {"casualty_strike_signal", "humanitarian_care_signal", "aid_food_water_medical_access_signal", "health_system_hospital_signal"} else 3
-    domain = _domain_from_url(candidate.get("url") or candidate.get("canonical_url") or candidate.get("original_url") or "")
+    domain = _domain_from_url(candidate.get("url") or candidate.get("canonical_url") or candidate.get("original_url") or "") or _normalize_text(candidate.get("inferred_publisher_domain"))
     if _normalize_publisher(candidate.get("publisher")) in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in KNOWN_PROVIDER_DOMAINS:
         flags.append("official_un_ngo_source_signal")
         score += 3
@@ -727,13 +788,25 @@ def _apply_cluster_comparisons(candidates: list[dict[str, Any]], manifest_index:
 
 def _compare_candidate(candidate: dict[str, Any], manifest_index: dict[str, Any], registry_by_publisher: dict[str, dict[str, Any]], registry_by_domain: dict[str, dict[str, Any]]) -> dict[str, Any]:
     candidate = dict(candidate)
+    if not _nonempty(candidate.get("publisher")):
+        inferred_domain = _infer_visible_publisher_domain(candidate.get("title"), candidate.get("summary_or_snippet"))
+        if inferred_domain:
+            candidate["publisher"] = _publisher_from_domain(inferred_domain)
+            candidate["inferred_publisher_domain"] = inferred_domain
     candidate["title_fingerprint"] = _fingerprint_title(candidate.get("title") or "")
     candidate["publisher_title_fingerprint"] = _fingerprint_publisher_title(candidate.get("publisher") or "", candidate.get("title") or "")
+    candidate["url"] = _normalize_url(candidate.get("url") or "")
+    candidate["canonical_url"] = _normalize_url(candidate.get("canonical_url") or "")
+    if _is_google_news_url(candidate["url"]):
+        candidate["url"] = ""
+    if _is_google_news_url(candidate["canonical_url"]):
+        candidate["canonical_url"] = ""
     candidate["normalized_url"] = gaza_sources.canonicalize_url(candidate.get("url") or candidate.get("canonical_url") or "")
-    candidate["canonical_url"] = _normalize_url(candidate.get("canonical_url") or candidate.get("url") or "")
     candidate["duplicate_cluster"] = _nonempty(candidate.get("duplicate_cluster") or _fingerprint_cluster(candidate))
     candidate["source_registry_status"] = _infer_source_registry_status(candidate, registry_by_publisher, registry_by_domain)
-    candidate["source_tier"] = _nonempty(candidate.get("source_tier") or _source_tier_for_candidate(candidate.get("publisher"), candidate.get("canonical_url") or candidate.get("url") or ""))
+    candidate["source_tier"] = _nonempty(candidate.get("source_tier") or _source_tier_for_candidate(candidate.get("publisher"), candidate.get("canonical_url") or candidate.get("url") or candidate.get("inferred_publisher_domain") or ""))
+    if _normalize_text(candidate["source_tier"]) == "aggregator":
+        candidate["source_tier"] = "unknown_or_uncategorized"
     candidate["comparison_flags"] = []
 
     matched_manifest_row, matched_key_type = _best_manifest_match(candidate, manifest_index)
@@ -753,6 +826,8 @@ def _compare_candidate(candidate: dict[str, Any], manifest_index: dict[str, Any]
 
     if blocked_or_unresolved:
         candidate["comparison_flags"].append("blocked_or_unresolved")
+        candidate["manual_review_needed"] = True
+        candidate["comparison_flags"].append("manual_review_needed")
     if stale:
         candidate["comparison_flags"].append("stale")
     if outside_scope:
@@ -812,9 +887,14 @@ def _compare_candidate(candidate: dict[str, Any], manifest_index: dict[str, Any]
     if candidate.get("comparison_flags") and "manual_review_needed" in candidate["comparison_flags"] and qualifies:
         candidate["recommended_action"] = "manual review needed"
 
-    if candidate.get("discovery_source") == "google_news_rss" and candidate.get("google_news_url") and not _normalize_url(candidate.get("canonical_url") or ""):
+    if candidate.get("google_news_url") and not _has_source_of_record_url(candidate):
         candidate["skip_or_accept_reason"] = "google news wrapper unresolved"
         candidate["blocked_or_unresolved"] = True
+        if "blocked_or_unresolved" not in candidate["comparison_flags"]:
+            candidate["comparison_flags"].append("blocked_or_unresolved")
+        if "manual_review_needed" not in candidate["comparison_flags"]:
+            candidate["comparison_flags"].append("manual_review_needed")
+        candidate["recommended_action"] = "resolve canonical publisher URL before source review"
     return candidate
 
 
@@ -826,19 +906,21 @@ def _build_recommendations(candidates: list[dict[str, Any]]) -> tuple[list[dict[
     seen_query: set[str] = set()
     seen_tier: set[str] = set()
     for row in candidates:
+        domain = _domain_from_url(row.get("url") or row.get("canonical_url") or "") or _normalize_text(row.get("inferred_publisher_domain"))
+        if domain in AGGREGATOR_DOMAINS or _normalize_publisher(row.get("publisher")) == "google news":
+            continue
         if "known_provider_missed" in row.get("comparison_flags", []) or "new_provider_candidate" in row.get("comparison_flags", []):
-            key = _normalize_publisher(row.get("publisher")) or _domain_from_url(row.get("url") or row.get("canonical_url") or "")
+            key = _normalize_publisher(row.get("publisher")) or domain
             if key and key not in seen_registry:
                 seen_registry.add(key)
                 registry_changes.append(
                     {
-                        "publisher_or_domain": row.get("publisher") or _domain_from_url(row.get("url") or row.get("canonical_url") or ""),
+                        "publisher_or_domain": row.get("publisher") or domain,
                         "reason": row.get("skip_or_accept_reason") or "",
                         "recommended_action": row.get("recommended_action") or "",
                     }
                 )
         if "known_provider_missed" in row.get("comparison_flags", []):
-            domain = _domain_from_url(row.get("url") or row.get("canonical_url") or "")
             query = f'site:{domain} Gaza' if domain else f'"{row.get("publisher") or ""}" Gaza'
             if query not in seen_query:
                 seen_query.add(query)
@@ -849,12 +931,12 @@ def _build_recommendations(candidates: list[dict[str, Any]]) -> tuple[list[dict[
                     }
                 )
         if "official_source_preferred" in row.get("comparison_flags", []):
-            tier_key = _normalize_publisher(row.get("publisher")) or row.get("url") or row.get("canonical_url") or ""
+            tier_key = _normalize_publisher(row.get("publisher")) or row.get("url") or row.get("canonical_url") or domain or ""
             if tier_key not in seen_tier:
                 seen_tier.add(tier_key)
                 tier_changes.append(
                     {
-                        "publisher": row.get("publisher") or _domain_from_url(row.get("url") or row.get("canonical_url") or ""),
+                        "publisher": row.get("publisher") or domain,
                         "current_tier": row.get("source_tier"),
                         "recommended_tier": "official_humanitarian" if _normalize_publisher(row.get("publisher")) in OFFICIAL_HUMANITARIAN_PUBLISHERS else row.get("source_tier"),
                         "reason": "official/source-of-record URL should outrank republication",

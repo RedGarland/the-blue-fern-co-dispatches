@@ -5,9 +5,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$ProjectRoot = "C:\PythonProjects\Dispatches From The Blue Fern Co"
-$PagesRepo = Join-Path $ProjectRoot "bluefern-dispatches-pages"
-$LogRoot = Join-Path $ProjectRoot "logs\food-line\daily_ops"
+$ProjectRoot = if ($env:BLUEFERN_PROJECT_ROOT) { $env:BLUEFERN_PROJECT_ROOT } else { "C:\PythonProjects\Dispatches From The Blue Fern Co" }
+$LogRoot = if ($env:BLUEFERN_FOOD_LINE_LOG_ROOT) { $env:BLUEFERN_FOOD_LINE_LOG_ROOT } else { Join-Path $ProjectRoot "logs\food-line\daily_ops" }
 
 function Write-FoodLineLogLine {
   param(
@@ -76,21 +75,41 @@ function Invoke-FoodLineLoggedProcess {
   }
 
   Write-FoodLineLogLine -Path $LogPath -Message "$Label exit_code: $($process.ExitCode)"
+  $stdoutLines = @()
   if (Test-Path -LiteralPath $stdoutPath) {
     Write-FoodLineLogLine -Path $LogPath -Message "--- $Label stdout ---"
-    foreach ($line in Get-Content -LiteralPath $stdoutPath) {
+    $stdoutLines = Get-Content -LiteralPath $stdoutPath
+    foreach ($line in $stdoutLines) {
       Add-Content -LiteralPath $LogPath -Value $line -Encoding utf8
     }
   }
+  $stderrLines = @()
   if (Test-Path -LiteralPath $stderrPath) {
     Write-FoodLineLogLine -Path $LogPath -Message "--- $Label stderr ---"
-    foreach ($line in Get-Content -LiteralPath $stderrPath) {
+    $stderrLines = Get-Content -LiteralPath $stderrPath
+    foreach ($line in $stderrLines) {
       Add-Content -LiteralPath $LogPath -Value $line -Encoding utf8
     }
   }
   Remove-Item -LiteralPath $stdoutPath, $stderrPath -ErrorAction SilentlyContinue
 
-  return $process.ExitCode
+  return @{
+    ExitCode = $process.ExitCode
+    StdoutLines = $stdoutLines
+    StderrLines = $stderrLines
+  }
+}
+
+function ConvertFrom-FoodLineJsonLines {
+  param(
+    [Parameter(Mandatory = $true)][string[]]$Lines
+  )
+
+  $jsonText = ($Lines -join [Environment]::NewLine).Trim()
+  if (-not $jsonText) {
+    throw "Dispatch output did not include JSON."
+  }
+  return $jsonText | ConvertFrom-Json
 }
 
 try {
@@ -99,7 +118,7 @@ try {
   }
 
   $EditionDate = if ($Date) { $Date } else { (Get-Date).AddDays(-1).ToString("yyyy-MM-dd") }
-  $PythonExe = Join-Path $ProjectRoot ".venv\Scripts\python.exe"
+  $PythonExe = if ($env:BLUEFERN_PYTHON_EXE) { $env:BLUEFERN_PYTHON_EXE } else { Join-Path $ProjectRoot ".venv\Scripts\python.exe" }
   $DispatchScript = Join-Path $ProjectRoot "scripts\run_food_line_dispatch.py"
   $LogPath = Join-Path $LogRoot "$EditionDate.log"
 
@@ -131,12 +150,14 @@ try {
     throw "Python executable not found: $PythonExe"
   }
 
-  $dispatchExitCode = Invoke-FoodLineLoggedProcess `
+  $dispatchResult = Invoke-FoodLineLoggedProcess `
     -LogPath $LogPath `
     -Label "dispatch" `
     -FilePath $PythonExe `
     -Arguments $commandArgs `
     -WorkingDirectory $ProjectRoot
+
+  $dispatchExitCode = [int]$dispatchResult.ExitCode
 
   if ($dispatchExitCode -eq 1) {
     Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
@@ -149,6 +170,13 @@ try {
     throw "Food Line dispatch run failed for $EditionDate (exit code $dispatchExitCode)"
   }
 
+  $dispatchPayload = ConvertFrom-FoodLineJsonLines -Lines $dispatchResult.StdoutLines
+  if (-not $dispatchPayload.ok) {
+    Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run failed"
+    throw "Food Line dispatch returned ok=false for $EditionDate"
+  }
+
   if ($DryRun) {
     Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
     Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run completed successfully"
@@ -156,43 +184,11 @@ try {
     exit 0
   }
 
-  $publishScript = Join-Path $ProjectRoot "scripts\publish_github_pages.py"
-  $publishArgs = @(
-    $publishScript
-    "--pages-repo"
-    $PagesRepo
-    "--remote-url"
-    "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
-    "--pages-branch"
-    "gh-pages"
-    "--expect-date"
-    $EditionDate
-    "--expect-dispatch"
-    "food-line"
-    "--commit"
-    "--no-push"
-  )
-
-  $publishExitCode = Invoke-FoodLineLoggedProcess `
-    -LogPath $LogPath `
-    -Label "publish" `
-    -FilePath $PythonExe `
-    -Arguments $publishArgs `
-    -WorkingDirectory $ProjectRoot
-
-  if ($publishExitCode -ne 0) {
-    throw "Food Line Pages publish failed for $EditionDate (exit code $publishExitCode)"
-  }
-
-  $gitExitCode = Invoke-FoodLineLoggedProcess `
-    -LogPath $LogPath `
-    -Label "git_push" `
-    -FilePath "git" `
-    -Arguments @("push", "origin", "gh-pages") `
-    -WorkingDirectory $PagesRepo
-
-  if ($gitExitCode -ne 0) {
-    throw "Food Line Pages push failed for $EditionDate (exit code $gitExitCode)"
+  if (($dispatchPayload.public_rendered -eq $false) -or ($dispatchPayload.edition_mode -eq "no_public_edition")) {
+    Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"
+    Write-FoodLineLogLine -Path $LogPath -Message "Food Line scheduled run completed: no public edition today."
+    Write-Host "Food Line scheduled run completed: no public edition today."
+    exit 0
   }
 
   Write-FoodLineLogLine -Path $LogPath -Message "Python exit code: $dispatchExitCode"

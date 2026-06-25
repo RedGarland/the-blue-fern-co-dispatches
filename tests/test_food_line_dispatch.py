@@ -1,9 +1,13 @@
 ﻿import csv
 import base64
 import json
+import os
 import re
 import ssl
+import subprocess
 import sys
+import tempfile
+import textwrap
 import types
 import urllib.error
 from datetime import date as dt_date
@@ -8062,6 +8066,95 @@ def test_food_line_daily_wrapper_logs_before_python_and_supports_date_and_dry_ru
     assert "new-item -itemtype file" in lower_text
     assert "set-content" in lower_text
     assert lower_text.index("new-item -itemtype file") < lower_text.index('-label "dispatch"')
+    assert "Food Line scheduled run completed: no public edition today." in wrapper_text
+    assert "scripts\\publish_github_pages.py" not in wrapper_text
+    assert '"git_push"' not in wrapper_text
+
+
+def _write_food_line_wrapper_fake_dispatch(project_root: Path, exit_code: int, payload: dict) -> None:
+    scripts_dir = project_root / "scripts"
+    scripts_dir.mkdir(parents=True, exist_ok=True)
+    dispatch_script = scripts_dir / "run_food_line_dispatch.py"
+    payload_json = json.dumps(payload)
+    dispatch_script.write_text(
+        textwrap.dedent(
+            f"""
+            import json
+
+            payload = json.loads({payload_json!r})
+            print(json.dumps(payload, indent=2))
+            raise SystemExit({exit_code})
+            """
+        ).strip()
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def _run_food_line_wrapper(tmp_path: Path, payload: dict, exit_code: int = 0) -> tuple[subprocess.CompletedProcess[str], Path]:
+    project_root = tmp_path / "project"
+    log_root = project_root / "logs" / "food-line" / "daily_ops"
+    log_root.mkdir(parents=True, exist_ok=True)
+    _write_food_line_wrapper_fake_dispatch(project_root, exit_code=exit_code, payload=payload)
+    wrapper_path = Path(__file__).resolve().parents[1] / "run_food_line_daily.ps1"
+    env = os.environ.copy()
+    env["BLUEFERN_PROJECT_ROOT"] = str(project_root)
+    env["BLUEFERN_FOOD_LINE_LOG_ROOT"] = str(log_root)
+    env["BLUEFERN_PYTHON_EXE"] = sys.executable
+    completed = subprocess.run(
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(wrapper_path),
+            "-Date",
+            "2026-06-23",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        env=env,
+        check=False,
+    )
+    return completed, log_root / "2026-06-23.log"
+
+
+def test_food_line_daily_wrapper_succeeds_for_no_public_edition_without_pages_publish() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={
+                "ok": True,
+                "public_rendered": False,
+                "edition_mode": "no_public_edition",
+                "publish_status": "no_public_edition",
+                "skip_reason": "No new primary food-access signal qualified for public Food Line publication.",
+            },
+        )
+
+        assert completed.returncode == 0
+        assert "Food Line scheduled run completed: no public edition today." in completed.stdout
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "Food Line scheduled run completed: no public edition today." in log_text
+        assert "publish command:" not in log_text
+        assert "git_push command:" not in log_text
+
+
+def test_food_line_daily_wrapper_preserves_real_dispatch_failures() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={"ok": False, "public_rendered": False, "edition_mode": "no_public_edition"},
+            exit_code=7,
+        )
+
+        assert completed.returncode != 0
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "Food Line scheduled run failed" in log_text
+        assert "Food Line dispatch run failed for 2026-06-23 (exit code 7)" in log_text
 
 
 

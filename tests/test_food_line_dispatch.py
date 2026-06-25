@@ -3,6 +3,7 @@ import base64
 import json
 import os
 import re
+import shutil
 import ssl
 import subprocess
 import sys
@@ -8091,19 +8092,28 @@ def _write_food_line_wrapper_fake_dispatch(project_root: Path, exit_code: int, p
     )
 
 
+def _resolve_powershell_executable() -> str:
+    for candidate in ("powershell.exe", "pwsh"):
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+    pytest.skip("PowerShell is not available for wrapper execution tests")
+
+
 def _run_food_line_wrapper(tmp_path: Path, payload: dict, exit_code: int = 0) -> tuple[subprocess.CompletedProcess[str], Path]:
     project_root = tmp_path / "project"
     log_root = project_root / "logs" / "food-line" / "daily_ops"
     log_root.mkdir(parents=True, exist_ok=True)
     _write_food_line_wrapper_fake_dispatch(project_root, exit_code=exit_code, payload=payload)
     wrapper_path = Path(__file__).resolve().parents[1] / "run_food_line_daily.ps1"
+    powershell_exe = _resolve_powershell_executable()
     env = os.environ.copy()
     env["BLUEFERN_PROJECT_ROOT"] = str(project_root)
     env["BLUEFERN_FOOD_LINE_LOG_ROOT"] = str(log_root)
     env["BLUEFERN_PYTHON_EXE"] = sys.executable
     completed = subprocess.run(
         [
-            "powershell.exe",
+            powershell_exe,
             "-NoProfile",
             "-NonInteractive",
             "-ExecutionPolicy",

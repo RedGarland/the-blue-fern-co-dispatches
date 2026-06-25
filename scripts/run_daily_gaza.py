@@ -394,15 +394,23 @@ def run_tests(validation_profile: str, pytest_basetemp: Path) -> tuple[subproces
         "SMTP_USERNAME",
         "SMTP_PASSWORD",
         "EMAIL_TO",
+        "SMTP_TO",
         "EMAIL_FROM",
         "SMTP_FROM",
         "SMTP_USE_SSL",
         "SMTP_SKIP_VERIFY",
         "SMTP_RELAX_X509_STRICT",
         "SMTP_TLS_VERIFY",
+        "SMTP_TLS_CA_SOURCE",
+        "SMTP_TRUSTSTORE",
+        "SMTP_CERTIFI",
         "SMTP_CA_BUNDLE",
         "SMTP_CA_FILE",
         "SMTP_DEBUG_FILE",
+        "SMTP_TIMEOUT",
+        "SMTP_RETRIES",
+        "SMTP_RETRY_DELAY",
+        "SMTP_LOCAL_HOSTNAME",
     )
     saved = {name: os.environ.pop(name) for name in smtp_env_names if name in os.environ}
     try:
@@ -849,6 +857,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--skip-tests", action="store_true", help="Skip pytest validation.")
     parser.add_argument("--push", action="store_true", help="Push the Pages repo to origin after local publish succeeds.")
     parser.add_argument("--email-report", action="store_true", help="Email a plain-text run report after success or failure.")
+    parser.add_argument("--email-nonfatal", "--warn-on-email-failure", dest="email_nonfatal", action="store_true", help="Log email-report failures without making the run fail when the dispatch pipeline otherwise succeeded.")
     parser.add_argument("--smtp-debug", action="store_true", help="Enable smtplib debug output when --email-report sends mail.")
     parser.add_argument("--open-local", action="store_true", help="Open the rendered local edition after success.")
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repo path.")
@@ -924,12 +933,16 @@ def main(argv: list[str] | None = None) -> int:
             message = notification_error_message(exc)
             summary["email_ok"] = False
             summary["notification_error"] = message
-            summary["overall_ok"] = False
-            summary["errors"].append(f"Email report failed: {message}")
+            if args.email_nonfatal:
+                summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))
+                summary["warnings"].append(f"Email report failed: {message}")
+            else:
+                summary["overall_ok"] = False
+                summary["errors"].append(f"Email report failed: {message}")
             log_line(log_path, f"Email report failed: {message}")
             summary["ok"] = summary["overall_ok"]
             write_summary(summary)
-            return 2
+            return pipeline_code if args.email_nonfatal else 2
         summary["email_report_sent"] = True
         summary["email_ok"] = True
         summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))

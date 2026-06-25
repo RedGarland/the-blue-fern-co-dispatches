@@ -135,12 +135,20 @@ def _env_first(*names: str) -> str | None:
     return None
 
 
+def _smtp_recipient_value() -> str:
+    return _env_first("EMAIL_TO", "SMTP_TO") or ""
+
+
+def _smtp_sender_value() -> str | None:
+    return _env_first("EMAIL_FROM", "SMTP_FROM")
+
+
 def _smtp_sensitive_values() -> list[str]:
     values = [
         os.getenv("SMTP_PASSWORD") or "",
         os.getenv("SMTP_USER") or "",
         os.getenv("SMTP_USERNAME") or "",
-        os.getenv("EMAIL_TO") or "",
+        _smtp_recipient_value(),
         os.getenv("EMAIL_FROM") or "",
         os.getenv("SMTP_FROM") or "",
     ]
@@ -225,9 +233,10 @@ def notification_error_message(exc: BaseException) -> str:
         return (
             "SMTP TLS certificate verification failed. "
             f"{message}. "
-            "Check SMTP_CA_FILE/SMTP_CA_BUNDLE if local TLS inspection is intentional. "
-            "You can also enable truststore-backed verification with SMTP_TRUSTSTORE=1 when available. "
-            "SMTP_RELAX_X509_STRICT=1 is diagnostic only."
+            "If this machine is behind intentional TLS inspection, export the inspection CA as a PEM file and set "
+            "SMTP_CA_FILE=<path-to-pem> or SMTP_CA_BUNDLE=<path-to-pem>. "
+            "If you want to use Windows trust roots and the optional truststore package is installed, set SMTP_TRUSTSTORE=1. "
+            "Leave SMTP_TLS_VERIFY enabled for normal runs. SMTP_RELAX_X509_STRICT=1 is diagnostic only and should not be the default."
         )
     return message
 
@@ -261,6 +270,49 @@ def _resolve_ca_bundle_path() -> tuple[str | None, str | None]:
                 )
             return str(path), key
     return None, None
+
+
+def _smtp_runtime_settings() -> dict[str, object]:
+    smtp_host = os.getenv("SMTP_HOST")
+    smtp_port_text = os.getenv("SMTP_PORT", "587")
+    try:
+        smtp_port = int(smtp_port_text)
+    except ValueError as exc:
+        raise RuntimeError(f"SMTP_PORT must be an integer, got {smtp_port_text!r}") from exc
+    smtp_use_ssl = _env_bool("SMTP_USE_SSL")
+    smtp_timeout = _env_float("SMTP_TIMEOUT", 30.0)
+    smtp_retries = _env_int("SMTP_RETRIES", 2)
+    smtp_retry_delay = _env_float("SMTP_RETRY_DELAY", 1.0)
+    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")
+    email_to = _smtp_recipient_value()
+    email_from = _smtp_sender_value() or smtp_user or f"noreply@{socket.gethostname()}"
+    return {
+        "smtp_host": smtp_host,
+        "smtp_port": smtp_port,
+        "smtp_use_ssl": smtp_use_ssl,
+        "smtp_timeout": smtp_timeout,
+        "smtp_retries": smtp_retries,
+        "smtp_retry_delay": smtp_retry_delay,
+        "smtp_user": smtp_user,
+        "smtp_password": smtp_password,
+        "email_to": email_to,
+        "email_from": email_from,
+    }
+
+
+def _validate_smtp_runtime_settings(settings: dict[str, object]) -> list[str]:
+    missing: list[str] = []
+    if not str(settings.get("smtp_host") or "").strip():
+        missing.append("SMTP_HOST")
+    if not str(settings.get("email_to") or "").strip():
+        missing.append("EMAIL_TO or SMTP_TO")
+    if str(settings.get("smtp_user") or "").strip() and not str(settings.get("smtp_password") or "").strip():
+        missing.append("SMTP_PASSWORD")
+    recipients = [addr.strip() for addr in str(settings.get("email_to") or "").split(",") if addr.strip()]
+    if str(settings.get("email_to") or "").strip() and not recipients:
+        raise RuntimeError("EMAIL_TO/SMTP_TO did not contain any valid recipient addresses")
+    return missing
 
 
 def _build_tls_context() -> tuple[ssl.SSLContext, dict[str, str | bool | None]]:
@@ -367,30 +419,25 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     # SMTP_TLS_VERIFY=1
     # Set SMTP_CA_FILE/SMTP_CA_BUNDLE only for intentional local TLS inspection.
     # SMTP_RELAX_X509_STRICT=1 is diagnostic-only and should not be a steady-state default.
-    smtp_host = os.getenv("SMTP_HOST")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_use_ssl = _env_bool("SMTP_USE_SSL")
-    smtp_timeout = _env_float("SMTP_TIMEOUT", 30.0)
-    smtp_retries = _env_int("SMTP_RETRIES", 2)
-    smtp_retry_delay = _env_float("SMTP_RETRY_DELAY", 1.0)
-    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
-    smtp_password = os.getenv("SMTP_PASSWORD")
-    email_to = os.getenv("EMAIL_TO", "")
-    email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
+    settings = _smtp_runtime_settings()
+    smtp_host = str(settings["smtp_host"] or "")
+    smtp_port = int(settings["smtp_port"])
+    smtp_use_ssl = bool(settings["smtp_use_ssl"])
+    smtp_timeout = float(settings["smtp_timeout"])
+    smtp_retries = int(settings["smtp_retries"])
+    smtp_retry_delay = float(settings["smtp_retry_delay"])
+    smtp_user = str(settings["smtp_user"] or "") or None
+    smtp_password = str(settings["smtp_password"] or "") or None
+    email_to = str(settings["email_to"] or "")
+    email_from = str(settings["email_from"] or "")
 
-    missing: list[str] = []
-    if not smtp_host:
-        missing.append("SMTP_HOST")
-    if not email_to.strip():
-        missing.append("EMAIL_TO")
-    if smtp_user and not smtp_password:
-        missing.append("SMTP_PASSWORD")
+    missing = _validate_smtp_runtime_settings(settings)
     if missing:
         raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
 
     recipients = [addr.strip() for addr in email_to.split(",") if addr.strip()]
     if not recipients:
-        raise RuntimeError("EMAIL_TO did not contain any valid recipient addresses")
+        raise RuntimeError("EMAIL_TO/SMTP_TO did not contain any valid recipient addresses")
 
     msg = EmailMessage()
     msg["Subject"] = subject
@@ -545,29 +592,45 @@ def build_test_email_body(date_str: str) -> str:
 
 
 def print_smtp_config_debug() -> None:
-    smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
-    email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
-    smtp_port = os.getenv("SMTP_PORT", "587")
-    smtp_port_int = int(smtp_port)
-    smtp_use_ssl = _env_bool("SMTP_USE_SSL")
+    settings = _smtp_runtime_settings()
+    smtp_user = str(settings["smtp_user"] or "") or None
+    email_from = str(settings["email_from"] or "")
+    smtp_port_int = int(settings["smtp_port"])
+    smtp_port = str(smtp_port_int)
+    smtp_use_ssl = bool(settings["smtp_use_ssl"])
     mode = _smtp_mode(smtp_port_int, smtp_use_ssl)
     _tls_context, tls_meta = _build_tls_context()
     lines = [
         "SMTP diagnostic config:",
-        f"- SMTP host: {os.getenv('SMTP_HOST') or '<unset>'}",
+        f"- SMTP host: {str(settings['smtp_host'] or '<unset>')}",
         f"- SMTP port: {smtp_port}",
         f"- SMTP username: {_mask_email(smtp_user)}",
         f"- Email from: {_mask_email(email_from)}",
-        f"- Email to: {_mask_recipients(os.getenv('EMAIL_TO'))}",
+        f"- Email to: {_mask_recipients(str(settings['email_to'] or ''))}",
         f"- TLS mode: {mode}",
         f"- TLS verification: {str(bool(tls_meta['tls_verify_enabled'])).lower()}",
         f"- TLS relaxed (diagnostic): {str(bool(tls_meta['tls_relaxed'])).lower()}",
         f"- TLS source preference: {tls_meta.get('tls_source_preference')}",
         f"- CA source: {tls_meta.get('ca_source') or '<none>'}",
         f"- CA bundle path: {tls_meta.get('ca_bundle_path') or '<none>'}",
+        f"- SMTP timeout: {settings['smtp_timeout']}",
+        f"- SMTP retries: {settings['smtp_retries']}",
+        f"- SMTP retry delay: {settings['smtp_retry_delay']}",
         f"- SMTP debug file: {os.getenv('SMTP_DEBUG_FILE') or '<unset>'}",
+        f"- SMTP_TRUSTSTORE: {os.getenv('SMTP_TRUSTSTORE') or '<unset>'}",
+        f"- SMTP_CA_FILE: {os.getenv('SMTP_CA_FILE') or '<unset>'}",
+        f"- SMTP_CA_BUNDLE: {os.getenv('SMTP_CA_BUNDLE') or '<unset>'}",
+        f"- SMTP_RELAX_X509_STRICT: {os.getenv('SMTP_RELAX_X509_STRICT') or '<unset>'}",
     ]
     print("\n".join(lines), file=sys.stderr)
+
+
+def check_smtp_config() -> None:
+    settings = _smtp_runtime_settings()
+    missing = _validate_smtp_runtime_settings(settings)
+    if missing:
+        raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
+    print_smtp_config_debug()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -577,9 +640,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pages-repo", help="Pages repository path used by publish step.")
     parser.add_argument("--smtp-debug", action="store_true", help="Enable smtplib debug output on the SMTP connection.")
     parser.add_argument("--send-test-email", action="store_true", help="Send an SMTP-only diagnostic email and do not run the Gaza pipeline.")
+    parser.add_argument("--check-smtp-config", action="store_true", help="Validate SMTP/TLS configuration and print masked diagnostics without sending mail or running the Gaza pipeline.")
+    parser.add_argument("--email-nonfatal", "--warn-on-email-failure", dest="email_nonfatal", action="store_true", help="Pass through nonfatal email-report mode to the Gaza daily runner.")
     args = parser.parse_args(argv)
 
     load_env_file()
+
+    if args.check_smtp_config:
+        try:
+            check_smtp_config()
+        except Exception as exc:  # noqa: BLE001
+            print(f"SMTP configuration check failed: {notification_error_message(exc)}", file=sys.stderr)
+            return 2
+        return 0
 
     if args.send_test_email:
         if args.smtp_debug:
@@ -598,6 +671,8 @@ def main(argv: list[str] | None = None) -> int:
         pipeline_cmd.append("--dry-run")
     if args.smtp_debug:
         pipeline_cmd.append("--smtp-debug")
+    if args.email_nonfatal:
+        pipeline_cmd.append("--email-nonfatal")
     if args.pages_repo:
         pipeline_cmd.extend(["--pages-repo", args.pages_repo])
     result = run_command(pipeline_cmd)

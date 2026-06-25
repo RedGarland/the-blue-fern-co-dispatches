@@ -9,6 +9,7 @@ import pytest
 
 import scripts.publish_gaza_historical as historical
 import scripts.run_daily_gaza as daily
+import scripts.run_and_notify as notify
 
 
 def make_root(repo: Path) -> Path:
@@ -578,6 +579,37 @@ def test_email_report_sends_on_success(isolated, monkeypatch, capsys):
     assert "run manifest path:" in sent[0][1]
 
 
+def test_run_and_notify_check_smtp_config_does_not_send_or_run_pipeline(monkeypatch, capsys):
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
+    monkeypatch.setenv("SMTP_PORT", "587")
+    monkeypatch.setenv("SMTP_USER", "alerts@example.test")
+    monkeypatch.setenv("SMTP_PASSWORD", "pw")
+    monkeypatch.setenv("EMAIL_TO", "ops@example.test")
+    monkeypatch.setattr(notify, "run_command", lambda cmd: (_ for _ in ()).throw(AssertionError("pipeline should not run")))
+    monkeypatch.setattr(notify, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("email should not send")))
+
+    rc = notify.main(["--date", "2026-05-07", "--check-smtp-config"])
+
+    captured = capsys.readouterr()
+    assert rc == 0
+    assert "SMTP diagnostic config:" in captured.err
+    assert "TLS mode:" in captured.err
+
+
+def test_run_and_notify_check_smtp_config_reports_missing_env(monkeypatch, capsys):
+    monkeypatch.setattr(notify, "load_env_file", lambda path=None: None)
+    monkeypatch.delenv("SMTP_HOST", raising=False)
+    monkeypatch.delenv("EMAIL_TO", raising=False)
+    monkeypatch.delenv("SMTP_TO", raising=False)
+
+    rc = notify.main(["--date", "2026-05-07", "--check-smtp-config"])
+
+    captured = capsys.readouterr()
+    assert rc == 2
+    assert "Missing required env vars: SMTP_HOST, EMAIL_TO or SMTP_TO" in captured.err
+
+
 def test_email_report_sends_on_failure_with_warnings_and_errors(isolated, monkeypatch, capsys):
     root = isolated
     sent = []
@@ -831,8 +863,97 @@ def test_pipeline_success_email_tls_failure_includes_safe_guidance(isolated, mon
     assert code == 2
     err = str(summary["notification_error"])
     assert "SMTP TLS certificate verification failed" in err
-    assert "SMTP_CA_FILE" in err and "SMTP_CA_BUNDLE" in err
+    assert "SMTP_CA_FILE=<path-to-pem>" in err
+    assert "SMTP_CA_BUNDLE=<path-to-pem>" in err
+    assert "SMTP_TRUSTSTORE=1" in err
     assert "SMTP_RELAX_X509_STRICT=1" in err
+
+
+def test_custom_ca_env_vars_are_passed_into_smtp_tls_context(monkeypatch, tmp_path):
+    pem = tmp_path / "inspection-ca.pem"
+    pem.write_text("PEM", encoding="utf-8")
+    monkeypatch.setenv("SMTP_CA_BUNDLE", str(pem))
+    monkeypatch.delenv("SMTP_CA_FILE", raising=False)
+    monkeypatch.delenv("SMTP_RELAX_X509_STRICT", raising=False)
+    monkeypatch.delenv("SMTP_SKIP_VERIFY", raising=False)
+    monkeypatch.delenv("SMTP_TLS_VERIFY", raising=False)
+    called: dict[str, str | None] = {"cafile": None}
+
+    def fake_create_default_context(cafile=None):
+        called["cafile"] = cafile
+        return ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+    monkeypatch.setattr(notify.ssl, "create_default_context", fake_create_default_context)
+    _ctx, meta = notify._build_tls_context()
+    assert called["cafile"] == str(pem.resolve())
+    assert meta["ca_source"] == "custom_bundle"
+    assert meta["ca_bundle_env"] == "SMTP_CA_BUNDLE"
+
+
+def test_pipeline_success_email_failure_is_nonfatal_when_flag_set(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    monkeypatch.setattr(daily, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+    monkeypatch.setattr(
+        daily,
+        "run_command",
+        lambda args, cwd=daily.ROOT: (write_generated_output(root, "2026-05-07") or completed(args))
+        if "run_gaza_dispatch.py" in " ".join(args)
+        else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
+    )
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--skip-tests",
+            "--dry-run",
+            "--email-report",
+            "--email-nonfatal",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert summary["pipeline_ok"] is True
+    assert summary["generation_ok"] is True
+    assert summary["publish_ok"] is True
+    assert summary["email_ok"] is False
+    assert summary["overall_ok"] is True
+    assert "smtp outage" in str(summary["notification_error"])
+    assert any("Email report failed:" in warning for warning in summary["warnings"])
+    assert not any("Email report failed:" in error for error in summary["errors"])
+
+
+def test_pipeline_success_email_failure_is_fatal_by_default(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    monkeypatch.setattr(daily, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+    monkeypatch.setattr(
+        daily,
+        "run_command",
+        lambda args, cwd=daily.ROOT: (write_generated_output(root, "2026-05-07") or completed(args))
+        if "run_gaza_dispatch.py" in " ".join(args)
+        else completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}),
+    )
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--skip-tests",
+            "--dry-run",
+            "--email-report",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 2
+    assert summary["email_ok"] is False
+    assert summary["overall_ok"] is False
+    assert any("Email report failed:" in error for error in summary["errors"])
 
 
 def test_no_old_gaza_project_path_is_referenced():

@@ -46,6 +46,7 @@ def test_aggregator_url_is_kept_as_discovery_metadata_not_evidence(tmp_path):
     assert trt["url"].startswith("https://www.trtworld.com/middle-east/")
     assert trt["canonical_url"] == trt["url"]
     assert trt["source_registry_status"] == "known_provider"
+    assert trt["source_tier"] != "aggregator"
 
 
 def test_manifest_matching_known_provider_miss_and_new_provider_candidate(tmp_path):
@@ -76,6 +77,77 @@ def test_manifest_matching_known_provider_miss_and_new_provider_candidate(tmp_pa
     assert "new_provider_candidate" in new_source["comparison_flags"]
     assert report["summary"]["known_provider_missed_count"] >= 1
     assert report["summary"]["new_provider_candidate_count"] >= 1
+
+
+def test_google_news_urls_are_never_recommended_as_registry_changes(tmp_path):
+    report = _build_report(
+        tmp_path,
+        extra_rows=[
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVk?oc=5",
+                "title": "Emergency care collapse in Gaza - imemc.org",
+                "publisher": "",
+                "published_at": "2026-06-22T11:15:00+00:00",
+                "summary_or_snippet": "Google News discovery only.",
+                "discovery_source": "manual_seed_url",
+            }
+        ],
+    )
+
+    registry_targets = {str(row["publisher_or_domain"]).lower() for row in report["recommended_registry_changes"]}
+    assert "news.google.com" not in registry_targets
+    assert "google news" not in registry_targets
+
+
+def test_unresolved_google_news_candidate_is_blocked_and_uses_discovery_metadata_only(tmp_path):
+    report = _build_report(
+        tmp_path,
+        extra_rows=[
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVk?oc=5",
+                "title": "Hospital attack leaves medics wounded - imemc.org",
+                "publisher": "",
+                "published_at": "2026-06-22T11:15:00+00:00",
+                "summary_or_snippet": "Google News discovery only.",
+                "discovery_source": "manual_seed_url",
+            }
+        ],
+    )
+
+    row = next(item for item in report["candidates"] if item["title"] == "Hospital attack leaves medics wounded - imemc.org")
+    assert row["aggregator_url"].startswith("https://news.google.com/rss/articles/")
+    assert row["google_news_url"] == row["aggregator_url"]
+    assert row["url"] == ""
+    assert row["canonical_url"] == ""
+    assert "manual_review_needed" in row["comparison_flags"]
+    assert "blocked_or_unresolved" in row["comparison_flags"]
+    assert row["source_registry_status"] == "canonical_resolution_needed"
+    assert row["recommended_action"] == "resolve canonical publisher URL before source review"
+
+
+def test_visible_domain_in_google_news_title_is_inferred_for_classification(tmp_path):
+    report = _build_report(
+        tmp_path,
+        extra_rows=[
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVkLWltZW1j?oc=5",
+                "title": "Israeli attack kills child in al-Mawasi - imemc.org",
+                "publisher": "",
+                "published_at": "2026-06-22T11:15:00+00:00",
+                "summary_or_snippet": "Same Google News item, visible source suffix only.",
+                "discovery_source": "manual_seed_url",
+            }
+        ],
+    )
+
+    row = next(item for item in report["candidates"] if item["title"] == "Israeli attack kills child in al-Mawasi - imemc.org")
+    assert row["publisher"] == "IMEMC"
+    assert row["inferred_publisher_domain"] == "imemc.org"
+    assert row["source_tier"] == "region_specialist"
+    assert row["source_registry_status"] == "canonical_resolution_needed"
 
 
 def test_syndicated_duplicate_prefers_original_and_official_source(tmp_path):

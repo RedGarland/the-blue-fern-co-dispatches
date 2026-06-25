@@ -6,7 +6,7 @@
     "url": "https://www.bbc.co.uk/news/articles/c0jy96w6pw2o?at_medium=RSS&at_campaign=rss",
     "canonical_url": "https://www.bbc.co.uk/news/articles/c0jy96w6pw2o?at_medium=RSS&at_campaign=rss",
     "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
+    "canonicalization_status": "not_wrapper",
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-06-23T11:10:06+00:00",
@@ -21,14 +21,14 @@
     "provider_id": "rss",
     "attribution_mode": "independently_reported",
     "claim_status": "independently_reported",
-    "traceability_note": "",
+    "traceability_note": "Restored from origin/gh-pages:gaza/editions/2026-06-24/sources_manifest.json after local source checkout recovery.",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-24",
-    "used_in_story_ids": [
-      "gaza-story-2026-06-24-001"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
+    "ground_classification": "rejected_no_gaza_ground_signal",
+    "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
     "candidate_score": 24,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
@@ -48,7 +48,9 @@
     "relevance_band": "core",
     "dedupe_key": "bbc|un commission of inquiry says israel committing genocide in gaza by deliberately targeting children",
     "title_fingerprint": "un commission of inquiry says israel committing genocide in gaza by deliberately targeting children",
-    "claim_fingerprint": "bbc|un commission of inquiry says israel committing genocide in gaza by deliberately targeting children|conflict"
+    "claim_fingerprint": "bbc|un commission of inquiry says israel committing genocide in gaza by deliberately targeting children|conflict",
+    "duplicate_classification": "new",
+    "duplicate_reason": ""
   },
   {
     "source_record_id": "gaza-2026-06-24-guardian-world-832eba42f486",
@@ -57,7 +59,7 @@
     "url": "https://www.theguardian.com/world/2026/jun/23/israel-deliberately-targeting-gaza-children-to-commit-genocide-un-inquiry-finds",
     "canonical_url": "https://www.theguardian.com/world/2026/jun/23/israel-deliberately-targeting-gaza-children-to-commit-genocide-un-inquiry-finds",
     "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
+    "canonicalization_status": "not_wrapper",
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-06-23T18:56:11+00:00",
@@ -72,14 +74,16 @@
     "provider_id": "rss",
     "attribution_mode": "independently_reported",
     "claim_status": "independently_reported",
-    "traceability_note": "",
+    "traceability_note": "Restored from origin/gh-pages:gaza/editions/2026-06-24/sources_manifest.json after local source checkout recovery.",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-24",
     "used_in_story_ids": [
-      "gaza-story-2026-06-24-002"
+      "gaza-story-2026-06-24-003"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
+    "ground_classification": "core_ground_development",
+    "ground_classification_reason": "core_ground_signal",
     "candidate_score": 48,
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -101,23 +105,25 @@
     "relevance_band": "core",
     "dedupe_key": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds",
     "title_fingerprint": "israel continues to commit genocide by targeting children in gaza un inquiry finds",
-    "claim_fingerprint": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds|conflict"
+    "claim_fingerprint": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds|conflict",
+    "duplicate_classification": "new",
+    "duplicate_reason": ""
   },
   {
     "source_record_id": "gaza-2026-06-24-guardian-world-96f5c7dd9d28",
     "source_id": "gaza-2026-06-24-guardian-world-96f5c7dd9d28",
-    "title": "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds | First Thing",
+    "title": "Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds",
     "url": "https://www.theguardian.com/us-news/2026/jun/24/first-thing-israel-continues-to-commit-genocide-by-targeting-children-in-gaza-un-inquiry-finds",
     "canonical_url": "https://www.theguardian.com/us-news/2026/jun/24/first-thing-israel-continues-to-commit-genocide-by-targeting-children-in-gaza-un-inquiry-finds",
     "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
+    "canonicalization_status": "not_wrapper",
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-06-24T11:38:29+00:00",
     "retrieved_at": "2026-06-24T13:00:35.852080+00:00",
     "retrieved_local_date": "2026-06-24",
     "post_edition_date_source": false,
-    "summary_or_snippet": "Palestinian children 'deliberately targeted and killed', report's chair says. Plus, Mamdani-backed candidates sweep NYC Democratic primaries Good morning. Israel continues to commit genocide by deliberately targeting Palestinian children in Gaza, an \u2060 independent UN inquiry has found . What does the report say? That Palestinian children were deliberately targeted and killed during the \u200cwar, including after a ceasefire came into effect \u200cin October 2025. \"The evidence shows that Palestinian children have been deliberately targeted and killed by the Israeli security forces,\" Srinivasan Muralidhar, the commission's chair, said in a statement accompanying the report . How has Israel 's government reacted? The Israeli mission in Geneva said Israel rejected the commission's \"libellous sham\". The country has fought hard against allegations of genocide, while receiving critical diplomatic support from its allies including the US and the UK. What about legal and rights experts? A significant body of research has concluded that Israel is intent on destroying Palestinians, including analyses by UN investigators, rights bodies such as Amnesty International and Human Rights Watch , and genocide scholars worldwide. Which Mamdani allies won their primaries? Brad Lander, a former New York City comptroller, defeated the Democratic representative Dan Goldman; Claire Valdez, a state lawmaker and former union organizer, defeated Antonio Reynoso, the preferred successor of Nydia Vel\u00e1zquez, who is retiring; and Darializa Avila Chevalier, a public defense investigator, toppled Adriano Espaillat, the powerful five-term incumbent who chairs the congressional Hispanic caucus.",
+    "summary_or_snippet": "Palestinian children 'deliberately targeted and killed', report's chair says. Israel continues to commit genocide by deliberately targeting Palestinian children in Gaza, an \u2060 independent UN inquiry has found . What does the report say? That Palestinian children were deliberately targeted and killed during the \u200cwar, including after a ceasefire came into effect \u200cin October 2025. \"The evidence shows that Palestinian children have been deliberately targeted and killed by the Israeli security forces,\" Srinivasan Muralidhar, the commission's chair, said in a statement accompanying the report . How has Israel 's government reacted? The Israeli mission in Geneva said Israel rejected the commission's \"libellous sham\". The country has fought hard against allegations of genocide, while receiving critical diplomatic support from its allies including the US and the UK. What about legal and rights experts? A significant body of research has concluded that Israel is intent on destroying Palestinians, including analyses by UN investigators, rights bodies such as Amnesty International and Human Rights Watch , and genocide scholars worldwide. Brad Lander, a former New York City comptroller, defeated the Democratic representative Dan Goldman; Claire Valdez, a state lawmaker and former union organizer, defeated Antonio Reynoso, the preferred successor of Nydia Vel\u00e1zquez, who is retiring; and Darializa Avila Chevalier, a public defense investigator, toppled Adriano Espaillat, the powerful five-term incumbent who chairs the congressional Hispanic caucus.",
     "source_type": "rss",
     "region_scope": "Gaza",
     "category_hint": "conflict",
@@ -125,7 +131,7 @@
     "provider_id": "rss",
     "attribution_mode": "independently_reported",
     "claim_status": "independently_reported",
-    "traceability_note": "",
+    "traceability_note": "Restored from origin/gh-pages:gaza/editions/2026-06-24/sources_manifest.json after local source checkout recovery.",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-24",
     "used_in_story_ids": [
@@ -133,6 +139,8 @@
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
+    "ground_classification": "core_ground_development",
+    "ground_classification_reason": "core_ground_signal",
     "candidate_score": 80,
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -157,7 +165,9 @@
     "relevance_band": "core",
     "dedupe_key": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds first thing",
     "title_fingerprint": "israel continues to commit genocide by targeting children in gaza un inquiry finds first thing",
-    "claim_fingerprint": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds first thing|conflict"
+    "claim_fingerprint": "guardian|israel continues to commit genocide by targeting children in gaza un inquiry finds first thing|conflict",
+    "duplicate_classification": "new",
+    "duplicate_reason": ""
   },
   {
     "source_record_id": "gaza-2026-06-24-aljazeera-middle-east-5aadf2e4de03",
@@ -166,7 +176,7 @@
     "url": "https://www.aljazeera.com/news/2026/6/24/four-gaza-aid-flotilla-activists-released-from-libya-detention?traffic_source=rss",
     "canonical_url": "https://www.aljazeera.com/news/2026/6/24/four-gaza-aid-flotilla-activists-released-from-libya-detention?traffic_source=rss",
     "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
+    "canonicalization_status": "not_wrapper",
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-06-24T09:39:49+00:00",
@@ -181,7 +191,7 @@
     "provider_id": "rss",
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
-    "traceability_note": "",
+    "traceability_note": "Restored from origin/gh-pages:gaza/editions/2026-06-24/sources_manifest.json after local source checkout recovery.",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-24",
     "used_in_story_ids": [
@@ -189,6 +199,8 @@
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
+    "ground_classification": "core_ground_development",
+    "ground_classification_reason": "gaza_flotilla_public_development",
     "candidate_score": 44,
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -209,7 +221,9 @@
     "relevance_band": "core",
     "dedupe_key": "al jazeera|four gaza aid flotilla activists released from libya detention",
     "title_fingerprint": "four gaza aid flotilla activists released from libya detention",
-    "claim_fingerprint": "al jazeera|four gaza aid flotilla activists released from libya detention|conflict"
+    "claim_fingerprint": "al jazeera|four gaza aid flotilla activists released from libya detention|conflict",
+    "duplicate_classification": "new",
+    "duplicate_reason": ""
   },
   {
     "source_record_id": "gaza-2026-06-24-aljazeera-middle-east-db03fd660217",
@@ -218,7 +232,7 @@
     "url": "https://www.aljazeera.com/features/2026/6/24/diabetes-patients-in-gaza-face-survival-battle-amid-war-shortages?traffic_source=rss",
     "canonical_url": "https://www.aljazeera.com/features/2026/6/24/diabetes-patients-in-gaza-face-survival-battle-amid-war-shortages?traffic_source=rss",
     "canonical_url_attempted": false,
-    "canonicalization_status": "direct_url",
+    "canonicalization_status": "not_wrapper",
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-06-24T06:04:30+00:00",
@@ -233,14 +247,14 @@
     "provider_id": "rss",
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
-    "traceability_note": "",
+    "traceability_note": "Restored from origin/gh-pages:gaza/editions/2026-06-24/sources_manifest.json after local source checkout recovery.",
     "dispatch_slug": "gaza",
     "edition_date": "2026-06-24",
-    "used_in_story_ids": [
-      "gaza-story-2026-06-24-005"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
+    "ground_classification": "rejected_no_gaza_ground_signal",
+    "ground_classification_reason": "inquiry_or_legal_context_without_current_ground_conditions",
     "candidate_score": 32,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
@@ -260,6 +274,8 @@
     "relevance_band": "core",
     "dedupe_key": "al jazeera|diabetes patients in gaza face survival battle amid war shortages",
     "title_fingerprint": "diabetes patients in gaza face survival battle amid war shortages",
-    "claim_fingerprint": "al jazeera|diabetes patients in gaza face survival battle amid war shortages|conflict"
+    "claim_fingerprint": "al jazeera|diabetes patients in gaza face survival battle amid war shortages|conflict",
+    "duplicate_classification": "new",
+    "duplicate_reason": ""
   }
 ]

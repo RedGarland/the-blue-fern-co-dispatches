@@ -18,15 +18,7 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 24 Jun 2026 13:00:56 +0000</lastBuildDate>
-  <item>
-    <title>Gaza Briefing: June 24, 2026</title>
-    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-24-transcript.html</link>
-    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-24-transcript.html</guid>
-    <pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
-    <description>Israel continues to commit genocide by targeting children in Gaza, UN inquiry finds | First Thing. Palestinian children 'deliberately targeted and killed', report's chair says. Transcript and source links are available from The Blue Fern Co.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-24.mp3" length="1261824" type="audio/mpeg" />
-  </item>
+  <lastBuildDate>Sat, 20 Jun 2026 13:00:43 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>

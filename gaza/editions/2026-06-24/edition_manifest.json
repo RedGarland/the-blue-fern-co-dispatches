@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-24",
-  "generated_at": "2026-06-24T13:00:37.429853+00:00",
+  "generated_at": "2026-06-25T00:07:08.130736+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-24/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-24",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-24",
   "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-24",
   "template_version": "gaza-source-record-v1",
   "source_count": 5,
-  "story_count": 5,
+  "story_count": 2,
   "source_adequacy_status": "limited_source_update",
   "source_adequacy_label": "Limited-source update",
   "publisher_count": 3,
@@ -24,6 +24,37 @@
   "allow_post_edition_date_sources": false,
   "post_edition_date_sources_included": false,
   "post_edition_date_source_count": 0,
+  "public_content_quality_ok": true,
+  "public_content_quality_errors": [],
+  "public_content_quality_warnings": [
+    "stripped 3 newsletter or wrapper fragment(s)",
+    "collapsed 1 duplicate public story group(s)"
+  ],
+  "duplicate_story_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-06-24-003",
+      "merged_story_ids": [
+        "gaza-story-2026-06-24-002"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-24-guardian-world-832eba42f486"
+      ],
+      "duplicate_reason": "same_event_un_inquiry_genocide_targeting_children",
+      "normalized_event_key": "gaza_un_inquiry_genocide_targeting_children",
+      "reasons": [
+        "same_event_un_inquiry_genocide_targeting_children"
+      ]
+    }
+  ],
+  "stripped_newsletter_fragments": [
+    "| First Thing",
+    "Plus, Mamdani-backed candidates sweep NYC Democratic primaries Good morning.",
+    "Which Mamdani allies won their primaries?"
+  ],
+  "public_story_count_before_dedupe": 3,
+  "public_story_count_after_dedupe": 2,
+  "forbidden_public_fragments_found": [],
+  "public_prose_punctuation_errors": [],
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-24\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-24\\curation_manifest.json",
   "free_public_artifacts": [
@@ -39,11 +70,13 @@
   "public_exposed": true,
   "warnings": [
     "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-24\\manual_sources.template.json"
+    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-24\\manual_sources.template.json",
+    "Core Gaza target sources are missing or not actively checked: OCHA oPt (missing_from_registry), UNRWA (missing_from_registry), WHO (missing_from_registry), UNICEF (missing_from_registry), WFP (missing_from_registry), PRCS / Palestinian Red Crescent (missing_from_registry), Gaza Health Ministry (missing_from_registry), COGAT / Israeli military coordination source (missing_from_registry), Reuters (missing_from_registry), Associated Press (missing_from_registry), AFP (missing_from_registry), BBC (missing_from_registry), The Guardian (missing_from_registry), Al Jazeera English (missing_from_registry), WAFA (missing_from_registry)",
+    "26 target reliable sources are missing from the registry."
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-06-24T06:00:00-07:00",
-  "actual_run_local_time": "2026-06-24T06:00:37-07:00",
+  "actual_run_local_time": "2026-06-24T17:07:08-07:00",
   "source_window_start_utc": "2026-06-23T11:10:06Z",
   "source_window_end_utc": "2026-06-24T11:38:29Z",
   "first_source_retrieved_at": "2026-06-24T13:00:35.852080Z",

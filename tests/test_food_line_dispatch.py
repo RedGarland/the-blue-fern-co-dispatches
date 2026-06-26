@@ -508,6 +508,13 @@ def _write_food_line_discovery_gap_report(
     return report_path, report_markdown_path
 
 
+def _write_source_collection_gold_set(root: Path, date: str, payload: list[dict]) -> Path:
+    path = root / "data" / "dispatches" / "food-line" / "source_collection_gold_sets" / f"{date}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return path
+
+
 def _http_urls(text: str) -> list[str]:
     urls = {
         url
@@ -6266,6 +6273,235 @@ def test_food_line_collector_audit_json_is_written(tmp_path: Path):
     assert audit[0]["fetched"] is True
     assert audit[0]["accepted_pressure_count"] == 1
     assert audit[0]["top_rejection_reasons"] == []
+
+
+def test_food_line_source_collection_audit_matches_normalized_review_candidate(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    row = {
+        **_pressure_row(
+            1,
+            "Austin food bank reports rising summer demand",
+            "Food bank demand increased and pantry lines grew for families seeking help.",
+            family="local_news",
+            state="TX",
+            source_type="manual",
+            publisher="Austin Monitor",
+        ),
+        "url": "https://example.com/2026/06/24/austin-food-bank-demand",
+        "published_at": "2026-06-24T10:00:00Z",
+        "retrieved_at": "2026-06-25T12:00:00Z",
+        "pressure_signal": True,
+        "pressure_type": "demand strain",
+        "pressure_summary": "Austin food-bank demand increased and pantry lines grew for families seeking help.",
+        "pressure_reason": "matched demand strain",
+        "pressure_verification_status": "source_text_verified",
+        "source_role": "local_signal",
+        "source_purpose": "current_news",
+        "location_name": "Austin, TX",
+        "location_scope": "local",
+        "map_category": "elevated demand",
+        "source_public_story_eligible": True,
+        "source_freshness_status": "fresh_daily_signal",
+        "source_published_date": "2026-06-24",
+        "source_freshness_date_basis": "url_path",
+        "primary_eligible": True,
+    }
+    manual_path.write_text(json.dumps([row], indent=2), encoding="utf-8")
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food bank\" after:2026-06-20",
+                "url": "https://example.com/2026/06/24/austin-food-bank-demand/?utm_source=test",
+                "title": "Austin food bank reports rising summer demand",
+                "expected_status": "review_candidate",
+                "expected_reason": "pantry demand pressure",
+                "priority": "high",
+                "source_family": "local_reporting",
+            }
+        ],
+    )
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        generate_audio=False,
+        audit_source_collection=True,
+        gold_set_path=gold_set_path,
+    )
+
+    assert result["source_collection_audit_run"] is True
+    assert result["source_collection_found_count"] == 1
+    assert result["source_collection_reached_review_count"] == 1
+    assert result["source_collection_missed_count"] == 0
+    audit = json.loads(Path(result["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["summary"]["recall"] == 1.0
+    assert audit["items"][0]["found"] is True
+    assert audit["items"][0]["highest_stage_reached"] == "qualified_public_candidate"
+    assert audit["items"][0]["matched_artifact"] == "pressure_review"
+    assert audit["items"][0]["fuzzy_match"] is False
+
+
+def test_food_line_source_collection_audit_marks_missing_high_priority_candidate(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" after:2026-06-20",
+                "url": "https://example.com/reuters-missed-pressure-2026-06-25",
+                "title": "Millions lose food stamps as pantry demand rises",
+                "expected_status": "review_candidate",
+                "expected_reason": "SNAP loss / pantry demand pressure",
+                "priority": "high",
+                "source_family": "national_wire",
+            }
+        ],
+    )
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        generate_audio=False,
+        audit_source_collection=True,
+        gold_set_path=gold_set_path,
+    )
+
+    assert result["source_collection_audit_run"] is True
+    assert result["source_collection_found_count"] == 0
+    assert result["source_collection_missed_count"] == 1
+    assert result["source_collection_high_priority_missed_count"] == 1
+    assert result["source_collection_likely_failure_category"] == "discovery_query_gap"
+    audit = json.loads(Path(result["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["items"][0]["found"] is False
+    assert audit["items"][0]["highest_stage_reached"] == "not_discovered"
+    assert audit["items"][0]["miss_reason"] == "not_discovered"
+
+
+def test_food_line_source_collection_audit_records_rejected_candidate_with_reason(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    rejected_row = {
+        **_pressure_row(
+            2,
+            "Community pantry volunteer signup and donation page",
+            "Volunteer opportunities and donation information for the pantry.",
+            family="food_bank_provider",
+            state="TX",
+            source_type="manual",
+            publisher="Community Pantry",
+        ),
+        "url": "https://example.com/community-pantry-donations",
+        "published_at": "2026-06-24T08:00:00Z",
+        "retrieved_at": "2026-06-25T12:00:00Z",
+        "pressure_signal": False,
+        "pressure_type": "context / monitoring only",
+        "pressure_summary": "",
+        "pressure_reason": "resource-only / no pressure signal",
+        "pressure_verification_status": "demoted_context",
+        "source_role": "resource_context",
+        "source_purpose": "resource_page",
+        "location_name": "Austin, TX",
+        "location_scope": "local",
+        "map_category": "context / monitoring only",
+        "source_public_story_eligible": True,
+        "source_freshness_status": "fresh_daily_signal",
+        "source_published_date": "2026-06-24",
+        "source_freshness_date_basis": "published_at",
+        "primary_eligible": False,
+        "primary_disqualification_reason": "resource-only / no pressure signal",
+    }
+    manual_path.write_text(json.dumps([rejected_row], indent=2), encoding="utf-8")
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"pantry\" after:2026-06-20",
+                "url": rejected_row["url"],
+                "title": rejected_row["title"],
+                "expected_status": "review_candidate",
+                "expected_reason": "should be reviewed then rejected as resource-only",
+                "priority": "medium",
+                "source_family": "food_bank_provider",
+            }
+        ],
+    )
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        generate_audio=False,
+        audit_source_collection=True,
+        gold_set_path=gold_set_path,
+    )
+
+    assert result["source_collection_rejected_with_reason_count"] == 1
+    assert result["source_collection_missed_count"] == 0
+    audit = json.loads(Path(result["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["items"][0]["highest_stage_reached"] == "rejected_with_reason"
+    assert audit["items"][0]["miss_reason"] == "rejected_resource_only"
+    assert "resource-only" in audit["items"][0]["rejection_reason"]
+
+
+def test_food_line_source_collection_audit_mode_dry_run_does_not_publish(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" after:2026-06-20",
+                "url": "https://example.com/missed-food-line-candidate",
+                "title": "Missed audit candidate",
+                "expected_status": "review_candidate",
+                "expected_reason": "pressure candidate",
+                "priority": "high",
+                "source_family": "national_wire",
+            }
+        ],
+    )
+
+    exit_code = food_line.main(
+        [
+            "--date",
+            date,
+            "--dry-run",
+            "--no-generate-audio",
+            "--audit-source-collection",
+            "--gold-set",
+            str(gold_set_path),
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["source_collection_audit_run"] is True
+    assert payload["pages_publish_copied"] is False
+    assert payload["pushed"] is False
+    assert payload["bluesky_status"] == "skipped"
+
+
+def test_food_line_source_collection_audit_is_disabled_without_flag(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
+    assert result["source_collection_audit_run"] is False
+    assert result["source_collection_gold_count"] == 0
+    assert result["source_collection_audit_path"] == ""
 
 
 def test_food_line_review_csv_is_written_and_includes_evidence_fields(tmp_path: Path):

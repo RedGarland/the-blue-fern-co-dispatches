@@ -1,0 +1,24 @@
+[
+  {
+    "date": "2026-06-25",
+    "query": "\"food banks\" after:2026-06-20",
+    "url": "https://example.com/reuters-food-stamps-pressure-2026-06-25",
+    "title": "Millions lose food stamps as pantry demand rises",
+    "expected_status": "review_candidate",
+    "expected_reason": "SNAP loss / pantry demand pressure",
+    "priority": "high",
+    "source_family": "national_wire",
+    "notes": "Placeholder fixture row; replace with a verified candidate URL when operating the audit manually."
+  },
+  {
+    "date": "2026-06-25",
+    "query": "\"food bank\" after:2026-06-20 site:kpbs.org",
+    "url": "https://example.com/kpbs-food-bank-demand-2026-06-25",
+    "title": "San Diego food banks report rising summer demand",
+    "expected_status": "review_candidate",
+    "expected_reason": "summer demand / pantry strain",
+    "priority": "medium",
+    "source_family": "local_reporting",
+    "notes": "Placeholder fixture row mirroring the intended gold-set structure."
+  }
+]

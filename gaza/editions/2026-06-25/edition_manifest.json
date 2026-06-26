@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-25",
-  "generated_at": "2026-06-26T03:50:41.674846+00:00",
+  "generated_at": "2026-06-26T04:37:30.717222+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-25/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-25",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-25",
@@ -43,15 +43,15 @@
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-06-25T06:00:00-07:00",
-  "actual_run_local_time": "2026-06-25T20:50:41-07:00",
+  "actual_run_local_time": "2026-06-25T21:37:30-07:00",
   "source_window_start_utc": "2026-06-25T16:25:34Z",
   "source_window_end_utc": "2026-06-25T20:34:02Z",
-  "first_source_retrieved_at": "2026-06-26T03:50:40.250725Z",
-  "last_source_retrieved_at": "2026-06-26T03:50:40.250725Z",
-  "contains_later_same_day_update": false,
-  "later_same_day_update_count": 0,
-  "later_same_day_update_batch_count": 0,
-  "later_same_day_update_source_count": 0,
+  "first_source_retrieved_at": "2026-06-26T04:06:26.138656Z",
+  "last_source_retrieved_at": "2026-06-26T04:37:28.936773Z",
+  "contains_later_same_day_update": true,
+  "later_same_day_update_count": 1,
+  "later_same_day_update_batch_count": 1,
+  "later_same_day_update_source_count": 1,
   "contains_post_edition_date_update": false,
   "post_edition_date_update_count": 0,
   "post_edition_date_update_batch_count": 0,
@@ -59,15 +59,24 @@
   "post_edition_date_retrieval_batches": [],
   "retrieval_batches": [
     {
-      "retrieved_at": "2026-06-26T03:50:40.250725Z",
-      "retrieved_at_local": "2026-06-25T20:50:40-07:00",
+      "retrieved_at": "2026-06-26T04:06:26.138656Z",
+      "retrieved_at_local": "2026-06-25T21:06:26-07:00",
       "retrieved_local_date": "2026-06-25",
       "batch_classification": "scheduled_or_pre_scheduled_batch",
       "source_record_ids": [
-        "gaza-2026-06-25-guardian-world-2b4041472298",
         "gaza-2026-06-25-aljazeera-middle-east-d95f56f7d36c"
       ],
-      "source_count": 2
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-06-26T04:37:28.936773Z",
+      "retrieved_at_local": "2026-06-25T21:37:28-07:00",
+      "retrieved_local_date": "2026-06-25",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-06-25-guardian-world-2b4041472298"
+      ],
+      "source_count": 1
     }
   ]
 }

@@ -1,53 +1,106 @@
 [
   {
-    "source_id": "gaza-src-001",
-    "title": "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza",
-    "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF",
-    "publisher": "The New York Times",
-    "published_at": null,
-    "retrieved_at": "2026-06-26T04:37:48.148463+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-001"
-    ],
+    "source_record_id": "gaza-2026-06-26-manual-aljazeera-west-bank-gaza-killings",
+    "source_id": "gaza-2026-06-26-manual-aljazeera-west-bank-gaza-killings",
+    "title": "Israeli forces shoot and kill Palestinians in occupied West Bank, Gaza",
+    "url": "https://www.aljazeera.com/news/2026/6/25/israeli-forces-shoot-and-kill-palestinians-in-occupied-west-bank-gaza",
+    "canonical_url": "https://www.aljazeera.com/news/2026/6/25/israeli-forces-shoot-and-kill-palestinians-in-occupied-west-bank-gaza",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "not_wrapper",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-06-25T00:00:00Z",
+    "retrieved_at": "2026-06-26T14:40:50Z",
+    "retrieved_local_date": "2026-06-26",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Al Jazeera reported that Israeli forces shot and killed Palestinians in incidents involving the occupied West Bank and Gaza.",
+    "source_type": "manual",
+    "region_scope": "Gaza / occupied West Bank",
+    "category_hint": "civilian_harm",
+    "reliability_tier": "editorial-record",
+    "provider_id": "manual-supplement",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Manual review: likely publishable Gaza-relevant incident source. Mixed West Bank/Gaza item; use only if the Gaza incident survives curation.",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-26"
+    "edition_date": "2026-06-26",
+    "used_in_story_ids": [
+      "gaza-story-2026-06-26-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 10,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "al jazeera|israeli forces shoot and kill palestinians in occupied west bank gaza",
+    "title_fingerprint": "israeli forces shoot and kill palestinians in occupied west bank gaza",
+    "claim_fingerprint": "al jazeera|israeli forces shoot and kill palestinians in occupied west bank gaza|civilian harm"
   },
   {
-    "source_id": "gaza-src-002",
-    "title": "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls",
-    "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE",
-    "publisher": "Haaretz",
-    "published_at": null,
-    "retrieved_at": "2026-06-26T04:37:48.148463+00:00",
-    "archive_path": null,
-    "used_in_story_ids": [
-      "gaza-story-001"
-    ],
-    "claim_ids": [
-      "gaza-claim-002"
-    ],
+    "source_record_id": "gaza-2026-06-26-manual-presbyterian-outlook-gaza-genocide-arms-embargo",
+    "source_id": "gaza-2026-06-26-manual-presbyterian-outlook-gaza-genocide-arms-embargo",
+    "title": "Committee approves naming Israel?s actions in Gaza a genocide, calls for arms embargo",
+    "url": "https://pres-outlook.org/2026/06/committee-approves-naming-israels-actions-in-gaza-a-genocide-calls-for-arms-embargo/",
+    "canonical_url": "https://pres-outlook.org/2026/06/committee-approves-naming-israels-actions-in-gaza-a-genocide-calls-for-arms-embargo",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "not_wrapper",
+    "wrapper_url": null,
+    "publisher": "Presbyterian Outlook",
+    "published_at": "2026-06-26T00:00:00Z",
+    "retrieved_at": "2026-06-26T14:40:50Z",
+    "retrieved_local_date": "2026-06-26",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Presbyterian Outlook reported that a committee approved language naming Israel?s actions in Gaza a genocide and calling for an arms embargo.",
+    "source_type": "manual",
+    "region_scope": "Gaza / United States institutional response",
+    "category_hint": "accountability_context",
+    "reliability_tier": "editorial-record",
+    "provider_id": "manual-supplement",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Manual review: accountability/context source. Use as secondary context, not as the primary Gaza field-development signal unless no stronger source-backed update exists.",
     "dispatch_slug": "gaza",
-    "edition_date": "2026-06-26"
-  },
-  {
-    "source_id": "gaza-src-003",
-    "title": "Court extends detention of 2 Gaza flotilla activists accused of Hamas links",
-    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR",
-    "publisher": "The Times of Israel",
-    "published_at": null,
-    "retrieved_at": "2026-06-26T04:37:48.148463+00:00",
-    "archive_path": null,
+    "edition_date": "2026-06-26",
     "used_in_story_ids": [
-      "gaza-story-001"
+      "gaza-story-2026-06-26-002"
     ],
-    "claim_ids": [
-      "gaza-claim-003"
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 36,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 10,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-06-26"
+    "relevance_band": "core",
+    "dedupe_key": "presbyterian outlook|committee approves naming israel s actions in gaza a genocide calls for arms embargo",
+    "title_fingerprint": "committee approves naming israel s actions in gaza a genocide calls for arms embargo",
+    "claim_fingerprint": "presbyterian outlook|committee approves naming israel s actions in gaza a genocide calls for arms embargo|accountability context"
   }
 ]

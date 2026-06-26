@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import re
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import quote_plus, urlsplit
+from urllib.parse import parse_qsl, quote_plus, unquote, urlsplit
 
 from bluefern_dispatches import gaza_sources
 
@@ -104,8 +105,34 @@ KNOWN_PROVIDER_DOMAINS = {
     "bbc.com": "BBC News",
     "theguardian.com": "The Guardian",
     "aljazeera.com": "Al Jazeera",
+    "news.un.org": "UN News",
+    "reliefweb.int": "ReliefWeb",
     "timesofisrael.com": "Times of Israel",
     "haaretz.com": "Haaretz",
+}
+
+VISIBLE_PUBLISHER_SUFFIX_DOMAINS = {
+    "trt world": "trtworld.com",
+    "anadolu": "aa.com.tr",
+    "jerusalem post": "jpost.com",
+    "times of israel": "timesofisrael.com",
+    "haaretz": "haaretz.com",
+    "middle east eye": "middleeasteye.net",
+    "reuters": "reuters.com",
+    "ap news": "apnews.com",
+    "associated press": "apnews.com",
+    "ap": "apnews.com",
+    "afp": "afp.com",
+    "bbc": "bbc.com",
+    "bbc news": "bbc.com",
+    "guardian": "theguardian.com",
+    "the guardian": "theguardian.com",
+    "al jazeera": "aljazeera.com",
+    "al jazeera english": "aljazeera.com",
+    "un news": "news.un.org",
+    "reliefweb": "reliefweb.int",
+    "imemc": "imemc.org",
+    "imemc.org": "imemc.org",
 }
 
 WEAK_CONTEXT_HINTS = (
@@ -202,7 +229,58 @@ def _infer_visible_publisher_domain(*values: Any) -> str:
             match = pattern.search(text)
             if match:
                 return _normalize_text(match.group(1))
+        suffix = re.split(r"\s[-|:]\s", text)[-1]
+        normalized_suffix = _normalize_publisher(suffix)
+        if normalized_suffix in VISIBLE_PUBLISHER_SUFFIX_DOMAINS:
+            return VISIBLE_PUBLISHER_SUFFIX_DOMAINS[normalized_suffix]
     return ""
+
+
+def _extract_embedded_http_url(text: str) -> str:
+    match = re.search(r"https?://[^\s\x00<>\"']+", text)
+    if not match:
+        return ""
+    candidate = gaza_sources.canonicalize_url(match.group(0))
+    return "" if _is_google_news_url(candidate) else candidate
+
+
+def _resolve_google_news_canonical_url(url: str) -> tuple[str, str]:
+    raw = _nonempty(url)
+    if not _is_google_news_url(raw):
+        candidate = gaza_sources.canonicalize_url(raw)
+        return (candidate, "direct_url") if candidate else ("", "missing_url")
+
+    canonical_url, reason = gaza_sources.extract_canonical_from_google_wrapper(raw)
+    if canonical_url and not _is_google_news_url(canonical_url):
+        return canonical_url, reason
+
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return "", "invalid_wrapper_url"
+
+    query_candidates = [unquote(str(value or "")).strip() for _key, value in parse_qsl(parts.query, keep_blank_values=False)]
+    for candidate_text in query_candidates:
+        candidate = _extract_embedded_http_url(candidate_text)
+        if candidate:
+            return candidate, "resolved_from_query_payload"
+
+    segments = [segment for segment in parts.path.split("/") if segment]
+    article_token = segments[-1] if segments else ""
+    token_candidates = [unquote(article_token)]
+    if article_token:
+        padded = article_token + ("=" * ((4 - len(article_token) % 4) % 4))
+        try:
+            decoded = base64.urlsafe_b64decode(padded).decode("utf-8", "ignore")
+        except Exception:  # noqa: BLE001
+            decoded = ""
+        if decoded:
+            token_candidates.append(decoded)
+    for candidate_text in token_candidates:
+        candidate = _extract_embedded_http_url(candidate_text)
+        if candidate:
+            return candidate, "resolved_from_wrapper_payload"
+    return "", "wrapper_without_extractable_canonical"
 
 
 def _has_source_of_record_url(candidate: dict[str, Any]) -> bool:
@@ -299,7 +377,7 @@ def _looks_syndicated(candidate: dict[str, Any]) -> bool:
 def _source_tier_for_candidate(publisher: Any, url: Any) -> str:
     publisher_text = _normalize_publisher(publisher)
     domain = _domain_from_url(_nonempty(url))
-    if publisher_text in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in {"who.int", "unrwa.org", "unicef.org", "wfp.org", "ochaopt.org", "prcs.ps", "wafa.ps"}:
+    if publisher_text in OFFICIAL_HUMANITARIAN_PUBLISHERS or domain in {"who.int", "unrwa.org", "unicef.org", "wfp.org", "ochaopt.org", "prcs.ps", "wafa.ps", "news.un.org", "reliefweb.int"}:
         return "official_humanitarian"
     if publisher_text in WIRE_PUBLISHERS or domain in {"reuters.com", "apnews.com", "afp.com", "bbc.com", "theguardian.com", "aljazeera.com"}:
         return "wire_and_major_international"
@@ -467,7 +545,7 @@ def _discover_from_feed_surface(surface: dict[str, Any], *, fetch_rss_items_fn: 
         canonical_url = ""
         if _is_google_news_url(item_url):
             aggregator_url = item_url
-            canonical_url, _reason = gaza_sources.extract_canonical_from_google_wrapper(item_url)
+            canonical_url, _reason = _resolve_google_news_canonical_url(item_url)
             discovered_url = canonical_url or ""
         else:
             canonical_url = gaza_sources.canonicalize_url(item_url)
@@ -510,7 +588,7 @@ def _seed_to_candidate(seed: dict[str, Any], *, default_surface_type: str, retri
     if _is_google_news_url(aggregator_url or url):
         aggregator_url = aggregator_url or url
         if not canonical_url:
-            canonical_url, _reason = gaza_sources.extract_canonical_from_google_wrapper(aggregator_url)
+            canonical_url, _reason = _resolve_google_news_canonical_url(aggregator_url)
         if _is_google_news_url(url):
             url = ""
     if canonical_url and _is_google_news_url(canonical_url):
@@ -979,6 +1057,48 @@ def _filter_rows(candidates: list[dict[str, Any]], flag: str) -> list[dict[str, 
     return [row for row in candidates if flag in row.get("comparison_flags", [])]
 
 
+def _published_sort_key(value: Any) -> tuple[int, str]:
+    parsed = _parse_dt(value)
+    if parsed is None:
+        return (1, "")
+    return (0, f"{-parsed.timestamp():020.6f}")
+
+
+def _report_priority(row: dict[str, Any]) -> tuple[int, int, int, int, tuple[int, str], str]:
+    current = not bool(row.get("stale"))
+    resolved = _has_source_of_record_url(row)
+    qualifies = bool(row.get("would_qualify"))
+    blocked = bool(row.get("blocked_or_unresolved"))
+    weak_or_outside = bool(row.get("weak_signal") or row.get("outside_scope"))
+    official = 0 if _normalize_text(row.get("source_tier")) == "official_humanitarian" else 1
+    if current and resolved and qualifies and not blocked:
+        bucket = 0
+    elif current and resolved and not weak_or_outside:
+        bucket = 1
+    elif current and blocked:
+        bucket = 2
+    elif current:
+        bucket = 3
+    elif resolved and not weak_or_outside:
+        bucket = 4
+    elif blocked:
+        bucket = 5
+    else:
+        bucket = 6
+    return (
+        bucket,
+        0 if current else 1,
+        0 if resolved else 1,
+        official,
+        _published_sort_key(row.get("published_at")),
+        (_nonempty(row.get("publisher")) + "|" + _nonempty(row.get("title"))).lower(),
+    )
+
+
+def _sort_report_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(rows, key=_report_priority)
+
+
 def _render_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]]) -> str:
     if not rows:
         return "_None._"
@@ -1081,13 +1201,15 @@ def build_gaza_wide_source_audit(
 
     registry_changes, query_changes, tier_changes = _build_recommendations(candidates)
     summary = _summary_counts(candidates, manifest)
-    missing_but_likely = [row for row in candidates if row.get("would_qualify") and not row.get("already_in_manifest")]
-    known_provider_missed = _filter_rows(candidates, "known_provider_missed")
-    new_provider_candidates = _filter_rows(candidates, "new_provider_candidate")
-    official_humanitarian_candidates = [row for row in candidates if _normalize_text(row.get("source_tier")) == "official_humanitarian"]
-    duplicate_and_syndicated = [row for row in candidates if {"syndicated_duplicate", "official_source_preferred"} & set(row.get("comparison_flags", []))]
-    blocked_or_unresolved = _filter_rows(candidates, "blocked_or_unresolved")
-    stale_or_outside_or_weak = [row for row in candidates if {"stale", "outside_scope", "weak_signal"} & set(row.get("comparison_flags", []))]
+    missing_but_likely = _sort_report_rows([row for row in candidates if row.get("would_qualify") and not row.get("already_in_manifest")])
+    known_provider_missed = _sort_report_rows(_filter_rows(candidates, "known_provider_missed"))
+    new_provider_candidates = _sort_report_rows(_filter_rows(candidates, "new_provider_candidate"))
+    official_humanitarian_candidates = _sort_report_rows([row for row in candidates if _normalize_text(row.get("source_tier")) == "official_humanitarian"])
+    duplicate_and_syndicated = _sort_report_rows([row for row in candidates if {"syndicated_duplicate", "official_source_preferred"} & set(row.get("comparison_flags", []))])
+    blocked_or_unresolved = _sort_report_rows(_filter_rows(candidates, "blocked_or_unresolved"))
+    blocked_or_unresolved_current = _sort_report_rows([row for row in blocked_or_unresolved if not row.get("stale")])
+    blocked_or_unresolved_stale = _sort_report_rows([row for row in blocked_or_unresolved if row.get("stale")])
+    stale_or_outside_or_weak = _sort_report_rows([row for row in candidates if {"stale", "outside_scope", "weak_signal"} & set(row.get("comparison_flags", []))])
 
     report = {
         "ok": True,
@@ -1113,6 +1235,8 @@ def build_gaza_wide_source_audit(
         "official_humanitarian_candidates": official_humanitarian_candidates,
         "duplicates_and_syndications": duplicate_and_syndicated,
         "blocked_or_unresolved": blocked_or_unresolved,
+        "blocked_or_unresolved_current": blocked_or_unresolved_current,
+        "blocked_or_unresolved_stale": blocked_or_unresolved_stale,
         "stale_outside_scope_weak_signal": stale_or_outside_or_weak,
         "recommended_registry_changes": registry_changes,
         "recommended_query_changes": query_changes,
@@ -1182,10 +1306,22 @@ def render_gaza_wide_source_audit_markdown(report: dict[str, Any]) -> str:
             [("publisher", "publisher"), ("title", "title"), ("comparison_flags", "flags"), ("skip_or_accept_reason", "reason"), ("recommended_action", "recommended_action")],
         ),
         "",
-        "## Blocked Or Unresolved",
+        "## Current Blocked Or Unresolved",
+        _render_table(
+            report.get("blocked_or_unresolved_current", []),
+            [("publisher", "publisher"), ("title", "title"), ("google_news_url", "google_news_url"), ("url", "url"), ("skip_or_accept_reason", "reason"), ("recommended_action", "recommended_action")],
+        ),
+        "",
+        "## Stale Blocked Or Unresolved",
+        _render_table(
+            report.get("blocked_or_unresolved_stale", []),
+            [("publisher", "publisher"), ("title", "title"), ("google_news_url", "google_news_url"), ("url", "url"), ("skip_or_accept_reason", "reason"), ("recommended_action", "recommended_action")],
+        ),
+        "",
+        "## All Blocked Or Unresolved",
         _render_table(
             report.get("blocked_or_unresolved", []),
-            [("publisher", "publisher"), ("title", "title"), ("url", "url"), ("skip_or_accept_reason", "reason"), ("recommended_action", "recommended_action")],
+            [("publisher", "publisher"), ("title", "title"), ("google_news_url", "google_news_url"), ("url", "url"), ("skip_or_accept_reason", "reason"), ("recommended_action", "recommended_action")],
         ),
         "",
         "## Stale, Outside Scope, Weak Signal",

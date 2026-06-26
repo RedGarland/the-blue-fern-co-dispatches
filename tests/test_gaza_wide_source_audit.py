@@ -150,6 +150,30 @@ def test_visible_domain_in_google_news_title_is_inferred_for_classification(tmp_
     assert row["source_registry_status"] == "canonical_resolution_needed"
 
 
+def test_google_news_wrapper_payload_can_resolve_real_publisher_url(tmp_path):
+    report = _build_report(
+        tmp_path,
+        extra_rows=[
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiT2h0dHBzOi8vd3d3LnRydHdvcmxkLmNvbS9taWRkbGUtZWFzdC9nYXphLWhlYWx0aC1zeXN0ZW0tc3RyYWluLW9mZmljaWFscy13YXJuLW9mLWNvbGxhcHNpbmctY2FyZS0xODI3MzY0NQ?oc=5",
+                "title": "Gaza health system strain, officials warn of collapsing care - TRT World",
+                "publisher": "",
+                "published_at": "2026-06-22T07:15:00+00:00",
+                "summary_or_snippet": "Health care access and hospital strain in Gaza.",
+                "discovery_source": "manual_seed_url",
+            }
+        ],
+    )
+
+    row = next(item for item in report["candidates"] if item["title"] == "Gaza health system strain, officials warn of collapsing care - TRT World")
+    assert row["google_news_url"].startswith("https://news.google.com/rss/articles/")
+    assert row["url"] == "https://www.trtworld.com/middle-east/gaza-health-system-strain-officials-warn-of-collapsing-care-18273645"
+    assert row["canonical_url"] == row["url"]
+    assert row["publisher"] == "TRT World"
+    assert row["source_registry_status"] == "known_provider"
+
+
 def test_syndicated_duplicate_prefers_original_and_official_source(tmp_path):
     report = _build_report(tmp_path)
     rows = {row["publisher"]: row for row in report["candidates"] if row.get("publisher")}
@@ -235,6 +259,58 @@ def test_report_writes_only_under_output_review_and_does_not_touch_public_paths(
     assert not (root / "output" / "site" / "gaza" / "archive.html").exists()
     assert not (root / "output" / "site" / "gaza" / "audio" / "podcast.xml").exists()
     assert not (root / "bluefern-dispatches-pages").exists()
+
+
+def test_report_separates_current_and_stale_blocked_rows_and_prioritizes_current_resolved_items(tmp_path):
+    report = _build_report(
+        tmp_path,
+        extra_rows=[
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVkLWN1cnJlbnQ?oc=5",
+                "title": "Current unresolved child casualty report - Reuters",
+                "publisher": "",
+                "published_at": "2026-06-22T12:05:00+00:00",
+                "summary_or_snippet": "Current Gaza casualty report.",
+                "discovery_source": "manual_seed_url",
+            },
+            {
+                "url": "",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVkLXN0YWxl?oc=5",
+                "title": "Older unresolved hospital report - Reuters",
+                "publisher": "",
+                "published_at": "2026-06-10T12:05:00+00:00",
+                "summary_or_snippet": "Older Gaza hospital report.",
+                "discovery_source": "manual_seed_url",
+            },
+            {
+                "url": "https://www.aljazeera.com/news/2026/6/22/gaza-child-killed-in-strike",
+                "title": "Child killed in Gaza strike",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-06-22T13:00:00+00:00",
+                "summary_or_snippet": "Current Gaza ground development with casualties and child death.",
+                "discovery_source": "manual_seed_url",
+            },
+            {
+                "url": "https://www.who.int/news/item/2026-06-15-gaza-shelter-warning",
+                "title": "Older Gaza shelter warning",
+                "publisher": "WHO",
+                "published_at": "2026-06-15T10:00:00+00:00",
+                "summary_or_snippet": "Older Gaza warning.",
+                "discovery_source": "manual_seed_url",
+            },
+        ],
+    )
+
+    current_titles = [row["title"] for row in report["blocked_or_unresolved_current"]]
+    stale_titles = [row["title"] for row in report["blocked_or_unresolved_stale"]]
+    assert "Current unresolved child casualty report - Reuters" in current_titles
+    assert "Older unresolved hospital report - Reuters" in stale_titles
+
+    markdown = gaza_wide_source_audit.render_gaza_wide_source_audit_markdown(report)
+    assert "## Current Blocked Or Unresolved" in markdown
+    assert "## Stale Blocked Or Unresolved" in markdown
+    assert markdown.index("Child killed in Gaza strike") < markdown.index("Older unresolved hospital report - Reuters")
 
 
 def test_script_parse_args_supports_requested_flags():

@@ -53,6 +53,30 @@ TOPIC_REWRITE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"\bcamp\b|\bdisplac\b|\brefugee\b|\bdaily life\b", re.IGNORECASE), "daily life in Gaza's camps"),
     (re.compile(r"\b1967\b|\bexpulsion|killings?\b", re.IGNORECASE), "newly surfaced documentation tied to 1967 expulsions and killings"),
 )
+GENERIC_GAZA_LEAD_PHRASES = {
+    "west bank developments",
+    "regional developments",
+    "diplomacy context",
+    "accountability context",
+}
+GENERIC_TITLE_ENDINGS = (
+    "update",
+    "updates",
+    "developments",
+    "context",
+    "overview",
+    "briefing",
+    "newsfeed",
+)
+SECONDARY_CLAUSE_PREFIXES = (
+    "also covered:",
+    "also:",
+    "the update also covers",
+    "the briefing also covers",
+)
+SUMMARY_RESTART_RE = re.compile(
+    r"\b(Israeli forces|Israeli PM|Netanyahu|Medics|Witnesses|Officials|Mediators|The ICRC|Dr\s+[A-Z])\b"
+)
 
 
 def _env_enabled(name: str) -> bool:
@@ -258,7 +282,7 @@ def _gaza_bluesky_context(project_root: Path, edition_date: str) -> dict[str, An
 
     expected_post_snippets: list[str] = []
     seen_snippets: set[str] = set()
-    for row in selected_rows:
+    for row in sorted((row for row in selected_rows if isinstance(row, dict)), key=_story_priority):
         snippet = _story_post_snippet(row)
         key = snippet.casefold().strip()
         if not key or key in seen_snippets:
@@ -385,39 +409,124 @@ def _topic_text_fragments_from_record(record: dict[str, Any]) -> list[str]:
     return fragments
 
 
-def _story_post_snippet(record: dict[str, Any]) -> str:
-    text = _clean_description_text(
-        str(
-            record.get("social_summary")
-            or record.get("public_summary")
-            or record.get("summary")
-            or record.get("summary_or_snippet")
-            or record.get("description")
-            or record.get("title")
-            or ""
-        ),
-        180,
-    )
-    lowered = _record_text_blob(record)
-    if not text:
+def _normalize_story_phrase(value: str) -> str:
+    return re.sub(r"\s+", " ", str(value or "").strip(" .,:;!?\"'")).casefold()
+
+
+def _has_repeated_ngram(text: str, n: int = 3) -> bool:
+    words = re.findall(r"[a-z0-9']+", str(text or "").lower())
+    if len(words) < n * 2:
+        return False
+    seen: set[tuple[str, ...]] = set()
+    for idx in range(len(words) - n + 1):
+        gram = tuple(words[idx : idx + n])
+        if gram in seen:
+            return True
+        seen.add(gram)
+    return False
+
+
+def _looks_like_generic_story_text(text: str) -> bool:
+    normalized = _normalize_story_phrase(text)
+    if not normalized:
+        return True
+    return normalized in GENERIC_GAZA_LEAD_PHRASES
+
+
+def _looks_like_generic_title(title: str) -> bool:
+    normalized = _normalize_story_phrase(title)
+    return any(normalized.endswith(ending) for ending in GENERIC_TITLE_ENDINGS)
+
+
+def _trim_restarted_summary(text: str) -> str:
+    value = str(text or "").strip()
+    if len(value) < 80:
+        return value
+    for match in SUMMARY_RESTART_RE.finditer(value):
+        if match.start() < 60:
+            continue
+        prefix = value[: match.start()].rstrip(" ,;:-")
+        if len(prefix) >= 40:
+            return sanitize_public_prose(prefix)
+    return value
+
+
+def _story_priority(record: dict[str, Any]) -> tuple[int, int, int, int]:
+    lead_score = int(record.get("score") or record.get("top_story_relevance_score") or 0)
+    substantive = 1 if bool(record.get("substantive_ground")) else 0
+    core_ground = 1 if bool(record.get("core_ground_development")) else 0
+    core_scope = 1 if _normalize_story_phrase(record.get("story_scope") or record.get("region_scope") or "") == "core gaza" else 0
+    return (-core_ground, -substantive, -core_scope, -lead_score)
+
+
+def _story_text_quality(cleaned: str, *, field_name: str) -> int:
+    if not cleaned or _looks_like_generic_story_text(cleaned):
+        return -100
+    normalized = _normalize_story_phrase(cleaned)
+    score = 0
+    if field_name == "title":
+        score += 2
+        if not _looks_like_generic_title(cleaned):
+            score += 2
+    elif field_name in {"social_summary", "public_summary"}:
+        score += 6
+    else:
+        score += 5
+    if len(cleaned) > 150:
+        score -= 2
+    if _has_repeated_ngram(cleaned):
+        score -= 5
+    if re.search(r"\b([A-Z][a-z]+(?:\s+[A-Z][A-Za-z'/-]+){1,3})\b.*\b\1\b", cleaned):
+        score -= 4
+    if normalized.endswith(" west bank") or normalized.endswith(" gaza"):
+        score -= 1
+    return score
+
+
+def _best_story_reader_text(record: dict[str, Any], max_length: int) -> str:
+    candidates: list[tuple[int, int, str]] = []
+    for order, key in enumerate(("social_summary", "public_summary", "summary", "summary_or_snippet", "description", "title")):
+        raw = record.get(key)
+        raw_text = str(raw or "")
+        raw_variants = [raw_text]
+        if key != "title":
+            trimmed_raw = _trim_restarted_summary(raw_text)
+            if trimmed_raw and trimmed_raw != raw_text:
+                raw_variants = [trimmed_raw]
+        for raw_variant in raw_variants:
+            variant = _clean_description_text(raw_variant, max_length)
+            if not variant:
+                continue
+            quality = _story_text_quality(variant, field_name=key)
+            if quality <= -100:
+                continue
+            candidates.append((quality, -order, variant))
+    if not candidates:
         return ""
+    candidates.sort(reverse=True)
+    return candidates[0][2]
+
+
+def _story_post_snippet(record: dict[str, Any]) -> str:
+    cleaned = _best_story_reader_text(record, 180)
+    if not cleaned:
+        return ""
+    lowered = _record_text_blob(record)
     if "khan younis" in lowered and "strike" in lowered:
         return "Khan Younis strikes"
     if "civil defence" in lowered and "10 killed" in lowered:
         return "Gaza civil defence reported 10 killed"
     if "cairo" in lowered and "mediator" in lowered and ("ceasefire" in lowered or "talk" in lowered):
         return "Cairo ceasefire talks"
-    if "west bank" in lowered:
-        return "West Bank developments"
     if "flotilla" in lowered or "prison ship" in lowered:
         return "flotilla detention"
-    return text
+    return cleaned
 
 
 def _derive_gaza_focus_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
     context = _gaza_bluesky_context(project_root, edition_date)
     topics: list[str] = []
-    for row in context.get("story_rows") or []:
+    for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
         if not isinstance(row, dict):
             continue
         snippet = _story_post_snippet(row)
@@ -471,6 +580,14 @@ def _compose_cta(edition_date: str) -> str:
     return "Full briefing:"
 
 
+def _gaza_bluesky_intro_label(context: dict[str, Any]) -> str:
+    edition_manifest = context.get("edition_manifest")
+    status = ""
+    if isinstance(edition_manifest, dict):
+        status = str(edition_manifest.get("source_adequacy_status") or "").strip().lower()
+    return "Gaza source-backed update" if status == "limited_source_update" else "Gaza briefing"
+
+
 def _shorten_post_text_at_word_boundary(text: str, max_len: int) -> str:
     sentence = re.sub(r"\s+", " ", str(text or "").strip())
     if len(sentence) <= max_len:
@@ -500,10 +617,7 @@ def _gaza_public_summary_for_bluesky(project_root: Path, edition_date: str, max_
     for row in context.get("story_rows") or []:
         if not isinstance(row, dict):
             continue
-        cleaned = _clean_description_text(
-            str(row.get("social_summary") or row.get("public_summary") or row.get("summary") or row.get("summary_or_snippet") or row.get("title") or ""),
-            max_length,
-        )
+        cleaned = _best_story_reader_text(row, max_length)
         if cleaned:
             return cleaned
     return ""
@@ -520,21 +634,20 @@ def build_gaza_bluesky_post_text(
     clean_date = str(edition_date or "").strip()
     context = _gaza_bluesky_context(root, clean_date)
     topics = []
-    for row in context.get("story_rows") or []:
-        if not isinstance(row, dict):
-            continue
+    for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
         snippet = _story_post_snippet(row)
         if not snippet:
             continue
         if snippet.casefold() in {item.casefold() for item in topics}:
             continue
         topics.append(snippet)
-        if len(topics) >= 5:
+        if len(topics) >= 2:
             break
     public_summary = _gaza_public_summary_for_bluesky(root, clean_date, max_length=180)
     if not topics and not public_summary:
         return BLUESKY_GAZA_POST_FALLBACK
     date_text = _format_post_date(clean_date)
+    intro_label = _gaza_bluesky_intro_label(context)
     url_suffix = f"\n\nPublic edition: {public_url}" if include_public_url and str(public_url or "").strip() else ""
     footer = "Source-backed briefing from The Blue Fern Co."
 
@@ -546,18 +659,18 @@ def build_gaza_bluesky_post_text(
 
     if topics:
         if len(topics) == 1:
-            intro = f"In the {date_text} Gaza briefing: {topics[0]}."
+            intro = f"In the {date_text} {intro_label}: {topics[0]}."
         elif len(topics) == 2:
-            intro = f"In the {date_text} Gaza briefing: {topics[0]}; and {topics[1]}."
+            intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
         else:
-            intro = f"In the {date_text} Gaza briefing: {'; '.join(topics[:-1])}; and {topics[-1]}."
+            intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
         candidate = _with_suffix(f"{intro}\n\n{footer}")
         if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != _normalize_public_post_text(intro):
             return candidate
         if len(f"{intro}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return _normalize_public_post_text(f"{intro}{url_suffix}" if url_suffix else intro)
     if public_summary:
-        prefix = f"In the {date_text} Gaza briefing: "
+        prefix = f"In the {date_text} {intro_label}: "
         available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - len(footer) - 5
         if available > 0:
             summary = _shorten_post_text_at_word_boundary(public_summary.rstrip(".") or public_summary, available).rstrip(".")
@@ -568,9 +681,9 @@ def build_gaza_bluesky_post_text(
     if topics:
         compact_topics = topics[:2]
         if len(compact_topics) == 1:
-            compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}."
+            compact = f"In the {date_text} {intro_label}: {compact_topics[0]}."
         else:
-            compact = f"In the {date_text} Gaza briefing: {compact_topics[0]}; and {compact_topics[1]}."
+            compact = f"In the {date_text} {intro_label}: {compact_topics[0]}. Also covered: {compact_topics[1]}."
         if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return _normalize_public_post_text(f"{compact}{url_suffix}" if url_suffix else compact)
     return BLUESKY_GAZA_POST_FALLBACK[:BLUESKY_MAX_POST_LENGTH]
@@ -677,7 +790,6 @@ def _read_json(path: Path) -> Any:
 def _extract_top_story_summary(project_root: Path, edition_date: str, max_length: int) -> str:
     curated_path = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "curation_manifest.json"
     payload = _read_json(curated_path)
-    keys = ("social_summary", "summary", "description", "dek", "public_summary")
     preferred: list[str] = []
     fallback: list[str] = []
     if isinstance(payload, list):
@@ -685,7 +797,7 @@ def _extract_top_story_summary(project_root: Path, edition_date: str, max_length
         for item in eligible_items or payload:
             if not isinstance(item, dict):
                 continue
-            cleaned = _first_usable_direct_field(item, keys, max_length)
+            cleaned = _best_story_reader_text(item, max_length)
             if not cleaned:
                 continue
             blob = json.dumps(item).lower()
@@ -697,7 +809,7 @@ def _extract_top_story_summary(project_root: Path, edition_date: str, max_length
         return preferred[0]
     if fallback:
         return fallback[0]
-    return _first_usable_field(payload, keys, max_length)
+    return _first_usable_field(payload, ("social_summary", "summary", "description", "dek", "public_summary", "title"), max_length)
 
 
 def _extract_first_paragraph_from_html(project_root: Path, edition_date: str, max_length: int) -> str:
@@ -726,13 +838,8 @@ def build_gaza_card_description(edition_date: str, project_root: Path, max_lengt
     if not date_text:
         return BLUESKY_CARD_FALLBACK_DESCRIPTION
     context = _gaza_bluesky_context(project_root, date_text)
-    for row in context.get("story_rows") or []:
-        if not isinstance(row, dict):
-            continue
-        cleaned = _clean_description_text(
-            str(row.get("social_summary") or row.get("public_summary") or row.get("summary") or row.get("summary_or_snippet") or row.get("title") or ""),
-            max_length,
-        )
+    for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
+        cleaned = _best_story_reader_text(row, max_length)
         if cleaned:
             return cleaned
     edition_manifest = context.get("edition_manifest")
@@ -977,13 +1084,24 @@ def _bluesky_stale_content_guard(post_text: str, context: dict[str, Any]) -> tup
         if phrase in body and phrase not in allowed_corpus:
             return False, "stale-content-guard-failed"
     clause_text = body.rsplit(".", 1)[0] if "." in body else body
-    clauses = [part.strip(" .") for part in clause_text.split(";") if part.strip(" .")]
+    sentence_parts = [part.strip(" .") for part in re.split(r"(?<=[.!?])\s+", clause_text) if part.strip(" .")]
+    clauses: list[str] = []
+    for part in sentence_parts or [clause_text]:
+        normalized_part = part.strip(" .")
+        for prefix in SECONDARY_CLAUSE_PREFIXES:
+            if normalized_part.startswith(prefix):
+                normalized_part = normalized_part[len(prefix) :].strip(" .")
+                break
+        if "; " in normalized_part:
+            clauses.extend(item.strip(" .") for item in normalized_part.split(";") if item.strip(" ."))
+        elif normalized_part:
+            clauses.append(normalized_part)
     expected_lookup = {snippet.casefold(): snippet for snippet in expected_snippets}
     for clause in clauses:
         clause = clause.removeprefix("and ").strip(" .")
         if not clause:
             continue
-        if clause in {"full briefing", "limited-source update"}:
+        if clause in {"full briefing", "limited-source update", "source-backed update"}:
             continue
         if clause.casefold() in expected_lookup:
             continue

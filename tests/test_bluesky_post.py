@@ -174,7 +174,7 @@ def test_reader_prose_respects_military_and_gaza_adjacent_attribution(tmp_path: 
         project_root=tmp_path,
     )
     assert text.startswith("In the May 31 Gaza briefing:")
-    assert "destroyed weapons storage facilities in Gaza" in text
+    assert "weapons storage facilities in Gaza" in text
     assert "Gaza-bound convoy in Libya was dissolved after arrests." in text
     assert "inside Gaza" not in text.lower()
 
@@ -322,6 +322,79 @@ def test_gaza_post_text_omits_source_count_metadata_and_cleans_punctuation(tmp_p
     assert "Source-backed briefing from The Blue Fern Co." in text
 
 
+def test_june_25_post_uses_specific_reader_facing_prose_for_limited_source_update(tmp_path: Path):
+    edition_date = "2026-06-25"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Israeli forces arrest Palestinian 'doctor of the poor'",
+                    "summary": (
+                        "Dr Mazen Al-Rantisi, a 71-year-old physician well known for providing care to low-income Palestinians, "
+                        "was arrested in the occupied West Bank Israeli forces on Sunday arrested a prominent 71-year-old "
+                        "Palestinian physician known as the \"doctor of the poor\" in a pre-dawn raid on his home in the occupied "
+                        "West Bank, prompting widespread condemnation. Dr Mazen Al-Rantisi, a physician widely known for providing "
+                        "care to low-income Palestinians, was arrested in the al-Tira neighbourhood of Ramallah."
+                    ),
+                    "category": "palestinian_development",
+                    "story_scope": "palestinian_development",
+                    "score": 65,
+                    "included_in_public_summary": True,
+                    "substantive_ground": True,
+                    "core_ground_development": True,
+                    "attribution_mode": "independently_reported",
+                    "claim_status": "independently_reported",
+                    "region_scope": "West Bank / Gaza relevance",
+                },
+                {
+                    "title": "Netanyahu: 'We will remain in Lebanon, Syria, and Gaza as long as required'",
+                    "summary": "Israeli PM Benjamin Netanyahu stated that Israeli forces will maintain a presence in southern Lebanon, Syria and Gaza.",
+                    "category": "conflict",
+                    "story_scope": "core_gaza",
+                    "score": 38,
+                    "included_in_public_summary": True,
+                    "substantive_ground": False,
+                    "core_ground_development": False,
+                    "attribution_mode": "reported_public_source",
+                    "claim_status": "reported_public_source",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "source_count": 2,
+                "publisher_count": 2,
+                "publishers": ["Al Jazeera", "The Guardian"],
+                "source_adequacy_status": "limited_source_update",
+            }
+        ),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 25, 2026</p></body></html>", encoding="utf-8")
+
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        edition_date,
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-06-25/",
+        project_root=tmp_path,
+        include_public_url=False,
+    )
+
+    assert text.startswith("In the June 25 Gaza source-backed update:")
+    assert "West Bank developments" not in text
+    assert "regional developments" not in text
+    assert "palestinian_development" not in text
+    assert "Dr Mazen Al-Rantisi" in text
+    assert "; and " not in text
+
+
 def test_gaza_card_description_and_maybe_post_clean_public_punctuation_and_keep_guards(monkeypatch, tmp_path: Path):
     monkeypatch.setenv("BLUESKY_ENABLED", "1")
     monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
@@ -405,6 +478,38 @@ def test_gaza_card_description_and_maybe_post_clean_public_punctuation_and_keep_
     assert "!." not in description
     assert "Why has FIFA's rebuilding plan gone nowhere?" in result["post_text"]
     assert "Why has FIFA's rebuilding plan gone nowhere?" in description
+
+
+def test_june_25_card_description_uses_clean_story_text_instead_of_truncated_raw_snippet(tmp_path: Path):
+    edition_date = "2026-06-25"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Israeli forces arrest Palestinian 'doctor of the poor'",
+                    "summary": (
+                        "Dr Mazen Al-Rantisi, a 71-year-old physician well known for providing care to low-income Palestinians, "
+                        "was arrested in the occupied West Bank Israeli forces on Sunday arrested a prominent 71-year-old "
+                        "Palestinian physician known as the \"doctor of the poor\" in a pre-dawn raid on his home in the occupied West Bank."
+                    ),
+                    "included_in_public_summary": True,
+                    "score": 65,
+                    "substantive_ground": True,
+                    "core_ground_development": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    description = bluesky_post.build_gaza_card_description(edition_date, tmp_path)
+
+    assert description.startswith("Dr Mazen Al-Rantisi")
+    assert "low-income" in description
+    assert "Israeli forces on Sunday arrested" not in description
+    assert len(description) <= bluesky_post.BLUESKY_CARD_MAX_DESCRIPTION_LENGTH
 
 
 def test_build_uses_current_date_artifacts_and_ignores_prior_edition_artifacts(tmp_path: Path):

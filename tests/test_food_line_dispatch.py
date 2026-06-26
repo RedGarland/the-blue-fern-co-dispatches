@@ -1281,6 +1281,25 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(
+        food_line,
+        "collect_food_line_auto_sources",
+        lambda *args, **kwargs: {"ok": True, "source_count": 44},
+    )
+    monkeypatch.setattr(
+        food_line,
+        "_food_line_discovery_gap_summary",
+        lambda *args, **kwargs: {
+            "run": True,
+            "report_found": True,
+            "report_path": str(tmp_path / "data" / "dispatches" / "food-line" / "discovery_gap" / "2026-06-06" / "discovery_gap_report.json"),
+            "report_markdown_path": str(tmp_path / "data" / "dispatches" / "food-line" / "discovery_gap" / "2026-06-06" / "discovery_gap_report.md"),
+            "likely_qualifying_count": 0,
+            "unreviewed_likely_qualifying_count": 0,
+            "public_no_qualifying_update_validated": True,
+            "warning": "",
+        },
+    )
     date = "2026-06-06"
     payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-06" / "auto_sources.json"
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
@@ -1288,7 +1307,7 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    result = run_food_line_dispatch(tmp_path, date)
+    result = run_food_line_dispatch(tmp_path, date, collect=True, include_discovery_gap_summary=True)
 
     review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
     review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
@@ -1305,8 +1324,9 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
 
     assert result["public_rendered"] is True
     assert result["edition_mode"] == "no_current_update"
-    assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
-    assert result["food_line_publish_blocked_reason"] == "No fresh current-story Food Line sources remained after freshness filtering."
+    assert result["source_freshness_status"] == "passed_no_qualifying_update"
+    assert result["food_line_publish_blocked_reason"] == ""
+    assert result["food_line_no_current_update_policy_status"] == "allowed"
     assert result["stale_public_story_count"] >= 3
     assert stale_ids.issubset(set(result["stale_source_ids"]))
     assert result["lead_source_record_id"] not in stale_ids
@@ -1317,7 +1337,7 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert review_by_id["food-line-auto-8766e7659336949d"]["pressure_signal"] == "false"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["freshness_status"] == "stale_outside_daily_window"
     assert review_by_id["food-line-auto-6effc522ae28d822"]["pressure_signal"] == "false"
-    assert "No current update / June 6, 2026" in edition_html
+    assert "No qualifying update / June 6, 2026" in edition_html
     assert "Generated from saved source records available for June 6, 2026." in edition_html
     assert "No fresh source-backed current food-pressure signal qualified today." in edition_html
     assert "Today’s Read" in edition_html
@@ -1346,17 +1366,164 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "What the source says" in source_table_html
     assert "stale current-story candidate source" in source_table_html
     assert "food-line-auto-" in source_table_html
-    assert "2026-06-06 — No current update" in index_html
+    assert "2026-06-06 — No qualifying update" in index_html
     assert "editions/2026-06-06/" in index_html
     assert 'href="/american-pressure/"' not in index_html
     assert 'href="/gaza/"' in index_html
     assert 'href="/cascadia/"' in index_html
     assert 'href="/food-line/"' in index_html
-    assert "2026-06-06 — No current update" in archive_html
+    assert "2026-06-06 — No qualifying update" in archive_html
     assert manifest["public_rendered"] is True
     assert manifest["edition_mode"] == "no_current_update"
     assert manifest["skip_reason"] == ""
-    assert manifest["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+    assert manifest["source_freshness_status"] == "passed_no_qualifying_update"
+
+
+def test_food_line_no_current_update_policy_blocks_when_discovery_gap_did_not_run() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": True, "source_count": 12},
+        discovery_gap_check={"run": False},
+        discovery_expansion_used=False,
+        source_freshness_status="passed_no_qualifying_update",
+        news_item_count=6,
+        local_signal_count=3,
+        state_signal_count=2,
+        discovery_gap_unreviewed_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is False
+    assert result["status"] == "blocked"
+    assert any("discovery-gap or equivalent expanded discovery did not run" in reason for reason in result["reasons"])
+
+
+def test_food_line_no_current_update_policy_blocks_when_freshness_status_is_blocked() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": True, "source_count": 18},
+        discovery_gap_check={"run": True},
+        discovery_expansion_used=False,
+        source_freshness_status="blocked_insufficient_fresh_current_stories",
+        news_item_count=8,
+        local_signal_count=4,
+        state_signal_count=2,
+        discovery_gap_unreviewed_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is False
+    assert result["status"] == "blocked"
+    assert any("source freshness status blocked_insufficient_fresh_current_stories blocks public no-qualifying-update publication" in reason for reason in result["reasons"])
+
+
+def test_food_line_no_current_update_policy_blocks_when_collector_failed() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": False, "source_count": 18},
+        discovery_gap_check={"run": True},
+        discovery_expansion_used=False,
+        source_freshness_status="passed_no_qualifying_update",
+        news_item_count=8,
+        local_signal_count=4,
+        state_signal_count=2,
+        discovery_gap_unreviewed_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is False
+    assert result["status"] == "blocked"
+    assert "source collection did not run successfully" in result["reasons"]
+
+
+def test_food_line_no_current_update_policy_allows_public_no_qualifying_update_only_with_full_checks() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": True, "source_count": 18},
+        discovery_gap_check={"run": True},
+        discovery_expansion_used=False,
+        source_freshness_status="passed_no_qualifying_update",
+        news_item_count=8,
+        local_signal_count=4,
+        state_signal_count=2,
+        discovery_gap_unreviewed_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is True
+    assert result["status"] == "allowed"
+    assert result["reasons"] == []
+
+
+def test_food_line_no_current_update_policy_blocks_stale_candidate_even_with_discovery_gap_and_high_counts() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": True, "source_count": 18},
+        discovery_gap_check={"run": True},
+        discovery_expansion_used=False,
+        source_freshness_status="blocked_insufficient_fresh_current_stories",
+        news_item_count=8,
+        local_signal_count=4,
+        state_signal_count=2,
+        discovery_gap_unreviewed_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is False
+    assert result["status"] == "blocked"
+    assert any("blocked_insufficient_fresh_current_stories" in reason for reason in result["reasons"])
+
+
+def test_food_line_no_current_update_policy_freshness_status_uses_real_blocked_status_for_stale_candidate() -> None:
+    status = food_line._food_line_no_current_update_policy_freshness_status(
+        future_date_blocked=False,
+        no_current_update_candidate=True,
+        stale_public_story_count=5,
+        public_rendered=False,
+        discovery_gap_check={"run": True},
+        discovery_bridge_result={"discovery_expansion_used": False},
+    )
+
+    assert status == "blocked_insufficient_fresh_current_stories"
+
+
+def test_food_line_no_current_update_policy_freshness_status_allows_validated_no_qualifying_update() -> None:
+    status = food_line._food_line_no_current_update_policy_freshness_status(
+        future_date_blocked=False,
+        no_current_update_candidate=True,
+        stale_public_story_count=5,
+        public_rendered=False,
+        discovery_gap_check={"run": True, "public_no_qualifying_update_validated": True},
+        discovery_bridge_result={"discovery_expansion_used": False},
+    )
+
+    assert status == "passed_no_qualifying_update"
+
+
+def test_food_line_no_current_update_without_discovery_gap_is_internal_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(
+        food_line,
+        "collect_food_line_auto_sources",
+        lambda *args, **kwargs: {"ok": True, "source_count": 44},
+    )
+    date = "2026-06-06"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, collect=True, include_discovery_gap_summary=False)
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["public_rendered"] is False
+    assert result["edition_mode"] == "internal_no_qualifying_update"
+    assert result["food_line_no_current_update_policy_status"] == "blocked"
+    assert result["food_line_no_current_update_policy_metrics"]["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+    assert any("discovery-gap or equivalent expanded discovery did not run" in reason for reason in result["food_line_no_current_update_policy_reasons"])
+    assert "Food Line public no-qualifying-update policy blocked publication" in result["food_line_publish_blocked_reason"]
+    assert manifest["public_rendered"] is False
+    assert manifest["edition_mode"] == "internal_no_qualifying_update"
+    assert (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists() is False
 
 
 def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -1396,21 +1563,18 @@ def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_p
     p.write_text(json.dumps(rows, indent=2), encoding="utf-8")
 
     result = run_food_line_dispatch(tmp_path, date)
-    index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
-    archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
     manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
-    assert result["public_rendered"] is True
-    assert result["edition_mode"] == "no_current_update"
+    assert result["public_rendered"] is False
+    assert result["edition_mode"] == "internal_no_qualifying_update"
     assert result["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
     assert result["qualified_primary_count"] == 0
-    assert "2026-06-07 — No current update" in index_html
-    assert "2026-06-07 — No current update" in archive_html
-    assert "Food Line tracks source-backed reported signals of food pressure available at publish time." in index_html
-    assert "Blocked" not in archive_html
-    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is True
-    assert manifest["edition_mode"] == "no_current_update"
+    assert any("source collection did not run successfully" in reason for reason in result["food_line_no_current_update_policy_reasons"])
+    assert any("discovery-gap or equivalent expanded discovery did not run" in reason for reason in result["food_line_no_current_update_policy_reasons"])
+    assert public_edition_is_listable(tmp_path / "output" / "site", "food-line", date) is False
+    assert manifest["edition_mode"] == "internal_no_qualifying_update"
     assert manifest["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
+    assert (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists() is False
 
 
 def test_food_line_archive_lists_current_update_edition_is_archive_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -1519,9 +1683,9 @@ def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No current update" in index_html
-    assert "2026-06-07 — No current update" in archive_html
-    assert "2026-06-06 — No current update" in archive_html
+    assert "2026-06-07 — No qualifying update" in index_html
+    assert "2026-06-07 — No qualifying update" in archive_html
+    assert "2026-06-06 — No qualifying update" in archive_html
     assert "2026-06-05" not in index_html
     assert "2026-06-05" not in archive_html
     assert 'href="map/"' not in index_html
@@ -1574,7 +1738,7 @@ def test_food_line_homepage_omits_pressure_map_link_when_marker_count_is_zero(tm
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No current update" in index_html
+    assert "2026-06-07 — No qualifying update" in index_html
     assert 'href="map/"' not in index_html
 
 
@@ -1621,7 +1785,7 @@ def test_food_line_homepage_shows_pressure_map_link_when_marker_count_is_positiv
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No current update" in index_html
+    assert "2026-06-07 — No qualifying update" in index_html
     assert 'href="map/"' in index_html
 
 
@@ -1787,34 +1951,29 @@ def test_food_line_future_url_story_stays_no_current_update_without_verified_dat
         raise AssertionError(f"unexpected fetch url: {url}")
 
     result = run_food_line_dispatch(tmp_path, "2026-06-07", collect=True, collect_fetcher=fetcher)
-    manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "sources_manifest.json"
-    edition_manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "edition_manifest.json"
-    claim_ledger_path = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "claim_ledger.html"
-    manifest_rows = json.loads(manifest_path.read_text(encoding="utf-8"))
+    edition_manifest_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / "2026-06-07" / "run_manifest.json"
+    review_path = tmp_path / "output" / "review" / "food-line" / "2026-06-07" / "pressure_review.csv"
     edition_manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
-    claim_ledger_html = claim_ledger_path.read_text(encoding="utf-8")
-    row = next(item for item in manifest_rows if item["url"] == "https://example.com/2026-06-08/future-food-access-story")
+    review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
+    row = next(item for item in review_rows if item["source_url"] == "https://example.com/2026-06-08/future-food-access-story")
 
-    assert row["published_at"] == ""
-    assert row["page_metadata_date"] == "2026-06-08T12:00:00Z"
-    assert row["source_published_date_basis"] == "page_metadata"
     assert row["source_freshness_date_basis"] == "page_metadata"
-    assert row["source_public_story_eligible"] is False
-    assert row["date_provenance_warning"] == "published_at missing; using page_metadata_date"
-    assert result["edition_mode"] == "no_current_update"
+    assert row["source_public_story_eligible"] == "false"
+    assert row["source_freshness_status"] == "stale_outside_daily_window"
+    assert result["public_rendered"] is False
+    assert result["edition_mode"] == "internal_no_qualifying_update"
     assert result["qualified_primary_count"] == 0
-    assert edition_manifest["edition_mode"] == "no_current_update"
+    assert edition_manifest["edition_mode"] == "internal_no_qualifying_update"
     assert edition_manifest["claim_count"] == 0
     assert edition_manifest["claim_ledger_path"] == "/food-line/editions/2026-06-07/claim_ledger.html"
     assert edition_manifest["source_table_path"] == "/food-line/editions/2026-06-07/source_table.html"
     assert edition_manifest["qualified_source_count"] == 0
     assert edition_manifest["excluded_source_count"] >= 0
     assert edition_manifest["correction_status"] == "none"
-    assert edition_manifest["validation_status"] == "ok"
-    assert "No current public Food Line claims were made for this edition" in claim_ledger_html
-    assert "Records reviewed:" in claim_ledger_html
-    assert "Qualified current records: 0" in claim_ledger_html
-    assert "Excluded resource-only / no pressure signal" in claim_ledger_html
+    assert edition_manifest["validation_status"] == "pending"
+    assert edition_manifest["food_line_no_current_update_policy_status"] == "blocked"
+    assert any("discovery-gap or equivalent expanded discovery did not run" in reason for reason in edition_manifest["food_line_no_current_update_policy_reasons"])
+    assert (tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-07" / "index.html").exists() is False
 
 
 def test_food_line_url_date_only_rows_stay_background_reference_and_audit_material(tmp_path: Path):
@@ -3172,18 +3331,18 @@ def test_food_line_june_11_wsls_only_shows_audit_reason_and_summary_counts_match
     p.write_text(json.dumps([wsls, stale_row], indent=2), encoding="utf-8")
 
     result = run_food_line_dispatch(tmp_path, date)
-    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
-    source_table_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "source_table.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+    review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    review_rows = list(csv.DictReader(review_path.open(encoding="utf-8")))
 
-    assert result["public_rendered"] is True
-    assert result["edition_mode"] == "no_current_update"
+    assert result["public_rendered"] is False
+    assert result["edition_mode"] == "internal_no_qualifying_update"
     assert result["lead_source_record_id"] is None
-    assert "No current update" in edition_html
-    assert "Source audit: reused prior lead from 2026-06-10" in source_table_html
-    assert "0 sources were used on the public page" in source_table_html
-    assert "1 source audit record" in source_table_html
-    assert "Used on public page" in source_table_html
-    assert "No" in source_table_html
+    assert manifest["food_line_no_current_update_policy_status"] == "blocked"
+    assert any("source collection did not run successfully" in reason for reason in manifest["food_line_no_current_update_policy_reasons"])
+    assert review_rows
+    assert any(row["source_record_id"] == wsls["source_record_id"] for row in review_rows)
+    assert (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists() is False
 
 
 def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp_path: Path):

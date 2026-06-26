@@ -3810,6 +3810,90 @@ def test_food_line_cli_publish_skips_no_public_edition_without_pages_publish(mon
     assert out["source_adequacy"]["status"] == "blocked_insufficient_current_story_sources"
 
 
+def test_food_line_run_range_iterates_each_date_inclusively(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    seen_dates: list[str] = []
+
+    def fake_run_food_line_dispatch(root: Path, edition_date: str, **kwargs):
+        seen_dates.append(edition_date)
+        assert root == tmp_path
+        assert kwargs["collect"] is True
+        assert kwargs["include_discovery_gap_summary"] is True
+        return {"ok": True, "edition_date": edition_date}
+
+    monkeypatch.setattr(food_line, "run_food_line_dispatch", fake_run_food_line_dispatch)
+
+    runs = food_line.run_range(
+        tmp_path,
+        "2026-06-21",
+        "2026-06-25",
+        collect=True,
+        include_discovery_gap_summary=True,
+    )
+
+    assert seen_dates == ["2026-06-21", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25"]
+    assert [run["edition_date"] for run in runs] == seen_dates
+
+
+def test_food_line_main_range_mode_returns_successful_aggregate(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def fake_run_range(root: Path, start_date: str, end_date: str, **kwargs):
+        assert root == Path.cwd()
+        assert start_date == "2026-06-21"
+        assert end_date == "2026-06-25"
+        assert kwargs["collect"] is True
+        return [
+            {"ok": True, "edition_date": "2026-06-21", "public_rendered": False, "edition_mode": "no_public_edition"},
+            {"ok": True, "edition_date": "2026-06-22", "public_rendered": True, "edition_mode": "no_current_update"},
+        ]
+
+    monkeypatch.setattr(food_line, "run_range", fake_run_range)
+
+    rc = food_line.main(
+        [
+            "--start-date",
+            "2026-06-21",
+            "--end-date",
+            "2026-06-25",
+            "--collect",
+        ]
+    )
+    out = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert out["ok"] is True
+    assert out["run_count"] == 2
+    assert out["failed_dates"] == []
+    assert out["start_date"] == "2026-06-21"
+    assert out["end_date"] == "2026-06-22"
+    assert [run["edition_date"] for run in out["runs"]] == ["2026-06-21", "2026-06-22"]
+
+
+def test_food_line_main_range_mode_reports_failed_date(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    def fake_run_range(root: Path, start_date: str, end_date: str, **kwargs):
+        return [
+            {"ok": True, "edition_date": "2026-06-21"},
+            {"ok": False, "edition_date": "2026-06-22", "errors": ["collector failed"]},
+            {"ok": True, "edition_date": "2026-06-23"},
+        ]
+
+    monkeypatch.setattr(food_line, "run_range", fake_run_range)
+
+    rc = food_line.main(
+        [
+            "--start-date",
+            "2026-06-21",
+            "--end-date",
+            "2026-06-23",
+            "--collect",
+        ]
+    )
+    out = json.loads(capsys.readouterr().out)
+
+    assert rc == 1
+    assert out["ok"] is False
+    assert out["failed_dates"] == ["2026-06-22"]
+    assert out["errors"] == ["2026-06-22: collector failed"]
+
+
 def test_food_line_publish_food_line_pages_fails_when_expected_edition_missing(monkeypatch: pytest.MonkeyPatch):
     done = types.SimpleNamespace(
         returncode=1,

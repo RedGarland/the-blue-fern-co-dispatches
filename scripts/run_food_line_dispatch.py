@@ -11,8 +11,10 @@ import subprocess
 import sys
 from collections import Counter
 from datetime import date as date_type, datetime, timedelta, timezone
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -4407,6 +4409,415 @@ def _write_food_line_review_csv(root: Path, date: str, sources: list[dict[str, A
     return review_path
 
 
+def _read_food_line_review_csv(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+_FOOD_LINE_SOURCE_COLLECTION_TRACKING_PARAMS = {
+    "fbclid",
+    "gclid",
+    "mc_cid",
+    "mc_eid",
+    "mkt_tok",
+    "spm",
+}
+
+
+def _normalize_food_line_source_collection_url(url: str) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return canonical_url(raw)
+    filtered_query = [
+        (key, value)
+        for key, value in parse_qsl(parts.query, keep_blank_values=True)
+        if key
+        and key.lower() not in _FOOD_LINE_SOURCE_COLLECTION_TRACKING_PARAMS
+        and not key.lower().startswith("utm_")
+    ]
+    path = parts.path.rstrip("/")
+    normalized = urlunsplit(
+        (
+            parts.scheme.lower(),
+            parts.netloc.lower(),
+            path,
+            urlencode(filtered_query, doseq=True),
+            "",
+        )
+    )
+    return canonical_url(normalized)
+
+
+def _food_line_source_collection_gold_set_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "source_collection_gold_sets" / f"{date}.json"
+
+
+def _food_line_source_collection_audit_paths(root: Path, date: str) -> tuple[Path, Path]:
+    review_dir = root / "output" / "review" / DISPATCH_SLUG / date
+    return review_dir / "source_collection_audit.json", review_dir / "source_collection_audit.md"
+
+
+def _load_food_line_source_collection_gold_set(path: Path, date: str) -> list[dict[str, Any]]:
+    payload = _read_json(path)
+    if not isinstance(payload, list):
+        raise ValueError(f"gold set must be a list: {path}")
+    rows: list[dict[str, Any]] = []
+    for index, row in enumerate(payload, start=1):
+        if not isinstance(row, dict):
+            raise ValueError(f"gold set row {index} must be an object: {path}")
+        normalized_url = _normalize_food_line_source_collection_url(str(row.get("url") or ""))
+        if not normalized_url:
+            raise ValueError(f"gold set row {index} is missing a valid url: {path}")
+        rows.append(
+            {
+                "date": str(row.get("date") or date).strip() or date,
+                "query": str(row.get("query") or "").strip(),
+                "url": str(row.get("url") or "").strip(),
+                "normalized_url": normalized_url,
+                "title": str(row.get("title") or "").strip(),
+                "expected_status": str(row.get("expected_status") or "").strip(),
+                "expected_reason": str(row.get("expected_reason") or "").strip(),
+                "priority": str(row.get("priority") or "medium").strip().lower() or "medium",
+                "source_family": str(row.get("source_family") or "").strip(),
+                "notes": str(row.get("notes") or "").strip(),
+            }
+        )
+    return rows
+
+
+def _food_line_source_collection_rejection_reason(
+    row: dict[str, Any] | None,
+    rejected_news_reason: str,
+    rejected_record_reasons: list[str],
+) -> tuple[str, str]:
+    row = row or {}
+    candidate_reasons = [
+        str(row.get("public_inclusion_reason") or "").strip(),
+        str(row.get("primary_disqualification_reason") or "").strip(),
+        str(row.get("freshness_disqualification_reason") or "").strip(),
+        str(row.get("source_freshness_disqualification_reason") or "").strip(),
+        str(row.get("pressure_reason") or "").strip(),
+        rejected_news_reason.strip(),
+        "; ".join(reason for reason in rejected_record_reasons if reason),
+    ]
+    reason_text = next((reason for reason in candidate_reasons if reason), "")
+    lowered = reason_text.lower()
+    pressure_verification_status = str(row.get("pressure_verification_status") or "").strip().lower()
+    source_purpose = str(row.get("source_purpose") or "").strip().lower()
+    if not reason_text:
+        if pressure_verification_status == "demoted_context" or source_purpose in {
+            "donation_page",
+            "evergreen_context",
+            "resource_page",
+            "program_description",
+        }:
+            return "resource-only / no pressure signal", "rejected_resource_only"
+        return "", "unknown"
+    if "resource-only" in lowered or "resource only" in lowered or "no pressure signal" in lowered:
+        return reason_text, "rejected_resource_only"
+    if "stale" in lowered or "outside daily window" in lowered:
+        return reason_text, "rejected_stale"
+    if "weak pressure" in lowered or "not a current public food-pressure signal" in lowered:
+        return reason_text, "rejected_weak_pressure"
+    if "published_at" in lowered or "missing usable date" in lowered or "missing required field: published_at" in lowered:
+        return reason_text, "rejected_missing_date"
+    if "traceability" in lowered or "missing source url" in lowered or "missing required field: url" in lowered:
+        return reason_text, "rejected_insufficient_traceability"
+    return reason_text, "unknown"
+
+
+def _food_line_source_collection_stage_rank(stage: str) -> int:
+    order = {
+        "not_discovered": 0,
+        "discovered_raw_candidate": 1,
+        "fetched_or_attempted": 2,
+        "parsed_or_source_record_created": 3,
+        "written_to_auto_sources_or_manual_sources": 4,
+        "appears_in_pressure_review": 5,
+        "rejected_with_reason": 6,
+        "qualified_public_candidate": 7,
+    }
+    return order.get(stage, -1)
+
+
+def _food_line_source_collection_markdown(report: dict[str, Any]) -> str:
+    summary = report.get("summary") or {}
+    lines = [
+        f"# Food Line source-collection audit - {report.get('edition_date')}",
+        "",
+        f"- Gold candidates: {summary.get('gold_count', 0)}",
+        f"- Found by collector: {summary.get('found_count', 0)}",
+        f"- Reached pressure review: {summary.get('reached_review_count', 0)}",
+        f"- Qualified public candidates: {summary.get('qualified_count', 0)}",
+        f"- Rejected with reason: {summary.get('rejected_with_reason_count', 0)}",
+        f"- Missed entirely: {summary.get('missed_count', 0)}",
+        f"- High-priority missed: {summary.get('high_priority_missed_count', 0)}",
+        f"- Recall: {summary.get('recall', 0.0):.3f}",
+        f"- High-priority recall: {summary.get('high_priority_recall', 0.0):.3f}",
+        f"- Likely failure category: {summary.get('likely_failure_category', 'no_major_gap_detected')}",
+        "",
+        "| Priority | Found | Stage | Miss / reject reason | Title | URL |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for item in report.get("items") or []:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(item.get("priority") or ""),
+                    "yes" if item.get("found") else "no",
+                    str(item.get("highest_stage_reached") or ""),
+                    str(item.get("miss_reason") or item.get("rejection_reason") or ""),
+                    str(item.get("matched_title") or item.get("title") or "").replace("|", "\\|"),
+                    str(item.get("url") or "").replace("|", "%7C"),
+                ]
+            )
+            + " |"
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def run_food_line_source_collection_audit(
+    root: Path,
+    date: str,
+    *,
+    gold_set_path: Path,
+    sources: list[dict[str, Any]],
+    rejected_records: list[dict[str, Any]],
+    pressure_review_path: Path,
+    collect_result: dict[str, Any] | None,
+) -> dict[str, Any]:
+    gold_rows = _load_food_line_source_collection_gold_set(gold_set_path, date)
+    auto_rows = _read_json(_auto_source_path(root, date)) if _auto_source_path(root, date).exists() else []
+    manual_rows = _read_json(_manual_source_path(root, date)) if _manual_source_path(root, date).exists() else []
+    review_rows = _read_food_line_review_csv(pressure_review_path)
+    rejected_news = list((collect_result or {}).get("rejected_news") or [])
+    json_path, markdown_path = _food_line_source_collection_audit_paths(root, date)
+
+    source_rows = list(sources or [])
+    combined_written_rows = []
+    manual_row_list = manual_rows if isinstance(manual_rows, list) else []
+    auto_row_list = auto_rows if isinstance(auto_rows, list) else []
+    for row in [*manual_row_list, *auto_row_list, *source_rows]:
+        if isinstance(row, dict):
+            combined_written_rows.append(row)
+
+    high_priority_total = sum(1 for row in gold_rows if row["priority"] == "high")
+    items: list[dict[str, Any]] = []
+
+    for gold in gold_rows:
+        normalized_url = gold["normalized_url"]
+        gold_title = str(gold.get("title") or "").strip()
+        gold_host = urlsplit(normalized_url).netloc.lower() if normalized_url else ""
+        best_fuzzy: dict[str, Any] | None = None
+        best_fuzzy_score = 0.0
+
+        def _is_exact_match(candidate_url: str) -> bool:
+            return bool(candidate_url) and _normalize_food_line_source_collection_url(candidate_url) == normalized_url
+
+        def _consider_fuzzy(candidate: dict[str, Any], candidate_title: str, candidate_url: str) -> None:
+            nonlocal best_fuzzy, best_fuzzy_score
+            if not gold_title or not candidate_title:
+                return
+            candidate_host = urlsplit(_normalize_food_line_source_collection_url(candidate_url)).netloc.lower()
+            if not candidate_host or candidate_host != gold_host:
+                return
+            score = SequenceMatcher(None, normalize_title(gold_title), normalize_title(candidate_title)).ratio()
+            if score >= 0.72 and score > best_fuzzy_score:
+                best_fuzzy = candidate
+                best_fuzzy_score = score
+
+        exact_source = next((row for row in source_rows if _is_exact_match(str(row.get("url") or row.get("primary_source_url") or ""))), None)
+        if exact_source is None:
+            for row in source_rows:
+                _consider_fuzzy(row, str(row.get("title") or ""), str(row.get("url") or row.get("primary_source_url") or ""))
+            exact_source = best_fuzzy
+        fuzzy_match = exact_source is best_fuzzy and best_fuzzy is not None
+
+        exact_written = next(
+            (row for row in combined_written_rows if _is_exact_match(str(row.get("url") or row.get("primary_source_url") or ""))),
+            None,
+        )
+        if exact_written is None and exact_source is not None:
+            exact_written = exact_source
+
+        exact_review = next(
+            (row for row in review_rows if _is_exact_match(str(row.get("source_url") or row.get("primary_source_url") or ""))),
+            None,
+        )
+        if exact_review is None and exact_source is not None:
+            exact_review = next(
+                (
+                    row
+                    for row in review_rows
+                    if str(row.get("source_record_id") or "").strip()
+                    and str(row.get("source_record_id") or "").strip() == str(exact_source.get("source_record_id") or "").strip()
+                ),
+                None,
+            )
+
+        exact_rejected_news = next((row for row in rejected_news if _is_exact_match(str(row.get("url") or ""))), None)
+        exact_rejected_record = next(
+            (
+                row
+                for row in rejected_records
+                if _is_exact_match(str(row.get("url") or "")) or _is_exact_match(str(row.get("primary_source_url") or ""))
+            ),
+            None,
+        )
+
+        found = any((exact_source, exact_written, exact_review, exact_rejected_news, exact_rejected_record))
+        stage = "not_discovered"
+        matched_artifact = ""
+        matched_row = None
+
+        if exact_rejected_news is not None:
+            stage = "discovered_raw_candidate"
+            matched_artifact = "collector_rejected_news"
+            matched_row = exact_rejected_news
+        if exact_source is not None:
+            stage = "parsed_or_source_record_created"
+            matched_artifact = "merged_sources"
+            matched_row = exact_source
+        if exact_written is not None and _food_line_source_collection_stage_rank("written_to_auto_sources_or_manual_sources") > _food_line_source_collection_stage_rank(stage):
+            stage = "written_to_auto_sources_or_manual_sources"
+            matched_artifact = "manual_or_auto_sources"
+            matched_row = exact_written
+        if exact_review is not None and _food_line_source_collection_stage_rank("appears_in_pressure_review") > _food_line_source_collection_stage_rank(stage):
+            stage = "appears_in_pressure_review"
+            matched_artifact = "pressure_review"
+            matched_row = exact_review
+
+        rejection_text, rejection_miss_reason = _food_line_source_collection_rejection_reason(
+            exact_source or exact_written if isinstance(exact_written, dict) else None,
+            str((exact_rejected_news or {}).get("reason") or ""),
+            [str(item) for item in ((exact_rejected_record or {}).get("reasons") or [])],
+        )
+
+        qualifies = bool((exact_source or {}).get("qualifies_for_public_inclusion")) or (
+            isinstance(exact_review, dict)
+            and str(exact_review.get("primary_eligible") or "").strip().lower() == "true"
+            and str(exact_review.get("source_public_story_eligible") or "").strip().lower() == "true"
+        )
+        if qualifies:
+            stage = "qualified_public_candidate"
+            matched_artifact = matched_artifact or "pressure_review"
+        elif found and rejection_text and _food_line_source_collection_stage_rank("rejected_with_reason") > _food_line_source_collection_stage_rank(stage):
+            stage = "rejected_with_reason"
+            matched_artifact = matched_artifact or ("collector_rejected_news" if exact_rejected_news else "pressure_review")
+
+        miss_reason = ""
+        if stage == "not_discovered":
+            miss_reason = "not_discovered"
+        elif stage == "fetched_or_attempted":
+            miss_reason = "fetch_failed"
+        elif stage == "parsed_or_source_record_created":
+            miss_reason = "not_written_to_sources"
+        elif stage == "written_to_auto_sources_or_manual_sources":
+            miss_reason = "not_reached_review"
+        elif stage == "rejected_with_reason":
+            miss_reason = rejection_miss_reason
+
+        if stage == "appears_in_pressure_review" and not qualifies:
+            miss_reason = "not_reached_review"
+
+        item = {
+            "url": gold["url"],
+            "normalized_url": normalized_url,
+            "title": gold["title"],
+            "query": gold["query"],
+            "priority": gold["priority"],
+            "source_family": gold["source_family"],
+            "expected_status": gold["expected_status"],
+            "expected_reason": gold["expected_reason"],
+            "found": found,
+            "highest_stage_reached": stage,
+            "matched_artifact": matched_artifact,
+            "matched_source_record_id": str((matched_row or {}).get("source_record_id") or ""),
+            "matched_title": str((matched_row or {}).get("title") or (matched_row or {}).get("source_title") or ""),
+            "fuzzy_match": fuzzy_match,
+            "pressure_signal": bool((exact_source or {}).get("pressure_signal")) if exact_source is not None else None,
+            "freshness_status": str((exact_source or {}).get("source_freshness_status") or (exact_review or {}).get("source_freshness_status") or ""),
+            "source_public_story_eligible": (
+                bool((exact_source or {}).get("source_public_story_eligible"))
+                if exact_source is not None and "source_public_story_eligible" in exact_source
+                else (
+                    str((exact_review or {}).get("source_public_story_eligible") or "").strip().lower() == "true"
+                    if exact_review is not None
+                    else None
+                )
+            ),
+            "rejection_reason": rejection_text,
+            "miss_reason": miss_reason,
+        }
+        items.append(item)
+
+    found_count = sum(1 for item in items if item["found"])
+    reached_review_count = sum(1 for item in items if _food_line_source_collection_stage_rank(str(item["highest_stage_reached"])) >= _food_line_source_collection_stage_rank("appears_in_pressure_review"))
+    qualified_count = sum(1 for item in items if item["highest_stage_reached"] == "qualified_public_candidate")
+    rejected_with_reason_count = sum(1 for item in items if item["highest_stage_reached"] == "rejected_with_reason")
+    missed_count = sum(1 for item in items if item["highest_stage_reached"] == "not_discovered")
+    high_priority_missed_count = sum(1 for item in items if item["priority"] == "high" and item["highest_stage_reached"] == "not_discovered")
+
+    likely_failure_category = "no_major_gap_detected"
+    if high_priority_missed_count > 0 or missed_count > 0:
+        likely_failure_category = "discovery_query_gap"
+    elif any(item["miss_reason"] == "fetch_failed" for item in items):
+        likely_failure_category = "fetch_parse_gap"
+    elif any(item["miss_reason"] in {"rejected_resource_only", "rejected_weak_pressure"} for item in items):
+        likely_failure_category = "classifier_gap"
+    elif any(item["miss_reason"] == "rejected_stale" for item in items):
+        likely_failure_category = "freshness_gate"
+    elif any(item["miss_reason"] == "rejected_insufficient_traceability" for item in items):
+        likely_failure_category = "traceability_gap"
+
+    summary = {
+        "gold_count": len(items),
+        "found_count": found_count,
+        "reached_review_count": reached_review_count,
+        "qualified_count": qualified_count,
+        "rejected_with_reason_count": rejected_with_reason_count,
+        "missed_count": missed_count,
+        "high_priority_missed_count": high_priority_missed_count,
+        "recall": found_count / len(items) if items else 0.0,
+        "high_priority_recall": (
+            (high_priority_total - high_priority_missed_count) / high_priority_total if high_priority_total else 1.0
+        ),
+        "likely_failure_category": likely_failure_category,
+    }
+    report = {
+        "edition_date": date,
+        "generated_at": utc_now(),
+        "gold_set_path": str(gold_set_path),
+        "summary": summary,
+        "items": items,
+    }
+    _write_json(json_path, report)
+    _write_text(markdown_path, _food_line_source_collection_markdown(report))
+    return {
+        "source_collection_audit_run": True,
+        "source_collection_gold_count": summary["gold_count"],
+        "source_collection_found_count": summary["found_count"],
+        "source_collection_reached_review_count": summary["reached_review_count"],
+        "source_collection_qualified_count": summary["qualified_count"],
+        "source_collection_rejected_with_reason_count": summary["rejected_with_reason_count"],
+        "source_collection_missed_count": summary["missed_count"],
+        "source_collection_high_priority_missed_count": summary["high_priority_missed_count"],
+        "source_collection_recall": summary["recall"],
+        "source_collection_high_priority_recall": summary["high_priority_recall"],
+        "source_collection_likely_failure_category": summary["likely_failure_category"],
+        "source_collection_audit_path": str(json_path),
+        "source_collection_audit_markdown_path": str(markdown_path),
+    }
+
+
 def _resolve_marker_coordinates(marker: dict[str, Any]) -> tuple[float, float, str] | None:
     lat_raw = marker.get("latitude")
     lon_raw = marker.get("longitude")
@@ -5053,6 +5464,8 @@ def run_food_line_dispatch(
     audio_format: str = "mp3",
     audio_timeout_seconds: float = 90.0,
     allow_future_date: bool = False,
+    audit_source_collection: bool = False,
+    gold_set_path: Path | None = None,
 ) -> dict[str, Any]:
     date = validate_date(date)
     public_max_date = None if allow_future_date else _food_line_local_today().isoformat()
@@ -5388,6 +5801,31 @@ def run_food_line_dispatch(
         row["context_only"] = row["public_inclusion_bucket"] in {"context_only", "included_as_context_signal"}
         row["excluded"] = row["public_inclusion_bucket"] == "excluded"
     pressure_review_path = _write_food_line_review_csv(root, date, sources)
+    source_collection_audit_summary = {
+        "source_collection_audit_run": False,
+        "source_collection_gold_count": 0,
+        "source_collection_found_count": 0,
+        "source_collection_reached_review_count": 0,
+        "source_collection_qualified_count": 0,
+        "source_collection_rejected_with_reason_count": 0,
+        "source_collection_missed_count": 0,
+        "source_collection_high_priority_missed_count": 0,
+        "source_collection_recall": 0.0,
+        "source_collection_high_priority_recall": 0.0,
+        "source_collection_likely_failure_category": "no_major_gap_detected",
+        "source_collection_audit_path": "",
+        "source_collection_audit_markdown_path": "",
+    }
+    if audit_source_collection:
+        source_collection_audit_summary = run_food_line_source_collection_audit(
+            root,
+            date,
+            gold_set_path=gold_set_path or _food_line_source_collection_gold_set_path(root, date),
+            sources=sources,
+            rejected_records=rejected_records,
+            pressure_review_path=pressure_review_path,
+            collect_result=collect_result,
+        )
     exclusion_reason_counts = _food_line_exclusion_reason_counts(
         sources,
         rejected_records,
@@ -5560,6 +5998,7 @@ def run_food_line_dispatch(
         "qualified_but_not_public_warning": qualified_but_not_public_warning,
         "bluesky_post_text": None,
         "bluesky_post_ready": False,
+        **source_collection_audit_summary,
     }
     bluesky_post_text = _food_line_bluesky_post_text(
         date,
@@ -5773,6 +6212,7 @@ def run_food_line_dispatch(
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
         "edition_mode": edition_mode,
+        **source_collection_audit_summary,
         "bluesky_post_text": manifest["bluesky_post_text"],
         "bluesky_post_ready": manifest["bluesky_post_ready"],
         "qualified_primary_count": qualified_primary_count,
@@ -5887,6 +6327,8 @@ def run_range(
     audio_voice: str = "alloy",
     audio_format: str = "mp3",
     audio_timeout_seconds: float = 90.0,
+    audit_source_collection: bool = False,
+    gold_set_path: Path | None = None,
 ) -> list[dict[str, Any]]:
     start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
     end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
@@ -5911,6 +6353,8 @@ def run_range(
                 audio_format=audio_format,
                 audio_timeout_seconds=audio_timeout_seconds,
                 allow_future_date=allow_future_date,
+                audit_source_collection=audit_source_collection,
+                gold_set_path=gold_set_path,
             )
         )
         day += timedelta(days=1)
@@ -5980,6 +6424,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--require-audio", action="store_true", help="Require the Food Line audio MP3 to be generated before the run can succeed.")
     p.add_argument("--force-audio-regenerate", action="store_true", help="Regenerate Food Line audio even when an MP3 already exists; preserve the existing MP3 if regeneration fails.")
     p.add_argument("--allow-future-date", action="store_true", help="Allow public Food Line output for a future-dated edition.")
+    p.add_argument("--audit-source-collection", action="store_true", help="Write a gold-set audit of Food Line source collection and review stages.")
+    p.add_argument("--gold-set", help="Optional path to a Food Line source-collection gold-set JSON file.")
     p.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="Optional TTS provider when --generate-audio is used.")
     p.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model for Food Line audio generation.")
     p.add_argument("--audio-voice", default="alloy", help="TTS voice for Food Line audio generation.")
@@ -5993,6 +6439,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.push and not args.publish:
             raise ValueError("--push requires --publish")
+        gold_set_path = Path(args.gold_set).resolve() if args.gold_set else None
+        if args.audit_source_collection and gold_set_path is not None and not gold_set_path.exists():
+            raise ValueError(f"gold set file not found: {gold_set_path}")
         if args.start_date or args.end_date:
             if not args.start_date or not args.end_date:
                 raise ValueError("--start-date and --end-date are required together")
@@ -6012,6 +6461,8 @@ def main(argv: list[str] | None = None) -> int:
                     audio_voice=str(args.audio_voice or "alloy"),
                     audio_format=str(args.audio_format or "mp3"),
                     audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
+                audit_source_collection=bool(args.audit_source_collection),
+                gold_set_path=gold_set_path,
                 )
             result = _summarize_range_results(runs)
         else:
@@ -6032,6 +6483,8 @@ def main(argv: list[str] | None = None) -> int:
                 audio_format=str(args.audio_format or "mp3"),
                 audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
                 allow_future_date=bool(args.allow_future_date),
+                audit_source_collection=bool(args.audit_source_collection),
+                gold_set_path=gold_set_path,
             )
             result["pages_publish_path"] = str(PAGES_REPO)
             result["pages_publish_copied"] = False

@@ -463,9 +463,10 @@ def verify_remote_pages_tree(pages_repo: Path, pages_branch: str, edition_date: 
     return result
 
 
-def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> dict[str, Any]:
-    edition_url = f"{public_urls.get('edition')}?v=careline-claim-audit"
-    archive_url = f"{public_urls.get('archive')}?v=careline-claim-audit"
+def verify_live_public_urls(edition_date: str, public_urls: dict[str, str], cache_token: str | None = None) -> dict[str, Any]:
+    token = str(cache_token or edition_date).strip() or edition_date
+    edition_url = f"{public_urls.get('edition')}?v={token}"
+    archive_url = f"{public_urls.get('archive')}?v={token}"
     edition_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
     archive_result: dict[str, Any] = {"ok": False, "status": None, "marker_found": False, "error": None}
 
@@ -486,6 +487,7 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> d
     if error is None and status == 200:
         edition_result["marker_found"] = (
             "Dispatches From Gaza" in body
+            and edition_date in body
             and (
                 "Limited-source update" in body
                 or "Today’s Read" in body
@@ -494,6 +496,8 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> d
             )
         )
         edition_result["ok"] = bool(edition_result["marker_found"])
+        if not edition_result["ok"]:
+            edition_result["diagnostic_excerpt"] = " ".join(body.split())[:200]
 
     status, body, error = _fetch(archive_url)
     archive_result["status"] = status
@@ -510,6 +514,7 @@ def verify_live_public_urls(edition_date: str, public_urls: dict[str, str]) -> d
         "live_http_ok": edition_result["ok"],
         "live_archive_ok": archive_result["ok"],
         "ok": bool(edition_result["ok"] and archive_result["ok"]),
+        "cache_token": token,
     }
 
 

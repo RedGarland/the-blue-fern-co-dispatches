@@ -1,24 +1,35 @@
 [
   {
     "date": "2026-06-25",
-    "query": "\"food banks\" after:2026-06-20",
-    "url": "https://example.com/reuters-food-stamps-pressure-2026-06-25",
-    "title": "Millions lose food stamps as pantry demand rises",
+    "query": "\"food banks\" funding cuts families after:2025-04-28",
+    "url": "https://apnews.com/article/food-banks-campaign-against-hunger-snap-pantry-665c19251b5d83bbed45a29958f79609",
+    "title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
     "expected_status": "review_candidate",
-    "expected_reason": "SNAP loss / pantry demand pressure",
+    "expected_reason": "major-outlet reporting on food-bank strain and SNAP-linked household pressure",
     "priority": "high",
     "source_family": "national_wire",
-    "notes": "Placeholder fixture row; replace with a verified candidate URL when operating the audit manually."
+    "notes": "AP News major-outlet candidate used as a manually reviewable national baseline URL."
   },
   {
     "date": "2026-06-25",
-    "query": "\"food bank\" after:2026-06-20 site:kpbs.org",
-    "url": "https://example.com/kpbs-food-bank-demand-2026-06-25",
-    "title": "San Diego food banks report rising summer demand",
+    "query": "\"food banks\" SNAP requirements shift site:nepm.org after:2026-06-01",
+    "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+    "title": "Food banks continue to see increased need as SNAP requirements shift",
     "expected_status": "review_candidate",
-    "expected_reason": "summer demand / pantry strain",
+    "expected_reason": "regional food-bank demand candidate tied to SNAP requirement changes",
+    "priority": "medium",
+    "source_family": "public_radio",
+    "notes": "New England Public Media regional candidate used as a manually reviewable local/regional baseline URL."
+  },
+  {
+    "date": "2026-06-25",
+    "query": "\"WA food banks are worried\" USDA after:2025-04-01",
+    "url": "https://www.cascadepbs.org/politics/2025/04/usda-set-cut-1b-food-programs-wa-food-banks-are-worried/",
+    "title": "USDA set to cut $1B for food programs. WA food banks are worried",
+    "expected_status": "review_candidate",
+    "expected_reason": "state-level food-bank operations pressure candidate from a regional outlet",
     "priority": "medium",
     "source_family": "local_reporting",
-    "notes": "Placeholder fixture row mirroring the intended gold-set structure."
+    "notes": "Cascade PBS regional candidate used as an additional manually reviewable local/state baseline URL."
   }
 ]

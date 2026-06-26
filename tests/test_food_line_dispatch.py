@@ -6495,6 +6495,104 @@ def test_food_line_source_collection_audit_mode_dry_run_does_not_publish(tmp_pat
     assert payload["bluesky_status"] == "skipped"
 
 
+def test_food_line_source_collection_audit_dry_run_reuses_existing_collector_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    auto_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    auto_path.parent.mkdir(parents=True, exist_ok=True)
+    auto_path.write_text(
+        json.dumps(
+            [
+                {
+                    **_pressure_row(
+                        11,
+                        "Food banks continue to see increased need as SNAP requirements shift",
+                        "Regional food banks continue to see increased need as SNAP requirements shift.",
+                        family="public_radio",
+                        state="MA",
+                    ),
+                    "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+                    "source_id": "nepm-dd978f466973",
+                    "source_family": "public_radio",
+                    "source_public_story_eligible": True,
+                    "qualifies_for_public_inclusion": True,
+                    "pressure_signal": True,
+                    "pressure_verification_status": "source_text_verified",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    collector_audit_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "collector_audit.json"
+    collector_audit_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_id": "nepm-dd978f466973",
+                    "source_name": "Food banks continue to see increased need as SNAP requirements shift | New England Public Media",
+                    "source_family": "public_radio",
+                    "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+                    "fetched": True,
+                    "item_count": 1,
+                    "accepted_pressure_count": 1,
+                    "demoted_count": 0,
+                    "rejected_count": 0,
+                    "top_rejection_reasons": [],
+                    "extraction_basis_used": ["page_text_excerpt"],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" SNAP requirements shift site:nepm.org after:2026-06-01",
+                "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+                "title": "Food banks continue to see increased need as SNAP requirements shift",
+                "expected_status": "review_candidate",
+                "expected_reason": "regional food-bank demand candidate tied to SNAP requirement changes",
+                "priority": "high",
+                "source_family": "public_radio",
+            }
+        ],
+    )
+
+    def _unexpected_collect(*args, **kwargs):
+        raise AssertionError("live collector should not run when reusable audit artifacts exist")
+
+    monkeypatch.setattr(food_line, "collect_food_line_auto_sources", _unexpected_collect)
+
+    exit_code = food_line.main(
+        [
+            "--date",
+            date,
+            "--collect",
+            "--dry-run",
+            "--no-generate-audio",
+            "--audit-source-collection",
+            "--gold-set",
+            str(gold_set_path),
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["source_collection_audit_run"] is True
+    assert payload["source_collection_collect_reused_existing"] is True
+    assert payload["source_collection_collect_live_ran"] is False
+    assert payload["source_collection_runtime_bounded"] is True
+    assert payload["source_collection_runtime_bound_reason"] == "reused_existing_collection_artifacts"
+    assert payload["pages_publish_copied"] is False
+    assert payload["pushed"] is False
+    assert payload["bluesky_status"] == "skipped"
+
+
 def test_food_line_source_collection_audit_is_disabled_without_flag(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-25"
@@ -6502,6 +6600,155 @@ def test_food_line_source_collection_audit_is_disabled_without_flag(tmp_path: Pa
     assert result["source_collection_audit_run"] is False
     assert result["source_collection_gold_count"] == 0
     assert result["source_collection_audit_path"] == ""
+
+
+def test_food_line_source_collection_audit_uses_discovery_intake_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    candidate_url = "https://example.com/2026/06/25/pantry-demand-surges"
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" after:2026-06-24 before:2026-06-26",
+                "url": candidate_url,
+                "title": "Pantry demand surges as families turn to food banks",
+                "expected_status": "review_candidate",
+                "expected_reason": "discovery intake should surface this candidate for audit review",
+                "priority": "high",
+                "source_family": "local_reporting",
+            }
+        ],
+    )
+
+    def fake_run_discovery_expansion(root: Path, edition_date: str, **kwargs):
+        candidate_path = root / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
+        candidate_path.parent.mkdir(parents=True, exist_ok=True)
+        candidate_path.write_text(
+            json.dumps(
+                [
+                    {
+                        "candidate_id": "food-line-discovery-1",
+                        "discovered_title": "Pantry demand surges as families turn to food banks",
+                        "source_name": "Local Monitor",
+                        "final_trace_url": candidate_url,
+                        "canonical_url": candidate_url,
+                        "discovered_url": candidate_url,
+                        "google_news_url": "https://news.google.com/rss/articles/food-line-discovery-1",
+                        "fetch_status": "ok",
+                        "classification_status": "qualified_pressure_signal",
+                    }
+                ],
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        return {"ok": True, "discovery_candidates_path": str(candidate_path)}
+
+    def fake_run_discovery_bridge(root: Path, edition_date: str, dry_run: bool = False):
+        review_path = root / "output" / "review" / "food-line" / edition_date / "discovery_intake.json"
+        review_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "ok": True,
+            "discovery_source_rows": [
+                {
+                    "source_record_id": "food-line-discovery-1",
+                    "candidate_id": "food-line-discovery-1",
+                    "title": "Pantry demand surges as families turn to food banks",
+                    "url": candidate_url,
+                    "classification_status": "qualified_pressure_signal",
+                    "fetch_status": "ok",
+                }
+            ],
+        }
+        review_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return payload
+
+    monkeypatch.setattr(food_line, "run_food_line_discovery_expansion", fake_run_discovery_expansion)
+    monkeypatch.setattr(food_line, "run_food_line_discovery_intake_bridge", fake_run_discovery_bridge)
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        collect=True,
+        generate_audio=False,
+        audit_source_collection=True,
+        gold_set_path=gold_set_path,
+    )
+
+    assert result["source_collection_audit_run"] is True
+    assert result["source_collection_found_count"] == 1
+    assert result["source_collection_reached_review_count"] == 1
+    assert result["source_collection_qualified_count"] == 1
+    audit = json.loads(Path(result["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["items"][0]["matched_artifact"] == "discovery_intake_review"
+    assert audit["items"][0]["highest_stage_reached"] == "qualified_public_candidate"
+    assert audit["items"][0]["source_public_story_eligible"] is True
+
+
+def test_food_line_source_collection_audit_marks_discovery_candidate_rejected_with_reason(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    candidate_url = "https://example.com/2026/06/25/summer-meal-locations"
+    candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "discovery" / date / "discovery_candidates.json"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(
+        json.dumps(
+            [
+                {
+                    "candidate_id": "food-line-discovery-2",
+                    "discovered_title": "Summer meal locations and pantry donation information",
+                    "source_name": "Community Pantry",
+                    "final_trace_url": candidate_url,
+                    "canonical_url": candidate_url,
+                    "discovered_url": candidate_url,
+                    "fetch_status": "ok",
+                    "classification_status": "context_only",
+                    "exclusion_reason": "resource-only / no pressure signal",
+                    "source_purpose": "resource_page",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"summer meals\" after:2026-06-24 before:2026-06-26",
+                "url": candidate_url,
+                "title": "Summer meal locations and pantry donation information",
+                "expected_status": "review_candidate",
+                "expected_reason": "resource-only discovery candidate should be rejected with a reason",
+                "priority": "medium",
+                "source_family": "food_bank_provider",
+            }
+        ],
+    )
+
+    pressure_review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    pressure_review_path.parent.mkdir(parents=True, exist_ok=True)
+    pressure_review_path.write_text("", encoding="utf-8")
+    audit = food_line.run_food_line_source_collection_audit(
+        tmp_path,
+        date,
+        gold_set_path=gold_set_path,
+        sources=[],
+        rejected_records=[],
+        pressure_review_path=pressure_review_path,
+        collect_result={"ok": True},
+    )
+
+    payload = json.loads(Path(audit["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["source_collection_rejected_with_reason_count"] == 1
+    assert payload["items"][0]["highest_stage_reached"] == "rejected_with_reason"
+    assert payload["items"][0]["matched_artifact"] == "discovery_candidates"
+    assert payload["items"][0]["miss_reason"] == "rejected_resource_only"
 
 
 def test_food_line_review_csv_is_written_and_includes_evidence_fields(tmp_path: Path):
@@ -7876,6 +8123,13 @@ def test_food_line_source_discovery_queries_load():
     assert any("Summer EBT" in row["template"] for row in queries)
     assert any("Feeding America" in row["template"] for row in queries)
     assert any("SNAP benefits delayed" in row["template"] for row in queries)
+    assert any("{state} food banks" in row["template"] for row in queries)
+    assert any("{state} food pantries" in row["template"] for row in queries)
+    assert any("{state} pantry demand" in row["template"] for row in queries)
+    assert any("{state} families turn to food banks" in row["template"] for row in queries)
+    assert any("{state} food stamps OR SNAP cuts OR SNAP benefits OR SNAP rolls" in row["template"] for row in queries)
+    assert any("{state} food distribution sites OR hunger relief OR emergency food assistance" in row["template"] for row in queries)
+    assert any("{state} meal sites OR summer meals" in row["template"] for row in queries)
     assert any("food insecurity RSS" in row["template"] for row in queries)
     assert any("public radio food access RSS" in row["template"] for row in queries)
     assert any("local newspaper food access RSS" in row["template"] for row in queries)
@@ -7885,6 +8139,29 @@ def test_food_line_source_discovery_queries_load():
     assert any("ALICE food costs" in row["template"] for row in queries)
     assert any("caregiver food insecurity hospitalization" in row["template"] for row in queries)
     assert any("hospitalized children food insecurity research" in row["template"] for row in queries)
+
+
+def test_food_line_discovery_date_bounded_queries_cover_new_pressure_terms():
+    rows = food_line_discovery._date_bounded_queries("2026-06-25")
+    queries = {row["query"] for row in rows}
+
+    assert any('"food banks"' in query for query in queries)
+    assert any('"food pantries"' in query for query in queries)
+    assert any('"pantry demand"' in query for query in queries)
+    assert any('"families turn to food banks"' in query for query in queries)
+    assert any('"food stamps" OR "SNAP cuts" OR "SNAP benefits" OR "SNAP rolls"' in query for query in queries)
+    assert any('"food distribution sites" OR "hunger relief" OR "emergency food assistance"' in query for query in queries)
+    assert any('"meal sites" OR "summer meals"' in query for query in queries)
+
+
+def test_food_line_gold_set_2026_06_25_uses_real_reviewable_urls():
+    payload = json.loads(
+        (Path(__file__).parent.parent / "data" / "dispatches" / "food-line" / "source_collection_gold_sets" / "2026-06-25.json").read_text(encoding="utf-8")
+    )
+    assert payload
+    assert all("example.com" not in str(row.get("url") or "") for row in payload)
+    assert any("apnews.com" in str(row.get("url") or "") for row in payload)
+    assert any("nepm.org" in str(row.get("url") or "") or "cascadepbs.org" in str(row.get("url") or "") for row in payload)
 
 
 def test_food_line_discovery_source_configuration_includes_target_outlet_seeds():

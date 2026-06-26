@@ -69,9 +69,16 @@ NEGATIVE_TERMS = [
 ]
 DATE_BOUNDED_QUERY_ROOTS = (
     ('"food insecurity"', "local_news", "date_bounded"),
+    ('"food banks"', "local_news", "date_bounded"),
+    ('"food pantries"', "food_bank_provider", "date_bounded"),
+    ('"pantry demand"', "food_bank_provider", "date_bounded"),
     ('"food pantries" "increased need"', "food_bank_provider", "date_bounded"),
     ('"food bank" "increased demand"', "food_bank_provider", "date_bounded"),
+    ('"families turn to food banks"', "local_news", "date_bounded"),
+    ('"food stamps" OR "SNAP cuts" OR "SNAP benefits" OR "SNAP rolls"', "state_policy_news", "date_bounded"),
     ('"SNAP" "food insecurity"', "state_policy_news", "date_bounded"),
+    ('"food distribution sites" OR "hunger relief" OR "emergency food assistance"', "nonprofit_news", "date_bounded"),
+    ('"meal sites" OR "summer meals"', "school_meals_child_nutrition", "date_bounded"),
     ('"food donations" "food insecurity"', "nonprofit_news", "date_bounded"),
     ('"school meals" "food pantry"', "school_meals_child_nutrition", "date_bounded"),
     ('"summer meals" "food bank"', "school_meals_child_nutrition", "date_bounded"),

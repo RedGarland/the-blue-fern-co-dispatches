@@ -119,7 +119,10 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
             '"food insecurity"',
             '"food bank"',
             '"food pantry"',
+            '"food banks"',
+            '"food pantries"',
             '"hunger relief"',
+            '"emergency food assistance"',
         ],
     },
     {
@@ -129,6 +132,8 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '("food bank" OR "food pantry") (demand OR strain OR shortage OR surge)',
             '("food bank" OR "food pantry") ("increased need" OR waitlist OR "funding gap")',
+            '"pantry demand"',
+            '"families turn to food banks"',
         ],
     },
     {
@@ -137,7 +142,9 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "source_family": "state_policy_news",
         "templates": [
             '(SNAP OR EBT) (cuts OR changes OR benefits OR families)',
+            '("food stamps" OR "SNAP cuts" OR "SNAP benefits" OR "SNAP rolls") ("food bank" OR pantry OR families)',
             '("summer meals" OR "school meals") (families OR children OR hunger)',
+            '("meal sites" OR "summer meals" OR "food distribution sites") (families OR children OR "emergency food assistance")',
             '(WIC OR TEFAP OR "Meals on Wheels") (cuts OR delays OR waitlist)',
         ],
     },
@@ -157,8 +164,12 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '"food bank demand" {geo} after:{after} before:{before}',
             '"food pantry demand" {geo} after:{after} before:{before}',
+            '"food banks" {geo} after:{after} before:{before}',
+            '"food pantries" {geo} after:{after} before:{before}',
+            '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
+            '"emergency food assistance" {geo} after:{after} before:{before}',
             '"grocery prices" {geo} food pantry after:{after} before:{before}',
         ],
     },
@@ -169,8 +180,12 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '"food bank demand" {geo} after:{after} before:{before}',
             '"food pantry demand" {geo} after:{after} before:{before}',
+            '"food banks" {geo} after:{after} before:{before}',
+            '"food pantries" {geo} after:{after} before:{before}',
+            '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
+            '"emergency food assistance" {geo} after:{after} before:{before}',
             '"grocery prices" {geo} food pantry after:{after} before:{before}',
         ],
     },

@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from collections import Counter
 from datetime import date as date_type, datetime, timedelta, timezone
 from difflib import SequenceMatcher
@@ -38,6 +39,7 @@ from bluefern_dispatches.food_line_sources import (
 )
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
 from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
+from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
 
@@ -665,6 +667,10 @@ def _manual_source_path(root: Path, date: str) -> Path:
 
 def _auto_source_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "auto_sources.json"
+
+
+def _collector_audit_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "collector_audit.json"
 
 
 def _as_text(value: Any) -> str:
@@ -4416,6 +4422,27 @@ def _read_food_line_review_csv(path: Path) -> list[dict[str, Any]]:
         return list(csv.DictReader(handle))
 
 
+def _read_food_line_json_list(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    payload = _read_json(path)
+    return [row for row in payload if isinstance(row, dict)] if isinstance(payload, list) else []
+
+
+def _read_food_line_source_discovery_review_csv(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def _read_food_line_discovery_intake_review(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    payload = _read_json(path)
+    return payload if isinstance(payload, dict) else {}
+
+
 _FOOD_LINE_SOURCE_COLLECTION_TRACKING_PARAMS = {
     "fbclid",
     "gclid",
@@ -4463,6 +4490,109 @@ def _food_line_source_collection_audit_paths(root: Path, date: str) -> tuple[Pat
     return review_dir / "source_collection_audit.json", review_dir / "source_collection_audit.md"
 
 
+def _food_line_discovery_candidates_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "discovery" / date / "discovery_candidates.json"
+
+
+def _food_line_source_discovery_review_path(root: Path, date: str) -> Path:
+    return root / "output" / "review" / DISPATCH_SLUG / date / "source_discovery_review.csv"
+
+
+def _food_line_source_discovery_audit_path(root: Path, date: str) -> Path:
+    return root / "data" / "dispatches" / DISPATCH_SLUG / "sources" / date / "source_discovery_audit.json"
+
+
+def _food_line_discovery_intake_review_path(root: Path, date: str) -> Path:
+    return root / "output" / "review" / DISPATCH_SLUG / date / "discovery_intake.json"
+
+
+def _food_line_can_reuse_collect_artifacts(root: Path, date: str) -> bool:
+    return _auto_source_path(root, date).exists() and _collector_audit_path(root, date).exists()
+
+
+def _food_line_reused_collect_result(root: Path, date: str) -> dict[str, Any]:
+    auto_rows = _read_food_line_json_list(_auto_source_path(root, date))
+    audit_rows = _read_food_line_json_list(_collector_audit_path(root, date))
+    rejected_news_reasons: list[str] = []
+    rejected_news_by_source: dict[str, int] = {}
+    collected_source_count_by_source_id: dict[str, int] = {}
+    pressure_evidence_basis_counts: Counter[str] = Counter()
+    fetch_failure_count_by_source_id: dict[str, int] = {}
+    no_evidence_count_by_source_id: dict[str, int] = {}
+    verified_pressure_count = 0
+    pressure_demoted_unverified_count = 0
+    rejected_news_count = 0
+    pressure_verified_count_by_extraction_quality: Counter[str] = Counter()
+    demoted_count_by_extraction_quality: Counter[str] = Counter()
+    collected_count_by_extraction_quality: Counter[str] = Counter()
+    extraction_quality_by_source_id: dict[str, str] = {}
+
+    for row in auto_rows:
+        source_id = str(row.get("source_id") or "").strip()
+        extraction_quality = str(row.get("extraction_quality") or "unknown").strip() or "unknown"
+        if source_id and source_id not in extraction_quality_by_source_id:
+            extraction_quality_by_source_id[source_id] = extraction_quality
+        collected_count_by_extraction_quality[extraction_quality] += 1
+        evidence_basis = str(row.get("evidence_text_basis") or "insufficient_evidence").strip() or "insufficient_evidence"
+        pressure_evidence_basis_counts[evidence_basis] += 1
+        verification_status = str(row.get("pressure_verification_status") or "").strip()
+        if verification_status == "source_text_verified":
+            verified_pressure_count += 1
+            pressure_verified_count_by_extraction_quality[extraction_quality] += 1
+        elif verification_status == "demoted_context":
+            pressure_demoted_unverified_count += 1
+            demoted_count_by_extraction_quality[extraction_quality] += 1
+
+    for row in audit_rows:
+        source_id = str(row.get("source_id") or "").strip()
+        item_count = int(row.get("item_count") or 0)
+        collected_source_count_by_source_id[source_id] = item_count
+        rejected_count = int(row.get("rejected_count") or 0)
+        rejected_news_count += rejected_count
+        accepted_pressure_count = int(row.get("accepted_pressure_count") or 0)
+        verified_pressure_count = max(verified_pressure_count, 0)
+        quality = extraction_quality_by_source_id.get(source_id, "unknown")
+        if accepted_pressure_count:
+            pressure_verified_count_by_extraction_quality[quality] += 0
+        top_reasons = [str(item).strip() for item in (row.get("top_rejection_reasons") or []) if str(item).strip()]
+        if top_reasons:
+            rejected_news_reasons.extend(top_reasons)
+            rejected_news_by_source[source_id] = len(top_reasons)
+        if not bool(row.get("fetched")):
+            fetch_failure_count_by_source_id[source_id] = max(1, len(top_reasons))
+            if not item_count:
+                no_evidence_count_by_source_id[source_id] = 1
+        for basis in row.get("extraction_basis_used") or []:
+            basis_text = str(basis).strip()
+            if basis_text:
+                pressure_evidence_basis_counts[basis_text] += 0
+
+    return {
+        "ok": True,
+        "source_count": len(auto_rows),
+        "collector_audit_path": str(_collector_audit_path(root, date)),
+        "reused_existing_artifacts": True,
+        "rejected_news_count": rejected_news_count,
+        "rejected_news_reasons": rejected_news_reasons,
+        "rejected_news_by_source": rejected_news_by_source,
+        "collected_source_count_by_source_id": collected_source_count_by_source_id,
+        "pressure_verified_count": verified_pressure_count,
+        "pressure_demoted_unverified_count": pressure_demoted_unverified_count,
+        "pressure_registry_only_count": 0,
+        "pressure_evidence_basis_counts": dict(sorted(pressure_evidence_basis_counts.items())),
+        "collected_count_by_extraction_quality": dict(sorted(collected_count_by_extraction_quality.items())),
+        "verified_pressure_count_by_extraction_quality": dict(sorted(pressure_verified_count_by_extraction_quality.items())),
+        "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
+        "fetch_failure_count_by_source_id": fetch_failure_count_by_source_id,
+        "no_evidence_count_by_source_id": no_evidence_count_by_source_id,
+        "failed_sources": [
+            {"source_id": source_id, "reason": "reused collector artifact recorded a fetch failure"}
+            for source_id in sorted(fetch_failure_count_by_source_id)
+        ],
+        "rejected_news": [],
+    }
+
+
 def _load_food_line_source_collection_gold_set(path: Path, date: str) -> list[dict[str, Any]]:
     payload = _read_json(path)
     if not isinstance(payload, list):
@@ -4498,6 +4628,8 @@ def _food_line_source_collection_rejection_reason(
 ) -> tuple[str, str]:
     row = row or {}
     candidate_reasons = [
+        str(row.get("reason") or "").strip(),
+        str(row.get("exclusion_reason") or "").strip(),
         str(row.get("public_inclusion_reason") or "").strip(),
         str(row.get("primary_disqualification_reason") or "").strip(),
         str(row.get("freshness_disqualification_reason") or "").strip(),
@@ -4510,17 +4642,21 @@ def _food_line_source_collection_rejection_reason(
     lowered = reason_text.lower()
     pressure_verification_status = str(row.get("pressure_verification_status") or "").strip().lower()
     source_purpose = str(row.get("source_purpose") or "").strip().lower()
+    source_role = str(row.get("source_role") or "").strip().lower()
+    classification_status = str(row.get("classification_status") or "").strip().lower()
     if not reason_text:
         if pressure_verification_status == "demoted_context" or source_purpose in {
             "donation_page",
             "evergreen_context",
             "resource_page",
             "program_description",
-        }:
+        } or source_role == "resource_context" or classification_status == "context_only":
             return "resource-only / no pressure signal", "rejected_resource_only"
         return "", "unknown"
     if "resource-only" in lowered or "resource only" in lowered or "no pressure signal" in lowered:
         return reason_text, "rejected_resource_only"
+    if "background reference" in lowered:
+        return "resource-only / no pressure signal", "rejected_resource_only"
     if "stale" in lowered or "outside daily window" in lowered:
         return reason_text, "rejected_stale"
     if "weak pressure" in lowered or "not a current public food-pressure signal" in lowered:
@@ -4529,6 +4665,8 @@ def _food_line_source_collection_rejection_reason(
         return reason_text, "rejected_missing_date"
     if "traceability" in lowered or "missing source url" in lowered or "missing required field: url" in lowered:
         return reason_text, "rejected_insufficient_traceability"
+    if "fetch blocked" in lowered or "blocked fetch" in lowered or "forbidden" in lowered or "timeout" in lowered:
+        return reason_text, "fetch_failed"
     return reason_text, "unknown"
 
 
@@ -4598,6 +4736,13 @@ def run_food_line_source_collection_audit(
     auto_rows = _read_json(_auto_source_path(root, date)) if _auto_source_path(root, date).exists() else []
     manual_rows = _read_json(_manual_source_path(root, date)) if _manual_source_path(root, date).exists() else []
     review_rows = _read_food_line_review_csv(pressure_review_path)
+    discovery_candidate_rows = _read_food_line_json_list(_food_line_discovery_candidates_path(root, date))
+    discovery_review_rows = _read_food_line_source_discovery_review_csv(_food_line_source_discovery_review_path(root, date))
+    discovery_audit_rows = _read_food_line_json_list(_food_line_source_discovery_audit_path(root, date))
+    discovery_intake_review = _read_food_line_discovery_intake_review(_food_line_discovery_intake_review_path(root, date))
+    discovery_intake_rows = [
+        row for row in (discovery_intake_review.get("discovery_source_rows") or []) if isinstance(row, dict)
+    ]
     rejected_news = list((collect_result or {}).get("rejected_news") or [])
     json_path, markdown_path = _food_line_source_collection_audit_paths(root, date)
 
@@ -4672,8 +4817,53 @@ def run_food_line_source_collection_audit(
             ),
             None,
         )
+        exact_discovery_candidate = next(
+            (
+                row
+                for row in discovery_candidate_rows
+                if _is_exact_match(str(row.get("final_trace_url") or row.get("canonical_url") or row.get("discovered_url") or row.get("google_news_url") or ""))
+            ),
+            None,
+        )
+        exact_discovery_review = next(
+            (row for row in discovery_review_rows if _is_exact_match(str(row.get("candidate_url") or ""))),
+            None,
+        )
+        exact_discovery_audit = next(
+            (row for row in discovery_audit_rows if _is_exact_match(str(row.get("candidate_url") or ""))),
+            None,
+        )
+        exact_discovery_intake = next(
+            (
+                row
+                for row in discovery_intake_rows
+                if _is_exact_match(
+                    str(
+                        row.get("url")
+                        or row.get("final_trace_url")
+                        or row.get("canonical_url")
+                        or row.get("discovered_url")
+                        or row.get("google_news_url")
+                        or ""
+                    )
+                )
+            ),
+            None,
+        )
 
-        found = any((exact_source, exact_written, exact_review, exact_rejected_news, exact_rejected_record))
+        found = any(
+            (
+                exact_source,
+                exact_written,
+                exact_review,
+                exact_rejected_news,
+                exact_rejected_record,
+                exact_discovery_candidate,
+                exact_discovery_review,
+                exact_discovery_audit,
+                exact_discovery_intake,
+            )
+        )
         stage = "not_discovered"
         matched_artifact = ""
         matched_row = None
@@ -4686,26 +4876,70 @@ def run_food_line_source_collection_audit(
             stage = "parsed_or_source_record_created"
             matched_artifact = "merged_sources"
             matched_row = exact_source
+        if exact_discovery_candidate is not None:
+            fetch_status = str(exact_discovery_candidate.get("fetch_status") or "").strip().lower()
+            if fetch_status and fetch_status not in {"ok", "manual_fallback"}:
+                if _food_line_source_collection_stage_rank("fetched_or_attempted") > _food_line_source_collection_stage_rank(stage):
+                    stage = "fetched_or_attempted"
+                    matched_artifact = "discovery_candidates"
+                    matched_row = exact_discovery_candidate
+            elif _food_line_source_collection_stage_rank("parsed_or_source_record_created") > _food_line_source_collection_stage_rank(stage):
+                stage = "parsed_or_source_record_created"
+                matched_artifact = "discovery_candidates"
+                matched_row = exact_discovery_candidate
         if exact_written is not None and _food_line_source_collection_stage_rank("written_to_auto_sources_or_manual_sources") > _food_line_source_collection_stage_rank(stage):
             stage = "written_to_auto_sources_or_manual_sources"
             matched_artifact = "manual_or_auto_sources"
             matched_row = exact_written
+        if exact_discovery_review is not None and _food_line_source_collection_stage_rank("written_to_auto_sources_or_manual_sources") > _food_line_source_collection_stage_rank(stage):
+            stage = "written_to_auto_sources_or_manual_sources"
+            matched_artifact = "source_discovery_review"
+            matched_row = exact_discovery_review
+        if exact_discovery_intake is not None and _food_line_source_collection_stage_rank("written_to_auto_sources_or_manual_sources") > _food_line_source_collection_stage_rank(stage):
+            stage = "written_to_auto_sources_or_manual_sources"
+            matched_artifact = "discovery_intake_review"
+            matched_row = exact_discovery_intake
         if exact_review is not None and _food_line_source_collection_stage_rank("appears_in_pressure_review") > _food_line_source_collection_stage_rank(stage):
             stage = "appears_in_pressure_review"
             matched_artifact = "pressure_review"
             matched_row = exact_review
 
         rejection_text, rejection_miss_reason = _food_line_source_collection_rejection_reason(
-            exact_source or exact_written if isinstance(exact_written, dict) else None,
-            str((exact_rejected_news or {}).get("reason") or ""),
+            (
+                exact_source
+                or (exact_written if isinstance(exact_written, dict) else None)
+                or exact_discovery_candidate
+                or exact_discovery_audit
+                or exact_discovery_review
+                or exact_discovery_intake
+            ),
+            str((exact_rejected_news or {}).get("reason") or (exact_discovery_review or {}).get("reason") or (exact_discovery_audit or {}).get("reason") or ""),
             [str(item) for item in ((exact_rejected_record or {}).get("reasons") or [])],
         )
 
-        qualifies = bool((exact_source or {}).get("qualifies_for_public_inclusion")) or (
-            isinstance(exact_review, dict)
-            and str(exact_review.get("primary_eligible") or "").strip().lower() == "true"
-            and str(exact_review.get("source_public_story_eligible") or "").strip().lower() == "true"
+        qualifies = (
+            bool((exact_source or {}).get("qualifies_for_public_inclusion"))
+            or (
+                isinstance(exact_review, dict)
+                and str(exact_review.get("primary_eligible") or "").strip().lower() == "true"
+                and str(exact_review.get("source_public_story_eligible") or "").strip().lower() == "true"
+            )
+            or str((exact_discovery_candidate or {}).get("classification_status") or "").strip() in {"qualified_pressure_signal", "manual_fallback"}
+            or str((exact_discovery_intake or {}).get("classification_status") or "").strip() in {"qualified_pressure_signal", "manual_fallback"}
         )
+        if not qualifies and str((exact_discovery_review or {}).get("action") or "").strip() == "rejected_discovery":
+            stage = "rejected_with_reason"
+            matched_artifact = "source_discovery_review"
+            matched_row = exact_discovery_review
+        elif (
+            not qualifies
+            and exact_discovery_candidate is not None
+            and str((exact_discovery_candidate or {}).get("classification_status") or "").strip() in {"context_only", "duplicate"}
+            and str((exact_discovery_candidate or {}).get("exclusion_reason") or "").strip()
+        ):
+            stage = "rejected_with_reason"
+            matched_artifact = "discovery_candidates"
+            matched_row = exact_discovery_candidate
         if qualifies:
             stage = "qualified_public_candidate"
             matched_artifact = matched_artifact or "pressure_review"
@@ -4740,18 +4974,44 @@ def run_food_line_source_collection_audit(
             "found": found,
             "highest_stage_reached": stage,
             "matched_artifact": matched_artifact,
-            "matched_source_record_id": str((matched_row or {}).get("source_record_id") or ""),
-            "matched_title": str((matched_row or {}).get("title") or (matched_row or {}).get("source_title") or ""),
+            "matched_source_record_id": str((matched_row or {}).get("source_record_id") or (matched_row or {}).get("candidate_id") or (matched_row or {}).get("source_id") or ""),
+            "matched_title": str((matched_row or {}).get("title") or (matched_row or {}).get("source_title") or (matched_row or {}).get("discovered_title") or (matched_row or {}).get("source_name") or ""),
             "fuzzy_match": fuzzy_match,
-            "pressure_signal": bool((exact_source or {}).get("pressure_signal")) if exact_source is not None else None,
-            "freshness_status": str((exact_source or {}).get("source_freshness_status") or (exact_review or {}).get("source_freshness_status") or ""),
+            "pressure_signal": (
+                bool((exact_source or {}).get("pressure_signal"))
+                if exact_source is not None
+                else (
+                    str((exact_discovery_candidate or {}).get("classification_status") or "").strip() == "qualified_pressure_signal"
+                    if exact_discovery_candidate is not None
+                    else (
+                        str((exact_discovery_intake or {}).get("classification_status") or "").strip() in {"qualified_pressure_signal", "manual_fallback"}
+                        if exact_discovery_intake is not None
+                        else None
+                    )
+                )
+            ),
+            "freshness_status": str(
+                (exact_source or {}).get("source_freshness_status")
+                or (exact_review or {}).get("source_freshness_status")
+                or (exact_discovery_intake or {}).get("fetch_status")
+                or (exact_discovery_candidate or {}).get("fetch_status")
+                or ""
+            ),
             "source_public_story_eligible": (
                 bool((exact_source or {}).get("source_public_story_eligible"))
                 if exact_source is not None and "source_public_story_eligible" in exact_source
                 else (
                     str((exact_review or {}).get("source_public_story_eligible") or "").strip().lower() == "true"
                     if exact_review is not None
-                    else None
+                    else (
+                        str((exact_discovery_intake or {}).get("classification_status") or "").strip() in {"qualified_pressure_signal", "manual_fallback"}
+                        if exact_discovery_intake is not None
+                        else (
+                            str((exact_discovery_candidate or {}).get("classification_status") or "").strip() in {"qualified_pressure_signal", "manual_fallback"}
+                            if exact_discovery_candidate is not None
+                            else None
+                        )
+                    )
                 )
             ),
             "rejection_reason": rejection_text,
@@ -4760,7 +5020,12 @@ def run_food_line_source_collection_audit(
         items.append(item)
 
     found_count = sum(1 for item in items if item["found"])
-    reached_review_count = sum(1 for item in items if _food_line_source_collection_stage_rank(str(item["highest_stage_reached"])) >= _food_line_source_collection_stage_rank("appears_in_pressure_review"))
+    reached_review_count = sum(
+        1
+        for item in items
+        if item["matched_artifact"] in {"pressure_review", "source_discovery_review", "discovery_intake_review"}
+        or _food_line_source_collection_stage_rank(str(item["highest_stage_reached"])) >= _food_line_source_collection_stage_rank("appears_in_pressure_review")
+    )
     qualified_count = sum(1 for item in items if item["highest_stage_reached"] == "qualified_public_candidate")
     rejected_with_reason_count = sum(1 for item in items if item["highest_stage_reached"] == "rejected_with_reason")
     missed_count = sum(1 for item in items if item["highest_stage_reached"] == "not_discovered")
@@ -5466,10 +5731,17 @@ def run_food_line_dispatch(
     allow_future_date: bool = False,
     audit_source_collection: bool = False,
     gold_set_path: Path | None = None,
+    dry_run_requested: bool = False,
+    audit_allow_live_discovery: bool = False,
 ) -> dict[str, Any]:
     date = validate_date(date)
     public_max_date = None if allow_future_date else _food_line_local_today().isoformat()
     collect_result: dict[str, Any] | None = None
+    collect_reused_existing = False
+    discovery_bootstrap_ran = False
+    discovery_bootstrap_skipped_reason = ""
+    audit_runtime_bounded = False
+    audit_runtime_bound_reason = ""
     registry_purpose_refresh = refresh_food_line_pressure_registry_source_purpose(root)
     discovery_bridge_result: dict[str, Any] = {
         "ok": True,
@@ -5495,10 +5767,16 @@ def run_food_line_dispatch(
     if use_discovery_candidates:
         discovery_bridge_result = run_food_line_discovery_intake_bridge(root, date)
     if collect:
-        try:
-            collect_result = collect_food_line_auto_sources(root, date, fetcher=collect_fetcher)
-        except Exception as exc:  # noqa: BLE001
-            collect_result = {"ok": False, "source_count": 0, "failed_sources": [{"source_id": "collector", "reason": str(exc)}]}
+        if audit_source_collection and dry_run_requested and _food_line_can_reuse_collect_artifacts(root, date):
+            collect_result = _food_line_reused_collect_result(root, date)
+            collect_reused_existing = True
+            audit_runtime_bounded = True
+            audit_runtime_bound_reason = "reused_existing_collection_artifacts"
+        else:
+            try:
+                collect_result = collect_food_line_auto_sources(root, date, fetcher=collect_fetcher)
+            except Exception as exc:  # noqa: BLE001
+                collect_result = {"ok": False, "source_count": 0, "failed_sources": [{"source_id": "collector", "reason": str(exc)}]}
     sources, rejected_records, source_diagnostics = _merged_sources(root, date, include_discovery_candidates=use_discovery_candidates)
     for row in sources:
         row_url_date, _ = _url_path_date(str(row.get("url") or ""))
@@ -5815,8 +6093,37 @@ def run_food_line_dispatch(
         "source_collection_likely_failure_category": "no_major_gap_detected",
         "source_collection_audit_path": "",
         "source_collection_audit_markdown_path": "",
+        "source_collection_audit_elapsed_seconds": 0.0,
+        "source_collection_live_discovery_ran": False,
+        "source_collection_live_discovery_skipped_reason": "",
+        "source_collection_collect_reused_existing": False,
+        "source_collection_collect_live_ran": False,
+        "source_collection_candidate_count_evaluated": 0,
+        "source_collection_query_families_used": [],
+        "source_collection_runtime_bounded": False,
+        "source_collection_runtime_bound_reason": "",
     }
     if audit_source_collection:
+        audit_started_at = time.monotonic()
+        should_bootstrap_discovery_audit = bool(collect or include_discovery_gap_summary)
+        if should_bootstrap_discovery_audit and not _food_line_discovery_candidates_path(root, date).exists():
+            if dry_run_requested and not audit_allow_live_discovery:
+                discovery_bootstrap_skipped_reason = "live_discovery_skipped_for_bounded_audit_dry_run"
+                audit_runtime_bounded = True
+                if not audit_runtime_bound_reason:
+                    audit_runtime_bound_reason = discovery_bootstrap_skipped_reason
+            else:
+                run_food_line_discovery_expansion(
+                    root,
+                    date,
+                    edition_mode="no_current_update" if no_current_update_candidate else "current_update",
+                    dry_run=False,
+                )
+                discovery_bootstrap_ran = True
+        if should_bootstrap_discovery_audit and not _food_line_discovery_intake_review_path(root, date).exists():
+            if _food_line_discovery_candidates_path(root, date).exists():
+                run_food_line_discovery_intake_bridge(root, date, dry_run=False)
+                discovery_bootstrap_ran = True
         source_collection_audit_summary = run_food_line_source_collection_audit(
             root,
             date,
@@ -5825,6 +6132,28 @@ def run_food_line_dispatch(
             rejected_records=rejected_records,
             pressure_review_path=pressure_review_path,
             collect_result=collect_result,
+        )
+        discovery_expansion_audit_for_summary = _food_line_discovery_expansion_audit(root, date)
+        source_collection_audit_summary.update(
+            {
+                "source_collection_audit_elapsed_seconds": round(time.monotonic() - audit_started_at, 3),
+                "source_collection_live_discovery_ran": discovery_bootstrap_ran,
+                "source_collection_live_discovery_skipped_reason": discovery_bootstrap_skipped_reason,
+                "source_collection_collect_reused_existing": collect_reused_existing,
+                "source_collection_collect_live_ran": bool(collect and not collect_reused_existing),
+                "source_collection_candidate_count_evaluated": int(
+                    discovery_expansion_audit_for_summary.get("candidate_count")
+                    or len(discovery_bridge_result.get("discovery_source_rows") or [])
+                    or 0
+                ),
+                "source_collection_query_families_used": sorted(
+                    str(key)
+                    for key in (discovery_expansion_audit_for_summary.get("candidates_by_query_family") or {}).keys()
+                    if str(key).strip()
+                ),
+                "source_collection_runtime_bounded": audit_runtime_bounded,
+                "source_collection_runtime_bound_reason": audit_runtime_bound_reason,
+            }
         )
     exclusion_reason_counts = _food_line_exclusion_reason_counts(
         sources,
@@ -6329,6 +6658,8 @@ def run_range(
     audio_timeout_seconds: float = 90.0,
     audit_source_collection: bool = False,
     gold_set_path: Path | None = None,
+    dry_run_requested: bool = False,
+    audit_allow_live_discovery: bool = False,
 ) -> list[dict[str, Any]]:
     start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
     end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
@@ -6355,6 +6686,8 @@ def run_range(
                 allow_future_date=allow_future_date,
                 audit_source_collection=audit_source_collection,
                 gold_set_path=gold_set_path,
+                dry_run_requested=dry_run_requested,
+                audit_allow_live_discovery=audit_allow_live_discovery,
             )
         )
         day += timedelta(days=1)
@@ -6426,6 +6759,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--allow-future-date", action="store_true", help="Allow public Food Line output for a future-dated edition.")
     p.add_argument("--audit-source-collection", action="store_true", help="Write a gold-set audit of Food Line source collection and review stages.")
     p.add_argument("--gold-set", help="Optional path to a Food Line source-collection gold-set JSON file.")
+    p.add_argument(
+        "--audit-live-discovery",
+        action="store_true",
+        help="Allow audit mode to run live discovery expansion when cached discovery artifacts are missing.",
+    )
     p.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="Optional TTS provider when --generate-audio is used.")
     p.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model for Food Line audio generation.")
     p.add_argument("--audio-voice", default="alloy", help="TTS voice for Food Line audio generation.")
@@ -6453,17 +6791,19 @@ def main(argv: list[str] | None = None) -> int:
                 use_discovery_candidates=bool(args.use_discovery_candidates),
                 include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
                 allow_future_date=bool(args.allow_future_date),
-                    generate_audio=bool(args.generate_audio),
-                    require_audio=bool(args.require_audio),
-                    force_audio_regenerate=bool(args.force_audio_regenerate),
-                    tts_provider=str(args.tts_provider or "none"),
-                    audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
-                    audio_voice=str(args.audio_voice or "alloy"),
-                    audio_format=str(args.audio_format or "mp3"),
-                    audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
+                generate_audio=bool(args.generate_audio),
+                require_audio=bool(args.require_audio),
+                force_audio_regenerate=bool(args.force_audio_regenerate),
+                tts_provider=str(args.tts_provider or "none"),
+                audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                audio_voice=str(args.audio_voice or "alloy"),
+                audio_format=str(args.audio_format or "mp3"),
+                audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
                 audit_source_collection=bool(args.audit_source_collection),
                 gold_set_path=gold_set_path,
-                )
+                dry_run_requested=bool(args.dry_run),
+                audit_allow_live_discovery=bool(args.audit_live_discovery),
+            )
             result = _summarize_range_results(runs)
         else:
             if not args.date:
@@ -6485,6 +6825,8 @@ def main(argv: list[str] | None = None) -> int:
                 allow_future_date=bool(args.allow_future_date),
                 audit_source_collection=bool(args.audit_source_collection),
                 gold_set_path=gold_set_path,
+                dry_run_requested=bool(args.dry_run),
+                audit_allow_live_discovery=bool(args.audit_live_discovery),
             )
             result["pages_publish_path"] = str(PAGES_REPO)
             result["pages_publish_copied"] = False

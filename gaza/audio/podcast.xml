@@ -18,15 +18,7 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 26 Jun 2026 14:46:30 +0000</lastBuildDate>
-  <item>
-    <title>Gaza Briefing: June 26, 2026</title>
-    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-26-transcript.html</link>
-    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-06-26-transcript.html</guid>
-    <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
-    <description>Israeli forces shoot and kill Palestinians in occupied West Bank, Gaza. Al Jazeera reported that Israeli forces shot and killed Palestinians in incidents involving the occupied West Bank and Gaza. Transcript and source links are available from The Blue Fern Co.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-06-26.mp3" length="710400" type="audio/mpeg" />
-  </item>
+  <lastBuildDate>Sat, 20 Jun 2026 13:00:43 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>

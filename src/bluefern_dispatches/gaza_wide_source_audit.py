@@ -3,8 +3,15 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import os
 import re
+import shutil
+import ssl
+import subprocess
+import urllib.error
+import urllib.request
 from collections import Counter, defaultdict
+from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -20,6 +27,7 @@ DEFAULT_OUTPUT_DIR = Path("output") / "review"
 GOOGLE_NEWS_BASE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 STALE_AFTER_DAYS = 3
 AGGREGATOR_DOMAINS = {"news.google.com"}
+DEFAULT_FETCH_TIMEOUT = 20
 
 OFFICIAL_HUMANITARIAN_PUBLISHERS = {
     "ocha",
@@ -168,6 +176,18 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+@dataclass(frozen=True)
+class AuditFetchOptions:
+    timeout: int = DEFAULT_FETCH_TIMEOUT
+    allow_curl_no_revoke: bool = False
+
+
+class AuditFeedFetchError(RuntimeError):
+    def __init__(self, message: str, payload: dict[str, Any]) -> None:
+        super().__init__(message)
+        self.payload = payload
+
+
 def _nonempty(value: Any) -> str:
     return str(value or "").strip()
 
@@ -295,6 +315,173 @@ def _date_prefix(value: Any) -> str:
     text = _nonempty(value)
     match = re.match(r"^(\d{4}-\d{2}-\d{2})", text)
     return match.group(1) if match else ""
+
+
+def _certifi_cafile() -> str:
+    try:
+        import certifi  # type: ignore
+    except ImportError:
+        return ""
+    try:
+        return str(certifi.where() or "")
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _build_verified_ssl_context(*, cafile: str | None = None) -> ssl.SSLContext:
+    return ssl.create_default_context(cafile=cafile or None)
+
+
+def _open_url_with_context(request: urllib.request.Request, *, timeout: int, context: ssl.SSLContext):
+    return urllib.request.urlopen(request, timeout=timeout, context=context)
+
+
+def _run_curl_fetch(url: str, *, timeout: int, allow_no_revoke: bool) -> tuple[bytes, str]:
+    curl_cmd = shutil.which("curl.exe") or shutil.which("curl")
+    if not curl_cmd:
+        raise RuntimeError("curl_not_available")
+    cmd = [curl_cmd, "--silent", "--show-error", "--location", "--max-time", str(timeout), "--fail", url]
+    if allow_no_revoke:
+        cmd.insert(1, "--ssl-no-revoke")
+    proc = subprocess.run(cmd, capture_output=True, text=False, check=False)
+    if proc.returncode != 0:
+        stderr_text = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"curl_failed(rc={proc.returncode}): {stderr_text}")
+    return proc.stdout or b"", "curl_no_revoke" if allow_no_revoke else "curl"
+
+
+def _is_tls_error(exc_text: str) -> bool:
+    lowered = _normalize_text(exc_text)
+    return (
+        gaza_sources._is_tls_error(exc_text)
+        or "certificate verify failed" in lowered
+        or "cert verification failed" in lowered
+    )
+
+
+def _attempt_verified_fetch(url: str, *, timeout: int, context_label: str, cafile: str | None = None) -> dict[str, Any]:
+    request = urllib.request.Request(url, headers={"User-Agent": "BlueFernDispatches/1.0"})
+    try:
+        with _open_url_with_context(request, timeout=timeout, context=_build_verified_ssl_context(cafile=cafile)) as response:
+            return {
+                "ok": True,
+                "url": url,
+                "status_code": int(getattr(response, "status", 200) or 200),
+                "failure_reason": None,
+                "exception_type": None,
+                "tls_error": False,
+                "backend_used": context_label,
+                "content_type": str(response.headers.get("Content-Type") or ""),
+                "content_encoding": str(response.headers.get("Content-Encoding") or ""),
+                "content_bytes": response.read(),
+            }
+    except urllib.error.HTTPError as exc:
+        return {
+            "ok": False,
+            "url": url,
+            "status_code": int(exc.code),
+            "failure_reason": f"HTTPError: {exc}",
+            "exception_type": type(exc).__name__,
+            "tls_error": False,
+            "backend_used": context_label,
+            "content_bytes": None,
+        }
+    except Exception as exc:  # noqa: BLE001
+        tls_error = _is_tls_error(str(exc))
+        return {
+            "ok": False,
+            "url": url,
+            "status_code": None,
+            "failure_reason": gaza_sources.TLS_FAILURE_REASON if tls_error else f"{type(exc).__name__}: {exc}",
+            "exception_type": type(exc).__name__,
+            "tls_error": tls_error,
+            "backend_used": context_label,
+            "content_bytes": None,
+        }
+
+
+def _format_fetch_attempts(attempts: list[dict[str, Any]]) -> str:
+    parts: list[str] = []
+    for attempt in attempts:
+        backend = _nonempty(attempt.get("backend_used")) or "unknown"
+        reason = _nonempty(attempt.get("failure_reason")) or "ok"
+        parts.append(f"{backend}:{reason}")
+    return "; ".join(parts)
+
+
+def _audit_fetch_feed_payload(url: str, *, options: AuditFetchOptions) -> dict[str, Any]:
+    attempts: list[dict[str, Any]] = []
+    system_result = _attempt_verified_fetch(url, timeout=options.timeout, context_label="python_system")
+    attempts.append(system_result)
+    if system_result.get("ok"):
+        system_result["attempts"] = attempts
+        return system_result
+
+    certifi_path = _certifi_cafile()
+    if system_result.get("tls_error") and certifi_path:
+        certifi_result = _attempt_verified_fetch(
+            url,
+            timeout=options.timeout,
+            context_label="python_certifi",
+            cafile=certifi_path,
+        )
+        attempts.append(certifi_result)
+        if certifi_result.get("ok"):
+            certifi_result["attempts"] = attempts
+            return certifi_result
+
+    if options.allow_curl_no_revoke and any(bool(attempt.get("tls_error")) for attempt in attempts):
+        try:
+            body, backend = _run_curl_fetch(url, timeout=options.timeout, allow_no_revoke=True)
+            result = {
+                "ok": True,
+                "url": url,
+                "status_code": 200,
+                "failure_reason": None,
+                "exception_type": None,
+                "tls_error": False,
+                "backend_used": backend,
+                "content_type": "",
+                "content_encoding": "",
+                "content_bytes": body,
+                "attempts": attempts,
+            }
+            return result
+        except Exception as exc:  # noqa: BLE001
+            attempts.append(
+                {
+                    "ok": False,
+                    "url": url,
+                    "status_code": None,
+                    "failure_reason": str(exc),
+                    "exception_type": type(exc).__name__,
+                    "tls_error": _is_tls_error(str(exc)),
+                    "backend_used": "curl_no_revoke",
+                    "content_bytes": None,
+                }
+            )
+
+    failure = dict(attempts[-1] if attempts else {})
+    failure["attempts"] = attempts
+    return failure
+
+
+def _default_audit_fetch_rss_items(options: AuditFetchOptions) -> Callable[[str], list[dict[str, str]]]:
+    def _fetch(url: str) -> list[dict[str, str]]:
+        payload = _audit_fetch_feed_payload(url, options=options)
+        if not payload.get("ok"):
+            attempts = payload.get("attempts") or []
+            raise AuditFeedFetchError(
+                f"{payload.get('failure_reason') or 'feed_fetch_failed'}; attempts={_format_fetch_attempts(attempts)}",
+                payload,
+            )
+        return gaza_sources.parse_rss_items(
+            payload.get("content_bytes") or b"",
+            content_type=str(payload.get("content_type") or ""),
+            content_encoding=str(payload.get("content_encoding") or ""),
+        )
+
+    return _fetch
 
 
 def _parse_dt(value: Any) -> datetime | None:
@@ -529,8 +716,24 @@ def _discover_from_feed_surface(surface: dict[str, Any], *, fetch_rss_items_fn: 
         return [], ["missing discovery query URL"]
     try:
         items = fetch_rss_items_fn(query_url)
+    except AuditFeedFetchError as exc:
+        payload = exc.payload or {}
+        attempts = payload.get("attempts") or []
+        context = (
+            f"feed_fetch_failed source={_nonempty(surface.get('discovery_source') or surface.get('surface_type'))} "
+            f"query={_nonempty(surface.get('discovery_query') or query_url)} "
+            f"url={query_url} reason={_nonempty(payload.get('failure_reason') or str(exc))}"
+        )
+        if attempts:
+            context += f" attempts={_format_fetch_attempts(attempts)}"
+        return [], [context]
     except Exception as exc:  # noqa: BLE001
-        return [], [f"{type(exc).__name__}: {exc}"]
+        context = (
+            f"feed_fetch_failed source={_nonempty(surface.get('discovery_source') or surface.get('surface_type'))} "
+            f"query={_nonempty(surface.get('discovery_query') or query_url)} "
+            f"url={query_url} reason={type(exc).__name__}: {exc}"
+        )
+        return [], [context]
     rows: list[dict[str, Any]] = []
     warnings: list[str] = []
     for item in items:
@@ -1129,6 +1332,10 @@ def _report_paths(output_dir: Path, edition_date: str) -> tuple[Path, Path]:
     )
 
 
+def _env_flag(name: str) -> bool:
+    return _normalize_text(os.getenv(name)) in {"1", "true", "yes", "on"}
+
+
 def build_gaza_wide_source_audit(
     root: Path,
     edition_date: str,
@@ -1138,6 +1345,7 @@ def build_gaza_wide_source_audit(
     manual_urls_file: Path | None = None,
     fetch_rss_items_fn: Callable[[str], list[dict[str, str]]] | None = None,
     output_dir: Path | None = None,
+    fetch_options: AuditFetchOptions | None = None,
 ) -> dict[str, Any]:
     edition = date.fromisoformat(edition_date)
     resolved_output_dir = (root / output_dir) if output_dir is not None and not output_dir.is_absolute() else (output_dir or (root / DEFAULT_OUTPUT_DIR))
@@ -1152,7 +1360,7 @@ def build_gaza_wide_source_audit(
 
     candidates: list[dict[str, Any]] = []
     warnings: list[str] = []
-    fetch_rss_items_fn = fetch_rss_items_fn or gaza_sources.fetch_rss_items
+    fetch_rss_items_fn = fetch_rss_items_fn or _default_audit_fetch_rss_items(fetch_options or AuditFetchOptions())
     for surface in surfaces:
         surface_type = _normalize_text(surface.get("surface_type"))
         if surface.get("query_url") and surface_type in {"known_publisher_rss", "google_news_rss", "query_surface"}:
@@ -1226,6 +1434,8 @@ def build_gaza_wide_source_audit(
             "manual_seed_count": 0 if manual_urls_file is None else len(_load_seed_file(manual_urls_file)),
             "query_file": str(queries_file) if queries_file else "",
             "manual_urls_file": str(manual_urls_file) if manual_urls_file else "",
+            "fetch_timeout_seconds": (fetch_options or AuditFetchOptions()).timeout,
+            "curl_no_revoke_opt_in": bool((fetch_options or AuditFetchOptions()).allow_curl_no_revoke),
         },
         "summary": summary,
         "candidates": candidates,
@@ -1251,6 +1461,7 @@ def build_gaza_wide_source_audit(
 
 def render_gaza_wide_source_audit_markdown(report: dict[str, Any]) -> str:
     summary = report.get("summary") or {}
+    warnings = report.get("warnings") or []
     lines = [
         "# Gaza Wide Source Discovery Audit",
         "",
@@ -1275,6 +1486,9 @@ def render_gaza_wide_source_audit_markdown(report: dict[str, Any]) -> str:
             ],
             [("metric", "metric"), ("value", "count")],
         ),
+        "",
+        "## Warnings",
+        *([f"- {warning}" for warning in warnings] if warnings else ["_None._"]),
         "",
         "## Missing But Likely Qualified",
         _render_table(
@@ -1361,6 +1575,7 @@ def write_gaza_wide_source_audit_report(
     output_dir: Path | None = None,
     dry_run: bool = False,
     fetch_rss_items_fn: Callable[[str], list[dict[str, str]]] | None = None,
+    fetch_options: AuditFetchOptions | None = None,
 ) -> dict[str, Any]:
     report = build_gaza_wide_source_audit(
         root,
@@ -1370,6 +1585,7 @@ def write_gaza_wide_source_audit_report(
         manual_urls_file=manual_urls_file,
         output_dir=output_dir,
         fetch_rss_items_fn=fetch_rss_items_fn,
+        fetch_options=fetch_options,
     )
     if dry_run:
         return report
@@ -1390,6 +1606,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--queries-file", help="Optional JSON file of extra discovery queries.")
     parser.add_argument("--manual-urls-file", help="Optional plain text or JSON file of manual seed URLs.")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Directory for the JSON and markdown report outputs.")
+    parser.add_argument("--feed-timeout", type=int, default=DEFAULT_FETCH_TIMEOUT, help=f"Per-feed fetch timeout in seconds. Default: {DEFAULT_FETCH_TIMEOUT}.")
+    parser.add_argument(
+        "--allow-curl-no-revoke",
+        action="store_true",
+        help="Audit-only opt-in Windows curl revocation workaround after verified Python TLS attempts fail. Also enabled by BLUEFERN_GAZA_AUDIT_ALLOW_CURL_NO_REVOKE=1.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Build the audit without writing output files.")
     return parser.parse_args(argv)
 
@@ -1401,6 +1623,10 @@ def main(argv: list[str] | None = None) -> int:
     queries_file = Path(args.queries_file) if args.queries_file else None
     manual_urls_file = Path(args.manual_urls_file) if args.manual_urls_file else None
     output_dir = Path(args.output_dir) if args.output_dir else DEFAULT_OUTPUT_DIR
+    fetch_options = AuditFetchOptions(
+        timeout=max(1, int(args.feed_timeout or DEFAULT_FETCH_TIMEOUT)),
+        allow_curl_no_revoke=bool(args.allow_curl_no_revoke or _env_flag("BLUEFERN_GAZA_AUDIT_ALLOW_CURL_NO_REVOKE")),
+    )
     report = write_gaza_wide_source_audit_report(
         root,
         args.date,
@@ -1409,6 +1635,7 @@ def main(argv: list[str] | None = None) -> int:
         manual_urls_file=manual_urls_file,
         output_dir=output_dir,
         dry_run=args.dry_run,
+        fetch_options=fetch_options,
     )
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if report.get("ok") else 1

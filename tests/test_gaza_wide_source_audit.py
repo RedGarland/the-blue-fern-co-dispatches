@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import ssl
 from pathlib import Path
 
 from bluefern_dispatches import gaza_sources
@@ -35,6 +36,28 @@ def _build_report(tmp_path: Path, *, extra_rows: list[dict[str, object]] | None 
         manual_urls_file=manual_urls_file,
         fetch_rss_items_fn=_noop_fetch_rss_items,
     )
+
+
+class _FakeResponse:
+    def __init__(self, body: bytes, *, status: int = 200, headers: dict[str, str] | None = None) -> None:
+        self.status = status
+        self.headers = headers or {"Content-Type": "application/rss+xml; charset=utf-8"}
+        self._body = body
+
+    def read(self) -> bytes:
+        return self._body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+
+def _write_query_file(tmp_path: Path, rows: list[dict[str, object]]) -> Path:
+    path = tmp_path / "queries.json"
+    path.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
+    return path
 
 
 def test_aggregator_url_is_kept_as_discovery_metadata_not_evidence(tmp_path):
@@ -174,6 +197,30 @@ def test_google_news_wrapper_payload_can_resolve_real_publisher_url(tmp_path):
     assert row["source_registry_status"] == "known_provider"
 
 
+def test_audit_fetch_abstraction_succeeds_with_verified_tls_context(monkeypatch):
+    seen: dict[str, object] = {}
+    feed = b"""<?xml version='1.0' encoding='UTF-8'?><rss><channel><item><title>Gaza hospital warning</title><link>https://www.who.int/news/item/2026-06-22-gaza-hospital-access-warning</link><pubDate>2026-06-22</pubDate><description>Official humanitarian warning.</description></item></channel></rss>"""
+
+    def _fake_open(request, *, timeout, context):
+        seen["timeout"] = timeout
+        seen["context"] = context
+        return _FakeResponse(feed)
+
+    monkeypatch.setattr(gaza_wide_source_audit, "_open_url_with_context", _fake_open)
+    monkeypatch.setattr(ssl, "_create_unverified_context", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("unexpected unverified TLS context")))
+
+    fetch = gaza_wide_source_audit._default_audit_fetch_rss_items(gaza_wide_source_audit.AuditFetchOptions(timeout=7))
+    items = fetch("https://example.test/feed.xml")
+
+    assert len(items) == 1
+    assert items[0]["title"] == "Gaza hospital warning"
+    assert seen["timeout"] == 7
+    context = seen["context"]
+    assert isinstance(context, ssl.SSLContext)
+    assert context.verify_mode == ssl.CERT_REQUIRED
+    assert context.check_hostname is True
+
+
 def test_syndicated_duplicate_prefers_original_and_official_source(tmp_path):
     report = _build_report(tmp_path)
     rows = {row["publisher"]: row for row in report["candidates"] if row.get("publisher")}
@@ -261,6 +308,101 @@ def test_report_writes_only_under_output_review_and_does_not_touch_public_paths(
     assert not (root / "bluefern-dispatches-pages").exists()
 
 
+def test_tls_fetch_failure_is_recorded_with_context_and_does_not_crash(tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir(parents=True, exist_ok=True)
+    queries_file = _write_query_file(
+        tmp_path,
+        [
+            {
+                "query_url": "https://example.test/feed.xml",
+                "publisher": "Example Feed",
+                "discovery_source": "query_surface",
+                "discovery_query": "\"Gaza\" example feed",
+                "surface_type": "query_surface",
+            }
+        ],
+    )
+
+    monkeypatch.setattr(gaza_wide_source_audit, "_default_query_surfaces", lambda *_args, **_kwargs: [])
+
+    def _tls_fail(_request, *, timeout, context):
+        raise ssl.SSLCertVerificationError("certificate verify failed")
+
+    monkeypatch.setattr(gaza_wide_source_audit, "_open_url_with_context", _tls_fail)
+    monkeypatch.setattr(gaza_wide_source_audit, "_certifi_cafile", lambda: "")
+
+    report = gaza_wide_source_audit.write_gaza_wide_source_audit_report(
+        root,
+        "2026-06-22",
+        manifest_path=MANIFEST_FIXTURE,
+        queries_file=queries_file,
+        dry_run=True,
+    )
+
+    assert report["ok"] is True
+    assert report["candidates"] == []
+    warning = report["warnings"][0]
+    assert "feed_fetch_failed" in warning
+    assert "url=https://example.test/feed.xml" in warning
+    assert 'query="Gaza" example feed' in warning
+    assert "tls_certificate_verification_failed" in warning
+
+
+def test_curl_no_revoke_workaround_is_opt_in_only(monkeypatch):
+    def _tls_fail(_request, *, timeout, context):
+        raise ssl.SSLCertVerificationError("certificate verify failed")
+
+    monkeypatch.setattr(gaza_wide_source_audit, "_open_url_with_context", _tls_fail)
+    monkeypatch.setattr(gaza_wide_source_audit, "_certifi_cafile", lambda: "")
+
+    called = {"count": 0}
+
+    def _fake_curl(url, *, timeout, allow_no_revoke):
+        called["count"] += 1
+        assert allow_no_revoke is True
+        return (
+            b"<?xml version='1.0' encoding='UTF-8'?><rss><channel><item><title>Gaza aid convoy reaches hospital</title><link>https://www.aljazeera.com/news/2026/6/22/gaza-aid-convoy-reaches-hospital</link></item></channel></rss>",
+            "curl_no_revoke",
+        )
+
+    monkeypatch.setattr(gaza_wide_source_audit, "_run_curl_fetch", _fake_curl)
+
+    blocked_payload = gaza_wide_source_audit._audit_fetch_feed_payload(
+        "https://example.test/feed.xml",
+        options=gaza_wide_source_audit.AuditFetchOptions(timeout=5, allow_curl_no_revoke=False),
+    )
+    assert blocked_payload["ok"] is False
+    assert called["count"] == 0
+
+    allowed_fetch = gaza_wide_source_audit._default_audit_fetch_rss_items(
+        gaza_wide_source_audit.AuditFetchOptions(timeout=5, allow_curl_no_revoke=True)
+    )
+    items = allowed_fetch("https://example.test/feed.xml")
+    assert called["count"] == 1
+    assert items[0]["title"] == "Gaza aid convoy reaches hospital"
+
+
+def test_dry_run_does_not_write_review_files(tmp_path):
+    root = tmp_path / "repo"
+    root.mkdir(parents=True, exist_ok=True)
+    manual_urls_file = _write_seed_file(tmp_path)
+
+    report = gaza_wide_source_audit.write_gaza_wide_source_audit_report(
+        root,
+        "2026-06-22",
+        manifest_path=MANIFEST_FIXTURE,
+        manual_urls_file=manual_urls_file,
+        fetch_rss_items_fn=_noop_fetch_rss_items,
+        dry_run=True,
+    )
+
+    assert report["json_report_path"].endswith("output\\review\\gaza_wide_discovery_2026-06-22.json")
+    assert report["markdown_report_path"].endswith("output\\review\\gaza_wide_discovery_2026-06-22.md")
+    assert not (root / "output" / "review" / "gaza_wide_discovery_2026-06-22.json").exists()
+    assert not (root / "output" / "review" / "gaza_wide_discovery_2026-06-22.md").exists()
+
+
 def test_report_separates_current_and_stale_blocked_rows_and_prioritizes_current_resolved_items(tmp_path):
     report = _build_report(
         tmp_path,
@@ -326,6 +468,9 @@ def test_script_parse_args_supports_requested_flags():
             "manual_seed_urls.json",
             "--output-dir",
             "output/review",
+            "--feed-timeout",
+            "45",
+            "--allow-curl-no-revoke",
             "--dry-run",
         ]
     )
@@ -333,3 +478,5 @@ def test_script_parse_args_supports_requested_flags():
     assert args.date == "2026-06-22"
     assert args.dry_run is True
     assert args.output_dir == "output/review"
+    assert args.feed_timeout == 45
+    assert args.allow_curl_no_revoke is True

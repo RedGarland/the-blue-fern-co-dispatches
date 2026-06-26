@@ -5708,6 +5708,32 @@ def run_range(
     return out
 
 
+def _summarize_range_results(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    failed_dates: list[str] = []
+    errors: list[str] = []
+    for run in runs:
+        edition_date = str(run.get("edition_date") or "unknown-date")
+        if run.get("ok"):
+            continue
+        failed_dates.append(edition_date)
+        run_errors = run.get("errors")
+        if isinstance(run_errors, list) and run_errors:
+            errors.extend(f"{edition_date}: {str(error)}" for error in run_errors)
+        else:
+            errors.append(f"{edition_date}: run returned ok=false")
+    result: dict[str, Any] = {
+        "ok": not failed_dates,
+        "runs": runs,
+        "start_date": runs[0].get("edition_date") if runs else None,
+        "end_date": runs[-1].get("edition_date") if runs else None,
+        "run_count": len(runs),
+        "failed_dates": failed_dates,
+    }
+    if errors:
+        result["errors"] = errors
+    return result
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Generate Food Line Dispatch daily editions.")
     p.add_argument("--date", help="Edition date YYYY-MM-DD")
@@ -5761,16 +5787,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.start_date or args.end_date:
             if not args.start_date or not args.end_date:
                 raise ValueError("--start-date and --end-date are required together")
-                result = {
-                    "ok": True,
-                    "runs": run_range(
-                        Path.cwd(),
-                        args.start_date,
-                        args.end_date,
-                        collect=bool(args.collect),
-                        use_discovery_candidates=bool(args.use_discovery_candidates),
-                        include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
-                        allow_future_date=bool(args.allow_future_date),
+            runs = run_range(
+                Path.cwd(),
+                args.start_date,
+                args.end_date,
+                collect=bool(args.collect),
+                use_discovery_candidates=bool(args.use_discovery_candidates),
+                include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
+                allow_future_date=bool(args.allow_future_date),
                     generate_audio=bool(args.generate_audio),
                     require_audio=bool(args.require_audio),
                     force_audio_regenerate=bool(args.force_audio_regenerate),
@@ -5779,8 +5803,8 @@ def main(argv: list[str] | None = None) -> int:
                     audio_voice=str(args.audio_voice or "alloy"),
                     audio_format=str(args.audio_format or "mp3"),
                     audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
-                ),
-            }
+                )
+            result = _summarize_range_results(runs)
         else:
             if not args.date:
                 raise ValueError("--date is required")

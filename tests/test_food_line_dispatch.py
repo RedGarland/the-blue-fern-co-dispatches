@@ -8060,6 +8060,15 @@ def test_food_line_daily_wrapper_logs_before_python_and_supports_date_and_dry_ru
 
     assert "logs\\food-line\\daily_ops" in wrapper_text
     assert "--date" in wrapper_text
+    assert "--collect" in wrapper_text
+    assert "--include-discovery-gap-summary" in wrapper_text
+    assert "--push" in wrapper_text
+    assert "--post-bluesky" in wrapper_text
+    assert "--generate-audio" in wrapper_text
+    assert "--tts-provider" in wrapper_text
+    assert "--audio-format" in wrapper_text
+    assert "--audio-model" in wrapper_text
+    assert "--audio-voice" in wrapper_text
     assert "--dry-run" in wrapper_text
     assert "start-process" in lower_text
     assert "redirectstandardoutput" in lower_text
@@ -8067,7 +8076,10 @@ def test_food_line_daily_wrapper_logs_before_python_and_supports_date_and_dry_ru
     assert "new-item -itemtype file" in lower_text
     assert "set-content" in lower_text
     assert lower_text.index("new-item -itemtype file") < lower_text.index('-label "dispatch"')
-    assert "Food Line scheduled run completed: no public edition today." in wrapper_text
+    assert "Food Line scheduled run status:" in wrapper_text
+    assert "Food Line no public edition" in wrapper_text
+    assert "Food Line no-current-update" in wrapper_text
+    assert "Food Line dry-run completed" in wrapper_text
     assert "scripts\\publish_github_pages.py" not in wrapper_text
     assert '"git_push"' not in wrapper_text
 
@@ -8100,7 +8112,13 @@ def _resolve_powershell_executable() -> str:
     pytest.skip("PowerShell is not available for wrapper execution tests")
 
 
-def _run_food_line_wrapper(tmp_path: Path, payload: dict, exit_code: int = 0) -> tuple[subprocess.CompletedProcess[str], Path]:
+def _run_food_line_wrapper(
+    tmp_path: Path,
+    payload: dict,
+    exit_code: int = 0,
+    *,
+    dry_run: bool = False,
+) -> tuple[subprocess.CompletedProcess[str], Path]:
     project_root = tmp_path / "project"
     log_root = project_root / "logs" / "food-line" / "daily_ops"
     log_root.mkdir(parents=True, exist_ok=True)
@@ -8111,18 +8129,21 @@ def _run_food_line_wrapper(tmp_path: Path, payload: dict, exit_code: int = 0) ->
     env["BLUEFERN_PROJECT_ROOT"] = str(project_root)
     env["BLUEFERN_FOOD_LINE_LOG_ROOT"] = str(log_root)
     env["BLUEFERN_PYTHON_EXE"] = sys.executable
+    command = [
+        powershell_exe,
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(wrapper_path),
+        "-Date",
+        "2026-06-23",
+    ]
+    if dry_run:
+        command.append("-DryRun")
     completed = subprocess.run(
-        [
-            powershell_exe,
-            "-NoProfile",
-            "-NonInteractive",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(wrapper_path),
-            "-Date",
-            "2026-06-23",
-        ],
+        command,
         capture_output=True,
         text=True,
         cwd=Path(__file__).resolve().parents[1],
@@ -8138,19 +8159,121 @@ def test_food_line_daily_wrapper_succeeds_for_no_public_edition_without_pages_pu
             Path(tmpdir),
             payload={
                 "ok": True,
+                "edition_date": "2026-06-23",
+                "source_count": 0,
                 "public_rendered": False,
                 "edition_mode": "no_public_edition",
                 "publish_status": "no_public_edition",
                 "skip_reason": "No new primary food-access signal qualified for public Food Line publication.",
+                "pages_publish_copied": False,
+                "pushed": False,
+                "bluesky_status": "skipped",
+                "audio_status": "skipped",
+            },
+            exit_code=1,
+        )
+
+        assert completed.returncode == 0
+        assert (
+            'Food Line no public edition 2026-06-23: source_count=0 reason="No new primary food-access signal qualified for public Food Line publication."'
+            in completed.stdout
+        )
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "Food Line scheduled run status: NO_PUBLIC_EDITION" in log_text
+        assert "summary.source_count: 0" in log_text
+        assert "summary.public_rendered: false" in log_text
+        assert "summary.edition_mode: no_public_edition" in log_text
+        assert "summary.skip_reason: No new primary food-access signal qualified for public Food Line publication." in log_text
+        assert "summary.pages_publish_copied: false" in log_text
+        assert "summary.pushed: false" in log_text
+        assert "summary.bluesky_status: skipped" in log_text
+        assert "summary.audio_status: skipped" in log_text
+        assert "publish command:" not in log_text
+        assert "git_push command:" not in log_text
+
+
+def test_food_line_daily_wrapper_dry_run_uses_safe_collection_only_flags() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={
+                "ok": True,
+                "edition_date": "2026-06-23",
+                "source_count": 35,
+                "public_rendered": True,
+                "edition_mode": "no_current_update",
+                "source_freshness_status": "blocked_insufficient_fresh_current_stories",
+                "food_line_publish_blocked_reason": "No fresh current-story Food Line sources remained after freshness filtering.",
+                "pages_publish_copied": False,
+                "pushed": False,
+                "bluesky_status": "skipped",
+                "audio_status": "audio_file_ready",
+                "collector_result": {"ok": True, "source_count": 44},
+                "discovery_gap_check": {"run": False},
+            },
+            dry_run=True,
+        )
+
+        assert completed.returncode == 0
+        assert (
+            "Food Line dry-run completed 2026-06-23: source_count=35 public_rendered=true edition_mode=no_current_update"
+            in completed.stdout
+        )
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "--collect" in log_text
+        assert "--include-discovery-gap-summary" in log_text
+        assert "--dry-run" in log_text
+        assert "--publish" not in log_text
+        assert "--push" not in log_text
+        assert "--post-bluesky" not in log_text
+        assert "--generate-audio" not in log_text
+        assert "Food Line scheduled run status: DRY_RUN_COMPLETED" in log_text
+        assert "summary.source_count: 35" in log_text
+        assert "summary.public_rendered: true" in log_text
+        assert "summary.edition_mode: no_current_update" in log_text
+        assert "summary.source_freshness_status: blocked_insufficient_fresh_current_stories" in log_text
+        assert "summary.food_line_publish_blocked_reason: No fresh current-story Food Line sources remained after freshness filtering." in log_text
+        assert "summary.pages_publish_copied: false" in log_text
+        assert "summary.pushed: false" in log_text
+        assert "summary.bluesky_status: skipped" in log_text
+        assert "summary.audio_status: audio_file_ready" in log_text
+
+
+def test_food_line_daily_wrapper_production_logs_full_workflow_flags_and_publish_summary() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={
+                "ok": True,
+                "edition_date": "2026-06-23",
+                "source_count": 12,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-23/",
+                "pages_publish_copied": True,
+                "pushed": True,
+                "bluesky_status": "success",
+                "audio_status": "audio_file_ready",
             },
         )
 
         assert completed.returncode == 0
-        assert "Food Line scheduled run completed: no public edition today." in completed.stdout
+        assert (
+            "Food Line published 2026-06-23: https://dispatches.thebluefernco.com/food-line/editions/2026-06-23/ pushed=true bluesky=success audio=audio_file_ready"
+            in completed.stdout
+        )
         log_text = log_path.read_text(encoding="utf-8")
-        assert "Food Line scheduled run completed: no public edition today." in log_text
-        assert "publish command:" not in log_text
-        assert "git_push command:" not in log_text
+        assert "--collect" in log_text
+        assert "--include-discovery-gap-summary" in log_text
+        assert "--publish" in log_text
+        assert "--push" in log_text
+        assert "--post-bluesky" in log_text
+        assert "--generate-audio" in log_text
+        assert "--tts-provider openai" in log_text
+        assert "--audio-format mp3" in log_text
+        assert "--audio-model gpt-4o-mini-tts" in log_text
+        assert "--audio-voice alloy" in log_text
+        assert "Food Line scheduled run status: PUBLISHED" in log_text
 
 
 def test_food_line_daily_wrapper_preserves_real_dispatch_failures() -> None:

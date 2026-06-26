@@ -210,7 +210,7 @@ def _sync_pages_repo(pages_repo: Path, pages_branch: str) -> dict[str, Any]:
 
 
 def _load_manual_records(path: Path) -> list[dict[str, Any]]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
     records = payload.get("sources") if isinstance(payload, dict) else payload
     if not isinstance(records, list):
         raise ValueError(f"{path.name} must be a list or an object with a sources list")

@@ -319,7 +319,7 @@ def test_gaza_post_text_omits_source_count_metadata_and_cleans_punctuation(tmp_p
     assert "!." not in text
     assert "Gaza's footballers train on broken pitches with no shoes" in text
     assert "Why has FIFA's rebuilding plan gone nowhere?" in text
-    assert "Source-backed briefing from The Blue Fern Co." in text
+    assert "Source-backed briefing from The Blue Fern Co." not in text
 
 
 def test_june_25_post_uses_specific_reader_facing_prose_for_limited_source_update(tmp_path: Path):
@@ -393,6 +393,80 @@ def test_june_25_post_uses_specific_reader_facing_prose_for_limited_source_updat
     assert "palestinian_development" not in text
     assert "Dr Mazen Al-Rantisi" in text
     assert "; and " not in text
+
+
+def test_june_26_post_and_card_description_do_not_repeat_same_sentence(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    edition_date = "2026-06-26"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    story_text = (
+        "Al Jazeera reported that Israeli forces shot and killed Palestinians in incidents involving the occupied West Bank and Gaza."
+    )
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": story_text,
+                    "summary": story_text,
+                    "included_in_public_summary": True,
+                    "source_adequacy_status": "limited_source_update",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "source_count": 1,
+                "publisher_count": 1,
+                "publishers": ["Al Jazeera"],
+                "source_adequacy_status": "limited_source_update",
+                "social_summary": story_text,
+            }
+        ),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html><body><p>June 26, 2026</p></body></html>", encoding="utf-8")
+    run_manifest = tmp_path / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
+    run_manifest.parent.mkdir(parents=True, exist_ok=True)
+    run_manifest.write_text(json.dumps({"social_summary": story_text}), encoding="utf-8")
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: {"accessJwt": "token-123", "did": "did:plc:abc123"})
+    monkeypatch.setattr(bluesky_post, "_upload_card_thumb", lambda *_args, **_kwargs: (None, "not_attempted", False, None, None))
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            _ = (exc_type, exc, tb)
+            return False
+
+        def read(self):
+            return json.dumps({"uri": "at://did:plc:abc123/app.bsky.feed.post/xyz"}).encode("utf-8")
+
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda _req, timeout=20.0: FakeResponse())
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-06-26/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+        force_post=True,
+    )
+    assert result["status"] == "success"
+    assert result["post_text"].startswith("In the June 26 Gaza source-backed update:")
+    assert "Source-backed briefing from The Blue Fern Co." not in result["post_text"]
+    assert result["card_description"] == "Read the June 26 source-backed Gaza update from The Blue Fern Co."
+    assert story_text in result["post_text"]
+    assert result["card_description"] != story_text
 
 
 def test_gaza_card_description_and_maybe_post_clean_public_punctuation_and_keep_guards(monkeypatch, tmp_path: Path):
@@ -477,7 +551,8 @@ def test_gaza_card_description_and_maybe_post_clean_public_punctuation_and_keep_
     assert "?." not in description
     assert "!." not in description
     assert "Why has FIFA's rebuilding plan gone nowhere?" in result["post_text"]
-    assert "Why has FIFA's rebuilding plan gone nowhere?" in description
+    assert description == "Why has FIFA's rebuilding plan gone nowhere?"
+    assert result["card_description"] == "The Blue Fern Co. Gaza briefing for June 22, 2026."
 
 
 def test_june_25_card_description_uses_clean_story_text_instead_of_truncated_raw_snippet(tmp_path: Path):
@@ -705,7 +780,7 @@ def test_description_prefers_gaza_story_summary_over_first_non_gaza_item(tmp_pat
 
 def test_card_description_fallback_when_no_summary(tmp_path: Path):
     description = bluesky_post.build_gaza_card_description("2026-05-07", tmp_path)
-    assert description == "Source-backed daily Gaza briefing from The Blue Fern Co."
+    assert description == "The Blue Fern Co. Gaza briefing for May 7, 2026."
 
 
 def test_card_description_truncates_cleanly(tmp_path: Path):
@@ -837,7 +912,7 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
         embed = record["embed"]
         assert embed["$type"] == "app.bsky.embed.external"
         assert embed["external"]["uri"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/"
-        assert embed["external"]["description"] == "Specific verified Gaza dispatch summary."
+        assert embed["external"]["description"] == "The Blue Fern Co. Gaza briefing for May 7, 2026."
         return FakeResponse({"uri": "at://did:plc:abc123/app.bsky.feed.post/xyz"})
 
     monkeypatch.setattr(bluesky_post, "_post_json", fake_post_json)
@@ -850,6 +925,7 @@ def test_posts_success_with_external_embed_and_public_url(monkeypatch, tmp_path:
         project_root=tmp_path,
     )
     assert result["status"] == "success"
+    assert result["card_description"] == "The Blue Fern Co. Gaza briefing for May 7, 2026."
     assert result["post_uri"] == "at://did:plc:abc123/app.bsky.feed.post/xyz"
     assert result["embed_type"] == "app.bsky.embed.external"
     assert "https://dispatches.thebluefernco.com/gaza/editions/2026-05-07/" not in result["post_text"]

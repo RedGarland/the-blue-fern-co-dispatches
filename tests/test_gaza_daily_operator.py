@@ -25,6 +25,13 @@ def write_manual_sources(root: Path, edition_date: str, payload: list[dict]) -> 
     return path
 
 
+def write_manual_sources_with_bom(root: Path, edition_date: str, payload: list[dict]) -> Path:
+    path = root / "data" / "dispatches" / "gaza" / "sources" / edition_date / "manual_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8-sig")
+    return path
+
+
 @pytest.fixture()
 def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
     repo = Path(__file__).resolve().parents[1]
@@ -84,6 +91,35 @@ def test_manual_source_validation_rejects_missing_required_fields_with_precise_m
     result = operator.validate_or_repair_manual_sources("2026-06-26")
     assert result["ok"] is False
     assert "source record 1 missing required fields: title, url, traceability_note" in result["errors"][0]
+
+
+def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> None:
+    write_manual_sources_with_bom(
+        isolated,
+        "2026-06-26",
+        [
+            {
+                "source_record_id": "gaza-src-2026-06-26-001",
+                "title": "Aid access update",
+                "url": "https://valid.test/gaza-aid",
+                "publisher": "Example News",
+                "published_at": "2026-06-26T08:00:00Z",
+                "retrieved_at": "2026-06-26T09:00:00Z",
+                "summary_or_snippet": "Source-backed update.",
+                "source_type": "news",
+                "provider_id": "manual-supplement",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+                "claim_status": "reported_public_source",
+                "traceability_note": "Manual supplement from a public report.",
+            }
+        ],
+    )
+    result = operator.validate_or_repair_manual_sources("2026-06-26")
+    assert result["ok"] is True
+    assert result["status"] == "valid"
 
 
 def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:

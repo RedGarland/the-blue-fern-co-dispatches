@@ -6563,10 +6563,15 @@ def test_food_line_source_collection_audit_dry_run_reuses_existing_collector_art
         ],
     )
 
+    collector_called = False
+
     def _unexpected_collect(*args, **kwargs):
+        nonlocal collector_called
+        collector_called = True
         raise AssertionError("live collector should not run when reusable audit artifacts exist")
 
     monkeypatch.setattr(food_line, "collect_food_line_auto_sources", _unexpected_collect)
+    monkeypatch.chdir(tmp_path)
 
     exit_code = food_line.main(
         [
@@ -6583,6 +6588,7 @@ def test_food_line_source_collection_audit_dry_run_reuses_existing_collector_art
     payload = json.loads(capsys.readouterr().out)
 
     assert exit_code == 0
+    assert collector_called is False
     assert payload["source_collection_audit_run"] is True
     assert payload["source_collection_collect_reused_existing"] is True
     assert payload["source_collection_collect_live_ran"] is False

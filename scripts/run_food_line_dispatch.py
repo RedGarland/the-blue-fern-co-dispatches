@@ -78,6 +78,131 @@ def _food_line_discovery_no_current_update_metadata(
     return True, str(discovery_bridge_result.get("discovery_no_current_update_reason") or "").strip() or "No discovery candidates were retained."
 
 
+def _food_line_no_current_update_public_label() -> str:
+    return "No qualifying update"
+
+
+def _food_line_no_current_update_blocked_freshness_status(status: str) -> bool:
+    normalized = str(status or "").strip().lower()
+    if not normalized:
+        return False
+    if normalized in FOOD_LINE_NO_CURRENT_UPDATE_BLOCKED_FRESHNESS_STATUSES:
+        return True
+    return normalized.startswith("blocked_insufficient")
+
+
+def _food_line_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def evaluate_food_line_no_current_update_publication_policy(
+    *,
+    edition_mode: str,
+    collector_result: dict[str, Any] | None,
+    discovery_gap_check: dict[str, Any] | None,
+    discovery_expansion_used: bool,
+    source_freshness_status: str,
+    news_item_count: int,
+    local_signal_count: int,
+    state_signal_count: int,
+    discovery_gap_unreviewed_likely_qualifying_count: int | None,
+) -> dict[str, Any]:
+    metrics = {
+        "collector_ok": bool((collector_result or {}).get("ok")),
+        "collector_source_count": _food_line_int((collector_result or {}).get("source_count")),
+        "news_item_count": int(news_item_count),
+        "local_signal_count": int(local_signal_count),
+        "state_signal_count": int(state_signal_count),
+        "local_state_signal_count": int(local_signal_count) + int(state_signal_count),
+        "discovery_gap_run": bool((discovery_gap_check or {}).get("run")),
+        "discovery_expansion_used": bool(discovery_expansion_used),
+        "discovery_gap_unreviewed_likely_qualifying_count": discovery_gap_unreviewed_likely_qualifying_count,
+        "source_freshness_status": str(source_freshness_status or "").strip(),
+        "min_collector_source_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT,
+        "min_news_item_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT,
+        "min_local_state_signal_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_LOCAL_STATE_SIGNAL_COUNT,
+    }
+    result = {
+        "allowed": False,
+        "status": "not_applicable",
+        "reasons": [],
+        "metrics": metrics,
+    }
+    if edition_mode != "no_current_update":
+        return result
+
+    reasons: list[str] = []
+    collector_source_count = metrics["collector_source_count"]
+    if not metrics["collector_ok"]:
+        reasons.append("source collection did not run successfully")
+    if collector_source_count is None:
+        reasons.append("collector source_count is missing")
+    elif collector_source_count < FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT:
+        reasons.append(
+            f"collector source_count {collector_source_count} is below the minimum "
+            f"{FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT}"
+        )
+
+    coverage_ok = (
+        collector_source_count is not None
+        and collector_source_count >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT
+        and (
+            metrics["news_item_count"] >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT
+            or metrics["local_state_signal_count"] >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_LOCAL_STATE_SIGNAL_COUNT
+        )
+    )
+    if not coverage_ok:
+        reasons.append("monitoring coverage was insufficient for a public no-qualifying-update edition")
+
+    if not (metrics["discovery_gap_run"] or metrics["discovery_expansion_used"]):
+        reasons.append("discovery-gap or equivalent expanded discovery did not run")
+
+    if discovery_gap_unreviewed_likely_qualifying_count is None:
+        reasons.append("unreviewed likely qualifying discovery candidate count is missing")
+    elif discovery_gap_unreviewed_likely_qualifying_count > 0:
+        reasons.append(
+            f"{discovery_gap_unreviewed_likely_qualifying_count} unreviewed likely qualifying discovery candidate"
+            f"{'s remain' if discovery_gap_unreviewed_likely_qualifying_count != 1 else ' remains'}"
+        )
+
+    if _food_line_no_current_update_blocked_freshness_status(metrics["source_freshness_status"]):
+        reasons.append(
+            f"source freshness status {metrics['source_freshness_status']} blocks public no-qualifying-update publication"
+        )
+
+    result["allowed"] = not reasons
+    result["status"] = "allowed" if not reasons else "blocked"
+    result["reasons"] = reasons
+    return result
+
+
+def _food_line_no_current_update_policy_freshness_status(
+    *,
+    future_date_blocked: bool,
+    no_current_update_candidate: bool,
+    stale_public_story_count: int,
+    public_rendered: bool,
+    discovery_gap_check: dict[str, Any] | None,
+    discovery_bridge_result: dict[str, Any] | None,
+) -> str:
+    if future_date_blocked:
+        return "future_date_blocked"
+    if no_current_update_candidate:
+        gap_validated = bool((discovery_gap_check or {}).get("public_no_qualifying_update_validated"))
+        expansion_validated = bool((discovery_bridge_result or {}).get("public_no_qualifying_update_validated"))
+        if gap_validated or expansion_validated:
+            return "passed_no_qualifying_update"
+        if stale_public_story_count > 0:
+            return "blocked_insufficient_fresh_current_stories"
+        return "blocked_insufficient_current_story_sources"
+    if public_rendered:
+        return "passed" if not stale_public_story_count else "passed_with_stale_exclusions"
+    return "blocked_insufficient_current_story_sources"
+
+
 def header(
     brand: str,
     root_prefix: str,
@@ -111,6 +236,13 @@ MIN_FAMILIES = 2
 MIN_LOCAL = 3
 MIN_USABLE = 3
 FOOD_LINE_FRESHNESS_WINDOW_DAYS = 3
+FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT = 10
+FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT = 5
+FOOD_LINE_NO_CURRENT_UPDATE_MIN_LOCAL_STATE_SIGNAL_COUNT = 5
+FOOD_LINE_NO_CURRENT_UPDATE_BLOCKED_FRESHNESS_STATUSES = {
+    "blocked_insufficient_fresh_current_stories",
+    "blocked_insufficient_current_story_sources",
+}
 FOOD_LINE_CATEGORY_COLORS: dict[str, str] = {
     "acute strain / service disruption": "#9a4b4b",
     "elevated demand": "#b6784f",
@@ -2785,7 +2917,7 @@ def _food_line_edition_summary_html(
     signal_label = "signal" if public_signal_count == 1 else "signals"
     if status_label == "no-current-update":
         return (
-            f"<p>This edition is no-current-update: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
+            f"<p>This edition is no-qualifying-update: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
             f"but no fresh source-backed current food-pressure signal qualified.</p>"
             f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
         )
@@ -3224,7 +3356,7 @@ def _food_line_public_edition_title(root: Path, date: str) -> str:
         public_signal_count = 0
     if public_signal_count <= 0:
         if str(manifest.get("edition_mode") or "").strip() == "no_current_update":
-            return f"{date} — No current update"
+            return f"{date} — {_food_line_no_current_update_public_label()}"
         return date
     rows = _food_line_public_edition_source_rows(root, date)
     phrases = [_food_line_archive_signal_fragment(row) for row in rows]
@@ -3827,7 +3959,7 @@ def render_food_line_edition(
     public_signal_count = len(public_signal_rows)
     status_label = _food_line_public_edition_status_label(edition_mode, reviewed_count, public_signal_count, excluded_count)
     eyebrow_label = {
-        "no-current-update": "No current update",
+        "no-current-update": _food_line_no_current_update_public_label(),
         "full": "Full-source update",
         "partial": "Partial-source update",
         "limited": "Limited-source update",
@@ -4439,10 +4571,10 @@ def _podcast_description(
     edition_mode: str = "current_update",
 ) -> str:
     if edition_mode == "no_current_update":
-        pressure_point = "No current Food Line update was published because no fresh source-backed current-story records were available."
+        pressure_point = "No qualifying Food Line update was published because no fresh source-backed current-story records qualified for public release."
         why_it_matters = "Stale sources remain in the source audit, but they are not presented as current stories."
         source_note = "Background and source links are available in the public source table."
-        mode_text = "This edition is a no-current-update public fallback."
+        mode_text = "This edition is a public no-qualifying-update fallback."
     else:
         pressure_point = _food_line_audio_index_teaser(lead, continuing_rows)
         why_it_matters = _food_line_audio_why_it_matters(lead)
@@ -5107,6 +5239,7 @@ def run_food_line_dispatch(
     continuing_source_record_ids = [str(row.get("source_record_id") or "").strip() for row in continuing_rows if str(row.get("source_record_id") or "").strip()]
     continuing_source_urls = [str(row.get("url") or "").strip() for row in continuing_rows if str(row.get("url") or "").strip()]
     no_current_update = False
+    no_current_update_candidate = False
     edition_mode = "blocked_future_date"
     public_rendered = False
     qualified_primary_count = 1 if lead_row and not future_date_blocked else 0
@@ -5123,9 +5256,10 @@ def run_food_line_dispatch(
     stale_public_story_count = sum(1 for row in stale_source_rows if not _food_line_source_background_reference(row))
     excluded_stale_source_count = len(stale_source_rows)
     stale_source_ids = [str(row.get("source_record_id") or "").strip() for row in stale_source_rows if str(row.get("source_record_id") or "").strip()]
-    no_current_update = bool(stale_public_story_count) and not future_date_blocked and not lead_row
-    edition_mode = "blocked_future_date" if future_date_blocked else ("current_update" if lead_row else ("no_current_update" if no_current_update else "no_public_edition"))
-    public_rendered = edition_mode in {"current_update", "no_current_update"}
+    no_current_update_candidate = bool(stale_public_story_count) and not future_date_blocked and not lead_row
+    no_current_update = no_current_update_candidate
+    edition_mode = "blocked_future_date" if future_date_blocked else ("current_update" if lead_row else ("no_current_update" if no_current_update_candidate else "no_public_edition"))
+    public_rendered = edition_mode == "current_update"
     public_section_rows = _food_line_public_section_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
     public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
     current_public_rows = [
@@ -5166,6 +5300,59 @@ def run_food_line_dispatch(
             "warning": "",
         }
     )
+    provisional_source_freshness_status = _food_line_no_current_update_policy_freshness_status(
+        future_date_blocked=future_date_blocked,
+        no_current_update_candidate=no_current_update_candidate,
+        stale_public_story_count=stale_public_story_count,
+        public_rendered=public_rendered,
+        discovery_gap_check=discovery_gap_summary,
+        discovery_bridge_result=discovery_bridge_result,
+    )
+    no_current_update_policy = evaluate_food_line_no_current_update_publication_policy(
+        edition_mode=edition_mode,
+        collector_result=collect_result,
+        discovery_gap_check=discovery_gap_summary,
+        discovery_expansion_used=bool(discovery_bridge_result.get("discovery_expansion_used")),
+        source_freshness_status=provisional_source_freshness_status,
+        news_item_count=news_item_count,
+        local_signal_count=scope_counts["local_signal_count"],
+        state_signal_count=scope_counts["state_signal_count"],
+        discovery_gap_unreviewed_likely_qualifying_count=_food_line_int(discovery_gap_summary.get("unreviewed_likely_qualifying_count")),
+    )
+    if no_current_update_candidate and not no_current_update_policy["allowed"]:
+        no_current_update = False
+        edition_mode = "internal_no_qualifying_update"
+        public_rendered = False
+    elif no_current_update_candidate:
+        no_current_update = True
+        edition_mode = "no_current_update"
+        public_rendered = True
+    public_section_rows = _food_line_public_section_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
+    public_rows = _food_line_public_rendered_rows(sources, lead_row, continuing_rows) if public_rendered else []
+    current_public_rows = [
+        row
+        for row in public_rows
+        if _food_line_public_usage_label(row, lead_row, continuing_rows, edition_mode=edition_mode) != "Background reference"
+    ]
+    public_signal_count = 0 if edition_mode == "no_current_update" else len(current_public_rows)
+    public_story_rows = _food_line_public_story_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
+    public_story_ids = {
+        str(row.get("source_record_id") or "").strip()
+        for row in public_story_rows
+        if str(row.get("source_record_id") or "").strip()
+    }
+    qualified_but_not_public_count = sum(
+        1
+        for row in qualifying_public_rows
+        if str(row.get("source_record_id") or "").strip() not in public_story_ids
+    )
+    qualified_but_not_public_warning = ""
+    if qualified_but_not_public_count > 0:
+        qualified_but_not_public_warning = (
+            f"Food Line found {qualified_but_not_public_count} source"
+            f"{'s' if qualified_but_not_public_count != 1 else ''} that qualified for public inclusion but were not published."
+        )
+    claim_rows = _food_line_claim_ledger_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
     for row in sources:
         row_id = str(row.get("source_record_id") or "").strip()
         row["claim_supported"] = _food_line_claim_supported_text(row)
@@ -5229,8 +5416,12 @@ def run_food_line_dispatch(
         review_counts=(len(sources), max(0, len(sources) - len(public_story_rows))),
         exclusion_reason_counts=exclusion_reason_counts,
     )
+    no_current_update_policy_reasons = list(no_current_update_policy.get("reasons") or [])
+    no_current_update_policy_reason_text = "; ".join(no_current_update_policy_reasons)
     if future_date_blocked:
         skip_reason = _food_line_future_date_reason()
+    elif edition_mode == "internal_no_qualifying_update":
+        skip_reason = no_current_update_policy_reason_text or "Food Line public no-qualifying-update policy blocked publication."
     elif public_rendered:
         skip_reason = ""
     else:
@@ -5239,8 +5430,18 @@ def run_food_line_dispatch(
         source_freshness_status = "future_date_blocked"
         food_line_publish_blocked_reason = _food_line_future_date_reason()
     elif edition_mode == "no_current_update":
-        source_freshness_status = "blocked_insufficient_fresh_current_stories"
-        food_line_publish_blocked_reason = "No fresh current-story Food Line sources remained after freshness filtering."
+        source_freshness_status = "passed_no_qualifying_update"
+        food_line_publish_blocked_reason = ""
+    elif edition_mode == "internal_no_qualifying_update":
+        source_freshness_status = (
+            provisional_source_freshness_status
+            if _food_line_no_current_update_blocked_freshness_status(provisional_source_freshness_status)
+            else "blocked_no_current_update_policy"
+        )
+        food_line_publish_blocked_reason = (
+            "Food Line public no-qualifying-update policy blocked publication: "
+            f"{no_current_update_policy_reason_text or 'public no-qualifying-update requirements were not met.'}"
+        )
     elif public_rendered:
         source_freshness_status = "passed" if not stale_public_story_count else "passed_with_stale_exclusions"
         food_line_publish_blocked_reason = ""
@@ -5323,6 +5524,10 @@ def run_food_line_dispatch(
         "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
         "stale_source_ids": stale_source_ids,
         "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
+        "food_line_no_current_update_policy_status": no_current_update_policy.get("status"),
+        "food_line_no_current_update_policy_allowed": bool(no_current_update_policy.get("allowed")),
+        "food_line_no_current_update_policy_reasons": no_current_update_policy_reasons,
+        "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
@@ -5516,6 +5721,10 @@ def run_food_line_dispatch(
         "freshness_window_days": FOOD_LINE_FRESHNESS_WINDOW_DAYS,
         "stale_source_ids": stale_source_ids,
         "food_line_publish_blocked_reason": food_line_publish_blocked_reason,
+        "food_line_no_current_update_policy_status": no_current_update_policy.get("status"),
+        "food_line_no_current_update_policy_allowed": bool(no_current_update_policy.get("allowed")),
+        "food_line_no_current_update_policy_reasons": no_current_update_policy_reasons,
+        "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
@@ -5828,10 +6037,11 @@ def main(argv: list[str] | None = None) -> int:
             result["pages_publish_copied"] = False
             result["pushed"] = False
             if args.publish and result.get("ok") and not args.dry_run:
-                if str(result.get("edition_mode") or "") == "no_public_edition":
-                    result["publish_status"] = "no_public_edition"
-                    result["publish_skipped_reason"] = "no_public_edition"
-                    result["pages_publish_skipped_reason"] = "no_public_edition"
+                if not bool(result.get("public_rendered")):
+                    publish_skip_reason = str(result.get("edition_mode") or "not_public_rendered")
+                    result["publish_status"] = publish_skip_reason
+                    result["publish_skipped_reason"] = publish_skip_reason
+                    result["pages_publish_skipped_reason"] = publish_skip_reason
                 else:
                     ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
                     result["pages_publish_copied"] = ok

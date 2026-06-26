@@ -2,7 +2,7 @@
   "dispatch_slug": "food-line",
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-06-17",
-  "generated_at": "2026-06-21T21:51:13.954770+00:00",
+  "generated_at": "2026-06-19T05:31:04.259357+00:00",
   "source_count": 41,
   "story_count": 1,
   "source_adequacy": {
@@ -142,7 +142,7 @@
     "changed": false,
     "blocked_count": 0,
     "source_purpose_counts": {
-      "current_news": 19,
+      "current_news": 22,
       "disaster_alert": 1,
       "donation_page": 2,
       "official_notice": 1,
@@ -150,7 +150,7 @@
       "resource_page": 1
     },
     "current_or_evergreen_counts": {
-      "current": 24,
+      "current": 27,
       "evergreen": 3
     }
   },

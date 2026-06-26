@@ -649,7 +649,6 @@ def build_gaza_bluesky_post_text(
     date_text = _format_post_date(clean_date)
     intro_label = _gaza_bluesky_intro_label(context)
     url_suffix = f"\n\nPublic edition: {public_url}" if include_public_url and str(public_url or "").strip() else ""
-    footer = "Source-backed briefing from The Blue Fern Co."
 
     def _with_suffix(body: str) -> str:
         body = _normalize_public_post_text(body)
@@ -664,17 +663,17 @@ def build_gaza_bluesky_post_text(
             intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
         else:
             intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
-        candidate = _with_suffix(f"{intro}\n\n{footer}")
-        if len(candidate) <= BLUESKY_MAX_POST_LENGTH and candidate != _normalize_public_post_text(intro):
+        candidate = _with_suffix(intro)
+        if len(candidate) <= BLUESKY_MAX_POST_LENGTH:
             return candidate
         if len(f"{intro}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return _normalize_public_post_text(f"{intro}{url_suffix}" if url_suffix else intro)
     if public_summary:
         prefix = f"In the {date_text} {intro_label}: "
-        available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - len(footer) - 5
+        available = BLUESKY_MAX_POST_LENGTH - len(prefix) - len(url_suffix) - 2
         if available > 0:
             summary = _shorten_post_text_at_word_boundary(public_summary.rstrip(".") or public_summary, available).rstrip(".")
-            candidate = f"{prefix}{summary}.\n\n{footer}"
+            candidate = f"{prefix}{summary}."
             candidate = _with_suffix(candidate)
             if len(candidate) <= BLUESKY_MAX_POST_LENGTH:
                 return candidate
@@ -687,6 +686,36 @@ def build_gaza_bluesky_post_text(
         if len(f"{compact}{url_suffix}") <= BLUESKY_MAX_POST_LENGTH:
             return _normalize_public_post_text(f"{compact}{url_suffix}" if url_suffix else compact)
     return BLUESKY_GAZA_POST_FALLBACK[:BLUESKY_MAX_POST_LENGTH]
+
+
+def _build_gaza_generic_card_description(edition_date: str, max_length: int, *, limited_source: bool = False) -> str:
+    try:
+        dt = datetime.strptime(edition_date, "%Y-%m-%d")
+        date_text = f"{dt.strftime('%B')} {dt.day}, {dt.year}"
+        short_date_text = f"{dt.strftime('%B')} {dt.day}"
+    except ValueError:
+        date_text = edition_date
+        short_date_text = edition_date
+    if limited_source:
+        text = f"Read the {short_date_text} source-backed Gaza update from The Blue Fern Co."
+    else:
+        text = f"The Blue Fern Co. Gaza briefing for {date_text}."
+    return _clean_description_text(text, max_length) or BLUESKY_CARD_FALLBACK_DESCRIPTION
+
+
+def _primary_gaza_post_sentence(post_text: str) -> str:
+    text = _normalize_public_post_text(post_text).split("\n\n", 1)[0].strip()
+    if text.lower().startswith("in the ") and ": " in text:
+        text = text.split(": ", 1)[1].strip()
+    return _normalize_story_phrase(text)
+
+
+def _description_duplicates_gaza_post(description: str, post_text: str) -> bool:
+    desc_norm = _normalize_story_phrase(description)
+    post_norm = _primary_gaza_post_sentence(post_text)
+    if not desc_norm or not post_norm:
+        return False
+    return desc_norm == post_norm or desc_norm in post_norm or post_norm in desc_norm
 
 
 def _clean_description_text(value: str, max_length: int) -> str:
@@ -838,11 +867,14 @@ def build_gaza_card_description(edition_date: str, project_root: Path, max_lengt
     if not date_text:
         return BLUESKY_CARD_FALLBACK_DESCRIPTION
     context = _gaza_bluesky_context(project_root, date_text)
+    edition_manifest = context.get("edition_manifest")
+    limited_source = False
+    if isinstance(edition_manifest, dict):
+        limited_source = str(edition_manifest.get("source_adequacy_status") or "").strip().lower() == "limited_source_update"
     for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
         cleaned = _best_story_reader_text(row, max_length)
         if cleaned:
             return cleaned
-    edition_manifest = context.get("edition_manifest")
     cleaned = _prefer_dispatch_level_summary(edition_manifest, max_length)
     if cleaned:
         return cleaned
@@ -854,7 +886,7 @@ def build_gaza_card_description(edition_date: str, project_root: Path, max_lengt
     from_html = _extract_first_paragraph_from_html(project_root, date_text, max_length)
     if from_html:
         return from_html
-    return BLUESKY_CARD_FALLBACK_DESCRIPTION
+    return _build_gaza_generic_card_description(date_text, max_length, limited_source=limited_source)
 
 
 def _build_gaza_card_title(edition_date: str) -> str:
@@ -1170,15 +1202,32 @@ def maybe_post_gaza_dispatch_to_bluesky(
         result["reason"] = "current-edition-date-mismatch"
         result["stale_content_guard_status"] = "blocked"
         return result
-    card_title = _build_gaza_card_title(edition_date)
-    card_description = build_gaza_card_description(edition_date, root, max_length=BLUESKY_CARD_MAX_DESCRIPTION_LENGTH)
-    use_external_embed = card_description != BLUESKY_CARD_FALLBACK_DESCRIPTION
     text = build_gaza_bluesky_post_text(
         edition_date,
         public_url,
         project_root=root,
-        include_public_url=not use_external_embed,
+        include_public_url=False,
     )
+    card_title = _build_gaza_card_title(edition_date)
+    card_description = build_gaza_card_description(edition_date, root, max_length=BLUESKY_CARD_MAX_DESCRIPTION_LENGTH)
+    if _description_duplicates_gaza_post(card_description, text):
+        limited_source = False
+        edition_manifest = context.get("edition_manifest")
+        if isinstance(edition_manifest, dict):
+            limited_source = str(edition_manifest.get("source_adequacy_status") or "").strip().lower() == "limited_source_update"
+        card_description = _build_gaza_generic_card_description(
+            edition_date,
+            BLUESKY_CARD_MAX_DESCRIPTION_LENGTH,
+            limited_source=limited_source,
+        )
+    use_external_embed = card_description != BLUESKY_CARD_FALLBACK_DESCRIPTION
+    if not use_external_embed:
+        text = build_gaza_bluesky_post_text(
+            edition_date,
+            public_url,
+            project_root=root,
+            include_public_url=True,
+        )
     result["post_text"] = text
     result["card_title"] = card_title
     result["card_description"] = card_description

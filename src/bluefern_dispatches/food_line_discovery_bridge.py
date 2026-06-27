@@ -178,6 +178,7 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
         "pressure_signal_type_hint": _nonempty(candidate.get("pressure_signal_type_hint")),
         "traceability_status": traceability_status,
         "public_claim_eligible": bool(candidate.get("public_claim_eligible")),
+        "public_claim_blockers": list(candidate.get("public_claim_blockers") or []),
         "candidate_id": _nonempty(candidate.get("candidate_id")),
     }
     if manual_fallback:

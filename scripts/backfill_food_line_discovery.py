@@ -73,12 +73,52 @@ def _backfill_summary_paths(root: Path, start_date: str, end_date: str) -> tuple
     return folder / "backfill_summary.json", folder / "backfill_summary.html"
 
 
+def _write_partial_summary(root: Path, summary: dict[str, Any], *, start_date: str, end_date: str, dry_run: bool) -> None:
+    if dry_run:
+        return
+    json_path, html_path = _backfill_summary_paths(root, start_date, end_date)
+    summary["backfill_summary_json_path"] = str(json_path)
+    summary["backfill_summary_html_path"] = str(html_path)
+    _write_json(json_path, summary)
+    rows = "".join(
+        "<tr>"
+        f"<td>{html.escape(str(row['date']))}</td>"
+        f"<td>{row['candidate_count']}</td>"
+        f"<td>{row['traceable_candidate_count']}</td>"
+        f"<td>{row['likely_qualifying_candidate_count']}</td>"
+        f"<td>{row['watchlist_candidate_count']}</td>"
+        f"<td>{row['rejected_candidate_count']}</td>"
+        f"<td>{html.escape(str(row.get('status') or 'completed'))}</td>"
+        "</tr>"
+        for row in summary.get("per_date", [])
+    )
+    lanes = "".join(f"<li>{html.escape(k)}: {v}</li>" for k, v in (summary.get("discovery_lanes_used") or {}).items()) or "<li>none</li>"
+    gaps = "".join(f"<li>{html.escape(day)}</li>" for day in (summary.get("dates_with_no_reviewable_candidates") or [])) or "<li>none</li>"
+    _write_text(
+        html_path,
+        "<!doctype html><html><head><meta charset=\"utf-8\"><title>Food Line backfill summary</title>"
+        "<style>body{font-family:Georgia,serif;margin:2rem;color:#1f2a30}table{border-collapse:collapse;width:100%}"
+        "th,td{border:1px solid #c8c8c8;padding:.5rem;text-align:left}th{background:#f4efe7}</style></head><body>"
+        f"<h1>Food Line backfill summary - {html.escape(start_date)} to {html.escape(end_date)}</h1>"
+        f"<p>Total candidates: {summary.get('total_candidates', 0)}. Public output written: false. Pages repo mutated: false.</p>"
+        f"<h2>Discovery lanes used</h2><ul>{lanes}</ul>"
+        f"<h2>Dates still showing no reviewable candidates</h2><ul>{gaps}</ul>"
+        "<h2>Per-date summary</h2><table><thead><tr><th>Date</th><th>Candidates</th><th>Traceable</th>"
+        "<th>Likely qualifying</th><th>Watchlist</th><th>Rejected</th><th>Status</th></tr></thead>"
+        f"<tbody>{rows}</tbody></table></body></html>",
+    )
+
+
 def _review_payload(edition_date: str, candidates: list[dict[str, Any]], intake: dict[str, Any]) -> dict[str, Any]:
     review_counts = Counter(str(row.get("candidate_review_status") or row.get("review_status") or "needs_review") for row in candidates)
     blocker_counts = Counter()
     for row in candidates:
-        blocker = str(row.get("exclusion_reason") or "").strip() or str(row.get("classification_status") or "").strip()
-        if blocker:
+        blockers = [str(item).strip() for item in row.get("public_claim_blockers") or [] if str(item).strip()]
+        if not blockers:
+            fallback = str(row.get("exclusion_reason") or "").strip() or str(row.get("classification_status") or "").strip()
+            if fallback:
+                blockers = [fallback]
+        for blocker in blockers:
             blocker_counts[blocker] += 1
     return {
         "generated_at": _utc_now(),
@@ -114,6 +154,7 @@ def _review_payload(edition_date: str, candidates: list[dict[str, Any]], intake:
                 "traceability_status": str(row.get("traceability_status") or ""),
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
+                "public_claim_blockers": list(row.get("public_claim_blockers") or []),
                 "classification_status": str(row.get("classification_status") or ""),
                 "exclusion_reason": str(row.get("exclusion_reason") or ""),
             }
@@ -185,8 +226,13 @@ def run_food_line_discovery_backfill(
     start_date: str,
     end_date: str,
     *,
-    max_queries: int | None = None,
-    max_results_per_query: int = 10,
+    max_queries: int | None = 8,
+    max_results_per_query: int = 5,
+    query_lookback_days: int = 0,
+    query_lookahead_days: int = 0,
+    public_claim_lookback_days: int = 0,
+    public_claim_lookahead_days: int = 0,
+    resume: bool = False,
     dry_run: bool = False,
 ) -> dict[str, Any]:
     dates = _expand_dates(start_date, end_date)
@@ -195,18 +241,90 @@ def run_food_line_discovery_backfill(
     blocker_counts: Counter[str] = Counter()
     useful_source_hits: Counter[str] = Counter()
     dates_with_no_reviewable: list[str] = []
+    failed_dates: list[str] = []
 
-    for edition_date in dates:
-        expansion = run_food_line_discovery_expansion(
-            root,
-            edition_date,
-            edition_mode="no_current_update",
-            max_queries=max_queries,
-            max_results_per_query=max_results_per_query,
-            dry_run=dry_run,
-        )
-        intake = run_food_line_discovery_intake_bridge(root, edition_date, dry_run=dry_run)
-        candidates, intake_payload = _copy_candidate_artifacts(root, edition_date, intake=intake, dry_run=dry_run)
+    def build_summary() -> dict[str, Any]:
+        summary = {
+            "ok": not failed_dates,
+            "generated_at": _utc_now(),
+            "start_date": start_date,
+            "end_date": end_date,
+            "dates_scanned": dates,
+            "failed_dates": failed_dates,
+            "total_candidates": sum(int(row["candidate_count"]) for row in per_date),
+            "candidates_by_date": {row["date"]: row["candidate_count"] for row in per_date},
+            "traceable_candidates_by_date": {row["date"]: row["traceable_candidate_count"] for row in per_date},
+            "likely_qualifying_candidates_by_date": {row["date"]: row["likely_qualifying_candidate_count"] for row in per_date},
+            "watchlist_candidates_by_date": {row["date"]: row["watchlist_candidate_count"] for row in per_date},
+            "rejected_candidates_by_date": {row["date"]: row["rejected_candidate_count"] for row in per_date},
+            "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
+            "discovery_lanes_used": dict(sorted(lane_counts.items())),
+            "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
+            "dates_with_no_reviewable_candidates": dates_with_no_reviewable,
+            "per_date": per_date,
+            "public_output_written": False,
+            "pages_repo_mutated": False,
+            "dry_run": dry_run,
+            "resume": resume,
+            "max_queries": max_queries,
+            "max_results_per_query": max_results_per_query,
+            "query_lookback_days": query_lookback_days,
+            "query_lookahead_days": query_lookahead_days,
+            "public_claim_lookback_days": public_claim_lookback_days,
+            "public_claim_lookahead_days": public_claim_lookahead_days,
+        }
+        json_path, html_path = _backfill_summary_paths(root, start_date, end_date)
+        summary["backfill_summary_json_path"] = str(json_path)
+        summary["backfill_summary_html_path"] = str(html_path)
+        return summary
+
+    for index, edition_date in enumerate(dates, start=1):
+        print(f"[food-line-backfill] {index}/{len(dates)} {edition_date}", flush=True)
+        try:
+            if resume and _candidate_copy_path(root, edition_date).exists() and _review_json_path(root, edition_date).exists() and not dry_run:
+                candidates = _read_json(_candidate_copy_path(root, edition_date))
+                intake_payload = {"discovery_review_path": str(_review_json_path(root, edition_date))}
+                expansion = {"ok": True, "discovery_audit_json_path": ""}
+                intake = {"ok": True, "discovery_candidates_intaked": len(candidates) if isinstance(candidates, list) else 0}
+                status = "resumed_existing"
+            else:
+                expansion = run_food_line_discovery_expansion(
+                    root,
+                    edition_date,
+                    edition_mode="no_current_update",
+                    max_queries=max_queries,
+                    max_results_per_query=max_results_per_query,
+                    query_lookback_days=query_lookback_days,
+                    query_lookahead_days=query_lookahead_days,
+                    public_claim_lookback_days=public_claim_lookback_days,
+                    public_claim_lookahead_days=public_claim_lookahead_days,
+                    dry_run=dry_run,
+                )
+                intake = run_food_line_discovery_intake_bridge(root, edition_date, dry_run=dry_run)
+                candidates, intake_payload = _copy_candidate_artifacts(root, edition_date, intake=intake, dry_run=dry_run)
+                status = "completed"
+        except Exception as exc:  # noqa: BLE001
+            failed_dates.append(edition_date)
+            per_date.append(
+                {
+                    "date": edition_date,
+                    "ok": False,
+                    "status": "failed",
+                    "candidate_count": 0,
+                    "traceable_candidate_count": 0,
+                    "likely_qualifying_candidate_count": 0,
+                    "watchlist_candidate_count": 0,
+                    "rejected_candidate_count": 0,
+                    "needs_review_candidate_count": 0,
+                    "discovery_gap": True,
+                    "errors": [str(exc)],
+                    "public_output_written": False,
+                    "pages_repo_mutated": False,
+                }
+            )
+            _write_partial_summary(root, build_summary(), start_date=start_date, end_date=end_date, dry_run=dry_run)
+            continue
+
         typed_candidates = [row for row in candidates if isinstance(row, dict)]
         review_counts = Counter(str(row.get("candidate_review_status") or row.get("review_status") or "needs_review") for row in typed_candidates)
         traceable_count = sum(1 for row in typed_candidates if str(row.get("traceability_status") or "") == "traceable")
@@ -219,9 +337,13 @@ def run_food_line_discovery_backfill(
             lane = str(row.get("discovery_lane") or "").strip()
             if lane:
                 lane_counts[lane] += 1
-            reason = str(row.get("exclusion_reason") or row.get("classification_status") or "").strip()
-            if reason:
-                blocker_counts[reason] += 1
+            blockers = [str(item).strip() for item in row.get("public_claim_blockers") or [] if str(item).strip()]
+            if not blockers:
+                fallback = str(row.get("exclusion_reason") or row.get("classification_status") or "").strip()
+                if fallback:
+                    blockers = [fallback]
+            for blocker in blockers:
+                blocker_counts[blocker] += 1
             if likely_qualifying_count > 0 and not str(row.get("duplicate_of") or "").strip():
                 publisher = str(row.get("discovered_publisher") or row.get("publisher") or "").strip()
                 if publisher:
@@ -232,6 +354,7 @@ def run_food_line_discovery_backfill(
             {
                 "date": edition_date,
                 "ok": bool(expansion.get("ok")) and bool(intake.get("ok")),
+                "status": status,
                 "candidate_count": len(typed_candidates),
                 "traceable_candidate_count": traceable_count,
                 "likely_qualifying_candidate_count": likely_qualifying_count,
@@ -245,63 +368,14 @@ def run_food_line_discovery_backfill(
                 "discovery_audit_path": str(expansion.get("discovery_audit_json_path") or ""),
                 "discovery_intake_path": str(intake_payload.get("discovery_review_path") or intake.get("discovery_review_path") or ""),
                 "discovery_lanes_used": sorted({str(row.get("discovery_lane") or "") for row in typed_candidates if str(row.get("discovery_lane") or "")}),
+                "top_blocker_reasons": dict(sorted(Counter(blocker for row in typed_candidates for blocker in (row.get("public_claim_blockers") or [])).items(), key=lambda item: (-item[1], item[0]))[:10]),
+                "errors": [],
                 "public_output_written": False,
                 "pages_repo_mutated": False,
             }
         )
-
-    summary = {
-        "ok": True,
-        "generated_at": _utc_now(),
-        "start_date": start_date,
-        "end_date": end_date,
-        "dates_scanned": dates,
-        "total_candidates": sum(int(row["candidate_count"]) for row in per_date),
-        "candidates_by_date": {row["date"]: row["candidate_count"] for row in per_date},
-        "traceable_candidates_by_date": {row["date"]: row["traceable_candidate_count"] for row in per_date},
-        "likely_qualifying_candidates_by_date": {row["date"]: row["likely_qualifying_candidate_count"] for row in per_date},
-        "watchlist_candidates_by_date": {row["date"]: row["watchlist_candidate_count"] for row in per_date},
-        "rejected_candidates_by_date": {row["date"]: row["rejected_candidate_count"] for row in per_date},
-        "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
-        "discovery_lanes_used": dict(sorted(lane_counts.items())),
-        "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
-        "dates_with_no_reviewable_candidates": dates_with_no_reviewable,
-        "per_date": per_date,
-        "public_output_written": False,
-        "pages_repo_mutated": False,
-        "dry_run": dry_run,
-    }
-    json_path, html_path = _backfill_summary_paths(root, start_date, end_date)
-    summary["backfill_summary_json_path"] = str(json_path)
-    summary["backfill_summary_html_path"] = str(html_path)
-    if not dry_run:
-        _write_json(json_path, summary)
-        rows = "".join(
-            "<tr>"
-            f"<td>{html.escape(str(row['date']))}</td>"
-            f"<td>{row['candidate_count']}</td>"
-            f"<td>{row['traceable_candidate_count']}</td>"
-            f"<td>{row['likely_qualifying_candidate_count']}</td>"
-            f"<td>{row['watchlist_candidate_count']}</td>"
-            f"<td>{row['rejected_candidate_count']}</td>"
-            "</tr>"
-            for row in per_date
-        )
-        lanes = "".join(f"<li>{html.escape(k)}: {v}</li>" for k, v in summary["discovery_lanes_used"].items()) or "<li>none</li>"
-        gaps = "".join(f"<li>{html.escape(day)}</li>" for day in dates_with_no_reviewable) or "<li>none</li>"
-        _write_text(
-            html_path,
-            "<!doctype html><html><head><meta charset=\"utf-8\"><title>Food Line backfill summary</title>"
-            "<style>body{font-family:Georgia,serif;margin:2rem;color:#1f2a30}table{border-collapse:collapse;width:100%}"
-            "th,td{border:1px solid #c8c8c8;padding:.5rem;text-align:left}th{background:#f4efe7}</style></head><body>"
-            f"<h1>Food Line backfill summary - {html.escape(start_date)} to {html.escape(end_date)}</h1>"
-            f"<p>Total candidates: {summary['total_candidates']}. Public output written: false. Pages repo mutated: false.</p>"
-            f"<h2>Discovery lanes used</h2><ul>{lanes}</ul>"
-            f"<h2>Dates still showing no reviewable candidates</h2><ul>{gaps}</ul>"
-            "<h2>Per-date summary</h2><table><thead><tr><th>Date</th><th>Candidates</th><th>Traceable</th>"
-            "<th>Likely qualifying</th><th>Watchlist</th><th>Rejected</th></tr></thead>"
-            f"<tbody>{rows}</tbody></table></body></html>",
-        )
+        _write_partial_summary(root, build_summary(), start_date=start_date, end_date=end_date, dry_run=dry_run)
+    summary = build_summary()
     return summary
 
 
@@ -309,8 +383,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Backfill Food Line discovery intake and review artifacts without publishing public editions.")
     parser.add_argument("--start-date", required=True)
     parser.add_argument("--end-date", required=True)
-    parser.add_argument("--max-queries", type=int, default=None)
-    parser.add_argument("--max-results-per-query", type=int, default=10)
+    parser.add_argument("--max-queries", type=int, default=8)
+    parser.add_argument("--max-results-per-query", type=int, default=5)
+    parser.add_argument("--query-lookback-days", type=int, default=0)
+    parser.add_argument("--query-lookahead-days", type=int, default=0)
+    parser.add_argument("--lookback-days", type=int, default=0)
+    parser.add_argument("--lookahead-days", type=int, default=0)
+    parser.add_argument("--resume", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args(argv)
 
@@ -323,6 +402,11 @@ def main(argv: list[str] | None = None) -> int:
         args.end_date,
         max_queries=args.max_queries,
         max_results_per_query=args.max_results_per_query,
+        query_lookback_days=args.query_lookback_days,
+        query_lookahead_days=args.query_lookahead_days,
+        public_claim_lookback_days=args.lookback_days,
+        public_claim_lookahead_days=args.lookahead_days,
+        resume=bool(args.resume),
         dry_run=bool(args.dry_run),
     )
     print(json.dumps(result, indent=2, ensure_ascii=False))

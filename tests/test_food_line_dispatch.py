@@ -6757,6 +6757,160 @@ def test_food_line_source_collection_audit_marks_discovery_candidate_rejected_wi
     assert payload["items"][0]["miss_reason"] == "rejected_resource_only"
 
 
+def test_food_line_source_collection_rejection_reason_aggregates_concrete_sources():
+    reason, miss_reason = food_line._food_line_source_collection_rejection_reason(
+        {
+            "exclusion_reason": "outside daily window",
+            "pressure_verification_status": "demoted_context",
+            "source_purpose": "current_news",
+        },
+        {
+            "reason": "rejected in pressure review after freshness check",
+            "source_freshness_disqualification_reason": "published_at is outside daily window",
+        },
+        {
+            "reason": "resource-only candidate was reviewed and rejected",
+        },
+        ["missing required field: published_at"],
+    )
+
+    assert reason == (
+        "outside daily window; rejected in pressure review after freshness check; "
+        "published_at is outside daily window; resource-only candidate was reviewed and rejected; "
+        "missing required field: published_at"
+    )
+    assert miss_reason == "rejected_stale"
+
+
+def test_food_line_source_collection_audit_uses_collector_audit_for_ap_alias_match(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    collector_audit_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "collector_audit.json"
+    collector_audit_path.parent.mkdir(parents=True, exist_ok=True)
+    collector_audit_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_id": "ap-food-bank-cuts",
+                    "source_name": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+                    "source_family": "national_news",
+                    "url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+                    "fetched": True,
+                    "item_count": 1,
+                    "accepted_pressure_count": 0,
+                    "demoted_count": 0,
+                    "rejected_count": 1,
+                    "top_rejection_reasons": ["excluded by negative filter: menu"],
+                    "extraction_basis_used": ["page_text_excerpt"],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" funding cuts families after:2025-04-28",
+                "url": "https://apnews.com/article/food-banks-campaign-against-hunger-snap-pantry-665c19251b5d83bbed45a29958f79609",
+                "title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+                "expected_status": "review_candidate",
+                "expected_reason": "major-outlet reporting on food-bank strain and SNAP-linked household pressure",
+                "priority": "high",
+                "source_family": "national_wire",
+            }
+        ],
+    )
+
+    pressure_review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    pressure_review_path.parent.mkdir(parents=True, exist_ok=True)
+    pressure_review_path.write_text("", encoding="utf-8")
+    audit = food_line.run_food_line_source_collection_audit(
+        tmp_path,
+        date,
+        gold_set_path=gold_set_path,
+        sources=[],
+        rejected_records=[],
+        pressure_review_path=pressure_review_path,
+        collect_result={"ok": True},
+    )
+
+    payload = json.loads(Path(audit["source_collection_audit_path"]).read_text(encoding="utf-8"))
+    item = payload["items"][0]
+    assert item["found"] is True
+    assert item["matched_artifact"] == "collector_audit"
+    assert item["highest_stage_reached"] == "rejected_with_reason"
+    assert item["rejection_reason"] == "excluded by negative filter: menu"
+    assert item["matched_title"] == "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks"
+
+
+def test_food_line_source_collection_audit_markdown_prefers_concrete_rejection_reason(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(
+        json.dumps(
+            [
+                {
+                    **_pressure_row(
+                        31,
+                        "Food banks continue to see increased need as SNAP requirements shift",
+                        "Regional food banks continue to see increased need as SNAP requirements shift.",
+                        family="public_radio",
+                        state="MA",
+                    ),
+                    "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+                    "source_family": "public_radio",
+                    "source_purpose": "current_news",
+                    "pressure_signal": False,
+                    "pressure_verification_status": "demoted_context",
+                    "source_freshness_status": "stale_outside_daily_window",
+                    "source_freshness_disqualification_reason": "outside daily window",
+                    "freshness_disqualification_reason": "outside daily window",
+                    "primary_eligible": False,
+                    "primary_disqualification_reason": "not a current public food-pressure signal",
+                    "source_public_story_eligible": False,
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" SNAP requirements shift site:nepm.org after:2026-06-01",
+                "url": "https://www.nepm.org/regional-news/2026-06-08/food-banks-continue-to-see-increased-need-as-snap-requirements-shift",
+                "title": "Food banks continue to see increased need as SNAP requirements shift",
+                "expected_status": "review_candidate",
+                "expected_reason": "regional food-bank demand candidate tied to SNAP requirement changes",
+                "priority": "high",
+                "source_family": "public_radio",
+            }
+        ],
+    )
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        generate_audio=False,
+        audit_source_collection=True,
+        gold_set_path=gold_set_path,
+    )
+
+    markdown = Path(result["source_collection_audit_markdown_path"]).read_text(encoding="utf-8")
+    assert "| unknown |" not in markdown
+    assert "outside daily window" in markdown
+    assert "not a current public food-pressure signal" in markdown
+
+
 def test_food_line_review_csv_is_written_and_includes_evidence_fields(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-04"

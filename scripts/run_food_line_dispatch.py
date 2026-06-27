@@ -4451,6 +4451,7 @@ _FOOD_LINE_SOURCE_COLLECTION_TRACKING_PARAMS = {
     "mkt_tok",
     "spm",
 }
+_AP_NEWS_ARTICLE_ID_RE = re.compile(r"(?<![0-9a-f])([0-9a-f]{32})(?![0-9a-f])", re.IGNORECASE)
 
 
 def _normalize_food_line_source_collection_url(url: str) -> str:
@@ -4479,6 +4480,21 @@ def _normalize_food_line_source_collection_url(url: str) -> str:
         )
     )
     return canonical_url(normalized)
+
+
+def _food_line_source_collection_url_aliases(url: str) -> set[str]:
+    normalized = _normalize_food_line_source_collection_url(url)
+    if not normalized:
+        return set()
+    aliases = {normalized}
+    parts = urlsplit(normalized)
+    host = parts.netloc.lower()
+    if host.endswith("apnews.com"):
+        article_id_match = _AP_NEWS_ARTICLE_ID_RE.search(parts.path or "")
+        if article_id_match:
+            article_id = article_id_match.group(1).lower()
+            aliases.add(canonical_url(urlunsplit((parts.scheme, parts.netloc, f"/article/{article_id}", "", ""))))
+    return aliases
 
 
 def _food_line_source_collection_gold_set_path(root: Path, date: str) -> Path:
@@ -4622,28 +4638,53 @@ def _load_food_line_source_collection_gold_set(path: Path, date: str) -> list[di
 
 
 def _food_line_source_collection_rejection_reason(
-    row: dict[str, Any] | None,
-    rejected_news_reason: str,
-    rejected_record_reasons: list[str],
+    *reason_sources: Any,
 ) -> tuple[str, str]:
-    row = row or {}
-    candidate_reasons = [
-        str(row.get("reason") or "").strip(),
-        str(row.get("exclusion_reason") or "").strip(),
-        str(row.get("public_inclusion_reason") or "").strip(),
-        str(row.get("primary_disqualification_reason") or "").strip(),
-        str(row.get("freshness_disqualification_reason") or "").strip(),
-        str(row.get("source_freshness_disqualification_reason") or "").strip(),
-        str(row.get("pressure_reason") or "").strip(),
-        rejected_news_reason.strip(),
-        "; ".join(reason for reason in rejected_record_reasons if reason),
-    ]
-    reason_text = next((reason for reason in candidate_reasons if reason), "")
+    reason_text_parts: list[str] = []
+    seen_reason_keys: set[str] = set()
+
+    def _append_reason(value: Any) -> None:
+        text = str(value or "").strip()
+        if not text:
+            return
+        key = normalize_title(text)
+        if not key or key in seen_reason_keys:
+            return
+        seen_reason_keys.add(key)
+        reason_text_parts.append(text)
+
+    def _collect(value: Any) -> None:
+        if isinstance(value, dict):
+            for key in (
+                "reason",
+                "exclusion_reason",
+                "public_inclusion_reason",
+                "primary_disqualification_reason",
+                "freshness_disqualification_reason",
+                "source_freshness_disqualification_reason",
+                "pressure_reason",
+            ):
+                _append_reason(value.get(key))
+            return
+        if isinstance(value, (list, tuple, set)):
+            for item in value:
+                _collect(item)
+            return
+        _append_reason(value)
+
+    for source in reason_sources:
+        _collect(source)
+
+    reason_text = "; ".join(reason_text_parts)
     lowered = reason_text.lower()
-    pressure_verification_status = str(row.get("pressure_verification_status") or "").strip().lower()
-    source_purpose = str(row.get("source_purpose") or "").strip().lower()
-    source_role = str(row.get("source_role") or "").strip().lower()
-    classification_status = str(row.get("classification_status") or "").strip().lower()
+    merged_row: dict[str, Any] = {}
+    for source in reason_sources:
+        if isinstance(source, dict):
+            merged_row.update(source)
+    pressure_verification_status = str(merged_row.get("pressure_verification_status") or "").strip().lower()
+    source_purpose = str(merged_row.get("source_purpose") or "").strip().lower()
+    source_role = str(merged_row.get("source_role") or "").strip().lower()
+    classification_status = str(merged_row.get("classification_status") or "").strip().lower()
     if not reason_text:
         if pressure_verification_status == "demoted_context" or source_purpose in {
             "donation_page",
@@ -4653,12 +4694,12 @@ def _food_line_source_collection_rejection_reason(
         } or source_role == "resource_context" or classification_status == "context_only":
             return "resource-only / no pressure signal", "rejected_resource_only"
         return "", "unknown"
+    if "stale" in lowered or "outside daily window" in lowered:
+        return reason_text, "rejected_stale"
     if "resource-only" in lowered or "resource only" in lowered or "no pressure signal" in lowered:
         return reason_text, "rejected_resource_only"
     if "background reference" in lowered:
         return "resource-only / no pressure signal", "rejected_resource_only"
-    if "stale" in lowered or "outside daily window" in lowered:
-        return reason_text, "rejected_stale"
     if "weak pressure" in lowered or "not a current public food-pressure signal" in lowered:
         return reason_text, "rejected_weak_pressure"
     if "published_at" in lowered or "missing usable date" in lowered or "missing required field: published_at" in lowered:
@@ -4704,6 +4745,11 @@ def _food_line_source_collection_markdown(report: dict[str, Any]) -> str:
         "| --- | --- | --- | --- | --- | --- |",
     ]
     for item in report.get("items") or []:
+        reason_cell = str(item.get("miss_reason") or "")
+        if str(item.get("highest_stage_reached") or "") == "rejected_with_reason" and str(item.get("rejection_reason") or "").strip():
+            reason_cell = str(item.get("rejection_reason") or "")
+        elif not reason_cell:
+            reason_cell = str(item.get("rejection_reason") or "")
         lines.append(
             "| "
             + " | ".join(
@@ -4711,7 +4757,7 @@ def _food_line_source_collection_markdown(report: dict[str, Any]) -> str:
                     str(item.get("priority") or ""),
                     "yes" if item.get("found") else "no",
                     str(item.get("highest_stage_reached") or ""),
-                    str(item.get("miss_reason") or item.get("rejection_reason") or ""),
+                    reason_cell,
                     str(item.get("matched_title") or item.get("title") or "").replace("|", "\\|"),
                     str(item.get("url") or "").replace("|", "%7C"),
                 ]
@@ -4736,6 +4782,7 @@ def run_food_line_source_collection_audit(
     auto_rows = _read_json(_auto_source_path(root, date)) if _auto_source_path(root, date).exists() else []
     manual_rows = _read_json(_manual_source_path(root, date)) if _manual_source_path(root, date).exists() else []
     review_rows = _read_food_line_review_csv(pressure_review_path)
+    collector_audit_rows = _read_food_line_json_list(_collector_audit_path(root, date))
     discovery_candidate_rows = _read_food_line_json_list(_food_line_discovery_candidates_path(root, date))
     discovery_review_rows = _read_food_line_source_discovery_review_csv(_food_line_source_discovery_review_path(root, date))
     discovery_audit_rows = _read_food_line_json_list(_food_line_source_discovery_audit_path(root, date))
@@ -4759,13 +4806,14 @@ def run_food_line_source_collection_audit(
 
     for gold in gold_rows:
         normalized_url = gold["normalized_url"]
+        gold_aliases = _food_line_source_collection_url_aliases(gold["url"])
         gold_title = str(gold.get("title") or "").strip()
         gold_host = urlsplit(normalized_url).netloc.lower() if normalized_url else ""
         best_fuzzy: dict[str, Any] | None = None
         best_fuzzy_score = 0.0
 
         def _is_exact_match(candidate_url: str) -> bool:
-            return bool(candidate_url) and _normalize_food_line_source_collection_url(candidate_url) == normalized_url
+            return bool(candidate_url) and bool(gold_aliases & _food_line_source_collection_url_aliases(candidate_url))
 
         def _consider_fuzzy(candidate: dict[str, Any], candidate_title: str, candidate_url: str) -> None:
             nonlocal best_fuzzy, best_fuzzy_score
@@ -4817,6 +4865,7 @@ def run_food_line_source_collection_audit(
             ),
             None,
         )
+        exact_collector_audit = next((row for row in collector_audit_rows if _is_exact_match(str(row.get("url") or ""))), None)
         exact_discovery_candidate = next(
             (
                 row
@@ -4858,6 +4907,7 @@ def run_food_line_source_collection_audit(
                 exact_review,
                 exact_rejected_news,
                 exact_rejected_record,
+                exact_collector_audit,
                 exact_discovery_candidate,
                 exact_discovery_review,
                 exact_discovery_audit,
@@ -4872,6 +4922,10 @@ def run_food_line_source_collection_audit(
             stage = "discovered_raw_candidate"
             matched_artifact = "collector_rejected_news"
             matched_row = exact_rejected_news
+        elif exact_collector_audit is not None:
+            stage = "fetched_or_attempted"
+            matched_artifact = "collector_audit"
+            matched_row = exact_collector_audit
         if exact_source is not None:
             stage = "parsed_or_source_record_created"
             matched_artifact = "merged_sources"
@@ -4905,16 +4959,17 @@ def run_food_line_source_collection_audit(
             matched_row = exact_review
 
         rejection_text, rejection_miss_reason = _food_line_source_collection_rejection_reason(
-            (
-                exact_source
-                or (exact_written if isinstance(exact_written, dict) else None)
-                or exact_discovery_candidate
-                or exact_discovery_audit
-                or exact_discovery_review
-                or exact_discovery_intake
-            ),
-            str((exact_rejected_news or {}).get("reason") or (exact_discovery_review or {}).get("reason") or (exact_discovery_audit or {}).get("reason") or ""),
-            [str(item) for item in ((exact_rejected_record or {}).get("reasons") or [])],
+            exact_review,
+            exact_source,
+            exact_written if isinstance(exact_written, dict) else None,
+            exact_collector_audit,
+            exact_discovery_candidate,
+            exact_discovery_audit,
+            exact_discovery_review,
+            exact_discovery_intake,
+            (exact_rejected_news or {}).get("reason"),
+            (exact_rejected_record or {}).get("reasons") or [],
+            (exact_collector_audit or {}).get("top_rejection_reasons") or [],
         )
 
         qualifies = (
@@ -4943,6 +4998,15 @@ def run_food_line_source_collection_audit(
         if qualifies:
             stage = "qualified_public_candidate"
             matched_artifact = matched_artifact or "pressure_review"
+        elif (
+            exact_collector_audit is not None
+            and int((exact_collector_audit or {}).get("rejected_count") or 0) > 0
+            and rejection_text
+            and _food_line_source_collection_stage_rank("rejected_with_reason") > _food_line_source_collection_stage_rank(stage)
+        ):
+            stage = "rejected_with_reason"
+            matched_artifact = "collector_audit"
+            matched_row = exact_collector_audit
         elif found and rejection_text and _food_line_source_collection_stage_rank("rejected_with_reason") > _food_line_source_collection_stage_rank(stage):
             stage = "rejected_with_reason"
             matched_artifact = matched_artifact or ("collector_rejected_news" if exact_rejected_news else "pressure_review")

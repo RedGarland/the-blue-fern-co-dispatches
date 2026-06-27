@@ -270,6 +270,41 @@ def _extract_source_date(value: str) -> str:
         return ""
 
 
+def _is_homepage_only_url(url: str) -> bool:
+    value = _normalize_url(url)
+    if not value:
+        return False
+    parsed = urllib.parse.urlsplit(value)
+    path = (parsed.path or "").strip("/")
+    return parsed.scheme in {"http", "https"} and not path and not parsed.query
+
+
+def _is_article_specific_url(url: str) -> bool:
+    value = _normalize_url(url)
+    if not value:
+        return False
+    host = _host(value)
+    if not host or host.endswith(SOCIAL_DOMAINS) or host.endswith((GOOGLE_NEWS_DOMAIN, "google.com")):
+        return False
+    parsed = urllib.parse.urlsplit(value)
+    path = (parsed.path or "").strip("/")
+    return bool(path)
+
+
+def _choose_trace_url(original_trace_url: str, canonical_url: str, discovered_url: str) -> str:
+    if _is_article_specific_url(canonical_url):
+        return _normalize_url(canonical_url)
+    if _is_article_specific_url(original_trace_url):
+        return _normalize_url(original_trace_url)
+    if _is_article_specific_url(discovered_url):
+        return _normalize_url(discovered_url)
+    if canonical_url:
+        return _normalize_url(canonical_url)
+    if original_trace_url:
+        return _normalize_url(original_trace_url)
+    return _normalize_url(discovered_url)
+
+
 def _discovery_traceability_status(*, source_url: str, original_source_url: str, discovered_url: str, fetch_status: str) -> str:
     if not any((source_url, original_source_url, discovered_url)):
         return "missing_url"
@@ -277,10 +312,14 @@ def _discovery_traceability_status(*, source_url: str, original_source_url: str,
         return "social_only"
     if _host(discovered_url).endswith((GOOGLE_NEWS_DOMAIN, "google.com")) and not source_url and not original_source_url:
         return "source_wrapper_only"
-    if fetch_status == "manual_fallback":
+    if fetch_status == "manual_fallback" and (_is_article_specific_url(source_url) or _is_article_specific_url(original_source_url)):
         return "traceable"
+    if _is_article_specific_url(source_url) or _is_article_specific_url(original_source_url):
+        return "traceable"
+    if _is_homepage_only_url(source_url) or _is_homepage_only_url(original_source_url):
+        return "publisher_homepage_trace_only"
     if source_url or original_source_url:
-        return "traceable"
+        return "non_article_trace_url"
     return "weak_traceability"
 
 
@@ -331,16 +370,83 @@ def _discovery_source_type(query_family: str, discovered_url: str, publisher_url
     return "rss_discovery"
 
 
-def _candidate_review_defaults(*, lane: str, classification_status: str, fetch_status: str, traceability_status: str, duplicate_of: str) -> tuple[str, bool]:
+def _published_date_in_window(edition_date: str, source_published_date: str, *, lookback_days: int, lookahead_days: int) -> bool:
+    if not _nonempty(source_published_date):
+        return False
+    edition = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
+    published = datetime.strptime(validate_date(source_published_date), "%Y-%m-%d").date()
+    return edition - timedelta(days=max(0, int(lookback_days))) <= published <= edition + timedelta(days=max(0, int(lookahead_days)))
+
+
+def _public_claim_blockers(
+    *,
+    edition_date: str,
+    source_published_date: str,
+    lookback_days: int,
+    lookahead_days: int,
+    lane: str,
+    classification_status: str,
+    fetch_status: str,
+    traceability_status: str,
+    duplicate_of: str,
+) -> list[str]:
+    blockers: list[str] = []
+    if duplicate_of:
+        blockers.append("duplicate")
+    if fetch_status != "ok" and fetch_status != "manual_fallback":
+        blockers.append("blocked_fetch")
+    if classification_status == "context_only":
+        blockers.append("context_only")
+    elif classification_status not in {"qualified_pressure_signal", "manual_fallback"}:
+        blockers.append("classification_not_current_pressure_signal")
+    if lane == "social_watchlist":
+        blockers.append("social_watchlist_only")
+    if traceability_status == "publisher_homepage_trace_only":
+        blockers.append("publisher_homepage_trace_only")
+    elif traceability_status == "non_article_trace_url":
+        blockers.append("non_article_trace_url")
+    elif traceability_status != "traceable":
+        blockers.append(traceability_status or "traceability_incomplete")
+    if not _published_date_in_window(
+        edition_date,
+        source_published_date,
+        lookback_days=lookback_days,
+        lookahead_days=lookahead_days,
+    ):
+        blockers.append("outside_backfill_date_window")
+    deduped: list[str] = []
+    for blocker in blockers:
+        if blocker and blocker not in deduped:
+            deduped.append(blocker)
+    return deduped
+
+
+def _candidate_review_defaults(
+    *,
+    edition_date: str,
+    source_published_date: str,
+    lookback_days: int,
+    lookahead_days: int,
+    lane: str,
+    classification_status: str,
+    fetch_status: str,
+    traceability_status: str,
+    duplicate_of: str,
+) -> tuple[str, bool, list[str]]:
     review_status = "watchlist" if lane == "social_watchlist" else "needs_review"
-    eligible = bool(
-        classification_status in {"qualified_pressure_signal", "manual_fallback"}
-        and fetch_status in {"ok", "manual_fallback"}
-        and traceability_status == "traceable"
-        and lane != "social_watchlist"
-        and not duplicate_of
+    blockers = _public_claim_blockers(
+        edition_date=edition_date,
+        source_published_date=source_published_date,
+        lookback_days=lookback_days,
+        lookahead_days=lookahead_days,
+        lane=lane,
+        classification_status=classification_status,
+        fetch_status=fetch_status,
+        traceability_status=traceability_status,
+        duplicate_of=duplicate_of,
     )
-    return review_status, eligible
+    eligible = not blockers
+    return review_status, eligible, blockers
 
 
 def _candidate_id(*parts: str) -> str:
@@ -373,17 +479,20 @@ def load_food_line_discovery_expansion_config(root: Path) -> dict[str, Any]:
     }
 
 
-def _parse_date_range(edition_date: str) -> tuple[str, str]:
+def _parse_date_range(edition_date: str, *, lookback_days: int = 1, lookahead_days: int = 1) -> tuple[str, str]:
     day = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
-    return (day - timedelta(days=1)).isoformat(), (day + timedelta(days=1)).isoformat()
+    return (day - timedelta(days=max(0, int(lookback_days)))).isoformat(), (day + timedelta(days=max(0, int(lookahead_days)))).isoformat()
 
 
 def build_food_line_discovery_query_plan(
     root: Path,
     edition_date: str,
+    *,
+    lookback_days: int = 1,
+    lookahead_days: int = 1,
 ) -> list[dict[str, Any]]:
     config = load_food_line_discovery_expansion_config(root)
-    after, before = _parse_date_range(edition_date)
+    after, before = _parse_date_range(edition_date, lookback_days=lookback_days, lookahead_days=lookahead_days)
     rows: list[dict[str, Any]] = []
     for family in config["query_families"]:
         family_name = _nonempty(family.get("query_family"))
@@ -578,7 +687,11 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         discovered_url=canonical or trace_url,
         fetch_status="manual_fallback",
     )
-    candidate_review_status, public_claim_eligible = _candidate_review_defaults(
+    candidate_review_status, public_claim_eligible, public_claim_blockers = _candidate_review_defaults(
+        edition_date=_nonempty(record.get("date")),
+        source_published_date=_nonempty(record.get("date")),
+        lookback_days=0,
+        lookahead_days=0,
         lane=lane,
         classification_status="manual_fallback",
         fetch_status="manual_fallback",
@@ -626,6 +739,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "pressure_signal_type_hint": _nonempty(record.get("pressure_signal_type_hint")),
             "traceability_status": traceability_status,
             "public_claim_eligible": public_claim_eligible,
+            "public_claim_blockers": public_claim_blockers,
             "manually_reviewed_summary": _nonempty(record.get("manually_reviewed_summary")),
             "pressure_evidence_summary": _nonempty(record.get("pressure_evidence_summary")),
             "affected_groups": list(record.get("affected_groups") or []),
@@ -674,13 +788,12 @@ def validate_food_line_manual_fallback_record(record: dict[str, Any]) -> list[st
 
 def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     canonical = _normalize_url(_nonempty(row.get("canonical_url")))
-    final_trace = _normalize_url(_nonempty(row.get("final_trace_url") or canonical))
-    discovered = _normalize_url(_nonempty(row.get("discovered_url") or final_trace))
+    original_source_url = _normalize_url(_nonempty(row.get("original_source_url") or row.get("final_trace_url") or canonical))
+    discovered = _normalize_url(_nonempty(row.get("discovered_url") or original_source_url))
     google_news_url = _normalize_url(_nonempty(row.get("google_news_url")))
-    if google_news_url and not final_trace:
-        final_trace = discovered if not google_news_url else discovered
     if google_news_url and not discovered:
         discovered = google_news_url
+    final_trace = _choose_trace_url(original_source_url, canonical, discovered)
     if not canonical:
         canonical = _normalize_url(final_trace)
     candidate = dict(row)
@@ -688,6 +801,8 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["discovered_url"] = discovered
     candidate["canonical_url"] = canonical
     candidate["google_news_url"] = google_news_url
+    candidate["original_source_url"] = original_source_url
+    candidate["source_url"] = _normalize_url(_nonempty(candidate.get("source_url") or final_trace or original_source_url or discovered))
     candidate["final_trace_url"] = final_trace or canonical or discovered
     candidate["manual_review_required"] = bool(candidate.get("manual_review_required", True))
     candidate["pressure_terms_detected"] = list(candidate.get("pressure_terms_detected") or [])
@@ -699,6 +814,7 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["fetch_status"] = _nonempty(candidate.get("fetch_status") or "unfetched")
     candidate["fetch_error"] = _nonempty(candidate.get("fetch_error"))
     candidate["duplicate_of"] = _nonempty(candidate.get("duplicate_of"))
+    candidate["public_claim_blockers"] = list(candidate.get("public_claim_blockers") or [])
     return candidate
 
 
@@ -797,11 +913,20 @@ def run_food_line_discovery_expansion(
     edition_mode: str = "current_update",
     max_results_per_query: int = 10,
     max_queries: int | None = None,
+    query_lookback_days: int = 1,
+    query_lookahead_days: int = 1,
+    public_claim_lookback_days: int = 0,
+    public_claim_lookahead_days: int = 0,
     dry_run: bool = False,
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
-    query_plan = build_food_line_discovery_query_plan(root, date_text)
+    query_plan = build_food_line_discovery_query_plan(
+        root,
+        date_text,
+        lookback_days=query_lookback_days,
+        lookahead_days=query_lookahead_days,
+    )
     if max_queries is not None and max_queries >= 0:
         query_plan = query_plan[:max_queries]
     candidates: list[dict[str, Any]] = []
@@ -812,6 +937,8 @@ def run_food_line_discovery_expansion(
     metro_counts: Counter[str] = Counter()
     duplicate_count = 0
     blocked_fetch_count = 0
+    homepage_only_trace_count = 0
+    outside_window_count = 0
     qualified_pressure_signals = 0
     context_only_count = 0
     manual_reviewable_count = 0
@@ -855,7 +982,11 @@ def run_food_line_discovery_expansion(
                     fetch_status = "ok"
                     fetchable_count += 1
                     canonical_from_page = _extract_canonical_url(payload2)
-                    if canonical_from_page:
+                    if _is_article_specific_url(canonical_from_page):
+                        canonical = canonical_from_page
+                        if not _is_article_specific_url(final_trace_url):
+                            final_trace_url = canonical_from_page
+                    elif canonical_from_page and not canonical:
                         canonical = canonical_from_page
                     evidence_text = " ".join(
                         part
@@ -880,13 +1011,18 @@ def run_food_line_discovery_expansion(
                 if term_text and term_text.lower() in evidence_text.lower() and term_text not in location_hits:
                     location_hits.append(term_text)
             source_published_date = _extract_source_date(_nonempty(item.get("pubDate")))
+            source_url = _choose_trace_url(final_trace_url or publisher_url, canonical, discovered_url)
             traceability_status = _discovery_traceability_status(
-                source_url=canonical or final_trace_url or publisher_url,
+                source_url=source_url,
                 original_source_url=final_trace_url or publisher_url,
                 discovered_url=discovered_url,
                 fetch_status=fetch_status,
             )
-            candidate_review_status, public_claim_eligible = _candidate_review_defaults(
+            candidate_review_status, public_claim_eligible, public_claim_blockers = _candidate_review_defaults(
+                edition_date=date_text,
+                source_published_date=source_published_date,
+                lookback_days=public_claim_lookback_days,
+                lookahead_days=public_claim_lookahead_days,
                 lane=lane,
                 classification_status=classification_status,
                 fetch_status=fetch_status,
@@ -912,7 +1048,7 @@ def run_food_line_discovery_expansion(
                 "discovered_publisher": _nonempty(item.get("source_name") or item.get("source_url")),
                 "discovered_url": discovered_url,
                 "canonical_url": canonical,
-                "source_url": canonical or final_trace_url or publisher_url or discovered_url,
+                "source_url": source_url,
                 "original_source_url": final_trace_url or publisher_url or "",
                 "google_news_url": google_news_url,
                 "publication_date": _nonempty(item.get("pubDate")),
@@ -934,6 +1070,7 @@ def run_food_line_discovery_expansion(
                 "pressure_signal_type_hint": _nonempty(classification_status),
                 "traceability_status": traceability_status,
                 "public_claim_eligible": public_claim_eligible,
+                "public_claim_blockers": public_claim_blockers,
                 "query_url": query_url,
                 "retrieved_at": discovered_at,
             }
@@ -943,6 +1080,7 @@ def run_food_line_discovery_expansion(
                 row["classification_status"] = "duplicate"
                 row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
                 row["public_claim_eligible"] = False
+                row["public_claim_blockers"] = sorted(set([*list(row.get("public_claim_blockers") or []), "duplicate"]))
                 duplicate_count += 1
             else:
                 seen_trace_keys[trace_key] = row["candidate_id"]
@@ -955,6 +1093,10 @@ def run_food_line_discovery_expansion(
                 qualified_pressure_signals += 1
             elif row["classification_status"] == "context_only":
                 context_only_count += 1
+            if "publisher_homepage_trace_only" in row["public_claim_blockers"]:
+                homepage_only_trace_count += 1
+            if "outside_backfill_date_window" in row["public_claim_blockers"]:
+                outside_window_count += 1
             manual_reviewable_count += 1 if row["manual_review_required"] else 0
             query_family_counts[row["query_family"]] += 1
             if row["state_or_territory"]:
@@ -978,13 +1120,31 @@ def run_food_line_discovery_expansion(
             row["classification_status"] = "duplicate"
             row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
             row["public_claim_eligible"] = False
+            row["public_claim_blockers"] = sorted(set([*list(row.get("public_claim_blockers") or []), "duplicate"]))
         elif trace_key:
             seen_trace_keys[trace_key] = row["candidate_id"]
         if row.get("classification_status") == "manual_fallback":
             row["manual_review_required"] = False
             row["candidate_review_status"] = "needs_review"
-        if row.get("fetch_status") == "ok" and row.get("classification_status") == "qualified_pressure_signal":
-            qualified_pressure_signals += 0
+        row["traceability_status"] = _discovery_traceability_status(
+            source_url=_nonempty(row.get("source_url") or row.get("final_trace_url")),
+            original_source_url=_nonempty(row.get("original_source_url") or row.get("final_trace_url")),
+            discovered_url=_nonempty(row.get("discovered_url")),
+            fetch_status=_nonempty(row.get("fetch_status")),
+        )
+        row["candidate_review_status"], row["public_claim_eligible"], row["public_claim_blockers"] = _candidate_review_defaults(
+            edition_date=date_text,
+            source_published_date=_nonempty(row.get("source_published_date")),
+            lookback_days=public_claim_lookback_days,
+            lookahead_days=public_claim_lookahead_days,
+            lane=_nonempty(row.get("discovery_lane")),
+            classification_status=_nonempty(row.get("classification_status")),
+            fetch_status=_nonempty(row.get("fetch_status")),
+            traceability_status=_nonempty(row.get("traceability_status")),
+            duplicate_of=_nonempty(row.get("duplicate_of")),
+        )
+        if row.get("classification_status") == "manual_fallback":
+            row["candidate_review_status"] = "needs_review"
     candidate_count = len(candidates)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
@@ -993,6 +1153,8 @@ def run_food_line_discovery_expansion(
     metro_counts = Counter(_nonempty(row.get("metro")) for row in candidates if _nonempty(row.get("metro")))
     duplicate_count = sum(1 for row in candidates if _nonempty(row.get("duplicate_of")))
     blocked_fetch_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) not in {"ok", "manual_fallback"})
+    homepage_only_trace_count = sum(1 for row in candidates if "publisher_homepage_trace_only" in list(row.get("public_claim_blockers") or []))
+    outside_window_count = sum(1 for row in candidates if "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []))
     fetchable_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) == "ok")
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
     qualified_pressure_signals = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "qualified_pressure_signal")
@@ -1023,6 +1185,8 @@ def run_food_line_discovery_expansion(
         "duplicate_count": duplicate_count,
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,
+        "homepage_only_trace_count": homepage_only_trace_count,
+        "outside_backfill_date_window_count": outside_window_count,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
         "context_only_count": context_only_count,
@@ -1033,6 +1197,10 @@ def run_food_line_discovery_expansion(
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
+        "query_lookback_days": int(query_lookback_days),
+        "query_lookahead_days": int(query_lookahead_days),
+        "public_claim_lookback_days": int(public_claim_lookback_days),
+        "public_claim_lookahead_days": int(public_claim_lookahead_days),
         "discovery_candidates_path": str(candidate_path),
         "discovery_audit_json_path": str(audit_json_path),
         "discovery_audit_md_path": str(audit_md_path),
@@ -1064,6 +1232,8 @@ def run_food_line_discovery_expansion(
             f"- Total candidates discovered: `{candidate_count}`",
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
+            f"- Homepage-only traces: `{homepage_only_trace_count}`",
+            f"- Outside backfill date window: `{outside_window_count}`",
             f"- Manually reviewable candidates: `{manual_reviewable_count}`",
             f"- Qualified pressure signals: `{qualified_pressure_signals}`",
             f"- Context-only records: `{context_only_count}`",
@@ -1118,6 +1288,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--edition-mode", default="current_update", choices=("current_update", "no_current_update"))
     parser.add_argument("--max-results-per-query", type=int, default=10)
     parser.add_argument("--max-queries", type=int, default=None)
+    parser.add_argument("--query-lookback-days", type=int, default=1)
+    parser.add_argument("--query-lookahead-days", type=int, default=1)
+    parser.add_argument("--public-claim-lookback-days", type=int, default=0)
+    parser.add_argument("--public-claim-lookahead-days", type=int, default=0)
     parser.add_argument("--dry-run", action="store_true")
     return parser
 
@@ -1134,6 +1308,10 @@ def main(argv: list[str] | None = None) -> int:
         edition_mode=args.edition_mode,
         max_results_per_query=args.max_results_per_query,
         max_queries=args.max_queries,
+        query_lookback_days=args.query_lookback_days,
+        query_lookahead_days=args.query_lookahead_days,
+        public_claim_lookback_days=args.public_claim_lookback_days,
+        public_claim_lookahead_days=args.public_claim_lookahead_days,
         dry_run=bool(args.dry_run),
     )
     print(json.dumps(result, indent=2, ensure_ascii=False))

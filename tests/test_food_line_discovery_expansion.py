@@ -52,7 +52,24 @@ def test_food_line_discovery_query_plan_covers_state_territory_and_metro_geograp
     states = {row["state_or_territory"] for row in plan if row["state_or_territory"]}
     metros = {row["metro"] for row in plan if row["metro"]}
 
-    assert {"core_hunger", "pressure", "policy_program", "cost_pressure", "state_territory", "metro"}.issubset(families)
+    assert {
+        "core_hunger",
+        "pressure",
+        "policy_program",
+        "cost_pressure",
+        "public_radio",
+        "food_bank_provider",
+        "feeding_america_affiliate",
+        "school_meals_child_nutrition",
+        "county_city_agenda",
+        "snap_state_notice",
+        "united_way_211",
+        "nonprofit_report",
+        "institutional_update",
+        "social_watchlist",
+        "state_territory",
+        "metro",
+    }.issubset(families)
     assert "Puerto Rico" in states
     assert "Guam" in states
     assert "U.S. Virgin Islands" in states
@@ -147,14 +164,22 @@ def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallba
     assert manual_candidates
     assert any(row["google_news_url"] == axios_google_url for row in axios_candidates)
     assert any(row["final_trace_url"] == axios_trace_url for row in axios_candidates)
+    assert any(row["source_url"] == axios_trace_url for row in axios_candidates)
+    assert any(row["original_source_url"] == axios_trace_url for row in axios_candidates)
+    assert any(row["discovery_query"] for row in axios_candidates)
+    assert any(row["discovery_source_type"] == "rss_discovery" for row in axios_candidates)
     assert any(row["fetch_status"] == "blocked_403" for row in axios_candidates)
     assert any("403" in row["fetch_error"] for row in axios_candidates)
     assert any(row["manual_review_required"] is True for row in axios_candidates)
+    assert any(row["candidate_review_status"] == "needs_review" for row in axios_candidates)
+    assert all(row["public_claim_eligible"] is False for row in axios_candidates)
     assert any(row["duplicate_of"] for row in axios_candidates)
     assert manual_candidates[0]["review_status"] == "manual_reviewed"
     assert manual_candidates[0]["manual_review_required"] is False
     assert manual_candidates[0]["extraction_quality"] == "manual_fallback"
     assert manual_candidates[0]["final_trace_url"] == axios_trace_url
+    assert manual_candidates[0]["discovery_lane"] == "news_article"
+    assert manual_candidates[0]["traceability_status"] == "traceable"
     assert "No candidates were retained" not in audit["discovery_confidence_summary"]
     assert "no_current_update" in audit["no_current_update_reason"] or audit["no_current_update_reason"]
 

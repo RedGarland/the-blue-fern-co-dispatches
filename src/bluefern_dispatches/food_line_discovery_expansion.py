@@ -5,6 +5,7 @@ import hashlib
 import html
 import json
 import re
+from email.utils import parsedate_to_datetime
 import urllib.error
 import urllib.parse
 from collections import Counter
@@ -22,6 +23,7 @@ DISCOVERY_AUDIT_JSON_FILE = "discovery_audit.json"
 DISCOVERY_AUDIT_MD_FILE = "discovery_audit.md"
 DISCOVERY_CONFIG_FILE = "discovery_expansion_config.json"
 GOOGLE_NEWS_DOMAIN = "news.google.com"
+SOCIAL_DOMAINS = ("x.com", "twitter.com", "facebook.com", "instagram.com", "tiktok.com")
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -249,6 +251,96 @@ def _normalize_url(url: str) -> str:
         value = "https:" + value
     parsed = urllib.parse.urlsplit(canonical_url(value) if not value.startswith(("http://", "https://")) else value)
     return urllib.parse.urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), parsed.path.rstrip("/"), parsed.query, ""))
+
+
+def _host(url: str) -> str:
+    try:
+        return urllib.parse.urlsplit(_normalize_url(url)).netloc.lower()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _extract_source_date(value: str) -> str:
+    text = _nonempty(value)
+    if not text:
+        return ""
+    try:
+        return parsedate_to_datetime(text).date().isoformat()
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def _discovery_traceability_status(*, source_url: str, original_source_url: str, discovered_url: str, fetch_status: str) -> str:
+    if not any((source_url, original_source_url, discovered_url)):
+        return "missing_url"
+    if any(_host(url).endswith(SOCIAL_DOMAINS) for url in (source_url, original_source_url, discovered_url) if url):
+        return "social_only"
+    if _host(discovered_url).endswith((GOOGLE_NEWS_DOMAIN, "google.com")) and not source_url and not original_source_url:
+        return "source_wrapper_only"
+    if fetch_status == "manual_fallback":
+        return "traceable"
+    if source_url or original_source_url:
+        return "traceable"
+    return "weak_traceability"
+
+
+def _lane_from_query(query_family: str, discovered_url: str, publisher_url: str, publisher: str) -> str:
+    family = _nonempty(query_family)
+    publisher_text = " ".join((_nonempty(publisher), _host(discovered_url), _host(publisher_url))).lower()
+    direct = {
+        "public_radio",
+        "food_bank_provider",
+        "feeding_america_affiliate",
+        "school_meals_child_nutrition",
+        "county_city_agenda",
+        "snap_state_notice",
+        "united_way_211",
+        "nonprofit_report",
+        "social_watchlist",
+        "institutional_update",
+    }
+    if family in direct:
+        return family
+    if "npr" in publisher_text or "public radio" in publisher_text:
+        return "public_radio"
+    if "feedingamerica" in publisher_text or "feeding america" in publisher_text:
+        return "feeding_america_affiliate"
+    if any(term in publisher_text for term in ("211", "united way")):
+        return "united_way_211"
+    if any(term in publisher_text for term in ("school", "nutrition", "summer meal")):
+        return "school_meals_child_nutrition"
+    if any(term in publisher_text for term in ("agenda", "county", "city council", "school board")):
+        return "county_city_agenda"
+    if any(term in publisher_text for term in ("snap", "ebt", "wic", "benefits")):
+        return "snap_state_notice"
+    if any(term in publisher_text for term in ("food bank", "food pantry", "pantry")):
+        return "food_bank_provider"
+    if any(_host(url).endswith(SOCIAL_DOMAINS) for url in (discovered_url, publisher_url) if url):
+        return "social_watchlist"
+    return "news_article"
+
+
+def _discovery_source_type(query_family: str, discovered_url: str, publisher_url: str, fetch_status: str) -> str:
+    if fetch_status == "manual_fallback":
+        return "manual_fallback"
+    if any(_host(url).endswith(SOCIAL_DOMAINS) for url in (discovered_url, publisher_url) if url):
+        return "social_post"
+    family = _nonempty(query_family)
+    if family in {"county_city_agenda", "snap_state_notice", "united_way_211", "nonprofit_report", "institutional_update"}:
+        return "institutional_page"
+    return "rss_discovery"
+
+
+def _candidate_review_defaults(*, lane: str, classification_status: str, fetch_status: str, traceability_status: str, duplicate_of: str) -> tuple[str, bool]:
+    review_status = "watchlist" if lane == "social_watchlist" else "needs_review"
+    eligible = bool(
+        classification_status in {"qualified_pressure_signal", "manual_fallback"}
+        and fetch_status in {"ok", "manual_fallback"}
+        and traceability_status == "traceable"
+        and lane != "social_watchlist"
+        and not duplicate_of
+    )
+    return review_status, eligible
 
 
 def _candidate_id(*parts: str) -> str:
@@ -479,32 +571,61 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         if part
     ).lower()
     pressure_terms_detected = _detect_terms(text_blob, PRESSURE_TERMS)
+    lane = _nonempty(record.get("discovery_lane")) or _lane_from_query("manual_fallback", trace_url, canonical, publisher)
+    traceability_status = _discovery_traceability_status(
+        source_url=trace_url or canonical,
+        original_source_url=trace_url,
+        discovered_url=canonical or trace_url,
+        fetch_status="manual_fallback",
+    )
+    candidate_review_status, public_claim_eligible = _candidate_review_defaults(
+        lane=lane,
+        classification_status="manual_fallback",
+        fetch_status="manual_fallback",
+        traceability_status=traceability_status,
+        duplicate_of="",
+    )
     return (
         {
             "candidate_id": candidate_id,
             "discovery_date": _nonempty(record.get("date")),
+            "discovered_at": _utc_now(),
+            "discovery_lane": lane,
+            "discovery_query": _nonempty(record.get("discovery_query")),
+            "discovery_source_type": "manual_fallback",
             "query_family": "manual_fallback",
             "query_text": "",
             "geographic_scope": _nonempty(record.get("geographic_scope") or "manual"),
             "state_or_territory": _nonempty(record.get("state_or_territory")),
+            "state_hint": _nonempty(record.get("state_hint") or record.get("state_or_territory")),
             "metro": _nonempty(record.get("metro")),
             "discovery_channel": "manual_fallback",
             "discovered_title": headline,
             "discovered_publisher": publisher,
             "discovered_url": canonical or trace_url,
             "canonical_url": canonical,
+            "source_url": trace_url or canonical,
+            "original_source_url": trace_url or canonical,
             "google_news_url": "",
             "publication_date": _nonempty(record.get("date")),
+            "source_published_date": _nonempty(record.get("date")),
+            "date_basis": "manual_reviewed_date",
             "fetch_status": "manual_fallback",
             "fetch_error": "",
             "final_trace_url": trace_url or canonical,
             "duplicate_of": "",
             "review_status": "manual_reviewed",
+            "candidate_review_status": candidate_review_status,
             "classification_status": "manual_fallback",
             "exclusion_reason": "",
             "pressure_terms_detected": pressure_terms_detected,
             "location_terms_detected": [location] if location else [],
             "manual_review_required": False,
+            "location_scope": _nonempty(record.get("location_scope") or record.get("geographic_scope") or "manual"),
+            "pressure_signal_hint": _nonempty(record.get("pressure_signal_hint") or record.get("pressure_evidence_summary")),
+            "pressure_signal_type_hint": _nonempty(record.get("pressure_signal_type_hint")),
+            "traceability_status": traceability_status,
+            "public_claim_eligible": public_claim_eligible,
             "manually_reviewed_summary": _nonempty(record.get("manually_reviewed_summary")),
             "pressure_evidence_summary": _nonempty(record.get("pressure_evidence_summary")),
             "affected_groups": list(record.get("affected_groups") or []),
@@ -751,38 +872,68 @@ def run_food_line_discovery_expansion(
                 fetch_status=fetch_status,
                 duplicate=False,
             )
+            lane = _lane_from_query(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, _nonempty(item.get("source_name")))
             pressure_hits = _detect_terms(evidence_text.lower(), PRESSURE_TERMS)
             location_hits = []
             for term in [query_row.get("state_or_territory"), query_row.get("metro")]:
                 term_text = _nonempty(term)
                 if term_text and term_text.lower() in evidence_text.lower() and term_text not in location_hits:
                     location_hits.append(term_text)
+            source_published_date = _extract_source_date(_nonempty(item.get("pubDate")))
+            traceability_status = _discovery_traceability_status(
+                source_url=canonical or final_trace_url or publisher_url,
+                original_source_url=final_trace_url or publisher_url,
+                discovered_url=discovered_url,
+                fetch_status=fetch_status,
+            )
+            candidate_review_status, public_claim_eligible = _candidate_review_defaults(
+                lane=lane,
+                classification_status=classification_status,
+                fetch_status=fetch_status,
+                traceability_status=traceability_status,
+                duplicate_of="",
+            )
             row = {
                 "candidate_id": _candidate_id(final_trace_url or discovered_url, _nonempty(item.get("source_name") or item.get("source_url")), _nonempty(query_row.get("query_family"))),
                 "discovery_date": date_text,
+                "discovered_at": discovered_at,
+                "discovery_lane": lane,
+                "discovery_query": query_text,
+                "discovery_source_type": _discovery_source_type(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, fetch_status),
                 "query_family": _nonempty(query_row.get("query_family")),
                 "query_text": query_text,
                 "geographic_scope": _nonempty(query_row.get("geographic_scope")),
                 "state_or_territory": _nonempty(query_row.get("state_or_territory")),
                 "state_abbrev": _nonempty(query_row.get("state_abbrev")),
+                "state_hint": _nonempty(query_row.get("state_abbrev") or query_row.get("state_or_territory")),
                 "metro": _nonempty(query_row.get("metro")),
                 "discovery_channel": _nonempty(query_row.get("discovery_channel") or "google_news_rss"),
                 "discovered_title": _nonempty(item.get("title")),
                 "discovered_publisher": _nonempty(item.get("source_name") or item.get("source_url")),
                 "discovered_url": discovered_url,
                 "canonical_url": canonical,
+                "source_url": canonical or final_trace_url or publisher_url or discovered_url,
+                "original_source_url": final_trace_url or publisher_url or "",
                 "google_news_url": google_news_url,
                 "publication_date": _nonempty(item.get("pubDate")),
+                "source_published_date": source_published_date,
+                "date_basis": "pubDate" if source_published_date else "unknown",
                 "fetch_status": fetch_status,
                 "fetch_error": fetch_error,
                 "final_trace_url": final_trace_url,
                 "duplicate_of": "",
                 "review_status": "needs_review",
+                "candidate_review_status": candidate_review_status,
                 "classification_status": classification_status,
                 "exclusion_reason": exclusion_reason,
                 "pressure_terms_detected": pressure_hits,
                 "location_terms_detected": location_hits,
                 "manual_review_required": True,
+                "location_scope": _nonempty(query_row.get("geographic_scope")),
+                "pressure_signal_hint": ", ".join(pressure_hits[:4]),
+                "pressure_signal_type_hint": _nonempty(classification_status),
+                "traceability_status": traceability_status,
+                "public_claim_eligible": public_claim_eligible,
                 "query_url": query_url,
                 "retrieved_at": discovered_at,
             }
@@ -791,12 +942,15 @@ def run_food_line_discovery_expansion(
                 row["duplicate_of"] = seen_trace_keys[trace_key]
                 row["classification_status"] = "duplicate"
                 row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
+                row["public_claim_eligible"] = False
                 duplicate_count += 1
             else:
                 seen_trace_keys[trace_key] = row["candidate_id"]
             if row["fetch_status"] != "ok":
                 blocked_fetch_count += 1
                 row["manual_review_required"] = True
+                if row["discovery_lane"] != "social_watchlist":
+                    row["candidate_review_status"] = "needs_review"
             if row["classification_status"] == "qualified_pressure_signal":
                 qualified_pressure_signals += 1
             elif row["classification_status"] == "context_only":
@@ -823,14 +977,18 @@ def run_food_line_discovery_expansion(
             row["duplicate_of"] = seen_trace_keys[trace_key]
             row["classification_status"] = "duplicate"
             row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
+            row["public_claim_eligible"] = False
         elif trace_key:
             seen_trace_keys[trace_key] = row["candidate_id"]
         if row.get("classification_status") == "manual_fallback":
             row["manual_review_required"] = False
+            row["candidate_review_status"] = "needs_review"
         if row.get("fetch_status") == "ok" and row.get("classification_status") == "qualified_pressure_signal":
             qualified_pressure_signals += 0
     candidate_count = len(candidates)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
+    lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
+    source_type_counts = Counter(_nonempty(row.get("discovery_source_type")) for row in candidates if _nonempty(row.get("discovery_source_type")))
     state_counts = Counter(_nonempty(row.get("state_or_territory")) for row in candidates if _nonempty(row.get("state_or_territory")))
     metro_counts = Counter(_nonempty(row.get("metro")) for row in candidates if _nonempty(row.get("metro")))
     duplicate_count = sum(1 for row in candidates if _nonempty(row.get("duplicate_of")))
@@ -870,6 +1028,8 @@ def run_food_line_discovery_expansion(
         "context_only_count": context_only_count,
         "manual_fallback_count": manual_fallback_count,
         "candidates_by_query_family": dict(sorted(query_family_counts.items())),
+        "candidates_by_discovery_lane": dict(sorted(lane_counts.items())),
+        "candidates_by_discovery_source_type": dict(sorted(source_type_counts.items())),
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
@@ -913,6 +1073,10 @@ def run_food_line_discovery_expansion(
             "## Candidates by query family",
             "",
             _markdown_table(query_family_counts, "query_family"),
+            "",
+            "## Candidates by discovery lane",
+            "",
+            _markdown_table(lane_counts, "discovery_lane"),
             "",
             "## Candidates by state or territory",
             "",

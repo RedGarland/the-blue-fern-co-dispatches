@@ -5581,6 +5581,36 @@ def test_food_line_ap_article_is_not_rejected_by_menu_negative_filter(tmp_path: 
     assert "negative filter menu ignored" in row["pressure_reason"]
 
 
+def test_food_line_article_with_heavy_site_chrome_is_not_rejected_by_menu_negative_filter():
+    pressure = food_line.evaluate_food_line_pressure(
+        {
+            "title": "Food pantries overwhelmed as thousands across Pittsburgh miss SNAP payments",
+            "summary_or_snippet": (
+                "Food pantries overwhelmed as thousands across Pittsburgh miss SNAP payments | Pittsburgh Post-Gazette "
+                "MENU SUBSCRIBE LOGIN REGISTER"
+            ),
+            "url": "https://www.post-gazette.com/news/social-services/2025/11/03/pittsburgh-allegheny-snap-food-bank-pantry/stories/202511030070",
+            "evidence_text": (
+                "Food pantries overwhelmed as thousands across Pittsburgh miss SNAP payments. "
+                "As hundreds of thousands continue to go without SNAP assistance amid the ongoing shutdown, overwhelming local food pantries. "
+                "MENU SUBSCRIBE LOGIN REGISTER"
+            ),
+            "evidence_text_basis": "page_text_excerpt",
+            "source_family": "local_news",
+            "source_type": "page",
+            "state": "PA",
+            "published_at": "2025-11-03T15:35:37-05:00",
+        },
+        edition_date="2026-06-25",
+        pressure_required=True,
+        positive_keywords=["food pantries", "SNAP", "food bank"],
+        negative_keywords=["menu"],
+    )
+
+    assert pressure["rejected"] is False
+    assert pressure["rejection_reason"] == ""
+
+
 def test_food_line_menu_navigation_page_is_still_rejected_by_menu_negative_filter():
     pressure = food_line.evaluate_food_line_pressure(
         {
@@ -5603,6 +5633,78 @@ def test_food_line_menu_navigation_page_is_still_rejected_by_menu_negative_filte
     assert pressure["pressure_signal"] is False
     assert pressure["rejected"] is True
     assert pressure["rejection_reason"] == "excluded by negative filter: menu"
+
+
+@pytest.mark.parametrize(
+    ("row", "positive_keywords", "expected_reason", "expected_rejected"),
+    [
+        (
+            {
+                "title": "Find food near you",
+                "summary_or_snippet": "Menu Find food and pantry locator.",
+                "url": "https://www.example.org/find-food",
+                "evidence_text": "Menu Find food and pantry locator for households seeking help.",
+                "evidence_text_basis": "page_text_excerpt",
+                "source_family": "food_bank_provider",
+                "source_type": "page",
+                "state": "US",
+                "published_at": "2026-06-25T12:00:00Z",
+            },
+            ["find food", "pantry"],
+            "resource-only / no pressure signal",
+            False,
+        ),
+        (
+            {
+                "title": "SNAP Food Benefits",
+                "summary_or_snippet": "Menu Oregon SNAP program page.",
+                "url": "https://www.oregon.gov/odhs/food/Pages/snap.aspx",
+                "evidence_text": "Menu Oregon SNAP benefits program information and application details.",
+                "evidence_text_basis": "page_text_excerpt",
+                "source_family": "state_official",
+                "source_type": "page",
+                "state": "OR",
+                "published_at": "2026-06-25T12:00:00Z",
+            },
+            ["SNAP", "benefits"],
+            "official/provider page lacks current dated pressure evidence",
+            True,
+        ),
+        (
+            {
+                "title": "Supplemental Nutrition Assistance Program SNAP",
+                "summary_or_snippet": "Menu SNAP program overview and policy context.",
+                "url": "https://frac.org/programs/supplemental-nutrition-assistance-program-snap",
+                "evidence_text": "Menu SNAP program overview, eligibility context, and policy background.",
+                "evidence_text_basis": "page_text_excerpt",
+                "source_family": "policy_research",
+                "source_type": "page",
+                "state": "US",
+                "published_at": "2026-06-25T12:00:00Z",
+            },
+            ["SNAP"],
+            "evergreen context / no current pressure signal",
+            True,
+        ),
+    ],
+)
+def test_food_line_menu_rejects_use_clearer_non_article_reasons(
+    row: dict,
+    positive_keywords: list[str],
+    expected_reason: str,
+    expected_rejected: bool,
+):
+    pressure = food_line.evaluate_food_line_pressure(
+        row,
+        edition_date="2026-06-25",
+        pressure_required=True,
+        positive_keywords=positive_keywords,
+        negative_keywords=["menu"],
+    )
+
+    assert pressure["pressure_signal"] is False
+    assert pressure["rejected"] is expected_rejected
+    assert pressure["rejection_reason"] == expected_reason
 
 
 def test_food_line_disabled_pressure_sources_are_skipped(tmp_path: Path):

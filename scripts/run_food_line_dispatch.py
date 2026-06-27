@@ -4497,6 +4497,34 @@ def _food_line_source_collection_url_aliases(url: str) -> set[str]:
     return aliases
 
 
+def _food_line_ap_menu_false_positive_reason(candidate: dict[str, Any] | None, reason_text: str) -> str:
+    if str(reason_text or "").strip().lower() != "excluded by negative filter: menu":
+        return ""
+    candidate = candidate or {}
+    combined = normalize_title(
+        " ".join(
+            part
+            for part in (
+                str(candidate.get("title") or ""),
+                str(candidate.get("source_name") or ""),
+                str(candidate.get("url") or ""),
+            )
+            if str(part).strip()
+        )
+    )
+    if not combined:
+        return ""
+    strong_terms = ("food bank", "food banks", "snap", "hunger", "pantry", "funding cuts", "families", "rising costs")
+    navigation_terms = ("restaurant", "recipe", "cooking", "chef", "brunch", "dinner", "lunch")
+    strong_hits = sum(1 for term in strong_terms if term in combined)
+    navigation_hits = sum(1 for term in navigation_terms if term in combined)
+    url = str(candidate.get("url") or "").strip().lower()
+    article_like = "/article/" in url or bool(re.search(r"/\d{4}/\d{2}/\d{2}/", url))
+    if article_like and strong_hits >= 3 and navigation_hits == 0:
+        return "collector artifact reflects a pre-fix menu false positive on an article-like food-pressure candidate"
+    return ""
+
+
 def _food_line_source_collection_gold_set_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / DISPATCH_SLUG / "source_collection_gold_sets" / f"{date}.json"
 
@@ -4674,6 +4702,16 @@ def _food_line_source_collection_rejection_reason(
 
     for source in reason_sources:
         _collect(source)
+
+    for source in reason_sources:
+        if isinstance(source, dict):
+            corrected_reason = _food_line_ap_menu_false_positive_reason(
+                source,
+                str(source.get("reason") or ((source.get("top_rejection_reasons") or [""])[0] if isinstance(source.get("top_rejection_reasons"), list) else "")),
+            )
+            if corrected_reason:
+                reason_text_parts = [reason for reason in reason_text_parts if normalize_title(reason) != normalize_title("excluded by negative filter: menu")]
+                _append_reason(corrected_reason)
 
     reason_text = "; ".join(reason_text_parts)
     lowered = reason_text.lower()

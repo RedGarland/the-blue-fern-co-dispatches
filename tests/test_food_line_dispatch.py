@@ -5526,6 +5526,85 @@ def test_food_line_collect_reports_rejected_news_reasons(tmp_path: Path):
     assert any("excluded by negative filter" in reason for reason in result["rejected_news_reasons"])
 
 
+def test_food_line_ap_article_is_not_rejected_by_menu_negative_filter(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    _write_pressure_registry(
+        tmp_path,
+        [
+            {
+                "source_id": "ap-food-bank-cuts",
+                "source_name": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+                "publisher": "Associated Press",
+                "source_type": "page",
+                "url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+                "source_family": "national_news",
+                "state": "US",
+                "location_name": "United States",
+                "location_scope": "national",
+                "source_role_allowed": "pressure_evidence",
+                "pressure_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "positive_keywords": ["food bank", "food banks", "hunger", "SNAP", "pantry", "families", "funding cuts", "rising costs"],
+                "negative_keywords": ["recipe", "restaurant", "menu"],
+                "affected_group_keywords": ["families", "children", "SNAP households"],
+                "enabled": True,
+                "notes": "AP pressure candidate should not be rejected by navigation boilerplate.",
+            }
+        ],
+    )
+
+    payload = b"""
+    <html>
+      <head>
+        <title>Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks</title>
+        <meta property="article:published_time" content="2026-06-25T13:00:00Z" />
+        <meta name="description" content="AP reports that food banks are seeing more families seek help as SNAP pressure and rising costs deepen hunger." />
+      </head>
+      <body>
+        <nav>Menu World U.S. Politics</nav>
+        <article>
+          <p>Funding cuts threaten to deepen the hunger crisis as rising costs send more families to food banks.</p>
+          <p>Food banks say SNAP pressure and pantry demand are increasing for low-income households.</p>
+        </article>
+      </body>
+    </html>
+    """
+
+    result = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=lambda _url, timeout=15: payload)
+
+    assert result["source_count"] == 1
+    assert result["rejected_news_count"] == 0
+    row = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json").read_text(encoding="utf-8"))[0]
+    assert row["pressure_signal"] is True
+    assert "negative filter menu ignored" in row["pressure_reason"]
+
+
+def test_food_line_menu_navigation_page_is_still_rejected_by_menu_negative_filter():
+    pressure = food_line.evaluate_food_line_pressure(
+        {
+            "title": "Weekend menu",
+            "summary_or_snippet": "Menu update for weekend service.",
+            "url": "https://example.com/menu",
+            "evidence_text": "Menu Menu highlights for weekend service.",
+            "evidence_text_basis": "page_text_excerpt",
+            "source_family": "national_news",
+            "source_type": "page",
+            "state": "US",
+            "published_at": "2026-06-25T12:00:00Z",
+        },
+        edition_date="2026-06-25",
+        pressure_required=True,
+        positive_keywords=["food bank", "hunger", "SNAP"],
+        negative_keywords=["menu"],
+    )
+
+    assert pressure["pressure_signal"] is False
+    assert pressure["rejected"] is True
+    assert pressure["rejection_reason"] == "excluded by negative filter: menu"
+
+
 def test_food_line_disabled_pressure_sources_are_skipped(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-04"
@@ -6843,8 +6922,69 @@ def test_food_line_source_collection_audit_uses_collector_audit_for_ap_alias_mat
     assert item["found"] is True
     assert item["matched_artifact"] == "collector_audit"
     assert item["highest_stage_reached"] == "rejected_with_reason"
-    assert item["rejection_reason"] == "excluded by negative filter: menu"
+    assert item["rejection_reason"] == "collector artifact reflects a pre-fix menu false positive on an article-like food-pressure candidate"
     assert item["matched_title"] == "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks"
+
+
+def test_food_line_source_collection_audit_markdown_no_longer_reports_menu_for_ap_candidate(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    collector_audit_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "collector_audit.json"
+    collector_audit_path.parent.mkdir(parents=True, exist_ok=True)
+    collector_audit_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_id": "ap-food-bank-cuts",
+                    "source_name": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+                    "source_family": "national_news",
+                    "url": "https://apnews.com/article/665c19251b5d83bbed45a29958f79609",
+                    "fetched": True,
+                    "item_count": 1,
+                    "accepted_pressure_count": 0,
+                    "demoted_count": 0,
+                    "rejected_count": 1,
+                    "top_rejection_reasons": ["excluded by negative filter: menu"],
+                    "extraction_basis_used": ["page_text_excerpt"],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    gold_set_path = _write_source_collection_gold_set(
+        tmp_path,
+        date,
+        [
+            {
+                "date": date,
+                "query": "\"food banks\" funding cuts families after:2025-04-28",
+                "url": "https://apnews.com/article/food-banks-campaign-against-hunger-snap-pantry-665c19251b5d83bbed45a29958f79609",
+                "title": "Funding cuts threaten to deepen hunger crisis as rising costs send more families to food banks",
+                "expected_status": "review_candidate",
+                "expected_reason": "major-outlet reporting on food-bank strain and SNAP-linked household pressure",
+                "priority": "high",
+                "source_family": "national_wire",
+            }
+        ],
+    )
+    pressure_review_path = tmp_path / "output" / "review" / "food-line" / date / "pressure_review.csv"
+    pressure_review_path.parent.mkdir(parents=True, exist_ok=True)
+    pressure_review_path.write_text("", encoding="utf-8")
+
+    audit = food_line.run_food_line_source_collection_audit(
+        tmp_path,
+        date,
+        gold_set_path=gold_set_path,
+        sources=[],
+        rejected_records=[],
+        pressure_review_path=pressure_review_path,
+        collect_result={"ok": True},
+    )
+
+    markdown = Path(audit["source_collection_audit_markdown_path"]).read_text(encoding="utf-8")
+    assert "excluded by negative filter: menu" not in markdown
+    assert "pre-fix menu false positive" in markdown
 
 
 def test_food_line_source_collection_audit_markdown_prefers_concrete_rejection_reason(tmp_path: Path):

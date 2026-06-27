@@ -486,6 +486,28 @@ DEFAULT_AFFECTED_GROUP_KEYWORDS = {
     "non-white adults": ["non-white adults", "nonwhite adults", "racialized adults"],
 }
 
+FOOD_LINE_ARTICLE_SIGNAL_TERMS = (
+    "food bank",
+    "food banks",
+    "snap",
+    "hunger",
+    "pantry",
+    "food insecurity",
+    "funding cuts",
+    "families",
+    "rising costs",
+)
+
+FOOD_LINE_MENU_NAVIGATION_TERMS = (
+    "restaurant",
+    "recipe",
+    "cooking",
+    "chef",
+    "brunch",
+    "dinner",
+    "lunch",
+)
+
 
 def food_line_test_mode_enabled() -> bool:
     value = os.getenv(TEST_MODE_ENV_VAR, "")
@@ -1558,6 +1580,49 @@ def _pressure_match_terms(text: str) -> list[str]:
     return terms
 
 
+def _food_line_negative_filter_text(*parts: str) -> str:
+    return _normalize_source_text(" ".join(part for part in parts if part), limit=1200)
+
+
+def _food_line_article_like_url(url: str) -> bool:
+    lowered = str(url or "").strip().lower()
+    if not lowered:
+        return False
+    return (
+        "/article/" in lowered
+        or bool(re.search(r"/\d{4}/\d{2}/\d{2}/", lowered))
+        or "/regional-news/" in lowered
+        or "/news/" in lowered
+        or "/politics/" in lowered
+    )
+
+
+def _food_line_should_ignore_negative_filter(
+    *,
+    negative_hit: str,
+    title: str,
+    summary: str,
+    cleaned_evidence_text: str,
+    url: str,
+    pressure_type: str,
+    match_terms: list[str],
+) -> bool:
+    if str(negative_hit or "").strip().lower() != "menu":
+        return False
+    article_signal_text = _food_line_negative_filter_text(title, summary, cleaned_evidence_text, url).lower()
+    if not article_signal_text:
+        return False
+    strong_signal_hits = sum(1 for term in FOOD_LINE_ARTICLE_SIGNAL_TERMS if term in article_signal_text)
+    navigation_hits = sum(1 for term in FOOD_LINE_MENU_NAVIGATION_TERMS if term in article_signal_text)
+    return (
+        _food_line_article_like_url(url)
+        and pressure_type != "context only"
+        and bool(match_terms)
+        and strong_signal_hits >= 3
+        and navigation_hits == 0
+    )
+
+
 def _extract_html_text(payload: bytes) -> str:
     text = payload.decode("utf-8", errors="replace")
     text = re.sub(r"(?is)<script[^>]*>.*?</script>", " ", text)
@@ -1866,12 +1931,23 @@ def evaluate_food_line_pressure(
     text = cleaned_evidence_text if cleaned_evidence_text and cleaned_evidence_text != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK else raw_text
     classification_text = " ".join(part for part in (cleaned_evidence_text, raw_text) if part and part != FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK).strip() or raw_text
     lowered = classification_text.lower()
+    negative_filter_text = _food_line_negative_filter_text(title, summary, cleaned_evidence_text, str(row.get("url") or ""))
     positives = list(positive_keywords or _normalize_registry_keywords(row.get("positive_keywords"), DEFAULT_POSITIVE_KEYWORDS.get(str(row.get("source_family") or "").lower(), [])))
     negatives = list(negative_keywords or _normalize_registry_keywords(row.get("negative_keywords"), DEFAULT_NEGATIVE_KEYWORDS))
-    negative_hit = next((term for term in negatives if term.lower() in lowered), "")
+    negative_hit = next((term for term in negatives if term.lower() in negative_filter_text.lower()), "")
     pressure_type = "context only" if source_purpose in SOURCE_PURPOSE_EVERGREEN_VALUES else _pressure_type_for_text(classification_text)
     affected_groups = [] if source_purpose in SOURCE_PURPOSE_EVERGREEN_VALUES else _infer_affected_groups(classification_text)
     match_terms = [] if source_purpose in SOURCE_PURPOSE_EVERGREEN_VALUES else _pressure_match_terms(classification_text)
+    ignore_negative_hit = _food_line_should_ignore_negative_filter(
+        negative_hit=negative_hit,
+        title=title,
+        summary=summary,
+        cleaned_evidence_text=cleaned_evidence_text,
+        url=str(row.get("url") or ""),
+        pressure_type=pressure_type,
+        match_terms=match_terms,
+    )
+    effective_negative_hit = "" if ignore_negative_hit else negative_hit
     pressure_summary = ""
     pressure_signal = False
     pressure_reason = "insufficient specific pressure evidence"
@@ -1885,7 +1961,7 @@ def evaluate_food_line_pressure(
         pressure_verification_status = "registry_summary_only"
     elif evidence_text:
         pressure_verification_status = "demoted_context"
-    if not blocked_by_source_purpose and pressure_type != "context only" and not negative_hit and evidence_text and evidence_text_basis in SUPPORTED_EVIDENCE_BASIS:
+    if not blocked_by_source_purpose and pressure_type != "context only" and not effective_negative_hit and evidence_text and evidence_text_basis in SUPPORTED_EVIDENCE_BASIS:
         pressure_summary = _build_pressure_summary(
             source_name=str(row.get("source_name") or row.get("publisher") or row.get("title") or "The source"),
             publisher=str(row.get("publisher") or ""),
@@ -1900,7 +1976,7 @@ def evaluate_food_line_pressure(
             pressure_signal = True
             pressure_reason = f"matched {pressure_type}"
             pressure_verification_status = "source_text_verified"
-            if negative_hit:
+            if ignore_negative_hit:
                 pressure_reason += f"; negative filter {negative_hit} ignored because pressure evidence was explicit"
         else:
             affected_groups = []
@@ -1967,7 +2043,7 @@ def evaluate_food_line_pressure(
         source_role = "research_signal" if research_or_data_signal else ("daily_signal" if pressure_signal else "map_signal")
     else:
         source_role = "pressure_evidence" if pressure_signal else "resource_context"
-    if pressure_required and not pressure_signal and negative_hit and family not in BASELINE_FAMILIES:
+    if pressure_required and not pressure_signal and effective_negative_hit and family not in BASELINE_FAMILIES:
         source_role = "rejected_context"
     location_scope = "outside_product_geography" if not supported_geography else ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
     state = str(row.get("state") or "").strip().upper()
@@ -2005,13 +2081,13 @@ def evaluate_food_line_pressure(
         "promotable": promotable,
         "non_promotable_reason": non_promotable_reason,
         "rejected": bool(
-            (negative_hit and pressure_required and family not in BASELINE_FAMILIES and not blocked_by_source_purpose)
+            (effective_negative_hit and pressure_required and family not in BASELINE_FAMILIES and not blocked_by_source_purpose)
             or source_purpose == "donation_page"
         ),
         "rejection_reason": (
             "donation page is not current pressure evidence"
             if source_purpose == "donation_page"
-            else (f"excluded by negative filter: {negative_hit}" if negative_hit and pressure_required and family not in BASELINE_FAMILIES else "")
+            else (f"excluded by negative filter: {effective_negative_hit}" if effective_negative_hit and pressure_required and family not in BASELINE_FAMILIES else "")
         ),
         "map_eligible": map_eligible,
     }

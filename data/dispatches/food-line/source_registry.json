@@ -172,8 +172,8 @@
       "state administration"
     ],
     "default_map_category": "benefit disruption",
-    "enabled": true,
-    "notes": "Idaho food assistance program updates.",
+    "enabled": false,
+    "notes": "Disabled 2026-06-26 after repeated verified 404 responses on the exact SNAP page URL and no safe replacement URL was verified.",
     "pressure_verification_required": true,
     "pressure_required": true,
     "extraction_quality": "medium",
@@ -304,8 +304,8 @@
       "state administration"
     ],
     "default_map_category": "benefit disruption",
-    "enabled": true,
-    "notes": "Ohio SNAP information page.",
+    "enabled": false,
+    "notes": "Disabled 2026-06-26 after repeated verified 404 responses on the exact SNAP page URL and no safe replacement URL was verified.",
     "pressure_verification_required": true,
     "pressure_required": true,
     "extraction_quality": "medium",

@@ -7361,6 +7361,16 @@ def test_food_line_reused_collect_result_preserves_fetch_failure_classification(
     assert result["fetch_failure_action_by_source_id"] == {"blocked-page": "mark_paywall_or_forbidden"}
 
 
+def test_food_line_known_404_registry_entries_are_disabled() -> None:
+    registry = json.loads(Path("data/dispatches/food-line/source_registry.json").read_text(encoding="utf-8"))
+    by_id = {row["source_id"]: row for row in registry}
+
+    for source_id in ("id-iccp-snap", "oh-jfs-snap"):
+        row = by_id[source_id]
+        assert row["enabled"] is False
+        assert "verified 404" in str(row.get("notes") or "").lower()
+
+
 def test_food_line_candidate_registry_loads(tmp_path: Path):
     _ensure_assets(tmp_path)
     _write_candidate_registry(

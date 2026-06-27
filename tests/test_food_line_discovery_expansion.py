@@ -212,8 +212,90 @@ def test_food_line_discovery_query_plan_covers_state_territory_and_metro_geograp
     assert "Northern Mariana Islands" in states
     assert "Charlotte" in metros
     assert "Washington DC" in metros
-    assert any("after:2026-06-18" in row["query_text"] and "before:2026-06-20" in row["query_text"] for row in plan)
+    assert all("after:2026-06-18" in row["query_text"] and "before:2026-06-20" in row["query_text"] for row in plan)
     assert any(row["geographic_scope"] == "metro" for row in plan)
+
+
+def test_food_line_discovery_expansion_caps_queries_across_multiple_lanes(tmp_path: Path):
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            calls.append(url)
+            return _rss_payload([])
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=8,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+
+    assert result["query_count"] == 8
+    assert len(calls) == 8
+    assert "news_article" in result["executed_lanes"]
+    assert "public_radio" in result["executed_lanes"]
+    assert "food_bank_provider" in result["executed_lanes"]
+    assert "county_city_agenda" in result["executed_lanes"]
+    assert "snap_state_notice" in result["executed_lanes"]
+    assert "social_watchlist" in result["skipped_lanes"] or "social_watchlist" in result["executed_lanes"]
+
+
+def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+    homepage_url = "https://www.kxan.com"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Traceable article",
+                        "link": "https://news.google.com/rss/articles/CBMiTRACE?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food bank demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    },
+                    {
+                        "title": "Homepage only trace",
+                        "link": "https://news.google.com/rss/articles/CBMiHOME?oc=5",
+                        "source_url": homepage_url,
+                        "publisher": "KXAN",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    },
+                ]
+            )
+        if url == article_url:
+            return _html_article(title="Traceable article", canonical=article_url, body="Food bank demand is rising.")
+        if url == homepage_url:
+            return _html_article(title="Homepage only trace", canonical=homepage_url, body="Food pantry demand is rising.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+
+    assert result["google_news_url_count"] == 2
+    assert result["article_specific_url_count"] == 1
+    assert result["publisher_homepage_trace_only_count"] == 1
+    assert result["unresolved_google_news_count"] == 1
+    assert result["blocked_fetch_count"] == 0
+    assert result["in_window_candidate_count"] == 2
+    assert result["out_of_window_candidate_count"] == 0
+    assert result["public_eligible_candidate_count"] == 1
 
 
 def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallbacks(tmp_path: Path):

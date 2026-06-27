@@ -84,6 +84,7 @@ def test_food_line_discovery_backfill_writes_per_date_candidate_and_review_artif
     assert summary_payload["candidates_by_date"]["2026-06-21"] == 1
     assert summary_payload["candidates_by_date"]["2026-06-22"] == 0
     assert "2026-06-22" in summary_payload["dates_with_no_reviewable_candidates"]
+    assert "2026-06-22" in summary_payload["dates_with_no_public_eligible_candidates"]
     assert summary_payload["public_output_written"] is False
     assert summary_payload["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()
@@ -235,10 +236,69 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert result["ok"] is True
     assert summary["top_blocker_reasons"]["outside_backfill_date_window"] >= 1
     assert summary["top_blocker_reasons"]["publisher_homepage_trace_only"] >= 1
+    assert summary["google_news_url_count"] == 2
+    assert summary["publisher_homepage_trace_only_count"] == 1
+    assert summary["unresolved_google_news_count"] == 1
+    assert summary["public_eligible_candidate_count"] == 0
+    assert "2026-06-21" in summary["dates_with_no_public_eligible_candidates"]
     assert review["top_blocker_reasons"]["outside_backfill_date_window"] >= 1
     assert review["top_blocker_reasons"]["publisher_homepage_trace_only"] >= 1
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_discovery_backfill_samples_multiple_lanes_under_query_cap(tmp_path: Path):
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            calls.append(url)
+            return _rss_payload([])
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-24",
+            "2026-06-24",
+            max_queries=8,
+            max_results_per_query=1,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-24_to_2026-06-24"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert len(calls) == 8
+    assert all("after%3A2026-06-24" in url and "before%3A2026-06-24" in url for url in calls)
+    assert "news_article" in summary["executed_lanes"]
+    assert "public_radio" in summary["executed_lanes"]
+    assert "food_bank_provider" in summary["executed_lanes"]
+    assert "county_city_agenda" in summary["executed_lanes"]
+    assert summary["skipped_lanes"]
     assert not (tmp_path / "output" / "site").exists()
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
 
@@ -263,10 +323,23 @@ def test_food_line_discovery_backfill_resume_uses_existing_partial_summary(tmp_p
     ]
     candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "candidates" / "2026-06-21" / "candidate_sources.json"
     review_path = tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.json"
+    audit_path = tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "discovery_audit.json"
     candidate_path.parent.mkdir(parents=True, exist_ok=True)
     review_path.parent.mkdir(parents=True, exist_ok=True)
     candidate_path.write_text(json.dumps(existing_candidates, indent=2), encoding="utf-8")
     review_path.write_text(json.dumps({"candidate_count_total": 1}, indent=2), encoding="utf-8")
+    audit_path.write_text(
+        json.dumps(
+            {
+                "configured_lanes": ["news_article", "public_radio"],
+                "executed_lanes": ["news_article"],
+                "skipped_lanes": ["public_radio"],
+                "candidates_by_lane": {"news_article": 1},
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
     result = backfill.run_food_line_discovery_backfill(
         tmp_path,
@@ -291,5 +364,7 @@ def test_food_line_discovery_backfill_resume_uses_existing_partial_summary(tmp_p
     assert result["ok"] is True
     assert summary["per_date"][0]["status"] == "resumed_existing"
     assert summary["candidates_by_date"]["2026-06-21"] == 1
+    assert summary["executed_lanes"] == ["news_article"]
+    assert summary["skipped_lanes"] == ["public_radio"]
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False

@@ -484,6 +484,45 @@ def _parse_date_range(edition_date: str, *, lookback_days: int = 1, lookahead_da
     return (day - timedelta(days=max(0, int(lookback_days)))).isoformat(), (day + timedelta(days=max(0, int(lookahead_days)))).isoformat()
 
 
+def _apply_query_date_bounds(query_text: str, *, after: str, before: str) -> str:
+    text = _nonempty(query_text)
+    if not text:
+        return ""
+    if "after:" not in text:
+        text = f"{text} after:{after}"
+    if "before:" not in text:
+        text = f"{text} before:{before}"
+    return text
+
+
+def _sample_query_plan_across_families(query_plan: list[dict[str, Any]], max_queries: int | None) -> list[dict[str, Any]]:
+    if max_queries is None or max_queries < 0 or len(query_plan) <= max_queries:
+        return list(query_plan)
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    family_order: list[str] = []
+    for row in query_plan:
+        family = _nonempty(row.get("query_family")) or "unknown"
+        if family not in grouped:
+            grouped[family] = []
+            family_order.append(family)
+        grouped[family].append(row)
+    sampled: list[dict[str, Any]] = []
+    index = 0
+    while len(sampled) < max_queries:
+        added = False
+        for family in family_order:
+            family_rows = grouped.get(family) or []
+            if index < len(family_rows):
+                sampled.append(family_rows[index])
+                added = True
+                if len(sampled) >= max_queries:
+                    break
+        if not added:
+            break
+        index += 1
+    return sampled
+
+
 def build_food_line_discovery_query_plan(
     root: Path,
     edition_date: str,
@@ -502,7 +541,7 @@ def build_food_line_discovery_query_plan(
         if family_name in {"state_territory", "metro"}:
             continue
         for template in templates:
-            query_text = template.format(after=after, before=before)
+            query_text = _apply_query_date_bounds(template.format(after=after, before=before), after=after, before=before)
             rows.append(
                 {
                     "query_family": family_name,
@@ -523,7 +562,7 @@ def build_food_line_discovery_query_plan(
     for state_name, abbrev in STATE_TERRITORIES:
         family = next((row for row in config["query_families"] if _nonempty(row.get("query_family")) == "state_territory"), {})
         for template in [str(item).strip() for item in family.get("templates") or [] if str(item).strip()]:
-            query_text = template.format(geo=state_name, after=after, before=before)
+            query_text = _apply_query_date_bounds(template.format(geo=state_name, after=after, before=before), after=after, before=before)
             rows.append(
                 {
                     "query_family": "state_territory",
@@ -549,7 +588,7 @@ def build_food_line_discovery_query_plan(
         if not metro_name:
             continue
         for template in [str(item).strip() for item in family.get("templates") or [] if str(item).strip()]:
-            query_text = template.format(geo=metro_name, after=after, before=before)
+            query_text = _apply_query_date_bounds(template.format(geo=metro_name, after=after, before=before), after=after, before=before)
             rows.append(
                 {
                     "query_family": "metro",
@@ -571,6 +610,24 @@ def build_food_line_discovery_query_plan(
 
 def _query_url(query_text: str) -> str:
     return "https://news.google.com/rss/search?q=" + urllib.parse.quote_plus(query_text) + "&hl=en-US&gl=US&ceid=US:en"
+
+
+def _query_family_to_lane(query_family: str) -> str:
+    family = _nonempty(query_family)
+    if family in {
+        "public_radio",
+        "food_bank_provider",
+        "feeding_america_affiliate",
+        "school_meals_child_nutrition",
+        "county_city_agenda",
+        "snap_state_notice",
+        "united_way_211",
+        "nonprofit_report",
+        "social_watchlist",
+        "institutional_update",
+    }:
+        return family
+    return "news_article"
 
 
 def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
@@ -634,6 +691,19 @@ def _classify_fetch_error(error: str) -> str:
     if "empty response" in lowered:
         return "empty_response"
     return "fetch_failed"
+
+
+def _is_google_news_wrapper(url: str) -> bool:
+    host = _host(url)
+    return bool(host) and (host == GOOGLE_NEWS_DOMAIN or host.endswith(f".{GOOGLE_NEWS_DOMAIN}"))
+
+
+def _initial_trace_url(discovered_url: str, publisher_url: str) -> str:
+    if _is_article_specific_url(publisher_url):
+        return publisher_url
+    if _is_article_specific_url(discovered_url) and not _is_google_news_wrapper(discovered_url):
+        return discovered_url
+    return publisher_url or discovered_url
 
 
 def _search_text_blob(row: dict[str, Any]) -> str:
@@ -927,8 +997,8 @@ def run_food_line_discovery_expansion(
         lookback_days=query_lookback_days,
         lookahead_days=query_lookahead_days,
     )
-    if max_queries is not None and max_queries >= 0:
-        query_plan = query_plan[:max_queries]
+    configured_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_plan if _nonempty(row.get("query_family"))})
+    query_plan = _sample_query_plan_across_families(query_plan, max_queries)
     candidates: list[dict[str, Any]] = []
     query_rows: list[dict[str, Any]] = []
     discovered_at = _utc_now()
@@ -943,6 +1013,9 @@ def run_food_line_discovery_expansion(
     context_only_count = 0
     manual_reviewable_count = 0
     fetchable_count = 0
+    google_news_url_count = 0
+    article_specific_url_count = 0
+    unresolved_google_news_count = 0
     seen_trace_keys: dict[str, str] = {}
 
     for query_row in query_plan:
@@ -968,7 +1041,7 @@ def run_food_line_discovery_expansion(
             discovered_url = _normalize_url(_nonempty(item.get("link")))
             google_news_url = discovered_url if GOOGLE_NEWS_DOMAIN in discovered_url else ""
             publisher_url = _normalize_url(_nonempty(item.get("source_url")))
-            candidate_source_url = publisher_url or discovered_url
+            candidate_source_url = _initial_trace_url(discovered_url, publisher_url)
             final_trace_url = candidate_source_url or discovered_url
             canonical = _normalize_url(final_trace_url)
             fetch_status = "unfetched"
@@ -1097,6 +1170,12 @@ def run_food_line_discovery_expansion(
                 homepage_only_trace_count += 1
             if "outside_backfill_date_window" in row["public_claim_blockers"]:
                 outside_window_count += 1
+            if row["google_news_url"]:
+                google_news_url_count += 1
+                if row["traceability_status"] != "traceable":
+                    unresolved_google_news_count += 1
+            if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url"))):
+                article_specific_url_count += 1
             manual_reviewable_count += 1 if row["manual_review_required"] else 0
             query_family_counts[row["query_family"]] += 1
             if row["state_or_territory"]:
@@ -1157,9 +1236,31 @@ def run_food_line_discovery_expansion(
     outside_window_count = sum(1 for row in candidates if "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []))
     fetchable_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) == "ok")
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
+    google_news_url_count = sum(1 for row in candidates if _nonempty(row.get("google_news_url")))
+    article_specific_url_count = sum(
+        1 for row in candidates if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
+    )
+    unresolved_google_news_count = sum(
+        1
+        for row in candidates
+        if _nonempty(row.get("google_news_url")) and _nonempty(row.get("traceability_status")) != "traceable"
+    )
     qualified_pressure_signals = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "qualified_pressure_signal")
     context_only_count = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "context_only")
     manual_fallback_count = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "manual_fallback")
+    in_window_candidate_count = sum(
+        1
+        for row in candidates
+        if _published_date_in_window(
+            date_text,
+            _nonempty(row.get("source_published_date")),
+            lookback_days=public_claim_lookback_days,
+            lookahead_days=public_claim_lookahead_days,
+        )
+    )
+    public_eligible_candidate_count = sum(1 for row in candidates if bool(row.get("public_claim_eligible")))
+    executed_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_rows if _nonempty(row.get("query_family"))})
+    skipped_lanes = [lane for lane in configured_lanes if lane not in executed_lanes]
     discovery_confidence, discovery_confidence_reason = _discovery_confidence(
         {
             "candidate_count": candidate_count,
@@ -1185,12 +1286,23 @@ def run_food_line_discovery_expansion(
         "duplicate_count": duplicate_count,
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,
+        "google_news_url_count": google_news_url_count,
+        "article_specific_url_count": article_specific_url_count,
         "homepage_only_trace_count": homepage_only_trace_count,
+        "publisher_homepage_trace_only_count": homepage_only_trace_count,
+        "unresolved_google_news_count": unresolved_google_news_count,
         "outside_backfill_date_window_count": outside_window_count,
+        "in_window_candidate_count": in_window_candidate_count,
+        "out_of_window_candidate_count": max(0, candidate_count - in_window_candidate_count),
+        "public_eligible_candidate_count": public_eligible_candidate_count,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
         "context_only_count": context_only_count,
         "manual_fallback_count": manual_fallback_count,
+        "configured_lanes": configured_lanes,
+        "executed_lanes": executed_lanes,
+        "skipped_lanes": skipped_lanes,
+        "candidates_by_lane": dict(sorted(lane_counts.items())),
         "candidates_by_query_family": dict(sorted(query_family_counts.items())),
         "candidates_by_discovery_lane": dict(sorted(lane_counts.items())),
         "candidates_by_discovery_source_type": dict(sorted(source_type_counts.items())),
@@ -1232,13 +1344,21 @@ def run_food_line_discovery_expansion(
             f"- Total candidates discovered: `{candidate_count}`",
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
+            f"- Google News wrapper URLs: `{google_news_url_count}`",
+            f"- Article-specific trace URLs: `{article_specific_url_count}`",
             f"- Homepage-only traces: `{homepage_only_trace_count}`",
+            f"- Unresolved Google News traces: `{unresolved_google_news_count}`",
             f"- Outside backfill date window: `{outside_window_count}`",
+            f"- In-window candidates: `{in_window_candidate_count}`",
+            f"- Public-eligible candidates: `{public_eligible_candidate_count}`",
             f"- Manually reviewable candidates: `{manual_reviewable_count}`",
             f"- Qualified pressure signals: `{qualified_pressure_signals}`",
             f"- Context-only records: `{context_only_count}`",
             f"- Duplicate count: `{duplicate_count}`",
             f"- Manual fallback records: `{manual_fallback_count}`",
+            f"- Configured lanes: {', '.join(configured_lanes) if configured_lanes else 'none'}",
+            f"- Executed lanes: {', '.join(executed_lanes) if executed_lanes else 'none'}",
+            f"- Skipped lanes: {', '.join(skipped_lanes) if skipped_lanes else 'none'}",
             "",
             "## Candidates by query family",
             "",

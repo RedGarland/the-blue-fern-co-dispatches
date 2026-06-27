@@ -775,6 +775,186 @@ def _food_line_qualifies_for_public_inclusion(row: dict[str, Any]) -> bool:
     return not bool(_food_line_public_inclusion_reason(row))
 
 
+def _food_line_candidate_traceability_status(row: dict[str, Any]) -> str:
+    primary_url = canonical_url(str(row.get("primary_source_url") or ""))
+    url = canonical_url(str(row.get("url") or ""))
+    final_trace_url = canonical_url(str(row.get("final_trace_url") or ""))
+    discovered_url = canonical_url(str(row.get("discovered_url") or ""))
+    traceability_role = str(row.get("source_traceability_role") or "").strip().lower()
+    if not any((primary_url, url, final_trace_url, discovered_url)):
+        return "missing_url"
+    if "wrapper" in traceability_role or "syndicated" in traceability_role:
+        return "source_wrapper_only" if not primary_url else "traceable"
+    wrapper_hosts = ("news.google.com", "google.com", "t.co", "x.com", "twitter.com", "facebook.com", "instagram.com")
+    parsed_url = urlsplit(url or discovered_url or final_trace_url)
+    if parsed_url.netloc.lower().endswith(wrapper_hosts) and not primary_url and not final_trace_url:
+        return "source_wrapper_only"
+    if primary_url or final_trace_url:
+        return "traceable"
+    if url:
+        return "weak_traceability"
+    return "missing_url"
+
+
+def _food_line_candidate_signal_strength(row: dict[str, Any]) -> str:
+    if not bool(row.get("pressure_signal")):
+        if str(row.get("pressure_verification_status") or "").strip().lower() in {"demoted_context", "registry_summary_only"}:
+            return "weak"
+        return "none"
+    match_terms = [str(term).strip() for term in (row.get("pressure_match_terms") or []) if str(term).strip()]
+    verification_status = str(row.get("pressure_verification_status") or "").strip().lower()
+    evidence_basis = str(row.get("evidence_text_basis") or "").strip().lower()
+    if verification_status == "source_text_verified" and evidence_basis in {"manual_review", "manual_source_text", "page_text_excerpt"} and len(match_terms) >= 2:
+        return "strong"
+    if verification_status == "source_text_verified":
+        return "moderate"
+    return "weak"
+
+
+def _food_line_candidate_pressure_type(row: dict[str, Any]) -> str:
+    pressure_key = _food_line_pressure_type_key(row)
+    mapping = {
+        "demand_strain": "pantry_demand",
+        "service_reduction": "distribution_capacity",
+        "benefit_disruption": "benefit_gap",
+        "benefit_access_decline": "benefit_gap",
+        "snap_enrollment_decline": "benefit_gap",
+        "school_meal_access_pressure": "school_meal_gap",
+        "child_meal_gap": "summer_hunger",
+        "summer_meal_gap": "summer_hunger",
+        "food_bank_inventory_shortage": "food_bank_inventory",
+        "operating_cost_strain": "cost_pressure",
+        "fuel_cost_strain": "cost_pressure",
+        "volunteer_capacity_strain": "distribution_capacity",
+        "distribution_cancellation": "distribution_capacity",
+        "disaster_food_access_pressure": "distribution_capacity",
+        "household_food_insecurity_data_signal": "household_food_insecurity",
+        "access_gap": "household_food_insecurity",
+        "price_pressure": "cost_pressure",
+        "rural_grocery_access": "household_food_insecurity",
+        "senior_meal_strain": "distribution_capacity",
+    }
+    return mapping.get(pressure_key, "other")
+
+
+def _food_line_candidate_blockers(row: dict[str, Any]) -> list[str]:
+    blockers: list[str] = []
+    traceability_status = _food_line_candidate_traceability_status(row)
+    pressure_strength = _food_line_candidate_signal_strength(row)
+    source_role = str(row.get("source_role") or "").strip().lower()
+    public_reason = str(row.get("public_inclusion_reason") or "").strip() or _food_line_public_inclusion_reason(row)
+    freshness_status = str(row.get("source_freshness_status") or row.get("freshness_status") or "").strip().lower()
+    if str(row.get("duplicate_of") or "").strip():
+        blockers.append("duplicate")
+    if traceability_status == "missing_url":
+        blockers.append("missing_original_source_url")
+    elif traceability_status == "source_wrapper_only":
+        blockers.append("source_wrapper_only")
+    if not bool(row.get("supported_product_geography", True)) or str(row.get("location_scope") or "").strip() == "outside_product_geography":
+        blockers.append("non_us_scope")
+    if not bool(row.get("source_public_story_eligible", True)) or freshness_status in {"stale_outside_daily_window", "missing_source_published_date", "unparsed_source_published_date", "url_path_only"}:
+        blockers.append("stale_or_no_usable_date")
+    if public_reason == "resource-only / no pressure signal":
+        blockers.append("resource_only_no_pressure")
+    if pressure_strength == "weak":
+        blockers.append("weak_pressure_signal")
+    if source_role in {"policy_context", "research_signal", "institutional_context_signal", "data_anchor_signal", "background_context", "baseline_condition"}:
+        blockers.append("institutional_context_only")
+    if (
+        str(row.get("discovery_channel") or "").strip().lower() in {"social", "social_post"}
+        or str(row.get("fetch_status") or "").strip().lower().startswith("blocked")
+        or str(row.get("pressure_verification_status") or "").strip().lower() == "registry_summary_only"
+    ):
+        blockers.append("social_only_unverified")
+    if public_reason == "not a current public food-pressure signal":
+        blockers.append("no_public_impact")
+    deduped: list[str] = []
+    for blocker in blockers:
+        if blocker not in deduped:
+            deduped.append(blocker)
+    return deduped
+
+
+def _food_line_candidate_review_status(row: dict[str, Any], blockers: list[str]) -> str:
+    if bool(row.get("public_claim_eligible")):
+        return "approved"
+    hard_reject = {"missing_original_source_url", "source_wrapper_only", "duplicate", "non_us_scope"}
+    if any(blocker in hard_reject for blocker in blockers):
+        return "rejected"
+    if blockers == ["resource_only_no_pressure"] or blockers == ["no_public_impact"]:
+        return "rejected"
+    if any(blocker in {"weak_pressure_signal", "institutional_context_only", "social_only_unverified"} for blocker in blockers):
+        return "watchlist"
+    return "needs_review"
+
+
+def _food_line_candidate_source_role(row: dict[str, Any], review_status: str) -> str:
+    source_role = str(row.get("source_role") or "").strip().lower()
+    source_family = str(row.get("source_family") or "").strip().lower()
+    if review_status == "watchlist":
+        return "watchlist_signal"
+    if source_role in {"baseline_condition", "data_anchor_signal", "research_signal", "institutional_context_signal", "policy_context"}:
+        return "data_anchor"
+    if source_role in {"provider_signal", "resource_context"} or source_family in {"food_bank_provider", "school_meals_child_nutrition", "senior_meals", "state_official", "federal_official"}:
+        return "operating_signal"
+    if bool(row.get("pressure_signal")):
+        return "human_story"
+    return "watchlist_signal"
+
+
+def _food_line_candidate_review_note(row: dict[str, Any], blockers: list[str], review_status: str) -> str:
+    if bool(row.get("public_claim_eligible")):
+        return "Eligible for public source-backed Food Line claims."
+    if blockers:
+        return "; ".join(blockers[:3]).replace("_", " ")
+    if review_status == "needs_review":
+        return "Traceable candidate retained for operator review."
+    return "Retained outside public claims."
+
+
+def _annotate_food_line_candidate_review_fields(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    blocker_counts: Counter[str] = Counter()
+    review_status_counts: Counter[str] = Counter()
+    traceability_counts: Counter[str] = Counter()
+    for row in rows:
+        public_claim_eligible = bool(row.get("qualifies_for_public_inclusion")) if "qualifies_for_public_inclusion" in row else _food_line_qualifies_for_public_inclusion(row)
+        traceability_status = _food_line_candidate_traceability_status(row)
+        blockers = _food_line_candidate_blockers({**row, "public_claim_eligible": public_claim_eligible})
+        review_status = _food_line_candidate_review_status({**row, "public_claim_eligible": public_claim_eligible}, blockers)
+        candidate_source_role = _food_line_candidate_source_role(row, review_status)
+        review_note = _food_line_candidate_review_note(row, blockers, review_status)
+        pressure_signal_strength = _food_line_candidate_signal_strength(row)
+        pressure_signal_type = _food_line_candidate_pressure_type(row)
+        row["review_status"] = review_status
+        row["candidate_source_role"] = candidate_source_role
+        row["pressure_signal_strength"] = pressure_signal_strength
+        row["pressure_signal_type"] = pressure_signal_type
+        row["public_claim_eligible"] = bool(public_claim_eligible)
+        row["public_claim_blockers"] = blockers
+        row["traceability_status"] = traceability_status
+        row["review_note"] = review_note
+        row["candidate_classification"] = {
+            "review_status": review_status,
+            "source_role": candidate_source_role,
+            "pressure_signal_strength": pressure_signal_strength,
+            "pressure_signal_type": pressure_signal_type,
+            "public_claim_eligible": bool(public_claim_eligible),
+            "public_claim_blockers": blockers,
+            "traceability_status": traceability_status,
+            "review_note": review_note,
+        }
+        review_status_counts[review_status] += 1
+        traceability_counts[traceability_status] += 1
+        for blocker in blockers:
+            blocker_counts[blocker] += 1
+    return {
+        "review_status_counts": dict(sorted(review_status_counts.items())),
+        "traceability_status_counts": dict(sorted(traceability_counts.items())),
+        "public_claim_blocker_counts": dict(sorted(blocker_counts.items())),
+        "public_claim_eligible_count": sum(1 for row in rows if bool(row.get("public_claim_eligible"))),
+    }
+
+
 def _food_line_public_inclusion_bucket(row: dict[str, Any], *, is_lead: bool = False) -> str:
     if not _food_line_qualifies_for_public_inclusion(row):
         if _food_line_source_background_reference(row):
@@ -4415,6 +4595,86 @@ def _write_food_line_review_csv(root: Path, date: str, sources: list[dict[str, A
     return review_path
 
 
+def _write_food_line_candidate_review_artifacts(root: Path, date: str, sources: list[dict[str, Any]], classification_summary: dict[str, Any]) -> tuple[Path, Path]:
+    review_dir = root / "output" / "review" / DISPATCH_SLUG / date
+    json_path = review_dir / "candidate_review.json"
+    html_path = review_dir / "candidate_review.html"
+    blocker_counts = dict(classification_summary.get("public_claim_blocker_counts") or {})
+    payload = {
+        "generated_at": utc_now(),
+        "edition_date": date,
+        "candidate_count_total": len(sources),
+        "candidate_count_traceable": sum(1 for row in sources if str(row.get("traceability_status") or "") == "traceable"),
+        "candidate_count_approved": sum(1 for row in sources if str(row.get("review_status") or "") == "approved"),
+        "candidate_count_needs_review": sum(1 for row in sources if str(row.get("review_status") or "") == "needs_review"),
+        "candidate_count_watchlist": sum(1 for row in sources if str(row.get("review_status") or "") == "watchlist"),
+        "candidate_count_rejected": sum(1 for row in sources if str(row.get("review_status") or "") == "rejected"),
+        "public_claim_eligible_count": int(classification_summary.get("public_claim_eligible_count") or 0),
+        "public_claim_blocker_counts": blocker_counts,
+        "candidates": [
+            {
+                "title": str(row.get("title") or ""),
+                "publisher": str(row.get("publisher") or ""),
+                "date": str(row.get("source_published_date") or row.get("published_at") or ""),
+                "url": str(row.get("url") or ""),
+                "pressure_type": str(row.get("pressure_signal_type") or ""),
+                "pressure_strength": str(row.get("pressure_signal_strength") or ""),
+                "review_status": str(row.get("review_status") or ""),
+                "public_claim_eligible": bool(row.get("public_claim_eligible")),
+                "public_claim_blockers": list(row.get("public_claim_blockers") or []),
+                "review_note": str(row.get("review_note") or ""),
+            }
+            for row in sources
+        ],
+    }
+    _write_json(json_path, payload)
+    summary_items = [
+        ("Total candidates found", payload["candidate_count_total"]),
+        ("Approved", payload["candidate_count_approved"]),
+        ("Needs review", payload["candidate_count_needs_review"]),
+        ("Watchlist", payload["candidate_count_watchlist"]),
+        ("Rejected", payload["candidate_count_rejected"]),
+        ("Public-claim eligible", payload["public_claim_eligible_count"]),
+    ]
+    blocker_list = "".join(
+        f"<li>{html.escape(reason)}: {count}</li>"
+        for reason, count in sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))
+    ) or "<li>none</li>"
+    rows_html = "".join(
+        (
+            "<tr>"
+            f"<td>{html.escape(str(row['title']))}</td>"
+            f"<td>{html.escape(str(row['publisher']))}</td>"
+            f"<td>{html.escape(str(row['date']))}</td>"
+            f"<td><a href=\"{html.escape(str(row['url']))}\">source</a></td>"
+            f"<td>{html.escape(str(row['pressure_type']))}</td>"
+            f"<td>{html.escape(str(row['pressure_strength']))}</td>"
+            f"<td>{html.escape(str(row['review_status']))}</td>"
+            f"<td>{'true' if row['public_claim_eligible'] else 'false'}</td>"
+            f"<td>{html.escape(', '.join(str(item) for item in row['public_claim_blockers']))}</td>"
+            f"<td>{html.escape(str(row['review_note']))}</td>"
+            "</tr>"
+        )
+        for row in payload["candidates"]
+    )
+    summary_html = "".join(f"<li>{html.escape(label)}: {value}</li>" for label, value in summary_items)
+    document = (
+        "<!doctype html><html><head><meta charset=\"utf-8\"><title>Food Line candidate review</title>"
+        "<style>body{font-family:Georgia,serif;margin:2rem;color:#1f2a30}table{border-collapse:collapse;width:100%}"
+        "th,td{border:1px solid #c8c8c8;padding:.5rem;vertical-align:top;text-align:left}th{background:#f4efe7}"
+        "ul{margin-top:.25rem}</style></head><body>"
+        f"<h1>Food Line candidate review - {html.escape(date)}</h1>"
+        f"<h2>Summary</h2><ul>{summary_html}</ul>"
+        f"<h2>Blocker counts</h2><ul>{blocker_list}</ul>"
+        "<h2>Candidates</h2><table><thead><tr>"
+        "<th>Title</th><th>Publisher</th><th>Date</th><th>URL</th><th>Pressure type</th><th>Strength</th>"
+        "<th>Review status</th><th>Public-claim eligible</th><th>Blockers</th><th>Review note</th>"
+        f"</tr></thead><tbody>{rows_html}</tbody></table></body></html>"
+    )
+    _write_text(html_path, document)
+    return json_path, html_path
+
+
 def _read_food_line_review_csv(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -6196,7 +6456,14 @@ def run_food_line_dispatch(
         row["included_as_additional_signal"] = row["public_inclusion_bucket"] == "included_as_additional_signal"
         row["context_only"] = row["public_inclusion_bucket"] in {"context_only", "included_as_context_signal"}
         row["excluded"] = row["public_inclusion_bucket"] == "excluded"
+    classification_summary = _annotate_food_line_candidate_review_fields(sources)
     pressure_review_path = _write_food_line_review_csv(root, date, sources)
+    candidate_review_json_path, candidate_review_html_path = _write_food_line_candidate_review_artifacts(
+        root,
+        date,
+        sources,
+        classification_summary,
+    )
     source_collection_audit_summary = {
         "source_collection_audit_run": False,
         "source_collection_gold_count": 0,
@@ -6444,6 +6711,17 @@ def run_food_line_dispatch(
         "discovery_no_current_update_reason": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[1],
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "public_signal_count": public_signal_count,
+        "candidate_count_total": len(sources),
+        "candidate_count_traceable": sum(1 for row in sources if str(row.get("traceability_status") or "") == "traceable"),
+        "candidate_count_approved": sum(1 for row in sources if str(row.get("review_status") or "") == "approved"),
+        "candidate_count_needs_review": sum(1 for row in sources if str(row.get("review_status") or "") == "needs_review"),
+        "candidate_count_watchlist": sum(1 for row in sources if str(row.get("review_status") or "") == "watchlist"),
+        "candidate_count_rejected": sum(1 for row in sources if str(row.get("review_status") or "") == "rejected"),
+        "public_claim_eligible_count": int(classification_summary.get("public_claim_eligible_count") or 0),
+        "public_claim_blocker_counts": dict(classification_summary.get("public_claim_blocker_counts") or {}),
+        "intake_broadened": True,
+        "candidate_review_json_path": str(candidate_review_json_path),
+        "candidate_review_html_path": str(candidate_review_html_path),
         "qualified_but_not_public_count": qualified_but_not_public_count,
         "qualified_but_not_public_warning": qualified_but_not_public_warning,
         "bluesky_post_text": None,
@@ -6641,6 +6919,8 @@ def run_food_line_dispatch(
         "discovery_no_current_update_state": discovery_bridge_result.get("discovery_no_current_update_state"),
         "discovery_no_current_update_reason": _food_line_discovery_no_current_update_metadata(edition_mode, discovery_bridge_result)[1],
         "pressure_review_path": str(pressure_review_path),
+        "candidate_review_json_path": str(candidate_review_json_path),
+        "candidate_review_html_path": str(candidate_review_html_path),
         "public_signal_count": public_signal_count,
         "pressure_signal_count": sum(1 for row in sources if bool(row.get("pressure_signal"))),
         "pressure_marker_count": sum(1 for row in sources if bool(row.get("pressure_signal")) and bool(row.get("map_eligible"))),
@@ -6655,6 +6935,15 @@ def run_food_line_dispatch(
         "baseline_record_count": sum(1 for row in sources if str(row.get("source_role")) == "baseline_condition"),
         "context_record_count": sum(1 for row in sources if str(row.get("source_role")) in {"resource_context", "policy_context", "baseline_condition"}),
         "excluded_context_count": sum(1 for row in sources if str(row.get("source_role")) in {"resource_context", "policy_context", "baseline_condition"}),
+        "candidate_count_total": len(sources),
+        "candidate_count_traceable": sum(1 for row in sources if str(row.get("traceability_status") or "") == "traceable"),
+        "candidate_count_approved": sum(1 for row in sources if str(row.get("review_status") or "") == "approved"),
+        "candidate_count_needs_review": sum(1 for row in sources if str(row.get("review_status") or "") == "needs_review"),
+        "candidate_count_watchlist": sum(1 for row in sources if str(row.get("review_status") or "") == "watchlist"),
+        "candidate_count_rejected": sum(1 for row in sources if str(row.get("review_status") or "") == "rejected"),
+        "public_claim_eligible_count": int(classification_summary.get("public_claim_eligible_count") or 0),
+        "public_claim_blocker_counts": dict(classification_summary.get("public_claim_blocker_counts") or {}),
+        "intake_broadened": True,
         "public_rendered": public_rendered,
         "public_url": f"{BASE_URL}/food-line/editions/{date}/" if public_rendered else None,
         "qualified_but_not_public_count": qualified_but_not_public_count,

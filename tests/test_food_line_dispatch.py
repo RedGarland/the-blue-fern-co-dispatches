@@ -4418,6 +4418,97 @@ def test_food_line_cascade_pbs_style_funding_cut_story_publishes_when_fresh_and_
     assert "Sources Behind This Briefing" not in edition_html
 
 
+def test_food_line_candidate_review_artifact_and_manifest_include_classification_diagnostics(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = _freshen_food_line_payload_for_publication(
+        [
+            row
+            for row in json.loads(payload_path.read_text(encoding="utf-8"))
+            if row["source_record_id"] == "food-line-auto-6effc522ae28d822"
+        ],
+        date,
+    )
+    payload.append(
+        {
+            **_ktal_manual_source(),
+            "source_record_id": "food-line-watchlist-1",
+            "title": "Regional pantry asks for help ahead of summer demand",
+            "url": "https://example.org/pantry-update",
+            "primary_source_url": "https://example.org/pantry-update",
+            "publisher": "Example Pantry",
+            "state": "SC",
+            "location_name": "Example County, SC",
+            "map_category": "elevated demand",
+            "summary_or_snippet": "The pantry says demand may increase this summer and asked for donations.",
+            "evidence_text": "The pantry says demand may increase this summer and asked for donations.",
+            "evidence_text_basis": "page_title_only",
+            "pressure_signal": False,
+            "pressure_type": "context only",
+            "pressure_summary": "",
+            "pressure_reason": "insufficient specific pressure evidence",
+            "pressure_verification_status": "demoted_context",
+            "source_role": "resource_context",
+            "source_public_story_eligible": False,
+            "primary_eligible": False,
+            "primary_disqualification_reason": "resource-only / no pressure signal",
+        }
+    )
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    review_json = json.loads((tmp_path / "output" / "review" / "food-line" / date / "candidate_review.json").read_text(encoding="utf-8"))
+    review_html = (tmp_path / "output" / "review" / "food-line" / date / "candidate_review.html").read_text(encoding="utf-8")
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert review_json["candidate_count_total"] == 2
+    assert review_json["candidate_count_approved"] == 1
+    assert review_json["candidate_count_watchlist"] == 1
+    assert review_json["public_claim_blocker_counts"]["weak_pressure_signal"] >= 1
+    assert "Food Line candidate review" in review_html
+    assert "weak_pressure_signal" in json.dumps(review_json)
+    assert manifest["candidate_count_total"] == 2
+    assert manifest["candidate_count_watchlist"] == 1
+    assert manifest["public_claim_eligible_count"] == 1
+    assert manifest["intake_broadened"] is True
+
+
+def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    date = "2026-06-13"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / "2026-06-13" / "auto_sources.json"
+    payload = _freshen_food_line_payload_for_publication(
+        [
+            row
+            for row in json.loads(payload_path.read_text(encoding="utf-8"))
+            if row["source_record_id"] == "food-line-auto-6effc522ae28d822"
+        ],
+        date,
+    )
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    run_food_line_dispatch(tmp_path, date)
+    edition_html = (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+
+    for forbidden in (
+        "review_status",
+        "public_claim_eligible",
+        "public_claim_blockers",
+        "candidate_source_role",
+        "pressure_signal_strength",
+        "traceability_status",
+    ):
+        assert forbidden not in edition_html
+
+
 def test_food_line_nonpressure_rss_items_are_excluded_from_pressure_map(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-04"
@@ -5230,9 +5321,23 @@ def test_food_line_public_inclusion_helpers_separate_lead_from_public_eligibilit
         "lead_canonical_url": wpde["url"],
     }
     food_line._annotate_food_line_primary_eligibility(rows, previous_context)
+    for row in rows:
+        row_id = str(row.get("source_record_id") or "").strip()
+        row["qualifies_for_public_inclusion"] = food_line._food_line_qualifies_for_public_inclusion(row)
+        row["public_inclusion_reason"] = food_line._food_line_public_inclusion_reason(row)
+        row["public_inclusion_bucket"] = food_line._food_line_public_inclusion_bucket(
+            row,
+            is_lead=bool(row_id == wpde["source_record_id"]),
+        )
+        row["eligible_for_lead"] = bool(row.get("primary_eligible")) and bool(row.get("qualifies_for_public_inclusion"))
+    classification_summary = food_line._annotate_food_line_candidate_review_fields(rows)
 
     assert rows[0]["primary_eligible"] is False
     assert food_line._food_line_qualifies_for_public_inclusion(rows[0]) is True
+    assert rows[0]["public_claim_eligible"] is True
+    assert rows[0]["review_status"] == "approved"
+    assert rows[0]["eligible_for_lead"] is False
+    assert classification_summary["public_claim_eligible_count"] == 3
     assert food_line._food_line_public_inclusion_bucket(rows[1]) == "included_as_provider_operations_signal"
     assert food_line._food_line_public_inclusion_bucket(rows[2]) == "included_as_policy_access_signal"
     assert food_line._food_line_qualifies_for_public_inclusion(resource_only) is False

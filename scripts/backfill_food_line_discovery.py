@@ -18,7 +18,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
-from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
+from bluefern_dispatches.food_line_discovery_expansion import build_food_line_discovery_query_plan, run_food_line_discovery_expansion
 from bluefern_dispatches.food_line_sources import validate_date
 
 
@@ -68,6 +68,10 @@ def _review_html_path(root: Path, edition_date: str) -> Path:
     return root / "output" / "review" / DISPATCH_SLUG / edition_date / "candidate_review.html"
 
 
+def _discovery_audit_json_path(root: Path, edition_date: str) -> Path:
+    return root / "output" / "review" / DISPATCH_SLUG / edition_date / "discovery_audit.json"
+
+
 def _backfill_summary_paths(root: Path, start_date: str, end_date: str) -> tuple[Path, Path]:
     folder = root / "output" / "review" / DISPATCH_SLUG / "backfill" / f"{start_date}_to_{end_date}"
     return folder / "backfill_summary.json", folder / "backfill_summary.html"
@@ -93,7 +97,8 @@ def _write_partial_summary(root: Path, summary: dict[str, Any], *, start_date: s
         for row in summary.get("per_date", [])
     )
     lanes = "".join(f"<li>{html.escape(k)}: {v}</li>" for k, v in (summary.get("discovery_lanes_used") or {}).items()) or "<li>none</li>"
-    gaps = "".join(f"<li>{html.escape(day)}</li>" for day in (summary.get("dates_with_no_reviewable_candidates") or [])) or "<li>none</li>"
+    reviewable_gaps = "".join(f"<li>{html.escape(day)}</li>" for day in (summary.get("dates_with_no_reviewable_candidates") or [])) or "<li>none</li>"
+    public_gaps = "".join(f"<li>{html.escape(day)}</li>" for day in (summary.get("dates_with_no_public_eligible_candidates") or [])) or "<li>none</li>"
     _write_text(
         html_path,
         "<!doctype html><html><head><meta charset=\"utf-8\"><title>Food Line backfill summary</title>"
@@ -102,7 +107,8 @@ def _write_partial_summary(root: Path, summary: dict[str, Any], *, start_date: s
         f"<h1>Food Line backfill summary - {html.escape(start_date)} to {html.escape(end_date)}</h1>"
         f"<p>Total candidates: {summary.get('total_candidates', 0)}. Public output written: false. Pages repo mutated: false.</p>"
         f"<h2>Discovery lanes used</h2><ul>{lanes}</ul>"
-        f"<h2>Dates still showing no reviewable candidates</h2><ul>{gaps}</ul>"
+        f"<h2>Dates with no reviewable candidates</h2><ul>{reviewable_gaps}</ul>"
+        f"<h2>Dates with no public-eligible candidates</h2><ul>{public_gaps}</ul>"
         "<h2>Per-date summary</h2><table><thead><tr><th>Date</th><th>Candidates</th><th>Traceable</th>"
         "<th>Likely qualifying</th><th>Watchlist</th><th>Rejected</th><th>Status</th></tr></thead>"
         f"<tbody>{rows}</tbody></table></body></html>",
@@ -241,6 +247,7 @@ def run_food_line_discovery_backfill(
     blocker_counts: Counter[str] = Counter()
     useful_source_hits: Counter[str] = Counter()
     dates_with_no_reviewable: list[str] = []
+    dates_with_no_public_eligible: list[str] = []
     failed_dates: list[str] = []
 
     def build_summary() -> dict[str, Any]:
@@ -255,12 +262,28 @@ def run_food_line_discovery_backfill(
             "candidates_by_date": {row["date"]: row["candidate_count"] for row in per_date},
             "traceable_candidates_by_date": {row["date"]: row["traceable_candidate_count"] for row in per_date},
             "likely_qualifying_candidates_by_date": {row["date"]: row["likely_qualifying_candidate_count"] for row in per_date},
+            "public_eligible_candidates_by_date": {row["date"]: row["public_eligible_candidate_count"] for row in per_date},
             "watchlist_candidates_by_date": {row["date"]: row["watchlist_candidate_count"] for row in per_date},
             "rejected_candidates_by_date": {row["date"]: row["rejected_candidate_count"] for row in per_date},
+            "in_window_candidates_by_date": {row["date"]: row["in_window_candidate_count"] for row in per_date},
+            "out_of_window_candidates_by_date": {row["date"]: row["out_of_window_candidate_count"] for row in per_date},
             "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
             "discovery_lanes_used": dict(sorted(lane_counts.items())),
             "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
             "dates_with_no_reviewable_candidates": dates_with_no_reviewable,
+            "dates_with_no_public_eligible_candidates": dates_with_no_public_eligible,
+            "configured_lanes": sorted({lane for row in per_date for lane in row.get("configured_lanes", []) if str(lane).strip()}),
+            "executed_lanes": sorted({lane for row in per_date for lane in row.get("executed_lanes", []) if str(lane).strip()}),
+            "skipped_lanes": sorted({lane for row in per_date for lane in row.get("skipped_lanes", []) if str(lane).strip()}),
+            "candidates_by_lane": dict(sorted(Counter({}).items())),
+            "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
+            "article_specific_url_count": sum(int(row.get("article_specific_url_count", 0)) for row in per_date),
+            "publisher_homepage_trace_only_count": sum(int(row.get("publisher_homepage_trace_only_count", 0)) for row in per_date),
+            "unresolved_google_news_count": sum(int(row.get("unresolved_google_news_count", 0)) for row in per_date),
+            "blocked_fetch_count": sum(int(row.get("blocked_fetch_count", 0)) for row in per_date),
+            "in_window_candidate_count": sum(int(row.get("in_window_candidate_count", 0)) for row in per_date),
+            "out_of_window_candidate_count": sum(int(row.get("out_of_window_candidate_count", 0)) for row in per_date),
+            "public_eligible_candidate_count": sum(int(row.get("public_eligible_candidate_count", 0)) for row in per_date),
             "per_date": per_date,
             "public_output_written": False,
             "pages_repo_mutated": False,
@@ -274,6 +297,16 @@ def run_food_line_discovery_backfill(
             "public_claim_lookahead_days": public_claim_lookahead_days,
         }
         json_path, html_path = _backfill_summary_paths(root, start_date, end_date)
+        summary["candidates_by_lane"] = dict(
+            sorted(
+                Counter(
+                    lane
+                    for row in per_date
+                    for lane, count in (row.get("candidates_by_lane") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
         summary["backfill_summary_json_path"] = str(json_path)
         summary["backfill_summary_html_path"] = str(html_path)
         return summary
@@ -284,7 +317,7 @@ def run_food_line_discovery_backfill(
             if resume and _candidate_copy_path(root, edition_date).exists() and _review_json_path(root, edition_date).exists() and not dry_run:
                 candidates = _read_json(_candidate_copy_path(root, edition_date))
                 intake_payload = {"discovery_review_path": str(_review_json_path(root, edition_date))}
-                expansion = {"ok": True, "discovery_audit_json_path": ""}
+                expansion = {"ok": True, "discovery_audit_json_path": str(_discovery_audit_json_path(root, edition_date))}
                 intake = {"ok": True, "discovery_candidates_intaked": len(candidates) if isinstance(candidates, list) else 0}
                 status = "resumed_existing"
             else:
@@ -313,9 +346,21 @@ def run_food_line_discovery_backfill(
                     "candidate_count": 0,
                     "traceable_candidate_count": 0,
                     "likely_qualifying_candidate_count": 0,
+                    "public_eligible_candidate_count": 0,
                     "watchlist_candidate_count": 0,
                     "rejected_candidate_count": 0,
                     "needs_review_candidate_count": 0,
+                    "in_window_candidate_count": 0,
+                    "out_of_window_candidate_count": 0,
+                    "google_news_url_count": 0,
+                    "article_specific_url_count": 0,
+                    "publisher_homepage_trace_only_count": 0,
+                    "unresolved_google_news_count": 0,
+                    "blocked_fetch_count": 0,
+                    "configured_lanes": [],
+                    "executed_lanes": [],
+                    "skipped_lanes": [],
+                    "candidates_by_lane": {},
                     "discovery_gap": True,
                     "errors": [str(exc)],
                     "public_output_written": False,
@@ -333,6 +378,25 @@ def run_food_line_discovery_backfill(
             for row in typed_candidates
             if bool(row.get("public_claim_eligible")) or str(row.get("classification_status") or "") in {"qualified_pressure_signal", "manual_fallback"}
         )
+        public_eligible_count = sum(1 for row in typed_candidates if bool(row.get("public_claim_eligible")))
+        in_window_count = sum(1 for row in typed_candidates if "outside_backfill_date_window" not in list(row.get("public_claim_blockers") or []))
+        out_of_window_count = len(typed_candidates) - in_window_count
+        google_news_url_count = sum(1 for row in typed_candidates if str(row.get("google_news_url") or "").strip())
+        article_specific_url_count = sum(
+            1
+            for row in typed_candidates
+            if str(row.get("traceability_status") or "").strip() == "traceable"
+            and str(row.get("source_url") or row.get("final_trace_url") or "").strip()
+        )
+        publisher_homepage_trace_only_count = sum(
+            1 for row in typed_candidates if "publisher_homepage_trace_only" in list(row.get("public_claim_blockers") or [])
+        )
+        unresolved_google_news_count = sum(
+            1
+            for row in typed_candidates
+            if str(row.get("google_news_url") or "").strip() and str(row.get("traceability_status") or "").strip() != "traceable"
+        )
+        blocked_fetch_count = sum(1 for row in typed_candidates if str(row.get("fetch_status") or "").strip() not in {"ok", "manual_fallback"})
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
             if lane:
@@ -350,6 +414,46 @@ def run_food_line_discovery_backfill(
                     useful_source_hits[publisher] += 1
         if intake.get("discovery_candidates_intaked", 0) <= 0:
             dates_with_no_reviewable.append(edition_date)
+        if public_eligible_count <= 0:
+            dates_with_no_public_eligible.append(edition_date)
+        audit = _read_json(Path(expansion["discovery_audit_json_path"])) if expansion.get("discovery_audit_json_path") and Path(expansion["discovery_audit_json_path"]).exists() else {}
+        configured_lanes = list(audit.get("configured_lanes") or [])
+        if not configured_lanes:
+            query_plan = build_food_line_discovery_query_plan(
+                root,
+                edition_date,
+                lookback_days=query_lookback_days,
+                lookahead_days=query_lookahead_days,
+            )
+            configured_lanes = sorted(
+                {
+                    "news_article"
+                    if str(row.get("query_family") or "").strip() not in {
+                        "public_radio",
+                        "food_bank_provider",
+                        "feeding_america_affiliate",
+                        "school_meals_child_nutrition",
+                        "county_city_agenda",
+                        "snap_state_notice",
+                        "united_way_211",
+                        "nonprofit_report",
+                        "social_watchlist",
+                        "institutional_update",
+                    }
+                    else str(row.get("query_family") or "").strip()
+                    for row in query_plan
+                    if str(row.get("query_family") or "").strip()
+                }
+            )
+        executed_lanes = list(audit.get("executed_lanes") or [])
+        if not executed_lanes:
+            executed_lanes = sorted({str(row.get("discovery_lane") or "").strip() for row in typed_candidates if str(row.get("discovery_lane") or "").strip()})
+        skipped_lanes = list(audit.get("skipped_lanes") or [])
+        if not skipped_lanes:
+            skipped_lanes = [lane for lane in configured_lanes if lane not in executed_lanes]
+        candidates_by_lane = dict(audit.get("candidates_by_lane") or {})
+        if not candidates_by_lane:
+            candidates_by_lane = dict(sorted(Counter(str(row.get("discovery_lane") or "").strip() for row in typed_candidates if str(row.get("discovery_lane") or "").strip()).items()))
         per_date.append(
             {
                 "date": edition_date,
@@ -358,9 +462,17 @@ def run_food_line_discovery_backfill(
                 "candidate_count": len(typed_candidates),
                 "traceable_candidate_count": traceable_count,
                 "likely_qualifying_candidate_count": likely_qualifying_count,
+                "public_eligible_candidate_count": public_eligible_count,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),
                 "needs_review_candidate_count": int(review_counts.get("needs_review", 0)),
+                "in_window_candidate_count": in_window_count,
+                "out_of_window_candidate_count": out_of_window_count,
+                "google_news_url_count": google_news_url_count,
+                "article_specific_url_count": article_specific_url_count,
+                "publisher_homepage_trace_only_count": publisher_homepage_trace_only_count,
+                "unresolved_google_news_count": unresolved_google_news_count,
+                "blocked_fetch_count": blocked_fetch_count,
                 "discovery_gap": len(typed_candidates) == 0,
                 "discovery_candidate_path": str(_candidate_copy_path(root, edition_date)),
                 "candidate_review_json_path": str(_review_json_path(root, edition_date)),
@@ -368,6 +480,10 @@ def run_food_line_discovery_backfill(
                 "discovery_audit_path": str(expansion.get("discovery_audit_json_path") or ""),
                 "discovery_intake_path": str(intake_payload.get("discovery_review_path") or intake.get("discovery_review_path") or ""),
                 "discovery_lanes_used": sorted({str(row.get("discovery_lane") or "") for row in typed_candidates if str(row.get("discovery_lane") or "")}),
+                "configured_lanes": configured_lanes,
+                "executed_lanes": executed_lanes,
+                "skipped_lanes": skipped_lanes,
+                "candidates_by_lane": candidates_by_lane,
                 "top_blocker_reasons": dict(sorted(Counter(blocker for row in typed_candidates for blocker in (row.get("public_claim_blockers") or [])).items(), key=lambda item: (-item[1], item[0]))[:10]),
                 "errors": [],
                 "public_output_written": False,

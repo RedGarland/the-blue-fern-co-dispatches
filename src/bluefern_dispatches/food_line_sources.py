@@ -2324,6 +2324,46 @@ def _fetch(url: str, timeout: int = 15) -> bytes:
         raise
 
 
+def classify_food_line_fetch_failure(reason: str) -> dict[str, Any]:
+    text = str(reason or "").strip()
+    lowered = text.lower()
+    failure_type = "unknown"
+    recommended_action = "no_action"
+    transient = False
+    if "http error 404" in lowered:
+        failure_type = "404"
+        recommended_action = "update_url"
+    elif "http error 403" in lowered or "http error 401" in lowered or "forbidden" in lowered:
+        failure_type = "403"
+        recommended_action = "mark_paywall_or_forbidden"
+    elif "timed out" in lowered or "timeouterror" in lowered:
+        failure_type = "timeout"
+        recommended_action = "keep_retry_transient"
+        transient = True
+    elif "getaddrinfo failed" in lowered or "name or service not known" in lowered or "temporary failure in name resolution" in lowered:
+        failure_type = "dns"
+        recommended_action = "keep_retry_transient"
+        transient = True
+    elif "ssl" in lowered or "certificate_verify_failed" in lowered or "certificateverificationerror" in lowered:
+        failure_type = "ssl"
+        recommended_action = "keep_retry_transient"
+    elif "parseerror" in lowered or "xml" in lowered:
+        failure_type = "parse"
+        recommended_action = "switch_to_feed_or_sitemap"
+    elif "connectionreseterror" in lowered or "connection aborted" in lowered:
+        failure_type = "connection_reset"
+        recommended_action = "keep_retry_transient"
+        transient = True
+    elif "requires javascript" in lowered or "enable javascript" in lowered:
+        failure_type = "js_blocked"
+        recommended_action = "mark_requires_browser_or_js"
+    return {
+        "failure_type": failure_type,
+        "recommended_action": recommended_action,
+        "transient": transient,
+    }
+
+
 def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
     data_root = root / "data" / "dispatches" / "food-line"
     paths = [data_root / "source_registry.json", data_root / "pressure_source_registry.json"]
@@ -2528,6 +2568,9 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
     verified_pressure_count_by_extraction_quality: Counter[str] = Counter()
     demoted_count_by_extraction_quality: Counter[str] = Counter()
     fetch_failure_count_by_source_id: Counter[str] = Counter()
+    fetch_failure_count_by_type: Counter[str] = Counter()
+    fetch_failure_type_by_source_id: dict[str, str] = {}
+    fetch_failure_action_by_source_id: dict[str, str] = {}
     no_evidence_count_by_source_id: Counter[str] = Counter()
     rejected_by_source_purpose_count = int(registry_purpose_refresh.get("blocked_count") or 0)
     demoted_by_source_purpose_count = int(registry_purpose_refresh.get("blocked_count") or 0)
@@ -2548,6 +2591,9 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
             "demoted_count": 0,
             "rejected_count": 0,
             "top_rejection_reasons": [],
+            "fetch_failure_type": "",
+            "fetch_failure_action": "",
+            "fetch_failure_transient": False,
             "extraction_basis_used": [],
         }
         source_purpose = str(source.get("source_purpose") or "unknown")
@@ -2575,9 +2621,17 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
             audit_entry["fetched"] = True
             audit_entry["item_count"] = len(items[:5])
         except (urllib.error.URLError, TimeoutError, ET.ParseError, OSError, ValueError) as exc:
-            failures.append({"source_id": source_id, "reason": f"{type(exc).__name__}: {exc}"})
+            failure_reason = f"{type(exc).__name__}: {exc}"
+            failure_info = classify_food_line_fetch_failure(failure_reason)
+            failures.append({"source_id": source_id, "reason": failure_reason})
             fetch_failure_count_by_source_id[source_id] += 1
-            audit_entry["top_rejection_reasons"] = [f"{type(exc).__name__}: {exc}"]
+            fetch_failure_count_by_type[str(failure_info["failure_type"])] += 1
+            fetch_failure_type_by_source_id[source_id] = str(failure_info["failure_type"])
+            fetch_failure_action_by_source_id[source_id] = str(failure_info["recommended_action"])
+            audit_entry["top_rejection_reasons"] = [failure_reason]
+            audit_entry["fetch_failure_type"] = str(failure_info["failure_type"])
+            audit_entry["fetch_failure_action"] = str(failure_info["recommended_action"])
+            audit_entry["fetch_failure_transient"] = bool(failure_info["transient"])
             source_audit_rows.append(audit_entry)
             continue
         rejection_reasons: Counter[str] = Counter()
@@ -2762,6 +2816,9 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
         "verified_pressure_count_by_extraction_quality": dict(sorted(verified_pressure_count_by_extraction_quality.items())),
         "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
         "fetch_failure_count_by_source_id": dict(sorted(fetch_failure_count_by_source_id.items())),
+        "fetch_failure_count_by_type": dict(sorted(fetch_failure_count_by_type.items())),
+        "fetch_failure_type_by_source_id": dict(sorted(fetch_failure_type_by_source_id.items())),
+        "fetch_failure_action_by_source_id": dict(sorted(fetch_failure_action_by_source_id.items())),
         "no_evidence_count_by_source_id": dict(sorted(no_evidence_count_by_source_id.items())),
         "rejected_news": rejected_news,
         "failed_sources": failures,

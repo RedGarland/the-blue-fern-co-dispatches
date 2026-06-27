@@ -1616,11 +1616,38 @@ def _food_line_should_ignore_negative_filter(
     navigation_hits = sum(1 for term in FOOD_LINE_MENU_NAVIGATION_TERMS if term in article_signal_text)
     return (
         _food_line_article_like_url(url)
-        and pressure_type != "context only"
-        and bool(match_terms)
-        and strong_signal_hits >= 3
         and navigation_hits == 0
+        and (
+            strong_signal_hits >= 1
+            or (pressure_type != "context only" and bool(match_terms) and strong_signal_hits >= 1)
+        )
     )
+
+
+def _food_line_negative_filter_rejection_reason(
+    *,
+    source_purpose: str,
+    non_promotable_reason: str,
+    family: str,
+    pressure_required: bool,
+    pressure_signal: bool,
+    effective_negative_hit: str,
+    url: str,
+) -> str:
+    if source_purpose == "donation_page":
+        return "donation page is not current pressure evidence"
+    if not (effective_negative_hit and pressure_required and not pressure_signal):
+        return ""
+    if source_purpose == "resource_page":
+        return "resource-only / no pressure signal"
+    if source_purpose in {"evergreen_context", "program_description"}:
+        return "evergreen context / no current pressure signal"
+    if str(effective_negative_hit).strip().lower() == "menu":
+        if family == "policy_research" and not _food_line_article_like_url(url):
+            return "evergreen context / no current pressure signal"
+        if family in {"food_bank_provider", "senior_meals", "state_official", "federal_official", "state_policy_news"} and not _food_line_article_like_url(url):
+            return "official/provider page lacks current dated pressure evidence"
+    return f"excluded by negative filter: {effective_negative_hit}"
 
 
 def _extract_html_text(payload: bytes) -> str:
@@ -2051,6 +2078,15 @@ def evaluate_food_line_pressure(
         source_role not in {"data_anchor_signal", "institutional_context_signal"}
         and (source_role != "research_signal" or (supported_geography and state not in {"", "US"}))
     )
+    rejection_reason = _food_line_negative_filter_rejection_reason(
+        source_purpose=source_purpose,
+        non_promotable_reason=non_promotable_reason,
+        family=family,
+        pressure_required=bool(pressure_required),
+        pressure_signal=bool(pressure_signal),
+        effective_negative_hit=effective_negative_hit,
+        url=str(row.get("url") or ""),
+    )
     return {
         "pressure_signal": bool(pressure_signal),
         "pressure_type": pressure_type,
@@ -2084,11 +2120,7 @@ def evaluate_food_line_pressure(
             (effective_negative_hit and pressure_required and family not in BASELINE_FAMILIES and not blocked_by_source_purpose)
             or source_purpose == "donation_page"
         ),
-        "rejection_reason": (
-            "donation page is not current pressure evidence"
-            if source_purpose == "donation_page"
-            else (f"excluded by negative filter: {effective_negative_hit}" if effective_negative_hit and pressure_required and family not in BASELINE_FAMILIES else "")
-        ),
+        "rejection_reason": rejection_reason,
         "map_eligible": map_eligible,
     }
 

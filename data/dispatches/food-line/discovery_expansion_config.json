@@ -19,7 +19,136 @@
         "\"food insecurity\"",
         "\"food bank\"",
         "\"food pantry\"",
-        "\"hunger relief\""
+        "\"hunger relief\"",
+        "\"food bank demand\"",
+        "\"food pantry demand\"",
+        "\"pantry demand\"",
+        "\"food bank shortage\"",
+        "\"pantry shortage\"",
+        "\"food bank shelves\"",
+        "\"food bank inventory\"",
+        "\"food bank donations down\"",
+        "\"food bank serving more families\"",
+        "\"mobile pantry demand\""
+      ]
+    },
+    {
+      "query_family": "public_radio",
+      "geographic_scope": "national",
+      "source_family": "public_radio",
+      "templates": [
+        "\"food bank demand\" site:npr.org",
+        "\"food pantry demand\" site:npr.org",
+        "\"summer hunger\" site:npr.org",
+        "\"school meal gap\" site:npr.org",
+        "\"food insecurity\" \"public radio\""
+      ]
+    },
+    {
+      "query_family": "food_bank_provider",
+      "geographic_scope": "national",
+      "source_family": "food_bank_provider",
+      "templates": [
+        "\"food bank demand\" \"foodbank\"",
+        "\"food bank demand\" \"food pantry\"",
+        "\"food pantry demand\" \"foodbank\"",
+        "\"food bank inventory\" \"food pantry\"",
+        "\"food bank donations down\" \"food pantry\"",
+        "\"mobile pantry demand\" \"food bank\"",
+        "\"pantry cuts hours\" \"food bank\""
+      ]
+    },
+    {
+      "query_family": "feeding_america_affiliate",
+      "geographic_scope": "national",
+      "source_family": "food_bank_provider",
+      "templates": [
+        "\"Feeding America\" affiliate \"food bank demand\"",
+        "\"Feeding America\" affiliate pantry demand",
+        "\"Feeding America\" affiliate food insecurity",
+        "\"Feeding America\" affiliate summer hunger"
+      ]
+    },
+    {
+      "query_family": "school_meals_child_nutrition",
+      "geographic_scope": "national",
+      "source_family": "school_meals_child_nutrition",
+      "templates": [
+        "\"summer hunger\"",
+        "\"school meals\" \"food bank\"",
+        "\"summer meals\" \"food insecurity\"",
+        "\"school meal gap\"",
+        "\"children missing meals\""
+      ]
+    },
+    {
+      "query_family": "county_city_agenda",
+      "geographic_scope": "national",
+      "source_family": "state_official",
+      "templates": [
+        "\"food assistance\" agenda",
+        "\"food bank\" contract agenda",
+        "\"school board\" \"summer meals\" agenda",
+        "\"county commission\" \"food pantry\"",
+        "\"city council\" \"food distribution\""
+      ]
+    },
+    {
+      "query_family": "snap_state_notice",
+      "geographic_scope": "national",
+      "source_family": "state_official",
+      "templates": [
+        "\"SNAP\" \"food bank\"",
+        "\"SNAP delay\" \"food pantry\"",
+        "\"SNAP cuts\" \"food bank\"",
+        "\"food stamps\" \"food bank demand\"",
+        "\"EBT delay\" \"food pantry\""
+      ]
+    },
+    {
+      "query_family": "united_way_211",
+      "geographic_scope": "national",
+      "source_family": "nonprofit_news",
+      "templates": [
+        "\"United Way\" 211 food insecurity",
+        "\"211\" food pantry demand",
+        "\"211\" food assistance calls",
+        "\"United Way\" summer hunger"
+      ]
+    },
+    {
+      "query_family": "nonprofit_report",
+      "geographic_scope": "national",
+      "source_family": "nonprofit_news",
+      "templates": [
+        "\"food insecurity\" report nonprofit",
+        "\"food pantry demand\" report",
+        "\"Meals on Wheels\" waitlist",
+        "\"senior meal waitlist\"",
+        "\"food bank rising costs\" report"
+      ]
+    },
+    {
+      "query_family": "institutional_update",
+      "geographic_scope": "national",
+      "source_family": "food_bank_provider",
+      "templates": [
+        "\"food bank fuel costs\"",
+        "\"food bank inflation\"",
+        "\"food bank rising costs\"",
+        "\"pantry closed due to demand\"",
+        "\"food distribution canceled\"",
+        "\"institutional update\" \"food bank\""
+      ]
+    },
+    {
+      "query_family": "social_watchlist",
+      "geographic_scope": "national",
+      "source_family": "local_news",
+      "templates": [
+        "\"food bank demand\" site:x.com OR site:facebook.com OR site:instagram.com",
+        "\"food pantry shortage\" site:x.com OR site:facebook.com OR site:instagram.com",
+        "\"summer hunger\" site:x.com OR site:facebook.com OR site:instagram.com"
       ]
     },
     {
@@ -28,7 +157,12 @@
       "source_family": "local_news",
       "templates": [
         "(\"food bank\" OR \"food pantry\") (demand OR strain OR shortage OR surge)",
-        "(\"food bank\" OR \"food pantry\") (\"increased need\" OR waitlist OR \"funding gap\")"
+        "(\"food bank\" OR \"food pantry\") (\"increased need\" OR waitlist OR \"funding gap\")",
+        "\"food bank shelves\"",
+        "\"food bank inventory\"",
+        "\"food bank donations down\"",
+        "\"food bank serving more families\"",
+        "\"mobile pantry demand\""
       ]
     },
     {
@@ -38,7 +172,11 @@
       "templates": [
         "(SNAP OR EBT) (cuts OR changes OR benefits OR families)",
         "(\"summer meals\" OR \"school meals\") (families OR children OR hunger)",
-        "(WIC OR TEFAP OR \"Meals on Wheels\") (cuts OR delays OR waitlist)"
+        "(WIC OR TEFAP OR \"Meals on Wheels\") (cuts OR delays OR waitlist)",
+        "\"food stamps\" \"food bank demand\"",
+        "\"EBT delay\" \"food pantry\"",
+        "\"Meals on Wheels\" waitlist",
+        "\"senior meal waitlist\""
       ]
     },
     {
@@ -47,7 +185,10 @@
       "source_family": "local_news",
       "templates": [
         "(\"grocery prices\" OR \"food costs\") (\"food pantry\" OR families)",
-        "(\"rent and groceries\" OR \"utility bills and groceries\") hunger"
+        "(\"rent and groceries\" OR \"utility bills and groceries\") hunger",
+        "\"food bank fuel costs\"",
+        "\"food bank inflation\"",
+        "\"food bank rising costs\""
       ]
     },
     {
@@ -57,9 +198,13 @@
       "templates": [
         "\"food bank demand\" {geo} after:{after} before:{before}",
         "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"pantry shortage\" {geo} after:{after} before:{before}",
+        "\"food bank inventory\" {geo} after:{after} before:{before}",
         "\"SNAP cuts\" {geo} after:{after} before:{before}",
         "\"summer meals\" {geo} families after:{after} before:{before}",
-        "\"grocery prices\" {geo} food pantry after:{after} before:{before}"
+        "\"grocery prices\" {geo} food pantry after:{after} before:{before}",
+        "\"school meal gap\" {geo} after:{after} before:{before}",
+        "\"food distribution canceled\" {geo} after:{after} before:{before}"
       ]
     },
     {
@@ -69,9 +214,13 @@
       "templates": [
         "\"food bank demand\" {geo} after:{after} before:{before}",
         "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"pantry shortage\" {geo} after:{after} before:{before}",
+        "\"food bank inventory\" {geo} after:{after} before:{before}",
         "\"SNAP cuts\" {geo} after:{after} before:{before}",
         "\"summer meals\" {geo} families after:{after} before:{before}",
-        "\"grocery prices\" {geo} food pantry after:{after} before:{before}"
+        "\"grocery prices\" {geo} food pantry after:{after} before:{before}",
+        "\"school meal gap\" {geo} after:{after} before:{before}",
+        "\"food distribution canceled\" {geo} after:{after} before:{before}"
       ]
     }
   ],

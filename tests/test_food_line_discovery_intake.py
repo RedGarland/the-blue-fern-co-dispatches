@@ -143,10 +143,14 @@ def test_food_line_discovery_bridge_keeps_google_news_metadata_but_intakes_publi
     assert bridge["discovery_expansion_used"] is True
     assert bridge_row["final_trace_url"] == publisher_url
     assert bridge_row["google_news_url"].lower() == google_news_url.lower()
+    assert bridge_row["source_url"] == publisher_url
+    assert bridge_row["original_source_url"] == publisher_url
     assert bridge_row["fetch_status"] == "blocked_403"
     assert bridge_row["manual_review_required"] is True
     assert bridge_row["discovered_publisher"] == "Axios Charlotte"
     assert bridge_row["classification_status"] == "blocked_fetch"
+    assert bridge_row["candidate_review_status"] == "needs_review"
+    assert bridge_row["discovery_lane"] == "news_article"
 
 
 def test_food_line_blocked_candidates_do_not_become_public_signals_without_manual_fallback(tmp_path: Path):
@@ -236,6 +240,8 @@ def test_food_line_manual_fallback_merges_without_losing_the_original_trace_url(
     assert bridge_row["review_status"] == "manual_reviewed"
     assert bridge_row["classification_status"] == "manual_fallback"
     assert bridge_row["final_trace_url"] == publisher_url
+    assert bridge_row["candidate_review_status"] == "needs_review"
+    assert bridge_row["traceability_status"] == "traceable"
     assert bridge_row["manual_fallback_summary"] == "The article describes a summer pressure spike tied to school meals ending and tighter SNAP access."
     assert bridge_row["summary_or_snippet"] == "Nonprofits expect increased need as school meals end and SNAP changes tighten access."
 

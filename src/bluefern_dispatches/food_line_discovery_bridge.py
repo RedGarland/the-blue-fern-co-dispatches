@@ -106,9 +106,18 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
     manual_review_required = bool(candidate.get("manual_review_required", True))
     classification_status = _nonempty(candidate.get("classification_status") or "needs_review")
     review_status = _nonempty(candidate.get("review_status") or "needs_review")
+    candidate_review_status = _nonempty(candidate.get("candidate_review_status") or review_status or "needs_review")
     exclusion_reason = _nonempty(candidate.get("exclusion_reason"))
     pressure_terms_detected = [str(term).strip() for term in candidate.get("pressure_terms_detected") or [] if str(term).strip()]
     location_terms_detected = [str(term).strip() for term in candidate.get("location_terms_detected") or [] if str(term).strip()]
+    traceability_status = _nonempty(candidate.get("traceability_status"))
+    if not traceability_status:
+        if final_trace_url:
+            traceability_status = "traceable"
+        elif google_news_url:
+            traceability_status = "source_wrapper_only"
+        else:
+            traceability_status = "missing_url"
     bridge_row = {
         "source_record_id": _nonempty(candidate.get("candidate_id")),
         "title": title,
@@ -133,8 +142,12 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
         "promotable": True,
         "non_promotable_reason": "",
         "source_record_origin": "discovery_candidate",
+        "discovery_lane": _nonempty(candidate.get("discovery_lane")),
+        "discovery_query": _nonempty(candidate.get("discovery_query") or candidate.get("query_text")),
+        "discovery_source_type": _nonempty(candidate.get("discovery_source_type") or candidate.get("discovery_channel")),
         "discovery_candidate_id": _nonempty(candidate.get("candidate_id")),
         "discovery_date": _nonempty(candidate.get("discovery_date")),
+        "discovered_at": _nonempty(candidate.get("discovered_at") or candidate.get("retrieved_at")),
         "query_family": _nonempty(candidate.get("query_family")),
         "query_text": _nonempty(candidate.get("query_text")),
         "query_url": _nonempty(candidate.get("query_url")),
@@ -143,18 +156,28 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
         "discovered_publisher": publisher,
         "discovered_url": _normalize_url(_nonempty(candidate.get("discovered_url"))),
         "canonical_url": _normalize_url(_nonempty(candidate.get("canonical_url"))),
+        "source_url": _normalize_url(_nonempty(candidate.get("source_url") or final_trace_url)),
+        "original_source_url": _normalize_url(_nonempty(candidate.get("original_source_url") or final_trace_url)),
         "google_news_url": google_news_url,
         "publication_date": publication_date,
+        "source_published_date": _nonempty(candidate.get("source_published_date") or publication_date[:10]),
+        "date_basis": _nonempty(candidate.get("date_basis")),
         "fetch_status": _nonempty(candidate.get("fetch_status")),
         "fetch_error": _nonempty(candidate.get("fetch_error")),
         "final_trace_url": final_trace_url,
         "duplicate_of": _nonempty(candidate.get("duplicate_of")),
         "review_status": review_status,
+        "candidate_review_status": candidate_review_status,
         "classification_status": classification_status,
         "exclusion_reason": exclusion_reason,
         "pressure_terms_detected": pressure_terms_detected,
         "location_terms_detected": location_terms_detected,
         "manual_review_required": manual_review_required,
+        "state_hint": _nonempty(candidate.get("state_hint")),
+        "pressure_signal_hint": _nonempty(candidate.get("pressure_signal_hint")),
+        "pressure_signal_type_hint": _nonempty(candidate.get("pressure_signal_type_hint")),
+        "traceability_status": traceability_status,
+        "public_claim_eligible": bool(candidate.get("public_claim_eligible")),
         "candidate_id": _nonempty(candidate.get("candidate_id")),
     }
     if manual_fallback:
@@ -175,6 +198,7 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
                 ),
                 "manual_review_required": False,
                 "review_status": "manual_reviewed",
+                "candidate_review_status": "needs_review",
                 "classification_status": "manual_fallback",
                 "exclusion_reason": "",
                 "source_purpose": _nonempty(manual_fallback.get("source_purpose") or bridge_row["source_purpose"]),

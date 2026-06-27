@@ -1,0 +1,160 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import scripts.backfill_food_line_discovery as backfill
+
+
+def _rss_payload(items: list[dict[str, str]]) -> bytes:
+    parts = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "<rss version=\"2.0\"><channel>"]
+    for item in items:
+        parts.append(
+            "<item>"
+            f"<title>{item['title']}</title>"
+            f"<link>{item['link']}</link>"
+            f"<pubDate>{item.get('pubDate', 'Fri, 19 Jun 2026 12:00:00 GMT')}</pubDate>"
+            f"<description>{item.get('description', '')}</description>"
+            f"<source url=\"{item['source_url']}\">{item['publisher']}</source>"
+            "</item>"
+        )
+    parts.append("</channel></rss>")
+    return "".join(parts).encode("utf-8")
+
+
+def test_food_line_discovery_backfill_writes_per_date_candidate_and_review_artifacts(tmp_path: Path):
+    call_count = {"rss": 0}
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            call_count["rss"] += 1
+            if call_count["rss"] == 1:
+                return _rss_payload(
+                    [
+                        {
+                            "title": "Food bank says demand is rising in Charlotte",
+                            "link": "https://news.google.com/rss/articles/CBMiAXY?oc=5",
+                            "source_url": "https://example.com/charlotte-demand",
+                            "publisher": "Example Local News",
+                            "description": "The food bank says demand is rising and more families are showing up.",
+                        }
+                    ]
+                )
+            return _rss_payload([])
+        if url == "https://example.com/charlotte-demand":
+            return b"""<html><head><title>Charlotte demand</title><link rel=\"canonical\" href=\"https://example.com/charlotte-demand\"></head><body><p>Food bank demand is rising and more families are showing up.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    # Run with monkeypatched discovery fetcher by calling lower-level functions through the module.
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-22",
+            max_queries=1,
+            max_results_per_query=5,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "candidates" / "2026-06-21" / "candidate_sources.json"
+    review_json_path = tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.json"
+    review_html_path = tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.html"
+    summary_json_path = tmp_path / "output" / "review" / "food-line" / "backfill" / "2026-06-21_to_2026-06-22" / "backfill_summary.json"
+    summary_html_path = tmp_path / "output" / "review" / "food-line" / "backfill" / "2026-06-21_to_2026-06-22" / "backfill_summary.html"
+
+    assert result["ok"] is True
+    assert candidate_path.exists()
+    assert review_json_path.exists()
+    assert review_html_path.exists()
+    assert summary_json_path.exists()
+    assert summary_html_path.exists()
+    review_payload = json.loads(review_json_path.read_text(encoding="utf-8"))
+    summary_payload = json.loads(summary_json_path.read_text(encoding="utf-8"))
+    assert review_payload["candidate_count_total"] == 1
+    assert review_payload["candidate_count_traceable"] == 1
+    assert summary_payload["candidates_by_date"]["2026-06-21"] == 1
+    assert summary_payload["candidates_by_date"]["2026-06-22"] == 0
+    assert "2026-06-22" in summary_payload["dates_with_no_reviewable_candidates"]
+    assert summary_payload["public_output_written"] is False
+    assert summary_payload["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_discovery_backfill_summary_reports_watchlist_and_lane_counts(tmp_path: Path):
+    call_count = {"rss": 0}
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            call_count["rss"] += 1
+            if call_count["rss"] > 1:
+                return _rss_payload([])
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": "https://news.google.com/rss/articles/CBMiPANTRY?oc=5",
+                        "source_url": "https://example.com/pantry-demand",
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising and more families need help.",
+                    },
+                    {
+                        "title": "Social post says pantry lines are long",
+                        "link": "https://x.com/example/status/1",
+                        "source_url": "https://x.com/example/status/1",
+                        "publisher": "Example Social",
+                        "description": "Snippet only social post about long pantry lines.",
+                    },
+                ]
+            )
+        if url == "https://example.com/pantry-demand":
+            return b"""<html><head><title>Pantry demand</title><link rel=\"canonical\" href=\"https://example.com/pantry-demand\"></head><body><p>Food pantry demand is rising and more families need help.</p></body></html>"""
+        if url == "https://x.com/example/status/1":
+            raise TimeoutError("blocked social fetch")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=1,
+            max_results_per_query=10,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["watchlist_candidates_by_date"]["2026-06-21"] >= 1
+    assert summary["discovery_lanes_used"]["news_article"] >= 1
+    assert summary["discovery_lanes_used"]["social_watchlist"] >= 1
+    assert summary["likely_qualifying_candidates_by_date"]["2026-06-21"] >= 1

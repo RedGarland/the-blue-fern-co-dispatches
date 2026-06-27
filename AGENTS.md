@@ -112,6 +112,9 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 
 - Prefer targeted tests first, then broader tests only if the change is cross-cutting.
 - Use isolated pytest basetemp directories.
+- On Windows, use a unique basetemp per run; do not reuse `$env:TEMP\bluefern-pytest`.
+- After dry-run validation, restore tracked `output/site` changes and remove untracked validation artifacts unless they are explicitly part of the task.
+- Before commit, final status should show only intended source/test/doc/helper files.
 - Run lightweight parse checks for YAML/markdown/templates when creating governance or workflow files.
 - Do not skip or weaken tests to make failures pass.
 - Do not run expensive dispatch generation unless the task requires it.

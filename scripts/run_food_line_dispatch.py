@@ -4562,6 +4562,9 @@ def _food_line_reused_collect_result(root: Path, date: str) -> dict[str, Any]:
     collected_source_count_by_source_id: dict[str, int] = {}
     pressure_evidence_basis_counts: Counter[str] = Counter()
     fetch_failure_count_by_source_id: dict[str, int] = {}
+    fetch_failure_count_by_type: Counter[str] = Counter()
+    fetch_failure_type_by_source_id: dict[str, str] = {}
+    fetch_failure_action_by_source_id: dict[str, str] = {}
     no_evidence_count_by_source_id: dict[str, int] = {}
     verified_pressure_count = 0
     pressure_demoted_unverified_count = 0
@@ -4604,6 +4607,13 @@ def _food_line_reused_collect_result(root: Path, date: str) -> dict[str, Any]:
             rejected_news_by_source[source_id] = len(top_reasons)
         if not bool(row.get("fetched")):
             fetch_failure_count_by_source_id[source_id] = max(1, len(top_reasons))
+            failure_type = str(row.get("fetch_failure_type") or "").strip()
+            failure_action = str(row.get("fetch_failure_action") or "").strip()
+            if failure_type:
+                fetch_failure_count_by_type[failure_type] += 1
+                fetch_failure_type_by_source_id[source_id] = failure_type
+            if failure_action:
+                fetch_failure_action_by_source_id[source_id] = failure_action
             if not item_count:
                 no_evidence_count_by_source_id[source_id] = 1
         for basis in row.get("extraction_basis_used") or []:
@@ -4628,6 +4638,9 @@ def _food_line_reused_collect_result(root: Path, date: str) -> dict[str, Any]:
         "verified_pressure_count_by_extraction_quality": dict(sorted(pressure_verified_count_by_extraction_quality.items())),
         "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
         "fetch_failure_count_by_source_id": fetch_failure_count_by_source_id,
+        "fetch_failure_count_by_type": dict(sorted(fetch_failure_count_by_type.items())),
+        "fetch_failure_type_by_source_id": dict(sorted(fetch_failure_type_by_source_id.items())),
+        "fetch_failure_action_by_source_id": dict(sorted(fetch_failure_action_by_source_id.items())),
         "no_evidence_count_by_source_id": no_evidence_count_by_source_id,
         "failed_sources": [
             {"source_id": source_id, "reason": "reused collector artifact recorded a fetch failure"}
@@ -6024,6 +6037,9 @@ def run_food_line_dispatch(
     verified_pressure_count_by_extraction_quality = dict((collect_result or {}).get("verified_pressure_count_by_extraction_quality") or Counter(str(row.get("extraction_quality") or "unknown") for row in sources if str(row.get("pressure_verification_status") or "") == "source_text_verified"))
     demoted_count_by_extraction_quality = dict((collect_result or {}).get("demoted_count_by_extraction_quality") or Counter(str(row.get("extraction_quality") or "unknown") for row in sources if str(row.get("pressure_verification_status") or "") == "demoted_context"))
     fetch_failure_count_by_source_id = dict((collect_result or {}).get("fetch_failure_count_by_source_id") or {})
+    fetch_failure_count_by_type = dict((collect_result or {}).get("fetch_failure_count_by_type") or {})
+    fetch_failure_type_by_source_id = dict((collect_result or {}).get("fetch_failure_type_by_source_id") or {})
+    fetch_failure_action_by_source_id = dict((collect_result or {}).get("fetch_failure_action_by_source_id") or {})
     no_evidence_count_by_source_id = dict((collect_result or {}).get("no_evidence_count_by_source_id") or {})
     rejected_by_source_purpose_count = int((collect_result or {}).get("rejected_by_source_purpose_count") or sum(1 for row in sources if str(row.get("source_purpose") or "") in {"donation_page", "evergreen_context", "resource_page", "program_description"} and str(row.get("pressure_verification_status") or "") == "demoted_context"))
     demoted_by_source_purpose_count = int((collect_result or {}).get("demoted_by_source_purpose_count") or sum(1 for row in sources if str(row.get("source_purpose") or "") in {"donation_page", "evergreen_context", "resource_page", "program_description"} and str(row.get("pressure_verification_status") or "") == "demoted_context"))
@@ -6383,6 +6399,9 @@ def run_food_line_dispatch(
         "verified_pressure_count_by_extraction_quality": dict(sorted(verified_pressure_count_by_extraction_quality.items())),
         "demoted_count_by_extraction_quality": dict(sorted(demoted_count_by_extraction_quality.items())),
         "fetch_failure_count_by_source_id": dict(sorted(fetch_failure_count_by_source_id.items())),
+        "fetch_failure_count_by_type": dict(sorted(fetch_failure_count_by_type.items())),
+        "fetch_failure_type_by_source_id": dict(sorted(fetch_failure_type_by_source_id.items())),
+        "fetch_failure_action_by_source_id": dict(sorted(fetch_failure_action_by_source_id.items())),
         "no_evidence_count_by_source_id": dict(sorted(no_evidence_count_by_source_id.items())),
         "rejected_by_source_purpose_count": rejected_by_source_purpose_count,
         "demoted_by_source_purpose_count": demoted_by_source_purpose_count,

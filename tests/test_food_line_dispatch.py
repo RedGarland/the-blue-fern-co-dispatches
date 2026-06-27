@@ -7247,6 +7247,120 @@ def test_food_line_fetch_failures_are_counted_by_source_id(tmp_path: Path):
     assert result["collected_count_by_extraction_quality"] == {"high": 1}
 
 
+@pytest.mark.parametrize(
+    ("source_id", "exc", "expected_type", "expected_action"),
+    [
+        (
+            "missing-page",
+            urllib.error.HTTPError("https://example.com/missing", 404, "Not Found", hdrs=None, fp=None),
+            "404",
+            "update_url",
+        ),
+        (
+            "blocked-page",
+            urllib.error.HTTPError("https://example.com/blocked", 403, "Forbidden", hdrs=None, fp=None),
+            "403",
+            "mark_paywall_or_forbidden",
+        ),
+        (
+            "slow-page",
+            TimeoutError("The read operation timed out"),
+            "timeout",
+            "keep_retry_transient",
+        ),
+    ],
+)
+def test_food_line_fetch_failures_are_classified_for_source_health(
+    tmp_path: Path,
+    source_id: str,
+    exc: Exception,
+    expected_type: str,
+    expected_action: str,
+):
+    _ensure_assets(tmp_path)
+    date = "2026-06-04"
+    url = f"https://example.com/{source_id}"
+    _write_pressure_registry(
+        tmp_path,
+        [
+            {
+                "source_id": source_id,
+                "source_name": source_id,
+                "publisher": "Example Publisher",
+                "source_type": "page",
+                "url": url,
+                "source_family": "national_news",
+                "state": "US",
+                "location_name": "United States",
+                "location_scope": "national",
+                "source_role_allowed": "pressure_evidence",
+                "pressure_required": True,
+                "pressure_verification_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 7,
+                "extraction_quality": "high",
+                "expected_text_basis": "page_text",
+                "positive_keywords": ["food bank", "SNAP"],
+                "negative_keywords": ["recipe", "restaurant", "menu"],
+                "affected_group_keywords": ["families"],
+                "enabled": True,
+                "notes": "Failure diagnostics page.",
+            }
+        ],
+    )
+
+    def fetcher(_url: str, timeout: int = 15):
+        raise exc
+
+    result = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert result["fetch_failure_count_by_source_id"] == {source_id: 1}
+    assert result["fetch_failure_count_by_type"] == {expected_type: 1}
+    assert result["fetch_failure_type_by_source_id"] == {source_id: expected_type}
+    assert result["fetch_failure_action_by_source_id"] == {source_id: expected_action}
+    audit = json.loads(Path(result["collector_audit_path"]).read_text(encoding="utf-8"))
+    assert audit[0]["fetch_failure_type"] == expected_type
+    assert audit[0]["fetch_failure_action"] == expected_action
+    assert audit[0]["fetched"] is False
+
+
+def test_food_line_reused_collect_result_preserves_fetch_failure_classification(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-04"
+    auto_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    auto_path.parent.mkdir(parents=True, exist_ok=True)
+    auto_path.write_text("[]", encoding="utf-8")
+    collector_audit_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "collector_audit.json"
+    collector_audit_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_id": "blocked-page",
+                    "url": "https://example.com/blocked",
+                    "fetched": False,
+                    "item_count": 0,
+                    "accepted_pressure_count": 0,
+                    "demoted_count": 0,
+                    "rejected_count": 0,
+                    "top_rejection_reasons": ["HTTPError: HTTP Error 403: Forbidden"],
+                    "fetch_failure_type": "403",
+                    "fetch_failure_action": "mark_paywall_or_forbidden",
+                    "fetch_failure_transient": False,
+                    "extraction_basis_used": [],
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = food_line._food_line_reused_collect_result(tmp_path, date)
+    assert result["reused_existing_artifacts"] is True
+    assert result["fetch_failure_count_by_source_id"] == {"blocked-page": 1}
+    assert result["fetch_failure_count_by_type"] == {"403": 1}
+    assert result["fetch_failure_type_by_source_id"] == {"blocked-page": "403"}
+    assert result["fetch_failure_action_by_source_id"] == {"blocked-page": "mark_paywall_or_forbidden"}
+
+
 def test_food_line_candidate_registry_loads(tmp_path: Path):
     _ensure_assets(tmp_path)
     _write_candidate_registry(

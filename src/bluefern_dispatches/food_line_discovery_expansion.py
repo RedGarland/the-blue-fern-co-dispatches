@@ -55,6 +55,8 @@ LISTING_PATH_SEGMENTS = {
     "updates",
     "archive",
     "archives",
+    "calendar",
+    "calendars",
     "feed",
     "feeds",
     "rss",
@@ -463,6 +465,8 @@ def _public_claim_blockers(
         blockers.append("duplicate")
     if fetch_status != "ok" and fetch_status != "manual_fallback":
         blockers.append("blocked_fetch")
+    if fetch_status == "blocked_listing_url":
+        blockers.append("non_article_trace_url")
     if classification_status == "context_only":
         blockers.append("context_only")
     elif classification_status not in {"qualified_pressure_signal", "manual_fallback"}:
@@ -571,6 +575,17 @@ def _sample_query_plan_across_families(query_plan: list[dict[str, Any]], max_que
         return list(query_plan)
     direct_rows = [row for row in query_plan if _nonempty(row.get("discovery_channel")) not in {"", "google_news_rss"}]
     google_rows = [row for row in query_plan if _nonempty(row.get("discovery_channel")) in {"", "google_news_rss"}]
+    direct_rows = _sample_rows_round_robin(
+        direct_rows,
+        max_queries=max_queries,
+        bucket_key=lambda row: (_effective_lane(row), _nonempty(row.get("direct_source_name") or row.get("query_family"))),
+        sort_key=lambda row: (
+            int(row.get("sampling_priority") or 100),
+            0 if _nonempty(row.get("discovery_channel")) == "direct_rss" else 1,
+            _effective_lane(row),
+            _nonempty(row.get("direct_source_name") or row.get("query_family")),
+        ),
+    )
     if len(direct_rows) >= max_queries:
         return list(direct_rows[:max_queries])
     grouped: dict[str, list[dict[str, Any]]] = {}
@@ -589,6 +604,41 @@ def _sample_query_plan_across_families(query_plan: list[dict[str, Any]], max_que
             family_rows = grouped.get(family) or []
             if index < len(family_rows):
                 sampled.append(family_rows[index])
+                added = True
+                if len(sampled) >= max_queries:
+                    break
+        if not added:
+            break
+        index += 1
+    return sampled
+
+
+def _sample_rows_round_robin(
+    rows: list[dict[str, Any]],
+    *,
+    max_queries: int,
+    bucket_key: Any,
+    sort_key: Any,
+) -> list[dict[str, Any]]:
+    if max_queries <= 0 or not rows:
+        return []
+    ordered_rows = sorted(rows, key=sort_key)
+    grouped: dict[tuple[Any, ...] | Any, list[dict[str, Any]]] = {}
+    group_order: list[tuple[Any, ...] | Any] = []
+    for row in ordered_rows:
+        key = bucket_key(row)
+        if key not in grouped:
+            grouped[key] = []
+            group_order.append(key)
+        grouped[key].append(row)
+    sampled: list[dict[str, Any]] = []
+    index = 0
+    while len(sampled) < max_queries:
+        added = False
+        for key in group_order:
+            bucket = grouped.get(key) or []
+            if index < len(bucket):
+                sampled.append(bucket[index])
                 added = True
                 if len(sampled) >= max_queries:
                     break
@@ -634,6 +684,12 @@ def build_food_line_discovery_query_plan(
                 "max_age_days": int(direct_source.get("max_age_days") or 0),
                 "pressure_terms": [str(item).strip() for item in direct_source.get("pressure_terms") or [] if str(item).strip()],
                 "exclusion_terms": [str(item).strip() for item in direct_source.get("exclusion_terms") or [] if str(item).strip()],
+                "sampling_priority": int(direct_source.get("sampling_priority") or 100),
+                "direct_source_candidate_cap": int(
+                    direct_source.get("direct_source_candidate_cap")
+                    or (1 if discovery_channel == "direct_page" else 2)
+                ),
+                "direct_lane_candidate_cap": int(direct_source.get("direct_lane_candidate_cap") or 0),
                 "notes": _nonempty(direct_source.get("notes")),
             }
         )
@@ -1140,9 +1196,11 @@ def _is_feed_or_listing_url(url: str, *, feed_url: str = "") -> bool:
         return True
     if not path:
         return True
-    if path[-1] in LISTING_PATH_SEGMENTS:
+    last_segment = path[-1].split(".", 1)[0]
+    if last_segment in LISTING_PATH_SEGMENTS:
         return True
-    return len(path) == 1 and path[0] in LISTING_PATH_SEGMENTS
+    first_segment = path[0].split(".", 1)[0]
+    return len(path) == 1 and first_segment in LISTING_PATH_SEGMENTS
 
 
 def _candidate_preference_key(row: dict[str, Any]) -> tuple[int, int, int]:
@@ -1535,6 +1593,11 @@ def run_food_line_discovery_expansion(
     resolution_status_counts: Counter[str] = Counter()
     resolution_debug_by_candidate: dict[str, dict[str, Any]] = {}
     direct_source_counts: Counter[str] = Counter()
+    direct_source_lane_counts: Counter[str] = Counter()
+    direct_source_fetch_failure_reasons: Counter[str] = Counter()
+    direct_source_candidate_cap_hits: Counter[str] = Counter()
+    accepted_direct_source_counts: Counter[str] = Counter()
+    accepted_direct_source_lane_counts: Counter[str] = Counter()
 
     for query_row in query_plan:
         query_text = _nonempty(query_row.get("query_text"))
@@ -1569,6 +1632,7 @@ def run_food_line_discovery_expansion(
                 direct_source_fetch_success_count += 1
             else:
                 direct_source_fetch_failure_count += 1
+                direct_source_fetch_failure_reasons[result_row["direct_fetch_status"]] += 1
             rss_items = items
         result_row["result_count"] = len(rss_items)
         query_rows.append(result_row)
@@ -1578,6 +1642,7 @@ def run_food_line_discovery_expansion(
             feed_url = _normalize_url(_nonempty(query_row.get("direct_source_feed_url")))
             direct_fetch_status = ""
             direct_fetch_error = ""
+            direct_source_lane_key = ""
             google_news_url = discovered_url if GOOGLE_NEWS_DOMAIN in discovered_url else ""
             publisher_url = _normalize_url(_nonempty(item.get("source_url")))
             resolved_wrapper_url = ""
@@ -1654,7 +1719,6 @@ def run_food_line_discovery_expansion(
                             )
                             if part
                         )
-                direct_source_counts[direct_source_name or _host(query_url)] += 1
             elif final_trace_url:
                 payload2, fetch_error = _fetch_url(fetch, final_trace_url)
                 if fetch_error or not payload2:
@@ -1687,6 +1751,16 @@ def run_food_line_discovery_expansion(
                 duplicate=False,
             )
             lane = _effective_lane(query_row) if discovery_channel != "google_news_rss" else _lane_from_query(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, _nonempty(item.get("source_name")))
+            direct_source_lane_key = f"{direct_source_name} | {lane}" if direct_source_name else lane
+            if discovery_channel != "google_news_rss":
+                source_cap = max(0, int(query_row.get("direct_source_candidate_cap") or 0))
+                lane_cap = max(0, int(query_row.get("direct_lane_candidate_cap") or 0))
+                if source_cap and accepted_direct_source_counts[direct_source_name] >= source_cap:
+                    direct_source_candidate_cap_hits[direct_source_name] += 1
+                    continue
+                if lane_cap and accepted_direct_source_lane_counts[direct_source_lane_key] >= lane_cap:
+                    direct_source_candidate_cap_hits[direct_source_lane_key] += 1
+                    continue
             pressure_hits = _detect_terms(evidence_text.lower(), PRESSURE_TERMS)
             if discovery_channel != "google_news_rss":
                 pressure_hits = _detect_terms(evidence_text.lower(), list(query_row.get("pressure_terms") or PRESSURE_TERMS))
@@ -1819,6 +1893,9 @@ def run_food_line_discovery_expansion(
             if row["metro"]:
                 metro_counts[row["metro"]] += 1
             candidates.append(_normalize_candidate_row(row))
+            if discovery_channel != "google_news_rss":
+                accepted_direct_source_counts[direct_source_name] += 1
+                accepted_direct_source_lane_counts[direct_source_lane_key] += 1
 
     manual_fallback_count = _append_manual_fallbacks(candidates, manual_fallback_records, date_text)
     if manual_fallback_path and manual_fallback_path.exists():
@@ -1876,6 +1953,11 @@ def run_food_line_discovery_expansion(
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
     discovery_channel_counts = Counter(_nonempty(row.get("discovery_channel")) for row in candidates if _nonempty(row.get("discovery_channel")))
     direct_source_counts = Counter(_nonempty(row.get("direct_source_name")) for row in candidates if _nonempty(row.get("direct_source_name")))
+    direct_source_lane_counts = Counter(
+        f"{_nonempty(row.get('direct_source_name'))} | {_nonempty(row.get('discovery_lane'))}"
+        for row in candidates
+        if _nonempty(row.get("direct_source_name")) and _nonempty(row.get("discovery_lane"))
+    )
     source_type_counts = Counter(_nonempty(row.get("discovery_source_type")) for row in candidates if _nonempty(row.get("discovery_source_type")))
     state_counts = Counter(_nonempty(row.get("state_or_territory")) for row in candidates if _nonempty(row.get("state_or_territory")))
     metro_counts = Counter(_nonempty(row.get("metro")) for row in candidates if _nonempty(row.get("metro")))
@@ -1900,6 +1982,11 @@ def run_food_line_discovery_expansion(
         1 for row in query_rows if _nonempty(row.get("discovery_channel")) != "google_news_rss" and not _nonempty(row.get("query_error"))
     )
     direct_source_fetch_failure_count = max(0, direct_source_fetch_attempt_count - direct_source_fetch_success_count)
+    for row in candidates:
+        if _nonempty(row.get("discovery_channel")) != "google_news_rss":
+            fetch_status = _nonempty(row.get("fetch_status"))
+            if fetch_status not in {"", "ok", "manual_fallback"}:
+                direct_source_fetch_failure_reasons[fetch_status] += 1
     direct_article_url_count = sum(
         1
         for row in candidates
@@ -1936,6 +2023,11 @@ def run_food_line_discovery_expansion(
         )
     )
     public_eligible_candidate_count = sum(1 for row in candidates if bool(row.get("public_claim_eligible")))
+    dominant_source_warning = ""
+    if candidate_count > 0 and direct_source_counts:
+        top_source, top_count = max(direct_source_counts.items(), key=lambda item: item[1])
+        if top_count > candidate_count / 2:
+            dominant_source_warning = f"{top_source} contributed {top_count} of {candidate_count} candidates."
     executed_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_rows if _nonempty(row.get("query_family"))})
     skipped_lanes = [lane for lane in configured_lanes if lane not in executed_lanes]
     discovery_confidence, discovery_confidence_reason = _discovery_confidence(
@@ -1991,12 +2083,16 @@ def run_food_line_discovery_expansion(
         "context_only_count": context_only_count,
         "manual_fallback_count": manual_fallback_count,
         "duplicate_preferred_direct_count": duplicate_preferred_direct_count,
+        "direct_source_fetch_failure_reasons": dict(sorted(direct_source_fetch_failure_reasons.items())),
+        "direct_source_candidate_cap_hits": dict(sorted(direct_source_candidate_cap_hits.items())),
+        "dominant_source_warning": dominant_source_warning,
         "configured_lanes": configured_lanes,
         "executed_lanes": executed_lanes,
         "skipped_lanes": skipped_lanes,
         "candidates_by_lane": dict(sorted(lane_counts.items())),
         "candidates_by_discovery_channel": dict(sorted(discovery_channel_counts.items())),
         "candidates_by_direct_source": dict(sorted(direct_source_counts.items())),
+        "candidates_by_direct_source_lane": dict(sorted(direct_source_lane_counts.items())),
         "candidates_by_query_family": dict(sorted(query_family_counts.items())),
         "candidates_by_discovery_lane": dict(sorted(lane_counts.items())),
         "candidates_by_discovery_source_type": dict(sorted(source_type_counts.items())),
@@ -2046,6 +2142,9 @@ def run_food_line_discovery_expansion(
             f"- Direct article URLs: `{direct_article_url_count}`",
             f"- Direct homepage/feed blocks: `{direct_homepage_or_feed_blocked_count}`",
             f"- Google News fallback candidates: `{google_news_fallback_count}`",
+            f"- Direct source fetch failure reasons: `{dict(sorted(direct_source_fetch_failure_reasons.items()))}`",
+            f"- Direct source candidate cap hits: `{dict(sorted(direct_source_candidate_cap_hits.items()))}`",
+            f"- Dominant source warning: {dominant_source_warning or 'none'}",
             f"- Google News wrapper URLs: `{google_news_url_count}`",
             f"- Google News resolution attempts: `{google_news_resolution_attempt_count}`",
             f"- Google News resolution successes: `{google_news_resolution_success_count}`",
@@ -2084,6 +2183,10 @@ def run_food_line_discovery_expansion(
             "## Candidates by direct source",
             "",
             _markdown_table(direct_source_counts, "direct_source_name"),
+            "",
+            "## Candidates by direct source and lane",
+            "",
+            _markdown_table(direct_source_lane_counts, "direct_source_lane"),
             "",
             "## Candidates by state or territory",
             "",

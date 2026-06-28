@@ -309,6 +309,14 @@ def run_food_line_discovery_backfill(
             "google_news_fallback_count": sum(int(row.get("google_news_fallback_count", 0)) for row in per_date),
             "duplicate_preferred_direct_count": sum(int(row.get("duplicate_preferred_direct_count", 0)) for row in per_date),
             "direct_source_fetch_failure_reasons": dict(sorted(Counter({}).items())),
+            "direct_source_fetch_failure_reasons_by_source": {},
+            "direct_source_success_by_source": dict(sorted(Counter({}).items())),
+            "direct_source_item_counts": dict(sorted(Counter({}).items())),
+            "direct_source_zero_item_sources": sorted({}),
+            "disabled_direct_sources": sorted({}),
+            "direct_sources_recommended_for_disable": sorted({}),
+            "direct_sources_recommended_for_url_refresh": sorted({}),
+            "direct_sources_recommended_for_parser_fix": sorted({}),
             "direct_source_candidate_cap_hits": dict(sorted(Counter({}).items())),
             "dominant_source_warning": "; ".join(sorted({str(row.get("dominant_source_warning") or "").strip() for row in per_date if str(row.get("dominant_source_warning") or "").strip()})),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
@@ -408,6 +416,74 @@ def run_food_line_discovery_backfill(
                 ).items()
             )
         )
+        summary["direct_source_fetch_failure_reasons_by_source"] = {
+            source_name: dict(sorted(counter.items()))
+            for source_name, counter in sorted(
+                {
+                    source_name: Counter(
+                        reason
+                        for row in per_date
+                        for reason, count in ((row.get("direct_source_fetch_failure_reasons_by_source") or {}).get(source_name) or {}).items()
+                        for _ in range(int(count))
+                    )
+                    for source_name in {
+                        source_name
+                        for row in per_date
+                        for source_name in (row.get("direct_source_fetch_failure_reasons_by_source") or {}).keys()
+                    }
+                }.items()
+            )
+            if counter
+        }
+        success_by_source: dict[str, int] = {}
+        item_counts_by_source: dict[str, int] = {}
+        for row in per_date:
+            for source_name, count in (row.get("direct_source_success_by_source") or {}).items():
+                success_by_source[str(source_name)] = success_by_source.get(str(source_name), 0) + int(count)
+            for source_name, count in (row.get("direct_source_item_counts") or {}).items():
+                item_counts_by_source[str(source_name)] = item_counts_by_source.get(str(source_name), 0) + int(count)
+        summary["direct_source_success_by_source"] = dict(sorted(success_by_source.items()))
+        summary["direct_source_item_counts"] = dict(sorted(item_counts_by_source.items()))
+        summary["direct_source_zero_item_sources"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_source_zero_item_sources") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["disabled_direct_sources"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("disabled_direct_sources") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["direct_sources_recommended_for_disable"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_sources_recommended_for_disable") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["direct_sources_recommended_for_url_refresh"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_sources_recommended_for_url_refresh") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["direct_sources_recommended_for_parser_fix"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_sources_recommended_for_parser_fix") or [])
+                if str(source_name).strip()
+            }
+        )
         summary["backfill_summary_json_path"] = str(json_path)
         summary["backfill_summary_html_path"] = str(html_path)
         return summary
@@ -481,6 +557,14 @@ def run_food_line_discovery_backfill(
                     "candidates_by_direct_source": {},
                     "candidates_by_direct_source_lane": {},
                     "direct_source_fetch_failure_reasons": {},
+                    "direct_source_fetch_failure_reasons_by_source": {},
+                    "direct_source_success_by_source": {},
+                    "direct_source_item_counts": {},
+                    "direct_source_zero_item_sources": [],
+                    "disabled_direct_sources": [],
+                    "direct_sources_recommended_for_disable": [],
+                    "direct_sources_recommended_for_url_refresh": [],
+                    "direct_sources_recommended_for_parser_fix": [],
                     "direct_source_candidate_cap_hits": {},
                     "dominant_source_warning": "",
                     "only_out_of_window_candidates": False,
@@ -534,6 +618,17 @@ def run_food_line_discovery_backfill(
         google_news_fallback_count = int(audit.get("google_news_fallback_count", 0))
         duplicate_preferred_direct_count = int(audit.get("duplicate_preferred_direct_count", 0))
         direct_source_fetch_failure_reasons = dict(audit.get("direct_source_fetch_failure_reasons") or {})
+        direct_source_fetch_failure_reasons_by_source = {
+            str(source_name): dict(source_counts or {})
+            for source_name, source_counts in (audit.get("direct_source_fetch_failure_reasons_by_source") or {}).items()
+        }
+        direct_source_success_by_source = dict(audit.get("direct_source_success_by_source") or {})
+        direct_source_item_counts = dict(audit.get("direct_source_item_counts") or {})
+        direct_source_zero_item_sources = list(audit.get("direct_source_zero_item_sources") or [])
+        disabled_direct_sources = list(audit.get("disabled_direct_sources") or [])
+        direct_sources_recommended_for_disable = list(audit.get("direct_sources_recommended_for_disable") or [])
+        direct_sources_recommended_for_url_refresh = list(audit.get("direct_sources_recommended_for_url_refresh") or [])
+        direct_sources_recommended_for_parser_fix = list(audit.get("direct_sources_recommended_for_parser_fix") or [])
         direct_source_candidate_cap_hits = dict(audit.get("direct_source_candidate_cap_hits") or {})
         dominant_source_warning = str(audit.get("dominant_source_warning") or "").strip()
         for row in typed_candidates:
@@ -633,6 +728,14 @@ def run_food_line_discovery_backfill(
                 "google_news_fallback_count": google_news_fallback_count,
                 "duplicate_preferred_direct_count": duplicate_preferred_direct_count,
                 "direct_source_fetch_failure_reasons": direct_source_fetch_failure_reasons,
+                "direct_source_fetch_failure_reasons_by_source": direct_source_fetch_failure_reasons_by_source,
+                "direct_source_success_by_source": direct_source_success_by_source,
+                "direct_source_item_counts": direct_source_item_counts,
+                "direct_source_zero_item_sources": direct_source_zero_item_sources,
+                "disabled_direct_sources": disabled_direct_sources,
+                "direct_sources_recommended_for_disable": direct_sources_recommended_for_disable,
+                "direct_sources_recommended_for_url_refresh": direct_sources_recommended_for_url_refresh,
+                "direct_sources_recommended_for_parser_fix": direct_sources_recommended_for_parser_fix,
                 "direct_source_candidate_cap_hits": direct_source_candidate_cap_hits,
                 "dominant_source_warning": dominant_source_warning,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),

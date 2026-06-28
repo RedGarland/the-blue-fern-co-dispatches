@@ -631,3 +631,140 @@ def test_backfill_reports_direct_source_lane_caps_and_out_of_window_context_date
     assert summary["candidates_by_direct_source_lane"]["Dominant Feed | food_bank_provider"] == 1
     assert summary["direct_source_candidate_cap_hits"]["Dominant Feed"] == 1
     assert "2026-06-24" in summary["dates_with_only_out_of_window_candidates"]
+
+
+def test_backfill_aggregates_per_source_direct_source_diagnostics(tmp_path: Path):
+    good_feed = "https://example.org/good.xml"
+    broken_feed = "https://example.org/broken.xml"
+    zero_feed = "https://example.org/zero.xml"
+    disabled_feed = "https://example.org/disabled.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Good Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": good_feed,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "Broken Feed",
+                "source_family": "public_radio",
+                "discovery_lane": "public_radio",
+                "discovery_channel": "direct_rss",
+                "feed_url": broken_feed,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 20,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "Zero Feed",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_rss",
+                "feed_url": zero_feed,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 30,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "Disabled Feed",
+                "source_family": "school_meals_child_nutrition",
+                "discovery_lane": "school_meals_child_nutrition",
+                "discovery_channel": "direct_rss",
+                "feed_url": disabled_feed,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": False,
+                "sampling_priority": 40,
+                "max_age_days": 7,
+                "pressure_terms": ["summer meals"],
+                "exclusion_terms": [],
+            },
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == good_feed:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food pantry demand rises",
+                        "link": "https://example.org/good-story",
+                        "source_url": "https://example.org/good-story",
+                        "publisher": "Good Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://example.org/good-story":
+            return b"<html><head><link rel=\"canonical\" href=\"https://example.org/good-story\"></head><body>Food pantry demand is rising.</body></html>"
+        if url == broken_feed:
+            return {
+                "payload": b"not-valid-xml",
+                "response_status": 200,
+                "final_response_url": broken_feed,
+                "content_type": "application/rss+xml; charset=UTF-8",
+            }
+        if url == zero_feed:
+            return _rss_payload([])
+        if url.startswith("https://news.google.com/rss/search?q="):
+            raise AssertionError("direct sources should fill the capped run first")
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=3,
+            max_results_per_query=5,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["direct_source_success_by_source"]["Good Feed"] == 1
+    assert summary["direct_source_item_counts"]["Good Feed"] == 1
+    assert summary["direct_source_item_counts"]["Zero Feed"] == 0
+    assert summary["direct_source_fetch_failure_reasons_by_source"]["Broken Feed"]["parse_failure"] == 1
+    assert "Zero Feed" in summary["direct_source_zero_item_sources"]
+    assert "Disabled Feed" in summary["disabled_direct_sources"]
+    assert "Broken Feed" in summary["direct_sources_recommended_for_parser_fix"]

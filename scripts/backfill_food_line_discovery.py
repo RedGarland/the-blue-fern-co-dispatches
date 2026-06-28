@@ -295,6 +295,16 @@ def run_food_line_discovery_backfill(
             "executed_lanes": sorted({lane for row in per_date for lane in row.get("executed_lanes", []) if str(lane).strip()}),
             "skipped_lanes": sorted({lane for row in per_date for lane in row.get("skipped_lanes", []) if str(lane).strip()}),
             "candidates_by_lane": dict(sorted(Counter({}).items())),
+            "candidates_by_discovery_channel": dict(sorted(Counter({}).items())),
+            "candidates_by_direct_source": dict(sorted(Counter({}).items())),
+            "direct_source_count": sum(int(row.get("direct_source_count", 0)) for row in per_date),
+            "direct_source_fetch_attempt_count": sum(int(row.get("direct_source_fetch_attempt_count", 0)) for row in per_date),
+            "direct_source_fetch_success_count": sum(int(row.get("direct_source_fetch_success_count", 0)) for row in per_date),
+            "direct_source_fetch_failure_count": sum(int(row.get("direct_source_fetch_failure_count", 0)) for row in per_date),
+            "direct_article_url_count": sum(int(row.get("direct_article_url_count", 0)) for row in per_date),
+            "direct_homepage_or_feed_blocked_count": sum(int(row.get("direct_homepage_or_feed_blocked_count", 0)) for row in per_date),
+            "google_news_fallback_count": sum(int(row.get("google_news_fallback_count", 0)) for row in per_date),
+            "duplicate_preferred_direct_count": sum(int(row.get("duplicate_preferred_direct_count", 0)) for row in per_date),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
             "google_news_resolution_attempt_count": sum(int(row.get("google_news_resolution_attempt_count", 0)) for row in per_date),
             "google_news_resolution_success_count": sum(int(row.get("google_news_resolution_success_count", 0)) for row in per_date),
@@ -342,6 +352,26 @@ def run_food_line_discovery_backfill(
                 ).items()
             )
         )
+        summary["candidates_by_discovery_channel"] = dict(
+            sorted(
+                Counter(
+                    channel
+                    for row in per_date
+                    for channel, count in (row.get("candidates_by_discovery_channel") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["candidates_by_direct_source"] = dict(
+            sorted(
+                Counter(
+                    source_name
+                    for row in per_date
+                    for source_name, count in (row.get("candidates_by_direct_source") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
         summary["backfill_summary_json_path"] = str(json_path)
         summary["backfill_summary_html_path"] = str(html_path)
         return summary
@@ -382,6 +412,14 @@ def run_food_line_discovery_backfill(
                     "traceable_candidate_count": 0,
                     "likely_qualifying_candidate_count": 0,
                     "public_eligible_candidate_count": 0,
+                    "direct_source_count": 0,
+                    "direct_source_fetch_attempt_count": 0,
+                    "direct_source_fetch_success_count": 0,
+                    "direct_source_fetch_failure_count": 0,
+                    "direct_article_url_count": 0,
+                    "direct_homepage_or_feed_blocked_count": 0,
+                    "google_news_fallback_count": 0,
+                    "duplicate_preferred_direct_count": 0,
                     "watchlist_candidate_count": 0,
                     "rejected_candidate_count": 0,
                     "needs_review_candidate_count": 0,
@@ -403,6 +441,8 @@ def run_food_line_discovery_backfill(
                     "executed_lanes": [],
                     "skipped_lanes": [],
                     "candidates_by_lane": {},
+                    "candidates_by_discovery_channel": {},
+                    "candidates_by_direct_source": {},
                     "discovery_gap": True,
                     "errors": [str(exc)],
                     "public_output_written": False,
@@ -443,6 +483,14 @@ def run_food_line_discovery_backfill(
         )
         unresolved_google_news_count = sum(1 for row in typed_candidates if str(row.get("traceability_status") or "").strip() == "unresolved_google_news")
         blocked_fetch_count = sum(1 for row in typed_candidates if str(row.get("fetch_status") or "").strip() not in {"ok", "manual_fallback"})
+        direct_source_count = int(audit.get("direct_source_count", 0))
+        direct_source_fetch_attempt_count = int(audit.get("direct_source_fetch_attempt_count", 0))
+        direct_source_fetch_success_count = int(audit.get("direct_source_fetch_success_count", 0))
+        direct_source_fetch_failure_count = int(audit.get("direct_source_fetch_failure_count", 0))
+        direct_article_url_count = int(audit.get("direct_article_url_count", 0))
+        direct_homepage_or_feed_blocked_count = int(audit.get("direct_homepage_or_feed_blocked_count", 0))
+        google_news_fallback_count = int(audit.get("google_news_fallback_count", 0))
+        duplicate_preferred_direct_count = int(audit.get("duplicate_preferred_direct_count", 0))
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
             if lane:
@@ -499,6 +547,12 @@ def run_food_line_discovery_backfill(
         candidates_by_lane = dict(audit.get("candidates_by_lane") or {})
         if not candidates_by_lane:
             candidates_by_lane = dict(sorted(Counter(str(row.get("discovery_lane") or "").strip() for row in typed_candidates if str(row.get("discovery_lane") or "").strip()).items()))
+        candidates_by_discovery_channel = dict(audit.get("candidates_by_discovery_channel") or {})
+        if not candidates_by_discovery_channel:
+            candidates_by_discovery_channel = dict(sorted(Counter(str(row.get("discovery_channel") or "").strip() for row in typed_candidates if str(row.get("discovery_channel") or "").strip()).items()))
+        candidates_by_direct_source = dict(audit.get("candidates_by_direct_source") or {})
+        if not candidates_by_direct_source:
+            candidates_by_direct_source = dict(sorted(Counter(str(row.get("direct_source_name") or "").strip() for row in typed_candidates if str(row.get("direct_source_name") or "").strip()).items()))
         per_date.append(
             {
                 "date": edition_date,
@@ -508,6 +562,14 @@ def run_food_line_discovery_backfill(
                 "traceable_candidate_count": traceable_count,
                 "likely_qualifying_candidate_count": likely_qualifying_count,
                 "public_eligible_candidate_count": public_eligible_count,
+                "direct_source_count": direct_source_count,
+                "direct_source_fetch_attempt_count": direct_source_fetch_attempt_count,
+                "direct_source_fetch_success_count": direct_source_fetch_success_count,
+                "direct_source_fetch_failure_count": direct_source_fetch_failure_count,
+                "direct_article_url_count": direct_article_url_count,
+                "direct_homepage_or_feed_blocked_count": direct_homepage_or_feed_blocked_count,
+                "google_news_fallback_count": google_news_fallback_count,
+                "duplicate_preferred_direct_count": duplicate_preferred_direct_count,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),
                 "needs_review_candidate_count": int(review_counts.get("needs_review", 0)),
@@ -536,6 +598,8 @@ def run_food_line_discovery_backfill(
                 "executed_lanes": executed_lanes,
                 "skipped_lanes": skipped_lanes,
                 "candidates_by_lane": candidates_by_lane,
+                "candidates_by_discovery_channel": candidates_by_discovery_channel,
+                "candidates_by_direct_source": candidates_by_direct_source,
                 "top_blocker_reasons": dict(sorted(Counter(blocker for row in typed_candidates for blocker in (row.get("public_claim_blockers") or [])).items(), key=lambda item: (-item[1], item[0]))[:10]),
                 "errors": [],
                 "public_output_written": False,

@@ -39,6 +39,27 @@ GOOGLE_ASSET_DOMAINS = (
     "ogp.me",
 )
 STATIC_PATH_SUFFIXES = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
+LISTING_PATH_SEGMENTS = {
+    "category",
+    "categories",
+    "tag",
+    "tags",
+    "search",
+    "topic",
+    "topics",
+    "section",
+    "sections",
+    "news",
+    "stories",
+    "latest",
+    "updates",
+    "archive",
+    "archives",
+    "feed",
+    "feeds",
+    "rss",
+    "atom",
+}
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -508,12 +529,14 @@ def _food_line_discovery_config_path(root: Path) -> Path:
 def load_food_line_discovery_expansion_config(root: Path) -> dict[str, Any]:
     path = _food_line_discovery_config_path(root)
     if not path.exists():
-        path = Path(__file__).resolve().parents[2] / "data" / "dispatches" / DISPATCH_SLUG / DISCOVERY_CONFIG_FILE
-    if not path.exists():
-        return {
-            "query_families": QUERY_FAMILY_DEFINITIONS,
-            "metros": DEFAULT_METROS,
-        }
+        repo_path = Path(__file__).resolve().parents[2] / "data" / "dispatches" / DISPATCH_SLUG / DISCOVERY_CONFIG_FILE
+        if not repo_path.exists():
+            return {
+                "query_families": QUERY_FAMILY_DEFINITIONS,
+                "metros": DEFAULT_METROS,
+                "direct_sources": [],
+            }
+        path = repo_path
     payload = _read_json(path)
     if not isinstance(payload, dict):
         raise ValueError(f"{path.name} must be an object")
@@ -522,6 +545,7 @@ def load_food_line_discovery_expansion_config(root: Path) -> dict[str, Any]:
     return {
         "query_families": query_families or QUERY_FAMILY_DEFINITIONS,
         "metros": metros or DEFAULT_METROS,
+        "direct_sources": [row for row in payload.get("direct_sources") or [] if isinstance(row, dict)] if _food_line_discovery_config_path(root).exists() else [],
         "search": payload.get("search") if isinstance(payload.get("search"), dict) else {},
     }
 
@@ -545,15 +569,19 @@ def _apply_query_date_bounds(query_text: str, *, after: str, before: str) -> str
 def _sample_query_plan_across_families(query_plan: list[dict[str, Any]], max_queries: int | None) -> list[dict[str, Any]]:
     if max_queries is None or max_queries < 0 or len(query_plan) <= max_queries:
         return list(query_plan)
+    direct_rows = [row for row in query_plan if _nonempty(row.get("discovery_channel")) not in {"", "google_news_rss"}]
+    google_rows = [row for row in query_plan if _nonempty(row.get("discovery_channel")) in {"", "google_news_rss"}]
+    if len(direct_rows) >= max_queries:
+        return list(direct_rows[:max_queries])
     grouped: dict[str, list[dict[str, Any]]] = {}
     family_order: list[str] = []
-    for row in query_plan:
+    for row in google_rows:
         family = _nonempty(row.get("query_family")) or "unknown"
         if family not in grouped:
             grouped[family] = []
             family_order.append(family)
         grouped[family].append(row)
-    sampled: list[dict[str, Any]] = []
+    sampled: list[dict[str, Any]] = list(direct_rows)
     index = 0
     while len(sampled) < max_queries:
         added = False
@@ -580,6 +608,35 @@ def build_food_line_discovery_query_plan(
     config = load_food_line_discovery_expansion_config(root)
     after, before = _parse_date_range(edition_date, lookback_days=lookback_days, lookahead_days=lookahead_days)
     rows: list[dict[str, Any]] = []
+    for direct_source in [row for row in config.get("direct_sources") or [] if isinstance(row, dict) and bool(row.get("enabled", True))]:
+        source_name = _nonempty(direct_source.get("source_name"))
+        discovery_lane = _nonempty(direct_source.get("discovery_lane") or direct_source.get("source_family") or "news_article")
+        discovery_channel = _nonempty(direct_source.get("discovery_channel") or ("direct_rss" if _nonempty(direct_source.get("feed_url")) else "direct_page"))
+        rows.append(
+            {
+                "query_family": discovery_lane,
+                "query_text": source_name or _nonempty(direct_source.get("source_url") or direct_source.get("feed_url")),
+                "query_template": "",
+                "geographic_scope": _nonempty(direct_source.get("geographic_scope") or "national"),
+                "state_or_territory": _nonempty(direct_source.get("state_or_territory")),
+                "state_abbrev": "",
+                "metro": _nonempty(direct_source.get("metro")),
+                "discovery_channel": discovery_channel,
+                "search_provider": discovery_channel,
+                "source_family": _nonempty(direct_source.get("source_family") or "local_news"),
+                "edition_date": edition_date,
+                "after": after,
+                "before": before,
+                "direct_source_name": source_name,
+                "direct_source_feed_url": _nonempty(direct_source.get("feed_url")),
+                "direct_source_url": _nonempty(direct_source.get("source_url")),
+                "allowed_domains": [str(item).strip().lower() for item in direct_source.get("allowed_domains") or [] if str(item).strip()],
+                "max_age_days": int(direct_source.get("max_age_days") or 0),
+                "pressure_terms": [str(item).strip() for item in direct_source.get("pressure_terms") or [] if str(item).strip()],
+                "exclusion_terms": [str(item).strip() for item in direct_source.get("exclusion_terms") or [] if str(item).strip()],
+                "notes": _nonempty(direct_source.get("notes")),
+            }
+        )
     for family in config["query_families"]:
         family_name = _nonempty(family.get("query_family"))
         geographic_scope = _nonempty(family.get("geographic_scope"))
@@ -677,6 +734,10 @@ def _query_family_to_lane(query_family: str) -> str:
     return "news_article"
 
 
+def _effective_lane(row: dict[str, Any]) -> str:
+    return _nonempty(row.get("discovery_lane") or _query_family_to_lane(_nonempty(row.get("query_family"))))
+
+
 def _project_fetch_with_metadata(url: str, *, timeout: int = 15) -> tuple[bytes, dict[str, Any]]:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -761,6 +822,106 @@ def _parse_google_news_rss(payload: bytes) -> list[dict[str, str]]:
             }
         )
     return rows
+
+
+def _parse_direct_feed(payload: bytes) -> list[dict[str, str]]:
+    text = payload.decode("utf-8", errors="replace")
+    root = ET.fromstring(text)
+    rows: list[dict[str, str]] = []
+    if root.tag.lower().endswith("feed"):
+        for entry in root.findall(".//{*}entry"):
+            link = ""
+            for link_node in entry.findall("{*}link"):
+                href = _nonempty(link_node.attrib.get("href"))
+                rel = _nonempty(link_node.attrib.get("rel") or "alternate")
+                if href and rel in {"alternate", ""}:
+                    link = href
+                    break
+            rows.append(
+                {
+                    "title": _nonempty(entry.findtext("{*}title")),
+                    "link": _nonempty(link),
+                    "description": _nonempty(entry.findtext("{*}summary") or entry.findtext("{*}content")),
+                    "pubDate": _nonempty(entry.findtext("{*}published") or entry.findtext("{*}updated")),
+                    "source_url": "",
+                    "source_name": _nonempty(root.findtext("{*}title")),
+                }
+            )
+        return rows
+    for item in root.findall(".//item"):
+        source = item.find("source")
+        rows.append(
+            {
+                "title": _nonempty(item.findtext("title")),
+                "link": _nonempty(item.findtext("link")),
+                "description": _nonempty(item.findtext("description")),
+                "pubDate": _nonempty(item.findtext("pubDate")),
+                "source_url": _nonempty(source.attrib.get("url") if source is not None else ""),
+                "source_name": _nonempty(source.text if source is not None else ""),
+            }
+        )
+    return rows
+
+
+def _page_title(payload: bytes) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    match = re.search(r"<title[^>]*>(.*?)</title>", text, flags=re.IGNORECASE | re.DOTALL)
+    return _nonempty(html.unescape(match.group(1))) if match else ""
+
+
+def _page_summary(payload: bytes) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    for pattern in (
+        r'<meta\b[^>]*name=["\']description["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*property=["\']og:description["\'][^>]*content=["\']([^"\']+)["\']',
+    ):
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return _nonempty(html.unescape(match.group(1)))
+    cleaned = re.sub(r"<[^>]+>", " ", text)
+    return re.sub(r"\s+", " ", cleaned).strip()[:400]
+
+
+def _collect_direct_source_items(
+    fetcher: Any,
+    query_row: dict[str, Any],
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    source_url = _nonempty(query_row.get("direct_source_url") or query_row.get("direct_source_feed_url"))
+    discovery_channel = _nonempty(query_row.get("discovery_channel") or "direct_page")
+    payload, fetch_error = _fetch_url(fetcher, source_url)
+    diagnostics = {
+        "attempted": bool(source_url),
+        "success": False,
+        "error": fetch_error,
+        "item_count": 0,
+    }
+    if fetch_error or not payload:
+        return [], diagnostics
+    try:
+        diagnostics["success"] = True
+        if discovery_channel == "direct_rss":
+            items = _parse_direct_feed(payload)
+            diagnostics["item_count"] = len(items)
+            return items, diagnostics
+        canonical = _extract_canonical_url(payload)
+        page_url = _normalize_url(canonical or source_url)
+        items = [
+            {
+                "title": _page_title(payload) or _nonempty(query_row.get("direct_source_name")),
+                "link": page_url,
+                "description": _page_summary(payload),
+                "pubDate": "",
+                "source_url": source_url,
+                "source_name": _nonempty(query_row.get("direct_source_name")),
+            }
+        ]
+        diagnostics["item_count"] = 1
+        return items, diagnostics
+    except Exception as exc:  # noqa: BLE001
+        diagnostics["success"] = False
+        diagnostics["error"] = f"{type(exc).__name__}: {exc}"
+        diagnostics["item_count"] = 0
+        return [], diagnostics
 
 
 def _extract_canonical_url(payload: bytes) -> str:
@@ -958,6 +1119,78 @@ def _is_google_news_wrapper(url: str) -> bool:
     return bool(host) and (host == GOOGLE_NEWS_DOMAIN or host.endswith(f".{GOOGLE_NEWS_DOMAIN}"))
 
 
+def _domain_allowed(url: str, allowed_domains: list[str]) -> bool:
+    if not allowed_domains:
+        return True
+    host = _host(url)
+    return any(host == domain or host.endswith(f".{domain}") for domain in allowed_domains if domain)
+
+
+def _is_feed_or_listing_url(url: str, *, feed_url: str = "") -> bool:
+    value = _normalize_url(url)
+    if not value:
+        return False
+    if feed_url and value == _normalize_url(feed_url):
+        return True
+    if _is_homepage_only_url(value):
+        return True
+    parsed = urllib.parse.urlsplit(value)
+    path = [segment for segment in parsed.path.lower().split("/") if segment]
+    if parsed.query and any(key in urllib.parse.parse_qs(parsed.query) for key in ("s", "search", "q", "tag", "category")):
+        return True
+    if not path:
+        return True
+    if path[-1] in LISTING_PATH_SEGMENTS:
+        return True
+    return len(path) == 1 and path[0] in LISTING_PATH_SEGMENTS
+
+
+def _candidate_preference_key(row: dict[str, Any]) -> tuple[int, int, int]:
+    channel = _nonempty(row.get("discovery_channel"))
+    direct_preferred = 0 if channel not in {"", "google_news_rss"} else 1
+    traceable_preferred = 0 if _nonempty(row.get("traceability_status")) == "traceable" else 1
+    manual_preferred = 0 if _nonempty(row.get("classification_status")) == "manual_fallback" else 1
+    return (manual_preferred, direct_preferred, traceable_preferred)
+
+
+def _title_publisher_date_key(row: dict[str, Any]) -> str:
+    title = re.sub(r"\s+", " ", _nonempty(row.get("discovered_title")).lower())
+    publisher = re.sub(r"\s+", " ", _nonempty(row.get("discovered_publisher")).lower())
+    published = _nonempty(row.get("source_published_date"))
+    if not (title and publisher and published):
+        return ""
+    return f"{title}|{publisher}|{published}"
+
+
+def _dedupe_candidates(candidates: list[dict[str, Any]]) -> int:
+    for row in candidates:
+        row["duplicate_of"] = ""
+    preferred_direct = 0
+    seen_trace: dict[str, str] = {}
+    seen_title_keys: dict[str, str] = {}
+    id_to_row = {str(row.get("candidate_id") or ""): row for row in candidates}
+    for row in sorted(candidates, key=_candidate_preference_key):
+        candidate_id = _nonempty(row.get("candidate_id"))
+        trace_key = _normalize_url(_nonempty(row.get("canonical_url") or row.get("final_trace_url") or row.get("discovered_url")))
+        title_key = _title_publisher_date_key(row)
+        duplicate_of = ""
+        if trace_key and trace_key in seen_trace:
+            duplicate_of = seen_trace[trace_key]
+        elif title_key and title_key in seen_title_keys:
+            duplicate_of = seen_title_keys[title_key]
+        if duplicate_of:
+            row["duplicate_of"] = duplicate_of
+            winner = id_to_row.get(duplicate_of, {})
+            if _nonempty(row.get("discovery_channel")) == "google_news_rss" and _nonempty(winner.get("discovery_channel")) not in {"", "google_news_rss"}:
+                preferred_direct += 1
+            continue
+        if trace_key:
+            seen_trace[trace_key] = candidate_id
+        if title_key:
+            seen_title_keys[title_key] = candidate_id
+    return preferred_direct
+
+
 def _initial_trace_url(discovered_url: str, publisher_url: str) -> str:
     if _is_article_specific_url(publisher_url):
         return publisher_url
@@ -1147,6 +1380,10 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["exclusion_reason"] = _nonempty(candidate.get("exclusion_reason"))
     candidate["fetch_status"] = _nonempty(candidate.get("fetch_status") or "unfetched")
     candidate["fetch_error"] = _nonempty(candidate.get("fetch_error"))
+    candidate["direct_source_name"] = _nonempty(candidate.get("direct_source_name"))
+    candidate["feed_url"] = _normalize_url(_nonempty(candidate.get("feed_url")))
+    candidate["direct_fetch_status"] = _nonempty(candidate.get("direct_fetch_status"))
+    candidate["direct_fetch_error"] = _nonempty(candidate.get("direct_fetch_error"))
     candidate["duplicate_of"] = _nonempty(candidate.get("duplicate_of"))
     candidate["public_claim_blockers"] = list(candidate.get("public_claim_blockers") or [])
     candidate["canonical_homepage_collapse_ignored"] = bool(candidate.get("canonical_homepage_collapse_ignored"))
@@ -1287,31 +1524,60 @@ def run_food_line_discovery_expansion(
     canonical_homepage_collapse_ignored_count = 0
     article_specific_url_count = 0
     unresolved_google_news_count = 0
+    direct_source_count = 0
+    direct_source_fetch_attempt_count = 0
+    direct_source_fetch_success_count = 0
+    direct_source_fetch_failure_count = 0
+    direct_article_url_count = 0
+    direct_homepage_or_feed_blocked_count = 0
+    google_news_fallback_count = 0
+    duplicate_preferred_direct_count = 0
     resolution_status_counts: Counter[str] = Counter()
     resolution_debug_by_candidate: dict[str, dict[str, Any]] = {}
-    seen_trace_keys: dict[str, str] = {}
+    direct_source_counts: Counter[str] = Counter()
 
     for query_row in query_plan:
         query_text = _nonempty(query_row.get("query_text"))
-        query_url = _query_url(query_text)
-        payload, query_error = _fetch_url(fetch, query_url)
         result_row = dict(query_row)
-        result_row["query_url"] = query_url
-        result_row["query_error"] = query_error
         result_row["result_count"] = 0
-        if query_error or not payload:
-            query_rows.append(result_row)
-            continue
-        try:
-            rss_items = _parse_google_news_rss(payload)
-        except Exception as exc:  # noqa: BLE001
-            result_row["query_error"] = f"{type(exc).__name__}: {exc}"
-            query_rows.append(result_row)
-            continue
+        discovery_channel = _nonempty(query_row.get("discovery_channel") or "google_news_rss")
+        if discovery_channel == "google_news_rss":
+            query_url = _query_url(query_text)
+            payload, query_error = _fetch_url(fetch, query_url)
+            result_row["query_url"] = query_url
+            result_row["query_error"] = query_error
+            if query_error or not payload:
+                query_rows.append(result_row)
+                continue
+            try:
+                rss_items = _parse_google_news_rss(payload)
+            except Exception as exc:  # noqa: BLE001
+                result_row["query_error"] = f"{type(exc).__name__}: {exc}"
+                query_rows.append(result_row)
+                continue
+        else:
+            query_url = _nonempty(query_row.get("direct_source_feed_url") or query_row.get("direct_source_url"))
+            items, direct_meta = _collect_direct_source_items(fetch, query_row)
+            result_row["query_url"] = query_url
+            result_row["query_error"] = _nonempty(direct_meta.get("error"))
+            result_row["direct_source_name"] = _nonempty(query_row.get("direct_source_name"))
+            result_row["direct_fetch_status"] = "ok" if direct_meta.get("success") else _classify_fetch_error(_nonempty(direct_meta.get("error")) or "fetch_failed")
+            direct_source_count += 1
+            if direct_meta.get("attempted"):
+                direct_source_fetch_attempt_count += 1
+            if direct_meta.get("success"):
+                direct_source_fetch_success_count += 1
+            else:
+                direct_source_fetch_failure_count += 1
+            rss_items = items
         result_row["result_count"] = len(rss_items)
         query_rows.append(result_row)
         for item in rss_items[:max_results_per_query]:
             discovered_url = _normalize_url(_nonempty(item.get("link")))
+            direct_source_name = _nonempty(query_row.get("direct_source_name"))
+            feed_url = _normalize_url(_nonempty(query_row.get("direct_source_feed_url")))
+            direct_fetch_status = ""
+            direct_fetch_error = ""
             google_news_url = discovered_url if GOOGLE_NEWS_DOMAIN in discovered_url else ""
             publisher_url = _normalize_url(_nonempty(item.get("source_url")))
             resolved_wrapper_url = ""
@@ -1320,33 +1586,76 @@ def run_food_line_discovery_expansion(
             google_news_resolution_failed = False
             google_news_resolution_status = ""
             google_news_debug: dict[str, Any] = {}
-            if google_news_url and not _is_article_specific_url(publisher_url):
-                resolved_wrapper_url, google_news_resolution_error, google_news_resolution_attempted, google_news_debug = _resolve_google_news_wrapper(
-                    fetch,
-                    google_news_url,
-                    publisher_url=publisher_url,
-                )
-                google_news_resolution_status = _nonempty(google_news_debug.get("google_news_resolution_status"))
-                if google_news_resolution_attempted:
-                    google_news_resolution_attempt_count += 1
-                    if _is_article_specific_url(resolved_wrapper_url):
-                        google_news_resolution_success_count += 1
-                        google_news_resolved_article_url_count += 1
-                    elif _is_homepage_only_url(resolved_wrapper_url):
-                        google_news_resolution_failure_count += 1
-                        google_news_resolved_homepage_only_count += 1
-                        google_news_resolution_failed = True
-                    else:
-                        google_news_resolution_failure_count += 1
-                        google_news_resolution_failed = True
+            if discovery_channel == "google_news_rss":
+                google_news_fallback_count += 1
+                if google_news_url and not _is_article_specific_url(publisher_url):
+                    resolved_wrapper_url, google_news_resolution_error, google_news_resolution_attempted, google_news_debug = _resolve_google_news_wrapper(
+                        fetch,
+                        google_news_url,
+                        publisher_url=publisher_url,
+                    )
+                    google_news_resolution_status = _nonempty(google_news_debug.get("google_news_resolution_status"))
+                    if google_news_resolution_attempted:
+                        google_news_resolution_attempt_count += 1
+                        if _is_article_specific_url(resolved_wrapper_url):
+                            google_news_resolution_success_count += 1
+                            google_news_resolved_article_url_count += 1
+                        elif _is_homepage_only_url(resolved_wrapper_url):
+                            google_news_resolution_failure_count += 1
+                            google_news_resolved_homepage_only_count += 1
+                            google_news_resolution_failed = True
+                        else:
+                            google_news_resolution_failure_count += 1
+                            google_news_resolution_failed = True
             candidate_source_url = _initial_trace_url(discovered_url, resolved_wrapper_url or publisher_url)
+            if discovery_channel != "google_news_rss":
+                candidate_source_url = discovered_url or publisher_url or _normalize_url(_nonempty(query_row.get("direct_source_url")))
             final_trace_url = candidate_source_url or ""
             canonical = _normalize_url(final_trace_url)
             fetch_status = "unfetched"
             fetch_error = google_news_resolution_error
             canonical_from_page = ""
             evidence_text = _nonempty(item.get("title")) + " " + _nonempty(item.get("description"))
-            if final_trace_url:
+            if discovery_channel != "google_news_rss":
+                direct_fetch_status = "ok"
+                direct_fetch_error = ""
+                if not _domain_allowed(candidate_source_url, list(query_row.get("allowed_domains") or [])):
+                    fetch_status = "blocked_domain_mismatch"
+                    fetch_error = "direct source item URL outside allowed_domains"
+                    direct_fetch_status = fetch_status
+                    direct_fetch_error = fetch_error
+                elif _is_feed_or_listing_url(candidate_source_url, feed_url=feed_url):
+                    fetch_status = "blocked_listing_url"
+                    fetch_error = "direct source item resolved to homepage, feed, or listing page"
+                    direct_fetch_status = fetch_status
+                    direct_fetch_error = fetch_error
+                    direct_homepage_or_feed_blocked_count += 1
+                elif final_trace_url:
+                    payload2, fetch_error = _fetch_url(fetch, final_trace_url)
+                    if fetch_error or not payload2:
+                        fetch_status = _classify_fetch_error(fetch_error or "empty response")
+                        direct_fetch_status = fetch_status
+                        direct_fetch_error = fetch_error
+                    else:
+                        fetch_status = "ok"
+                        direct_fetch_status = "ok"
+                        fetchable_count += 1
+                        canonical_from_page = _extract_canonical_url(payload2)
+                        if _is_article_specific_url(canonical_from_page):
+                            canonical = canonical_from_page
+                            final_trace_url = canonical_from_page
+                        evidence_text = " ".join(
+                            part
+                            for part in (
+                                _nonempty(item.get("title")),
+                                _nonempty(item.get("description")),
+                                _nonempty(item.get("source_name") or direct_source_name),
+                                canonical_from_page,
+                            )
+                            if part
+                        )
+                direct_source_counts[direct_source_name or _host(query_url)] += 1
+            elif final_trace_url:
                 payload2, fetch_error = _fetch_url(fetch, final_trace_url)
                 if fetch_error or not payload2:
                     fetch_status = _classify_fetch_error(fetch_error or "empty response")
@@ -1377,8 +1686,14 @@ def run_food_line_discovery_expansion(
                 fetch_status=fetch_status,
                 duplicate=False,
             )
-            lane = _lane_from_query(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, _nonempty(item.get("source_name")))
+            lane = _effective_lane(query_row) if discovery_channel != "google_news_rss" else _lane_from_query(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, _nonempty(item.get("source_name")))
             pressure_hits = _detect_terms(evidence_text.lower(), PRESSURE_TERMS)
+            if discovery_channel != "google_news_rss":
+                pressure_hits = _detect_terms(evidence_text.lower(), list(query_row.get("pressure_terms") or PRESSURE_TERMS))
+                exclusion_hits = _detect_terms(evidence_text.lower(), list(query_row.get("exclusion_terms") or []))
+                if exclusion_hits and classification_status == "qualified_pressure_signal":
+                    classification_status = "context_only"
+                    exclusion_reason = "matched direct-source exclusion terms"
             location_hits = []
             for term in [query_row.get("state_or_territory"), query_row.get("metro")]:
                 term_text = _nonempty(term)
@@ -1418,14 +1733,18 @@ def run_food_line_discovery_expansion(
                 "state_abbrev": _nonempty(query_row.get("state_abbrev")),
                 "state_hint": _nonempty(query_row.get("state_abbrev") or query_row.get("state_or_territory")),
                 "metro": _nonempty(query_row.get("metro")),
-                "discovery_channel": _nonempty(query_row.get("discovery_channel") or "google_news_rss"),
+                "discovery_channel": discovery_channel,
                 "discovered_title": _nonempty(item.get("title")),
-                "discovered_publisher": _nonempty(item.get("source_name") or item.get("source_url")),
+                "discovered_publisher": _nonempty(item.get("source_name") or item.get("source_url") or direct_source_name),
                 "discovered_url": discovered_url,
                 "canonical_url": canonical,
                 "source_url": source_url,
                 "original_source_url": final_trace_url or publisher_url or "",
                 "google_news_url": google_news_url,
+                "direct_source_name": direct_source_name,
+                "feed_url": feed_url,
+                "direct_fetch_status": direct_fetch_status,
+                "direct_fetch_error": direct_fetch_error,
                 "google_news_resolution_attempted": google_news_resolution_attempted,
                 "google_news_resolution_error": google_news_resolution_error,
                 "google_news_resolved_url": resolved_wrapper_url,
@@ -1472,16 +1791,6 @@ def run_food_line_discovery_expansion(
                     "rejection_reason": _nonempty(google_news_debug.get("rejection_reason")),
                     "debug_snippet": _nonempty(google_news_debug.get("debug_snippet")),
                 }
-            trace_key = canonical or final_trace_url or discovered_url
-            if trace_key and trace_key in seen_trace_keys:
-                row["duplicate_of"] = seen_trace_keys[trace_key]
-                row["classification_status"] = "duplicate"
-                row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
-                row["public_claim_eligible"] = False
-                row["public_claim_blockers"] = sorted(set([*list(row.get("public_claim_blockers") or []), "duplicate"]))
-                duplicate_count += 1
-            else:
-                seen_trace_keys[trace_key] = row["candidate_id"]
             if row["fetch_status"] != "ok":
                 blocked_fetch_count += 1
                 row["manual_review_required"] = True
@@ -1501,6 +1810,8 @@ def run_food_line_discovery_expansion(
                     unresolved_google_news_count += 1
             if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url"))):
                 article_specific_url_count += 1
+                if discovery_channel != "google_news_rss":
+                    direct_article_url_count += 1
             manual_reviewable_count += 1 if row["manual_review_required"] else 0
             query_family_counts[row["query_family"]] += 1
             if row["state_or_territory"]:
@@ -1517,16 +1828,13 @@ def run_food_line_discovery_expansion(
         else:
             raise ValueError(f"{manual_fallback_path} must contain a JSON list")
 
+    duplicate_preferred_direct_count = _dedupe_candidates(candidates)
     for row in candidates:
-        trace_key = row.get("canonical_url") or row.get("final_trace_url") or row.get("discovered_url")
-        if trace_key and trace_key in seen_trace_keys and seen_trace_keys[trace_key] != row["candidate_id"]:
-            row["duplicate_of"] = seen_trace_keys[trace_key]
+        if _nonempty(row.get("duplicate_of")):
             row["classification_status"] = "duplicate"
             row["exclusion_reason"] = f"duplicate of {row['duplicate_of']}"
             row["public_claim_eligible"] = False
             row["public_claim_blockers"] = sorted(set([*list(row.get("public_claim_blockers") or []), "duplicate"]))
-        elif trace_key:
-            seen_trace_keys[trace_key] = row["candidate_id"]
         if row.get("classification_status") == "manual_fallback":
             row["manual_review_required"] = False
             row["candidate_review_status"] = "needs_review"
@@ -1566,6 +1874,8 @@ def run_food_line_discovery_expansion(
     candidate_count = len(candidates)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
+    discovery_channel_counts = Counter(_nonempty(row.get("discovery_channel")) for row in candidates if _nonempty(row.get("discovery_channel")))
+    direct_source_counts = Counter(_nonempty(row.get("direct_source_name")) for row in candidates if _nonempty(row.get("direct_source_name")))
     source_type_counts = Counter(_nonempty(row.get("discovery_source_type")) for row in candidates if _nonempty(row.get("discovery_source_type")))
     state_counts = Counter(_nonempty(row.get("state_or_territory")) for row in candidates if _nonempty(row.get("state_or_territory")))
     metro_counts = Counter(_nonempty(row.get("metro")) for row in candidates if _nonempty(row.get("metro")))
@@ -1584,6 +1894,28 @@ def run_food_line_discovery_expansion(
     article_specific_url_count = sum(
         1 for row in candidates if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
     )
+    direct_source_count = len(query_rows) - sum(1 for row in query_rows if _nonempty(row.get("discovery_channel")) == "google_news_rss")
+    direct_source_fetch_attempt_count = sum(1 for row in query_rows if _nonempty(row.get("discovery_channel")) != "google_news_rss")
+    direct_source_fetch_success_count = sum(
+        1 for row in query_rows if _nonempty(row.get("discovery_channel")) != "google_news_rss" and not _nonempty(row.get("query_error"))
+    )
+    direct_source_fetch_failure_count = max(0, direct_source_fetch_attempt_count - direct_source_fetch_success_count)
+    direct_article_url_count = sum(
+        1
+        for row in candidates
+        if _nonempty(row.get("discovery_channel")) != "google_news_rss"
+        and _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
+    )
+    direct_homepage_or_feed_blocked_count = sum(
+        1
+        for row in candidates
+        if _nonempty(row.get("discovery_channel")) != "google_news_rss"
+        and (
+            "non_article_trace_url" in list(row.get("public_claim_blockers") or [])
+            or "publisher_homepage_trace_only" in list(row.get("public_claim_blockers") or [])
+        )
+    )
+    google_news_fallback_count = sum(1 for row in candidates if _nonempty(row.get("discovery_channel")) == "google_news_rss")
     unresolved_google_news_count = sum(
         1
         for row in candidates
@@ -1631,6 +1963,13 @@ def run_food_line_discovery_expansion(
         "duplicate_count": duplicate_count,
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,
+        "direct_source_count": direct_source_count,
+        "direct_source_fetch_attempt_count": direct_source_fetch_attempt_count,
+        "direct_source_fetch_success_count": direct_source_fetch_success_count,
+        "direct_source_fetch_failure_count": direct_source_fetch_failure_count,
+        "direct_article_url_count": direct_article_url_count,
+        "direct_homepage_or_feed_blocked_count": direct_homepage_or_feed_blocked_count,
+        "google_news_fallback_count": google_news_fallback_count,
         "google_news_url_count": google_news_url_count,
         "google_news_resolution_attempt_count": google_news_resolution_attempt_count,
         "google_news_resolution_success_count": google_news_resolution_success_count,
@@ -1651,10 +1990,13 @@ def run_food_line_discovery_expansion(
         "qualified_pressure_signals": qualified_pressure_signals,
         "context_only_count": context_only_count,
         "manual_fallback_count": manual_fallback_count,
+        "duplicate_preferred_direct_count": duplicate_preferred_direct_count,
         "configured_lanes": configured_lanes,
         "executed_lanes": executed_lanes,
         "skipped_lanes": skipped_lanes,
         "candidates_by_lane": dict(sorted(lane_counts.items())),
+        "candidates_by_discovery_channel": dict(sorted(discovery_channel_counts.items())),
+        "candidates_by_direct_source": dict(sorted(direct_source_counts.items())),
         "candidates_by_query_family": dict(sorted(query_family_counts.items())),
         "candidates_by_discovery_lane": dict(sorted(lane_counts.items())),
         "candidates_by_discovery_source_type": dict(sorted(source_type_counts.items())),
@@ -1697,6 +2039,13 @@ def run_food_line_discovery_expansion(
             f"- Total candidates discovered: `{candidate_count}`",
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
+            f"- Direct sources scanned: `{direct_source_count}`",
+            f"- Direct source fetch attempts: `{direct_source_fetch_attempt_count}`",
+            f"- Direct source fetch successes: `{direct_source_fetch_success_count}`",
+            f"- Direct source fetch failures: `{direct_source_fetch_failure_count}`",
+            f"- Direct article URLs: `{direct_article_url_count}`",
+            f"- Direct homepage/feed blocks: `{direct_homepage_or_feed_blocked_count}`",
+            f"- Google News fallback candidates: `{google_news_fallback_count}`",
             f"- Google News wrapper URLs: `{google_news_url_count}`",
             f"- Google News resolution attempts: `{google_news_resolution_attempt_count}`",
             f"- Google News resolution successes: `{google_news_resolution_success_count}`",
@@ -1715,6 +2064,7 @@ def run_food_line_discovery_expansion(
             f"- Context-only records: `{context_only_count}`",
             f"- Duplicate count: `{duplicate_count}`",
             f"- Manual fallback records: `{manual_fallback_count}`",
+            f"- Duplicate records preferring direct-source candidates: `{duplicate_preferred_direct_count}`",
             f"- Configured lanes: {', '.join(configured_lanes) if configured_lanes else 'none'}",
             f"- Executed lanes: {', '.join(executed_lanes) if executed_lanes else 'none'}",
             f"- Skipped lanes: {', '.join(skipped_lanes) if skipped_lanes else 'none'}",
@@ -1726,6 +2076,14 @@ def run_food_line_discovery_expansion(
             "## Candidates by discovery lane",
             "",
             _markdown_table(lane_counts, "discovery_lane"),
+            "",
+            "## Candidates by discovery channel",
+            "",
+            _markdown_table(discovery_channel_counts, "discovery_channel"),
+            "",
+            "## Candidates by direct source",
+            "",
+            _markdown_table(direct_source_counts, "direct_source_name"),
             "",
             "## Candidates by state or territory",
             "",

@@ -24,6 +24,18 @@ DISCOVERY_AUDIT_MD_FILE = "discovery_audit.md"
 DISCOVERY_CONFIG_FILE = "discovery_expansion_config.json"
 GOOGLE_NEWS_DOMAIN = "news.google.com"
 SOCIAL_DOMAINS = ("x.com", "twitter.com", "facebook.com", "instagram.com", "tiktok.com")
+GOOGLE_ASSET_DOMAINS = (
+    "googleusercontent.com",
+    "gstatic.com",
+    "googleapis.com",
+    "googlevideo.com",
+    "google-analytics.com",
+    "googletagmanager.com",
+    "doubleclick.net",
+    "w3.org",
+    "schema.org",
+    "ogp.me",
+)
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -284,10 +296,16 @@ def _is_article_specific_url(url: str) -> bool:
     if not value:
         return False
     host = _host(value)
-    if not host or host.endswith(SOCIAL_DOMAINS) or host.endswith((GOOGLE_NEWS_DOMAIN, "google.com")):
+    if not host or host.endswith(SOCIAL_DOMAINS) or host.endswith((GOOGLE_NEWS_DOMAIN, "google.com")) or host.endswith(GOOGLE_ASSET_DOMAINS):
         return False
     parsed = urllib.parse.urlsplit(value)
     path = (parsed.path or "").strip("/")
+    lowered_path = path.lower()
+    if any(
+        lowered_path.endswith(ext)
+        for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
+    ):
+        return False
     return bool(path)
 
 
@@ -302,14 +320,25 @@ def _choose_trace_url(original_trace_url: str, canonical_url: str, discovered_ur
         return _normalize_url(canonical_url)
     if original_trace_url:
         return _normalize_url(original_trace_url)
+    if _is_google_news_wrapper(discovered_url):
+        return ""
     return _normalize_url(discovered_url)
 
 
-def _discovery_traceability_status(*, source_url: str, original_source_url: str, discovered_url: str, fetch_status: str) -> str:
+def _discovery_traceability_status(
+    *,
+    source_url: str,
+    original_source_url: str,
+    discovered_url: str,
+    fetch_status: str,
+    google_news_resolution_failed: bool = False,
+) -> str:
     if not any((source_url, original_source_url, discovered_url)):
         return "missing_url"
     if any(_host(url).endswith(SOCIAL_DOMAINS) for url in (source_url, original_source_url, discovered_url) if url):
         return "social_only"
+    if google_news_resolution_failed:
+        return "unresolved_google_news"
     if _host(discovered_url).endswith((GOOGLE_NEWS_DOMAIN, "google.com")) and not source_url and not original_source_url:
         return "source_wrapper_only"
     if fetch_status == "manual_fallback" and (_is_article_specific_url(source_url) or _is_article_specific_url(original_source_url)):
@@ -672,6 +701,88 @@ def _extract_canonical_url(payload: bytes) -> str:
     return ""
 
 
+def _extract_candidate_urls(text: str) -> list[str]:
+    if not text:
+        return []
+    candidates: list[str] = []
+    patterns = (
+        r'https?://[^\s"\'<>\\]+',
+        r'https?:\\?/\\?/[^\s"\'<>]+',
+    )
+    for pattern in patterns:
+        for match in re.findall(pattern, text, flags=re.IGNORECASE):
+            candidate = html.unescape(match).replace("\\/", "/")
+            for _ in range(2):
+                candidate = urllib.parse.unquote(candidate)
+            parsed = urllib.parse.urlsplit(candidate)
+            if parsed.scheme not in {"http", "https"}:
+                continue
+            normalized = _normalize_url(candidate)
+            if normalized and normalized not in candidates:
+                candidates.append(normalized)
+            for key in ("url", "u", "q", "continue", "redirect", "target"):
+                for value in urllib.parse.parse_qs(parsed.query).get(key, []):
+                    nested = _normalize_url(html.unescape(urllib.parse.unquote(value)))
+                    if nested and nested not in candidates:
+                        candidates.append(nested)
+    return candidates
+
+
+def _same_host_family(candidate_url: str, publisher_url: str) -> bool:
+    candidate_host = _host(candidate_url)
+    publisher_host = _host(publisher_url)
+    if not candidate_host or not publisher_host:
+        return False
+    return candidate_host == publisher_host or candidate_host.endswith(f".{publisher_host}") or publisher_host.endswith(f".{candidate_host}")
+
+
+def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "") -> str:
+    text = payload.decode("utf-8", errors="replace")
+    candidates = _extract_candidate_urls(text)
+    for candidate in candidates:
+        if _is_article_specific_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
+            return candidate
+    if publisher_url:
+        return ""
+    for candidate in candidates:
+        if _is_article_specific_url(candidate) and not _is_google_news_wrapper(candidate):
+            return candidate
+    return ""
+
+
+def _extract_google_news_homepage_url(payload: bytes, *, publisher_url: str = "") -> str:
+    text = payload.decode("utf-8", errors="replace")
+    candidates = _extract_candidate_urls(text)
+    for candidate in candidates:
+        if _is_homepage_only_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
+            return candidate
+    if publisher_url:
+        return ""
+    for candidate in candidates:
+        if _is_homepage_only_url(candidate) and not _is_google_news_wrapper(candidate):
+            return candidate
+    return ""
+
+
+def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publisher_url: str = "") -> tuple[str, str, bool]:
+    url = _normalize_url(google_news_url)
+    if not _is_google_news_wrapper(url):
+        return "", "", False
+    payload, fetch_error = _fetch_url(fetcher, url)
+    if fetch_error or not payload:
+        return "", fetch_error or "empty response", True
+    resolved = _extract_google_news_article_url(payload, publisher_url=publisher_url)
+    if resolved:
+        return resolved, "", True
+    homepage = _extract_google_news_homepage_url(payload, publisher_url=publisher_url)
+    if homepage:
+        return homepage, "", True
+    canonical = _extract_canonical_url(payload)
+    if canonical and (not publisher_url or _same_host_family(canonical, publisher_url)):
+        return canonical, "", True
+    return "", "unresolved google news wrapper", True
+
+
 def _classify_fetch_error(error: str) -> str:
     lowered = error.lower()
     if "403" in lowered:
@@ -703,6 +814,8 @@ def _initial_trace_url(discovered_url: str, publisher_url: str) -> str:
         return publisher_url
     if _is_article_specific_url(discovered_url) and not _is_google_news_wrapper(discovered_url):
         return discovered_url
+    if _is_google_news_wrapper(discovered_url):
+        return publisher_url
     return publisher_url or discovered_url
 
 
@@ -872,8 +985,10 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["canonical_url"] = canonical
     candidate["google_news_url"] = google_news_url
     candidate["original_source_url"] = original_source_url
-    candidate["source_url"] = _normalize_url(_nonempty(candidate.get("source_url") or final_trace or original_source_url or discovered))
-    candidate["final_trace_url"] = final_trace or canonical or discovered
+    candidate["source_url"] = _normalize_url(
+        _nonempty(candidate.get("source_url") or final_trace or original_source_url or ("" if _is_google_news_wrapper(discovered) else discovered))
+    )
+    candidate["final_trace_url"] = final_trace or canonical or ("" if _is_google_news_wrapper(discovered) else discovered)
     candidate["manual_review_required"] = bool(candidate.get("manual_review_required", True))
     candidate["pressure_terms_detected"] = list(candidate.get("pressure_terms_detected") or [])
     candidate["location_terms_detected"] = list(candidate.get("location_terms_detected") or [])
@@ -885,6 +1000,10 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["fetch_error"] = _nonempty(candidate.get("fetch_error"))
     candidate["duplicate_of"] = _nonempty(candidate.get("duplicate_of"))
     candidate["public_claim_blockers"] = list(candidate.get("public_claim_blockers") or [])
+    candidate["google_news_resolution_attempted"] = bool(candidate.get("google_news_resolution_attempted"))
+    candidate["google_news_resolution_error"] = _nonempty(candidate.get("google_news_resolution_error"))
+    candidate["google_news_resolved_url"] = _normalize_url(_nonempty(candidate.get("google_news_resolved_url")))
+    candidate["canonical_homepage_collapse_ignored"] = bool(candidate.get("canonical_homepage_collapse_ignored"))
     return candidate
 
 
@@ -1014,6 +1133,12 @@ def run_food_line_discovery_expansion(
     manual_reviewable_count = 0
     fetchable_count = 0
     google_news_url_count = 0
+    google_news_resolution_attempt_count = 0
+    google_news_resolution_success_count = 0
+    google_news_resolution_failure_count = 0
+    google_news_resolved_article_url_count = 0
+    google_news_resolved_homepage_only_count = 0
+    canonical_homepage_collapse_ignored_count = 0
     article_specific_url_count = 0
     unresolved_google_news_count = 0
     seen_trace_keys: dict[str, str] = {}
@@ -1041,11 +1166,34 @@ def run_food_line_discovery_expansion(
             discovered_url = _normalize_url(_nonempty(item.get("link")))
             google_news_url = discovered_url if GOOGLE_NEWS_DOMAIN in discovered_url else ""
             publisher_url = _normalize_url(_nonempty(item.get("source_url")))
-            candidate_source_url = _initial_trace_url(discovered_url, publisher_url)
-            final_trace_url = candidate_source_url or discovered_url
+            resolved_wrapper_url = ""
+            google_news_resolution_error = ""
+            google_news_resolution_attempted = False
+            google_news_resolution_failed = False
+            if google_news_url and not _is_article_specific_url(publisher_url):
+                resolved_wrapper_url, google_news_resolution_error, google_news_resolution_attempted = _resolve_google_news_wrapper(
+                    fetch,
+                    google_news_url,
+                    publisher_url=publisher_url,
+                )
+                if google_news_resolution_attempted:
+                    google_news_resolution_attempt_count += 1
+                    if _is_article_specific_url(resolved_wrapper_url):
+                        google_news_resolution_success_count += 1
+                        google_news_resolved_article_url_count += 1
+                    elif _is_homepage_only_url(resolved_wrapper_url):
+                        google_news_resolution_failure_count += 1
+                        google_news_resolved_homepage_only_count += 1
+                        google_news_resolution_failed = True
+                    else:
+                        google_news_resolution_failure_count += 1
+                        google_news_resolution_failed = True
+            candidate_source_url = _initial_trace_url(discovered_url, resolved_wrapper_url or publisher_url)
+            final_trace_url = candidate_source_url or ""
             canonical = _normalize_url(final_trace_url)
             fetch_status = "unfetched"
-            fetch_error = ""
+            fetch_error = google_news_resolution_error
+            canonical_from_page = ""
             evidence_text = _nonempty(item.get("title")) + " " + _nonempty(item.get("description"))
             if final_trace_url:
                 payload2, fetch_error = _fetch_url(fetch, final_trace_url)
@@ -1059,6 +1207,8 @@ def run_food_line_discovery_expansion(
                         canonical = canonical_from_page
                         if not _is_article_specific_url(final_trace_url):
                             final_trace_url = canonical_from_page
+                    elif _is_homepage_only_url(canonical_from_page) and _is_article_specific_url(final_trace_url):
+                        canonical_homepage_collapse_ignored_count += 1
                     elif canonical_from_page and not canonical:
                         canonical = canonical_from_page
                     evidence_text = " ".join(
@@ -1090,6 +1240,7 @@ def run_food_line_discovery_expansion(
                 original_source_url=final_trace_url or publisher_url,
                 discovered_url=discovered_url,
                 fetch_status=fetch_status,
+                google_news_resolution_failed=google_news_resolution_failed and not source_url and not (final_trace_url or publisher_url),
             )
             candidate_review_status, public_claim_eligible, public_claim_blockers = _candidate_review_defaults(
                 edition_date=date_text,
@@ -1124,6 +1275,12 @@ def run_food_line_discovery_expansion(
                 "source_url": source_url,
                 "original_source_url": final_trace_url or publisher_url or "",
                 "google_news_url": google_news_url,
+                "google_news_resolution_attempted": google_news_resolution_attempted,
+                "google_news_resolution_error": google_news_resolution_error,
+                "google_news_resolved_url": resolved_wrapper_url,
+                "canonical_homepage_collapse_ignored": bool(
+                    _is_homepage_only_url(canonical_from_page) and _is_article_specific_url(final_trace_url)
+                ) if fetch_status == "ok" else False,
                 "publication_date": _nonempty(item.get("pubDate")),
                 "source_published_date": source_published_date,
                 "date_basis": "pubDate" if source_published_date else "unknown",
@@ -1210,6 +1367,12 @@ def run_food_line_discovery_expansion(
             original_source_url=_nonempty(row.get("original_source_url") or row.get("final_trace_url")),
             discovered_url=_nonempty(row.get("discovered_url")),
             fetch_status=_nonempty(row.get("fetch_status")),
+            google_news_resolution_failed=(
+                bool(row.get("google_news_resolution_attempted"))
+                and not bool(_nonempty(row.get("google_news_resolved_url")))
+                and not bool(_nonempty(row.get("source_url") or row.get("final_trace_url")))
+                and not bool(_nonempty(row.get("original_source_url")))
+            ),
         )
         row["candidate_review_status"], row["public_claim_eligible"], row["public_claim_blockers"] = _candidate_review_defaults(
             edition_date=date_text,
@@ -1237,6 +1400,17 @@ def run_food_line_discovery_expansion(
     fetchable_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) == "ok")
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
     google_news_url_count = sum(1 for row in candidates if _nonempty(row.get("google_news_url")))
+    google_news_resolution_attempt_count = sum(1 for row in candidates if bool(row.get("google_news_resolution_attempted")))
+    google_news_resolution_success_count = sum(1 for row in candidates if _is_article_specific_url(_nonempty(row.get("google_news_resolved_url"))))
+    google_news_resolution_failure_count = sum(
+        1
+        for row in candidates
+        if bool(row.get("google_news_resolution_attempted")) and not _is_article_specific_url(_nonempty(row.get("google_news_resolved_url")))
+    )
+    google_news_resolved_article_url_count = google_news_resolution_success_count
+    google_news_resolved_homepage_only_count = sum(
+        1 for row in candidates if _is_homepage_only_url(_nonempty(row.get("google_news_resolved_url")))
+    )
     article_specific_url_count = sum(
         1 for row in candidates if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
     )
@@ -1245,6 +1419,7 @@ def run_food_line_discovery_expansion(
         for row in candidates
         if _nonempty(row.get("google_news_url")) and _nonempty(row.get("traceability_status")) != "traceable"
     )
+    canonical_homepage_collapse_ignored_count = sum(1 for row in candidates if bool(row.get("canonical_homepage_collapse_ignored")))
     qualified_pressure_signals = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "qualified_pressure_signal")
     context_only_count = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "context_only")
     manual_fallback_count = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "manual_fallback")
@@ -1287,6 +1462,12 @@ def run_food_line_discovery_expansion(
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,
         "google_news_url_count": google_news_url_count,
+        "google_news_resolution_attempt_count": google_news_resolution_attempt_count,
+        "google_news_resolution_success_count": google_news_resolution_success_count,
+        "google_news_resolution_failure_count": google_news_resolution_failure_count,
+        "google_news_resolved_article_url_count": google_news_resolved_article_url_count,
+        "google_news_resolved_homepage_only_count": google_news_resolved_homepage_only_count,
+        "canonical_homepage_collapse_ignored_count": canonical_homepage_collapse_ignored_count,
         "article_specific_url_count": article_specific_url_count,
         "homepage_only_trace_count": homepage_only_trace_count,
         "publisher_homepage_trace_only_count": homepage_only_trace_count,
@@ -1345,6 +1526,12 @@ def run_food_line_discovery_expansion(
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
             f"- Google News wrapper URLs: `{google_news_url_count}`",
+            f"- Google News resolution attempts: `{google_news_resolution_attempt_count}`",
+            f"- Google News resolution successes: `{google_news_resolution_success_count}`",
+            f"- Google News resolution failures: `{google_news_resolution_failure_count}`",
+            f"- Google News resolved article URLs: `{google_news_resolved_article_url_count}`",
+            f"- Google News resolved homepage-only URLs: `{google_news_resolved_homepage_only_count}`",
+            f"- Canonical homepage collapse ignored: `{canonical_homepage_collapse_ignored_count}`",
             f"- Article-specific trace URLs: `{article_specific_url_count}`",
             f"- Homepage-only traces: `{homepage_only_trace_count}`",
             f"- Unresolved Google News traces: `{unresolved_google_news_count}`",

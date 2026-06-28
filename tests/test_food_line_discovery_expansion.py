@@ -109,6 +109,8 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
                     }
                 ]
             )
+        if url == "https://news.google.com/rss/articles/CBMiHOME?oc=5":
+            return f"<html><body><a href=\"{homepage_url}\">open</a></body></html>".encode("utf-8")
         if url == homepage_url:
             return _html_article(
                 title="KXAN homepage",
@@ -133,6 +135,7 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
     assert candidate["public_claim_eligible"] is False
     assert candidate["traceability_status"] == "publisher_homepage_trace_only"
     assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
+    assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiHOME?oc=5"
 
 
 def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_collapses_to_homepage(tmp_path: Path):
@@ -154,6 +157,8 @@ def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_co
                     }
                 ]
             )
+        if url == "https://news.google.com/rss/articles/CBMiARTICLE?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
         if url.rstrip("/") == article_url.rstrip("/"):
             return _html_article(
                 title="Pantry demand rising",
@@ -175,7 +180,58 @@ def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_co
 
     assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiARTICLE?oc=5"
     assert candidate["source_url"] == article_url.rstrip("/")
+    assert candidate["original_source_url"] == article_url.rstrip("/")
     assert candidate["final_trace_url"] == article_url.rstrip("/")
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["canonical_homepage_collapse_ignored"] is True
+
+
+def test_food_line_discovery_expansion_resolves_google_news_wrapper_to_article_url(tmp_path: Path):
+    edition_date = "2026-06-21"
+    homepage_url = "https://fox56.com"
+    article_url = "https://fox56.com/news/local/summer-hunger-relief-food-banks-prepare"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Summer hunger relief: Local food banks prepare for increased need",
+                        "link": "https://news.google.com/rss/articles/CBMiFOX56?oc=5",
+                        "source_url": homepage_url,
+                        "publisher": "FOX56",
+                        "description": "Food banks prepare for increased need as school lets out.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiFOX56?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return _html_article(
+                title="Summer hunger relief",
+                canonical=article_url,
+                body="Food banks prepare for increased need as school lets out.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiFOX56?oc=5"
+    assert candidate["discovered_url"] == "https://news.google.com/rss/articles/CBMiFOX56?oc=5"
+    assert candidate["source_url"] == article_url
+    assert candidate["original_source_url"] == article_url
+    assert candidate["final_trace_url"] == article_url
     assert candidate["traceability_status"] == "traceable"
     assert candidate["public_claim_eligible"] is True
 
@@ -248,6 +304,7 @@ def test_food_line_discovery_expansion_caps_queries_across_multiple_lanes(tmp_pa
 def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_path: Path):
     edition_date = "2026-06-21"
     article_url = "https://example.com/story"
+    article_homepage_url = "https://example.com"
     homepage_url = "https://www.kxan.com"
 
     def fetcher(url: str, timeout: int = 15):
@@ -257,7 +314,7 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
                     {
                         "title": "Traceable article",
                         "link": "https://news.google.com/rss/articles/CBMiTRACE?oc=5",
-                        "source_url": article_url,
+                        "source_url": article_homepage_url,
                         "publisher": "Example News",
                         "description": "Food bank demand is rising.",
                         "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
@@ -272,6 +329,10 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
                     },
                 ]
             )
+        if url == "https://news.google.com/rss/articles/CBMiTRACE?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == "https://news.google.com/rss/articles/CBMiHOME?oc=5":
+            return f"<html><body><a href=\"{homepage_url}\">home</a></body></html>".encode("utf-8")
         if url == article_url:
             return _html_article(title="Traceable article", canonical=article_url, body="Food bank demand is rising.")
         if url == homepage_url:
@@ -289,6 +350,11 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     )
 
     assert result["google_news_url_count"] == 2
+    assert result["google_news_resolution_attempt_count"] == 2
+    assert result["google_news_resolution_success_count"] == 1
+    assert result["google_news_resolution_failure_count"] == 1
+    assert result["google_news_resolved_article_url_count"] == 1
+    assert result["google_news_resolved_homepage_only_count"] == 1
     assert result["article_specific_url_count"] == 1
     assert result["publisher_homepage_trace_only_count"] == 1
     assert result["unresolved_google_news_count"] == 1
@@ -296,6 +362,141 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     assert result["in_window_candidate_count"] == 2
     assert result["out_of_window_candidate_count"] == 0
     assert result["public_eligible_candidate_count"] == 1
+
+
+def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_public(tmp_path: Path):
+    edition_date = "2026-06-21"
+    google_url = "https://news.google.com/rss/articles/CBMiFAIL?oc=5"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Summer hunger relief: Local food banks prepare for increased need",
+                        "link": google_url,
+                        "source_url": "",
+                        "publisher": "Fox 56",
+                        "description": "Food bank hunger relief and increased need.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == google_url:
+            return b"<html><body><p>No article URL exposed here.</p></body></html>"
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["google_news_url"] == google_url
+    assert candidate["discovered_url"] == google_url
+    assert candidate["final_trace_url"] == ""
+    assert candidate["traceability_status"] == "unresolved_google_news"
+    assert candidate["public_claim_eligible"] is False
+    assert "unresolved_google_news" in candidate["public_claim_blockers"]
+
+
+def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable_url(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/background-story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Background report on community volunteering",
+                        "link": "https://news.google.com/rss/articles/CBMiCTX?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "A community profile without current pressure evidence.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiCTX?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return _html_article(title="Background report", canonical=article_url, body="A community profile without current pressure evidence.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["classification_status"] == "context_only"
+    assert candidate["public_claim_eligible"] is False
+    assert "context_only" in candidate["public_claim_blockers"]
+
+
+def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_fields(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food bank says demand is rising",
+                        "link": "https://news.google.com/rss/articles/CBMiFIELDS?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food bank demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiFIELDS?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return _html_article(title="Food bank says demand is rising", canonical=article_url, body="Food bank demand is rising.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    payload = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+
+    assert isinstance(payload, list)
+    assert payload
+    candidate = payload[0]
+    for key in (
+        "discovered_title",
+        "discovered_publisher",
+        "discovered_url",
+        "google_news_url",
+        "source_url",
+        "original_source_url",
+        "final_trace_url",
+        "traceability_status",
+        "public_claim_eligible",
+        "public_claim_blockers",
+    ):
+        assert key in candidate
 
 
 def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallbacks(tmp_path: Path):

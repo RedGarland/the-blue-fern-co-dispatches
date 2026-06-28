@@ -20,6 +20,84 @@ These are the current non-negotiable operating rules for this project.
 - Scheduled tasks use the project `.venv`.
 - `SMTP_PASSWORD` is never logged.
 
+## Codex Safe Execution Scope
+
+Codex may perform safe mechanical PR-preparation steps in the source repo when the user explicitly asks for that workflow step, but Codex is never merge, publication, Pages, or editorial authority.
+
+Codex may:
+
+- create a feature branch from the approved base branch
+- stage only explicitly named source, config, test, or documentation files
+- run `git diff --cached --stat`
+- run `git diff --cached --check`
+- run `git diff --cached --name-only`
+- verify the staged file list matches the intended files only
+- commit with a scoped commit message
+- push the feature branch
+- create a PR against the approved base branch
+- run or watch PR checks
+- open the PR in the browser with `gh pr view --web`
+- after the human confirms merge, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, verify Pages repo status
+- delete local and remote feature branches only after merge confirmation
+
+Codex must not:
+
+- merge a PR
+- publish a public edition
+- sync, commit, or push the Pages repo
+- post to Bluesky or other social platforms
+- create or replace podcast, audio, or other public publication artifacts for release
+- decide that a candidate is source-backed enough for public publication
+- relax source eligibility gates
+- alter editorial standards
+- commit generated public output unless explicitly instructed
+- use `git add .`
+- delete broad generated folders without explicit instruction
+
+Codex may do the following only with explicit instruction:
+
+- run discovery or backfill jobs that create candidate or review artifacts
+- clean specific generated artifacts
+- run dry-run publish validation
+- update discovery or source configuration
+- create commits and PRs
+- delete feature branches after merge confirmation
+
+Required staging rule before every commit:
+
+- run `git diff --cached --stat`
+- run `git diff --cached --check`
+- run `git diff --cached --name-only`
+- verify the staged file list contains only the intended files
+- if unrelated files are staged, stop and unstage them before committing
+
+Default safe PR command pattern:
+
+```powershell
+git switch -c feature/<scoped-branch-name>
+
+git add `
+  <explicit-file-1> `
+  <explicit-file-2> `
+  <explicit-file-3>
+
+git diff --cached --stat
+git diff --cached --check
+git diff --cached --name-only
+
+git commit -m "<scoped commit message>"
+git push -u origin feature/<scoped-branch-name>
+
+gh pr create `
+  --base add/pages-repo-default `
+  --head feature/<scoped-branch-name> `
+  --title "<PR title>" `
+  --body "<PR body with validation results and no publish/no Pages sync statement>"
+
+gh pr checks --watch
+gh pr view --web
+```
+
 ## American Pressure Operating Model
 
 1. Public cadence:

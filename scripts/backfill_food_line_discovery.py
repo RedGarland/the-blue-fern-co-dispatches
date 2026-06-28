@@ -277,6 +277,12 @@ def run_food_line_discovery_backfill(
             "skipped_lanes": sorted({lane for row in per_date for lane in row.get("skipped_lanes", []) if str(lane).strip()}),
             "candidates_by_lane": dict(sorted(Counter({}).items())),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
+            "google_news_resolution_attempt_count": sum(int(row.get("google_news_resolution_attempt_count", 0)) for row in per_date),
+            "google_news_resolution_success_count": sum(int(row.get("google_news_resolution_success_count", 0)) for row in per_date),
+            "google_news_resolution_failure_count": sum(int(row.get("google_news_resolution_failure_count", 0)) for row in per_date),
+            "google_news_resolved_article_url_count": sum(int(row.get("google_news_resolved_article_url_count", 0)) for row in per_date),
+            "google_news_resolved_homepage_only_count": sum(int(row.get("google_news_resolved_homepage_only_count", 0)) for row in per_date),
+            "canonical_homepage_collapse_ignored_count": sum(int(row.get("canonical_homepage_collapse_ignored_count", 0)) for row in per_date),
             "article_specific_url_count": sum(int(row.get("article_specific_url_count", 0)) for row in per_date),
             "publisher_homepage_trace_only_count": sum(int(row.get("publisher_homepage_trace_only_count", 0)) for row in per_date),
             "unresolved_google_news_count": sum(int(row.get("unresolved_google_news_count", 0)) for row in per_date),
@@ -353,6 +359,12 @@ def run_food_line_discovery_backfill(
                     "in_window_candidate_count": 0,
                     "out_of_window_candidate_count": 0,
                     "google_news_url_count": 0,
+                    "google_news_resolution_attempt_count": 0,
+                    "google_news_resolution_success_count": 0,
+                    "google_news_resolution_failure_count": 0,
+                    "google_news_resolved_article_url_count": 0,
+                    "google_news_resolved_homepage_only_count": 0,
+                    "canonical_homepage_collapse_ignored_count": 0,
                     "article_specific_url_count": 0,
                     "publisher_homepage_trace_only_count": 0,
                     "unresolved_google_news_count": 0,
@@ -382,6 +394,28 @@ def run_food_line_discovery_backfill(
         in_window_count = sum(1 for row in typed_candidates if "outside_backfill_date_window" not in list(row.get("public_claim_blockers") or []))
         out_of_window_count = len(typed_candidates) - in_window_count
         google_news_url_count = sum(1 for row in typed_candidates if str(row.get("google_news_url") or "").strip())
+        google_news_resolution_attempt_count = sum(1 for row in typed_candidates if bool(row.get("google_news_resolution_attempted")))
+        google_news_resolution_success_count = sum(
+            1
+            for row in typed_candidates
+            if str(row.get("google_news_resolved_url") or "").strip() and str(row.get("traceability_status") or "").strip() == "traceable"
+        )
+        google_news_resolution_failure_count = sum(
+            1
+            for row in typed_candidates
+            if bool(row.get("google_news_resolution_attempted")) and str(row.get("traceability_status") or "").strip() != "traceable"
+        )
+        google_news_resolved_article_url_count = sum(
+            1 for row in typed_candidates if str(row.get("google_news_resolved_url") or "").strip() and str(row.get("traceability_status") or "").strip() == "traceable"
+        )
+        google_news_resolved_homepage_only_count = sum(
+            1
+            for row in typed_candidates
+            if bool(row.get("google_news_resolution_attempted"))
+            and str(row.get("google_news_resolved_url") or "").strip()
+            and str(row.get("traceability_status") or "").strip() == "publisher_homepage_trace_only"
+        )
+        canonical_homepage_collapse_ignored_count = sum(1 for row in typed_candidates if bool(row.get("canonical_homepage_collapse_ignored")))
         article_specific_url_count = sum(
             1
             for row in typed_candidates
@@ -469,6 +503,12 @@ def run_food_line_discovery_backfill(
                 "in_window_candidate_count": in_window_count,
                 "out_of_window_candidate_count": out_of_window_count,
                 "google_news_url_count": google_news_url_count,
+                "google_news_resolution_attempt_count": google_news_resolution_attempt_count,
+                "google_news_resolution_success_count": google_news_resolution_success_count,
+                "google_news_resolution_failure_count": google_news_resolution_failure_count,
+                "google_news_resolved_article_url_count": google_news_resolved_article_url_count,
+                "google_news_resolved_homepage_only_count": google_news_resolved_homepage_only_count,
+                "canonical_homepage_collapse_ignored_count": canonical_homepage_collapse_ignored_count,
                 "article_specific_url_count": article_specific_url_count,
                 "publisher_homepage_trace_only_count": publisher_homepage_trace_only_count,
                 "unresolved_google_news_count": unresolved_google_news_count,

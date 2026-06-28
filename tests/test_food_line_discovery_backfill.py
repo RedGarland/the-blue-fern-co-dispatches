@@ -189,6 +189,10 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
                     },
                 ]
             )
+        if url == "https://news.google.com/rss/articles/CBMiLATE?oc=5":
+            return b"<html><body><a href=\"https://example.com/late-story\">story</a></body></html>"
+        if url == "https://news.google.com/rss/articles/CBMiHOME?oc=5":
+            return b"<html><body><a href=\"https://www.kxan.com\">home</a></body></html>"
         if url == "https://example.com/late-story":
             return b"""<html><head><title>Late story</title><link rel=\"canonical\" href=\"https://example.com/late-story\"></head><body><p>Food bank demand is rising.</p></body></html>"""
         if url == "https://www.kxan.com":
@@ -237,6 +241,11 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert summary["top_blocker_reasons"]["outside_backfill_date_window"] >= 1
     assert summary["top_blocker_reasons"]["publisher_homepage_trace_only"] >= 1
     assert summary["google_news_url_count"] == 2
+    assert summary["google_news_resolution_attempt_count"] == 1
+    assert summary["google_news_resolution_success_count"] == 0
+    assert summary["google_news_resolution_failure_count"] == 1
+    assert summary["google_news_resolved_article_url_count"] == 0
+    assert summary["google_news_resolved_homepage_only_count"] == 1
     assert summary["publisher_homepage_trace_only_count"] == 1
     assert summary["unresolved_google_news_count"] == 1
     assert summary["public_eligible_candidate_count"] == 0

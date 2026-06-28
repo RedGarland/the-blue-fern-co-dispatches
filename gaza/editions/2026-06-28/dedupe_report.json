@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-06-28",
-  "candidates_seen": 12,
+  "candidates_seen": 9,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-06-28-008",
@@ -9,21 +9,8 @@
       "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_source_url_different_publisher"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-009",
-      "title": "Israeli attacks kill three in Gaza over past 24 hours",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
         "new_official_or_public_agency_source",
-        "update_term_in_title_or_snippet",
-        "reports_new_numbers"
+        "update_term_in_title_or_snippet"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -53,17 +40,6 @@
     {
       "story_id": "gaza-story-2026-06-28-002",
       "title": "Gaza's displaced families face worsening living conditions",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-010",
-      "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -114,23 +90,9 @@
       "material_update": false,
       "material_update_reasons": [],
       "duplicate_reasons": [
-        "gaza_ceasefire_casualty"
-      ],
-      "prior_story_matched": "gaza-story-2026-06-28-009",
-      "prior_edition_date": "2026-06-28",
-      "include_decision": "merge_into_existing",
-      "public_rendered": false
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-001",
-      "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
-      "classification": "duplicate_merged",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [
         "within_edition_source_url"
       ],
-      "prior_story_matched": "gaza-story-2026-06-28-010",
+      "prior_story_matched": "gaza-story-2026-06-28-008",
       "prior_edition_date": "2026-06-28",
       "include_decision": "merge_into_existing",
       "public_rendered": false
@@ -144,7 +106,7 @@
       "duplicate_reasons": [
         "gaza_ceasefire_casualty"
       ],
-      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_story_matched": "gaza-story-2026-06-28-008",
       "prior_edition_date": "2026-06-28",
       "include_decision": "merge_into_existing",
       "public_rendered": false
@@ -158,64 +120,35 @@
       "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_source_url_different_publisher"
+        "new_official_or_public_agency_source",
+        "update_term_in_title_or_snippet"
       ],
       "duplicate_reasons": [],
       "prior_story_matched": "gaza-story-2026-06-18-006",
       "prior_edition_date": "2026-06-18",
       "include_decision": "include",
       "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-009",
-      "title": "Israeli attacks kill three in Gaza over past 24 hours",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "new_official_or_public_agency_source",
-        "update_term_in_title_or_snippet",
-        "reports_new_numbers"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-06-18-008",
-      "prior_edition_date": "2026-06-18",
-      "include_decision": "include",
-      "public_rendered": true
     }
   ],
-  "merged_sources": 2,
+  "merged_sources": 4,
   "duplicate_groups": [
     {
-      "kept_story_id": "gaza-story-2026-06-28-009",
+      "kept_story_id": "gaza-story-2026-06-28-008",
       "merged_story_ids": [
         "gaza-story-2026-06-28-003"
       ],
       "merged_source_ids": [
-        "gaza-2026-06-28-anadolu-083294ceced8"
-      ],
-      "duplicate_reason": "gaza_ceasefire_casualty",
-      "normalized_event_key": "gaza_ceasefire_casualty",
-      "reasons": [
-        "gaza_ceasefire_casualty"
-      ]
-    },
-    {
-      "kept_story_id": "gaza-story-2026-06-28-010",
-      "merged_story_ids": [
-        "gaza-story-2026-06-28-001"
-      ],
-      "merged_source_ids": [
+        "gaza-2026-06-28-anadolu-083294ceced8",
         "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
       ],
       "duplicate_reason": "within_edition_duplicate",
-      "normalized_event_key": "",
+      "normalized_event_key": "gaza_ceasefire_casualty",
       "reasons": [
         "within_edition_source_url"
       ]
     },
     {
-      "kept_story_id": "gaza-story-2026-06-28-009",
+      "kept_story_id": "gaza-story-2026-06-28-008",
       "merged_story_ids": [
         "gaza-story-2026-06-28-005"
       ],
@@ -237,23 +170,9 @@
       "material_update": false,
       "material_update_reasons": [],
       "duplicate_reasons": [
-        "gaza_ceasefire_casualty"
-      ],
-      "prior_story_matched": "gaza-story-2026-06-28-009",
-      "prior_edition_date": "2026-06-28",
-      "include_decision": "merge_into_existing",
-      "public_rendered": false
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-001",
-      "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
-      "classification": "duplicate_merged",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [
         "within_edition_source_url"
       ],
-      "prior_story_matched": "gaza-story-2026-06-28-010",
+      "prior_story_matched": "gaza-story-2026-06-28-008",
       "prior_edition_date": "2026-06-28",
       "include_decision": "merge_into_existing",
       "public_rendered": false
@@ -267,7 +186,7 @@
       "duplicate_reasons": [
         "gaza_ceasefire_casualty"
       ],
-      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_story_matched": "gaza-story-2026-06-28-008",
       "prior_edition_date": "2026-06-28",
       "include_decision": "merge_into_existing",
       "public_rendered": false
@@ -278,27 +197,11 @@
       "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_source_url_different_publisher"
+        "new_official_or_public_agency_source",
+        "update_term_in_title_or_snippet"
       ],
       "duplicate_reasons": [],
       "prior_story_matched": "gaza-story-2026-06-18-006",
-      "prior_edition_date": "2026-06-18",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-009",
-      "title": "Israeli attacks kill three in Gaza over past 24 hours",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "new_official_or_public_agency_source",
-        "update_term_in_title_or_snippet",
-        "reports_new_numbers"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": "gaza-story-2026-06-18-008",
       "prior_edition_date": "2026-06-18",
       "include_decision": "include",
       "public_rendered": true
@@ -334,20 +237,6 @@
     {
       "story_id": "gaza-story-2026-06-28-002",
       "title": "Gaza's displaced families face worsening living conditions",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-06-28-010",
-      "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

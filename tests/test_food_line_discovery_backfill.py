@@ -246,12 +246,14 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert summary["google_news_resolution_failure_count"] == 1
     assert summary["google_news_resolved_article_url_count"] == 0
     assert summary["google_news_resolved_homepage_only_count"] == 1
+    assert summary["google_news_resolution_status_counts"]["success_homepage_only"] == 1
     assert summary["publisher_homepage_trace_only_count"] == 1
-    assert summary["unresolved_google_news_count"] == 1
+    assert summary["unresolved_google_news_count"] == 0
     assert summary["public_eligible_candidate_count"] == 0
     assert "2026-06-21" in summary["dates_with_no_public_eligible_candidates"]
     assert review["top_blocker_reasons"]["outside_backfill_date_window"] >= 1
     assert review["top_blocker_reasons"]["publisher_homepage_trace_only"] >= 1
+    assert review["candidates"][1]["google_news_resolution"]["google_news_resolution_status"] == "success_homepage_only"
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()

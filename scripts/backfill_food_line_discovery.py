@@ -160,7 +160,11 @@ def _review_payload(
                 "discovery_query": str(row.get("discovery_query") or row.get("query_text") or ""),
                 "discovery_source_type": str(row.get("discovery_source_type") or ""),
                 "source_published_date": str(row.get("source_published_date") or row.get("publication_date") or ""),
+                "target_date": str(row.get("target_date") or edition_date),
+                "date_distance_days": row.get("date_distance_days"),
+                "date_match_status": str(row.get("date_match_status") or ""),
                 "date_basis": str(row.get("date_basis") or ""),
+                "selected_after_date_filter": bool(row.get("selected_after_date_filter")),
                 "location_scope": str(row.get("location_scope") or row.get("geographic_scope") or ""),
                 "state_hint": str(row.get("state_hint") or row.get("state_or_territory") or ""),
                 "pressure_signal_hint": str(row.get("pressure_signal_hint") or ""),
@@ -286,6 +290,9 @@ def run_food_line_discovery_backfill(
             "rejected_candidates_by_date": {row["date"]: row["rejected_candidate_count"] for row in per_date},
             "in_window_candidates_by_date": {row["date"]: row["in_window_candidate_count"] for row in per_date},
             "out_of_window_candidates_by_date": {row["date"]: row["out_of_window_candidate_count"] for row in per_date},
+            "in_window_direct_candidates_by_date": {row["date"]: row["in_window_direct_candidate_count"] for row in per_date},
+            "out_of_window_direct_candidates_by_date": {row["date"]: row["out_of_window_direct_candidate_count"] for row in per_date},
+            "missing_date_direct_candidates_by_date": {row["date"]: row["missing_date_direct_candidate_count"] for row in per_date},
             "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
             "discovery_lanes_used": dict(sorted(lane_counts.items())),
             "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
@@ -318,6 +325,10 @@ def run_food_line_discovery_backfill(
             "direct_sources_recommended_for_url_refresh": sorted({}),
             "direct_sources_recommended_for_parser_fix": sorted({}),
             "direct_source_candidate_cap_hits": dict(sorted(Counter({}).items())),
+            "direct_candidates_by_date_match_status": dict(sorted(Counter({}).items())),
+            "direct_candidates_by_date_basis": dict(sorted(Counter({}).items())),
+            "direct_sources_with_no_in_window_items": sorted({}),
+            "direct_sources_with_in_window_items": sorted({}),
             "dominant_source_warning": "; ".join(sorted({str(row.get("dominant_source_warning") or "").strip() for row in per_date if str(row.get("dominant_source_warning") or "").strip()})),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
             "google_news_resolution_attempt_count": sum(int(row.get("google_news_resolution_attempt_count", 0)) for row in per_date),
@@ -342,6 +353,9 @@ def run_food_line_discovery_backfill(
             "blocked_fetch_count": sum(int(row.get("blocked_fetch_count", 0)) for row in per_date),
             "in_window_candidate_count": sum(int(row.get("in_window_candidate_count", 0)) for row in per_date),
             "out_of_window_candidate_count": sum(int(row.get("out_of_window_candidate_count", 0)) for row in per_date),
+            "in_window_direct_candidate_count": sum(int(row.get("in_window_direct_candidate_count", 0)) for row in per_date),
+            "out_of_window_direct_candidate_count": sum(int(row.get("out_of_window_direct_candidate_count", 0)) for row in per_date),
+            "missing_date_direct_candidate_count": sum(int(row.get("missing_date_direct_candidate_count", 0)) for row in per_date),
             "public_eligible_candidate_count": sum(int(row.get("public_eligible_candidate_count", 0)) for row in per_date),
             "per_date": per_date,
             "public_output_written": False,
@@ -416,6 +430,26 @@ def run_food_line_discovery_backfill(
                 ).items()
             )
         )
+        summary["direct_candidates_by_date_match_status"] = dict(
+            sorted(
+                Counter(
+                    status
+                    for row in per_date
+                    for status, count in (row.get("direct_candidates_by_date_match_status") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["direct_candidates_by_date_basis"] = dict(
+            sorted(
+                Counter(
+                    basis
+                    for row in per_date
+                    for basis, count in (row.get("direct_candidates_by_date_basis") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
         summary["direct_source_fetch_failure_reasons_by_source"] = {
             source_name: dict(sorted(counter.items()))
             for source_name, counter in sorted(
@@ -484,6 +518,33 @@ def run_food_line_discovery_backfill(
                 if str(source_name).strip()
             }
         )
+        summary["direct_sources_with_no_in_window_items"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_sources_with_no_in_window_items") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["direct_sources_with_in_window_items"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("direct_sources_with_in_window_items") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["dates_with_no_in_window_direct_candidates"] = sorted(
+            {row["date"] for row in per_date if int(row.get("in_window_direct_candidate_count", 0)) <= 0}
+        )
+        summary["dates_where_out_of_window_filled_cap"] = sorted(
+            {
+                row["date"]
+                for row in per_date
+                if int(row.get("out_of_window_direct_candidate_count", 0)) > 0
+                and int(row.get("in_window_direct_candidate_count", 0)) <= 0
+            }
+        )
         summary["backfill_summary_json_path"] = str(json_path)
         summary["backfill_summary_html_path"] = str(html_path)
         return summary
@@ -537,6 +598,9 @@ def run_food_line_discovery_backfill(
                     "needs_review_candidate_count": 0,
                     "in_window_candidate_count": 0,
                     "out_of_window_candidate_count": 0,
+                    "in_window_direct_candidate_count": 0,
+                    "out_of_window_direct_candidate_count": 0,
+                    "missing_date_direct_candidate_count": 0,
                     "google_news_url_count": 0,
                     "google_news_resolution_attempt_count": 0,
                     "google_news_resolution_success_count": 0,
@@ -566,6 +630,10 @@ def run_food_line_discovery_backfill(
                     "direct_sources_recommended_for_url_refresh": [],
                     "direct_sources_recommended_for_parser_fix": [],
                     "direct_source_candidate_cap_hits": {},
+                    "direct_candidates_by_date_match_status": {},
+                    "direct_candidates_by_date_basis": {},
+                    "direct_sources_with_no_in_window_items": [],
+                    "direct_sources_with_in_window_items": [],
                     "dominant_source_warning": "",
                     "only_out_of_window_candidates": False,
                     "only_context_candidates": False,
@@ -630,6 +698,10 @@ def run_food_line_discovery_backfill(
         direct_sources_recommended_for_url_refresh = list(audit.get("direct_sources_recommended_for_url_refresh") or [])
         direct_sources_recommended_for_parser_fix = list(audit.get("direct_sources_recommended_for_parser_fix") or [])
         direct_source_candidate_cap_hits = dict(audit.get("direct_source_candidate_cap_hits") or {})
+        direct_candidates_by_date_match_status = dict(audit.get("direct_candidates_by_date_match_status") or {})
+        direct_candidates_by_date_basis = dict(audit.get("direct_candidates_by_date_basis") or {})
+        direct_sources_with_no_in_window_items = list(audit.get("direct_sources_with_no_in_window_items") or [])
+        direct_sources_with_in_window_items = list(audit.get("direct_sources_with_in_window_items") or [])
         dominant_source_warning = str(audit.get("dominant_source_warning") or "").strip()
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
@@ -737,12 +809,19 @@ def run_food_line_discovery_backfill(
                 "direct_sources_recommended_for_url_refresh": direct_sources_recommended_for_url_refresh,
                 "direct_sources_recommended_for_parser_fix": direct_sources_recommended_for_parser_fix,
                 "direct_source_candidate_cap_hits": direct_source_candidate_cap_hits,
+                "direct_candidates_by_date_match_status": direct_candidates_by_date_match_status,
+                "direct_candidates_by_date_basis": direct_candidates_by_date_basis,
+                "direct_sources_with_no_in_window_items": direct_sources_with_no_in_window_items,
+                "direct_sources_with_in_window_items": direct_sources_with_in_window_items,
                 "dominant_source_warning": dominant_source_warning,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),
                 "needs_review_candidate_count": int(review_counts.get("needs_review", 0)),
                 "in_window_candidate_count": in_window_count,
                 "out_of_window_candidate_count": out_of_window_count,
+                "in_window_direct_candidate_count": int(audit.get("in_window_direct_candidate_count", 0)),
+                "out_of_window_direct_candidate_count": int(audit.get("out_of_window_direct_candidate_count", 0)),
+                "missing_date_direct_candidate_count": int(audit.get("missing_date_direct_candidate_count", 0)),
                 "google_news_url_count": google_news_url_count,
                 "google_news_resolution_attempt_count": google_news_resolution_attempt_count,
                 "google_news_resolution_success_count": google_news_resolution_success_count,

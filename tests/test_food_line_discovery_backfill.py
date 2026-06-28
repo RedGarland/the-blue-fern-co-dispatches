@@ -282,6 +282,109 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
 
 
+def test_food_line_discovery_backfill_reports_direct_date_targeting_diagnostics(tmp_path: Path):
+    feed_url = "https://example.org/direct-feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "June 21 exact match",
+                        "link": "https://example.org/2026/06/21/story",
+                        "source_url": "https://example.org/2026/06/21/story",
+                        "publisher": "Historical Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sun, 21 Jun 2026 12:00:00 GMT",
+                    },
+                    {
+                        "title": "June 22 out of window",
+                        "link": "https://example.org/2026/06/25/story",
+                        "source_url": "https://example.org/2026/06/25/story",
+                        "publisher": "Historical Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Thu, 25 Jun 2026 12:00:00 GMT",
+                    },
+                ]
+            )
+        if url == "https://example.org/2026/06/21/story":
+            return b"""<html><head><title>June 21</title><link rel=\"canonical\" href=\"https://example.org/2026/06/21/story\"></head><body><p>Food pantry demand is rising.</p></body></html>"""
+        if url == "https://example.org/2026/06/25/story":
+            return b"""<html><head><title>June 25</title><link rel=\"canonical\" href=\"https://example.org/2026/06/25/story\"></head><body><p>Food pantry demand is rising.</p></body></html>"""
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-22",
+            max_queries=1,
+            max_results_per_query=1,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-22"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["in_window_direct_candidate_count"] == 1
+    assert summary["out_of_window_direct_candidate_count"] == 1
+    assert summary["missing_date_direct_candidate_count"] == 0
+    assert summary["direct_candidates_by_date_match_status"]["exact_date"] == 1
+    assert summary["direct_candidates_by_date_match_status"]["outside_query_window"] == 1
+    assert summary["direct_candidates_by_date_basis"]["feed_published"] == 2
+    assert summary["dates_with_no_in_window_direct_candidates"] == ["2026-06-22"]
+    assert summary["dates_where_out_of_window_filled_cap"] == ["2026-06-22"]
+    assert summary["direct_sources_with_in_window_items"] == ["Historical Feed"]
+    assert summary["public_output_written"] is False
+    assert summary["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
 def test_food_line_discovery_backfill_samples_multiple_lanes_under_query_cap(tmp_path: Path):
     calls: list[str] = []
 

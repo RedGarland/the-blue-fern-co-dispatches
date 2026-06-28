@@ -1219,6 +1219,203 @@ def test_dominant_source_warning_appears_when_one_source_supplies_majority(tmp_p
     assert "Dominant Feed contributed 2 of 2 candidates." == result["dominant_source_warning"]
 
 
+def test_direct_rss_prefers_exact_date_items_before_newer_out_of_window_items(tmp_path: Path):
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Balanced Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Newest but out of window",
+                        "link": "https://example.org/2026/06/25/newest-story",
+                        "source_url": "https://example.org/2026/06/25/newest-story",
+                        "publisher": "Balanced Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Thu, 25 Jun 2026 12:00:00 GMT",
+                    },
+                    {
+                        "title": "Exact date match",
+                        "link": "https://example.org/2026/06/21/exact-story",
+                        "source_url": "https://example.org/2026/06/21/exact-story",
+                        "publisher": "Balanced Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sun, 21 Jun 2026 12:00:00 GMT",
+                    },
+                ]
+            )
+        if url == "https://example.org/2026/06/21/exact-story":
+            return _html_article(title="Exact date match", canonical=url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+
+    assert len(candidates) == 1
+    assert candidates[0]["source_url"] == "https://example.org/2026/06/21/exact-story"
+    assert candidates[0]["date_match_status"] == "exact_date"
+    assert candidates[0]["date_basis"] == "feed_published"
+    assert candidates[0]["selected_after_date_filter"] is True
+    assert result["candidates_by_direct_source"] == {"Balanced Feed": 1}
+    assert result["in_window_direct_candidate_count"] == 1
+    assert result["out_of_window_direct_candidate_count"] == 0
+    assert result["direct_candidates_by_date_match_status"]["exact_date"] == 1
+
+
+def test_direct_page_prefers_exact_date_article_links_before_out_of_window_links(tmp_path: Path):
+    agenda_url = "https://example.org/agenda"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Agenda Source",
+                "source_family": "county_city_agenda",
+                "discovery_lane": "county_city_agenda",
+                "discovery_channel": "direct_page",
+                "source_url": agenda_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "state_local",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food assistance", "food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == agenda_url:
+            return (
+                "<html><body>"
+                "<a href=\"https://example.org/2026/06/25/latest-food-assistance\">Latest update</a>"
+                "<a href=\"https://example.org/2026/06/21/food-assistance-report\">Target-date update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == "https://example.org/2026/06/21/food-assistance-report":
+            return (
+                "<html><head>"
+                "<link rel=\"canonical\" href=\"https://example.org/2026/06/21/food-assistance-report\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T10:00:00Z\">"
+                "</head><body>Food assistance demand is rising.</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+
+    assert len(candidates) == 1
+    assert candidates[0]["source_url"] == "https://example.org/2026/06/21/food-assistance-report"
+    assert candidates[0]["date_match_status"] == "exact_date"
+    assert candidates[0]["date_basis"] == "page_meta_date"
+    assert result["candidates_by_direct_source"] == {"Agenda Source": 1}
+    assert result["direct_sources_with_in_window_items"] == ["Agenda Source"]
+
+
+def test_direct_source_missing_date_items_are_diagnosed_and_non_public(tmp_path: Path):
+    feed_url = "https://example.org/missing-date.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Missing Date Feed",
+                "source_family": "public_radio",
+                "discovery_lane": "public_radio",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Missing date story",
+                        "link": "https://example.org/story-without-date",
+                        "source_url": "https://example.org/story-without-date",
+                        "publisher": "Missing Date Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "",
+                    }
+                ]
+            )
+        if url == "https://example.org/story-without-date":
+            return _html_article(title="Missing date story", canonical=url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["source_published_date"] == ""
+    assert candidate["date_match_status"] == "missing_date"
+    assert candidate["date_basis"] == "missing"
+    assert candidate["public_claim_eligible"] is False
+    assert "outside_backfill_date_window" in candidate["public_claim_blockers"]
+    assert result["missing_date_direct_candidate_count"] == 1
+    assert result["direct_candidates_by_date_match_status"]["missing_date"] == 1
+    assert result["direct_candidates_by_date_basis"]["missing"] == 1
+    assert result["direct_sources_with_no_in_window_items"] == ["Missing Date Feed"]
+
+
 def test_direct_rss_sources_are_preferred_over_broad_agenda_pages_in_capped_runs(tmp_path: Path):
     calls: list[str] = []
     feed_url = "https://example.org/feed.xml"

@@ -45,6 +45,34 @@ def _html_article(*, title: str, canonical: str, body: str) -> bytes:
 </html>""".encode("utf-8")
 
 
+def _write_direct_source_config(tmp_path: Path, direct_sources: list[dict[str, object]]) -> None:
+    config_dir = tmp_path / "data" / "dispatches" / "food-line"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config = {
+        "search": {
+            "provider": "google_news_rss",
+            "rss_url_template": "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en",
+        },
+        "direct_sources": direct_sources,
+        "query_families": [
+            {
+                "query_family": "public_radio",
+                "geographic_scope": "national",
+                "source_family": "public_radio",
+                "templates": ['"food bank"'],
+            },
+            {
+                "query_family": "pressure",
+                "geographic_scope": "national",
+                "source_family": "local_news",
+                "templates": ['"food pantry"'],
+            },
+        ],
+        "metros": [{"name": "Charlotte"}],
+    }
+    (config_dir / "discovery_expansion_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+
+
 def test_food_line_discovery_expansion_blocks_out_of_window_candidates_for_public_claims(tmp_path: Path):
     edition_date = "2026-06-21"
     article_url = "https://example.com/food-bank-demand"
@@ -687,6 +715,229 @@ def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallba
     assert manual_candidates[0]["traceability_status"] == "traceable"
     assert "No candidates were retained" not in audit["discovery_confidence_summary"]
     assert "no_current_update" in audit["no_current_update_reason"] or audit["no_current_update_reason"]
+
+
+def test_direct_rss_item_with_article_url_becomes_traceable(tmp_path: Path):
+    article_url = "https://example.org/news/pantry-demand"
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": ["recipe"],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example Direct Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovery_channel"] == "direct_rss"
+    assert candidate["direct_source_name"] == "Example Direct Feed"
+    assert candidate["feed_url"] == feed_url
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["public_claim_eligible"] is True
+    assert result["direct_source_count"] == 1
+    assert result["direct_article_url_count"] == 1
+    assert result["candidates_by_discovery_channel"]["direct_rss"] == 1
+
+
+def test_direct_rss_item_with_feed_or_homepage_url_is_blocked(tmp_path: Path):
+    feed_url = "https://example.org/feed.xml"
+    homepage_url = "https://example.org"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Homepage listing only",
+                        "link": homepage_url,
+                        "source_url": homepage_url,
+                        "publisher": "Example Direct Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovery_channel"] == "direct_rss"
+    assert candidate["direct_fetch_status"] == "blocked_listing_url"
+    assert candidate["traceability_status"] in {"publisher_homepage_trace_only", "non_article_trace_url"}
+    assert candidate["public_claim_eligible"] is False
+    assert result["direct_homepage_or_feed_blocked_count"] == 1
+
+
+def test_direct_source_candidate_is_preferred_over_duplicate_google_news_candidate(tmp_path: Path):
+    article_url = "https://example.org/news/pantry-demand"
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": "https://news.google.com/rss/articles/CBMIDUP?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=2, max_results_per_query=5)
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+    direct = next(row for row in candidates if row["discovery_channel"] == "direct_rss")
+    google = next(row for row in candidates if row["discovery_channel"] == "google_news_rss")
+
+    assert direct["duplicate_of"] == ""
+    assert google["duplicate_of"] == direct["candidate_id"]
+    assert result["duplicate_preferred_direct_count"] == 1
+
+
+def test_direct_source_diagnostics_and_sampling_appear_in_backfill_summary(tmp_path: Path):
+    article_url = "https://example.org/news/pantry-demand"
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 24 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+        if url.startswith("https://news.google.com/rss/search?q="):
+            raise AssertionError("direct source should be sampled before google fallback under cap")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-24",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+
+    assert result["query_count"] == 1
+    assert result["direct_source_fetch_attempt_count"] == 1
+    assert result["direct_source_fetch_success_count"] == 1
+    assert result["google_news_fallback_count"] == 0
+    assert result["candidates_by_direct_source"]["Example Direct Feed"] == 1
 
 
 def test_food_line_manual_fallback_validation_rejects_missing_required_fields():

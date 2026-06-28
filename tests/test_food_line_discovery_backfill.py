@@ -6,6 +6,28 @@ from pathlib import Path
 import scripts.backfill_food_line_discovery as backfill
 
 
+def _write_direct_source_config(tmp_path: Path, direct_sources: list[dict[str, object]]) -> None:
+    config_dir = tmp_path / "data" / "dispatches" / "food-line"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config = {
+        "search": {
+            "provider": "google_news_rss",
+            "rss_url_template": "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en",
+        },
+        "direct_sources": direct_sources,
+        "query_families": [
+            {
+                "query_family": "pressure",
+                "geographic_scope": "national",
+                "source_family": "local_news",
+                "templates": ['"food pantry"'],
+            }
+        ],
+        "metros": [{"name": "Charlotte"}],
+    }
+    (config_dir / "discovery_expansion_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+
+
 def _rss_payload(items: list[dict[str, str]]) -> bytes:
     parts = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "<rss version=\"2.0\"><channel>"]
     for item in items:
@@ -379,3 +401,136 @@ def test_food_line_discovery_backfill_resume_uses_existing_partial_summary(tmp_p
     assert summary["skipped_lanes"] == ["public_radio"]
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
+
+
+def test_food_line_discovery_backfill_records_direct_source_fetch_failure_without_failing_run(tmp_path: Path):
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Broken Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            raise TimeoutError("feed timeout")
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-24",
+            "2026-06-24",
+            max_queries=1,
+            max_results_per_query=5,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-24_to_2026-06-24"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["direct_source_fetch_attempt_count"] == 1
+    assert summary["direct_source_fetch_failure_count"] == 1
+    assert summary["google_news_fallback_count"] == 0
+    assert summary["pages_repo_mutated"] is False
+
+
+def test_food_line_discovery_backfill_samples_direct_source_before_google_fallback(tmp_path: Path):
+    feed_url = "https://example.org/feed.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Priority Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url == feed_url:
+            return _rss_payload([])
+        if url.startswith("https://news.google.com/rss/search?q="):
+            raise AssertionError("google fallback should not be sampled first when direct cap is hit")
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-24",
+            "2026-06-24",
+            max_queries=1,
+            max_results_per_query=5,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-24_to_2026-06-24"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert calls == [feed_url]
+    assert summary["direct_source_fetch_attempt_count"] == 1
+    assert summary["google_news_fallback_count"] == 0

@@ -5,6 +5,8 @@ import hashlib
 import html
 import json
 import re
+import ssl
+import urllib.request
 from email.utils import parsedate_to_datetime
 import urllib.error
 import urllib.parse
@@ -36,6 +38,7 @@ GOOGLE_ASSET_DOMAINS = (
     "schema.org",
     "ogp.me",
 )
+STATIC_PATH_SUFFIXES = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -301,12 +304,27 @@ def _is_article_specific_url(url: str) -> bool:
     parsed = urllib.parse.urlsplit(value)
     path = (parsed.path or "").strip("/")
     lowered_path = path.lower()
-    if any(
-        lowered_path.endswith(ext)
-        for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
-    ):
+    if any(lowered_path.endswith(ext) for ext in STATIC_PATH_SUFFIXES):
         return False
     return bool(path)
+
+
+def _is_static_or_namespace_url(url: str) -> bool:
+    value = _normalize_url(url)
+    if not value:
+        return False
+    host = _host(value)
+    if not host:
+        return True
+    if host.endswith(SOCIAL_DOMAINS) or host.endswith((GOOGLE_NEWS_DOMAIN, "google.com")) or host.endswith(GOOGLE_ASSET_DOMAINS):
+        return True
+    parsed = urllib.parse.urlsplit(value)
+    path = (parsed.path or "").strip("/").lower()
+    if any(path.endswith(ext) for ext in STATIC_PATH_SUFFIXES):
+        return True
+    if value in {"http://www.w3.org/2000/svg", "https://www.w3.org/2000/svg", "http://schema.org", "https://schema.org"}:
+        return True
+    return False
 
 
 def _choose_trace_url(original_trace_url: str, canonical_url: str, discovered_url: str) -> str:
@@ -659,11 +677,70 @@ def _query_family_to_lane(query_family: str) -> str:
     return "news_article"
 
 
+def _project_fetch_with_metadata(url: str, *, timeout: int = 15) -> tuple[bytes, dict[str, Any]]:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/rss+xml;q=0.8,*/*;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    req = urllib.request.Request(url, headers=headers)
+
+    def _read(timeout_seconds: int, *, context: ssl.SSLContext | None = None) -> tuple[bytes, dict[str, Any]]:
+        with urllib.request.urlopen(req, timeout=timeout_seconds, context=context) as resp:  # noqa: S310
+            payload = resp.read(2_000_000)
+            final_url = _nonempty(resp.geturl())
+            redirect_chain = [url] if not final_url or final_url == url else [url, final_url]
+            return payload, {
+                "response_status": int(getattr(resp, "status", 200) or 200),
+                "final_response_url": final_url or url,
+                "content_type": _nonempty(resp.headers.get("Content-Type")),
+                "redirect_chain": redirect_chain,
+            }
+
+    try:
+        return _read(timeout)
+    except urllib.error.URLError as exc:
+        reason = getattr(exc, "reason", None)
+        if isinstance(reason, TimeoutError) or "timed out" in str(exc).lower():
+            longer_timeout = max(timeout * 3, timeout + 15)
+            try:
+                return _read(longer_timeout)
+            except urllib.error.URLError as retry_exc:
+                retry_reason = getattr(retry_exc, "reason", None)
+                if isinstance(retry_reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(retry_exc):
+                    return _read(longer_timeout, context=ssl._create_unverified_context())
+                raise
+        if isinstance(reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(exc):
+            return _read(timeout, context=ssl._create_unverified_context())
+        raise
+
+
 def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
     try:
         return fetcher(url, timeout=15), ""
     except Exception as exc:  # noqa: BLE001
         return b"", f"{type(exc).__name__}: {exc}"
+
+
+def _fetch_url_with_metadata(fetcher: Any, url: str) -> tuple[bytes, str, dict[str, Any]]:
+    try:
+        if getattr(fetcher, "__module__", "").endswith("food_line_sources") and getattr(fetcher, "__name__", "") == "_fetch":
+            payload, meta = _project_fetch_with_metadata(url, timeout=15)
+            return payload, "", meta
+        result = fetcher(url, timeout=15)
+        if isinstance(result, dict):
+            payload = result.get("payload")
+            if isinstance(payload, str):
+                payload = payload.encode("utf-8")
+            return payload if isinstance(payload, (bytes, bytearray)) else b"", _nonempty(result.get("error")), {
+                "response_status": result.get("response_status"),
+                "final_response_url": _nonempty(result.get("final_response_url") or url),
+                "content_type": _nonempty(result.get("content_type")),
+                "redirect_chain": list(result.get("redirect_chain") or []),
+            }
+        return result if isinstance(result, (bytes, bytearray)) else b"", "", {}
+    except Exception as exc:  # noqa: BLE001
+        return b"", f"{type(exc).__name__}: {exc}", {}
 
 
 def _parse_google_news_rss(payload: bytes) -> list[dict[str, str]]:
@@ -728,12 +805,45 @@ def _extract_candidate_urls(text: str) -> list[str]:
     return candidates
 
 
+def _extract_meta_refresh_target(text: str) -> str:
+    match = re.search(r'<meta\b[^>]*http-equiv=["\']refresh["\'][^>]*content=["\']([^"\']+)["\']', text, re.IGNORECASE)
+    if not match:
+        return ""
+    content = html.unescape(match.group(1))
+    url_match = re.search(r'url\s*=\s*(.+)$', content, re.IGNORECASE)
+    if not url_match:
+        return ""
+    return _normalize_url(url_match.group(1).strip(" '\""))
+
+
+def _extract_wrapper_debug_snippet(text: str, *, limit: int = 240) -> str:
+    cleaned = re.sub(r"\s+", " ", text or "").strip()
+    return cleaned[:limit]
+
+
 def _same_host_family(candidate_url: str, publisher_url: str) -> bool:
     candidate_host = _host(candidate_url)
     publisher_host = _host(publisher_url)
     if not candidate_host or not publisher_host:
         return False
     return candidate_host == publisher_host or candidate_host.endswith(f".{publisher_host}") or publisher_host.endswith(f".{candidate_host}")
+
+
+def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str) -> str:
+    url = _normalize_url(candidate_url)
+    if not url:
+        return "empty_url"
+    if _is_google_news_wrapper(url) or _host(url).endswith(("google.com",)):
+        return "google_domain"
+    if _is_static_or_namespace_url(url):
+        return "static_or_namespace_url"
+    if publisher_url and not _same_host_family(url, publisher_url):
+        return "not_same_publisher_family"
+    if _is_homepage_only_url(url):
+        return "publisher_homepage_only"
+    if not _is_article_specific_url(url):
+        return "not_article_specific"
+    return ""
 
 
 def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "") -> str:
@@ -764,23 +874,62 @@ def _extract_google_news_homepage_url(payload: bytes, *, publisher_url: str = ""
     return ""
 
 
-def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publisher_url: str = "") -> tuple[str, str, bool]:
+def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publisher_url: str = "") -> tuple[str, str, bool, dict[str, Any]]:
     url = _normalize_url(google_news_url)
     if not _is_google_news_wrapper(url):
-        return "", "", False
-    payload, fetch_error = _fetch_url(fetcher, url)
+        return "", "", False, {}
+    payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, url)
+    debug: dict[str, Any] = {
+        "response_status": fetch_meta.get("response_status"),
+        "final_response_url": _nonempty(fetch_meta.get("final_response_url") or url),
+        "content_type": _nonempty(fetch_meta.get("content_type")),
+        "redirect_chain": list(fetch_meta.get("redirect_chain") or ([url] if url else [])),
+        "candidate_url_count_extracted": 0,
+        "accepted_candidate_url": "",
+        "rejection_reason": "",
+        "google_news_resolution_status": "",
+        "debug_snippet": "",
+    }
     if fetch_error or not payload:
-        return "", fetch_error or "empty response", True
+        debug["rejection_reason"] = fetch_error or "empty response"
+        debug["google_news_resolution_status"] = "failed_fetch_error"
+        return "", fetch_error or "empty response", True, debug
+    text = payload.decode("utf-8", errors="replace")
+    candidates = _extract_candidate_urls(text)
+    meta_refresh = _extract_meta_refresh_target(text)
+    if meta_refresh and meta_refresh not in candidates:
+        candidates.append(meta_refresh)
+    debug["candidate_url_count_extracted"] = len(candidates)
+    debug["debug_snippet"] = _extract_wrapper_debug_snippet(text)
     resolved = _extract_google_news_article_url(payload, publisher_url=publisher_url)
     if resolved:
-        return resolved, "", True
+        debug["accepted_candidate_url"] = resolved
+        debug["google_news_resolution_status"] = "success_article"
+        return resolved, "", True, debug
     homepage = _extract_google_news_homepage_url(payload, publisher_url=publisher_url)
     if homepage:
-        return homepage, "", True
+        debug["accepted_candidate_url"] = homepage
+        debug["google_news_resolution_status"] = "success_homepage_only"
+        return homepage, "", True, debug
     canonical = _extract_canonical_url(payload)
     if canonical and (not publisher_url or _same_host_family(canonical, publisher_url)):
-        return canonical, "", True
-    return "", "unresolved google news wrapper", True
+        reason = _rejected_candidate_url_reason(canonical, publisher_url=publisher_url)
+        if not reason:
+            debug["accepted_candidate_url"] = canonical
+            debug["google_news_resolution_status"] = "success_article" if _is_article_specific_url(canonical) else "success_homepage_only"
+            return canonical, "", True, debug
+    if not candidates:
+        debug["rejection_reason"] = "no candidate urls extracted"
+        debug["google_news_resolution_status"] = "failed_no_candidate_urls"
+        return "", "unresolved google news wrapper", True, debug
+    rejected_reasons = [_rejected_candidate_url_reason(candidate, publisher_url=publisher_url) for candidate in candidates]
+    if publisher_url and all(reason in {"google_domain", "static_or_namespace_url", "not_same_publisher_family"} for reason in rejected_reasons if reason):
+        debug["rejection_reason"] = "no same publisher family candidate url"
+        debug["google_news_resolution_status"] = "failed_no_same_publisher_family"
+    else:
+        debug["rejection_reason"] = "only rejected candidate urls"
+        debug["google_news_resolution_status"] = "failed_only_rejected_urls"
+    return "", "unresolved google news wrapper", True, debug
 
 
 def _classify_fetch_error(error: str) -> str:
@@ -1000,9 +1149,6 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["fetch_error"] = _nonempty(candidate.get("fetch_error"))
     candidate["duplicate_of"] = _nonempty(candidate.get("duplicate_of"))
     candidate["public_claim_blockers"] = list(candidate.get("public_claim_blockers") or [])
-    candidate["google_news_resolution_attempted"] = bool(candidate.get("google_news_resolution_attempted"))
-    candidate["google_news_resolution_error"] = _nonempty(candidate.get("google_news_resolution_error"))
-    candidate["google_news_resolved_url"] = _normalize_url(_nonempty(candidate.get("google_news_resolved_url")))
     candidate["canonical_homepage_collapse_ignored"] = bool(candidate.get("canonical_homepage_collapse_ignored"))
     return candidate
 
@@ -1141,6 +1287,8 @@ def run_food_line_discovery_expansion(
     canonical_homepage_collapse_ignored_count = 0
     article_specific_url_count = 0
     unresolved_google_news_count = 0
+    resolution_status_counts: Counter[str] = Counter()
+    resolution_debug_by_candidate: dict[str, dict[str, Any]] = {}
     seen_trace_keys: dict[str, str] = {}
 
     for query_row in query_plan:
@@ -1170,12 +1318,15 @@ def run_food_line_discovery_expansion(
             google_news_resolution_error = ""
             google_news_resolution_attempted = False
             google_news_resolution_failed = False
+            google_news_resolution_status = ""
+            google_news_debug: dict[str, Any] = {}
             if google_news_url and not _is_article_specific_url(publisher_url):
-                resolved_wrapper_url, google_news_resolution_error, google_news_resolution_attempted = _resolve_google_news_wrapper(
+                resolved_wrapper_url, google_news_resolution_error, google_news_resolution_attempted, google_news_debug = _resolve_google_news_wrapper(
                     fetch,
                     google_news_url,
                     publisher_url=publisher_url,
                 )
+                google_news_resolution_status = _nonempty(google_news_debug.get("google_news_resolution_status"))
                 if google_news_resolution_attempted:
                     google_news_resolution_attempt_count += 1
                     if _is_article_specific_url(resolved_wrapper_url):
@@ -1303,7 +1454,24 @@ def run_food_line_discovery_expansion(
                 "public_claim_blockers": public_claim_blockers,
                 "query_url": query_url,
                 "retrieved_at": discovered_at,
+                "_google_news_resolution_attempted": google_news_resolution_attempted,
+                "_google_news_resolution_error": google_news_resolution_error,
+                "_google_news_resolved_url": resolved_wrapper_url,
+                "_google_news_resolution_status": google_news_resolution_status,
             }
+            if google_news_resolution_status:
+                resolution_status_counts[google_news_resolution_status] += 1
+                resolution_debug_by_candidate[row["candidate_id"]] = {
+                    "google_news_resolution_status": google_news_resolution_status,
+                    "response_status": google_news_debug.get("response_status"),
+                    "final_response_url": _nonempty(google_news_debug.get("final_response_url")),
+                    "content_type": _nonempty(google_news_debug.get("content_type")),
+                    "redirect_chain": list(google_news_debug.get("redirect_chain") or []),
+                    "candidate_url_count_extracted": int(google_news_debug.get("candidate_url_count_extracted") or 0),
+                    "accepted_candidate_url": _nonempty(google_news_debug.get("accepted_candidate_url")),
+                    "rejection_reason": _nonempty(google_news_debug.get("rejection_reason")),
+                    "debug_snippet": _nonempty(google_news_debug.get("debug_snippet")),
+                }
             trace_key = canonical or final_trace_url or discovered_url
             if trace_key and trace_key in seen_trace_keys:
                 row["duplicate_of"] = seen_trace_keys[trace_key]
@@ -1329,7 +1497,7 @@ def run_food_line_discovery_expansion(
                 outside_window_count += 1
             if row["google_news_url"]:
                 google_news_url_count += 1
-                if row["traceability_status"] != "traceable":
+                if row["traceability_status"] == "unresolved_google_news":
                     unresolved_google_news_count += 1
             if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url"))):
                 article_specific_url_count += 1
@@ -1368,8 +1536,8 @@ def run_food_line_discovery_expansion(
             discovered_url=_nonempty(row.get("discovered_url")),
             fetch_status=_nonempty(row.get("fetch_status")),
             google_news_resolution_failed=(
-                bool(row.get("google_news_resolution_attempted"))
-                and not bool(_nonempty(row.get("google_news_resolved_url")))
+                bool(row.get("_google_news_resolution_attempted"))
+                and _nonempty(row.get("_google_news_resolution_status")).startswith("failed_")
                 and not bool(_nonempty(row.get("source_url") or row.get("final_trace_url")))
                 and not bool(_nonempty(row.get("original_source_url")))
             ),
@@ -1387,6 +1555,14 @@ def run_food_line_discovery_expansion(
         )
         if row.get("classification_status") == "manual_fallback":
             row["candidate_review_status"] = "needs_review"
+    for row in candidates:
+        for key in (
+            "_google_news_resolution_attempted",
+            "_google_news_resolution_error",
+            "_google_news_resolved_url",
+            "_google_news_resolution_status",
+        ):
+            row.pop(key, None)
     candidate_count = len(candidates)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
@@ -1400,24 +1576,18 @@ def run_food_line_discovery_expansion(
     fetchable_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) == "ok")
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
     google_news_url_count = sum(1 for row in candidates if _nonempty(row.get("google_news_url")))
-    google_news_resolution_attempt_count = sum(1 for row in candidates if bool(row.get("google_news_resolution_attempted")))
-    google_news_resolution_success_count = sum(1 for row in candidates if _is_article_specific_url(_nonempty(row.get("google_news_resolved_url"))))
-    google_news_resolution_failure_count = sum(
-        1
-        for row in candidates
-        if bool(row.get("google_news_resolution_attempted")) and not _is_article_specific_url(_nonempty(row.get("google_news_resolved_url")))
-    )
+    google_news_resolution_attempt_count = sum(int(count) for status, count in resolution_status_counts.items())
+    google_news_resolution_success_count = int(resolution_status_counts.get("success_article", 0))
+    google_news_resolution_failure_count = google_news_resolution_attempt_count - google_news_resolution_success_count
     google_news_resolved_article_url_count = google_news_resolution_success_count
-    google_news_resolved_homepage_only_count = sum(
-        1 for row in candidates if _is_homepage_only_url(_nonempty(row.get("google_news_resolved_url")))
-    )
+    google_news_resolved_homepage_only_count = int(resolution_status_counts.get("success_homepage_only", 0))
     article_specific_url_count = sum(
         1 for row in candidates if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
     )
     unresolved_google_news_count = sum(
         1
         for row in candidates
-        if _nonempty(row.get("google_news_url")) and _nonempty(row.get("traceability_status")) != "traceable"
+        if _nonempty(row.get("traceability_status")) == "unresolved_google_news"
     )
     canonical_homepage_collapse_ignored_count = sum(1 for row in candidates if bool(row.get("canonical_homepage_collapse_ignored")))
     qualified_pressure_signals = sum(1 for row in candidates if _nonempty(row.get("classification_status")) == "qualified_pressure_signal")
@@ -1467,6 +1637,7 @@ def run_food_line_discovery_expansion(
         "google_news_resolution_failure_count": google_news_resolution_failure_count,
         "google_news_resolved_article_url_count": google_news_resolved_article_url_count,
         "google_news_resolved_homepage_only_count": google_news_resolved_homepage_only_count,
+        "google_news_resolution_status_counts": dict(sorted(resolution_status_counts.items())),
         "canonical_homepage_collapse_ignored_count": canonical_homepage_collapse_ignored_count,
         "article_specific_url_count": article_specific_url_count,
         "homepage_only_trace_count": homepage_only_trace_count,
@@ -1490,6 +1661,7 @@ def run_food_line_discovery_expansion(
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
+        "google_news_resolution_debug_by_candidate": resolution_debug_by_candidate,
         "query_lookback_days": int(query_lookback_days),
         "query_lookahead_days": int(query_lookahead_days),
         "public_claim_lookback_days": int(public_claim_lookback_days),

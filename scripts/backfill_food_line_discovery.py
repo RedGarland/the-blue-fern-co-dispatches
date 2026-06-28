@@ -115,7 +115,14 @@ def _write_partial_summary(root: Path, summary: dict[str, Any], *, start_date: s
     )
 
 
-def _review_payload(edition_date: str, candidates: list[dict[str, Any]], intake: dict[str, Any]) -> dict[str, Any]:
+def _review_payload(
+    edition_date: str,
+    candidates: list[dict[str, Any]],
+    intake: dict[str, Any],
+    *,
+    google_news_debug_by_candidate: dict[str, Any] | None = None,
+    google_news_resolution_status_counts: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     review_counts = Counter(str(row.get("candidate_review_status") or row.get("review_status") or "needs_review") for row in candidates)
     blocker_counts = Counter()
     for row in candidates:
@@ -141,6 +148,7 @@ def _review_payload(edition_date: str, candidates: list[dict[str, Any]], intake:
         "candidate_count_rejected": int(review_counts.get("rejected", 0)),
         "discovery_lane_counts": dict(sorted(Counter(str(row.get("discovery_lane") or "") for row in candidates if str(row.get("discovery_lane") or "")).items())),
         "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
+        "google_news_resolution_status_counts": dict(sorted((google_news_resolution_status_counts or {}).items())),
         "intake_review_path": str(intake.get("discovery_review_path") or ""),
         "candidates": [
             {
@@ -161,6 +169,7 @@ def _review_payload(edition_date: str, candidates: list[dict[str, Any]], intake:
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
                 "public_claim_blockers": list(row.get("public_claim_blockers") or []),
+                "google_news_resolution": dict((google_news_debug_by_candidate or {}).get(str(row.get("candidate_id") or ""), {})),
                 "classification_status": str(row.get("classification_status") or ""),
                 "exclusion_reason": str(row.get("exclusion_reason") or ""),
             }
@@ -219,9 +228,19 @@ def _copy_candidate_artifacts(
         intake = _read_json(intake_path) if intake_path.exists() else {}
         if not isinstance(intake, dict):
             intake = {}
+    audit_path = root / "output" / "review" / DISPATCH_SLUG / edition_date / "discovery_audit.json"
+    audit = _read_json(audit_path) if audit_path.exists() else {}
+    if not isinstance(audit, dict):
+        audit = {}
     if not dry_run:
         _write_json(_candidate_copy_path(root, edition_date), candidates)
-        payload = _review_payload(edition_date, [row for row in candidates if isinstance(row, dict)], intake)
+        payload = _review_payload(
+            edition_date,
+            [row for row in candidates if isinstance(row, dict)],
+            intake,
+            google_news_debug_by_candidate=dict(audit.get("google_news_resolution_debug_by_candidate") or {}),
+            google_news_resolution_status_counts=dict(audit.get("google_news_resolution_status_counts") or {}),
+        )
         _write_json(_review_json_path(root, edition_date), payload)
         _write_text(_review_html_path(root, edition_date), _review_html(payload))
     return [row for row in candidates if isinstance(row, dict)], intake
@@ -282,6 +301,16 @@ def run_food_line_discovery_backfill(
             "google_news_resolution_failure_count": sum(int(row.get("google_news_resolution_failure_count", 0)) for row in per_date),
             "google_news_resolved_article_url_count": sum(int(row.get("google_news_resolved_article_url_count", 0)) for row in per_date),
             "google_news_resolved_homepage_only_count": sum(int(row.get("google_news_resolved_homepage_only_count", 0)) for row in per_date),
+            "google_news_resolution_status_counts": dict(
+                sorted(
+                    Counter(
+                        status
+                        for row in per_date
+                        for status, count in (row.get("google_news_resolution_status_counts") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
             "canonical_homepage_collapse_ignored_count": sum(int(row.get("canonical_homepage_collapse_ignored_count", 0)) for row in per_date),
             "article_specific_url_count": sum(int(row.get("article_specific_url_count", 0)) for row in per_date),
             "publisher_homepage_trace_only_count": sum(int(row.get("publisher_homepage_trace_only_count", 0)) for row in per_date),
@@ -364,6 +393,7 @@ def run_food_line_discovery_backfill(
                     "google_news_resolution_failure_count": 0,
                     "google_news_resolved_article_url_count": 0,
                     "google_news_resolved_homepage_only_count": 0,
+                    "google_news_resolution_status_counts": {},
                     "canonical_homepage_collapse_ignored_count": 0,
                     "article_specific_url_count": 0,
                     "publisher_homepage_trace_only_count": 0,
@@ -393,28 +423,14 @@ def run_food_line_discovery_backfill(
         public_eligible_count = sum(1 for row in typed_candidates if bool(row.get("public_claim_eligible")))
         in_window_count = sum(1 for row in typed_candidates if "outside_backfill_date_window" not in list(row.get("public_claim_blockers") or []))
         out_of_window_count = len(typed_candidates) - in_window_count
+        audit = _read_json(Path(expansion["discovery_audit_json_path"])) if expansion.get("discovery_audit_json_path") and Path(expansion["discovery_audit_json_path"]).exists() else {}
         google_news_url_count = sum(1 for row in typed_candidates if str(row.get("google_news_url") or "").strip())
-        google_news_resolution_attempt_count = sum(1 for row in typed_candidates if bool(row.get("google_news_resolution_attempted")))
-        google_news_resolution_success_count = sum(
-            1
-            for row in typed_candidates
-            if str(row.get("google_news_resolved_url") or "").strip() and str(row.get("traceability_status") or "").strip() == "traceable"
-        )
-        google_news_resolution_failure_count = sum(
-            1
-            for row in typed_candidates
-            if bool(row.get("google_news_resolution_attempted")) and str(row.get("traceability_status") or "").strip() != "traceable"
-        )
-        google_news_resolved_article_url_count = sum(
-            1 for row in typed_candidates if str(row.get("google_news_resolved_url") or "").strip() and str(row.get("traceability_status") or "").strip() == "traceable"
-        )
-        google_news_resolved_homepage_only_count = sum(
-            1
-            for row in typed_candidates
-            if bool(row.get("google_news_resolution_attempted"))
-            and str(row.get("google_news_resolved_url") or "").strip()
-            and str(row.get("traceability_status") or "").strip() == "publisher_homepage_trace_only"
-        )
+        google_news_resolution_status_counts = dict(audit.get("google_news_resolution_status_counts") or {})
+        google_news_resolution_attempt_count = sum(int(v) for v in google_news_resolution_status_counts.values())
+        google_news_resolution_success_count = int(google_news_resolution_status_counts.get("success_article", 0))
+        google_news_resolution_failure_count = sum(int(v) for k, v in google_news_resolution_status_counts.items() if str(k).startswith("failed_")) + int(google_news_resolution_status_counts.get("success_homepage_only", 0))
+        google_news_resolved_article_url_count = int(google_news_resolution_status_counts.get("success_article", 0))
+        google_news_resolved_homepage_only_count = int(google_news_resolution_status_counts.get("success_homepage_only", 0))
         canonical_homepage_collapse_ignored_count = sum(1 for row in typed_candidates if bool(row.get("canonical_homepage_collapse_ignored")))
         article_specific_url_count = sum(
             1
@@ -425,11 +441,7 @@ def run_food_line_discovery_backfill(
         publisher_homepage_trace_only_count = sum(
             1 for row in typed_candidates if "publisher_homepage_trace_only" in list(row.get("public_claim_blockers") or [])
         )
-        unresolved_google_news_count = sum(
-            1
-            for row in typed_candidates
-            if str(row.get("google_news_url") or "").strip() and str(row.get("traceability_status") or "").strip() != "traceable"
-        )
+        unresolved_google_news_count = sum(1 for row in typed_candidates if str(row.get("traceability_status") or "").strip() == "unresolved_google_news")
         blocked_fetch_count = sum(1 for row in typed_candidates if str(row.get("fetch_status") or "").strip() not in {"ok", "manual_fallback"})
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
@@ -450,7 +462,6 @@ def run_food_line_discovery_backfill(
             dates_with_no_reviewable.append(edition_date)
         if public_eligible_count <= 0:
             dates_with_no_public_eligible.append(edition_date)
-        audit = _read_json(Path(expansion["discovery_audit_json_path"])) if expansion.get("discovery_audit_json_path") and Path(expansion["discovery_audit_json_path"]).exists() else {}
         configured_lanes = list(audit.get("configured_lanes") or [])
         if not configured_lanes:
             query_plan = build_food_line_discovery_query_plan(
@@ -508,6 +519,7 @@ def run_food_line_discovery_backfill(
                 "google_news_resolution_failure_count": google_news_resolution_failure_count,
                 "google_news_resolved_article_url_count": google_news_resolved_article_url_count,
                 "google_news_resolved_homepage_only_count": google_news_resolved_homepage_only_count,
+                "google_news_resolution_status_counts": google_news_resolution_status_counts,
                 "canonical_homepage_collapse_ignored_count": canonical_homepage_collapse_ignored_count,
                 "article_specific_url_count": article_specific_url_count,
                 "publisher_homepage_trace_only_count": publisher_homepage_trace_only_count,

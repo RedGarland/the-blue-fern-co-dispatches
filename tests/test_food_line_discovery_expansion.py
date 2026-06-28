@@ -236,6 +236,46 @@ def test_food_line_discovery_expansion_resolves_google_news_wrapper_to_article_u
     assert candidate["public_claim_eligible"] is True
 
 
+def test_food_line_discovery_expansion_resolves_meta_refresh_wrapper_to_article_url(tmp_path: Path):
+    edition_date = "2026-06-21"
+    homepage_url = "https://example.com"
+    article_url = "https://example.com/news/food-bank-demand-rises"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food bank demand rises",
+                        "link": "https://news.google.com/rss/articles/CBMiMETA?oc=5",
+                        "source_url": homepage_url,
+                        "publisher": "Example News",
+                        "description": "Food bank demand rises.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiMETA?oc=5":
+            return f"<html><head><meta http-equiv=\"refresh\" content=\"0; url={article_url}\"></head><body></body></html>".encode("utf-8")
+        if url == article_url:
+            return _html_article(title="Food bank demand rises", canonical=article_url, body="Food bank demand rises.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["final_trace_url"] == article_url
+    assert candidate["traceability_status"] == "traceable"
+
+
 def test_food_line_discovery_query_plan_covers_state_territory_and_metro_geographies(tmp_path: Path):
     plan = build_food_line_discovery_query_plan(tmp_path, "2026-06-19")
 
@@ -355,9 +395,11 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     assert result["google_news_resolution_failure_count"] == 1
     assert result["google_news_resolved_article_url_count"] == 1
     assert result["google_news_resolved_homepage_only_count"] == 1
+    assert result["google_news_resolution_status_counts"]["success_article"] == 1
+    assert result["google_news_resolution_status_counts"]["success_homepage_only"] == 1
     assert result["article_specific_url_count"] == 1
     assert result["publisher_homepage_trace_only_count"] == 1
-    assert result["unresolved_google_news_count"] == 1
+    assert result["unresolved_google_news_count"] == 0
     assert result["blocked_fetch_count"] == 0
     assert result["in_window_candidate_count"] == 2
     assert result["out_of_window_candidate_count"] == 0
@@ -403,6 +445,7 @@ def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_p
     assert candidate["traceability_status"] == "unresolved_google_news"
     assert candidate["public_claim_eligible"] is False
     assert "unresolved_google_news" in candidate["public_claim_blockers"]
+    assert result["google_news_resolution_status_counts"]["failed_no_candidate_urls"] == 1
 
 
 def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable_url(tmp_path: Path):
@@ -444,6 +487,50 @@ def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable
     assert candidate["classification_status"] == "context_only"
     assert candidate["public_claim_eligible"] is False
     assert "context_only" in candidate["public_claim_blockers"]
+
+
+def test_food_line_discovery_expansion_rejects_google_static_and_schema_urls(tmp_path: Path):
+    edition_date = "2026-06-21"
+    homepage_url = "https://example.com"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food bank demand rises",
+                        "link": "https://news.google.com/rss/articles/CBMiBAD?oc=5",
+                        "source_url": homepage_url,
+                        "publisher": "Example News",
+                        "description": "Food bank demand rises.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiBAD?oc=5":
+            return b"""<html><body>
+            <a href=\"https://lh3.googleusercontent.com/example=w16\">img</a>
+            <a href=\"https://www.google-analytics.com/analytics.js\">ga</a>
+            <a href=\"http://www.w3.org/2000/svg\">svg</a>
+            </body></html>"""
+        if url == homepage_url:
+            return _html_article(title="Example", canonical=homepage_url, body="Food bank demand rises.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["final_trace_url"] == homepage_url
+    assert candidate["traceability_status"] == "publisher_homepage_trace_only"
+    assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
 
 
 def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_fields(tmp_path: Path):

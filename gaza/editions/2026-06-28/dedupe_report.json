@@ -1,0 +1,414 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-28",
+  "candidates_seen": 12,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-06-28-008",
+      "title": "Israel kills three Palestinians in Gaza attacks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-009",
+      "title": "Israeli attacks kill three in Gaza over past 24 hours",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_official_or_public_agency_source",
+        "update_term_in_title_or_snippet",
+        "reports_new_numbers"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-007",
+      "title": "Gaza dialysis patients at risk as machines fail",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-006",
+      "title": "Israeli forces injure Palestinian, detain 17 in West Bank raids",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-002",
+      "title": "Gaza's displaced families face worsening living conditions",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-010",
+      "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-004",
+      "title": "Israel's Ben-Gvir faces US complaint over alleged war crimes: Rights group",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-012",
+      "title": "Paradise lost: How Israel is making war on West Bank farmers",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-011",
+      "title": "Adam Johnson on how US corporate media sold Israel's genocide in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-06-28-003",
+      "title": "Israel strikes kill 4 Palestinians in new Gaza truce violation",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-001",
+      "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-010",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-005",
+      "title": "Israel confirms killing 3 Palestinian policemen in latest Gaza ceasefire violation",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-06-28-008",
+      "title": "Israel kills three Palestinians in Gaza attacks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-18-006",
+      "prior_edition_date": "2026-06-18",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-009",
+      "title": "Israeli attacks kill three in Gaza over past 24 hours",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_official_or_public_agency_source",
+        "update_term_in_title_or_snippet",
+        "reports_new_numbers"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-18-008",
+      "prior_edition_date": "2026-06-18",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 2,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-06-28-009",
+      "merged_story_ids": [
+        "gaza-story-2026-06-28-003"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-28-anadolu-083294ceced8"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-06-28-010",
+      "merged_story_ids": [
+        "gaza-story-2026-06-28-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
+      ],
+      "duplicate_reason": "within_edition_duplicate",
+      "normalized_event_key": "",
+      "reasons": [
+        "within_edition_source_url"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-06-28-009",
+      "merged_story_ids": [
+        "gaza-story-2026-06-28-005"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-06-28-anadolu-eedb49ec1257"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-06-28-003",
+      "title": "Israel strikes kill 4 Palestinians in new Gaza truce violation",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-001",
+      "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_source_url"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-010",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-005",
+      "title": "Israel confirms killing 3 Palestinian policemen in latest Gaza ceasefire violation",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-06-28-009",
+      "prior_edition_date": "2026-06-28",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-008",
+      "title": "Israel kills three Palestinians in Gaza attacks",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-18-006",
+      "prior_edition_date": "2026-06-18",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-009",
+      "title": "Israeli attacks kill three in Gaza over past 24 hours",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "new_official_or_public_agency_source",
+        "update_term_in_title_or_snippet",
+        "reports_new_numbers"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-18-008",
+      "prior_edition_date": "2026-06-18",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-007",
+      "title": "Gaza dialysis patients at risk as machines fail",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-006",
+      "title": "Israeli forces injure Palestinian, detain 17 in West Bank raids",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-002",
+      "title": "Gaza's displaced families face worsening living conditions",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-010",
+      "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-004",
+      "title": "Israel's Ben-Gvir faces US complaint over alleged war crimes: Rights group",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-012",
+      "title": "Paradise lost: How Israel is making war on West Bank farmers",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-06-28-011",
+      "title": "Adam Johnson on how US corporate media sold Israel's genocide in Gaza",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-06-20",
+    "2026-06-18",
+    "2026-06-16",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

@@ -1,0 +1,830 @@
+[
+  {
+    "story_id": "gaza-story-2026-06-28-008",
+    "title": "Israel kills three Palestinians in Gaza attacks",
+    "summary": "Israeli attacks have killed at least three Palestinians in the Gaza Strip, including two people targeted by a drone in the north of the enclave. Palestinian health authorites said an Israeli drone struck the al-Salatin area, west of Beit Lahia, killing two people and wounding at least one more. In southern Gaza, Israeli forces also bombed a tent sheltering displaced Palestinians in Khan Younis. An Israeli warplane fired a missile at the tent, wounding several people who were taken to hospital for treatment. Medical staff at Nasser Medical Complex said they received the body of one unidentified person after the attack on the tent. Earlier, health officials in Gaza said. Israel's war on the enclave had killed at least 73,054 Palestinians and wounded 173,480 since October 7, 2023. They added that hospitals had received three bodies and treated 43 wounded people over the past 24 hours.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 95,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-middle-east-eye-0a70843b3a6e"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-middle-east-eye-0a70843b3a6e"
+    ],
+    "source_urls": [
+      "https://www.middleeasteye.net/live-blog/live-blog-update/israel-kills-three-palestinians-gaza-attacks"
+    ],
+    "publisher_names": [
+      "Middle East Eye"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-middle-east-eye-0a70843b3a6e",
+        "title": "Israel kills three Palestinians in Gaza attacks",
+        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/israel-kills-three-palestinians-gaza-attacks",
+        "publisher": "Middle East Eye",
+        "summary_or_snippet": "Israel kills three Palestinians in Gaza attacks Israeli attacks have killed at least three Palestinians in the Gaza Strip, including two people targeted by a drone in the north of the enclave. Palestinian health authorites said an Israeli drone struck the al-Salatin area, west of Beit Lahia, killing two people and wounding at least one more. In southern Gaza, Israeli forces also bombed a tent sheltering displaced Palestinians in Khan Younis. An Israeli warplane fired a missile at the tent, wounding several people who were taken to hospital for treatment. Medical staff at Nasser Medical Complex said they received the body of one unidentified person after the attack on the tent. Earlier, health officials in Gaza said Israel's war on the enclave had killed at least 73,054 Palestinians and wounded 173,480 since October 7, 2023. They added that hospitals had received three bodies and treated 43 wounded people over the past 24 hours."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
+    "top_story_relevance_score": 95,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-18-006",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-009",
+    "title": "Israeli attacks kill three in Gaza over past 24 hours",
+    "summary": "Israeli strikes in Gaza have killed three Palestinians and wounded 43 others, according to the Palestinian health ministry. It said the total number of deaths since the ceasefire was announced in October 2025 has now risen to 1,041.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 88,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-06-28-003",
+      "merged_duplicate_story=gaza-story-2026-06-28-005"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-middle-east-eye-6c10cf7339b5",
+      "gaza-2026-06-28-anadolu-083294ceced8",
+      "gaza-2026-06-28-anadolu-eedb49ec1257"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-middle-east-eye-6c10cf7339b5",
+      "gaza-2026-06-28-anadolu-083294ceced8",
+      "gaza-2026-06-28-anadolu-eedb49ec1257"
+    ],
+    "source_urls": [
+      "https://www.middleeasteye.net/live-blog/live-blog-update/israeli-attacks-killed-3-gaza-over-past-24-hours",
+      "https://www.aa.com.tr/en/middle-east/israel-strikes-kill-4-palestinians-in-new-gaza-truce-violation/3980518",
+      "https://www.aa.com.tr/en/middle-east/israel-confirms-killing-3-palestinian-policemen-in-latest-gaza-ceasefire-violation/3980365"
+    ],
+    "publisher_names": [
+      "Middle East Eye",
+      "Anadolu Agency"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-middle-east-eye-6c10cf7339b5",
+        "title": "Israeli attacks kill three in Gaza over past 24 hours",
+        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/israeli-attacks-killed-3-gaza-over-past-24-hours",
+        "publisher": "Middle East Eye",
+        "summary_or_snippet": "Israeli attacks kill three in Gaza over past 24 hours Israeli strikes in Gaza have killed three Palestinians and wounded 43 others, according to the Palestinian health ministry. It said the total number of deaths since the ceasefire was announced in October 2025 has now risen to 1,041."
+      },
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-083294ceced8",
+        "title": "Israel strikes kill 4 Palestinians in new Gaza truce violation",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-strikes-kill-4-palestinians-in-new-gaza-truce-violation/3980518",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Israeli attacks killed at least 1,041 people, injured 3,372 others since ceasefire, according to Gaza's Health Ministry"
+      },
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-eedb49ec1257",
+        "title": "Israel confirms killing 3 Palestinian policemen in latest Gaza ceasefire violation",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-confirms-killing-3-palestinian-policemen-in-latest-gaza-ceasefire-violation/3980365",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Gaza's Interior Ministry says killings reflect 'Israel's insistence on spreading chaos' in Gaza"
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 88,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-18-008",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-003",
+    "title": "Israel strikes kill 4 Palestinians in new Gaza truce violation",
+    "summary": "Israeli attacks killed at least 1,041 people, injured 3,372 others since ceasefire, according to Gaza's Health Ministry.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 76,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-anadolu-083294ceced8"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-anadolu-083294ceced8"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-strikes-kill-4-palestinians-in-new-gaza-truce-violation/3980518"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-083294ceced8",
+        "title": "Israel strikes kill 4 Palestinians in new Gaza truce violation",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-strikes-kill-4-palestinians-in-new-gaza-truce-violation/3980518",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Israeli attacks killed at least 1,041 people, injured 3,372 others since ceasefire, according to Gaza's Health Ministry"
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 76,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-28-009",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-007",
+    "title": "Gaza dialysis patients at risk as machines fail",
+    "summary": "Nearly half of the dialysis machines at Gaza's largest hospital have stopped working as. Israel's blockade and repeated attacks continue to cripple the enclave's health system. Dr Ghazi al-Yaziji, head of the artificial kidney department at al-Shifa Medical Complex, said a severe shortage of sodium bicarbonate, a substance needed to control dangerous acidity in the blood of kidney failure patients, has forced 25 machines out of service. He said only 26 machines are now operating, and even those are working only partially. Medical teams have had to shorten dialysis sessions from four hours to three and cut weekly treatment sessions from three to two, al-Yaziji said. He warned that the cuts are putting about 240 patients with Stage 5 chronic kidney failure at serious risk. The reduced treatment has increased the danger of heart and respiratory complications, which could prove fatal in some cases, he added.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 78,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-middle-east-eye-051fe02409b2"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-middle-east-eye-051fe02409b2"
+    ],
+    "source_urls": [
+      "https://www.middleeasteye.net/live-blog/live-blog-update/gaza-dialysis-patients-risk-machines-fail"
+    ],
+    "publisher_names": [
+      "Middle East Eye"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-middle-east-eye-051fe02409b2",
+        "title": "Gaza dialysis patients at risk as machines fail",
+        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/gaza-dialysis-patients-risk-machines-fail",
+        "publisher": "Middle East Eye",
+        "summary_or_snippet": "Gaza dialysis patients at risk as machines fail Nearly half of the dialysis machines at Gaza's largest hospital have stopped working as Israel's blockade and repeated attacks continue to cripple the enclave's health system. Dr Ghazi al-Yaziji, head of the artificial kidney department at al-Shifa Medical Complex, said a severe shortage of sodium bicarbonate, a substance needed to control dangerous acidity in the blood of kidney failure patients, has forced 25 machines out of service. He said only 26 machines are now operating, and even those are working only partially. Medical teams have had to shorten dialysis sessions from four hours to three and cut weekly treatment sessions from three to two, al-Yaziji said. He warned that the cuts are putting about 240 patients with Stage 5 chronic kidney failure at serious risk. The reduced treatment has increased the danger of heart and respiratory complications, which could prove fatal in some cases, he added."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 78,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-006",
+    "title": "Israeli forces injure Palestinian, detain 17 in West Bank raids",
+    "summary": "Journalist among those detained in Israeli raids, mayor says.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-anadolu-cfb2a521bfb3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-anadolu-cfb2a521bfb3"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israeli-forces-injure-palestinian-detain-17-in-west-bank-raids/3980331"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-cfb2a521bfb3",
+        "title": "Israeli forces injure Palestinian, detain 17 in West Bank raids",
+        "url": "https://www.aa.com.tr/en/middle-east/israeli-forces-injure-palestinian-detain-17-in-west-bank-raids/3980331",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Journalist among those detained in Israeli raids, mayor says"
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-002",
+    "title": "Gaza's displaced families face worsening living conditions",
+    "summary": "Rats infest Gaza's camps, where sewage and tents full of waste spread disease as families live without sanitation.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 57,
+    "scoring_reasons": [
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-65f1a6fa13f0"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-65f1a6fa13f0"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/28/gazas-displaced-families-face-worsening-living-conditions?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-65f1a6fa13f0",
+        "title": "Gaza's displaced families face worsening living conditions",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/6/28/gazas-displaced-families-face-worsening-living-conditions?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Rats infest Gaza's camps, where sewage and tents full of waste spread disease as families live without sanitation."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-010",
+    "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
+    "summary": "Israeli forces restrict Palestinian worshippers at Al-Aqsa Mosque and block the call to prayer at the Ibrahimi Mosque.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-06-28-001"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-2d0243809d7a",
+      "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-2d0243809d7a",
+      "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/28/israel-kills-three-palestinians-in-gaza-as-attacks-on-tents-continue?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-2d0243809d7a",
+        "title": "Israel kills three Palestinians in Gaza as attacks on tents continue",
+        "url": "https://www.aljazeera.com/news/2026/6/28/israel-kills-three-palestinians-in-gaza-as-attacks-on-tents-continue?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli forces restrict Palestinian worshippers at Al-Aqsa Mosque and block the call to prayer at the Ibrahimi Mosque."
+      },
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17",
+        "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
+        "url": "https://www.aljazeera.com/news/2026/6/28/israel-kills-three-palestinians-in-gaza-as-attacks-on-tents-continue?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli forces restrict Palestinian worshippers at Al-Aqsa Mosque and block the call to prayer at the Ibrahimi Mosque."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-001",
+    "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
+    "summary": "Israeli forces restrict Palestinian worshippers at Al-Aqsa Mosque and block the call to prayer at the Ibrahimi Mosque.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/6/28/israel-kills-three-palestinians-in-gaza-as-attacks-on-tents-continue?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17",
+        "title": "Israel kills four Palestinians in Gaza as attacks on tents continue",
+        "url": "https://www.aljazeera.com/news/2026/6/28/israel-kills-three-palestinians-in-gaza-as-attacks-on-tents-continue?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli forces restrict Palestinian worshippers at Al-Aqsa Mosque and block the call to prayer at the Ibrahimi Mosque."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-28-010",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_source_url"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-005",
+    "title": "Israel confirms killing 3 Palestinian policemen in latest Gaza ceasefire violation",
+    "summary": "Gaza's Interior Ministry says killings reflect 'Israel's insistence on spreading chaos' in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-anadolu-eedb49ec1257"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-anadolu-eedb49ec1257"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-confirms-killing-3-palestinian-policemen-in-latest-gaza-ceasefire-violation/3980365"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-eedb49ec1257",
+        "title": "Israel confirms killing 3 Palestinian policemen in latest Gaza ceasefire violation",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-confirms-killing-3-palestinian-policemen-in-latest-gaza-ceasefire-violation/3980365",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Gaza's Interior Ministry says killings reflect 'Israel's insistence on spreading chaos' in Gaza"
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-06-28-009",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-004",
+    "title": "Israel's Ben-Gvir faces US complaint over alleged war crimes: Rights group",
+    "summary": "Hind Rajab Foundation says it has asked US Justice Department to investigate Israeli minister over alleged crimes against Palestinians.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-anadolu-f03a717d9a87"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-anadolu-f03a717d9a87"
+    ],
+    "source_urls": [
+      "https://www.aa.com.tr/en/middle-east/israel-s-ben-gvir-faces-us-complaint-over-alleged-war-crimes-rights-group/3980483"
+    ],
+    "publisher_names": [
+      "Anadolu Agency"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-anadolu-f03a717d9a87",
+        "title": "Israel's Ben-Gvir faces US complaint over alleged war crimes: Rights group",
+        "url": "https://www.aa.com.tr/en/middle-east/israel-s-ben-gvir-faces-us-complaint-over-alleged-war-crimes-rights-group/3980483",
+        "publisher": "Anadolu Agency",
+        "summary_or_snippet": "Hind Rajab Foundation says it has asked US Justice Department to investigate Israeli minister over alleged crimes against Palestinians"
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-012",
+    "title": "Paradise lost: How Israel is making war on West Bank farmers",
+    "summary": "Israel is attacking West Bank agriculture in an attempt to drive Palestinian farmers off their land.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 42,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-88f60a043799"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-88f60a043799"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/economy/2026/6/28/paradise-lost-how-israel-is-making-war-on-west-bank-farmers?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-88f60a043799",
+        "title": "Paradise lost: How Israel is making war on West Bank farmers",
+        "url": "https://www.aljazeera.com/economy/2026/6/28/paradise-lost-how-israel-is-making-war-on-west-bank-farmers?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel is attacking West Bank agriculture in an attempt to drive Palestinian farmers off their land."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-06-28-011",
+    "title": "Adam Johnson on how US corporate media sold Israel's genocide in Gaza",
+    "summary": "Marc Lamont Hill speaks with author Adam Johnson on US corporate media's role in enabling the genocide in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-3286194d82d3"
+    ],
+    "source_ids": [
+      "gaza-2026-06-28-aljazeera-middle-east-3286194d82d3"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/upfront/2026/6/28/adam-johnson-on-how-us-corporate-media-sold-israels-genocide-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-06-28-aljazeera-middle-east-3286194d82d3",
+        "title": "Adam Johnson on how US corporate media sold Israel's genocide in Gaza",
+        "url": "https://www.aljazeera.com/video/upfront/2026/6/28/adam-johnson-on-how-us-corporate-media-sold-israels-genocide-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Marc Lamont Hill speaks with author Adam Johnson on US corporate media's role in enabling the genocide in Gaza."
+      }
+    ],
+    "generated_at": "2026-06-28T20:39:33.157368+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

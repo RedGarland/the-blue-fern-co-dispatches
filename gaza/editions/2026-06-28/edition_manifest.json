@@ -1,0 +1,101 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-06-28",
+  "generated_at": "2026-06-28T20:39:33.157368+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-06-28/",
+  "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28",
+  "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-06-28",
+  "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-06-28",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 12,
+  "story_count": 9,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "Anadolu Agency",
+    "Middle East Eye"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 12 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\sources_manifest.json",
+  "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\index.html",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\edition_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\sources_manifest.json",
+    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-06-28\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This is a limited-source update generated from 12 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-06-28\\manual_sources.template.json"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-06-28T06:00:00-07:00",
+  "actual_run_local_time": "2026-06-28T13:39:33-07:00",
+  "source_window_start_utc": "2026-06-28T09:44:23Z",
+  "source_window_end_utc": "2026-06-28T19:54:39Z",
+  "first_source_retrieved_at": "2026-06-28T19:21:41.073324Z",
+  "last_source_retrieved_at": "2026-06-28T20:39:29.168853Z",
+  "contains_later_same_day_update": true,
+  "later_same_day_update_count": 10,
+  "later_same_day_update_batch_count": 2,
+  "later_same_day_update_source_count": 10,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-06-28T19:21:41.073324Z",
+      "retrieved_at_local": "2026-06-28T12:21:41-07:00",
+      "retrieved_local_date": "2026-06-28",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-06-28-aljazeera-middle-east-3286194d82d3",
+        "gaza-2026-06-28-aljazeera-middle-east-88f60a043799"
+      ],
+      "source_count": 2
+    },
+    {
+      "retrieved_at": "2026-06-28T20:24:24.600886Z",
+      "retrieved_at_local": "2026-06-28T13:24:24-07:00",
+      "retrieved_local_date": "2026-06-28",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-06-28-aljazeera-middle-east-2d0243809d7a"
+      ],
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-06-28T20:39:29.168853Z",
+      "retrieved_at_local": "2026-06-28T13:39:29-07:00",
+      "retrieved_local_date": "2026-06-28",
+      "batch_classification": "later_same_day_update",
+      "source_record_ids": [
+        "gaza-2026-06-28-aljazeera-middle-east-e155d818fc17",
+        "gaza-2026-06-28-aljazeera-middle-east-65f1a6fa13f0",
+        "gaza-2026-06-28-anadolu-083294ceced8",
+        "gaza-2026-06-28-anadolu-f03a717d9a87",
+        "gaza-2026-06-28-anadolu-eedb49ec1257",
+        "gaza-2026-06-28-anadolu-cfb2a521bfb3",
+        "gaza-2026-06-28-middle-east-eye-051fe02409b2",
+        "gaza-2026-06-28-middle-east-eye-0a70843b3a6e",
+        "gaza-2026-06-28-middle-east-eye-6c10cf7339b5"
+      ],
+      "source_count": 9
+    }
+  ]
+}

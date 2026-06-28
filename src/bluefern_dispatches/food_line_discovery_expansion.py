@@ -680,6 +680,7 @@ def build_food_line_discovery_query_plan(
                 "direct_source_name": source_name,
                 "direct_source_feed_url": _nonempty(direct_source.get("feed_url")),
                 "direct_source_url": _nonempty(direct_source.get("source_url")),
+                "direct_source_enabled": bool(direct_source.get("enabled", True)),
                 "allowed_domains": [str(item).strip().lower() for item in direct_source.get("allowed_domains") or [] if str(item).strip()],
                 "max_age_days": int(direct_source.get("max_age_days") or 0),
                 "pressure_terms": [str(item).strip() for item in direct_source.get("pressure_terms") or [] if str(item).strip()],
@@ -860,6 +861,30 @@ def _fetch_url_with_metadata(fetcher: Any, url: str) -> tuple[bytes, str, dict[s
         return b"", f"{type(exc).__name__}: {exc}", {}
 
 
+def _looks_like_json_payload(payload: bytes, content_type: str) -> bool:
+    lowered = _nonempty(content_type).lower()
+    if "json" in lowered:
+        return True
+    prefix = payload.lstrip()[:1]
+    return prefix in {b"{", b"["}
+
+
+def _looks_like_html_payload(payload: bytes, content_type: str) -> bool:
+    lowered = _nonempty(content_type).lower()
+    if "html" in lowered:
+        return True
+    snippet = payload[:400].decode("utf-8", errors="replace").lower()
+    return "<html" in snippet or "<!doctype html" in snippet
+
+
+def _looks_like_xml_payload(payload: bytes, content_type: str) -> bool:
+    lowered = _nonempty(content_type).lower()
+    if any(token in lowered for token in ("xml", "rss", "atom")):
+        return True
+    snippet = payload[:200].decode("utf-8", errors="replace").lstrip().lower()
+    return snippet.startswith("<?xml") or snippet.startswith("<rss") or snippet.startswith("<feed")
+
+
 def _parse_google_news_rss(payload: bytes) -> list[dict[str, str]]:
     text = payload.decode("utf-8", errors="replace")
     root = ET.fromstring(text)
@@ -919,6 +944,31 @@ def _parse_direct_feed(payload: bytes) -> list[dict[str, str]]:
     return rows
 
 
+def _parse_json_feed(payload: bytes) -> list[dict[str, str]]:
+    parsed = json.loads(payload.decode("utf-8", errors="replace"))
+    if not isinstance(parsed, dict):
+        return []
+    rows: list[dict[str, str]] = []
+    source_name = _nonempty(parsed.get("title"))
+    items = parsed.get("items")
+    if not isinstance(items, list):
+        return rows
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        rows.append(
+            {
+                "title": _nonempty(item.get("title")),
+                "link": _nonempty(item.get("url") or item.get("external_url") or item.get("id")),
+                "description": _nonempty(item.get("summary") or item.get("content_text") or item.get("content_html")),
+                "pubDate": _nonempty(item.get("date_published") or item.get("date_modified")),
+                "source_url": "",
+                "source_name": source_name,
+            }
+        )
+    return rows
+
+
 def _page_title(payload: bytes) -> str:
     text = payload.decode("utf-8", errors="replace")
     match = re.search(r"<title[^>]*>(.*?)</title>", text, flags=re.IGNORECASE | re.DOTALL)
@@ -938,44 +988,174 @@ def _page_summary(payload: bytes) -> str:
     return re.sub(r"\s+", " ", cleaned).strip()[:400]
 
 
+def _page_text(payload: bytes, *, limit: int = 3000) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    cleaned = re.sub(r"(?is)<script[^>]*>.*?</script>", " ", text)
+    cleaned = re.sub(r"(?is)<style[^>]*>.*?</style>", " ", cleaned)
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    return re.sub(r"\s+", " ", html.unescape(cleaned)).strip()[:limit]
+
+
+def _extract_page_published_date(payload: bytes) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    patterns = (
+        r'<meta\b[^>]*property=["\']article:published_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*name=["\']article:published_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*property=["\']og:published_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*name=["\']pubdate["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<time\b[^>]*datetime=["\']([^"\']+)["\']',
+        r'"datePublished"\s*:\s*"([^"]+)"',
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if not match:
+            continue
+        candidate = _extract_source_date(_nonempty(match.group(1)))
+        if candidate:
+            return candidate
+    return ""
+
+
+def _is_document_specific_url(url: str) -> bool:
+    value = _normalize_url(url)
+    if not value:
+        return False
+    parsed = urllib.parse.urlsplit(value)
+    path = (parsed.path or "").lower()
+    return any(path.endswith(ext) for ext in (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"))
+
+
+def _extract_listing_links(
+    payload: bytes,
+    *,
+    base_url: str,
+    allowed_domains: list[str],
+    source_name: str,
+) -> list[dict[str, str]]:
+    text = payload.decode("utf-8", errors="replace")
+    rows: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for match in re.finditer(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL):
+        href = urllib.parse.urljoin(base_url, html.unescape(match.group(1)).strip())
+        normalized_href = _normalize_url(href)
+        if not normalized_href or normalized_href in seen:
+            continue
+        if allowed_domains and not _domain_allowed(normalized_href, allowed_domains):
+            continue
+        if _is_homepage_only_url(normalized_href) or _is_feed_or_listing_url(normalized_href):
+            continue
+        if not (_is_article_specific_url(normalized_href) or _is_document_specific_url(normalized_href)):
+            continue
+        label = re.sub(r"<[^>]+>", " ", match.group(2))
+        title = re.sub(r"\s+", " ", html.unescape(label)).strip()
+        if not title:
+            title = normalized_href.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ")
+        rows.append(
+            {
+                "title": title[:240],
+                "link": normalized_href,
+                "description": "",
+                "pubDate": "",
+                "source_url": normalized_href,
+                "source_name": source_name,
+            }
+        )
+        seen.add(normalized_href)
+        if len(rows) >= 25:
+            break
+    return rows
+
+
+def _recommended_direct_source_action(
+    *,
+    discovery_channel: str,
+    enabled: bool,
+    direct_fetch_status: str,
+    parser_attempted: str,
+    item_count: int,
+    content_type: str,
+) -> str:
+    if not enabled:
+        return "disable_source"
+    if direct_fetch_status in {"blocked_401", "blocked_403"}:
+        return "blocked_by_site"
+    if direct_fetch_status == "not_found_404":
+        return "replace_url"
+    if direct_fetch_status == "parse_failure":
+        if discovery_channel == "direct_rss" and "html" in _nonempty(content_type).lower():
+            return "replace_url"
+        return "fix_parser"
+    if item_count <= 0 and parser_attempted == "html_listing":
+        return "disable_source"
+    return "keep"
+
+
 def _collect_direct_source_items(
     fetcher: Any,
     query_row: dict[str, Any],
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
     source_url = _nonempty(query_row.get("direct_source_url") or query_row.get("direct_source_feed_url"))
     discovery_channel = _nonempty(query_row.get("discovery_channel") or "direct_page")
-    payload, fetch_error = _fetch_url(fetcher, source_url)
+    allowed_domains = [str(item).strip().lower() for item in query_row.get("allowed_domains") or [] if str(item).strip()]
+    payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, source_url)
     diagnostics = {
         "attempted": bool(source_url),
         "success": False,
         "error": fetch_error,
         "item_count": 0,
+        "response_status": fetch_meta.get("response_status"),
+        "final_response_url": _nonempty(fetch_meta.get("final_response_url") or source_url),
+        "content_type": _nonempty(fetch_meta.get("content_type")),
+        "redirect_chain": list(fetch_meta.get("redirect_chain") or ([source_url] if source_url else [])),
+        "failure_reason": "",
+        "exception_message": "",
+        "parser_attempted": "",
     }
     if fetch_error or not payload:
+        diagnostics["failure_reason"] = _classify_fetch_error(fetch_error or "empty response")
+        diagnostics["exception_message"] = _nonempty(fetch_error)
         return [], diagnostics
     try:
-        diagnostics["success"] = True
-        if discovery_channel == "direct_rss":
+        source_name = _nonempty(query_row.get("direct_source_name"))
+        if _looks_like_xml_payload(payload, diagnostics["content_type"]):
+            diagnostics["parser_attempted"] = "rss_or_atom"
             items = _parse_direct_feed(payload)
-            diagnostics["item_count"] = len(items)
-            return items, diagnostics
-        canonical = _extract_canonical_url(payload)
-        page_url = _normalize_url(canonical or source_url)
-        items = [
-            {
-                "title": _page_title(payload) or _nonempty(query_row.get("direct_source_name")),
-                "link": page_url,
-                "description": _page_summary(payload),
-                "pubDate": "",
-                "source_url": source_url,
-                "source_name": _nonempty(query_row.get("direct_source_name")),
-            }
-        ]
-        diagnostics["item_count"] = 1
+        elif _looks_like_json_payload(payload, diagnostics["content_type"]):
+            diagnostics["parser_attempted"] = "json_feed"
+            items = _parse_json_feed(payload)
+        elif _looks_like_html_payload(payload, diagnostics["content_type"]):
+            diagnostics["parser_attempted"] = "html_listing"
+            page_url = _normalize_url(_extract_canonical_url(payload) or diagnostics["final_response_url"] or source_url)
+            extracted = _extract_listing_links(
+                payload,
+                base_url=page_url or source_url,
+                allowed_domains=allowed_domains,
+                source_name=source_name,
+            )
+            if extracted:
+                items = extracted
+            else:
+                items = [
+                    {
+                        "title": _page_title(payload) or source_name,
+                        "link": page_url,
+                        "description": _page_summary(payload),
+                        "pubDate": "",
+                        "source_url": source_url,
+                        "source_name": source_name,
+                    }
+                ]
+        else:
+            diagnostics["parser_attempted"] = "unknown"
+            raise ValueError("unsupported direct source payload type")
+        diagnostics["success"] = True
+        diagnostics["item_count"] = len(items)
         return items, diagnostics
     except Exception as exc:  # noqa: BLE001
         diagnostics["success"] = False
         diagnostics["error"] = f"{type(exc).__name__}: {exc}"
+        diagnostics["failure_reason"] = _classify_fetch_error(diagnostics["error"])
+        diagnostics["exception_message"] = diagnostics["error"]
         diagnostics["item_count"] = 0
         return [], diagnostics
 
@@ -1551,6 +1731,8 @@ def run_food_line_discovery_expansion(
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
+    config = load_food_line_discovery_expansion_config(root)
+    configured_direct_sources = [row for row in config.get("direct_sources") or [] if isinstance(row, dict)]
     query_plan = build_food_line_discovery_query_plan(
         root,
         date_text,
@@ -1598,6 +1780,33 @@ def run_food_line_discovery_expansion(
     direct_source_candidate_cap_hits: Counter[str] = Counter()
     accepted_direct_source_counts: Counter[str] = Counter()
     accepted_direct_source_lane_counts: Counter[str] = Counter()
+    direct_source_fetch_failure_reasons_by_source: dict[str, Counter[str]] = {}
+    direct_source_success_by_source: Counter[str] = Counter()
+    direct_source_item_counts: Counter[str] = Counter()
+    direct_source_zero_item_sources: set[str] = set()
+    disabled_direct_sources = sorted(_nonempty(row.get("source_name")) for row in configured_direct_sources if not bool(row.get("enabled", True)) and _nonempty(row.get("source_name")))
+    direct_source_diagnostics: list[dict[str, Any]] = []
+    for source_row in configured_direct_sources:
+        source_name = _nonempty(source_row.get("source_name"))
+        if not source_name or bool(source_row.get("enabled", True)):
+            continue
+        direct_source_diagnostics.append(
+            {
+                "direct_source_name": source_name,
+                "lane": _nonempty(source_row.get("discovery_lane") or source_row.get("source_family") or "news_article"),
+                "discovery_channel": _nonempty(source_row.get("discovery_channel") or ("direct_rss" if _nonempty(source_row.get("feed_url")) else "direct_page")),
+                "configured_url": _nonempty(source_row.get("feed_url") or source_row.get("source_url")),
+                "final_response_url": "",
+                "http_status": None,
+                "content_type": "",
+                "failure_reason": "disabled_source",
+                "exception_message": "",
+                "parser_attempted": "",
+                "item_count_extracted": 0,
+                "source_disabled_or_skipped": True,
+                "recommended_action": "disable_source",
+            }
+        )
 
     for query_row in query_plan:
         query_text = _nonempty(query_row.get("query_text"))
@@ -1621,18 +1830,64 @@ def run_food_line_discovery_expansion(
         else:
             query_url = _nonempty(query_row.get("direct_source_feed_url") or query_row.get("direct_source_url"))
             items, direct_meta = _collect_direct_source_items(fetch, query_row)
+            source_name = _nonempty(query_row.get("direct_source_name"))
+            lane = _effective_lane(query_row)
             result_row["query_url"] = query_url
             result_row["query_error"] = _nonempty(direct_meta.get("error"))
-            result_row["direct_source_name"] = _nonempty(query_row.get("direct_source_name"))
+            result_row["direct_source_name"] = source_name
             result_row["direct_fetch_status"] = "ok" if direct_meta.get("success") else _classify_fetch_error(_nonempty(direct_meta.get("error")) or "fetch_failed")
+            result_row["direct_source_lane"] = lane
+            result_row["configured_url"] = query_url
+            result_row["final_response_url"] = _nonempty(direct_meta.get("final_response_url"))
+            result_row["response_status"] = direct_meta.get("response_status")
+            result_row["content_type"] = _nonempty(direct_meta.get("content_type"))
+            result_row["parser_attempted"] = _nonempty(direct_meta.get("parser_attempted"))
+            result_row["item_count"] = int(direct_meta.get("item_count") or 0)
+            result_row["direct_source_enabled"] = bool(query_row.get("direct_source_enabled", True))
+            result_row["exception_message"] = _nonempty(direct_meta.get("exception_message"))
+            result_row["failure_reason"] = _nonempty(direct_meta.get("failure_reason") or result_row["direct_fetch_status"])
+            result_row["direct_source_skipped"] = False
+            result_row["recommended_action"] = _recommended_direct_source_action(
+                discovery_channel=discovery_channel,
+                enabled=bool(query_row.get("direct_source_enabled", True)),
+                direct_fetch_status=_nonempty(result_row["direct_fetch_status"]),
+                parser_attempted=_nonempty(result_row.get("parser_attempted")),
+                item_count=int(result_row.get("item_count") or 0),
+                content_type=_nonempty(result_row.get("content_type")),
+            )
             direct_source_count += 1
             if direct_meta.get("attempted"):
                 direct_source_fetch_attempt_count += 1
             if direct_meta.get("success"):
                 direct_source_fetch_success_count += 1
+                if source_name:
+                    direct_source_success_by_source[source_name] += 1
             else:
                 direct_source_fetch_failure_count += 1
                 direct_source_fetch_failure_reasons[result_row["direct_fetch_status"]] += 1
+                if source_name:
+                    direct_source_fetch_failure_reasons_by_source.setdefault(source_name, Counter())[result_row["direct_fetch_status"]] += 1
+            if source_name:
+                direct_source_item_counts[source_name] += int(direct_meta.get("item_count") or 0)
+                if direct_meta.get("success") and not int(direct_meta.get("item_count") or 0):
+                    direct_source_zero_item_sources.add(source_name)
+            direct_source_diagnostics.append(
+                {
+                    "direct_source_name": source_name,
+                    "lane": lane,
+                    "discovery_channel": discovery_channel,
+                    "configured_url": query_url,
+                    "final_response_url": _nonempty(direct_meta.get("final_response_url")),
+                    "http_status": direct_meta.get("response_status"),
+                    "content_type": _nonempty(direct_meta.get("content_type")),
+                    "failure_reason": _nonempty(direct_meta.get("failure_reason") or result_row["direct_fetch_status"]),
+                    "exception_message": _nonempty(direct_meta.get("exception_message")),
+                    "parser_attempted": _nonempty(direct_meta.get("parser_attempted")),
+                    "item_count_extracted": int(direct_meta.get("item_count") or 0),
+                    "source_disabled_or_skipped": False,
+                    "recommended_action": _nonempty(result_row["recommended_action"]),
+                }
+            )
             rss_items = items
         result_row["result_count"] = len(rss_items)
         query_rows.append(result_row)
@@ -1680,6 +1935,10 @@ def run_food_line_discovery_expansion(
             fetch_status = "unfetched"
             fetch_error = google_news_resolution_error
             canonical_from_page = ""
+            page_title = ""
+            page_summary = ""
+            page_text = ""
+            page_published_date = ""
             evidence_text = _nonempty(item.get("title")) + " " + _nonempty(item.get("description"))
             if discovery_channel != "google_news_rss":
                 direct_fetch_status = "ok"
@@ -1706,6 +1965,10 @@ def run_food_line_discovery_expansion(
                         direct_fetch_status = "ok"
                         fetchable_count += 1
                         canonical_from_page = _extract_canonical_url(payload2)
+                        page_title = _page_title(payload2)
+                        page_summary = _page_summary(payload2)
+                        page_text = _page_text(payload2)
+                        page_published_date = _extract_page_published_date(payload2)
                         if _is_article_specific_url(canonical_from_page):
                             canonical = canonical_from_page
                             final_trace_url = canonical_from_page
@@ -1715,6 +1978,9 @@ def run_food_line_discovery_expansion(
                                 _nonempty(item.get("title")),
                                 _nonempty(item.get("description")),
                                 _nonempty(item.get("source_name") or direct_source_name),
+                                page_title,
+                                page_summary,
+                                page_text,
                                 canonical_from_page,
                             )
                             if part
@@ -1727,6 +1993,10 @@ def run_food_line_discovery_expansion(
                     fetch_status = "ok"
                     fetchable_count += 1
                     canonical_from_page = _extract_canonical_url(payload2)
+                    page_title = _page_title(payload2)
+                    page_summary = _page_summary(payload2)
+                    page_text = _page_text(payload2)
+                    page_published_date = _extract_page_published_date(payload2)
                     if _is_article_specific_url(canonical_from_page):
                         canonical = canonical_from_page
                         if not _is_article_specific_url(final_trace_url):
@@ -1741,6 +2011,9 @@ def run_food_line_discovery_expansion(
                             _nonempty(item.get("title")),
                             _nonempty(item.get("description")),
                             _nonempty(item.get("source_name")),
+                            page_title,
+                            page_summary,
+                            page_text,
                             canonical_from_page,
                         )
                         if part
@@ -1773,7 +2046,7 @@ def run_food_line_discovery_expansion(
                 term_text = _nonempty(term)
                 if term_text and term_text.lower() in evidence_text.lower() and term_text not in location_hits:
                     location_hits.append(term_text)
-            source_published_date = _extract_source_date(_nonempty(item.get("pubDate")))
+            source_published_date = _extract_source_date(_nonempty(item.get("pubDate"))) or page_published_date
             source_url = _choose_trace_url(final_trace_url or publisher_url, canonical, discovered_url)
             traceability_status = _discovery_traceability_status(
                 source_url=source_url,
@@ -2028,6 +2301,27 @@ def run_food_line_discovery_expansion(
         top_source, top_count = max(direct_source_counts.items(), key=lambda item: item[1])
         if top_count > candidate_count / 2:
             dominant_source_warning = f"{top_source} contributed {top_count} of {candidate_count} candidates."
+    direct_sources_recommended_for_disable = sorted(
+        {
+            _nonempty(row.get("direct_source_name"))
+            for row in direct_source_diagnostics
+            if _nonempty(row.get("recommended_action")) == "disable_source" and _nonempty(row.get("direct_source_name"))
+        }
+    )
+    direct_sources_recommended_for_url_refresh = sorted(
+        {
+            _nonempty(row.get("direct_source_name"))
+            for row in direct_source_diagnostics
+            if _nonempty(row.get("recommended_action")) == "replace_url" and _nonempty(row.get("direct_source_name"))
+        }
+    )
+    direct_sources_recommended_for_parser_fix = sorted(
+        {
+            _nonempty(row.get("direct_source_name"))
+            for row in direct_source_diagnostics
+            if _nonempty(row.get("recommended_action")) == "fix_parser" and _nonempty(row.get("direct_source_name"))
+        }
+    )
     executed_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_rows if _nonempty(row.get("query_family"))})
     skipped_lanes = [lane for lane in configured_lanes if lane not in executed_lanes]
     discovery_confidence, discovery_confidence_reason = _discovery_confidence(
@@ -2084,6 +2378,17 @@ def run_food_line_discovery_expansion(
         "manual_fallback_count": manual_fallback_count,
         "duplicate_preferred_direct_count": duplicate_preferred_direct_count,
         "direct_source_fetch_failure_reasons": dict(sorted(direct_source_fetch_failure_reasons.items())),
+        "direct_source_fetch_failure_reasons_by_source": {
+            key: dict(sorted(value.items()))
+            for key, value in sorted(direct_source_fetch_failure_reasons_by_source.items())
+        },
+        "direct_source_success_by_source": dict(sorted(direct_source_success_by_source.items())),
+        "direct_source_item_counts": dict(sorted(direct_source_item_counts.items())),
+        "direct_source_zero_item_sources": sorted(direct_source_zero_item_sources),
+        "disabled_direct_sources": disabled_direct_sources,
+        "direct_sources_recommended_for_disable": direct_sources_recommended_for_disable,
+        "direct_sources_recommended_for_url_refresh": direct_sources_recommended_for_url_refresh,
+        "direct_sources_recommended_for_parser_fix": direct_sources_recommended_for_parser_fix,
         "direct_source_candidate_cap_hits": dict(sorted(direct_source_candidate_cap_hits.items())),
         "dominant_source_warning": dominant_source_warning,
         "configured_lanes": configured_lanes,
@@ -2099,6 +2404,7 @@ def run_food_line_discovery_expansion(
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
+        "direct_source_diagnostics": direct_source_diagnostics,
         "google_news_resolution_debug_by_candidate": resolution_debug_by_candidate,
         "query_lookback_days": int(query_lookback_days),
         "query_lookahead_days": int(query_lookahead_days),
@@ -2143,6 +2449,14 @@ def run_food_line_discovery_expansion(
             f"- Direct homepage/feed blocks: `{direct_homepage_or_feed_blocked_count}`",
             f"- Google News fallback candidates: `{google_news_fallback_count}`",
             f"- Direct source fetch failure reasons: `{dict(sorted(direct_source_fetch_failure_reasons.items()))}`",
+            f"- Direct source fetch failure reasons by source: `{audit_summary['direct_source_fetch_failure_reasons_by_source']}`",
+            f"- Direct source successes by source: `{audit_summary['direct_source_success_by_source']}`",
+            f"- Direct source item counts: `{audit_summary['direct_source_item_counts']}`",
+            f"- Direct source zero-item sources: `{audit_summary['direct_source_zero_item_sources']}`",
+            f"- Disabled direct sources: `{disabled_direct_sources}`",
+            f"- Recommended direct-source disables: `{direct_sources_recommended_for_disable}`",
+            f"- Recommended direct-source URL refreshes: `{direct_sources_recommended_for_url_refresh}`",
+            f"- Recommended direct-source parser fixes: `{direct_sources_recommended_for_parser_fix}`",
             f"- Direct source candidate cap hits: `{dict(sorted(direct_source_candidate_cap_hits.items()))}`",
             f"- Dominant source warning: {dominant_source_warning or 'none'}",
             f"- Google News wrapper URLs: `{google_news_url_count}`",

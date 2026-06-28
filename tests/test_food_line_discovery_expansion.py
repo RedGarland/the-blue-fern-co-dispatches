@@ -938,6 +938,179 @@ def test_direct_source_diagnostics_and_sampling_appear_in_backfill_summary(tmp_p
     assert result["direct_source_fetch_success_count"] == 1
     assert result["google_news_fallback_count"] == 0
     assert result["candidates_by_direct_source"]["Example Direct Feed"] == 1
+    assert result["direct_source_success_by_source"]["Example Direct Feed"] == 1
+    assert result["direct_source_item_counts"]["Example Direct Feed"] == 1
+
+
+def test_direct_source_parse_failure_reports_per_source_diagnostics(tmp_path: Path):
+    feed_url = "https://example.org/broken.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Broken Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return {
+                "payload": b"not-valid-xml",
+                "response_status": 200,
+                "final_response_url": feed_url,
+                "content_type": "application/rss+xml; charset=UTF-8",
+            }
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    assert result["direct_source_fetch_failure_reasons_by_source"]["Broken Feed"]["parse_failure"] == 1
+    assert result["direct_sources_recommended_for_parser_fix"] == ["Broken Feed"]
+    diagnostics = [row for row in result["direct_source_diagnostics"] if row["direct_source_name"] == "Broken Feed"]
+    assert diagnostics
+    assert diagnostics[0]["parser_attempted"] == "rss_or_atom"
+    assert diagnostics[0]["failure_reason"] == "parse_failure"
+    assert diagnostics[0]["recommended_action"] == "fix_parser"
+
+
+def test_direct_source_blocked_403_is_marked_blocked_by_site(tmp_path: Path):
+    source_url = "https://example.org/protected"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Blocked Source",
+                "source_family": "snap_state_notice",
+                "discovery_lane": "snap_state_notice",
+                "discovery_channel": "direct_page",
+                "source_url": source_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["snap", "benefits"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == source_url:
+            raise urllib.error.HTTPError(url, 403, "Forbidden", None, None)
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    diagnostics = [row for row in result["direct_source_diagnostics"] if row["direct_source_name"] == "Blocked Source"]
+    assert diagnostics
+    assert diagnostics[0]["failure_reason"] == "blocked_403"
+    assert diagnostics[0]["recommended_action"] == "blocked_by_site"
+
+
+def test_disabled_direct_sources_are_reported_and_skipped(tmp_path: Path):
+    disabled_url = "https://example.org/disabled.xml"
+    calls: list[str] = []
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Disabled Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": disabled_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": False,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    assert disabled_url not in calls
+    assert result["disabled_direct_sources"] == ["Disabled Feed"]
+    diagnostics = [row for row in result["direct_source_diagnostics"] if row["direct_source_name"] == "Disabled Feed"]
+    assert diagnostics
+    assert diagnostics[0]["source_disabled_or_skipped"] is True
+    assert diagnostics[0]["recommended_action"] == "disable_source"
+
+
+def test_direct_page_listing_extraction_keeps_article_and_document_links_only(tmp_path: Path):
+    listing_url = "https://example.org/news"
+    article_url = "https://example.org/news/article-one"
+    document_url = "https://example.org/docs/food-assistance-report.pdf"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Listing Source",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": listing_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "direct_source_candidate_cap": 2,
+                "max_age_days": 7,
+                "pressure_terms": ["food assistance", "food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == listing_url:
+            return (
+                "<html><body>"
+                f"<a href=\"{article_url}\">Food pantry demand article</a>"
+                f"<a href=\"{document_url}\">Food assistance report PDF</a>"
+                "<a href=\"https://example.org/\">Homepage</a>"
+                "<a href=\"https://example.org/feed\">Feed</a>"
+                "<a href=\"https://example.org/calendar\">Calendar</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        if url == document_url:
+            return b"%PDF-1.7 food assistance report"
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=10)
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+    source_urls = {row["source_url"] for row in candidates}
+
+    assert article_url in source_urls
+    assert document_url in source_urls
+    assert "https://example.org" not in source_urls
+    assert "https://example.org/feed" not in source_urls
+    assert "https://example.org/calendar" not in source_urls
 
 
 def test_direct_sources_are_balanced_by_source_cap_and_lane_reporting(tmp_path: Path):

@@ -87,6 +87,84 @@ Aggregators such as Google News are discovery surfaces, not final evidence sourc
 
 This wide-discovery, strict-vetting pattern should be reusable across Gaza, Food Line, and Care Line. If a task reveals a durable workflow rule or architecture principle, update the relevant project docs in the same PR.
 
+## Codex Safe Execution Scope
+
+Source-repo work should follow a PR-only workflow. Codex may perform safe mechanical source-repo steps when explicitly asked, but human review remains required before merge, publication, or Pages activity.
+
+Codex may:
+
+- create a feature branch from the approved base branch
+- stage only explicitly named source, config, test, or documentation files
+- run `git diff --cached --stat`
+- run `git diff --cached --check`
+- run `git diff --cached --name-only`
+- verify the staged file list matches the intended files only
+- commit with a scoped commit message
+- push the feature branch
+- create a PR against the approved base branch
+- run or watch PR checks
+- open the PR in the browser with `gh pr view --web`
+- after the human confirms merge, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, verify Pages repo status
+- delete local and remote feature branches only after merge confirmation
+
+Codex must not:
+
+- merge a PR
+- publish public editions
+- sync, commit, or push the Pages repo
+- post to Bluesky or other social platforms
+- create or replace podcast, audio, or other public publication files for release
+- decide that a candidate is source-backed enough for public publication
+- relax source eligibility gates
+- alter editorial standards
+- commit generated public output unless explicitly instructed
+- use `git add .`
+- delete broad generated folders without explicit instruction
+
+Explicit instruction remains required for:
+
+- running discovery or backfill jobs that create candidate or review artifacts
+- cleaning specific generated artifacts
+- dry-run publish validation
+- updating discovery or source configuration
+- creating commits and PRs
+- deleting feature branches after merge confirmation
+
+Required staging rule before every commit:
+
+- run `git diff --cached --stat`
+- run `git diff --cached --check`
+- run `git diff --cached --name-only`
+- verify the staged file list contains only intended files
+- if unrelated files are staged, stop and unstage them before committing
+
+Default safe PR command pattern:
+
+```powershell
+git switch -c feature/<scoped-branch-name>
+
+git add `
+  <explicit-file-1> `
+  <explicit-file-2> `
+  <explicit-file-3>
+
+git diff --cached --stat
+git diff --cached --check
+git diff --cached --name-only
+
+git commit -m "<scoped commit message>"
+git push -u origin feature/<scoped-branch-name>
+
+gh pr create `
+  --base add/pages-repo-default `
+  --head feature/<scoped-branch-name> `
+  --title "<PR title>" `
+  --body "<PR body with validation results and no publish/no Pages sync statement>"
+
+gh pr checks --watch
+gh pr view --web
+```
+
 ### Publishing a historical Gaza edition
 
 1. Create:

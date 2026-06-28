@@ -940,6 +940,206 @@ def test_direct_source_diagnostics_and_sampling_appear_in_backfill_summary(tmp_p
     assert result["candidates_by_direct_source"]["Example Direct Feed"] == 1
 
 
+def test_direct_sources_are_balanced_by_source_cap_and_lane_reporting(tmp_path: Path):
+    feed_one = "https://example.org/feed-one.xml"
+    feed_two = "https://example.org/feed-two.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Dominant Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_one,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "Second Feed",
+                "source_family": "public_radio",
+                "discovery_lane": "public_radio",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_two,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 20,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_one:
+            return _rss_payload(
+                [
+                    {"title": "One", "link": "https://example.org/one", "source_url": "https://example.org/one", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT"},
+                    {"title": "Two", "link": "https://example.org/two", "source_url": "https://example.org/two", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:05:00 GMT"},
+                ]
+            )
+        if url == feed_two:
+            return _rss_payload(
+                [
+                    {"title": "Three", "link": "https://example.org/three", "source_url": "https://example.org/three", "publisher": "Second Feed", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:10:00 GMT"},
+                ]
+            )
+        if url in {"https://example.org/one", "https://example.org/two", "https://example.org/three"}:
+            return _html_article(title="Story", canonical=url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=2, max_results_per_query=5)
+
+    assert result["candidates_by_direct_source"] == {"Dominant Feed": 1, "Second Feed": 1}
+    assert result["candidates_by_direct_source_lane"]["Dominant Feed | food_bank_provider"] == 1
+    assert result["candidates_by_direct_source_lane"]["Second Feed | public_radio"] == 1
+    assert result["direct_source_candidate_cap_hits"]["Dominant Feed"] == 1
+    assert result["dominant_source_warning"] == ""
+
+
+def test_dominant_source_warning_appears_when_one_source_supplies_majority(tmp_path: Path):
+    feed_url = "https://example.org/feed-one.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Dominant Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 3,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {"title": "One", "link": "https://example.org/one", "source_url": "https://example.org/one", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT"},
+                    {"title": "Two", "link": "https://example.org/two", "source_url": "https://example.org/two", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:05:00 GMT"},
+                ]
+            )
+        if url in {"https://example.org/one", "https://example.org/two"}:
+            return _html_article(title="Story", canonical=url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    assert "Dominant Feed contributed 2 of 2 candidates." == result["dominant_source_warning"]
+
+
+def test_direct_rss_sources_are_preferred_over_broad_agenda_pages_in_capped_runs(tmp_path: Path):
+    calls: list[str] = []
+    feed_url = "https://example.org/feed.xml"
+    agenda_url = "https://example.org/calendar"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Agenda Source",
+                "source_family": "county_city_agenda",
+                "discovery_lane": "county_city_agenda",
+                "discovery_channel": "direct_page",
+                "source_url": agenda_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "state_local",
+                "enabled": True,
+                "sampling_priority": 500,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food assistance"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "RSS Source",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {"title": "RSS story", "link": "https://example.org/rss-story", "source_url": "https://example.org/rss-story", "publisher": "RSS Source", "description": "Food pantry demand is rising.", "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT"},
+                ]
+            )
+        if url == "https://example.org/rss-story":
+            return _html_article(title="RSS story", canonical=url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    assert calls == [feed_url, "https://example.org/rss-story"]
+    assert result["candidates_by_direct_source"] == {"RSS Source": 1}
+
+
+def test_cook_county_agenda_listing_pages_stay_non_public(tmp_path: Path):
+    agenda_url = "https://cook-county.legistar.com/Calendar.aspx"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Cook County Board Agenda",
+                "source_family": "county_city_agenda",
+                "discovery_lane": "county_city_agenda",
+                "discovery_channel": "direct_page",
+                "source_url": agenda_url,
+                "allowed_domains": ["cook-county.legistar.com"],
+                "geographic_scope": "state_local",
+                "enabled": True,
+                "sampling_priority": 500,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food assistance", "contract"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == agenda_url:
+            return b"<html><head><title>Calendar</title><link rel=\"canonical\" href=\"https://cook-county.legistar.com/Calendar.aspx\"></head><body>Food assistance committee calendar.</body></html>"
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["direct_source_name"] == "Cook County Board Agenda"
+    assert candidate["public_claim_eligible"] is False
+    assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"] or "non_article_trace_url" in candidate["public_claim_blockers"]
+
+
 def test_food_line_manual_fallback_validation_rejects_missing_required_fields():
     valid = {
         "publisher": "Axios Charlotte",

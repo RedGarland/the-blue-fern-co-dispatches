@@ -534,3 +534,100 @@ def test_food_line_discovery_backfill_samples_direct_source_before_google_fallba
     assert calls == [feed_url]
     assert summary["direct_source_fetch_attempt_count"] == 1
     assert summary["google_news_fallback_count"] == 0
+
+
+def test_backfill_reports_direct_source_lane_caps_and_out_of_window_context_dates(tmp_path: Path):
+    feed_one = "https://example.org/feed-one.xml"
+    feed_two = "https://example.org/feed-two.xml"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Dominant Feed",
+                "source_family": "food_bank_provider",
+                "discovery_lane": "food_bank_provider",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_one,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            },
+            {
+                "source_name": "Agenda Source",
+                "source_family": "county_city_agenda",
+                "discovery_lane": "county_city_agenda",
+                "discovery_channel": "direct_page",
+                "source_url": feed_two,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "state_local",
+                "enabled": True,
+                "sampling_priority": 500,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 7,
+                "pressure_terms": ["food assistance"],
+                "exclusion_terms": [],
+            },
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_one:
+            return _rss_payload(
+                [
+                    {"title": "One", "link": "https://example.org/one", "source_url": "https://example.org/one", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Thu, 26 Jun 2026 12:00:00 GMT"},
+                    {"title": "Two", "link": "https://example.org/two", "source_url": "https://example.org/two", "publisher": "Dominant Feed", "description": "Food pantry demand is rising.", "pubDate": "Thu, 26 Jun 2026 12:05:00 GMT"},
+                ]
+            )
+        if url == "https://example.org/one":
+            return b"<html><head><link rel=\"canonical\" href=\"https://example.org/one\"></head><body>background context without pressure</body></html>"
+        if url == feed_two:
+            return b"<html><head><title>Agenda</title><link rel=\"canonical\" href=\"https://example.org/document\"></head><body>background context without pressure</body></html>"
+        if url == "https://example.org/document":
+            return b"<html><head><link rel=\"canonical\" href=\"https://example.org/document\"></head><body>background context without pressure</body></html>"
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-24",
+            "2026-06-24",
+            max_queries=2,
+            max_results_per_query=5,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-24_to_2026-06-24"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["candidates_by_direct_source_lane"]["Agenda Source | county_city_agenda"] == 1
+    assert summary["candidates_by_direct_source_lane"]["Dominant Feed | food_bank_provider"] == 1
+    assert summary["direct_source_candidate_cap_hits"]["Dominant Feed"] == 1
+    assert "2026-06-24" in summary["dates_with_only_out_of_window_candidates"]

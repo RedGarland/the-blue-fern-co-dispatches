@@ -69,6 +69,47 @@ LISTING_PATH_SEGMENTS = {
     "rss",
     "atom",
 }
+ARCHIVE_ACTION_SEGMENTS = {
+    "action",
+    "actions",
+    "take-action",
+    "take_action",
+    "advocacy",
+    "advocate",
+    "donate",
+    "donation",
+    "donations",
+}
+ARCHIVE_RESOURCE_SEGMENTS = {
+    "program",
+    "programs",
+    "resource",
+    "resources",
+    "toolkit",
+    "toolkits",
+    "newsletter",
+    "newsletters",
+    "signup",
+    "sign-up",
+    "subscribe",
+    "subscription",
+}
+ARCHIVE_NAVIGATION_TEXT = {
+    "skip to content",
+    "skip to main content",
+    "menu",
+    "main menu",
+    "navigation",
+    "header",
+    "footer",
+    "home",
+    "about",
+    "contact",
+    "next",
+    "previous",
+    "older posts",
+    "newer posts",
+}
 
 GENERIC_TITLE_EXACT_NORMALIZED = {
     "skip to content",
@@ -634,6 +675,46 @@ def _is_article_specific_url(url: str) -> bool:
     if any(lowered_path.endswith(ext) for ext in STATIC_PATH_SUFFIXES):
         return False
     return bool(path)
+
+
+def _path_segments(url: str) -> list[str]:
+    parsed = urllib.parse.urlsplit(_normalize_url(url))
+    return [segment for segment in (parsed.path or "").strip("/").split("/") if segment]
+
+
+def _path_words(value: str) -> list[str]:
+    return [word for word in re.split(r"[^a-z0-9]+", value.lower()) if word]
+
+
+def _cap_text(value: str, *, limit: int = 240) -> str:
+    text = re.sub(r"\s+", " ", _nonempty(value)).strip()
+    return text[:limit]
+
+
+def _is_probable_article_slug(url: str) -> bool:
+    value = _normalize_url(url)
+    if not value or _is_document_specific_url(value):
+        return False
+    segments = _path_segments(value)
+    if not segments:
+        return False
+    parsed = urllib.parse.urlsplit(value)
+    if parsed.query and any(key in urllib.parse.parse_qs(parsed.query) for key in ("page", "paged")):
+        return False
+    lowered_segments = [segment.lower() for segment in segments]
+    if len(lowered_segments) == 1 and lowered_segments[0].split(".", 1)[0] in LISTING_PATH_SEGMENTS:
+        return False
+    last_segment = lowered_segments[-1].split(".", 1)[0]
+    if last_segment in LISTING_PATH_SEGMENTS or last_segment in ARCHIVE_ACTION_SEGMENTS or last_segment in ARCHIVE_RESOURCE_SEGMENTS:
+        return False
+    words = _path_words(last_segment)
+    if len(words) >= 4:
+        return True
+    if len(words) >= 3 and any(any(char.isdigit() for char in segment) for segment in lowered_segments):
+        return True
+    if len(words) >= 2 and len(lowered_segments) >= 2:
+        return True
+    return bool(_extract_url_date(value))
 
 
 def _is_static_or_namespace_url(url: str) -> bool:
@@ -1460,6 +1541,65 @@ def _is_document_specific_url(url: str) -> bool:
     return any(path.endswith(ext) for ext in (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"))
 
 
+def _archive_link_filter_decision(
+    url: str,
+    *,
+    anchor_text: str,
+    link_context: str,
+    listing_context_date: str,
+) -> tuple[str, str]:
+    normalized_url = _normalize_url(url)
+    if not normalized_url:
+        return "rejected_unknown_nonarticle", "empty_or_invalid_url"
+    if _is_homepage_only_url(normalized_url):
+        return "rejected_navigation_link", "homepage_only_url"
+    host = _host(normalized_url)
+    if host.endswith(SOCIAL_DOMAINS):
+        return "rejected_navigation_link", "social_domain"
+    parsed = urllib.parse.urlsplit(normalized_url)
+    segments = [segment.lower() for segment in _path_segments(normalized_url)]
+    path_text = "/".join(segments)
+    last_segment = segments[-1].split(".", 1)[0] if segments else ""
+    anchor_key = _normalized_title_key(anchor_text)
+    combined_text = " ".join(part for part in (anchor_key, normalized_url.lower()) if part)
+    query_map = urllib.parse.parse_qs(parsed.query)
+    if any(token in combined_text for token in ("legislative action center", "take action", "take-action")):
+        return "rejected_action_link", "action_anchor_text"
+    if last_segment in ARCHIVE_ACTION_SEGMENTS or any(f"/{segment}" in parsed.path.lower() for segment in ARCHIVE_ACTION_SEGMENTS):
+        return "rejected_action_link", f"path_segment:{last_segment or 'action'}"
+    if "advocacy" in combined_text or "donate" in combined_text:
+        return "rejected_action_link", "action_or_donate_text"
+    if any(key in query_map for key in ("s", "search", "q")) or "/search" in parsed.path.lower():
+        return "rejected_listing_link", "search_listing"
+    if any(segment in {"category", "categories", "tag", "tags", "author"} for segment in segments):
+        return "rejected_listing_link", "taxonomy_listing"
+    if any(key in query_map for key in ("tag", "category", "author")):
+        return "rejected_listing_link", "taxonomy_query"
+    if any(key in query_map for key in ("page", "paged")) or re.search(r"/page/\d+(?:/|$)", parsed.path.lower()):
+        return "rejected_navigation_link", "pagination_link"
+    if anchor_key in ARCHIVE_NAVIGATION_TEXT:
+        return "rejected_navigation_link", f"anchor_text:{anchor_key}"
+    if any(token in combined_text for token in ("share", "facebook", "twitter", "instagram", "linkedin")):
+        return "rejected_navigation_link", "share_or_social_link"
+    if len(segments) <= 1 and last_segment in LISTING_PATH_SEGMENTS:
+        return "rejected_listing_link", f"listing_root:{last_segment}"
+    if len(segments) <= 2 and any(segment in ARCHIVE_RESOURCE_SEGMENTS for segment in segments):
+        return "rejected_resource_landing", f"resource_segment:{last_segment or segments[-1]}"
+    if _is_document_specific_url(normalized_url):
+        return "accepted_article_link", "document_url"
+    if listing_context_date:
+        return "accepted_article_link", "listing_context_date"
+    if _extract_url_date(normalized_url):
+        return "accepted_article_link", "url_date"
+    if _is_probable_article_slug(normalized_url):
+        return "accepted_article_link", "article_slug"
+    if _is_feed_or_listing_url(normalized_url):
+        return "rejected_listing_link", "listing_url"
+    if _is_article_specific_url(normalized_url):
+        return "rejected_unknown_nonarticle", "weak_article_path_without_date_or_slug"
+    return "rejected_unknown_nonarticle", "non_article_path"
+
+
 def _extract_listing_context_date(text: str, start: int, end: int) -> str:
     before = text[max(0, start - 200) : start]
     after = text[end : min(len(text), end + 80)]
@@ -1484,10 +1624,13 @@ def _extract_listing_links(
     base_url: str,
     allowed_domains: list[str],
     source_name: str,
-) -> list[dict[str, str]]:
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
     text = payload.decode("utf-8", errors="replace")
     rows: list[dict[str, str]] = []
+    accepted_by_reason: Counter[str] = Counter()
+    rejected_by_reason: Counter[str] = Counter()
     seen: set[str] = set()
+    rejected_links: list[dict[str, str]] = []
     for match in re.finditer(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', text, flags=re.IGNORECASE | re.DOTALL):
         href = urllib.parse.urljoin(base_url, html.unescape(match.group(1)).strip())
         normalized_href = _normalize_url(href)
@@ -1495,15 +1638,31 @@ def _extract_listing_links(
             continue
         if allowed_domains and not _domain_allowed(normalized_href, allowed_domains):
             continue
-        if _is_homepage_only_url(normalized_href) or _is_feed_or_listing_url(normalized_href):
-            continue
-        if not (_is_article_specific_url(normalized_href) or _is_document_specific_url(normalized_href)):
-            continue
         label = re.sub(r"<[^>]+>", " ", match.group(2))
         title = re.sub(r"\s+", " ", html.unescape(label)).strip()
         if not title:
             title = normalized_href.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ")
         contextual_date = _extract_listing_context_date(text, match.start(), match.end())
+        link_context = _cap_text(text[max(0, match.start() - 120) : min(len(text), match.end() + 120)])
+        filter_status, filter_reason = _archive_link_filter_decision(
+            normalized_href,
+            anchor_text=title,
+            link_context=link_context,
+            listing_context_date=contextual_date,
+        )
+        if filter_status != "accepted_article_link":
+            rejected_by_reason[filter_reason] += 1
+            rejected_links.append(
+                {
+                    "link": normalized_href,
+                    "status": filter_status,
+                    "reason": filter_reason,
+                    "anchor_text": _cap_text(title),
+                    "link_context": link_context,
+                }
+            )
+            seen.add(normalized_href)
+            continue
         rows.append(
             {
                 "title": title[:240],
@@ -1514,12 +1673,23 @@ def _extract_listing_links(
                 "source_url": normalized_href,
                 "source_name": source_name,
                 "date_basis_hint": "page_body_date" if contextual_date else "",
+                "archive_link_filter_status": filter_status,
+                "archive_link_filter_reason": filter_reason,
+                "archive_source_anchor_text": _cap_text(title),
+                "archive_source_link_context": link_context,
             }
         )
+        accepted_by_reason[filter_reason] += 1
         seen.add(normalized_href)
         if len(rows) >= 25:
             break
-    return rows
+    return rows, {
+        "archive_links_accepted_count": len(rows),
+        "archive_links_rejected_count": len(rejected_links),
+        "archive_links_accepted_by_reason": dict(sorted(accepted_by_reason.items())),
+        "archive_links_rejected_by_reason": dict(sorted(rejected_by_reason.items())),
+        "rejected_links": rejected_links[:25],
+    }
 
 
 def _recommended_direct_source_action(
@@ -1583,6 +1753,11 @@ def _collect_direct_source_items(
         "historical_archive_stop_reason": "",
         "historical_archive_stop_context": "",
         "historical_archive_duplicate_link_count": 0,
+        "archive_links_accepted_count": 0,
+        "archive_links_rejected_count": 0,
+        "archive_links_accepted_by_reason": {},
+        "archive_links_rejected_by_reason": {},
+        "archive_rejected_links_sample": [],
     }
     source_name = _nonempty(query_row.get("direct_source_name"))
 
@@ -1593,12 +1768,24 @@ def _collect_direct_source_items(
             return _parse_json_feed(payload), "json_feed"
         if _looks_like_html_payload(payload, content_type):
             page_url = _normalize_url(_extract_canonical_url(payload) or final_response_url or current_url)
-            extracted = _extract_listing_links(
+            extracted, listing_meta = _extract_listing_links(
                 payload,
                 base_url=page_url or current_url,
                 allowed_domains=allowed_domains,
                 source_name=source_name,
             )
+            diagnostics["archive_links_accepted_count"] = int(diagnostics.get("archive_links_accepted_count", 0)) + int(listing_meta.get("archive_links_accepted_count", 0))
+            diagnostics["archive_links_rejected_count"] = int(diagnostics.get("archive_links_rejected_count", 0)) + int(listing_meta.get("archive_links_rejected_count", 0))
+            accepted_reason_counts = Counter(dict(diagnostics.get("archive_links_accepted_by_reason") or {}))
+            accepted_reason_counts.update(dict(listing_meta.get("archive_links_accepted_by_reason") or {}))
+            diagnostics["archive_links_accepted_by_reason"] = dict(sorted(accepted_reason_counts.items()))
+            rejected_reason_counts = Counter(dict(diagnostics.get("archive_links_rejected_by_reason") or {}))
+            rejected_reason_counts.update(dict(listing_meta.get("archive_links_rejected_by_reason") or {}))
+            diagnostics["archive_links_rejected_by_reason"] = dict(sorted(rejected_reason_counts.items()))
+            rejected_sample = list(diagnostics.get("archive_rejected_links_sample") or [])
+            if len(rejected_sample) < 25:
+                rejected_sample.extend(list(listing_meta.get("rejected_links") or [])[: max(0, 25 - len(rejected_sample))])
+            diagnostics["archive_rejected_links_sample"] = rejected_sample[:25]
             if extracted:
                 return extracted, "html_listing"
             fallback_title, _, _, _ = _pick_best_title(payload, fallback_title=source_name)
@@ -2471,6 +2658,9 @@ def run_food_line_discovery_expansion(
     historical_archive_page_fetch_failure_count = 0
     historical_archive_pages_fetched_by_source: dict[str, int] = {}
     historical_archive_links_extracted_by_source: dict[str, int] = {}
+    archive_links_rejected_by_source: dict[str, int] = {}
+    archive_links_accepted_by_source: dict[str, int] = {}
+    archive_links_rejected_by_reason: Counter[str] = Counter()
     historical_archive_in_window_candidates_by_source: dict[str, int] = {}
     historical_archive_stop_reason_by_source: dict[str, str] = {}
     historical_archive_duplicate_link_count_by_source: dict[str, int] = {}
@@ -2548,6 +2738,14 @@ def run_food_line_discovery_expansion(
                     source_counter = historical_archive_fetch_failure_reasons_by_source.setdefault(source_name, Counter())
                     for reason, count in failure_reasons.items():
                         source_counter[str(reason)] += int(count)
+            if source_name:
+                archive_links_rejected_by_source[source_name] = int(
+                    archive_links_rejected_by_source.get(source_name, 0)
+                ) + int(direct_meta.get("archive_links_rejected_count") or 0)
+                archive_links_accepted_by_source[source_name] = int(
+                    archive_links_accepted_by_source.get(source_name, 0)
+                ) + int(direct_meta.get("archive_links_accepted_count") or 0)
+                archive_links_rejected_by_reason.update(dict(direct_meta.get("archive_links_rejected_by_reason") or {}))
             if bool(direct_meta.get("historical_archive_pagination_enabled")) and source_name:
                 historical_archive_pagination_source_names.add(source_name)
                 historical_archive_page_fetch_attempt_count += int(direct_meta.get("historical_archive_page_fetch_attempt_count") or 0)
@@ -3034,6 +3232,10 @@ def run_food_line_discovery_expansion(
                 "archive_page_number": archive_page_number,
                 "archive_pagination_rank": archive_pagination_rank,
                 "archive_stop_context": archive_stop_context,
+                "archive_link_filter_status": _nonempty(item.get("archive_link_filter_status")),
+                "archive_link_filter_reason": _nonempty(item.get("archive_link_filter_reason")),
+                "archive_source_anchor_text": _nonempty(item.get("archive_source_anchor_text")),
+                "archive_source_link_context": _cap_text(_nonempty(item.get("archive_source_link_context"))),
                 "fetch_status": fetch_status,
                 "fetch_error": fetch_error,
                 "final_trace_url": final_trace_url,
@@ -3375,6 +3577,11 @@ def run_food_line_discovery_expansion(
         "historical_archive_page_fetch_failure_count": historical_archive_page_fetch_failure_count,
         "historical_archive_pages_fetched_by_source": dict(sorted(historical_archive_pages_fetched_by_source.items())),
         "historical_archive_links_extracted_by_source": dict(sorted(historical_archive_links_extracted_by_source.items())),
+        "archive_links_rejected_count": sum(archive_links_rejected_by_source.values()),
+        "archive_links_rejected_by_reason": dict(sorted(archive_links_rejected_by_reason.items())),
+        "archive_links_accepted_count": sum(archive_links_accepted_by_source.values()),
+        "archive_links_rejected_by_source": dict(sorted(archive_links_rejected_by_source.items())),
+        "archive_links_accepted_by_source": dict(sorted(archive_links_accepted_by_source.items())),
         "historical_archive_in_window_candidates_by_source": dict(sorted(historical_archive_in_window_candidates_by_source.items())),
         "historical_archive_stop_reason_by_source": dict(sorted(historical_archive_stop_reason_by_source.items())),
         "historical_archive_duplicate_link_count_by_source": dict(sorted(historical_archive_duplicate_link_count_by_source.items())),
@@ -3486,6 +3693,11 @@ def run_food_line_discovery_expansion(
             f"- Historical archive page fetch failures: `{audit_summary['historical_archive_page_fetch_failure_count']}`",
             f"- Historical archive pages fetched by source: `{audit_summary['historical_archive_pages_fetched_by_source']}`",
             f"- Historical archive links extracted by source: `{audit_summary['historical_archive_links_extracted_by_source']}`",
+            f"- Archive links rejected count: `{audit_summary['archive_links_rejected_count']}`",
+            f"- Archive links rejected by reason: `{audit_summary['archive_links_rejected_by_reason']}`",
+            f"- Archive links accepted count: `{audit_summary['archive_links_accepted_count']}`",
+            f"- Archive links rejected by source: `{audit_summary['archive_links_rejected_by_source']}`",
+            f"- Archive links accepted by source: `{audit_summary['archive_links_accepted_by_source']}`",
             f"- Historical archive in-window candidates by source: `{audit_summary['historical_archive_in_window_candidates_by_source']}`",
             f"- Historical archive stop reason by source: `{audit_summary['historical_archive_stop_reason_by_source']}`",
             f"- Historical archive duplicate link count by source: `{audit_summary['historical_archive_duplicate_link_count_by_source']}`",

@@ -699,6 +699,115 @@ def test_food_line_discovery_backfill_aggregates_archive_pagination_diagnostics(
     assert summary["historical_archive_pagination_sources_without_hits"] == []
 
 
+def test_food_line_discovery_backfill_aggregates_archive_link_rejections_by_source_and_reason(tmp_path: Path):
+    archive_url = "https://frac.org/blog/page/2"
+    article_url = "https://frac.org/blog/2026/06/21/summer-meals-pressure-rising"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "FRAC News",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["frac.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 2,
+                "max_age_days": 30,
+                "pressure_terms": ["food insecurity", "summer meals"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<a href=\"https://frac.org/action\">Legislative Action Center</a>"
+                "<a href=\"https://frac.org/donate\">Donate</a>"
+                "<a href=\"https://frac.org/search?q=summer+meals\">Search</a>"
+                "<a href=\"https://frac.org/category/news\">Category archive</a>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{article_url}\">Summer meals pressure rising for families</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head><title>Summer meals pressure rising for families</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><p>Food insecurity pressure is rising.</p></article></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=1,
+            max_results_per_query=1,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+    review = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.json").read_text(encoding="utf-8"))
+    candidate_urls = {row["source_url"] for row in review["candidates"]}
+
+    assert result["ok"] is True
+    assert "https://frac.org/action" not in candidate_urls
+    assert summary["archive_links_rejected_count"] == 4
+    assert summary["archive_links_accepted_count"] == 1
+    assert summary["archive_links_rejected_by_source"] == {"FRAC News": 4}
+    assert summary["archive_links_accepted_by_source"] == {"FRAC News": 1}
+    assert summary["archive_links_rejected_by_reason"] == {
+        "action_anchor_text": 1,
+        "path_segment:donate": 1,
+        "search_listing": 1,
+        "taxonomy_listing": 1,
+    }
+    assert review["archive_links_rejected_by_source"] == {"FRAC News": 4}
+    assert review["archive_links_rejected_by_reason"] == {
+        "action_anchor_text": 1,
+        "path_segment:donate": 1,
+        "search_listing": 1,
+        "taxonomy_listing": 1,
+    }
+    assert summary["public_output_written"] is False
+    assert summary["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
 def test_food_line_discovery_backfill_samples_multiple_lanes_under_query_cap(tmp_path: Path):
     calls: list[str] = []
 

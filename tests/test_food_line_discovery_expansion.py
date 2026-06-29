@@ -936,9 +936,11 @@ def test_document_title_is_only_used_after_better_headline_sources_fail(tmp_path
     assert candidate["public_claim_eligible"] is True
 
 
-def test_paginated_listing_trace_urls_stay_non_public(tmp_path: Path):
+def test_paginated_listing_filters_action_and_listing_links_but_keeps_article_candidate(tmp_path: Path):
     edition_date = "2026-06-21"
     archive_url = "https://frac.org/blog/page/2"
+    article_url = "https://frac.org/blog/2026/06/21/summer-meals-pressure-rising"
+    report_url = "https://frac.org/wp-content/uploads/frac-brief.pdf"
     _write_direct_source_config(
         tmp_path,
         [
@@ -952,7 +954,7 @@ def test_paginated_listing_trace_urls_stay_non_public(tmp_path: Path):
                 "geographic_scope": "national",
                 "enabled": True,
                 "sampling_priority": 10,
-                "direct_source_candidate_cap": 1,
+                "direct_source_candidate_cap": 2,
                 "max_age_days": 30,
                 "pressure_terms": ["food insecurity", "SNAP", "school meals"],
                 "exclusion_terms": [],
@@ -963,9 +965,30 @@ def test_paginated_listing_trace_urls_stay_non_public(tmp_path: Path):
     def fetcher(url: str, timeout: int = 15):
         if url == archive_url:
             return (
-                "<html><head><title>Skip to content</title></head>"
-                "<body><p>June 21, 2026</p><a href=\"https://frac.org/report\">Skip to content</a></body></html>"
+                "<html><head><title>FRAC News</title></head><body>"
+                "<nav><a href=\"https://frac.org/action\">Legislative Action Center</a></nav>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{article_url}\">Summer meals pressure rising for families</a>"
+                "<a href=\"https://frac.org/donate\">Donate</a>"
+                "<a href=\"https://frac.org/search?q=summer+meals\">Search</a>"
+                "<a href=\"https://frac.org/category/news\">Category archive</a>"
+                "<a href=\"https://frac.org/tag/snap\">SNAP tag</a>"
+                "<a href=\"https://frac.org/author/editor\">Author</a>"
+                "<a href=\"https://frac.org/blog\">Blog</a>"
+                "<a href=\"https://frac.org/page/3\">Next</a>"
+                "<a href=\"https://frac.org/resources\">Resources</a>"
+                f"<a href=\"{report_url}\">Download report</a>"
+                "</body></html>"
             ).encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head><title>Summer meals pressure rising for families</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><p>Food insecurity pressure is rising.</p></article></body></html>"
+            ).encode("utf-8")
+        if url == report_url:
+            return b"%PDF-1.4 fake pdf bytes"
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(
@@ -979,12 +1002,72 @@ def test_paginated_listing_trace_urls_stay_non_public(tmp_path: Path):
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+    candidate_urls = {row["final_trace_url"] for row in candidates}
+    article_candidate = next(row for row in candidates if row["final_trace_url"] == article_url)
+    report_candidate = next(row for row in candidates if row["final_trace_url"] == report_url)
 
-    assert candidate["public_claim_eligible"] is False
-    assert candidate["discovered_title"] == "Skip to content"
-    assert candidate["title_quality_status"] == "generic_or_invalid_title"
-    assert "generic_or_invalid_title" in candidate["public_claim_blockers"]
+    assert "https://frac.org/action" not in candidate_urls
+    assert article_candidate["archive_link_filter_status"] == "accepted_article_link"
+    assert article_candidate["archive_link_filter_reason"] == "listing_context_date"
+    assert article_candidate["archive_source_anchor_text"] == "Summer meals pressure rising for families"
+    assert "Summer meals pressure rising for families" in article_candidate["archive_source_link_context"]
+    assert report_candidate["archive_link_filter_status"] == "accepted_article_link"
+    assert report_candidate["archive_link_filter_reason"] == "document_url"
+    assert result["archive_links_rejected_count"] == 9
+    assert result["archive_links_accepted_count"] == 2
+    assert result["archive_links_rejected_by_source"] == {"FRAC News": 9}
+    assert result["archive_links_accepted_by_source"] == {"FRAC News": 2}
+    assert result["archive_links_rejected_by_reason"] == {
+        "action_anchor_text": 1,
+        "listing_root:blog": 1,
+        "pagination_link": 1,
+        "path_segment:donate": 1,
+        "resource_segment:resources": 1,
+        "search_listing": 1,
+        "taxonomy_listing": 3,
+    }
+
+
+def test_archive_link_filter_rejects_unknown_nonarticle_paths(tmp_path: Path):
+    edition_date = "2026-06-21"
+    archive_url = "https://example.org/archive"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Archive Source",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 2,
+                "max_age_days": 30,
+                "pressure_terms": ["food insecurity"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<a href=\"https://example.org/updates\">Updates</a>"
+                "<a href=\"https://example.org/press/overview\">Overview</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, edition_date, fetcher=fetcher, max_queries=1, max_results_per_query=5)
+
+    assert result["archive_links_rejected_count"] == 2
+    assert result["archive_links_rejected_by_reason"]["listing_root:updates"] == 1
+    assert result["archive_links_rejected_by_reason"]["weak_article_path_without_date_or_slug"] == 1
 
 
 def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallbacks(tmp_path: Path):

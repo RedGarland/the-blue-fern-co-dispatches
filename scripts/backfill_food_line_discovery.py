@@ -142,9 +142,11 @@ def _review_payload(
     candidates: list[dict[str, Any]],
     intake: dict[str, Any],
     *,
+    audit: dict[str, Any] | None = None,
     google_news_debug_by_candidate: dict[str, Any] | None = None,
     google_news_resolution_status_counts: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    audit = dict(audit or {})
     review_counts = Counter(str(row.get("candidate_review_status") or row.get("review_status") or "needs_review") for row in candidates)
     blocker_counts = Counter()
     title_methods = Counter()
@@ -182,6 +184,11 @@ def _review_payload(
         "title_extraction_methods": dict(sorted(title_methods.items())),
         "discovery_lane_counts": dict(sorted(Counter(str(row.get("discovery_lane") or "") for row in candidates if str(row.get("discovery_lane") or "")).items())),
         "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
+        "archive_links_rejected_count": int(audit.get("archive_links_rejected_count", 0) or 0),
+        "archive_links_rejected_by_reason": dict(sorted(dict(audit.get("archive_links_rejected_by_reason") or {}).items())),
+        "archive_links_accepted_count": int(audit.get("archive_links_accepted_count", 0) or 0),
+        "archive_links_rejected_by_source": dict(sorted(dict(audit.get("archive_links_rejected_by_source") or {}).items())),
+        "archive_links_accepted_by_source": dict(sorted(dict(audit.get("archive_links_accepted_by_source") or {}).items())),
         "google_news_resolution_status_counts": dict(sorted((google_news_resolution_status_counts or {}).items())),
         "intake_review_path": str(intake.get("discovery_review_path") or ""),
         "candidates": [
@@ -212,6 +219,10 @@ def _review_payload(
                 "selected_title": str(row.get("selected_title") or row.get("discovered_title") or row.get("title") or ""),
                 "title_quality_status": str(row.get("title_quality_status") or ""),
                 "title_quality_blocker_applied": bool(row.get("title_quality_blocker_applied")),
+                "archive_link_filter_status": str(row.get("archive_link_filter_status") or ""),
+                "archive_link_filter_reason": str(row.get("archive_link_filter_reason") or ""),
+                "archive_source_anchor_text": str(row.get("archive_source_anchor_text") or ""),
+                "archive_source_link_context": str(row.get("archive_source_link_context") or ""),
                 "google_news_resolution": dict((google_news_debug_by_candidate or {}).get(str(row.get("candidate_id") or ""), {})),
                 "classification_status": str(row.get("classification_status") or ""),
                 "exclusion_reason": str(row.get("exclusion_reason") or ""),
@@ -282,6 +293,7 @@ def _copy_candidate_artifacts(
             edition_date,
             candidates,
             intake,
+            audit=audit,
             google_news_debug_by_candidate=dict(audit.get("google_news_resolution_debug_by_candidate") or {}),
             google_news_resolution_status_counts=dict(audit.get("google_news_resolution_status_counts") or {}),
         )
@@ -405,6 +417,26 @@ def run_food_line_discovery_backfill(
             "historical_archive_page_fetch_failure_count": sum(int(row.get("historical_archive_page_fetch_failure_count", 0)) for row in per_date),
             "historical_archive_pages_fetched_by_source": dict(sorted(Counter({}).items())),
             "historical_archive_links_extracted_by_source": dict(sorted(Counter({}).items())),
+            "archive_links_rejected_count": sum(int(row.get("archive_links_rejected_count", 0)) for row in per_date),
+            "archive_links_rejected_by_reason": dict(sorted(Counter(
+                reason
+                for row in per_date
+                for reason, count in dict(row.get("archive_links_rejected_by_reason") or {}).items()
+                for _ in range(int(count))
+            ).items())),
+            "archive_links_accepted_count": sum(int(row.get("archive_links_accepted_count", 0)) for row in per_date),
+            "archive_links_rejected_by_source": dict(sorted(Counter(
+                source
+                for row in per_date
+                for source, count in dict(row.get("archive_links_rejected_by_source") or {}).items()
+                for _ in range(int(count))
+            ).items())),
+            "archive_links_accepted_by_source": dict(sorted(Counter(
+                source
+                for row in per_date
+                for source, count in dict(row.get("archive_links_accepted_by_source") or {}).items()
+                for _ in range(int(count))
+            ).items())),
             "historical_archive_in_window_candidates_by_source": dict(sorted(Counter({}).items())),
             "historical_archive_stop_reason_by_source": {},
             "historical_archive_duplicate_link_count_by_source": dict(sorted(Counter({}).items())),
@@ -1130,6 +1162,11 @@ def run_food_line_discovery_backfill(
                 "historical_archive_page_fetch_failure_count": int(audit.get("historical_archive_page_fetch_failure_count", 0)),
                 "historical_archive_pages_fetched_by_source": historical_archive_pages_fetched_by_source,
                 "historical_archive_links_extracted_by_source": historical_archive_links_extracted_by_source,
+                "archive_links_rejected_count": int(audit.get("archive_links_rejected_count", 0)),
+                "archive_links_rejected_by_reason": dict(sorted(dict(audit.get("archive_links_rejected_by_reason") or {}).items())),
+                "archive_links_accepted_count": int(audit.get("archive_links_accepted_count", 0)),
+                "archive_links_rejected_by_source": dict(sorted(dict(audit.get("archive_links_rejected_by_source") or {}).items())),
+                "archive_links_accepted_by_source": dict(sorted(dict(audit.get("archive_links_accepted_by_source") or {}).items())),
                 "historical_archive_in_window_candidates_by_source": historical_archive_in_window_candidates_by_source,
                 "historical_archive_stop_reason_by_source": historical_archive_stop_reason_by_source,
                 "historical_archive_duplicate_link_count_by_source": historical_archive_duplicate_link_count_by_source,

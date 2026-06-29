@@ -4571,6 +4571,8 @@ def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_pat
     assert result["render_mode"] == "review_only"
     assert result["source_count"] == 1
     assert result["public_eligible_candidate_count"] == 1
+    assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
+    assert "In United States" not in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children" in source_table_html
     assert "FRAC News" in claim_ledger_html
@@ -4684,10 +4686,37 @@ def test_food_line_review_only_render_preserves_source_backed_attribution(tmp_pa
     )
 
     edition_html = (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "was enacted" not in edition_html
     assert "benefit cuts occurred" not in edition_html
     assert "measured hunger increased" not in edition_html
+
+
+def test_food_line_public_signal_reader_sentence_polishes_national_location():
+    row = {
+        "location_scope": "national",
+        "location_name": "United States",
+        "state": "US",
+        "publisher": "FRAC News",
+        "pressure_type": "SNAP policy pressure",
+        "pressure_summary": "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+    }
+    sentence = food_line._food_line_public_signal_reader_sentence(row)
+    assert sentence == "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children."
+
+
+def test_food_line_public_signal_reader_sentence_preserves_local_location():
+    row = {
+        "location_scope": "state_local",
+        "location_name": "Horry County, SC",
+        "state": "SC",
+        "publisher": "WPDE / ABC 15",
+        "pressure_type": "demand strain",
+        "pressure_summary": "Food insecurity in Horry County is about 14 percent and about 20 percent of children are food insecure.",
+    }
+    sentence = food_line._food_line_public_signal_reader_sentence(row)
+    assert sentence.startswith("In Horry County, South Carolina,")
 
 
 def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):

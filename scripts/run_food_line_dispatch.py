@@ -2739,6 +2739,13 @@ def _food_line_natural_location_label(row: dict[str, Any]) -> str:
     return location
 
 
+def _food_line_is_national_location(row: dict[str, Any], location: str | None = None) -> bool:
+    location_label = str(location if location is not None else _food_line_natural_location_label(row)).strip().lower()
+    scope = str(row.get("location_scope") or "").strip().lower()
+    state = str(row.get("state") or "").strip().upper()
+    return scope in {"national", "us"} or state == "US" or location_label in {"united states", "the united states"}
+
+
 def _food_line_public_signal_reader_label(row: dict[str, Any]) -> str:
     row = row or {}
     title = str(row.get("title") or "").strip()
@@ -2796,6 +2803,7 @@ def _food_line_public_signal_reader_label(row: dict[str, Any]) -> str:
 def _food_line_public_signal_reader_sentence(row: dict[str, Any]) -> str:
     row = row or {}
     location = _food_line_natural_location_label(row)
+    national_location = _food_line_is_national_location(row, location)
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     publisher = str(row.get("publisher") or row.get("source_name") or "").strip()
     summary = " ".join(
@@ -2846,9 +2854,13 @@ def _food_line_public_signal_reader_sentence(row: dict[str, Any]) -> str:
     if summary:
         sentence = _food_line_public_summary_sentence(row, max_words=40).strip().rstrip(".")
         if sentence:
-            if location and location.lower() not in sentence.lower():
+            if national_location:
+                sentence = f"Nationally, {sentence}"
+            elif location and location.lower() not in sentence.lower():
                 sentence = f"In {location}, {sentence}"
             return sentence + "."
+    if national_location:
+        return "Nationally, food-pressure conditions were reported."
     if location:
         return f"In {location}, food-pressure conditions were reported."
     return "Food-pressure conditions were reported."

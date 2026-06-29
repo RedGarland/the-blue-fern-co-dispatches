@@ -346,6 +346,16 @@ def run_food_line_discovery_backfill(
             "historical_archive_candidates_by_source": dict(sorted(Counter({}).items())),
             "historical_archive_exact_date_candidates_by_source": dict(sorted(Counter({}).items())),
             "historical_archive_selected_before_broad_count": sum(int(row.get("historical_archive_selected_before_broad_count", 0)) for row in per_date),
+            "historical_archive_pagination_source_count": 0,
+            "historical_archive_page_fetch_attempt_count": sum(int(row.get("historical_archive_page_fetch_attempt_count", 0)) for row in per_date),
+            "historical_archive_page_fetch_success_count": sum(int(row.get("historical_archive_page_fetch_success_count", 0)) for row in per_date),
+            "historical_archive_page_fetch_failure_count": sum(int(row.get("historical_archive_page_fetch_failure_count", 0)) for row in per_date),
+            "historical_archive_pages_fetched_by_source": dict(sorted(Counter({}).items())),
+            "historical_archive_links_extracted_by_source": dict(sorted(Counter({}).items())),
+            "historical_archive_in_window_candidates_by_source": dict(sorted(Counter({}).items())),
+            "historical_archive_stop_reason_by_source": {},
+            "historical_archive_duplicate_link_count_by_source": dict(sorted(Counter({}).items())),
+            "historical_archive_pagination_sources_without_hits": sorted({}),
             "dominant_source_warning": "; ".join(sorted({str(row.get("dominant_source_warning") or "").strip() for row in per_date if str(row.get("dominant_source_warning") or "").strip()})),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
             "google_news_resolution_attempt_count": sum(int(row.get("google_news_resolution_attempt_count", 0)) for row in per_date),
@@ -650,6 +660,71 @@ def run_food_line_discovery_backfill(
                 ).items()
             )
         )
+        summary["historical_archive_pagination_source_count"] = len(
+            {
+                source_name
+                for row in per_date
+                for source_name in (
+                    list((row.get("historical_archive_pages_fetched_by_source") or {}).keys())
+                    + list((row.get("historical_archive_stop_reason_by_source") or {}).keys())
+                )
+                if str(source_name).strip()
+            }
+        )
+        summary["historical_archive_pages_fetched_by_source"] = dict(
+            sorted(
+                Counter(
+                    source_name
+                    for row in per_date
+                    for source_name, count in (row.get("historical_archive_pages_fetched_by_source") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["historical_archive_links_extracted_by_source"] = dict(
+            sorted(
+                Counter(
+                    source_name
+                    for row in per_date
+                    for source_name, count in (row.get("historical_archive_links_extracted_by_source") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["historical_archive_in_window_candidates_by_source"] = dict(
+            sorted(
+                Counter(
+                    source_name
+                    for row in per_date
+                    for source_name, count in (row.get("historical_archive_in_window_candidates_by_source") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["historical_archive_duplicate_link_count_by_source"] = dict(
+            sorted(
+                Counter(
+                    source_name
+                    for row in per_date
+                    for source_name, count in (row.get("historical_archive_duplicate_link_count_by_source") or {}).items()
+                    for _ in range(int(count))
+                ).items()
+            )
+        )
+        summary["historical_archive_stop_reason_by_source"] = {
+            str(source_name): str(stop_reason)
+            for row in per_date
+            for source_name, stop_reason in (row.get("historical_archive_stop_reason_by_source") or {}).items()
+            if str(source_name).strip() and str(stop_reason).strip()
+        }
+        summary["historical_archive_pagination_sources_without_hits"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("historical_archive_pagination_sources_without_hits") or [])
+                if str(source_name).strip()
+            }
+        )
         summary["dates_with_no_in_window_direct_candidates"] = sorted(
             {row["date"] for row in per_date if int(row.get("in_window_direct_candidate_count", 0)) <= 0}
         )
@@ -767,6 +842,16 @@ def run_food_line_discovery_backfill(
                     "historical_archive_candidates_by_source": {},
                     "historical_archive_exact_date_candidates_by_source": {},
                     "historical_archive_selected_before_broad_count": 0,
+                    "historical_archive_pagination_source_count": 0,
+                    "historical_archive_page_fetch_attempt_count": 0,
+                    "historical_archive_page_fetch_success_count": 0,
+                    "historical_archive_page_fetch_failure_count": 0,
+                    "historical_archive_pages_fetched_by_source": {},
+                    "historical_archive_links_extracted_by_source": {},
+                    "historical_archive_in_window_candidates_by_source": {},
+                    "historical_archive_stop_reason_by_source": {},
+                    "historical_archive_duplicate_link_count_by_source": {},
+                    "historical_archive_pagination_sources_without_hits": [],
                     "dominant_source_warning": "",
                     "only_out_of_window_candidates": False,
                     "only_context_candidates": False,
@@ -847,6 +932,12 @@ def run_food_line_discovery_backfill(
         }
         historical_archive_candidates_by_source = dict(audit.get("historical_archive_candidates_by_source") or {})
         historical_archive_exact_date_candidates_by_source = dict(audit.get("historical_archive_exact_date_candidates_by_source") or {})
+        historical_archive_pages_fetched_by_source = dict(audit.get("historical_archive_pages_fetched_by_source") or {})
+        historical_archive_links_extracted_by_source = dict(audit.get("historical_archive_links_extracted_by_source") or {})
+        historical_archive_in_window_candidates_by_source = dict(audit.get("historical_archive_in_window_candidates_by_source") or {})
+        historical_archive_stop_reason_by_source = dict(audit.get("historical_archive_stop_reason_by_source") or {})
+        historical_archive_duplicate_link_count_by_source = dict(audit.get("historical_archive_duplicate_link_count_by_source") or {})
+        historical_archive_pagination_sources_without_hits = list(audit.get("historical_archive_pagination_sources_without_hits") or [])
         dominant_source_warning = str(audit.get("dominant_source_warning") or "").strip()
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
@@ -980,6 +1071,16 @@ def run_food_line_discovery_backfill(
                 "historical_archive_candidates_by_source": historical_archive_candidates_by_source,
                 "historical_archive_exact_date_candidates_by_source": historical_archive_exact_date_candidates_by_source,
                 "historical_archive_selected_before_broad_count": int(audit.get("historical_archive_selected_before_broad_count", 0)),
+                "historical_archive_pagination_source_count": int(audit.get("historical_archive_pagination_source_count", 0)),
+                "historical_archive_page_fetch_attempt_count": int(audit.get("historical_archive_page_fetch_attempt_count", 0)),
+                "historical_archive_page_fetch_success_count": int(audit.get("historical_archive_page_fetch_success_count", 0)),
+                "historical_archive_page_fetch_failure_count": int(audit.get("historical_archive_page_fetch_failure_count", 0)),
+                "historical_archive_pages_fetched_by_source": historical_archive_pages_fetched_by_source,
+                "historical_archive_links_extracted_by_source": historical_archive_links_extracted_by_source,
+                "historical_archive_in_window_candidates_by_source": historical_archive_in_window_candidates_by_source,
+                "historical_archive_stop_reason_by_source": historical_archive_stop_reason_by_source,
+                "historical_archive_duplicate_link_count_by_source": historical_archive_duplicate_link_count_by_source,
+                "historical_archive_pagination_sources_without_hits": historical_archive_pagination_sources_without_hits,
                 "dominant_source_warning": dominant_source_warning,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),

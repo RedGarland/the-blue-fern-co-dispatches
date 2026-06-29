@@ -498,6 +498,115 @@ def test_food_line_discovery_backfill_aggregates_historical_archive_diagnostics(
     assert summary["historical_archive_selected_before_broad_count"] == 1
 
 
+def test_food_line_discovery_backfill_aggregates_archive_pagination_diagnostics(tmp_path: Path):
+    archive_url = "https://example.org/archive"
+    page_one_url = "https://example.org/archive?page=1"
+    page_two_url = "https://example.org/archive?page=2"
+    exact_article_url = "https://example.org/posts/exact-story"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Archive",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_pagination_enabled": True,
+                "archive_page_url_template": "https://example.org/archive?page={page}",
+                "archive_page_start": 1,
+                "archive_page_max_pages": 3,
+                "archive_page_increment": 1,
+                "direct_source_candidate_cap": 2,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        if url == page_one_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == page_two_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<p>June 25, 2026</p>"
+                "<a href=\"https://example.org/posts/newer-story\">Broad archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == exact_article_url:
+            return b"<html><head><link rel=\"canonical\" href=\"https://example.org/posts/exact-story\"></head><body>Food pantry demand is rising.</body></html>"
+        if url == "https://example.org/posts/newer-story":
+            return b"<html><head><link rel=\"canonical\" href=\"https://example.org/posts/newer-story\"></head><body>Food pantry demand is rising.</body></html>"
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=1,
+            max_results_per_query=1,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert summary["historical_archive_pagination_source_count"] == 1
+    assert summary["historical_archive_page_fetch_attempt_count"] == 2
+    assert summary["historical_archive_page_fetch_success_count"] == 2
+    assert summary["historical_archive_page_fetch_failure_count"] == 0
+    assert summary["historical_archive_pages_fetched_by_source"] == {"Historical Archive": 2}
+    assert summary["historical_archive_links_extracted_by_source"] == {"Historical Archive": 1}
+    assert summary["historical_archive_in_window_candidates_by_source"] == {"Historical Archive": 1}
+    assert summary["historical_archive_stop_reason_by_source"] == {"Historical Archive": "no_new_links"}
+    assert summary["historical_archive_duplicate_link_count_by_source"] == {"Historical Archive": 1}
+    assert summary["historical_archive_pagination_sources_without_hits"] == []
+
+
 def test_food_line_discovery_backfill_samples_multiple_lanes_under_query_cap(tmp_path: Path):
     calls: list[str] = []
 

@@ -399,6 +399,39 @@ def test_food_line_discovery_query_plan_propagates_historical_archive_templates(
     ]
 
 
+def test_food_line_discovery_query_plan_propagates_archive_pagination_config(tmp_path: Path):
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Archive Source",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": "https://example.org/archive",
+                "allowed_domains": ["example.org"],
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_pagination_enabled": True,
+                "archive_page_url_template": "https://example.org/archive?page={page}",
+                "archive_page_start": 1,
+                "archive_page_max_pages": 4,
+                "archive_page_increment": 1,
+                "archive_pagination_notes": "Verified broad pagination.",
+            }
+        ],
+    )
+
+    plan = build_food_line_discovery_query_plan(tmp_path, "2026-06-19")
+    archive_row = next(row for row in plan if row["query_text"] == "Archive Source")
+
+    assert archive_row["historical_archive_pagination_enabled"] is True
+    assert archive_row["archive_page_url_template"] == "https://example.org/archive?page={page}"
+    assert archive_row["archive_page_start"] == 1
+    assert archive_row["archive_page_max_pages"] == 4
+    assert archive_row["archive_page_increment"] == 1
+
+
 def test_food_line_discovery_expansion_caps_queries_across_multiple_lanes(tmp_path: Path):
     calls: list[str] = []
 
@@ -1649,6 +1682,181 @@ def test_historical_direct_page_without_templates_reports_archive_diagnostics(tm
     assert result["historical_archive_candidates_extracted_count"] == 0
     assert result["historical_archive_sources_with_templates"] == []
     assert result["historical_archive_sources_without_templates"] == ["Historical Archive"]
+
+
+def test_paginated_archive_pages_fetch_in_order_and_stop_on_no_new_links(tmp_path: Path):
+    archive_url = "https://example.org/archive"
+    page_one_url = "https://example.org/archive?page=1"
+    page_two_url = "https://example.org/archive?page=2"
+    exact_article_url = "https://example.org/posts/exact-story"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Archive",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_pagination_enabled": True,
+                "archive_page_url_template": "https://example.org/archive?page={page}",
+                "archive_page_start": 1,
+                "archive_page_max_pages": 3,
+                "archive_page_increment": 1,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 2,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url == page_one_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == page_two_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<p>June 25, 2026</p>"
+                f"<a href=\"https://example.org/posts/newer-story\">Broad archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == exact_article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{exact_article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        if url == "https://example.org/posts/newer-story":
+            return (
+                "<html><head>"
+                "<link rel=\"canonical\" href=\"https://example.org/posts/newer-story\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-25T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert calls[:3] == [page_one_url, page_two_url, archive_url]
+    assert candidate["archive_page_url_used"] == page_one_url
+    assert candidate["archive_page_number"] == 1
+    assert candidate["archive_pagination_rank"] == 1
+    assert candidate["archive_stop_context"] == "page=2"
+    assert result["historical_archive_pagination_source_count"] == 1
+    assert result["historical_archive_page_fetch_attempt_count"] == 2
+    assert result["historical_archive_page_fetch_success_count"] == 2
+    assert result["historical_archive_page_fetch_failure_count"] == 0
+    assert result["historical_archive_pages_fetched_by_source"] == {"Historical Archive": 2}
+    assert result["historical_archive_links_extracted_by_source"] == {"Historical Archive": 1}
+    assert result["historical_archive_in_window_candidates_by_source"] == {"Historical Archive": 1}
+    assert result["historical_archive_stop_reason_by_source"] == {"Historical Archive": "no_new_links"}
+    assert result["historical_archive_duplicate_link_count_by_source"] == {"Historical Archive": 1}
+
+
+def test_paginated_archive_source_reports_without_hits_and_keeps_out_of_window_items_non_public(tmp_path: Path):
+    archive_url = "https://example.org/archive"
+    page_one_url = "https://example.org/archive?page=1"
+    old_article_url = "https://example.org/posts/old-story"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Archive",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_pagination_enabled": True,
+                "archive_page_url_template": "https://example.org/archive?page={page}",
+                "archive_page_start": 1,
+                "archive_page_max_pages": 1,
+                "archive_page_increment": 1,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == page_one_url:
+            return (
+                "<html><body>"
+                "<p>June 10, 2026</p>"
+                f"<a href=\"{old_article_url}\">Old archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<p>June 10, 2026</p>"
+                f"<a href=\"{old_article_url}\">Old archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == old_article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{old_article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-10T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["public_claim_eligible"] is False
+    assert "outside_backfill_date_window" in candidate["public_claim_blockers"]
+    assert result["historical_archive_pagination_sources_without_hits"] == ["Historical Archive"]
 
 
 def test_direct_source_missing_date_items_are_diagnosed_and_non_public(tmp_path: Path):

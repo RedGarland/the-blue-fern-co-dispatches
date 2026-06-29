@@ -43,6 +43,28 @@ def _write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _candidate_rows_from_payload(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict):
+        for key in ("candidates", "items", "records", "candidate_sources"):
+            value = payload.get(key)
+            if isinstance(value, list):
+                return [row for row in value if isinstance(row, dict)]
+    return []
+
+
+def _candidate_payload_shape(payload: Any) -> str:
+    if isinstance(payload, list):
+        return "top_level_array"
+    if isinstance(payload, dict):
+        for key in ("candidates", "items", "records", "candidate_sources"):
+            if isinstance(payload.get(key), list):
+                return f"object.{key}"
+        return "object.unknown"
+    return type(payload).__name__
+
+
 def _expand_dates(start_date: str, end_date: str) -> list[str]:
     start = datetime.strptime(validate_date(start_date), "%Y-%m-%d").date()
     end = datetime.strptime(validate_date(end_date), "%Y-%m-%d").date()
@@ -125,6 +147,7 @@ def _review_payload(
 ) -> dict[str, Any]:
     review_counts = Counter(str(row.get("candidate_review_status") or row.get("review_status") or "needs_review") for row in candidates)
     blocker_counts = Counter()
+    title_methods = Counter()
     for row in candidates:
         blockers = [str(item).strip() for item in row.get("public_claim_blockers") or [] if str(item).strip()]
         if not blockers:
@@ -133,6 +156,9 @@ def _review_payload(
                 blockers = [fallback]
         for blocker in blockers:
             blocker_counts[blocker] += 1
+        method = str(row.get("title_extraction_method") or "").strip()
+        if method:
+            title_methods[method] += 1
     return {
         "generated_at": _utc_now(),
         "edition_date": edition_date,
@@ -146,6 +172,14 @@ def _review_payload(
         "candidate_count_needs_review": int(review_counts.get("needs_review", 0)),
         "candidate_count_watchlist": int(review_counts.get("watchlist", 0)),
         "candidate_count_rejected": int(review_counts.get("rejected", 0)),
+        "generic_or_invalid_title_count": sum(1 for row in candidates if str(row.get("title_quality_status") or "") == "generic_or_invalid_title"),
+        "missing_title_count": sum(1 for row in candidates if str(row.get("title_quality_status") or "") == "missing_title"),
+        "public_eligible_blocked_by_title_count": sum(
+            1
+            for row in candidates
+            if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+        ),
+        "title_extraction_methods": dict(sorted(title_methods.items())),
         "discovery_lane_counts": dict(sorted(Counter(str(row.get("discovery_lane") or "") for row in candidates if str(row.get("discovery_lane") or "")).items())),
         "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
         "google_news_resolution_status_counts": dict(sorted((google_news_resolution_status_counts or {}).items())),
@@ -173,6 +207,11 @@ def _review_payload(
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
                 "public_claim_blockers": list(row.get("public_claim_blockers") or []),
+                "title_extraction_method": str(row.get("title_extraction_method") or ""),
+                "raw_title_candidates": list(row.get("raw_title_candidates") or []),
+                "selected_title": str(row.get("selected_title") or row.get("discovered_title") or row.get("title") or ""),
+                "title_quality_status": str(row.get("title_quality_status") or ""),
+                "title_quality_blocker_applied": bool(row.get("title_quality_blocker_applied")),
                 "google_news_resolution": dict((google_news_debug_by_candidate or {}).get(str(row.get("candidate_id") or ""), {})),
                 "classification_status": str(row.get("classification_status") or ""),
                 "exclusion_reason": str(row.get("exclusion_reason") or ""),
@@ -224,9 +263,10 @@ def _copy_candidate_artifacts(
     dry_run: bool,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     discovery_candidate_path = root / "data" / "dispatches" / DISPATCH_SLUG / "discovery" / edition_date / "discovery_candidates.json"
-    candidates = _read_json(discovery_candidate_path) if discovery_candidate_path.exists() else []
-    if not isinstance(candidates, list):
-        raise ValueError(f"{discovery_candidate_path.name} must contain a JSON list")
+    candidates_payload = _read_json(discovery_candidate_path) if discovery_candidate_path.exists() else []
+    candidates = _candidate_rows_from_payload(candidates_payload)
+    if discovery_candidate_path.exists() and not candidates and candidates_payload not in ([], {}):
+        raise ValueError(f"{discovery_candidate_path.name} must contain candidate records as a list or supported wrapper object")
     if not isinstance(intake, dict):
         intake_path = root / "output" / "review" / DISPATCH_SLUG / edition_date / "discovery_intake.json"
         intake = _read_json(intake_path) if intake_path.exists() else {}
@@ -240,14 +280,18 @@ def _copy_candidate_artifacts(
         _write_json(_candidate_copy_path(root, edition_date), candidates)
         payload = _review_payload(
             edition_date,
-            [row for row in candidates if isinstance(row, dict)],
+            candidates,
             intake,
             google_news_debug_by_candidate=dict(audit.get("google_news_resolution_debug_by_candidate") or {}),
             google_news_resolution_status_counts=dict(audit.get("google_news_resolution_status_counts") or {}),
         )
+        payload["candidate_source_json_shape"] = _candidate_payload_shape(candidates_payload)
+        payload["candidate_source_record_count"] = len(candidates)
+        payload["candidate_source_records_path"] = "top_level_array"
+        payload["candidate_review_json_shape"] = "object.candidates"
         _write_json(_review_json_path(root, edition_date), payload)
         _write_text(_review_html_path(root, edition_date), _review_html(payload))
-    return [row for row in candidates if isinstance(row, dict)], intake
+    return candidates, intake
 
 
 def run_food_line_discovery_backfill(
@@ -293,6 +337,15 @@ def run_food_line_discovery_backfill(
             "in_window_direct_candidates_by_date": {row["date"]: row["in_window_direct_candidate_count"] for row in per_date},
             "out_of_window_direct_candidates_by_date": {row["date"]: row["out_of_window_direct_candidate_count"] for row in per_date},
             "missing_date_direct_candidates_by_date": {row["date"]: row["missing_date_direct_candidate_count"] for row in per_date},
+            "generic_or_invalid_title_count": sum(int(row.get("generic_or_invalid_title_count", 0)) for row in per_date),
+            "missing_title_count": sum(int(row.get("missing_title_count", 0)) for row in per_date),
+            "title_extraction_methods": dict(sorted(Counter(
+                method
+                for row in per_date
+                for method, count in dict(row.get("title_extraction_methods") or {}).items()
+                for _ in range(int(count))
+            ).items())),
+            "public_eligible_blocked_by_title_count": sum(int(row.get("public_eligible_blocked_by_title_count", 0)) for row in per_date),
             "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
             "discovery_lanes_used": dict(sorted(lane_counts.items())),
             "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
@@ -1085,6 +1138,24 @@ def run_food_line_discovery_backfill(
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),
                 "needs_review_candidate_count": int(review_counts.get("needs_review", 0)),
+                "generic_or_invalid_title_count": sum(
+                    1 for row in typed_candidates if str(row.get("title_quality_status") or "") == "generic_or_invalid_title"
+                ),
+                "missing_title_count": sum(1 for row in typed_candidates if str(row.get("title_quality_status") or "") == "missing_title"),
+                "title_extraction_methods": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("title_extraction_method") or "").strip()
+                            for row in typed_candidates
+                            if str(row.get("title_extraction_method") or "").strip()
+                        ).items()
+                    )
+                ),
+                "public_eligible_blocked_by_title_count": sum(
+                    1
+                    for row in typed_candidates
+                    if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+                ),
                 "in_window_candidate_count": in_window_count,
                 "out_of_window_candidate_count": out_of_window_count,
                 "in_window_direct_candidate_count": int(audit.get("in_window_direct_candidate_count", 0)),

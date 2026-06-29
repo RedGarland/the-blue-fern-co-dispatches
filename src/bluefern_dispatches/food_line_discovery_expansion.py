@@ -16,7 +16,12 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
-from bluefern_dispatches.food_line_sources import canonical_url, resolve_food_line_fetcher, validate_date
+from bluefern_dispatches.food_line_sources import (
+    FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES,
+    canonical_url,
+    resolve_food_line_fetcher,
+    validate_date,
+)
 
 DISPATCH_SLUG = "food-line"
 DISCOVERY_DIR_NAME = "discovery"
@@ -40,6 +45,8 @@ GOOGLE_ASSET_DOMAINS = (
 )
 STATIC_PATH_SUFFIXES = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
 LISTING_PATH_SEGMENTS = {
+    "blog",
+    "blogs",
     "category",
     "categories",
     "tag",
@@ -61,6 +68,47 @@ LISTING_PATH_SEGMENTS = {
     "feeds",
     "rss",
     "atom",
+}
+
+GENERIC_TITLE_EXACT_NORMALIZED = {
+    "skip to content",
+    "skip to main content",
+    "donate",
+    "our blog",
+    "blog",
+    "news",
+    "all songs considered",
+    "airtalk",
+    "apply for calfresh",
+    "home",
+    "menu",
+    "search",
+    "press releases",
+    "archive",
+    "archives",
+    "updates",
+    "resources",
+    "programs",
+    "food bank",
+    "hunger blog",
+}
+GENERIC_TITLE_SINGLE_WORDS = {
+    "about",
+    "archive",
+    "archives",
+    "blog",
+    "calendar",
+    "donate",
+    "feed",
+    "feeds",
+    "home",
+    "latest",
+    "menu",
+    "news",
+    "programs",
+    "resources",
+    "search",
+    "updates",
 }
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
@@ -270,6 +318,39 @@ def _utc_now() -> str:
 
 def _nonempty(value: Any) -> str:
     return str(value or "").strip()
+
+
+def _normalized_title_key(value: str) -> str:
+    text = _nonempty(html.unescape(value))
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"^[\W_]+|[\W_]+$", "", text)
+    return text.lower()
+
+
+def _clean_title_text(value: str) -> str:
+    text = _nonempty(html.unescape(value))
+    text = re.sub(r"<[^>]+>", " ", text)
+    return re.sub(r"\s+", " ", text).strip(" \t\r\n-–—|:;,.")
+
+
+def _dedupe_texts(values: list[str], *, limit: int = 6) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        cleaned = _clean_title_text(value)
+        key = _normalized_title_key(cleaned)
+        if not cleaned or not key or key in seen:
+            continue
+        out.append(cleaned[:240])
+        seen.add(key)
+        if len(out) >= limit:
+            break
+    return out
+
+
+GENERIC_CHROME_TITLES_NORMALIZED = {
+    _normalized_title_key(value) for value in FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES
+}
 
 
 def _read_json(path: Path) -> Any:
@@ -682,6 +763,7 @@ def _public_claim_blockers(
     fetch_status: str,
     traceability_status: str,
     duplicate_of: str,
+    title_quality_status: str = "",
 ) -> list[str]:
     blockers: list[str] = []
     if duplicate_of:
@@ -702,6 +784,8 @@ def _public_claim_blockers(
         blockers.append("non_article_trace_url")
     elif traceability_status != "traceable":
         blockers.append(traceability_status or "traceability_incomplete")
+    if title_quality_status in {"generic_or_invalid_title", "missing_title"}:
+        blockers.append("generic_or_invalid_title")
     if not _published_date_in_window(
         edition_date,
         source_published_date,
@@ -727,6 +811,7 @@ def _candidate_review_defaults(
     fetch_status: str,
     traceability_status: str,
     duplicate_of: str,
+    title_quality_status: str = "",
 ) -> tuple[str, bool, list[str]]:
     review_status = "watchlist" if lane == "social_watchlist" else "needs_review"
     blockers = _public_claim_blockers(
@@ -739,6 +824,7 @@ def _candidate_review_defaults(
         fetch_status=fetch_status,
         traceability_status=traceability_status,
         duplicate_of=duplicate_of,
+        title_quality_status=title_quality_status,
     )
     eligible = not blockers
     return review_status, eligible, blockers
@@ -1210,6 +1296,136 @@ def _page_title(payload: bytes) -> str:
     return _nonempty(html.unescape(match.group(1))) if match else ""
 
 
+def _meta_content(text: str, *, attr: str, value: str) -> str:
+    pattern = rf'<meta\b[^>]*{attr}=["\']{re.escape(value)}["\'][^>]*content=["\']([^"\']+)["\']'
+    match = re.search(pattern, text, re.IGNORECASE)
+    return _clean_title_text(match.group(1)) if match else ""
+
+
+def _extract_json_ld_headlines(text: str) -> list[str]:
+    candidates: list[str] = []
+
+    def visit(node: Any) -> None:
+        if isinstance(node, dict):
+            node_type = str(node.get("@type") or "")
+            type_values = {part.strip().lower() for part in re.split(r"[, ]+", node_type) if part.strip()}
+            if any(value in type_values for value in {"article", "newsarticle", "report"}):
+                headline = _clean_title_text(str(node.get("headline") or ""))
+                if headline:
+                    candidates.append(headline)
+            for value in node.values():
+                visit(value)
+        elif isinstance(node, list):
+            for value in node:
+                visit(value)
+
+    for match in re.finditer(
+        r'<script[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        text,
+        flags=re.IGNORECASE | re.DOTALL,
+    ):
+        raw_json = html.unescape(match.group(1)).strip()
+        if not raw_json:
+            continue
+        try:
+            visit(json.loads(raw_json))
+        except Exception:  # noqa: BLE001
+            continue
+    return _dedupe_texts(candidates)
+
+
+def _extract_scoped_h1_titles(text: str) -> list[str]:
+    candidates: list[str] = []
+    for scope_pattern in (
+        r"<article\b[^>]*>(.*?)</article>",
+        r"<main\b[^>]*>(.*?)</main>",
+        r'<div\b[^>]*(?:class|id)=["\'][^"\']*(?:content|article|post|entry|story)[^"\']*["\'][^>]*>(.*?)</div>',
+    ):
+        for scope_match in re.finditer(scope_pattern, text, flags=re.IGNORECASE | re.DOTALL):
+            scope = scope_match.group(1)
+            h1_match = re.search(r"<h1\b[^>]*>(.*?)</h1>", scope, flags=re.IGNORECASE | re.DOTALL)
+            if h1_match:
+                candidates.append(_clean_title_text(h1_match.group(1)))
+    for h1_match in re.finditer(r"<h1\b[^>]*>(.*?)</h1>", text, flags=re.IGNORECASE | re.DOTALL):
+        candidates.append(_clean_title_text(h1_match.group(1)))
+    return _dedupe_texts(candidates)
+
+
+def _strip_site_suffix(title: str) -> str:
+    cleaned = _clean_title_text(title)
+    if not cleaned:
+        return ""
+    for separator in (" | ", " - ", " — ", " :: ", " / "):
+        if separator not in cleaned:
+            continue
+        parts = [part.strip() for part in cleaned.split(separator) if part.strip()]
+        if not parts:
+            continue
+        first = parts[0]
+        if _normalized_title_key(first) and first != cleaned:
+            return first
+    return cleaned
+
+
+def _title_quality_status(title: str) -> str:
+    cleaned = _clean_title_text(title)
+    normalized = _normalized_title_key(cleaned)
+    if not normalized:
+        return "missing_title"
+    if cleaned.lower().startswith(("http://", "https://")):
+        return "generic_or_invalid_title"
+    if normalized in GENERIC_TITLE_EXACT_NORMALIZED:
+        return "generic_or_invalid_title"
+    if normalized in GENERIC_CHROME_TITLES_NORMALIZED:
+        return "generic_or_invalid_title"
+    words = [word for word in re.split(r"[\s/|:;,_-]+", normalized) if word]
+    if len(words) <= 2 and all(word in GENERIC_TITLE_SINGLE_WORDS for word in words):
+        return "generic_or_invalid_title"
+    if len(words) == 1 and len(words[0]) <= 3:
+        return "generic_or_invalid_title"
+    return "valid_article_title"
+
+
+def _pick_best_title(
+    payload: bytes,
+    *,
+    fallback_title: str = "",
+) -> tuple[str, str, list[str], str]:
+    text = payload.decode("utf-8", errors="replace")
+    raw_candidates: list[tuple[str, str]] = []
+
+    def add(method: str, value: str) -> None:
+        cleaned = _clean_title_text(value)
+        if cleaned:
+            raw_candidates.append((method, cleaned))
+
+    add("og_title", _meta_content(text, attr="property", value="og:title"))
+    for headline in _extract_json_ld_headlines(text):
+        add("json_ld_headline", headline)
+    add("twitter_title", _meta_content(text, attr="name", value="twitter:title"))
+    h1_candidates = _extract_scoped_h1_titles(text)
+    if h1_candidates:
+        add("article_h1", h1_candidates[0])
+        for extra in h1_candidates[1:]:
+            add("page_h1", extra)
+    document_title = _strip_site_suffix(_page_title(payload))
+    add("document_title", document_title)
+    add("feed_or_listing_title", fallback_title)
+
+    selected_title = ""
+    selected_method = ""
+    for method, candidate in raw_candidates:
+        if _title_quality_status(candidate) == "valid_article_title":
+            selected_title = candidate
+            selected_method = method
+            break
+    if not selected_title and raw_candidates:
+        selected_method, selected_title = raw_candidates[0]
+
+    title_quality_status = _title_quality_status(selected_title)
+    return selected_title, selected_method, _dedupe_texts([value for _, value in raw_candidates]), title_quality_status
+
+
 def _page_summary(payload: bytes) -> str:
     text = payload.decode("utf-8", errors="replace")
     for pattern in (
@@ -1385,10 +1601,11 @@ def _collect_direct_source_items(
             )
             if extracted:
                 return extracted, "html_listing"
+            fallback_title, _, _, _ = _pick_best_title(payload, fallback_title=source_name)
             return (
                 [
                     {
-                        "title": _page_title(payload) or source_name,
+                        "title": fallback_title or source_name,
                         "link": page_url,
                         "description": _page_summary(payload),
                         "pubDate": "",
@@ -1807,6 +2024,8 @@ def _is_feed_or_listing_url(url: str, *, feed_url: str = "") -> bool:
         return True
     if not path:
         return True
+    if len(path) >= 2 and path[-2] == "page" and path[-1].isdigit():
+        return True
     last_segment = path[-1].split(".", 1)[0]
     if last_segment in LISTING_PATH_SEGMENTS:
         return True
@@ -1921,6 +2140,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         discovered_url=canonical or trace_url,
         fetch_status="manual_fallback",
     )
+    title_quality_status = _title_quality_status(headline)
     candidate_review_status, public_claim_eligible, public_claim_blockers = _candidate_review_defaults(
         edition_date=_nonempty(record.get("date")),
         source_published_date=_nonempty(record.get("date")),
@@ -1931,6 +2151,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         fetch_status="manual_fallback",
         traceability_status=traceability_status,
         duplicate_of="",
+        title_quality_status=title_quality_status,
     )
     return (
         {
@@ -1974,6 +2195,11 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "traceability_status": traceability_status,
             "public_claim_eligible": public_claim_eligible,
             "public_claim_blockers": public_claim_blockers,
+            "title_extraction_method": "manual_fallback",
+            "raw_title_candidates": _dedupe_texts([headline]),
+            "selected_title": headline,
+            "title_quality_status": title_quality_status,
+            "title_quality_blocker_applied": title_quality_status in {"generic_or_invalid_title", "missing_title"},
             "manually_reviewed_summary": _nonempty(record.get("manually_reviewed_summary")),
             "pressure_evidence_summary": _nonempty(record.get("pressure_evidence_summary")),
             "affected_groups": list(record.get("affected_groups") or []),
@@ -2056,6 +2282,14 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["duplicate_of"] = _nonempty(candidate.get("duplicate_of"))
     candidate["public_claim_blockers"] = list(candidate.get("public_claim_blockers") or [])
     candidate["canonical_homepage_collapse_ignored"] = bool(candidate.get("canonical_homepage_collapse_ignored"))
+    candidate["title_extraction_method"] = _nonempty(candidate.get("title_extraction_method"))
+    candidate["raw_title_candidates"] = list(candidate.get("raw_title_candidates") or [])
+    candidate["selected_title"] = _nonempty(candidate.get("selected_title") or candidate.get("discovered_title"))
+    candidate["title_quality_status"] = _nonempty(candidate.get("title_quality_status") or _title_quality_status(candidate["selected_title"]))
+    candidate["title_quality_blocker_applied"] = bool(candidate.get("title_quality_blocker_applied")) or candidate["title_quality_status"] in {
+        "generic_or_invalid_title",
+        "missing_title",
+    }
     return candidate
 
 
@@ -2567,6 +2801,10 @@ def run_food_line_discovery_expansion(
             fetch_error = google_news_resolution_error
             canonical_from_page = ""
             page_title = ""
+            title_extraction_method = ""
+            raw_title_candidates: list[str] = _dedupe_texts([_nonempty(item.get("title"))])
+            selected_title = _nonempty(item.get("title"))
+            title_quality_status = _title_quality_status(selected_title)
             page_summary = ""
             page_text = ""
             page_published_date = ""
@@ -2597,7 +2835,11 @@ def run_food_line_discovery_expansion(
                         direct_fetch_status = "ok"
                         fetchable_count += 1
                         canonical_from_page = _extract_canonical_url(payload2)
-                        page_title = _page_title(payload2)
+                        page_title, title_extraction_method, raw_title_candidates, title_quality_status = _pick_best_title(
+                            payload2,
+                            fallback_title=_nonempty(item.get("title")),
+                        )
+                        selected_title = page_title or _nonempty(item.get("title"))
                         page_summary = _page_summary(payload2)
                         page_text = _page_text(payload2)
                         page_published_date, page_date_basis = _extract_page_published_date_info(payload2, final_trace_url)
@@ -2625,7 +2867,11 @@ def run_food_line_discovery_expansion(
                     fetch_status = "ok"
                     fetchable_count += 1
                     canonical_from_page = _extract_canonical_url(payload2)
-                    page_title = _page_title(payload2)
+                    page_title, title_extraction_method, raw_title_candidates, title_quality_status = _pick_best_title(
+                        payload2,
+                        fallback_title=_nonempty(item.get("title")),
+                    )
+                    selected_title = page_title or _nonempty(item.get("title"))
                     page_summary = _page_summary(payload2)
                     page_text = _page_text(payload2)
                     page_published_date, page_date_basis = _extract_page_published_date_info(payload2, final_trace_url)
@@ -2738,6 +2984,7 @@ def run_food_line_discovery_expansion(
                 fetch_status=fetch_status,
                 traceability_status=traceability_status,
                 duplicate_of="",
+                title_quality_status=title_quality_status,
             )
             row = {
                 "candidate_id": _candidate_id(final_trace_url or discovered_url, _nonempty(item.get("source_name") or item.get("source_url")), _nonempty(query_row.get("query_family"))),
@@ -2754,7 +3001,7 @@ def run_food_line_discovery_expansion(
                 "state_hint": _nonempty(query_row.get("state_abbrev") or query_row.get("state_or_territory")),
                 "metro": _nonempty(query_row.get("metro")),
                 "discovery_channel": discovery_channel,
-                "discovered_title": _nonempty(item.get("title")),
+                "discovered_title": selected_title,
                 "discovered_publisher": _nonempty(item.get("source_name") or item.get("source_url") or direct_source_name),
                 "discovered_url": discovered_url,
                 "canonical_url": canonical,
@@ -2804,6 +3051,11 @@ def run_food_line_discovery_expansion(
                 "traceability_status": traceability_status,
                 "public_claim_eligible": public_claim_eligible,
                 "public_claim_blockers": public_claim_blockers,
+                "title_extraction_method": title_extraction_method or ("feed_or_listing_title" if selected_title else ""),
+                "raw_title_candidates": raw_title_candidates,
+                "selected_title": selected_title,
+                "title_quality_status": title_quality_status,
+                "title_quality_blocker_applied": title_quality_status in {"generic_or_invalid_title", "missing_title"},
                 "query_url": query_url,
                 "retrieved_at": discovered_at,
                 "_google_news_resolution_attempted": google_news_resolution_attempted,
@@ -2911,9 +3163,11 @@ def run_food_line_discovery_expansion(
             fetch_status=_nonempty(row.get("fetch_status")),
             traceability_status=_nonempty(row.get("traceability_status")),
             duplicate_of=_nonempty(row.get("duplicate_of")),
+            title_quality_status=_nonempty(row.get("title_quality_status")),
         )
         if row.get("classification_status") == "manual_fallback":
             row["candidate_review_status"] = "needs_review"
+        row["title_quality_blocker_applied"] = "generic_or_invalid_title" in list(row.get("public_claim_blockers") or [])
     for row in candidates:
         for key in (
             "_google_news_resolution_attempted",
@@ -2939,6 +3193,18 @@ def run_food_line_discovery_expansion(
     blocked_fetch_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) not in {"ok", "manual_fallback"})
     homepage_only_trace_count = sum(1 for row in candidates if "publisher_homepage_trace_only" in list(row.get("public_claim_blockers") or []))
     outside_window_count = sum(1 for row in candidates if "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []))
+    generic_or_invalid_title_count = sum(1 for row in candidates if _nonempty(row.get("title_quality_status")) == "generic_or_invalid_title")
+    missing_title_count = sum(1 for row in candidates if _nonempty(row.get("title_quality_status")) == "missing_title")
+    public_eligible_blocked_by_title_count = sum(
+        1
+        for row in candidates
+        if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+    )
+    title_extraction_methods = dict(
+        sorted(
+            Counter(_nonempty(row.get("title_extraction_method")) for row in candidates if _nonempty(row.get("title_extraction_method"))).items()
+        )
+    )
     fetchable_count = sum(1 for row in candidates if _nonempty(row.get("fetch_status")) == "ok")
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
     google_news_url_count = sum(1 for row in candidates if _nonempty(row.get("google_news_url")))
@@ -3050,6 +3316,10 @@ def run_food_line_discovery_expansion(
         "duplicate_count": duplicate_count,
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,
+        "generic_or_invalid_title_count": generic_or_invalid_title_count,
+        "missing_title_count": missing_title_count,
+        "title_extraction_methods": title_extraction_methods,
+        "public_eligible_blocked_by_title_count": public_eligible_blocked_by_title_count,
         "direct_source_count": direct_source_count,
         "direct_source_fetch_attempt_count": direct_source_fetch_attempt_count,
         "direct_source_fetch_success_count": direct_source_fetch_success_count,
@@ -3179,6 +3449,10 @@ def run_food_line_discovery_expansion(
             f"- Total candidates discovered: `{candidate_count}`",
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
+            f"- Generic or invalid titles: `{generic_or_invalid_title_count}`",
+            f"- Missing titles: `{missing_title_count}`",
+            f"- Public-eligible blocked by title: `{public_eligible_blocked_by_title_count}`",
+            f"- Title extraction methods: `{title_extraction_methods}`",
             f"- Direct sources scanned: `{direct_source_count}`",
             f"- Direct source fetch attempts: `{direct_source_fetch_attempt_count}`",
             f"- Direct source fetch successes: `{direct_source_fetch_success_count}`",

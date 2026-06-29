@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 from bluefern_dispatches.food_line_sources import (
     FOOD_LINE_PUBLIC_EVIDENCE_CHROME_PHRASES,
     canonical_url,
+    evaluate_food_line_pressure,
     resolve_food_line_fetcher,
     validate_date,
 )
@@ -158,6 +159,15 @@ GENERIC_TITLE_SINGLE_WORDS = {
     "search",
     "updates",
 }
+PUBLIC_PROSE_REQUIRED_FIELDS = (
+    "pressure_summary",
+    "pressure_type",
+    "affected_groups",
+    "evidence_level",
+    "freshness_role",
+    "source_role",
+)
+SAFE_AFFECTED_GROUPS_FALLBACK = "Not clearly isolated by source"
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -742,6 +752,124 @@ def _path_words(value: str) -> list[str]:
 def _cap_text(value: str, *, limit: int = 240) -> str:
     text = re.sub(r"\s+", " ", _nonempty(value)).strip()
     return text[:limit]
+
+
+def _candidate_source_family(row: dict[str, Any]) -> str:
+    family = _nonempty(row.get("source_family"))
+    if family:
+        return family
+    lane = _nonempty(row.get("discovery_lane"))
+    lane_to_family = {
+        "public_radio": "public_radio",
+        "food_bank_provider": "food_bank_provider",
+        "feeding_america_affiliate": "food_bank_provider",
+        "school_meals_child_nutrition": "nonprofit_news",
+        "nonprofit_report": "nonprofit_news",
+        "news_article": "local_news",
+    }
+    return lane_to_family.get(lane, "local_news")
+
+
+def _candidate_location_name(row: dict[str, Any]) -> str:
+    for key in ("metro", "state_or_territory", "state_hint", "discovered_publisher", "direct_source_name"):
+        value = _nonempty(row.get(key))
+        if value:
+            return value
+    return "United States"
+
+
+def _candidate_public_evidence_text(row: dict[str, Any]) -> str:
+    for key in ("evidence_text", "pressure_evidence_summary", "manually_reviewed_summary", "summary_or_snippet"):
+        value = _cap_text(_nonempty(row.get(key)), limit=1200)
+        if value:
+            return value
+    return ""
+
+
+def _candidate_public_evidence_basis(row: dict[str, Any]) -> str:
+    basis = _nonempty(row.get("evidence_text_basis"))
+    if basis:
+        return basis
+    if _nonempty(row.get("classification_status")) == "manual_fallback":
+        return "manual_source_text"
+    if _nonempty(row.get("fetch_status")) == "ok":
+        return "page_text_excerpt"
+    if _nonempty(row.get("discovery_channel")) in {"direct_rss", "google_news_rss"}:
+        return "rss_item_text"
+    return "manual_source_text"
+
+
+def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) -> dict[str, Any]:
+    evidence_text = _candidate_public_evidence_text(row)
+    basis = _candidate_public_evidence_basis(row)
+    eval_row = {
+        "title": _nonempty(row.get("selected_title") or row.get("discovered_title")),
+        "summary_or_snippet": _nonempty(row.get("summary_or_snippet") or row.get("manually_reviewed_summary") or row.get("pressure_evidence_summary")),
+        "summary_fallback": _nonempty(row.get("pressure_evidence_summary") or row.get("manually_reviewed_summary")),
+        "evidence_text": evidence_text,
+        "evidence_text_basis": basis if evidence_text else "",
+        "collector_source_type": "page" if basis == "page_text_excerpt" else ("rss" if basis == "rss_item_text" else "manual"),
+        "source_family": _candidate_source_family(row),
+        "source_name": _nonempty(row.get("direct_source_name") or row.get("discovered_publisher")),
+        "publisher": _nonempty(row.get("discovered_publisher")),
+        "location_name": _candidate_location_name(row),
+        "published_at": _nonempty(row.get("source_published_date")),
+        "state": _nonempty(row.get("state_abbrev")),
+        "url": _nonempty(row.get("source_url") or row.get("final_trace_url")),
+    }
+    pressure_required = _nonempty(row.get("classification_status")) in {"qualified_pressure_signal", "manual_fallback"}
+    evaluated = evaluate_food_line_pressure(
+        eval_row,
+        edition_date=edition_date,
+        pressure_required=pressure_required,
+    )
+    affected_groups = list(row.get("affected_groups") or evaluated.get("affected_groups") or [])
+    if pressure_required and not affected_groups:
+        affected_groups = [SAFE_AFFECTED_GROUPS_FALLBACK]
+    return {
+        "pressure_signal": bool(row.get("pressure_signal")) or bool(evaluated.get("pressure_signal")) or pressure_required,
+        "pressure_type": _nonempty(row.get("pressure_type") or evaluated.get("pressure_type")),
+        "pressure_summary": _nonempty(
+            row.get("pressure_summary") or row.get("pressure_evidence_summary") or evaluated.get("pressure_summary")
+        ),
+        "affected_groups": affected_groups,
+        "evidence_level": _nonempty(row.get("evidence_level") or evaluated.get("evidence_level")),
+        "freshness_role": _nonempty(row.get("freshness_role") or evaluated.get("freshness_role")),
+        "source_role": _nonempty(row.get("source_role") or evaluated.get("source_role")),
+        "evidence_text": evidence_text,
+        "evidence_text_basis": basis if evidence_text else _nonempty(evaluated.get("evidence_text_basis")),
+    }
+
+
+def _missing_public_prose_fields(row: dict[str, Any]) -> list[str]:
+    missing: list[str] = []
+    if not _nonempty(row.get("pressure_summary")):
+        missing.append("pressure_summary")
+    pressure_type = _nonempty(row.get("pressure_type"))
+    if not pressure_type or pressure_type == "context only":
+        missing.append("pressure_type")
+    affected_groups = [_nonempty(item) for item in list(row.get("affected_groups") or []) if _nonempty(item)]
+    if not affected_groups:
+        missing.append("affected_groups")
+    if not _nonempty(row.get("evidence_level")):
+        missing.append("evidence_level")
+    if not _nonempty(row.get("freshness_role")):
+        missing.append("freshness_role")
+    if not _nonempty(row.get("source_role")):
+        missing.append("source_role")
+    return missing
+
+
+def _apply_public_readiness_gate(row: dict[str, Any], *, edition_date: str) -> None:
+    row.update(_derive_candidate_public_prose(row, edition_date=edition_date))
+    missing = _missing_public_prose_fields(row)
+    row["missing_public_prose_fields"] = missing
+    blockers = list(row.get("public_claim_blockers") or [])
+    if missing and "missing_public_prose_fields" not in blockers:
+        blockers.append("missing_public_prose_fields")
+    if missing:
+        row["public_claim_eligible"] = False
+    row["public_claim_blockers"] = blockers
 
 
 def _is_probable_article_slug(url: str) -> bool:
@@ -2412,6 +2540,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         original_source_url=trace_url,
         title_quality_status=title_quality_status,
     )
+    pressure_summary = _nonempty(record.get("pressure_summary") or record.get("pressure_evidence_summary"))
     return (
         {
             "candidate_id": candidate_id,
@@ -2427,6 +2556,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "state_hint": _nonempty(record.get("state_hint") or record.get("state_or_territory")),
             "metro": _nonempty(record.get("metro")),
             "discovery_channel": "manual_fallback",
+            "source_family": _nonempty(record.get("source_family") or "local_news"),
             "discovered_title": headline,
             "discovered_publisher": publisher,
             "discovered_url": canonical or trace_url,
@@ -2451,6 +2581,9 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "location_scope": _nonempty(record.get("location_scope") or record.get("geographic_scope") or "manual"),
             "pressure_signal_hint": _nonempty(record.get("pressure_signal_hint") or record.get("pressure_evidence_summary")),
             "pressure_signal_type_hint": _nonempty(record.get("pressure_signal_type_hint")),
+            "pressure_signal": bool(pressure_summary),
+            "pressure_type": _nonempty(record.get("pressure_type")),
+            "pressure_summary": pressure_summary,
             "traceability_status": traceability_status,
             "public_claim_eligible": public_claim_eligible,
             "public_claim_blockers": public_claim_blockers,
@@ -2462,6 +2595,13 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "manually_reviewed_summary": _nonempty(record.get("manually_reviewed_summary")),
             "pressure_evidence_summary": _nonempty(record.get("pressure_evidence_summary")),
             "affected_groups": list(record.get("affected_groups") or []),
+            "evidence_level": _nonempty(record.get("evidence_level")),
+            "freshness_role": _nonempty(record.get("freshness_role")),
+            "source_role": _nonempty(record.get("source_role")),
+            "summary_or_snippet": _nonempty(record.get("pressure_evidence_summary") or record.get("manually_reviewed_summary")),
+            "evidence_text": _cap_text(_nonempty(record.get("pressure_evidence_summary") or record.get("manually_reviewed_summary")), limit=1200),
+            "evidence_text_basis": "manual_source_text",
+            "missing_public_prose_fields": [],
             "limitations": _nonempty(record.get("limitations")),
             "extraction_quality": _nonempty(record.get("extraction_quality")) or "manual_fallback",
             "reviewer_or_source_note": _nonempty(record.get("reviewer_or_source_note")),
@@ -2551,6 +2691,17 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
         "generic_or_invalid_title",
         "missing_title",
     }
+    candidate["source_family"] = _nonempty(candidate.get("source_family"))
+    candidate["pressure_signal"] = bool(candidate.get("pressure_signal"))
+    candidate["pressure_type"] = _nonempty(candidate.get("pressure_type"))
+    candidate["pressure_summary"] = _nonempty(candidate.get("pressure_summary"))
+    candidate["evidence_level"] = _nonempty(candidate.get("evidence_level"))
+    candidate["freshness_role"] = _nonempty(candidate.get("freshness_role"))
+    candidate["source_role"] = _nonempty(candidate.get("source_role"))
+    candidate["summary_or_snippet"] = _nonempty(candidate.get("summary_or_snippet"))
+    candidate["evidence_text"] = _cap_text(_nonempty(candidate.get("evidence_text")), limit=1200)
+    candidate["evidence_text_basis"] = _nonempty(candidate.get("evidence_text_basis"))
+    candidate["missing_public_prose_fields"] = [item for item in list(candidate.get("missing_public_prose_fields") or []) if _nonempty(item)]
     return candidate
 
 
@@ -2622,7 +2773,16 @@ def _append_manual_fallbacks(candidates: list[dict[str, Any]], manual_fallback_r
             for key in (
                 "manually_reviewed_summary",
                 "pressure_evidence_summary",
+                "pressure_signal",
+                "pressure_type",
+                "pressure_summary",
                 "affected_groups",
+                "evidence_level",
+                "freshness_role",
+                "source_role",
+                "summary_or_snippet",
+                "evidence_text",
+                "evidence_text_basis",
                 "limitations",
                 "extraction_quality",
                 "reviewer_or_source_note",
@@ -3270,6 +3430,7 @@ def run_food_line_discovery_expansion(
                 "discovery_query": query_text,
                 "discovery_source_type": _discovery_source_type(_nonempty(query_row.get("query_family")), discovered_url, publisher_url, fetch_status),
                 "query_family": _nonempty(query_row.get("query_family")),
+                "source_family": _nonempty(query_row.get("source_family")),
                 "query_text": query_text,
                 "geographic_scope": _nonempty(query_row.get("geographic_scope")),
                 "state_or_territory": _nonempty(query_row.get("state_or_territory")),
@@ -3328,6 +3489,9 @@ def run_food_line_discovery_expansion(
                 "location_scope": _nonempty(query_row.get("geographic_scope")),
                 "pressure_signal_hint": ", ".join(pressure_hits[:4]),
                 "pressure_signal_type_hint": _nonempty(classification_status),
+                "pressure_signal": False,
+                "pressure_type": "",
+                "pressure_summary": "",
                 "traceability_status": traceability_status,
                 "public_claim_eligible": public_claim_eligible,
                 "public_claim_blockers": public_claim_blockers,
@@ -3336,6 +3500,14 @@ def run_food_line_discovery_expansion(
                 "selected_title": selected_title,
                 "title_quality_status": title_quality_status,
                 "title_quality_blocker_applied": title_quality_status in {"generic_or_invalid_title", "missing_title"},
+                "affected_groups": [],
+                "evidence_level": "",
+                "freshness_role": "",
+                "source_role": "",
+                "summary_or_snippet": _nonempty(page_summary or item.get("description")),
+                "evidence_text": _cap_text(evidence_text, limit=1200),
+                "evidence_text_basis": "page_text_excerpt" if fetch_status == "ok" else ("rss_item_text" if discovery_channel in {"direct_rss", "google_news_rss"} else "manual_source_text"),
+                "missing_public_prose_fields": [],
                 "query_url": query_url,
                 "retrieved_at": discovered_at,
                 "_google_news_resolution_attempted": google_news_resolution_attempted,
@@ -3449,6 +3621,7 @@ def run_food_line_discovery_expansion(
         )
         if row.get("classification_status") == "manual_fallback":
             row["candidate_review_status"] = "needs_review"
+        _apply_public_readiness_gate(row, edition_date=date_text)
         row["title_quality_blocker_applied"] = "generic_or_invalid_title" in list(row.get("public_claim_blockers") or [])
     for row in candidates:
         for key in (
@@ -3477,10 +3650,26 @@ def run_food_line_discovery_expansion(
     outside_window_count = sum(1 for row in candidates if "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []))
     generic_or_invalid_title_count = sum(1 for row in candidates if _nonempty(row.get("title_quality_status")) == "generic_or_invalid_title")
     missing_title_count = sum(1 for row in candidates if _nonempty(row.get("title_quality_status")) == "missing_title")
+    missing_public_prose_fields_count = sum(1 for row in candidates if list(row.get("missing_public_prose_fields") or []))
+    missing_public_prose_fields_by_field = dict(
+        sorted(
+            Counter(
+                field
+                for row in candidates
+                for field in list(row.get("missing_public_prose_fields") or [])
+                if _nonempty(field)
+            ).items()
+        )
+    )
     public_eligible_blocked_by_title_count = sum(
         1
         for row in candidates
         if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+    )
+    public_eligible_blocked_by_missing_public_prose_count = sum(
+        1
+        for row in candidates
+        if "missing_public_prose_fields" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
     )
     title_extraction_methods = dict(
         sorted(
@@ -3600,8 +3789,11 @@ def run_food_line_discovery_expansion(
         "blocked_fetch_count": blocked_fetch_count,
         "generic_or_invalid_title_count": generic_or_invalid_title_count,
         "missing_title_count": missing_title_count,
+        "missing_public_prose_fields_count": missing_public_prose_fields_count,
+        "missing_public_prose_fields_by_field": missing_public_prose_fields_by_field,
         "title_extraction_methods": title_extraction_methods,
         "public_eligible_blocked_by_title_count": public_eligible_blocked_by_title_count,
+        "public_eligible_blocked_by_missing_public_prose_count": public_eligible_blocked_by_missing_public_prose_count,
         "direct_source_count": direct_source_count,
         "direct_source_fetch_attempt_count": direct_source_fetch_attempt_count,
         "direct_source_fetch_success_count": direct_source_fetch_success_count,
@@ -3738,7 +3930,9 @@ def run_food_line_discovery_expansion(
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
             f"- Generic or invalid titles: `{generic_or_invalid_title_count}`",
             f"- Missing titles: `{missing_title_count}`",
+            f"- Candidates missing public prose fields: `{missing_public_prose_fields_count}`",
             f"- Public-eligible blocked by title: `{public_eligible_blocked_by_title_count}`",
+            f"- Public-eligible blocked by missing public prose: `{public_eligible_blocked_by_missing_public_prose_count}`",
             f"- Title extraction methods: `{title_extraction_methods}`",
             f"- Direct sources scanned: `{direct_source_count}`",
             f"- Direct source fetch attempts: `{direct_source_fetch_attempt_count}`",

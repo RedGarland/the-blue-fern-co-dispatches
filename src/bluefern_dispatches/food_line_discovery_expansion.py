@@ -176,6 +176,33 @@ DISCOVERY_PRESSURE_TYPE_RULES: list[tuple[str, tuple[tuple[str, ...], ...]]] = [
     ("food affordability pressure", (("grocery prices", "food costs", "food prices", "inflation", "rent and groceries"), tuple())),
     ("emergency food access pressure", (("emergency food assistance", "food distribution", "meal site", "meal sites"), ("access", "availability", "closure", "closed", "hours", "distance"))),
 ]
+DISCOVERY_POLICY_SOURCE_TERMS = (
+    "snap",
+    "broad-based categorical eligibility",
+    "bbce",
+    "eligibility",
+    "eligibility rules",
+    "wic",
+    "school meals",
+    "summer meals",
+    "usda proposal",
+    "usda rule",
+    "benefit access",
+)
+RESOURCE_CONTEXT_TERMS = (
+    "find food",
+    "find a food bank",
+    "find food near you",
+    "need help",
+    "help with snap",
+    "apply for",
+    "application",
+    "locator",
+    "programs",
+    "resources",
+    "resource library",
+    "meal sites",
+)
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -908,6 +935,51 @@ def _derive_pressure_summary_from_source_fields(
     return "", "insufficient_source_support", []
 
 
+def _derive_source_role_from_source_fields(
+    row: dict[str, Any],
+    *,
+    source_fields: dict[str, str],
+) -> tuple[str, str, list[str]]:
+    existing = _nonempty(row.get("source_role"))
+    if existing:
+        return existing, "existing", ["source_role"]
+    combined = " ".join(value.lower() for value in source_fields.values() if value)
+    discovery_lane = _nonempty(row.get("discovery_lane"))
+    source_family = _candidate_source_family(row)
+    trace_url = _nonempty(row.get("source_url") or row.get("final_trace_url"))
+    article_specific = _is_probable_article_slug(trace_url) or _is_document_specific_url(trace_url)
+    title_and_snippet = " ".join(
+        value.lower()
+        for value in (
+            _nonempty(source_fields.get("selected_title")),
+            _nonempty(source_fields.get("summary_or_snippet")),
+        )
+        if value
+    )
+    path_segments = set(_path_segments(trace_url))
+    resource_path = bool(path_segments & {"program", "programs", "resource", "resources", "find-food", "find-food-near-you", "locator"})
+    resource_page = resource_path or (
+        _nonempty(row.get("classification_status")) == "context_only" and any(token in title_and_snippet for token in RESOURCE_CONTEXT_TERMS)
+    )
+    if article_specific and source_family in {"nonprofit_report", "institutional_update"} and any(
+        token in combined for token in DISCOVERY_POLICY_SOURCE_TERMS
+    ):
+        fields = [field for field in ("selected_title", "summary_or_snippet", "evidence_text") if _nonempty(source_fields.get(field))]
+        return "policy_analysis", "derived_from_policy_source_text", fields or ["evidence_text"]
+    if resource_page:
+        fields = [field for field in ("selected_title", "summary_or_snippet", "evidence_text") if _nonempty(source_fields.get(field))]
+        return "resource_context", "derived_as_resource_context", fields or ["evidence_text"]
+    if article_specific and discovery_lane == "public_radio":
+        return "public_radio_report", "derived_from_discovery_lane", ["source_family"]
+    if article_specific and source_family in {"local_news", "local_news_direct_rss", "state_policy_news"}:
+        return "local_news_report", "derived_from_source_family", ["source_family"]
+    if article_specific and discovery_lane in {"food_bank_provider", "feeding_america_affiliate"}:
+        return "food_bank_update", "derived_from_discovery_lane", ["source_family"]
+    if article_specific and source_family in {"nonprofit_report", "institutional_update"}:
+        return "institutional_report", "derived_from_source_family", ["source_family"]
+    return "", "insufficient_source_support", []
+
+
 def _candidate_public_evidence_basis(row: dict[str, Any]) -> str:
     basis = _nonempty(row.get("evidence_text_basis"))
     if basis:
@@ -974,18 +1046,20 @@ def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) ->
             source_fields=source_fields,
         )
     final_pressure_summary = existing_pressure_summary or _nonempty(evaluated.get("pressure_summary")) or derived_pressure_summary
+    source_role, source_role_status, source_role_fields = _derive_source_role_from_source_fields(row, source_fields=source_fields)
 
     affected_groups = list(row.get("affected_groups") or evaluated.get("affected_groups") or [])
     if pressure_required and not affected_groups:
         affected_groups = [SAFE_AFFECTED_GROUPS_FALLBACK]
-    derivation_fields = list(dict.fromkeys([*pressure_type_fields, *pressure_summary_fields]))
+    pressure_derivation_fields = list(dict.fromkeys([*pressure_type_fields, *pressure_summary_fields]))
+    derivation_fields = list(dict.fromkeys([*pressure_derivation_fields, *source_role_fields]))
     public_prose_derivation_status = "insufficient_source_support"
-    if final_pressure_type and final_pressure_summary and derivation_fields:
+    if final_pressure_type and final_pressure_summary and pressure_derivation_fields:
         if pressure_type_status == "existing" and pressure_summary_status == "existing":
             public_prose_derivation_status = "existing_complete"
         elif "insufficient_source_support" not in {pressure_type_status, pressure_summary_status}:
             public_prose_derivation_status = "derived_complete"
-    elif derivation_fields:
+    elif pressure_derivation_fields:
         public_prose_derivation_status = "partial_derived_missing_fields"
     return {
         "pressure_signal": bool(row.get("pressure_signal")) or bool(evaluated.get("pressure_signal")) or pressure_required,
@@ -994,13 +1068,15 @@ def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) ->
         "affected_groups": affected_groups,
         "evidence_level": _nonempty(row.get("evidence_level") or evaluated.get("evidence_level")),
         "freshness_role": _nonempty(row.get("freshness_role") or evaluated.get("freshness_role")),
-        "source_role": _nonempty(row.get("source_role") or evaluated.get("source_role")),
+        "source_role": source_role or _nonempty(evaluated.get("source_role")),
         "evidence_text": evidence_text,
         "evidence_text_basis": basis if evidence_text else _nonempty(evaluated.get("evidence_text_basis")),
         "public_prose_derivation_status": public_prose_derivation_status,
         "public_prose_derivation_source_fields": derivation_fields,
         "pressure_summary_derivation_status": pressure_summary_status,
         "pressure_type_derivation_status": pressure_type_status,
+        "source_role_derivation_status": source_role_status,
+        "source_role_derivation_source_fields": source_role_fields,
     }
 
 
@@ -2769,6 +2845,8 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "public_prose_derivation_source_fields": ["pressure_evidence_summary"] if pressure_summary else [],
             "pressure_summary_derivation_status": "existing" if pressure_summary else "insufficient_source_support",
             "pressure_type_derivation_status": "existing" if _nonempty(record.get("pressure_type")) else "insufficient_source_support",
+            "source_role_derivation_status": "existing" if _nonempty(record.get("source_role")) else "insufficient_source_support",
+            "source_role_derivation_source_fields": ["source_role"] if _nonempty(record.get("source_role")) else [],
             "limitations": _nonempty(record.get("limitations")),
             "extraction_quality": _nonempty(record.get("extraction_quality")) or "manual_fallback",
             "reviewer_or_source_note": _nonempty(record.get("reviewer_or_source_note")),
@@ -2875,6 +2953,10 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     ]
     candidate["pressure_summary_derivation_status"] = _nonempty(candidate.get("pressure_summary_derivation_status"))
     candidate["pressure_type_derivation_status"] = _nonempty(candidate.get("pressure_type_derivation_status"))
+    candidate["source_role_derivation_status"] = _nonempty(candidate.get("source_role_derivation_status"))
+    candidate["source_role_derivation_source_fields"] = [
+        item for item in list(candidate.get("source_role_derivation_source_fields") or []) if _nonempty(item)
+    ]
     return candidate
 
 
@@ -3858,6 +3940,19 @@ def run_food_line_discovery_expansion(
             ).items()
         )
     )
+    source_role_derivation_status_counts = dict(
+        sorted(
+            Counter(
+                _nonempty(row.get("source_role_derivation_status")) or "insufficient_source_support"
+                for row in candidates
+            ).items()
+        )
+    )
+    source_role_counts = dict(
+        sorted(
+            Counter(_nonempty(row.get("source_role")) for row in candidates if _nonempty(row.get("source_role"))).items()
+        )
+    )
     public_eligible_blocked_by_title_count = sum(
         1
         for row in candidates
@@ -3991,6 +4086,8 @@ def run_food_line_discovery_expansion(
         "public_prose_derivation_status_counts": public_prose_derivation_status_counts,
         "pressure_summary_derivation_status_counts": pressure_summary_derivation_status_counts,
         "pressure_type_derivation_status_counts": pressure_type_derivation_status_counts,
+        "source_role_derivation_status_counts": source_role_derivation_status_counts,
+        "source_role_counts": source_role_counts,
         "title_extraction_methods": title_extraction_methods,
         "public_eligible_blocked_by_title_count": public_eligible_blocked_by_title_count,
         "public_eligible_blocked_by_missing_public_prose_count": public_eligible_blocked_by_missing_public_prose_count,

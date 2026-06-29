@@ -211,6 +211,19 @@ def _review_payload(
                 ).items()
             )
         ),
+        "source_role_derivation_status_counts": dict(
+            sorted(
+                Counter(
+                    str(row.get("source_role_derivation_status") or "insufficient_source_support")
+                    for row in candidates
+                ).items()
+            )
+        ),
+        "source_role_counts": dict(
+            sorted(
+                Counter(str(row.get("source_role") or "") for row in candidates if str(row.get("source_role") or "").strip()).items()
+            )
+        ),
         "public_eligible_blocked_by_title_count": sum(
             1
             for row in candidates
@@ -262,6 +275,8 @@ def _review_payload(
                 "public_prose_derivation_source_fields": list(row.get("public_prose_derivation_source_fields") or []),
                 "pressure_summary_derivation_status": str(row.get("pressure_summary_derivation_status") or ""),
                 "pressure_type_derivation_status": str(row.get("pressure_type_derivation_status") or ""),
+                "source_role_derivation_status": str(row.get("source_role_derivation_status") or ""),
+                "source_role_derivation_source_fields": list(row.get("source_role_derivation_source_fields") or []),
                 "traceability_status": str(row.get("traceability_status") or ""),
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
@@ -440,6 +455,26 @@ def run_food_line_discovery_backfill(
                         status
                         for row in per_date
                         for status, count in dict(row.get("pressure_type_derivation_status_counts") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
+            "source_role_derivation_status_counts": dict(
+                sorted(
+                    Counter(
+                        status
+                        for row in per_date
+                        for status, count in dict(row.get("source_role_derivation_status_counts") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
+            "source_role_counts": dict(
+                sorted(
+                    Counter(
+                        role
+                        for row in per_date
+                        for role, count in dict(row.get("source_role_counts") or {}).items()
                         for _ in range(int(count))
                     ).items()
                 )
@@ -1307,6 +1342,23 @@ def run_food_line_discovery_backfill(
                         Counter(
                             str(row.get("pressure_type_derivation_status") or "insufficient_source_support")
                             for row in typed_candidates
+                        ).items()
+                    )
+                ),
+                "source_role_derivation_status_counts": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("source_role_derivation_status") or "insufficient_source_support")
+                            for row in typed_candidates
+                        ).items()
+                    )
+                ),
+                "source_role_counts": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("source_role") or "").strip()
+                            for row in typed_candidates
+                            if str(row.get("source_role") or "").strip()
                         ).items()
                     )
                 ),

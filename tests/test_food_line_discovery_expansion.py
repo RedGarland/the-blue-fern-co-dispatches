@@ -1314,6 +1314,8 @@ def test_frac_style_candidate_derives_public_prose_from_source_evidence(tmp_path
     assert candidate["public_prose_derivation_status"] == "derived_complete"
     assert candidate["pressure_summary_derivation_status"] == "derived_from_title_and_source_text"
     assert candidate["pressure_type_derivation_status"] == "derived_from_selected_title"
+    assert candidate["source_role"] == "policy_analysis"
+    assert candidate["source_role_derivation_status"] == "derived_from_policy_source_text"
     assert "selected_title" in candidate["public_prose_derivation_source_fields"]
 
 
@@ -1383,7 +1385,7 @@ def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(t
         "pressure_type": "demand strain",
         "evidence_level": "news report",
         "freshness_role": "dated_recent_signal",
-        "source_role": "daily_signal",
+        "source_role": "local_news_report",
         "limitations": "Manual fallback example.",
         "extraction_quality": "manual_fallback",
         "reviewer_or_source_note": "Reviewed from source text.",
@@ -1417,7 +1419,82 @@ def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(t
     assert candidate["pressure_type"] == "demand strain"
     assert candidate["evidence_level"] == "news report"
     assert candidate["freshness_role"] == "dated_recent_signal"
-    assert candidate["source_role"] == "daily_signal"
+    assert candidate["source_role"] == "local_news_report"
+
+
+def test_resource_program_page_stays_resource_context(tmp_path: Path):
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "resource-test",
+            "discovered_publisher": "Example Resource Center",
+            "selected_title": "Find Food Near You",
+            "source_url": "https://example.org/programs/find-food",
+            "final_trace_url": "https://example.org/programs/find-food",
+            "classification_status": "context_only",
+            "fetch_status": "ok",
+            "summary_or_snippet": "Find food near you and learn about meal sites.",
+            "evidence_text": "Find food near you. Need help. Meal sites and programs.",
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-21")
+
+    assert candidate["source_role"] == "resource_context"
+    assert candidate["source_role_derivation_status"] == "derived_as_resource_context"
+    assert candidate["public_claim_eligible"] is False
+
+
+def test_local_news_article_derives_local_news_report(tmp_path: Path):
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "local-news-role",
+            "discovered_publisher": "Example Local News",
+            "selected_title": "Food pantry demand rises in Charlotte",
+            "source_url": "https://example.org/2026/06/21/food-pantry-demand-rises-charlotte",
+            "final_trace_url": "https://example.org/2026/06/21/food-pantry-demand-rises-charlotte",
+            "source_family": "local_news_direct_rss",
+            "discovery_lane": "news_article",
+            "classification_status": "qualified_pressure_signal",
+            "fetch_status": "ok",
+            "summary_or_snippet": "Food pantry demand rises in Charlotte.",
+            "evidence_text": "Food pantry demand rises in Charlotte as more families seek help.",
+            "affected_groups": ["families"],
+            "evidence_level": "news report",
+            "freshness_role": "fresh_daily_signal",
+            "pressure_type": "food bank demand pressure",
+            "pressure_summary": "Example Local News reported rising food pantry demand in Charlotte.",
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-21")
+
+    assert candidate["source_role"] == "local_news_report"
+    assert candidate["source_role_derivation_status"] == "derived_from_source_family"
+
+
+def test_public_radio_article_derives_public_radio_report(tmp_path: Path):
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "public-radio-role",
+            "discovered_publisher": "NPR National Desk",
+            "selected_title": "Food bank demand rises across the region",
+            "source_url": "https://www.npr.org/2026/06/21/1234567890/food-bank-demand-rises",
+            "final_trace_url": "https://www.npr.org/2026/06/21/1234567890/food-bank-demand-rises",
+            "source_family": "public_radio",
+            "discovery_lane": "public_radio",
+            "classification_status": "qualified_pressure_signal",
+            "fetch_status": "ok",
+            "summary_or_snippet": "Food bank demand rises across the region.",
+            "evidence_text": "Food bank demand rises across the region as more households seek help.",
+            "affected_groups": ["households"],
+            "evidence_level": "news report",
+            "freshness_role": "fresh_daily_signal",
+            "pressure_type": "food bank demand pressure",
+            "pressure_summary": "NPR reported rising food bank demand across the region.",
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-21")
+
+    assert candidate["source_role"] == "public_radio_report"
+    assert candidate["source_role_derivation_status"] == "derived_from_discovery_lane"
 
 
 def test_direct_rss_item_with_article_url_becomes_traceable(tmp_path: Path):

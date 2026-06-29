@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 
 import scripts.check_food_line_blue_fern_compliance as food_line_compliance
 import scripts.discover_food_line_sources as food_line_discovery
+import scripts.publish_food_line_review_only as food_line_review_publish
 import scripts.run_food_line_dispatch as food_line
 import bluefern_dispatches.bluesky_post as bluesky_post
 import scripts.test_food_line_tts as food_line_tts
@@ -393,6 +394,17 @@ def _write_review_only_candidate_review(root: Path, date: str, candidates: list[
     }
     review_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return review_path
+
+
+def _build_review_only_render_dir(root: Path, date: str, candidates: list[dict]) -> Path:
+    review_path = _write_review_only_candidate_review(root, date, candidates)
+    food_line.render_food_line_review_only(
+        root,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+    )
+    return root / "output" / "site-review-only" / "food-line" / "editions" / date
 
 
 def test_food_line_manual_source_file_includes_wkrn_policy_access_signal():
@@ -4746,6 +4758,249 @@ def test_food_line_claim_interpretation_preserves_local_strain_wording():
     }
     interpretation = food_line._food_line_claim_interpretation(row)
     assert interpretation == "This points to pantry supply strain in Horry County."
+
+
+def test_food_line_review_only_publish_dry_run_makes_no_mutations(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+    )
+
+    assert result["ok"] is True
+    assert result["dry_run"] is True
+    assert result["copied_targets"] == []
+    assert result["production_output_mutated"] is False
+    assert result["pages_repo_mutated"] is False
+    assert "archive" in result["validation_checks"]["archive_homepage_rss_podcast_impacts"]
+    assert not (tmp_path / "output" / "site" / "food-line" / "editions" / date).exists()
+    assert not (tmp_path / "bluefern-dispatches-pages" / "food-line" / "editions" / date).exists()
+
+
+def test_food_line_review_only_publish_missing_manifest_fails(tmp_path: Path):
+    edition_dir = tmp_path / "output" / "site-review-only" / "food-line" / "editions" / "2026-06-12"
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("index.html", "source_table.html", "claim_ledger.html"):
+        (edition_dir / name).write_text("<html></html>", encoding="utf-8")
+    with pytest.raises(ValueError, match="missing required files"):
+        food_line_review_publish.publish_review_only_render(
+            root=tmp_path,
+            date="2026-06-12",
+            review_render_dir=edition_dir,
+        )
+
+
+def test_food_line_review_only_publish_wrong_render_mode_fails(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    manifest_path = render_dir / "review_render_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["render_mode"] = "current_update"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+    )
+    assert result["ok"] is False
+    assert any("render_mode must be review_only" in error for error in result["errors"])
+
+
+def test_food_line_review_only_publish_date_mismatch_fails(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        "2026-06-12",
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date="2026-06-13",
+        review_render_dir=render_dir,
+    )
+    assert result["ok"] is False
+    assert any("edition_date 2026-06-12 does not match 2026-06-13" in error for error in result["errors"])
+
+
+def test_food_line_review_only_publish_leak_content_fails(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    index_path = render_dir / "index.html"
+    index_path.write_text(index_path.read_text(encoding="utf-8") + "<p>WPDE / ABC 15</p>", encoding="utf-8")
+
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+    )
+    assert result["ok"] is False
+    assert any("out-of-scope leak content" in error for error in result["errors"])
+
+
+def test_food_line_review_only_publish_valid_frac_review_render_passes_validation(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+    )
+    assert result["ok"] is True
+    assert result["validation_checks"]["expected_source_url"] == "https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children"
+    assert result["validation_checks"]["expected_source_url_in_all_rendered_files"] is True
+    assert result["validation_checks"]["leak_hits"] == []
+
+
+def test_food_line_review_only_publish_to_output_site_copies_only_edition_dir(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+        publish_to_output_site=True,
+    )
+
+    target = tmp_path / "output" / "site" / "food-line" / "editions" / date
+    assert result["ok"] is True
+    assert result["dry_run"] is False
+    assert result["production_output_mutated"] is True
+    assert result["pages_repo_mutated"] is False
+    assert target.exists()
+    assert (target / "index.html").exists()
+    assert not (tmp_path / "output" / "site" / "food-line" / "archive.html").exists()
+    assert not (tmp_path / "output" / "site" / "food-line" / "podcast.xml").exists()
+
+
+def test_food_line_review_only_publish_to_pages_copies_only_edition_dir_without_commit_or_push(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    render_dir = _build_review_only_render_dir(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+
+    result = food_line_review_publish.publish_review_only_render(
+        root=tmp_path,
+        date=date,
+        review_render_dir=render_dir,
+        publish_to_pages=True,
+        pages_repo=pages_repo,
+    )
+
+    target = pages_repo / "food-line" / "editions" / date
+    assert result["ok"] is True
+    assert result["dry_run"] is False
+    assert result["production_output_mutated"] is False
+    assert result["pages_repo_mutated"] is True
+    assert result["committed"] is False
+    assert result["pushed"] is False
+    assert target.exists()
+    assert (target / "claim_ledger.html").exists()
+    assert not (pages_repo / "food-line" / "archive.html").exists()
 
 
 def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):

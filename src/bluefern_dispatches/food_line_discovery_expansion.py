@@ -311,7 +311,7 @@ def _extract_source_date(value: str) -> str:
         re.sub(r"^[A-Za-z]{3},\s*", "", text),
         re.sub(r"\s+[A-Z]{2,5}$", "", re.sub(r"^[A-Za-z]{3},\s*", "", text)),
     ):
-        for fmt in ("%d %b %Y %H:%M:%S", "%d %b %Y %H:%M", "%d %b %Y", "%b %d, %Y"):
+        for fmt in ("%d %b %Y %H:%M:%S", "%d %b %Y %H:%M", "%d %b %Y", "%b %d, %Y", "%B %d, %Y", "%B %d %Y"):
             try:
                 return datetime.strptime(candidate_text.strip(), fmt).date().isoformat()
             except Exception:  # noqa: BLE001
@@ -423,7 +423,12 @@ def _date_match_sort_key(date_match_status: str, date_distance_days: int | None,
         "outside_query_window": 2,
         "missing_date": 3,
     }.get(date_match_status, 4)
-    basis_rank = {
+    basis_rank = _date_basis_rank(date_basis)
+    return status_rank, date_distance_days if date_distance_days is not None else 99999, basis_rank
+
+
+def _date_basis_rank(date_basis: str) -> int:
+    return {
         "feed_published": 0,
         "feed_updated": 1,
         "page_meta_date": 2,
@@ -431,7 +436,6 @@ def _date_match_sort_key(date_match_status: str, date_distance_days: int | None,
         "url_date": 4,
         "missing": 5,
     }.get(date_basis, 6)
-    return status_rank, date_distance_days if date_distance_days is not None else 99999, basis_rank
 
 
 def _is_homepage_only_url(url: str) -> bool:
@@ -817,6 +821,7 @@ def build_food_line_discovery_query_plan(
                     or (1 if discovery_channel == "direct_page" else 2)
                 ),
                 "direct_lane_candidate_cap": int(direct_source.get("direct_lane_candidate_cap") or 0),
+                "historical_capable": bool(direct_source.get("historical_capable", False)),
                 "notes": _nonempty(direct_source.get("notes")),
             }
         )
@@ -1135,6 +1140,24 @@ def _is_document_specific_url(url: str) -> bool:
     return any(path.endswith(ext) for ext in (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"))
 
 
+def _extract_listing_context_date(text: str, start: int, end: int) -> str:
+    before = text[max(0, start - 200) : start]
+    after = text[end : min(len(text), end + 80)]
+    before_matches = list(
+        re.finditer(
+            r"\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|"
+            r"sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+\d{1,2},\s+\d{4}\b",
+            before,
+            re.IGNORECASE,
+        )
+    )
+    if before_matches:
+        candidate = _extract_source_date(before_matches[-1].group(0))
+        if candidate:
+            return candidate
+    return _extract_page_body_date(after.encode("utf-8"))
+
+
 def _extract_listing_links(
     payload: bytes,
     *,
@@ -1160,14 +1183,17 @@ def _extract_listing_links(
         title = re.sub(r"\s+", " ", html.unescape(label)).strip()
         if not title:
             title = normalized_href.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ")
+        contextual_date = _extract_listing_context_date(text, match.start(), match.end())
         rows.append(
             {
                 "title": title[:240],
                 "link": normalized_href,
                 "description": "",
                 "pubDate": "",
+                "published_date": contextual_date,
                 "source_url": normalized_href,
                 "source_name": source_name,
+                "date_basis_hint": "page_body_date" if contextual_date else "",
             }
         )
         seen.add(normalized_href)
@@ -1894,6 +1920,10 @@ def run_food_line_discovery_expansion(
     direct_candidates_by_date_basis: Counter[str] = Counter()
     direct_sources_with_in_window_items: set[str] = set()
     direct_sources_with_no_in_window_items: set[str] = set()
+    historical_source_names: set[str] = set()
+    historical_sources_with_exact_date_items: set[str] = set()
+    historical_sources_with_url_date_items: set[str] = set()
+    historical_sources_with_page_body_date_items: set[str] = set()
     in_window_direct_candidate_count = 0
     out_of_window_direct_candidate_count = 0
     missing_date_direct_candidate_count = 0
@@ -1948,6 +1978,8 @@ def run_food_line_discovery_expansion(
             query_url = _nonempty(query_row.get("direct_source_feed_url") or query_row.get("direct_source_url"))
             items, direct_meta = _collect_direct_source_items(fetch, query_row)
             source_name = _nonempty(query_row.get("direct_source_name"))
+            if bool(query_row.get("historical_capable")) and source_name:
+                historical_source_names.add(source_name)
             lane = _effective_lane(query_row)
             result_row["query_url"] = query_url
             result_row["query_error"] = _nonempty(direct_meta.get("error"))
@@ -2011,7 +2043,8 @@ def run_food_line_discovery_expansion(
         if discovery_channel != "google_news_rss":
             ranked_direct_items: list[dict[str, Any]] = []
             source_has_in_window_item = False
-            for item in rss_items:
+            historical_prefetch_cap = 5
+            for index, item in enumerate(rss_items):
                 item_copy = dict(item)
                 source_published_date = _extract_source_date(_nonempty(item.get("pubDate")))
                 date_basis = "feed_published" if source_published_date else "missing"
@@ -2019,6 +2052,30 @@ def run_food_line_discovery_expansion(
                     source_published_date = _extract_source_date(_nonempty(item.get("updated")))
                     if source_published_date:
                         date_basis = "feed_updated"
+                if (
+                    not source_published_date
+                    and bool(query_row.get("historical_capable"))
+                    and discovery_channel == "direct_page"
+                    and index < historical_prefetch_cap
+                ):
+                    prefetched_payload, prefetched_error, _ = _fetch_url_with_metadata(fetch, _nonempty(item.get("link")))
+                    if prefetched_payload and not prefetched_error:
+                        prefetched_date, prefetched_basis = _extract_page_published_date_info(
+                            prefetched_payload,
+                            _normalize_url(_nonempty(item.get("link"))),
+                        )
+                        if prefetched_date:
+                            item_copy["published_date"] = prefetched_date
+                            item_copy["date_basis_hint"] = prefetched_basis
+                if not source_published_date:
+                    hinted_date = _extract_source_date(_nonempty(item.get("published_date") or item.get("pubDate")))
+                    hinted_basis = _nonempty(item.get("date_basis_hint"))
+                    if not hinted_date:
+                        hinted_date = _extract_source_date(_nonempty(item_copy.get("published_date")))
+                        hinted_basis = _nonempty(item_copy.get("date_basis_hint"))
+                    if hinted_date:
+                        source_published_date = hinted_date
+                        date_basis = hinted_basis or "page_body_date"
                 if not source_published_date:
                     inferred_url = _normalize_url(_nonempty(item.get("link")) or _nonempty(item.get("source_url")))
                     source_published_date = _extract_url_date(inferred_url)
@@ -2037,6 +2094,13 @@ def run_food_line_discovery_expansion(
                 item_copy["_date_basis"] = date_basis
                 item_copy["_date_distance_days"] = _date_distance_days(date_text, source_published_date)
                 ranked_direct_items.append(item_copy)
+                if bool(query_row.get("historical_capable")) and source_name:
+                    if match_status == "exact_date":
+                        historical_sources_with_exact_date_items.add(source_name)
+                    if date_basis == "url_date":
+                        historical_sources_with_url_date_items.add(source_name)
+                    if date_basis == "page_body_date":
+                        historical_sources_with_page_body_date_items.add(source_name)
             ranked_direct_items.sort(
                 key=lambda item: (
                     _date_match_sort_key(
@@ -2226,12 +2290,14 @@ def run_food_line_discovery_expansion(
                 if inferred_url:
                     source_published_date = inferred_url
                     date_basis = "url_date"
-            if not source_published_date:
-                source_published_date = page_published_date
-                date_basis = page_date_basis if source_published_date else "missing"
-            elif date_basis == "url_date" and page_published_date:
+            if page_published_date and (
+                not source_published_date or _date_basis_rank(page_date_basis) < _date_basis_rank(date_basis)
+            ):
                 source_published_date = page_published_date
                 date_basis = page_date_basis
+            elif not source_published_date:
+                source_published_date = page_published_date
+                date_basis = page_date_basis if source_published_date else "missing"
             date_distance_days = _date_distance_days(date_text, source_published_date)
             date_match_status = _date_match_status(
                 date_text,
@@ -2584,6 +2650,11 @@ def run_food_line_discovery_expansion(
         "direct_candidates_by_date_basis": dict(sorted(direct_candidates_by_date_basis.items())),
         "direct_sources_with_no_in_window_items": sorted(direct_sources_with_no_in_window_items),
         "direct_sources_with_in_window_items": sorted(direct_sources_with_in_window_items),
+        "historical_source_count": len(historical_source_names),
+        "historical_sources": sorted(historical_source_names),
+        "historical_sources_with_exact_date_items": sorted(historical_sources_with_exact_date_items),
+        "historical_sources_with_url_date_items": sorted(historical_sources_with_url_date_items),
+        "historical_sources_with_page_body_date_items": sorted(historical_sources_with_page_body_date_items),
         "public_eligible_candidate_count": public_eligible_candidate_count,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
@@ -2666,6 +2737,10 @@ def run_food_line_discovery_expansion(
             f"- Direct source successes by source: `{audit_summary['direct_source_success_by_source']}`",
             f"- Direct source item counts: `{audit_summary['direct_source_item_counts']}`",
             f"- Direct source zero-item sources: `{audit_summary['direct_source_zero_item_sources']}`",
+            f"- Historical direct sources: `{audit_summary['historical_sources']}`",
+            f"- Historical direct sources with exact-date items: `{audit_summary['historical_sources_with_exact_date_items']}`",
+            f"- Historical direct sources with URL-date items: `{audit_summary['historical_sources_with_url_date_items']}`",
+            f"- Historical direct sources with page-body-date items: `{audit_summary['historical_sources_with_page_body_date_items']}`",
             f"- Disabled direct sources: `{disabled_direct_sources}`",
             f"- Recommended direct-source disables: `{direct_sources_recommended_for_disable}`",
             f"- Recommended direct-source URL refreshes: `{direct_sources_recommended_for_url_refresh}`",

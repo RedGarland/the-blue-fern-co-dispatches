@@ -6222,6 +6222,32 @@ def test_food_line_dispatch_refreshes_historical_source_tables(tmp_path: Path):
     assert 'src="../../assets/food-line-logo.png"' in source_table_html
 
 
+def test_food_line_dispatch_reads_historical_discovery_audit_fields(tmp_path: Path):
+    audit_dir = tmp_path / "output" / "review" / "food-line" / "2026-06-19"
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    (audit_dir / "discovery_audit.json").write_text(
+        json.dumps(
+            {
+                "discovery_confidence": "limited",
+                "historical_source_count": 2,
+                "historical_sources": ["Archive One", "Archive Two"],
+                "historical_sources_with_exact_date_items": ["Archive One"],
+                "no_current_update": True,
+                "no_current_update_reason": "Historical archives yielded only one exact-date item.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    audit = food_line._food_line_discovery_expansion_audit(tmp_path, "2026-06-19")
+
+    assert audit["historical_source_count"] == 2
+    assert audit["historical_sources"] == ["Archive One", "Archive Two"]
+    assert audit["historical_sources_with_exact_date_items"] == ["Archive One"]
+    assert audit["no_current_update"] is True
+
+
 def test_food_line_blue_fern_compliance_report_is_written(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-04"

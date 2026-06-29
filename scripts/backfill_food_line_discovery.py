@@ -329,6 +329,11 @@ def run_food_line_discovery_backfill(
             "direct_candidates_by_date_basis": dict(sorted(Counter({}).items())),
             "direct_sources_with_no_in_window_items": sorted({}),
             "direct_sources_with_in_window_items": sorted({}),
+            "historical_source_count": 0,
+            "historical_sources": sorted({}),
+            "historical_sources_with_exact_date_items": sorted({}),
+            "historical_sources_with_url_date_items": sorted({}),
+            "historical_sources_with_page_body_date_items": sorted({}),
             "dominant_source_warning": "; ".join(sorted({str(row.get("dominant_source_warning") or "").strip() for row in per_date if str(row.get("dominant_source_warning") or "").strip()})),
             "google_news_url_count": sum(int(row.get("google_news_url_count", 0)) for row in per_date),
             "google_news_resolution_attempt_count": sum(int(row.get("google_news_resolution_attempt_count", 0)) for row in per_date),
@@ -534,6 +539,39 @@ def run_food_line_discovery_backfill(
                 if str(source_name).strip()
             }
         )
+        summary["historical_sources"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("historical_sources") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["historical_source_count"] = len(summary["historical_sources"])
+        summary["historical_sources_with_exact_date_items"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("historical_sources_with_exact_date_items") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["historical_sources_with_url_date_items"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("historical_sources_with_url_date_items") or [])
+                if str(source_name).strip()
+            }
+        )
+        summary["historical_sources_with_page_body_date_items"] = sorted(
+            {
+                source_name
+                for row in per_date
+                for source_name in (row.get("historical_sources_with_page_body_date_items") or [])
+                if str(source_name).strip()
+            }
+        )
         summary["dates_with_no_in_window_direct_candidates"] = sorted(
             {row["date"] for row in per_date if int(row.get("in_window_direct_candidate_count", 0)) <= 0}
         )
@@ -634,6 +672,11 @@ def run_food_line_discovery_backfill(
                     "direct_candidates_by_date_basis": {},
                     "direct_sources_with_no_in_window_items": [],
                     "direct_sources_with_in_window_items": [],
+                    "historical_source_count": 0,
+                    "historical_sources": [],
+                    "historical_sources_with_exact_date_items": [],
+                    "historical_sources_with_url_date_items": [],
+                    "historical_sources_with_page_body_date_items": [],
                     "dominant_source_warning": "",
                     "only_out_of_window_candidates": False,
                     "only_context_candidates": False,
@@ -702,6 +745,10 @@ def run_food_line_discovery_backfill(
         direct_candidates_by_date_basis = dict(audit.get("direct_candidates_by_date_basis") or {})
         direct_sources_with_no_in_window_items = list(audit.get("direct_sources_with_no_in_window_items") or [])
         direct_sources_with_in_window_items = list(audit.get("direct_sources_with_in_window_items") or [])
+        historical_sources = list(audit.get("historical_sources") or [])
+        historical_sources_with_exact_date_items = list(audit.get("historical_sources_with_exact_date_items") or [])
+        historical_sources_with_url_date_items = list(audit.get("historical_sources_with_url_date_items") or [])
+        historical_sources_with_page_body_date_items = list(audit.get("historical_sources_with_page_body_date_items") or [])
         dominant_source_warning = str(audit.get("dominant_source_warning") or "").strip()
         for row in typed_candidates:
             lane = str(row.get("discovery_lane") or "").strip()
@@ -813,6 +860,11 @@ def run_food_line_discovery_backfill(
                 "direct_candidates_by_date_basis": direct_candidates_by_date_basis,
                 "direct_sources_with_no_in_window_items": direct_sources_with_no_in_window_items,
                 "direct_sources_with_in_window_items": direct_sources_with_in_window_items,
+                "historical_source_count": int(audit.get("historical_source_count", len(historical_sources))),
+                "historical_sources": historical_sources,
+                "historical_sources_with_exact_date_items": historical_sources_with_exact_date_items,
+                "historical_sources_with_url_date_items": historical_sources_with_url_date_items,
+                "historical_sources_with_page_body_date_items": historical_sources_with_page_body_date_items,
                 "dominant_source_warning": dominant_source_warning,
                 "watchlist_candidate_count": int(review_counts.get("watchlist", 0)),
                 "rejected_candidate_count": int(review_counts.get("rejected", 0)),

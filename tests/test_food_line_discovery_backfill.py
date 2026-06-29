@@ -296,6 +296,7 @@ def test_food_line_discovery_backfill_reports_direct_date_targeting_diagnostics(
                 "allowed_domains": ["example.org"],
                 "geographic_scope": "national",
                 "enabled": True,
+                "historical_capable": True,
                 "direct_source_candidate_cap": 1,
                 "max_age_days": 30,
                 "pressure_terms": ["food pantry", "demand"],
@@ -379,6 +380,11 @@ def test_food_line_discovery_backfill_reports_direct_date_targeting_diagnostics(
     assert summary["dates_with_no_in_window_direct_candidates"] == ["2026-06-22"]
     assert summary["dates_where_out_of_window_filled_cap"] == ["2026-06-22"]
     assert summary["direct_sources_with_in_window_items"] == ["Historical Feed"]
+    assert summary["historical_source_count"] == 1
+    assert summary["historical_sources"] == ["Historical Feed"]
+    assert summary["historical_sources_with_exact_date_items"] == ["Historical Feed"]
+    assert summary["historical_sources_with_url_date_items"] == []
+    assert summary["historical_sources_with_page_body_date_items"] == []
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()

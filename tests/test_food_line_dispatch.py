@@ -341,6 +341,60 @@ def _wkrn_policy_access_source() -> dict:
     }
 
 
+def _review_only_candidate(
+    *,
+    title: str,
+    publisher: str,
+    source_url: str,
+    source_published_date: str = "2026-06-12",
+    pressure_summary: str = "",
+    pressure_type: str = "",
+    affected_groups: list[str] | None = None,
+    evidence_level: str = "background context",
+    freshness_role: str = "fresh_daily_signal",
+    source_role: str = "policy_analysis",
+    public_claim_eligible: bool = True,
+    public_claim_blockers: list[str] | None = None,
+    candidate_review_status: str = "approved",
+    location_scope: str = "national",
+    pressure_signal_hint: str = "",
+    classification_status: str = "qualified_pressure_signal",
+) -> dict:
+    return {
+        "title": title,
+        "publisher": publisher,
+        "source_url": source_url,
+        "source_published_date": source_published_date,
+        "pressure_summary": pressure_summary,
+        "pressure_type": pressure_type,
+        "affected_groups": list(affected_groups or []),
+        "evidence_level": evidence_level,
+        "freshness_role": freshness_role,
+        "source_role": source_role,
+        "public_claim_eligible": public_claim_eligible,
+        "public_claim_blockers": list(public_claim_blockers or []),
+        "candidate_review_status": candidate_review_status,
+        "traceability_status": "traceable",
+        "location_scope": location_scope,
+        "pressure_signal_hint": pressure_signal_hint,
+        "classification_status": classification_status,
+    }
+
+
+def _write_review_only_candidate_review(root: Path, date: str, candidates: list[dict]) -> Path:
+    review_path = root / "output" / "review" / "food-line" / date / "candidate_review.json"
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "generated_at": "2026-06-29T00:00:00Z",
+        "edition_date": date,
+        "public_claim_eligible_count": sum(1 for row in candidates if bool(row.get("public_claim_eligible"))),
+        "candidate_count_total": len(candidates),
+        "candidates": candidates,
+    }
+    review_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return review_path
+
+
 def test_food_line_manual_source_file_includes_wkrn_policy_access_signal():
     manual_sources = json.loads(_manual_path(Path.cwd(), "2026-06-12").read_text(encoding="utf-8"))
     row = next(item for item in manual_sources if item["source_record_id"] == "wkrn-tennessee-snap-enrollment-drop-20260612")
@@ -4476,6 +4530,164 @@ def test_food_line_candidate_review_artifact_and_manifest_include_classification
     assert manifest["candidate_count_watchlist"] == 1
     assert manifest["public_claim_eligible_count"] == 1
     assert manifest["intake_broadened"] is True
+
+
+def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children - Food Research & Action Center",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+    manual_path = _manual_path(tmp_path, date)
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(json.dumps([_wpde_manual_source(), _tulsa_manual_source(), _wkrn_policy_access_source()], indent=2), encoding="utf-8")
+
+    result = food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+    )
+
+    edition_dir = tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    source_table_html = (edition_dir / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (edition_dir / "claim_ledger.html").read_text(encoding="utf-8")
+    manifest = json.loads((edition_dir / "review_render_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["render_mode"] == "review_only"
+    assert result["source_count"] == 1
+    assert result["public_eligible_candidate_count"] == 1
+    assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
+    assert "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children" in source_table_html
+    assert "FRAC News" in claim_ledger_html
+    assert "WPDE / ABC 15" not in edition_html
+    assert "Tulsa Flyer" not in edition_html
+    assert "WKRN" not in edition_html
+    assert "WPDE / ABC 15" not in source_table_html
+    assert "Tulsa Flyer" not in claim_ledger_html
+    assert manifest["lead_source_role"] == "policy_analysis"
+    assert manifest["lead_pressure_type"] == "SNAP policy pressure"
+    assert manifest["lead_source_published_date"] == "2026-06-12"
+    assert manifest["production_output_mutated"] is False
+    assert manifest["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site" / "food-line").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_review_only_render_public_eligible_only_excludes_blocked_records(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC eligible article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/eligible",
+                pressure_summary="FRAC warned that a USDA proposal would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+            ),
+            _review_only_candidate(
+                title="Homepage block",
+                publisher="FAO",
+                source_url="https://www.fao.org/",
+                pressure_summary="",
+                pressure_type="",
+                public_claim_eligible=False,
+                public_claim_blockers=["homepage_or_landing_url", "missing_public_prose_fields"],
+                candidate_review_status="rejected",
+                source_role="resource_context",
+                pressure_signal_hint="food insecurity",
+            ),
+        ],
+    )
+
+    result = food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+    )
+
+    edition_html = (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    assert result["source_count"] == 1
+    assert "FRAC eligible article" in edition_html
+    assert "Homepage block" not in edition_html
+
+
+def test_food_line_review_only_render_fails_closed_for_missing_or_zero_public_eligible(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    missing_path = tmp_path / "output" / "review" / "food-line" / "2026-06-12" / "candidate_review.json"
+    with pytest.raises(ValueError, match="candidate review file not found"):
+        food_line.render_food_line_review_only(tmp_path, date="2026-06-12", candidate_review_path=missing_path, public_eligible_only=True)
+
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        "2026-06-12",
+        [
+            _review_only_candidate(
+                title="Blocked review row",
+                publisher="FRAC News",
+                source_url="https://frac.org/action",
+                public_claim_eligible=False,
+                public_claim_blockers=["rejected_action_link"],
+                candidate_review_status="rejected",
+                source_role="resource_context",
+                pressure_signal_hint="food insecurity",
+            )
+        ],
+    )
+    with pytest.raises(ValueError, match="zero public-eligible candidates"):
+        food_line.render_food_line_review_only(tmp_path, date="2026-06-12", candidate_review_path=review_path, public_eligible_only=True)
+
+
+def test_food_line_review_only_render_preserves_source_backed_attribution(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-12"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="FRAC policy article",
+                publisher="FRAC News",
+                source_url="https://frac.org/blog/policy",
+                pressure_summary="FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                pressure_type="SNAP policy pressure",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_analysis",
+            ),
+        ],
+    )
+
+    food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+    )
+
+    edition_html = (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
+    assert "was enacted" not in edition_html
+    assert "benefit cuts occurred" not in edition_html
+    assert "measured hunger increased" not in edition_html
 
 
 def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):

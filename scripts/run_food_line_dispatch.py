@@ -637,6 +637,13 @@ def _food_line_assets(root: Path, warnings: list[str], wrote: list[str]) -> None
         _copy_asset(source_root / asset, food_assets / asset, warnings, wrote)
 
 
+def _food_line_assets_to_output_root(root: Path, output_root: Path, warnings: list[str], wrote: list[str]) -> None:
+    source_root = root / "assets"
+    output_assets = output_root / "assets"
+    for asset in ("site.css", "bluefern.png", FOOD_LINE_LOGO_ASSET):
+        _copy_asset(source_root / asset, output_assets / asset, warnings, wrote)
+
+
 def _food_line_logo_html(size_class: str, asset_prefix: str) -> str:
     return f'<img class="hero-logo food-line-logo {size_class}" src="{asset_prefix}{FOOD_LINE_LOGO_ASSET}" alt="{html.escape(DISPATCH_DISPLAY_NAME)}">'
 
@@ -4701,6 +4708,245 @@ def _read_food_line_discovery_intake_review(path: Path) -> dict[str, Any]:
         return {}
     payload = _read_json(path)
     return payload if isinstance(payload, dict) else {}
+
+
+def _food_line_review_candidate_rows(path: Path) -> list[dict[str, Any]]:
+    payload = _read_json(path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"candidate review file must be an object: {path}")
+    candidates = payload.get("candidates")
+    if not isinstance(candidates, list):
+        raise ValueError(f"candidate review file must contain a 'candidates' list: {path}")
+    rows = [row for row in candidates if isinstance(row, dict)]
+    if len(rows) != len(candidates):
+        raise ValueError(f"candidate review file contains non-object candidate rows: {path}")
+    return rows
+
+
+def _food_line_review_candidate_source_family(row: dict[str, Any]) -> str:
+    explicit = str(row.get("source_family") or row.get("candidate_source_family") or "").strip().lower()
+    if explicit:
+        return explicit
+    source_role = str(row.get("source_role") or "").strip().lower()
+    publisher = str(row.get("publisher") or "").strip().lower()
+    if source_role == "policy_analysis":
+        return "policy_research"
+    if source_role == "institutional_report":
+        return "policy_research"
+    if source_role == "local_news_report":
+        return "local_news"
+    if source_role == "public_radio_report":
+        return "public_radio"
+    if source_role == "food_bank_update":
+        return "food_bank_provider"
+    if source_role == "resource_context":
+        return "food_bank_provider"
+    if "radio" in publisher or "npr" in publisher or "pbs" in publisher:
+        return "public_radio"
+    if any(token in publisher for token in ("news", "times", "tribune", "post", "herald", "journal", "flyer", "wkrn", "wpde", "abc", "nbc", "cbs", "fox")):
+        return "local_news"
+    return "policy_research"
+
+
+def _food_line_review_candidate_map_category(row: dict[str, Any]) -> str:
+    explicit = str(row.get("map_category") or "").strip()
+    if explicit:
+        return explicit
+    pressure_type = str(row.get("pressure_type") or "").strip().lower()
+    if "snap" in pressure_type or "benefit" in pressure_type:
+        return "benefit disruption"
+    if "school meal" in pressure_type or "child" in pressure_type:
+        return "summer meal / child nutrition"
+    if "food bank" in pressure_type or "emergency food" in pressure_type:
+        return "acute strain / service disruption"
+    if "afford" in pressure_type or "demand" in pressure_type:
+        return "elevated demand"
+    return "context / monitoring only"
+
+
+def _food_line_review_candidate_row(
+    row: dict[str, Any],
+    *,
+    edition_date: str,
+    index: int,
+) -> dict[str, Any]:
+    source_url = str(row.get("source_url") or row.get("url") or row.get("original_source_url") or "").strip()
+    title = str(row.get("selected_title") or row.get("title") or "").strip()
+    publisher = str(row.get("publisher") or "").strip()
+    source_role = str(row.get("source_role") or "resource_context").strip()
+    location_scope = str(row.get("location_scope") or "national").strip()
+    source_published_date = str(row.get("source_published_date") or row.get("date") or edition_date).strip()
+    pressure_summary = str(row.get("pressure_summary") or "").strip()
+    pressure_type = str(row.get("pressure_type") or "").strip()
+    pressure_signal_hint = str(row.get("pressure_signal_hint") or "").strip()
+    affected_groups = [str(item).strip() for item in list(row.get("affected_groups") or []) if str(item).strip()]
+    evidence_level = str(row.get("evidence_level") or "").strip() or "background context"
+    freshness_role = str(row.get("freshness_role") or "").strip() or "fresh_daily_signal"
+    public_claim_eligible = bool(row.get("public_claim_eligible"))
+    blockers = [str(item).strip() for item in list(row.get("public_claim_blockers") or []) if str(item).strip()]
+    pressure_signal = bool(public_claim_eligible or pressure_summary or pressure_type or pressure_signal_hint)
+    summary_text = pressure_summary or pressure_signal_hint or title
+    traceability_status = str(row.get("traceability_status") or "").strip() or ("traceable" if source_url else "missing_url")
+    return {
+        "source_record_id": str(row.get("source_record_id") or f"food-line-review-{edition_date}-{index:03d}"),
+        "title": title,
+        "publisher": publisher,
+        "url": source_url,
+        "primary_source_url": source_url,
+        "source_traceability_role": "article_url" if source_url else "",
+        "source_family": _food_line_review_candidate_source_family(row),
+        "location_scope": location_scope,
+        "location_name": str(row.get("location_name") or row.get("state_hint") or ("United States" if location_scope == "national" else "")).strip(),
+        "state": str(row.get("state") or row.get("state_hint") or "").strip(),
+        "map_category": _food_line_review_candidate_map_category(row),
+        "summary_or_snippet": summary_text,
+        "evidence_text": summary_text,
+        "evidence_text_basis": "candidate_review",
+        "source_type": "review_candidate",
+        "source_purpose": "review_candidate",
+        "source_published_date": source_published_date,
+        "published_at": source_published_date,
+        "retrieved_at": str(row.get("generated_at") or row.get("retrieved_at") or "").strip(),
+        "pressure_signal": pressure_signal,
+        "pressure_type": pressure_type,
+        "pressure_summary": pressure_summary,
+        "pressure_signal_hint": pressure_signal_hint,
+        "pressure_verification_status": "source_text_verified" if pressure_summary or pressure_type else "review_candidate_only",
+        "affected_groups": affected_groups,
+        "evidence_level": evidence_level,
+        "freshness_role": freshness_role,
+        "freshness_status": freshness_role,
+        "source_freshness_status": freshness_role,
+        "source_freshness_date_basis": str(row.get("date_basis") or "source_published_date"),
+        "source_public_story_eligible": public_claim_eligible,
+        "primary_eligible": public_claim_eligible,
+        "primary_disqualification_reason": "" if public_claim_eligible else ", ".join(blockers[:3]),
+        "public_claim_eligible": public_claim_eligible,
+        "public_claim_blockers": blockers,
+        "review_status": str(row.get("candidate_review_status") or row.get("review_status") or "").strip(),
+        "traceability_status": traceability_status,
+        "source_role": source_role,
+        "supported_product_geography": True,
+        "map_eligible": public_claim_eligible,
+        "classification_status": str(row.get("classification_status") or "").strip(),
+        "claim_supported": pressure_summary,
+        "limitations": str(row.get("limitations") or "").strip(),
+    }
+
+
+def render_food_line_review_only(
+    root: Path,
+    *,
+    date: str,
+    candidate_review_path: Path,
+    public_eligible_only: bool = False,
+    output_root: Path | None = None,
+) -> dict[str, Any]:
+    edition_date = validate_date(date)
+    review_path = candidate_review_path.resolve()
+    if not review_path.exists():
+        raise ValueError(f"candidate review file not found: {review_path}")
+    candidate_rows = _food_line_review_candidate_rows(review_path)
+    if not candidate_rows:
+        raise ValueError(f"candidate review file contains no candidate rows: {review_path}")
+    public_eligible_count = sum(1 for row in candidate_rows if bool(row.get("public_claim_eligible")))
+    if public_eligible_count <= 0:
+        raise ValueError(f"candidate review file contains zero public-eligible candidates: {review_path}")
+    selected_rows = [row for row in candidate_rows if bool(row.get("public_claim_eligible"))] if public_eligible_only else list(candidate_rows)
+    if not selected_rows:
+        raise ValueError(f"candidate review selection is empty after filters: {review_path}")
+
+    sources = [
+        _food_line_review_candidate_row(row, edition_date=edition_date, index=index)
+        for index, row in enumerate(selected_rows, start=1)
+    ]
+    previous_context: dict[str, Any] = {}
+    adequacy = source_adequacy(sources)
+    lead_row, continuing_rows, _why_lead, primary_signal_status = _select_primary_pressure_signal(sources, edition_date, previous_context)
+    if not lead_row:
+        raise ValueError(f"review-only render requires at least one primary-eligible source row: {review_path}")
+    role_counts = _role_counts(sources)
+    scope_counts = _scope_counts(sources)
+    editorial_status = _editorial_status(sources)
+    edition_mode = "current_update"
+    rendered_root = (output_root or (root / "output" / "site-review-only" / DISPATCH_SLUG)).resolve()
+    edition_dir = rendered_root / "editions" / edition_date
+    warnings: list[str] = []
+    wrote: list[str] = []
+    _food_line_assets_to_output_root(root, rendered_root, warnings, wrote)
+    html_page = render_food_line_edition(
+        edition_date,
+        sources,
+        adequacy,
+        lead_row,
+        editorial_status,
+        role_counts,
+        scope_counts,
+        previous_context,
+        primary_signal_status,
+        continuing_rows,
+        edition_mode=edition_mode,
+    )
+    public_rows = _public_source_rows(sources)
+    source_table_html = _source_table_html(
+        edition_date,
+        sources,
+        public_rows,
+        primary_row=lead_row,
+        continuing_rows=continuing_rows,
+        edition_mode=edition_mode,
+    )
+    claim_ledger_html = _food_line_claim_ledger_html(
+        edition_date,
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode=edition_mode,
+        review_counts=(len(sources), max(0, len(sources) - len(public_rows))),
+        exclusion_reason_counts={},
+    )
+    _write_text(edition_dir / "index.html", html_page)
+    _write_text(edition_dir / "source_table.html", source_table_html)
+    _write_text(edition_dir / "claim_ledger.html", claim_ledger_html)
+    wrote.extend(
+        [
+            str(edition_dir / "index.html"),
+            str(edition_dir / "source_table.html"),
+            str(edition_dir / "claim_ledger.html"),
+        ]
+    )
+    manifest = {
+        "ok": True,
+        "render_mode": "review_only",
+        "edition_date": edition_date,
+        "candidate_review_path": str(review_path),
+        "output_root": str(rendered_root),
+        "edition_dir": str(edition_dir),
+        "public_eligible_only": bool(public_eligible_only),
+        "candidate_count_total": len(candidate_rows),
+        "source_count": len(sources),
+        "public_eligible_candidate_count": public_eligible_count,
+        "rendered_public_claim_count": len(public_rows),
+        "source_urls": [str(row.get("url") or "") for row in sources if str(row.get("url") or "").strip()],
+        "lead_source_record_id": str(lead_row.get("source_record_id") or ""),
+        "lead_title": str(lead_row.get("title") or ""),
+        "lead_source_url": str(lead_row.get("url") or ""),
+        "lead_source_role": str(lead_row.get("source_role") or ""),
+        "lead_pressure_type": str(lead_row.get("pressure_type") or ""),
+        "lead_source_published_date": str(lead_row.get("source_published_date") or ""),
+        "production_output_mutated": False,
+        "pages_repo_mutated": False,
+        "source_table_path": str(edition_dir / "source_table.html"),
+        "claim_ledger_path": str(edition_dir / "claim_ledger.html"),
+        "index_path": str(edition_dir / "index.html"),
+        "source_table_exists": True,
+        "claim_ledger_exists": True,
+        "warnings": warnings,
+    }
+    _write_json(edition_dir / "review_render_manifest.json", manifest)
+    wrote.append(str(edition_dir / "review_render_manifest.json"))
+    manifest["written_paths"] = wrote
+    return manifest
 
 
 _FOOD_LINE_SOURCE_COLLECTION_TRACKING_PARAMS = {

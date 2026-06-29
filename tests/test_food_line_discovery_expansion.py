@@ -702,8 +702,289 @@ def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_
         "traceability_status",
         "public_claim_eligible",
         "public_claim_blockers",
+        "title_extraction_method",
+        "raw_title_candidates",
+        "selected_title",
+        "title_quality_status",
+        "title_quality_blocker_applied",
     ):
         assert key in candidate
+
+
+@pytest.mark.parametrize(
+    "generic_title",
+    [
+        "Skip to content",
+        "Donate",
+        "Our Blog",
+        "Blog",
+        "News",
+        "All Songs Considered",
+        "AirTalk",
+        "Apply for CalFresh",
+    ],
+)
+def test_generic_titles_are_review_only_even_when_otherwise_eligible(tmp_path: Path, generic_title: str):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": generic_title,
+                        "link": "https://news.google.com/rss/articles/CBMiGENERIC?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising for families relying on SNAP and school meals.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiGENERIC?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                f"<html><head><title>{generic_title}</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><p>Food pantry demand is rising for families relying on SNAP and school meals.</p></article></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["date_match_status"] == "exact_date"
+    assert candidate["classification_status"] == "qualified_pressure_signal"
+    assert candidate["public_claim_eligible"] is False
+    assert "generic_or_invalid_title" in candidate["public_claim_blockers"]
+    assert candidate["title_quality_status"] == "generic_or_invalid_title"
+    assert candidate["title_quality_blocker_applied"] is True
+    assert not (tmp_path / "output" / "site").exists()
+
+
+def test_og_title_replaces_generic_page_chrome(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Skip to content",
+                        "link": "https://news.google.com/rss/articles/CBMiOG?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiOG?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head>"
+                "<title>Skip to content - Example News</title>"
+                "<meta property=\"og:title\" content=\"Pantry demand rises as SNAP delays hit families\">"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><h1>Skip to content</h1><p>Food pantry demand is rising.</p></article></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(tmp_path, edition_date, fetcher=fetcher, max_queries=1, max_results_per_query=5, query_lookback_days=0, query_lookahead_days=0, public_claim_lookback_days=0, public_claim_lookahead_days=0)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovered_title"] == "Pantry demand rises as SNAP delays hit families"
+    assert candidate["selected_title"] == "Pantry demand rises as SNAP delays hit families"
+    assert candidate["title_extraction_method"] == "og_title"
+    assert candidate["title_quality_status"] == "valid_article_title"
+    assert candidate["public_claim_eligible"] is True
+
+
+def test_json_ld_headline_replaces_generic_page_chrome(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "News",
+                        "link": "https://news.google.com/rss/articles/CBMiLD?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiLD?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head>"
+                "<title>News</title>"
+                "<script type=\"application/ld+json\">"
+                "{\"@context\":\"https://schema.org\",\"@type\":\"NewsArticle\",\"headline\":\"School meal disruptions leave families scrambling\"}"
+                "</script>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><p>Food pantry demand is rising.</p></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(tmp_path, edition_date, fetcher=fetcher, max_queries=1, max_results_per_query=5, query_lookback_days=0, query_lookahead_days=0, public_claim_lookback_days=0, public_claim_lookahead_days=0)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovered_title"] == "School meal disruptions leave families scrambling"
+    assert candidate["title_extraction_method"] == "json_ld_headline"
+    assert candidate["public_claim_eligible"] is True
+
+
+def test_article_h1_replaces_generic_page_chrome_when_meta_titles_are_generic(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Blog",
+                        "link": "https://news.google.com/rss/articles/CBMiH1?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiH1?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head>"
+                "<title>Blog</title>"
+                "<meta property=\"og:title\" content=\"Blog\">"
+                "<meta name=\"twitter:title\" content=\"Blog\">"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><h1>Pantries report a surge in summer demand</h1><p>Food pantry demand is rising.</p></article></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(tmp_path, edition_date, fetcher=fetcher, max_queries=1, max_results_per_query=5, query_lookback_days=0, query_lookahead_days=0, public_claim_lookback_days=0, public_claim_lookahead_days=0)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovered_title"] == "Pantries report a surge in summer demand"
+    assert candidate["title_extraction_method"] == "article_h1"
+    assert candidate["public_claim_eligible"] is True
+
+
+def test_document_title_is_only_used_after_better_headline_sources_fail(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "News",
+                        "link": "https://news.google.com/rss/articles/CBMiDOC?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiDOC?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head>"
+                "<title>Food pantry demand rises in rural counties - Example News</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><p>Food pantry demand is rising.</p></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(tmp_path, edition_date, fetcher=fetcher, max_queries=1, max_results_per_query=5, query_lookback_days=0, query_lookahead_days=0, public_claim_lookback_days=0, public_claim_lookahead_days=0)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovered_title"] == "Food pantry demand rises in rural counties"
+    assert candidate["title_extraction_method"] == "document_title"
+    assert candidate["public_claim_eligible"] is True
+
+
+def test_paginated_listing_trace_urls_stay_non_public(tmp_path: Path):
+    edition_date = "2026-06-21"
+    archive_url = "https://frac.org/blog/page/2"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "FRAC News",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["frac.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food insecurity", "SNAP", "school meals"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == archive_url:
+            return (
+                "<html><head><title>Skip to content</title></head>"
+                "<body><p>June 21, 2026</p><a href=\"https://frac.org/report\">Skip to content</a></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["public_claim_eligible"] is False
+    assert candidate["discovered_title"] == "Skip to content"
+    assert candidate["title_quality_status"] == "generic_or_invalid_title"
+    assert "generic_or_invalid_title" in candidate["public_claim_blockers"]
 
 
 def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallbacks(tmp_path: Path):

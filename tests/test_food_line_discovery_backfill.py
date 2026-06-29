@@ -103,6 +103,8 @@ def test_food_line_discovery_backfill_writes_per_date_candidate_and_review_artif
     summary_payload = json.loads(summary_json_path.read_text(encoding="utf-8"))
     assert review_payload["candidate_count_total"] == 1
     assert review_payload["candidate_count_traceable"] == 1
+    assert review_payload["candidate_source_json_shape"] == "top_level_array"
+    assert review_payload["candidate_review_json_shape"] == "object.candidates"
     assert summary_payload["candidates_by_date"]["2026-06-21"] == 1
     assert summary_payload["candidates_by_date"]["2026-06-22"] == 0
     assert "2026-06-22" in summary_payload["dates_with_no_reviewable_candidates"]
@@ -111,6 +113,18 @@ def test_food_line_discovery_backfill_writes_per_date_candidate_and_review_artif
     assert summary_payload["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_candidate_rows_from_payload_supports_array_and_wrapper_objects():
+    rows = [{"candidate_id": "one"}, {"candidate_id": "two"}]
+
+    assert backfill._candidate_rows_from_payload(rows) == rows
+    assert backfill._candidate_rows_from_payload({"candidates": rows}) == rows
+    assert backfill._candidate_rows_from_payload({"items": rows}) == rows
+    assert backfill._candidate_rows_from_payload({"records": rows}) == rows
+    assert backfill._candidate_rows_from_payload({"candidate_sources": rows}) == rows
+    assert backfill._candidate_payload_shape(rows) == "top_level_array"
+    assert backfill._candidate_payload_shape({"candidates": rows}) == "object.candidates"
 
 
 def test_food_line_discovery_backfill_summary_reports_watchlist_and_lane_counts(tmp_path: Path):
@@ -278,6 +292,84 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert review["candidates"][1]["google_news_resolution"]["google_news_resolution_status"] == "success_homepage_only"
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_discovery_backfill_reports_title_quality_blockers(tmp_path: Path):
+    article_url = "https://example.com/story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Skip to content",
+                        "link": "https://news.google.com/rss/articles/CBMiTITLE?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example News",
+                        "description": "Food pantry demand is rising for families relying on SNAP and school meals.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiTITLE?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return (
+                "<html><head><title>Skip to content</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T12:00:00Z\">"
+                "</head><body><article><p>Food pantry demand is rising for families relying on SNAP and school meals.</p></article></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=1,
+            max_results_per_query=5,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+    review = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert summary["generic_or_invalid_title_count"] == 1
+    assert summary["missing_title_count"] == 0
+    assert summary["public_eligible_blocked_by_title_count"] == 1
+    assert summary["title_extraction_methods"]["document_title"] == 1
+    assert review["generic_or_invalid_title_count"] == 1
+    assert review["public_eligible_blocked_by_title_count"] == 1
+    assert review["candidates"][0]["title_quality_status"] == "generic_or_invalid_title"
+    assert review["candidates"][0]["public_claim_eligible"] is False
+    assert "generic_or_invalid_title" in review["candidates"][0]["public_claim_blockers"]
     assert not (tmp_path / "output" / "site").exists()
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
 

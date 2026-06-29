@@ -21,6 +21,7 @@ import scripts.check_food_line_blue_fern_compliance as food_line_compliance
 import scripts.discover_food_line_sources as food_line_discovery
 import scripts.publish_food_line_review_only as food_line_review_publish
 import scripts.run_food_line_dispatch as food_line
+import scripts.update_food_line_archive_for_review_only as food_line_archive_update
 import bluefern_dispatches.bluesky_post as bluesky_post
 import scripts.test_food_line_tts as food_line_tts
 import bluefern_dispatches.tts_provider as tts_provider
@@ -405,6 +406,61 @@ def _build_review_only_render_dir(root: Path, date: str, candidates: list[dict])
         public_eligible_only=True,
     )
     return root / "output" / "site-review-only" / "food-line" / "editions" / date
+
+
+def _food_line_archive_html_fixture() -> str:
+    return """<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Food Line Dispatch Archive</title></head>
+<body>
+  <main class="home food-line-shell">
+    <section class="food-line-panel">
+      <h2>Latest edition</h2>
+      <p><a href="editions/2026-06-20/">2026-06-20 — No current update</a></p>
+      <h2>Archive</h2>
+      <ul>
+        <li><a href="editions/2026-06-20/">2026-06-20 — No current update</a></li>
+        <li><a href="editions/2026-06-19/">2026-06-19 — Charlotte summer meal strain</a></li>
+        <li><a href="editions/2026-06-18/">2026-06-18 — No current update</a></li>
+        <li><a href="editions/2026-06-17/">2026-06-17 — United States food insecurity and United States food-pressure</a></li>
+        <li><a href="editions/2026-06-16/">2026-06-16 — St. Lawrence County pantry demand</a></li>
+        <li><a href="editions/2026-06-14/">2026-06-14 — No current update</a></li>
+        <li><a href="editions/2026-06-13/">2026-06-13 — No current update</a></li>
+        <li><a href="editions/2026-06-09/">2026-06-09 — No current update</a></li>
+        <li><a href="editions/2026-06-07/">2026-06-07 — No current update</a></li>
+        <li><a href="editions/2026-06-06/">2026-06-06 — No current update</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
+"""
+
+
+def _setup_food_line_archive_review_only_pages_fixture(tmp_path: Path, *, include_frac_url: bool = True) -> tuple[Path, Path, Path]:
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    archive_path = pages_repo / "food-line" / "archive.html"
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    archive_path.write_text(_food_line_archive_html_fixture(), encoding="utf-8")
+    (pages_repo / "food-line" / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+    (pages_repo / "food-line" / "rss.xml").write_text("<rss></rss>", encoding="utf-8")
+    (pages_repo / "food-line" / "podcast.xml").write_text("<rss></rss>", encoding="utf-8")
+    (pages_repo / "food-line" / "audio" / "index.html").parent.mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "audio" / "index.html").write_text("<html>Audio</html>", encoding="utf-8")
+    (pages_repo / "food-line" / "map" / "index.html").parent.mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "map" / "index.html").write_text("<html>Map</html>", encoding="utf-8")
+    edition_path = pages_repo / "food-line" / "editions" / "2026-06-12" / "index.html"
+    edition_path.parent.mkdir(parents=True, exist_ok=True)
+    edition_html = "<html><body>FRAC edition</body></html>"
+    if include_frac_url:
+        edition_html = (
+            "<html><body>"
+            "FRAC edition "
+            "https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children"
+            "</body></html>"
+        )
+    edition_path.write_text(edition_html, encoding="utf-8")
+    return pages_repo, archive_path, edition_path
 
 
 def test_food_line_manual_source_file_includes_wkrn_policy_access_signal():
@@ -5001,6 +5057,125 @@ def test_food_line_review_only_publish_to_pages_copies_only_edition_dir_without_
     assert target.exists()
     assert (target / "claim_ledger.html").exists()
     assert not (pages_repo / "food-line" / "archive.html").exists()
+
+
+def test_food_line_archive_review_only_updater_dry_run_makes_no_mutation(tmp_path: Path):
+    pages_repo, archive_path, edition_path = _setup_food_line_archive_review_only_pages_fixture(tmp_path)
+    before_archive = archive_path.read_text(encoding="utf-8")
+    before_home = (pages_repo / "food-line" / "index.html").read_text(encoding="utf-8")
+
+    result = food_line_archive_update.update_food_line_archive_for_review_only(
+        date="2026-06-12",
+        title="Food Line Dispatch - 2026-06-12",
+        edition_url="./editions/2026-06-12/",
+        pages_repo=pages_repo,
+    )
+
+    assert result["ok"] is True
+    assert result["dry_run"] is True
+    assert result["entry_added"] is True
+    assert result["already_present"] is False
+    assert result["changed_files"] == []
+    assert result["pages_repo_mutated"] is False
+    assert result["archive_path"] == str(archive_path.resolve())
+    assert result["edition_path"] == str(edition_path.resolve())
+    assert archive_path.read_text(encoding="utf-8") == before_archive
+    assert (pages_repo / "food-line" / "index.html").read_text(encoding="utf-8") == before_home
+
+
+def test_food_line_archive_review_only_updater_apply_adds_one_entry_and_only_archive_changes(tmp_path: Path):
+    pages_repo, archive_path, _edition_path = _setup_food_line_archive_review_only_pages_fixture(tmp_path)
+    before_files = {
+        "archive": archive_path.read_text(encoding="utf-8"),
+        "index": (pages_repo / "food-line" / "index.html").read_text(encoding="utf-8"),
+        "rss": (pages_repo / "food-line" / "rss.xml").read_text(encoding="utf-8"),
+        "podcast": (pages_repo / "food-line" / "podcast.xml").read_text(encoding="utf-8"),
+        "audio": (pages_repo / "food-line" / "audio" / "index.html").read_text(encoding="utf-8"),
+        "map": (pages_repo / "food-line" / "map" / "index.html").read_text(encoding="utf-8"),
+    }
+
+    result = food_line_archive_update.update_food_line_archive_for_review_only(
+        date="2026-06-12",
+        title="Food Line Dispatch - 2026-06-12",
+        edition_url="./editions/2026-06-12/",
+        pages_repo=pages_repo,
+        apply=True,
+    )
+
+    archive_html = archive_path.read_text(encoding="utf-8")
+    assert result["ok"] is True
+    assert result["dry_run"] is False
+    assert result["entry_added"] is True
+    assert result["already_present"] is False
+    assert result["pages_repo_mutated"] is True
+    assert result["changed_files"] == [str(archive_path.resolve())]
+    assert archive_html.count("2026-06-12 — Food Line Dispatch - 2026-06-12") == 1
+    assert 'href="editions/2026-06-12/"' in archive_html
+    assert archive_html.index("2026-06-13") < archive_html.index("2026-06-12")
+    assert archive_html.index("2026-06-12") < archive_html.index("2026-06-09")
+    assert (pages_repo / "food-line" / "index.html").read_text(encoding="utf-8") == before_files["index"]
+    assert (pages_repo / "food-line" / "rss.xml").read_text(encoding="utf-8") == before_files["rss"]
+    assert (pages_repo / "food-line" / "podcast.xml").read_text(encoding="utf-8") == before_files["podcast"]
+    assert (pages_repo / "food-line" / "audio" / "index.html").read_text(encoding="utf-8") == before_files["audio"]
+    assert (pages_repo / "food-line" / "map" / "index.html").read_text(encoding="utf-8") == before_files["map"]
+    assert before_files["archive"] != archive_html
+
+
+def test_food_line_archive_review_only_updater_repeat_apply_is_idempotent(tmp_path: Path):
+    pages_repo, archive_path, _edition_path = _setup_food_line_archive_review_only_pages_fixture(tmp_path)
+    first = food_line_archive_update.update_food_line_archive_for_review_only(
+        date="2026-06-12",
+        title="Food Line Dispatch - 2026-06-12",
+        edition_url="./editions/2026-06-12/",
+        pages_repo=pages_repo,
+        apply=True,
+    )
+    first_archive = archive_path.read_text(encoding="utf-8")
+
+    second = food_line_archive_update.update_food_line_archive_for_review_only(
+        date="2026-06-12",
+        title="Food Line Dispatch - 2026-06-12",
+        edition_url="./editions/2026-06-12/",
+        pages_repo=pages_repo,
+        apply=True,
+    )
+
+    assert first["entry_added"] is True
+    assert second["entry_added"] is False
+    assert second["already_present"] is True
+    assert second["pages_repo_mutated"] is False
+    assert second["changed_files"] == []
+    assert archive_path.read_text(encoding="utf-8") == first_archive
+    assert first_archive.count("2026-06-12 — Food Line Dispatch - 2026-06-12") == 1
+
+
+def test_food_line_archive_review_only_updater_missing_edition_fails_closed(tmp_path: Path):
+    pages_repo, _archive_path, edition_path = _setup_food_line_archive_review_only_pages_fixture(tmp_path)
+    edition_path.unlink()
+
+    with pytest.raises(ValueError, match="review-only edition index not found"):
+        food_line_archive_update.update_food_line_archive_for_review_only(
+            date="2026-06-12",
+            title="Food Line Dispatch - 2026-06-12",
+            edition_url="./editions/2026-06-12/",
+            pages_repo=pages_repo,
+        )
+
+
+def test_food_line_archive_review_only_updater_requires_expected_frac_url(tmp_path: Path):
+    pages_repo, archive_path, _edition_path = _setup_food_line_archive_review_only_pages_fixture(tmp_path, include_frac_url=False)
+    before_archive = archive_path.read_text(encoding="utf-8")
+
+    with pytest.raises(ValueError, match="does not contain expected source URL"):
+        food_line_archive_update.update_food_line_archive_for_review_only(
+            date="2026-06-12",
+            title="Food Line Dispatch - 2026-06-12",
+            edition_url="./editions/2026-06-12/",
+            pages_repo=pages_repo,
+            apply=True,
+        )
+
+    assert archive_path.read_text(encoding="utf-8") == before_archive
 
 
 def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):

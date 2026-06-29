@@ -162,8 +162,56 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
     assert candidate["original_source_url"] == homepage_url
     assert candidate["public_claim_eligible"] is False
     assert candidate["traceability_status"] == "publisher_homepage_trace_only"
+    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
     assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
     assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiHOME?oc=5"
+
+
+def test_food_line_discovery_expansion_blocks_landing_trace_urls(tmp_path: Path):
+    edition_date = "2026-06-21"
+    landing_url = "https://www.fao.org/home/en"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Home | Food and Agriculture Organization of the United Nations",
+                        "link": "https://news.google.com/rss/articles/CBMiLANDING?oc=5",
+                        "source_url": landing_url,
+                        "publisher": "Food and Agriculture Organization of the United Nations",
+                        "description": "Food price pressure is affecting household access to food.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiLANDING?oc=5":
+            return f"<html><body><a href=\"{landing_url}\">open</a></body></html>".encode("utf-8")
+        if url == landing_url:
+            return _html_article(
+                title="Home | Food and Agriculture Organization of the United Nations",
+                canonical=landing_url,
+                body="Food price pressure is affecting household access to food.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["source_url"] == landing_url
+    assert candidate["original_source_url"] == landing_url
+    assert candidate["traceability_status"] == "non_article_trace_url"
+    assert candidate["public_claim_eligible"] is False
+    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
+    assert candidate["title_quality_status"] == "generic_or_invalid_title"
 
 
 def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_collapses_to_homepage(tmp_path: Path):
@@ -719,6 +767,9 @@ def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_
         "Our Blog",
         "Blog",
         "News",
+        "Home | Example News",
+        "Welcome",
+        "Homepage",
         "All Songs Considered",
         "AirTalk",
         "Apply for CalFresh",
@@ -1271,6 +1322,7 @@ def test_direct_rss_item_with_feed_or_homepage_url_is_blocked(tmp_path: Path):
     assert candidate["direct_fetch_status"] == "blocked_listing_url"
     assert candidate["traceability_status"] in {"publisher_homepage_trace_only", "non_article_trace_url"}
     assert candidate["public_claim_eligible"] is False
+    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
     assert result["direct_homepage_or_feed_blocked_count"] == 1
 
 

@@ -1380,9 +1380,15 @@ def test_food_line_discovery_backfill_reports_missing_public_prose_diagnostics(t
     assert summary["missing_public_prose_fields_count"] >= 1
     assert summary["missing_public_prose_fields_by_field"]["pressure_summary"] >= 1
     assert summary["public_eligible_blocked_by_missing_public_prose_count"] >= 1
+    assert summary["public_prose_derivation_status_counts"]["insufficient_source_support"] >= 1
+    assert summary["pressure_summary_derivation_status_counts"]["insufficient_source_support"] >= 1
+    assert summary["pressure_type_derivation_status_counts"]["insufficient_source_support"] >= 1
     assert review["missing_public_prose_fields_count"] >= 1
     assert review["missing_public_prose_fields_by_field"]["pressure_summary"] >= 1
     assert review["public_eligible_blocked_by_missing_public_prose_count"] >= 1
+    assert review["public_prose_derivation_status_counts"]["insufficient_source_support"] >= 1
+    assert review["pressure_summary_derivation_status_counts"]["insufficient_source_support"] >= 1
+    assert review["pressure_type_derivation_status_counts"]["insufficient_source_support"] >= 1
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()

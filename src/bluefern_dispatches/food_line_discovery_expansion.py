@@ -168,6 +168,14 @@ PUBLIC_PROSE_REQUIRED_FIELDS = (
     "source_role",
 )
 SAFE_AFFECTED_GROUPS_FALLBACK = "Not clearly isolated by source"
+DISCOVERY_PRESSURE_TYPE_RULES: list[tuple[str, tuple[tuple[str, ...], ...]]] = [
+    ("SNAP policy pressure", (("snap",), ("proposal", "rule", "eligibility", "broad-based categorical eligibility", "bbce"))),
+    ("school meals pressure", (("school meals", "summer meals"), ("gap", "cut", "end", "loss", "access", "site", "sites", "hunger"))),
+    ("food bank demand pressure", (("food bank", "food pantry", "pantry"), ("demand", "surge", "rising", "rise", "strain", "need", "waitlist", "shortage"))),
+    ("benefit access pressure", (("snap", "ebt", "wic", "benefit", "benefits"), ("access", "eligibility", "delay", "disruption", "application", "renewal", "recertification", "backlog"))),
+    ("food affordability pressure", (("grocery prices", "food costs", "food prices", "inflation", "rent and groceries"), tuple())),
+    ("emergency food access pressure", (("emergency food assistance", "food distribution", "meal site", "meal sites"), ("access", "availability", "closure", "closed", "hours", "distance"))),
+]
 
 STATE_TERRITORIES: list[tuple[str, str]] = [
     ("Alabama", "AL"),
@@ -786,6 +794,120 @@ def _candidate_public_evidence_text(row: dict[str, Any]) -> str:
     return ""
 
 
+def _candidate_source_text_fields(row: dict[str, Any]) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    for key in ("selected_title", "discovered_title", "summary_or_snippet", "pressure_evidence_summary", "manually_reviewed_summary", "evidence_text"):
+        value = _cap_text(_nonempty(row.get(key)), limit=1200)
+        if value:
+            fields[key] = value
+    return fields
+
+
+def _publisher_attribution_name(row: dict[str, Any]) -> str:
+    publisher = _nonempty(row.get("discovered_publisher") or row.get("direct_source_name") or row.get("publisher"))
+    if publisher.endswith(" News") and len(publisher) > 5:
+        return publisher[:-5].strip()
+    return publisher or "The source"
+
+
+def _derive_pressure_type_from_source_fields(source_fields: dict[str, str]) -> tuple[str, str, list[str]]:
+    ordered_fields = ["selected_title", "discovered_title", "summary_or_snippet", "pressure_evidence_summary", "manually_reviewed_summary", "evidence_text"]
+    for pressure_type, groups in DISCOVERY_PRESSURE_TYPE_RULES:
+        group_matches: list[str] = []
+        for group in groups:
+            if not group:
+                continue
+            matched_field = ""
+            for field_name in ordered_fields:
+                text = source_fields.get(field_name, "")
+                lowered = text.lower()
+                if any(needle in lowered for needle in group):
+                    matched_field = field_name
+                    break
+            if not matched_field:
+                group_matches = []
+                break
+            group_matches.append(matched_field)
+        if group_matches and len(group_matches) == len(groups):
+            used_fields = list(dict.fromkeys(group_matches))
+            if len(used_fields) == 1:
+                return pressure_type, f"derived_from_{used_fields[0]}", used_fields
+            return pressure_type, "derived_from_multi_field_source_text", used_fields
+    return "", "insufficient_source_support", []
+
+
+def _derive_pressure_summary_from_source_fields(
+    row: dict[str, Any],
+    *,
+    pressure_type: str,
+    source_fields: dict[str, str],
+) -> tuple[str, str, list[str]]:
+    existing = _nonempty(row.get("pressure_summary") or row.get("pressure_evidence_summary"))
+    if existing:
+        return existing, "existing", ["pressure_evidence_summary" if _nonempty(row.get("pressure_evidence_summary")) else "pressure_summary"]
+    title = _strip_site_suffix(_nonempty(source_fields.get("selected_title") or source_fields.get("discovered_title")))
+    summary = _nonempty(source_fields.get("summary_or_snippet") or source_fields.get("pressure_evidence_summary") or source_fields.get("manually_reviewed_summary"))
+    evidence = _nonempty(source_fields.get("evidence_text"))
+    combined = " ".join(part for part in (title, summary, evidence) if part).lower()
+    publisher = _publisher_attribution_name(row)
+
+    if pressure_type == "SNAP policy pressure":
+        if all(token in combined for token in ("snap", "broad-based categorical eligibility")) and "would increase hunger" in combined:
+            return (
+                f"{publisher} warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+                "derived_from_title_and_source_text",
+                ["selected_title", "evidence_text"] if evidence else ["selected_title"],
+            )
+        if "snap" in combined and any(token in combined for token in ("proposal", "rule", "eligibility", "bbce")):
+            return (
+                f"{publisher} warned that a SNAP eligibility proposal would tighten access to benefits for some households.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "food bank demand pressure":
+        if re.search(r"food (?:bank|pantry).*?(?:demand|need).{0,30}(?:rise|rising|rose|surge|surging|increase)", combined):
+            noun = "food pantry" if "food pantry" in combined or "pantry" in combined else "food bank"
+            return (
+                f"{publisher} reported rising {noun} demand.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "school meals pressure":
+        if ("school meals" in combined or "summer meals" in combined) and any(token in combined for token in ("gap", "end", "cut", "loss", "access")):
+            meal_term = "summer meals" if "summer meals" in combined else "school meals"
+            return (
+                f"{publisher} reported pressure on {meal_term} access.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "benefit access pressure":
+        if any(token in combined for token in ("snap", "ebt", "wic", "benefit", "benefits")) and any(
+            token in combined for token in ("access", "eligibility", "delay", "disruption", "application", "renewal", "recertification", "backlog")
+        ):
+            return (
+                f"{publisher} reported pressure on access to food assistance benefits.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "food affordability pressure":
+        if any(token in combined for token in ("grocery prices", "food costs", "food prices", "inflation", "rent and groceries")):
+            return (
+                f"{publisher} reported food affordability pressure for households.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "emergency food access pressure":
+        if any(token in combined for token in ("emergency food assistance", "food distribution", "meal site", "meal sites")) and any(
+            token in combined for token in ("access", "availability", "closure", "closed", "hours", "distance")
+        ):
+            return (
+                f"{publisher} reported pressure on access to emergency food assistance.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    return "", "insufficient_source_support", []
+
+
 def _candidate_public_evidence_basis(row: dict[str, Any]) -> str:
     basis = _nonempty(row.get("evidence_text_basis"))
     if basis:
@@ -802,6 +924,7 @@ def _candidate_public_evidence_basis(row: dict[str, Any]) -> str:
 def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) -> dict[str, Any]:
     evidence_text = _candidate_public_evidence_text(row)
     basis = _candidate_public_evidence_basis(row)
+    source_fields = _candidate_source_text_fields(row)
     eval_row = {
         "title": _nonempty(row.get("selected_title") or row.get("discovered_title")),
         "summary_or_snippet": _nonempty(row.get("summary_or_snippet") or row.get("manually_reviewed_summary") or row.get("pressure_evidence_summary")),
@@ -823,21 +946,61 @@ def _derive_candidate_public_prose(row: dict[str, Any], *, edition_date: str) ->
         edition_date=edition_date,
         pressure_required=pressure_required,
     )
+    existing_pressure_type = _nonempty(row.get("pressure_type"))
+    evaluated_pressure_type = _nonempty(evaluated.get("pressure_type"))
+    derived_pressure_type, pressure_type_status, pressure_type_fields = ("", "insufficient_source_support", [])
+    if not existing_pressure_type and (not evaluated_pressure_type or evaluated_pressure_type == "context only"):
+        derived_pressure_type, pressure_type_status, pressure_type_fields = _derive_pressure_type_from_source_fields(source_fields)
+    elif existing_pressure_type:
+        pressure_type_status = "existing"
+        pressure_type_fields = ["pressure_type"]
+    else:
+        pressure_type_status = "existing_from_evaluator"
+        pressure_type_fields = ["evidence_text"]
+    final_pressure_type = existing_pressure_type or (evaluated_pressure_type if evaluated_pressure_type != "context only" else "") or derived_pressure_type
+
+    existing_pressure_summary = _nonempty(row.get("pressure_summary") or row.get("pressure_evidence_summary"))
+    derived_pressure_summary, pressure_summary_status, pressure_summary_fields = ("", "insufficient_source_support", [])
+    if existing_pressure_summary:
+        pressure_summary_status = "existing"
+        pressure_summary_fields = ["pressure_evidence_summary" if _nonempty(row.get("pressure_evidence_summary")) else "pressure_summary"]
+    elif _nonempty(evaluated.get("pressure_summary")):
+        pressure_summary_status = "existing_from_evaluator"
+        pressure_summary_fields = ["evidence_text"]
+    else:
+        derived_pressure_summary, pressure_summary_status, pressure_summary_fields = _derive_pressure_summary_from_source_fields(
+            row,
+            pressure_type=final_pressure_type,
+            source_fields=source_fields,
+        )
+    final_pressure_summary = existing_pressure_summary or _nonempty(evaluated.get("pressure_summary")) or derived_pressure_summary
+
     affected_groups = list(row.get("affected_groups") or evaluated.get("affected_groups") or [])
     if pressure_required and not affected_groups:
         affected_groups = [SAFE_AFFECTED_GROUPS_FALLBACK]
+    derivation_fields = list(dict.fromkeys([*pressure_type_fields, *pressure_summary_fields]))
+    public_prose_derivation_status = "insufficient_source_support"
+    if final_pressure_type and final_pressure_summary and derivation_fields:
+        if pressure_type_status == "existing" and pressure_summary_status == "existing":
+            public_prose_derivation_status = "existing_complete"
+        elif "insufficient_source_support" not in {pressure_type_status, pressure_summary_status}:
+            public_prose_derivation_status = "derived_complete"
+    elif derivation_fields:
+        public_prose_derivation_status = "partial_derived_missing_fields"
     return {
         "pressure_signal": bool(row.get("pressure_signal")) or bool(evaluated.get("pressure_signal")) or pressure_required,
-        "pressure_type": _nonempty(row.get("pressure_type") or evaluated.get("pressure_type")),
-        "pressure_summary": _nonempty(
-            row.get("pressure_summary") or row.get("pressure_evidence_summary") or evaluated.get("pressure_summary")
-        ),
+        "pressure_type": final_pressure_type,
+        "pressure_summary": final_pressure_summary,
         "affected_groups": affected_groups,
         "evidence_level": _nonempty(row.get("evidence_level") or evaluated.get("evidence_level")),
         "freshness_role": _nonempty(row.get("freshness_role") or evaluated.get("freshness_role")),
         "source_role": _nonempty(row.get("source_role") or evaluated.get("source_role")),
         "evidence_text": evidence_text,
         "evidence_text_basis": basis if evidence_text else _nonempty(evaluated.get("evidence_text_basis")),
+        "public_prose_derivation_status": public_prose_derivation_status,
+        "public_prose_derivation_source_fields": derivation_fields,
+        "pressure_summary_derivation_status": pressure_summary_status,
+        "pressure_type_derivation_status": pressure_type_status,
     }
 
 
@@ -2602,6 +2765,10 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
             "evidence_text": _cap_text(_nonempty(record.get("pressure_evidence_summary") or record.get("manually_reviewed_summary")), limit=1200),
             "evidence_text_basis": "manual_source_text",
             "missing_public_prose_fields": [],
+            "public_prose_derivation_status": "existing_complete" if pressure_summary and _nonempty(record.get("pressure_type")) else "partial_derived_missing_fields",
+            "public_prose_derivation_source_fields": ["pressure_evidence_summary"] if pressure_summary else [],
+            "pressure_summary_derivation_status": "existing" if pressure_summary else "insufficient_source_support",
+            "pressure_type_derivation_status": "existing" if _nonempty(record.get("pressure_type")) else "insufficient_source_support",
             "limitations": _nonempty(record.get("limitations")),
             "extraction_quality": _nonempty(record.get("extraction_quality")) or "manual_fallback",
             "reviewer_or_source_note": _nonempty(record.get("reviewer_or_source_note")),
@@ -2702,6 +2869,12 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["evidence_text"] = _cap_text(_nonempty(candidate.get("evidence_text")), limit=1200)
     candidate["evidence_text_basis"] = _nonempty(candidate.get("evidence_text_basis"))
     candidate["missing_public_prose_fields"] = [item for item in list(candidate.get("missing_public_prose_fields") or []) if _nonempty(item)]
+    candidate["public_prose_derivation_status"] = _nonempty(candidate.get("public_prose_derivation_status"))
+    candidate["public_prose_derivation_source_fields"] = [
+        item for item in list(candidate.get("public_prose_derivation_source_fields") or []) if _nonempty(item)
+    ]
+    candidate["pressure_summary_derivation_status"] = _nonempty(candidate.get("pressure_summary_derivation_status"))
+    candidate["pressure_type_derivation_status"] = _nonempty(candidate.get("pressure_type_derivation_status"))
     return candidate
 
 
@@ -3661,6 +3834,30 @@ def run_food_line_discovery_expansion(
             ).items()
         )
     )
+    public_prose_derivation_status_counts = dict(
+        sorted(
+            Counter(
+                _nonempty(row.get("public_prose_derivation_status")) or "insufficient_source_support"
+                for row in candidates
+            ).items()
+        )
+    )
+    pressure_summary_derivation_status_counts = dict(
+        sorted(
+            Counter(
+                _nonempty(row.get("pressure_summary_derivation_status")) or "insufficient_source_support"
+                for row in candidates
+            ).items()
+        )
+    )
+    pressure_type_derivation_status_counts = dict(
+        sorted(
+            Counter(
+                _nonempty(row.get("pressure_type_derivation_status")) or "insufficient_source_support"
+                for row in candidates
+            ).items()
+        )
+    )
     public_eligible_blocked_by_title_count = sum(
         1
         for row in candidates
@@ -3791,6 +3988,9 @@ def run_food_line_discovery_expansion(
         "missing_title_count": missing_title_count,
         "missing_public_prose_fields_count": missing_public_prose_fields_count,
         "missing_public_prose_fields_by_field": missing_public_prose_fields_by_field,
+        "public_prose_derivation_status_counts": public_prose_derivation_status_counts,
+        "pressure_summary_derivation_status_counts": pressure_summary_derivation_status_counts,
+        "pressure_type_derivation_status_counts": pressure_type_derivation_status_counts,
         "title_extraction_methods": title_extraction_methods,
         "public_eligible_blocked_by_title_count": public_eligible_blocked_by_title_count,
         "public_eligible_blocked_by_missing_public_prose_count": public_eligible_blocked_by_missing_public_prose_count,

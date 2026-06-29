@@ -187,6 +187,30 @@ def _review_payload(
                 ).items()
             )
         ),
+        "public_prose_derivation_status_counts": dict(
+            sorted(
+                Counter(
+                    str(row.get("public_prose_derivation_status") or "insufficient_source_support")
+                    for row in candidates
+                ).items()
+            )
+        ),
+        "pressure_summary_derivation_status_counts": dict(
+            sorted(
+                Counter(
+                    str(row.get("pressure_summary_derivation_status") or "insufficient_source_support")
+                    for row in candidates
+                ).items()
+            )
+        ),
+        "pressure_type_derivation_status_counts": dict(
+            sorted(
+                Counter(
+                    str(row.get("pressure_type_derivation_status") or "insufficient_source_support")
+                    for row in candidates
+                ).items()
+            )
+        ),
         "public_eligible_blocked_by_title_count": sum(
             1
             for row in candidates
@@ -234,6 +258,10 @@ def _review_payload(
                 "freshness_role": str(row.get("freshness_role") or ""),
                 "source_role": str(row.get("source_role") or ""),
                 "missing_public_prose_fields": list(row.get("missing_public_prose_fields") or []),
+                "public_prose_derivation_status": str(row.get("public_prose_derivation_status") or ""),
+                "public_prose_derivation_source_fields": list(row.get("public_prose_derivation_source_fields") or []),
+                "pressure_summary_derivation_status": str(row.get("pressure_summary_derivation_status") or ""),
+                "pressure_type_derivation_status": str(row.get("pressure_type_derivation_status") or ""),
                 "traceability_status": str(row.get("traceability_status") or ""),
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
@@ -382,6 +410,36 @@ def run_food_line_discovery_backfill(
                         field
                         for row in per_date
                         for field, count in dict(row.get("missing_public_prose_fields_by_field") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
+            "public_prose_derivation_status_counts": dict(
+                sorted(
+                    Counter(
+                        status
+                        for row in per_date
+                        for status, count in dict(row.get("public_prose_derivation_status_counts") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
+            "pressure_summary_derivation_status_counts": dict(
+                sorted(
+                    Counter(
+                        status
+                        for row in per_date
+                        for status, count in dict(row.get("pressure_summary_derivation_status_counts") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
+            "pressure_type_derivation_status_counts": dict(
+                sorted(
+                    Counter(
+                        status
+                        for row in per_date
+                        for status, count in dict(row.get("pressure_type_derivation_status_counts") or {}).items()
                         for _ in range(int(count))
                     ).items()
                 )
@@ -1225,6 +1283,30 @@ def run_food_line_discovery_backfill(
                             for row in typed_candidates
                             for field in list(row.get("missing_public_prose_fields") or [])
                             if str(field).strip()
+                        ).items()
+                    )
+                ),
+                "public_prose_derivation_status_counts": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("public_prose_derivation_status") or "insufficient_source_support")
+                            for row in typed_candidates
+                        ).items()
+                    )
+                ),
+                "pressure_summary_derivation_status_counts": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("pressure_summary_derivation_status") or "insufficient_source_support")
+                            for row in typed_candidates
+                        ).items()
+                    )
+                ),
+                "pressure_type_derivation_status_counts": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("pressure_type_derivation_status") or "insufficient_source_support")
+                            for row in typed_candidates
                         ).items()
                     )
                 ),

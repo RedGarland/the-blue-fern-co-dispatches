@@ -8,6 +8,8 @@ import pytest
 
 import scripts.run_food_line_dispatch as food_line_dispatch
 from bluefern_dispatches.food_line_discovery_expansion import (
+    _apply_public_readiness_gate,
+    _normalize_candidate_row,
     build_food_line_discovery_query_plan,
     read_food_line_discovery_expansion_audit,
     run_food_line_discovery_expansion,
@@ -104,7 +106,7 @@ def test_food_line_discovery_expansion_blocks_out_of_window_candidates_for_publi
         tmp_path,
         edition_date,
         fetcher=fetcher,
-        max_queries=1,
+        max_queries=8,
         max_results_per_query=5,
         query_lookback_days=0,
         query_lookahead_days=0,
@@ -151,7 +153,7 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
         tmp_path,
         edition_date,
         fetcher=fetcher,
-        max_queries=1,
+        max_queries=8,
         max_results_per_query=5,
         query_lookback_days=0,
         query_lookahead_days=0,
@@ -1271,24 +1273,67 @@ def test_traceable_article_candidate_with_missing_public_prose_fields_is_not_pub
     assert not (tmp_path / "output" / "site").exists()
 
 
-def test_frac_style_candidate_remains_reviewable_but_blocked_when_public_prose_is_absent(tmp_path: Path):
-    edition_date = "2026-06-21"
-    article_url = "https://frac.org/blog/snap-update-for-families"
-    feed_url = "https://frac.org/feed"
+def test_frac_style_candidate_derives_public_prose_from_source_evidence(tmp_path: Path):
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "frac-test",
+            "discovered_publisher": "FRAC News",
+            "discovered_title": "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children - Food Research & Action Center",
+            "selected_title": "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children - Food Research & Action Center",
+            "source_url": "https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+            "original_source_url": "https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+            "final_trace_url": "https://frac.org/blog/usda-proposal-to-end-broad-based-categorical-eligibility-for-snap-would-increase-hunger-for-families-and-children",
+            "source_published_date": "2026-06-21",
+            "discovery_lane": "nonprofit_report",
+            "source_family": "nonprofit_report",
+            "classification_status": "qualified_pressure_signal",
+            "traceability_status": "traceable",
+            "public_claim_eligible": True,
+            "public_claim_blockers": [],
+            "fetch_status": "ok",
+            "candidate_review_status": "needs_review",
+            "summary_or_snippet": "FRAC warned that the USDA proposal would increase hunger for families and children.",
+            "evidence_text": "Published June 21, 2026. FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children.",
+            "evidence_text_basis": "page_text_excerpt",
+            "affected_groups": ["children", "SNAP households", "low-income households"],
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-21")
+
+    assert candidate["discovered_publisher"] == "FRAC News"
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["pressure_type"] == "SNAP policy pressure"
+    assert (
+        candidate["pressure_summary"]
+        == "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children."
+    )
+    assert candidate["public_claim_blockers"] == []
+    assert candidate["missing_public_prose_fields"] == []
+    assert candidate["public_prose_derivation_status"] == "derived_complete"
+    assert candidate["pressure_summary_derivation_status"] == "derived_from_title_and_source_text"
+    assert candidate["pressure_type_derivation_status"] == "derived_from_selected_title"
+    assert "selected_title" in candidate["public_prose_derivation_source_fields"]
+
+
+def test_vague_source_text_does_not_derive_public_prose(tmp_path: Path):
+    article_url = "https://example.org/news/update"
+    feed_url = "https://example.org/feed.xml"
     _write_direct_source_config(
         tmp_path,
         [
             {
-                "source_name": "FRAC News",
-                "source_family": "nonprofit_report",
-                "discovery_lane": "nonprofit_report",
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
                 "discovery_channel": "direct_rss",
                 "feed_url": feed_url,
-                "allowed_domains": ["frac.org"],
+                "allowed_domains": ["example.org"],
                 "geographic_scope": "national",
                 "enabled": True,
                 "max_age_days": 7,
-                "pressure_terms": ["SNAP"],
+                "pressure_terms": ["food assistance"],
                 "exclusion_terms": [],
             }
         ],
@@ -1299,42 +1344,29 @@ def test_frac_style_candidate_remains_reviewable_but_blocked_when_public_prose_i
             return _rss_payload(
                 [
                     {
-                        "title": "SNAP update for families",
+                        "title": "Update",
                         "link": article_url,
                         "source_url": article_url,
-                        "publisher": "FRAC News",
-                        "description": "SNAP update.",
+                        "publisher": "Example Direct Feed",
+                        "description": "Community update.",
                         "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
                     }
                 ]
             )
         if url == article_url:
-            return _html_article(
-                title="SNAP update for families",
-                canonical=article_url,
-                body="SNAP update.",
-            )
+            return _html_article(title="Update", canonical=article_url, body="Community update.")
         raise AssertionError(url)
 
-    result = run_food_line_discovery_expansion(
-        tmp_path,
-        edition_date,
-        fetcher=fetcher,
-        max_queries=1,
-        max_results_per_query=5,
-        query_lookback_days=0,
-        query_lookahead_days=0,
-        public_claim_lookback_days=0,
-        public_claim_lookahead_days=0,
-    )
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
     candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
 
-    assert candidate["discovered_publisher"] == "FRAC News"
-    assert candidate["traceability_status"] == "traceable"
-    assert candidate["candidate_review_status"] == "needs_review"
     assert candidate["public_claim_eligible"] is False
     assert "missing_public_prose_fields" in candidate["public_claim_blockers"]
-    assert candidate["missing_public_prose_fields"]
+    assert candidate["pressure_summary"] == ""
+    assert candidate["pressure_type"] == ""
+    assert candidate["public_prose_derivation_status"] == "insufficient_source_support"
+    assert candidate["pressure_summary_derivation_status"] == "insufficient_source_support"
+    assert candidate["pressure_type_derivation_status"] == "insufficient_source_support"
 
 
 def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(tmp_path: Path):

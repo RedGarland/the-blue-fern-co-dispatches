@@ -1296,3 +1296,94 @@ def test_backfill_aggregates_per_source_direct_source_diagnostics(tmp_path: Path
     assert "Zero Feed" in summary["direct_source_zero_item_sources"]
     assert "Disabled Feed" in summary["disabled_direct_sources"]
     assert "Broken Feed" in summary["direct_sources_recommended_for_parser_fix"]
+
+
+def test_food_line_discovery_backfill_reports_missing_public_prose_diagnostics(tmp_path: Path):
+    feed_url = "https://example.org/feed.xml"
+    article_url = "https://example.org/news/food-assistance-brief"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food assistance"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food assistance brief",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example Direct Feed",
+                        "description": "Food assistance update.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return b"""<html><head><title>Food assistance brief</title><link rel=\"canonical\" href=\"https://example.org/news/food-assistance-brief\"></head><body><p>Food assistance update.</p></body></html>"""
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-06-21",
+            "2026-06-21",
+            max_queries=1,
+            max_results_per_query=5,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (
+            tmp_path
+            / "output"
+            / "review"
+            / "food-line"
+            / "backfill"
+            / "2026-06-21_to_2026-06-21"
+            / "backfill_summary.json"
+        ).read_text(encoding="utf-8")
+    )
+    review = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-06-21" / "candidate_review.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert summary["missing_public_prose_fields_count"] >= 1
+    assert summary["missing_public_prose_fields_by_field"]["pressure_summary"] >= 1
+    assert summary["public_eligible_blocked_by_missing_public_prose_count"] >= 1
+    assert review["missing_public_prose_fields_count"] >= 1
+    assert review["missing_public_prose_fields_by_field"]["pressure_summary"] >= 1
+    assert review["public_eligible_blocked_by_missing_public_prose_count"] >= 1
+    assert summary["public_output_written"] is False
+    assert summary["pages_repo_mutated"] is False
+    assert not (tmp_path / "output" / "site").exists()
+    assert not (tmp_path / "bluefern-dispatches-pages").exists()

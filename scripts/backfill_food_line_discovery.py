@@ -176,10 +176,26 @@ def _review_payload(
         "candidate_count_rejected": int(review_counts.get("rejected", 0)),
         "generic_or_invalid_title_count": sum(1 for row in candidates if str(row.get("title_quality_status") or "") == "generic_or_invalid_title"),
         "missing_title_count": sum(1 for row in candidates if str(row.get("title_quality_status") or "") == "missing_title"),
+        "missing_public_prose_fields_count": sum(1 for row in candidates if list(row.get("missing_public_prose_fields") or [])),
+        "missing_public_prose_fields_by_field": dict(
+            sorted(
+                Counter(
+                    field
+                    for row in candidates
+                    for field in list(row.get("missing_public_prose_fields") or [])
+                    if str(field).strip()
+                ).items()
+            )
+        ),
         "public_eligible_blocked_by_title_count": sum(
             1
             for row in candidates
             if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+        ),
+        "public_eligible_blocked_by_missing_public_prose_count": sum(
+            1
+            for row in candidates
+            if "missing_public_prose_fields" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
         ),
         "title_extraction_methods": dict(sorted(title_methods.items())),
         "discovery_lane_counts": dict(sorted(Counter(str(row.get("discovery_lane") or "") for row in candidates if str(row.get("discovery_lane") or "")).items())),
@@ -210,6 +226,14 @@ def _review_payload(
                 "state_hint": str(row.get("state_hint") or row.get("state_or_territory") or ""),
                 "pressure_signal_hint": str(row.get("pressure_signal_hint") or ""),
                 "pressure_signal_type_hint": str(row.get("pressure_signal_type_hint") or ""),
+                "pressure_signal": bool(row.get("pressure_signal")),
+                "pressure_type": str(row.get("pressure_type") or ""),
+                "pressure_summary": str(row.get("pressure_summary") or ""),
+                "affected_groups": list(row.get("affected_groups") or []),
+                "evidence_level": str(row.get("evidence_level") or ""),
+                "freshness_role": str(row.get("freshness_role") or ""),
+                "source_role": str(row.get("source_role") or ""),
+                "missing_public_prose_fields": list(row.get("missing_public_prose_fields") or []),
                 "traceability_status": str(row.get("traceability_status") or ""),
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),
@@ -351,6 +375,17 @@ def run_food_line_discovery_backfill(
             "missing_date_direct_candidates_by_date": {row["date"]: row["missing_date_direct_candidate_count"] for row in per_date},
             "generic_or_invalid_title_count": sum(int(row.get("generic_or_invalid_title_count", 0)) for row in per_date),
             "missing_title_count": sum(int(row.get("missing_title_count", 0)) for row in per_date),
+            "missing_public_prose_fields_count": sum(int(row.get("missing_public_prose_fields_count", 0)) for row in per_date),
+            "missing_public_prose_fields_by_field": dict(
+                sorted(
+                    Counter(
+                        field
+                        for row in per_date
+                        for field, count in dict(row.get("missing_public_prose_fields_by_field") or {}).items()
+                        for _ in range(int(count))
+                    ).items()
+                )
+            ),
             "title_extraction_methods": dict(sorted(Counter(
                 method
                 for row in per_date
@@ -358,6 +393,9 @@ def run_food_line_discovery_backfill(
                 for _ in range(int(count))
             ).items())),
             "public_eligible_blocked_by_title_count": sum(int(row.get("public_eligible_blocked_by_title_count", 0)) for row in per_date),
+            "public_eligible_blocked_by_missing_public_prose_count": sum(
+                int(row.get("public_eligible_blocked_by_missing_public_prose_count", 0)) for row in per_date
+            ),
             "top_blocker_reasons": dict(sorted(blocker_counts.items(), key=lambda item: (-item[1], item[0]))[:10]),
             "discovery_lanes_used": dict(sorted(lane_counts.items())),
             "sources_with_repeated_useful_hits": dict(sorted(useful_source_hits.items(), key=lambda item: (-item[1], item[0]))[:20]),
@@ -1179,6 +1217,17 @@ def run_food_line_discovery_backfill(
                     1 for row in typed_candidates if str(row.get("title_quality_status") or "") == "generic_or_invalid_title"
                 ),
                 "missing_title_count": sum(1 for row in typed_candidates if str(row.get("title_quality_status") or "") == "missing_title"),
+                "missing_public_prose_fields_count": sum(1 for row in typed_candidates if list(row.get("missing_public_prose_fields") or [])),
+                "missing_public_prose_fields_by_field": dict(
+                    sorted(
+                        Counter(
+                            field
+                            for row in typed_candidates
+                            for field in list(row.get("missing_public_prose_fields") or [])
+                            if str(field).strip()
+                        ).items()
+                    )
+                ),
                 "title_extraction_methods": dict(
                     sorted(
                         Counter(
@@ -1192,6 +1241,11 @@ def run_food_line_discovery_backfill(
                     1
                     for row in typed_candidates
                     if "generic_or_invalid_title" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
+                ),
+                "public_eligible_blocked_by_missing_public_prose_count": sum(
+                    1
+                    for row in typed_candidates
+                    if "missing_public_prose_fields" in list(row.get("public_claim_blockers") or []) and not bool(row.get("public_claim_eligible"))
                 ),
                 "in_window_candidate_count": in_window_count,
                 "out_of_window_candidate_count": out_of_window_count,

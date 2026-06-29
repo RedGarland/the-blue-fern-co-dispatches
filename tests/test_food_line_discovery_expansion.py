@@ -1220,8 +1220,172 @@ def test_food_line_discovery_expansion_retains_blocked_fetches_and_manual_fallba
     assert manual_candidates[0]["final_trace_url"] == axios_trace_url
     assert manual_candidates[0]["discovery_lane"] == "news_article"
     assert manual_candidates[0]["traceability_status"] == "traceable"
+    assert manual_candidates[0]["public_claim_eligible"] is False
+    assert "blocked_fetch" in manual_candidates[0]["public_claim_blockers"]
+    assert manual_candidates[0]["pressure_summary"]
     assert "No candidates were retained" not in audit["discovery_confidence_summary"]
     assert "no_current_update" in audit["no_current_update_reason"] or audit["no_current_update_reason"]
+
+
+def test_traceable_article_candidate_with_missing_public_prose_fields_is_not_public_eligible(tmp_path: Path):
+    article_url = "https://example.org/news/food-assistance-brief"
+    manual_fallback_record = {
+        "publisher": "Example News",
+        "canonical_url": article_url,
+        "headline": "Food assistance brief",
+        "date": "2026-06-21",
+        "location": "Charlotte, NC",
+        "manually_reviewed_summary": "The source discusses food assistance pressure.",
+        "pressure_evidence_summary": "The source discusses food assistance pressure.",
+        "affected_groups": ["families"],
+        "limitations": "Manual fallback example.",
+        "extraction_quality": "manual_fallback",
+        "reviewer_or_source_note": "Reviewed from source text.",
+        "final_trace_url": article_url,
+        "geographic_scope": "metro",
+    }
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        manual_fallback_records=[manual_fallback_record],
+        max_queries=1,
+        max_results_per_query=5,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["classification_status"] == "manual_fallback"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is False
+    assert "missing_public_prose_fields" in candidate["public_claim_blockers"]
+    assert "pressure_type" in candidate["missing_public_prose_fields"]
+    assert result["missing_public_prose_fields_count"] >= 1
+    assert result["public_eligible_blocked_by_missing_public_prose_count"] >= 1
+    assert not (tmp_path / "output" / "site").exists()
+
+
+def test_frac_style_candidate_remains_reviewable_but_blocked_when_public_prose_is_absent(tmp_path: Path):
+    edition_date = "2026-06-21"
+    article_url = "https://frac.org/blog/snap-update-for-families"
+    feed_url = "https://frac.org/feed"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "FRAC News",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["frac.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["SNAP"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "SNAP update for families",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "FRAC News",
+                        "description": "SNAP update.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return _html_article(
+                title="SNAP update for families",
+                canonical=article_url,
+                body="SNAP update.",
+            )
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["discovered_publisher"] == "FRAC News"
+    assert candidate["traceability_status"] == "traceable"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is False
+    assert "missing_public_prose_fields" in candidate["public_claim_blockers"]
+    assert candidate["missing_public_prose_fields"]
+
+
+def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(tmp_path: Path):
+    article_url = "https://example.com/story"
+    manual_fallback_record = {
+        "publisher": "Example News",
+        "canonical_url": article_url,
+        "headline": "Food pantry demand rises",
+        "date": "2026-06-21",
+        "location": "Charlotte, NC",
+        "manually_reviewed_summary": "The source says food pantry demand is rising for families with children.",
+        "pressure_evidence_summary": "The source says pantry demand is rising for families with children as SNAP support tightens.",
+        "affected_groups": ["families", "children"],
+        "pressure_type": "demand strain",
+        "evidence_level": "news report",
+        "freshness_role": "dated_recent_signal",
+        "source_role": "daily_signal",
+        "limitations": "Manual fallback example.",
+        "extraction_quality": "manual_fallback",
+        "reviewer_or_source_note": "Reviewed from source text.",
+        "final_trace_url": article_url,
+        "geographic_scope": "metro",
+    }
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        manual_fallback_records=[manual_fallback_record],
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "manual_fallback"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["missing_public_prose_fields"] == []
+    assert candidate["pressure_summary"] == manual_fallback_record["pressure_evidence_summary"]
+    assert candidate["pressure_type"] == "demand strain"
+    assert candidate["evidence_level"] == "news report"
+    assert candidate["freshness_role"] == "dated_recent_signal"
+    assert candidate["source_role"] == "daily_signal"
 
 
 def test_direct_rss_item_with_article_url_becomes_traceable(tmp_path: Path):

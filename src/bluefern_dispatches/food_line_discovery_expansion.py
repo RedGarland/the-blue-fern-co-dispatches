@@ -44,6 +44,13 @@ GOOGLE_ASSET_DOMAINS = (
     "ogp.me",
 )
 STATIC_PATH_SUFFIXES = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
+HOMEPAGE_LANDING_SEGMENTS = {
+    "home",
+    "homepage",
+    "index",
+    "welcome",
+    "default",
+}
 LISTING_PATH_SEGMENTS = {
     "blog",
     "blogs",
@@ -662,6 +669,50 @@ def _is_homepage_only_url(url: str) -> bool:
     return parsed.scheme in {"http", "https"} and not path and not parsed.query
 
 
+def _homepage_or_landing_url_reason(url: str) -> str:
+    value = _normalize_url(url)
+    if not value:
+        return ""
+    parsed = urllib.parse.urlsplit(value)
+    if parsed.scheme not in {"http", "https"}:
+        return ""
+    path = [segment.lower().split(".", 1)[0] for segment in (parsed.path or "").strip("/").split("/") if segment]
+    if not path and not parsed.query:
+        return "homepage_root"
+    if not path:
+        return ""
+    locale_pattern = re.compile(r"^[a-z]{2}(?:-[a-z]{2})?$")
+    first_segment = path[0]
+    last_segment = path[-1]
+    if first_segment in HOMEPAGE_LANDING_SEGMENTS:
+        return f"landing_segment:{first_segment}"
+    if last_segment in HOMEPAGE_LANDING_SEGMENTS and len(path) <= 2:
+        return f"landing_segment:{last_segment}"
+    if len(path) == 1:
+        if first_segment in LISTING_PATH_SEGMENTS:
+            return f"listing_root:{first_segment}"
+        if first_segment in ARCHIVE_RESOURCE_SEGMENTS:
+            return f"resource_landing:{first_segment}"
+        if first_segment in ARCHIVE_ACTION_SEGMENTS:
+            return f"action_landing:{first_segment}"
+    if len(path) == 2 and locale_pattern.fullmatch(first_segment):
+        if last_segment in LISTING_PATH_SEGMENTS:
+            return f"listing_root:{last_segment}"
+        if last_segment in ARCHIVE_RESOURCE_SEGMENTS:
+            return f"resource_landing:{last_segment}"
+        if last_segment in ARCHIVE_ACTION_SEGMENTS:
+            return f"action_landing:{last_segment}"
+        if last_segment in HOMEPAGE_LANDING_SEGMENTS:
+            return f"landing_segment:{last_segment}"
+    if len(path) == 2 and first_segment in {"category", "categories", "tag", "tags", "author"}:
+        return "taxonomy_listing"
+    return ""
+
+
+def _is_homepage_or_landing_url(url: str) -> bool:
+    return bool(_homepage_or_landing_url_reason(url))
+
+
 def _is_article_specific_url(url: str) -> bool:
     value = _normalize_url(url)
     if not value:
@@ -673,6 +724,8 @@ def _is_article_specific_url(url: str) -> bool:
     path = (parsed.path or "").strip("/")
     lowered_path = path.lower()
     if any(lowered_path.endswith(ext) for ext in STATIC_PATH_SUFFIXES):
+        return False
+    if _is_homepage_or_landing_url(value):
         return False
     return bool(path)
 
@@ -844,6 +897,8 @@ def _public_claim_blockers(
     fetch_status: str,
     traceability_status: str,
     duplicate_of: str,
+    source_url: str = "",
+    original_source_url: str = "",
     title_quality_status: str = "",
 ) -> list[str]:
     blockers: list[str] = []
@@ -859,6 +914,8 @@ def _public_claim_blockers(
         blockers.append("classification_not_current_pressure_signal")
     if lane == "social_watchlist":
         blockers.append("social_watchlist_only")
+    if _is_homepage_or_landing_url(source_url) or _is_homepage_or_landing_url(original_source_url):
+        blockers.append("homepage_or_landing_url")
     if traceability_status == "publisher_homepage_trace_only":
         blockers.append("publisher_homepage_trace_only")
     elif traceability_status == "non_article_trace_url":
@@ -892,6 +949,8 @@ def _candidate_review_defaults(
     fetch_status: str,
     traceability_status: str,
     duplicate_of: str,
+    source_url: str = "",
+    original_source_url: str = "",
     title_quality_status: str = "",
 ) -> tuple[str, bool, list[str]]:
     review_status = "watchlist" if lane == "social_watchlist" else "needs_review"
@@ -905,6 +964,8 @@ def _candidate_review_defaults(
         fetch_status=fetch_status,
         traceability_status=traceability_status,
         duplicate_of=duplicate_of,
+        source_url=source_url,
+        original_source_url=original_source_url,
         title_quality_status=title_quality_status,
     )
     eligible = not blockers
@@ -1448,9 +1509,10 @@ def _strip_site_suffix(title: str) -> str:
     return cleaned
 
 
-def _title_quality_status(title: str) -> str:
+def _title_quality_status(title: str, *, publisher: str = "") -> str:
     cleaned = _clean_title_text(title)
     normalized = _normalized_title_key(cleaned)
+    publisher_normalized = _normalized_title_key(_clean_title_text(publisher))
     if not normalized:
         return "missing_title"
     if cleaned.lower().startswith(("http://", "https://")):
@@ -1458,6 +1520,10 @@ def _title_quality_status(title: str) -> str:
     if normalized in GENERIC_TITLE_EXACT_NORMALIZED:
         return "generic_or_invalid_title"
     if normalized in GENERIC_CHROME_TITLES_NORMALIZED:
+        return "generic_or_invalid_title"
+    if publisher_normalized and normalized == publisher_normalized:
+        return "generic_or_invalid_title"
+    if re.match(r"^(home|homepage|welcome|index)\b", normalized):
         return "generic_or_invalid_title"
     words = [word for word in re.split(r"[\s/|:;,_-]+", normalized) if word]
     if len(words) <= 2 and all(word in GENERIC_TITLE_SINGLE_WORDS for word in words):
@@ -1471,6 +1537,7 @@ def _pick_best_title(
     payload: bytes,
     *,
     fallback_title: str = "",
+    publisher: str = "",
 ) -> tuple[str, str, list[str], str]:
     text = payload.decode("utf-8", errors="replace")
     raw_candidates: list[tuple[str, str]] = []
@@ -1496,14 +1563,14 @@ def _pick_best_title(
     selected_title = ""
     selected_method = ""
     for method, candidate in raw_candidates:
-        if _title_quality_status(candidate) == "valid_article_title":
+        if _title_quality_status(candidate, publisher=publisher) == "valid_article_title":
             selected_title = candidate
             selected_method = method
             break
     if not selected_title and raw_candidates:
         selected_method, selected_title = raw_candidates[0]
 
-    title_quality_status = _title_quality_status(selected_title)
+    title_quality_status = _title_quality_status(selected_title, publisher=publisher)
     return selected_title, selected_method, _dedupe_texts([value for _, value in raw_candidates]), title_quality_status
 
 
@@ -1551,8 +1618,9 @@ def _archive_link_filter_decision(
     normalized_url = _normalize_url(url)
     if not normalized_url:
         return "rejected_unknown_nonarticle", "empty_or_invalid_url"
-    if _is_homepage_only_url(normalized_url):
-        return "rejected_navigation_link", "homepage_only_url"
+    landing_reason = _homepage_or_landing_url_reason(normalized_url)
+    if landing_reason in {"homepage_root", "landing_segment:home", "landing_segment:homepage", "landing_segment:index", "landing_segment:welcome", "landing_segment:default"}:
+        return "rejected_navigation_link", landing_reason
     host = _host(normalized_url)
     if host.endswith(SOCIAL_DOMAINS):
         return "rejected_navigation_link", "social_domain"
@@ -2071,8 +2139,8 @@ def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str) ->
         return "static_or_namespace_url"
     if publisher_url and not _same_host_family(url, publisher_url):
         return "not_same_publisher_family"
-    if _is_homepage_only_url(url):
-        return "publisher_homepage_only"
+    if _is_homepage_or_landing_url(url):
+        return "publisher_homepage_or_landing"
     if not _is_article_specific_url(url):
         return "not_article_specific"
     return ""
@@ -2096,12 +2164,12 @@ def _extract_google_news_homepage_url(payload: bytes, *, publisher_url: str = ""
     text = payload.decode("utf-8", errors="replace")
     candidates = _extract_candidate_urls(text)
     for candidate in candidates:
-        if _is_homepage_only_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
+        if _is_homepage_or_landing_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
             return candidate
     if publisher_url:
         return ""
     for candidate in candidates:
-        if _is_homepage_only_url(candidate) and not _is_google_news_wrapper(candidate):
+        if _is_homepage_or_landing_url(candidate) and not _is_google_news_wrapper(candidate):
             return candidate
     return ""
 
@@ -2204,6 +2272,8 @@ def _is_feed_or_listing_url(url: str, *, feed_url: str = "") -> bool:
     if feed_url and value == _normalize_url(feed_url):
         return True
     if _is_homepage_only_url(value):
+        return True
+    if _homepage_or_landing_url_reason(value):
         return True
     parsed = urllib.parse.urlsplit(value)
     path = [segment for segment in parsed.path.lower().split("/") if segment]
@@ -2327,7 +2397,7 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         discovered_url=canonical or trace_url,
         fetch_status="manual_fallback",
     )
-    title_quality_status = _title_quality_status(headline)
+    title_quality_status = _title_quality_status(headline, publisher=publisher)
     candidate_review_status, public_claim_eligible, public_claim_blockers = _candidate_review_defaults(
         edition_date=_nonempty(record.get("date")),
         source_published_date=_nonempty(record.get("date")),
@@ -2338,6 +2408,8 @@ def _normalize_manual_fallback_record(record: dict[str, Any]) -> tuple[dict[str,
         fetch_status="manual_fallback",
         traceability_status=traceability_status,
         duplicate_of="",
+        source_url=trace_url or canonical,
+        original_source_url=trace_url,
         title_quality_status=title_quality_status,
     )
     return (
@@ -2472,7 +2544,9 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["title_extraction_method"] = _nonempty(candidate.get("title_extraction_method"))
     candidate["raw_title_candidates"] = list(candidate.get("raw_title_candidates") or [])
     candidate["selected_title"] = _nonempty(candidate.get("selected_title") or candidate.get("discovered_title"))
-    candidate["title_quality_status"] = _nonempty(candidate.get("title_quality_status") or _title_quality_status(candidate["selected_title"]))
+    candidate["title_quality_status"] = _nonempty(
+        candidate.get("title_quality_status") or _title_quality_status(candidate["selected_title"], publisher=_nonempty(candidate.get("discovered_publisher")))
+    )
     candidate["title_quality_blocker_applied"] = bool(candidate.get("title_quality_blocker_applied")) or candidate["title_quality_status"] in {
         "generic_or_invalid_title",
         "missing_title",
@@ -3036,6 +3110,7 @@ def run_food_line_discovery_expansion(
                         page_title, title_extraction_method, raw_title_candidates, title_quality_status = _pick_best_title(
                             payload2,
                             fallback_title=_nonempty(item.get("title")),
+                            publisher=_nonempty(item.get("source_name") or direct_source_name),
                         )
                         selected_title = page_title or _nonempty(item.get("title"))
                         page_summary = _page_summary(payload2)
@@ -3068,6 +3143,7 @@ def run_food_line_discovery_expansion(
                     page_title, title_extraction_method, raw_title_candidates, title_quality_status = _pick_best_title(
                         payload2,
                         fallback_title=_nonempty(item.get("title")),
+                        publisher=_nonempty(item.get("source_name")),
                     )
                     selected_title = page_title or _nonempty(item.get("title"))
                     page_summary = _page_summary(payload2)
@@ -3077,7 +3153,7 @@ def run_food_line_discovery_expansion(
                         canonical = canonical_from_page
                         if not _is_article_specific_url(final_trace_url):
                             final_trace_url = canonical_from_page
-                    elif _is_homepage_only_url(canonical_from_page) and _is_article_specific_url(final_trace_url):
+                    elif _is_homepage_or_landing_url(canonical_from_page) and _is_article_specific_url(final_trace_url):
                         canonical_homepage_collapse_ignored_count += 1
                     elif canonical_from_page and not canonical:
                         canonical = canonical_from_page
@@ -3182,6 +3258,8 @@ def run_food_line_discovery_expansion(
                 fetch_status=fetch_status,
                 traceability_status=traceability_status,
                 duplicate_of="",
+                source_url=source_url,
+                original_source_url=final_trace_url or publisher_url,
                 title_quality_status=title_quality_status,
             )
             row = {
@@ -3365,6 +3443,8 @@ def run_food_line_discovery_expansion(
             fetch_status=_nonempty(row.get("fetch_status")),
             traceability_status=_nonempty(row.get("traceability_status")),
             duplicate_of=_nonempty(row.get("duplicate_of")),
+            source_url=_nonempty(row.get("source_url") or row.get("final_trace_url")),
+            original_source_url=_nonempty(row.get("original_source_url") or row.get("final_trace_url")),
             title_quality_status=_nonempty(row.get("title_quality_status")),
         )
         if row.get("classification_status") == "manual_fallback":

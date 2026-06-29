@@ -363,6 +363,42 @@ def test_food_line_discovery_query_plan_marks_historical_direct_sources(tmp_path
     assert archive_row["historical_capable"] is True
 
 
+def test_food_line_discovery_query_plan_propagates_historical_archive_templates(tmp_path: Path):
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Archive Source",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": "https://example.org/archive",
+                "allowed_domains": ["example.org"],
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_templates": [
+                    {
+                        "template_name": "monthly_archive",
+                        "url_template": "https://example.org/archive/{yyyy}/{mm}",
+                        "archive_granularity": "month",
+                    }
+                ],
+            }
+        ],
+    )
+
+    plan = build_food_line_discovery_query_plan(tmp_path, "2026-06-19")
+    archive_row = next(row for row in plan if row["query_text"] == "Archive Source")
+
+    assert archive_row["historical_archive_templates"] == [
+        {
+            "template_name": "monthly_archive",
+            "url_template": "https://example.org/archive/{yyyy}/{mm}",
+            "archive_granularity": "month",
+        }
+    ]
+
+
 def test_food_line_discovery_expansion_caps_queries_across_multiple_lanes(tmp_path: Path):
     calls: list[str] = []
 
@@ -1446,6 +1482,173 @@ def test_direct_page_listing_context_dates_surface_historical_exact_date_items(t
     assert result["historical_source_count"] == 1
     assert result["historical_sources_with_exact_date_items"] == ["Historical Archive"]
     assert result["historical_sources_with_page_body_date_items"] == ["Historical Archive"]
+
+
+def test_direct_page_prefers_targeted_historical_archive_candidates_before_broad_archive(tmp_path: Path):
+    archive_url = "https://example.org/archive"
+    targeted_archive_url = "https://example.org/archive/2026/06"
+    exact_article_url = "https://example.org/posts/exact-story"
+    broad_article_url = "https://example.org/posts/newer-story"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Archive",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_templates": [
+                    {
+                        "template_name": "monthly_archive",
+                        "url_template": "https://example.org/archive/{yyyy}/{mm}",
+                        "archive_granularity": "month",
+                    }
+                ],
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url == targeted_archive_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<p>June 25, 2026</p>"
+                f"<a href=\"{broad_article_url}\">Broad archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == exact_article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{exact_article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        if url == broad_article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{broad_article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-25T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+
+    assert calls[:2] == [targeted_archive_url, archive_url]
+    assert len(candidates) == 1
+    assert candidates[0]["source_url"] == exact_article_url
+    assert candidates[0]["archive_url_used"] == targeted_archive_url
+    assert candidates[0]["archive_template_used"] == "monthly_archive"
+    assert candidates[0]["archive_granularity"] == "month"
+    assert candidates[0]["archive_target_date"] == "2026-06-21"
+    assert candidates[0]["archive_candidate_rank"] == 1
+    assert result["historical_archive_source_count"] == 1
+    assert result["historical_archive_fetch_attempt_count"] == 1
+    assert result["historical_archive_fetch_success_count"] == 1
+    assert result["historical_archive_fetch_failure_count"] == 0
+    assert result["historical_archive_url_count"] == 1
+    assert result["historical_archive_candidates_extracted_count"] == 1
+    assert result["historical_archive_sources_with_templates"] == ["Historical Archive"]
+    assert result["historical_archive_sources_without_templates"] == []
+    assert result["historical_archive_candidates_by_source"] == {"Historical Archive": 1}
+    assert result["historical_archive_exact_date_candidates_by_source"] == {"Historical Archive": 1}
+    assert result["historical_archive_selected_before_broad_count"] == 1
+
+
+def test_historical_direct_page_without_templates_reports_archive_diagnostics(tmp_path: Path):
+    archive_url = "https://example.org/archive"
+    exact_article_url = "https://example.org/posts/exact-story"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Historical Archive",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_page",
+                "source_url": archive_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "historical_capable": True,
+                "historical_archive_templates": [],
+                "sampling_priority": 10,
+                "direct_source_candidate_cap": 1,
+                "max_age_days": 30,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": [],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == archive_url:
+            return (
+                "<html><body>"
+                "<p>June 21, 2026</p>"
+                f"<a href=\"{exact_article_url}\">Target archive update</a>"
+                "</body></html>"
+            ).encode("utf-8")
+        if url == exact_article_url:
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{exact_article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-06-21T10:00:00Z\">"
+                "</head><body>Food pantry demand is rising.</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-06-21",
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+
+    assert result["historical_archive_source_count"] == 1
+    assert result["historical_archive_fetch_attempt_count"] == 0
+    assert result["historical_archive_fetch_success_count"] == 0
+    assert result["historical_archive_fetch_failure_count"] == 0
+    assert result["historical_archive_url_count"] == 0
+    assert result["historical_archive_candidates_extracted_count"] == 0
+    assert result["historical_archive_sources_with_templates"] == []
+    assert result["historical_archive_sources_without_templates"] == ["Historical Archive"]
 
 
 def test_direct_source_missing_date_items_are_diagnosed_and_non_public(tmp_path: Path):

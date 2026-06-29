@@ -438,6 +438,88 @@ def _date_basis_rank(date_basis: str) -> int:
     }.get(date_basis, 6)
 
 
+def _historical_archive_template_vars(edition_date: str) -> dict[str, str]:
+    target = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
+    return {
+        "yyyy": f"{target.year:04d}",
+        "yy": f"{target.year % 100:02d}",
+        "mm": f"{target.month:02d}",
+        "m": str(target.month),
+        "dd": f"{target.day:02d}",
+        "d": str(target.day),
+        "month_name_lower": target.strftime("%B").lower(),
+        "month_name_title": target.strftime("%B"),
+        "month_abbrev_lower": target.strftime("%b").lower(),
+        "month_abbrev_title": target.strftime("%b"),
+        "iso_date": target.isoformat(),
+        "yyyymm": f"{target.year:04d}{target.month:02d}",
+        "yyyymmdd": f"{target.year:04d}{target.month:02d}{target.day:02d}",
+    }
+
+
+def _normalize_historical_archive_templates(value: Any) -> list[dict[str, str]]:
+    raw_templates: list[Any] = []
+    if isinstance(value, str) and _nonempty(value):
+        raw_templates = [value]
+    elif isinstance(value, list):
+        raw_templates = list(value)
+    normalized: list[dict[str, str]] = []
+    for index, raw_template in enumerate(raw_templates, start=1):
+        if isinstance(raw_template, str):
+            url_template = _nonempty(raw_template)
+            template_name = f"template_{index}"
+            granularity = ""
+        elif isinstance(raw_template, dict):
+            url_template = _nonempty(
+                raw_template.get("url_template")
+                or raw_template.get("template")
+                or raw_template.get("url")
+            )
+            template_name = _nonempty(raw_template.get("template_name") or raw_template.get("name")) or f"template_{index}"
+            granularity = _nonempty(raw_template.get("archive_granularity") or raw_template.get("granularity"))
+        else:
+            continue
+        if not url_template:
+            continue
+        normalized.append(
+            {
+                "url_template": url_template,
+                "template_name": template_name,
+                "archive_granularity": granularity,
+            }
+        )
+    return normalized
+
+
+def _render_historical_archive_urls(
+    edition_date: str,
+    templates: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    variables = _historical_archive_template_vars(edition_date)
+    rendered: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for template in templates:
+        url_template = _nonempty(template.get("url_template"))
+        if not url_template:
+            continue
+        try:
+            rendered_url = _normalize_url(url_template.format_map(variables))
+        except Exception:  # noqa: BLE001
+            continue
+        if not rendered_url or rendered_url in seen:
+            continue
+        rendered.append(
+            {
+                "archive_url": rendered_url,
+                "archive_template_used": _nonempty(template.get("template_name")),
+                "archive_granularity": _nonempty(template.get("archive_granularity")),
+                "archive_target_date": validate_date(edition_date),
+            }
+        )
+        seen.add(rendered_url)
+    return rendered
+
+
 def _is_homepage_only_url(url: str) -> bool:
     value = _normalize_url(url)
     if not value:
@@ -822,6 +904,11 @@ def build_food_line_discovery_query_plan(
                 ),
                 "direct_lane_candidate_cap": int(direct_source.get("direct_lane_candidate_cap") or 0),
                 "historical_capable": bool(direct_source.get("historical_capable", False)),
+                "historical_archive_templates": _normalize_historical_archive_templates(
+                    direct_source.get("historical_archive_templates")
+                    or direct_source.get("archive_url_templates")
+                    or direct_source.get("archive_url_template")
+                ),
                 "notes": _nonempty(direct_source.get("notes")),
             }
         )
@@ -1233,67 +1320,143 @@ def _collect_direct_source_items(
     source_url = _nonempty(query_row.get("direct_source_url") or query_row.get("direct_source_feed_url"))
     discovery_channel = _nonempty(query_row.get("discovery_channel") or "direct_page")
     allowed_domains = [str(item).strip().lower() for item in query_row.get("allowed_domains") or [] if str(item).strip()]
-    payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, source_url)
     diagnostics = {
         "attempted": bool(source_url),
         "success": False,
-        "error": fetch_error,
+        "error": "",
         "item_count": 0,
-        "response_status": fetch_meta.get("response_status"),
-        "final_response_url": _nonempty(fetch_meta.get("final_response_url") or source_url),
-        "content_type": _nonempty(fetch_meta.get("content_type")),
-        "redirect_chain": list(fetch_meta.get("redirect_chain") or ([source_url] if source_url else [])),
+        "response_status": None,
+        "final_response_url": source_url,
+        "content_type": "",
+        "redirect_chain": [source_url] if source_url else [],
         "failure_reason": "",
         "exception_message": "",
         "parser_attempted": "",
+        "historical_archive_source_has_templates": False,
+        "historical_archive_urls": [],
+        "historical_archive_fetch_attempt_count": 0,
+        "historical_archive_fetch_success_count": 0,
+        "historical_archive_fetch_failure_count": 0,
+        "historical_archive_url_count": 0,
+        "historical_archive_candidates_extracted_count": 0,
+        "historical_archive_fetch_failure_reasons": {},
     }
-    if fetch_error or not payload:
-        diagnostics["failure_reason"] = _classify_fetch_error(fetch_error or "empty response")
-        diagnostics["exception_message"] = _nonempty(fetch_error)
-        return [], diagnostics
-    try:
-        source_name = _nonempty(query_row.get("direct_source_name"))
-        if _looks_like_xml_payload(payload, diagnostics["content_type"]):
-            diagnostics["parser_attempted"] = "rss_or_atom"
-            items = _parse_direct_feed(payload)
-        elif _looks_like_json_payload(payload, diagnostics["content_type"]):
-            diagnostics["parser_attempted"] = "json_feed"
-            items = _parse_json_feed(payload)
-        elif _looks_like_html_payload(payload, diagnostics["content_type"]):
-            diagnostics["parser_attempted"] = "html_listing"
-            page_url = _normalize_url(_extract_canonical_url(payload) or diagnostics["final_response_url"] or source_url)
+    source_name = _nonempty(query_row.get("direct_source_name"))
+
+    def parse_payload(payload: bytes, *, current_url: str, content_type: str, final_response_url: str) -> tuple[list[dict[str, str]], str]:
+        if _looks_like_xml_payload(payload, content_type):
+            return _parse_direct_feed(payload), "rss_or_atom"
+        if _looks_like_json_payload(payload, content_type):
+            return _parse_json_feed(payload), "json_feed"
+        if _looks_like_html_payload(payload, content_type):
+            page_url = _normalize_url(_extract_canonical_url(payload) or final_response_url or current_url)
             extracted = _extract_listing_links(
                 payload,
-                base_url=page_url or source_url,
+                base_url=page_url or current_url,
                 allowed_domains=allowed_domains,
                 source_name=source_name,
             )
             if extracted:
-                items = extracted
-            else:
-                items = [
+                return extracted, "html_listing"
+            return (
+                [
                     {
                         "title": _page_title(payload) or source_name,
                         "link": page_url,
                         "description": _page_summary(payload),
                         "pubDate": "",
-                        "source_url": source_url,
+                        "source_url": current_url,
                         "source_name": source_name,
                     }
-                ]
-        else:
-            diagnostics["parser_attempted"] = "unknown"
-            raise ValueError("unsupported direct source payload type")
-        diagnostics["success"] = True
-        diagnostics["item_count"] = len(items)
-        return items, diagnostics
-    except Exception as exc:  # noqa: BLE001
-        diagnostics["success"] = False
-        diagnostics["error"] = f"{type(exc).__name__}: {exc}"
-        diagnostics["failure_reason"] = _classify_fetch_error(diagnostics["error"])
-        diagnostics["exception_message"] = diagnostics["error"]
-        diagnostics["item_count"] = 0
-        return [], diagnostics
+                ],
+                "html_listing",
+            )
+        raise ValueError("unsupported direct source payload type")
+
+    archive_items: list[dict[str, str]] = []
+    archive_templates = _normalize_historical_archive_templates(query_row.get("historical_archive_templates"))
+    rendered_archives = _render_historical_archive_urls(_nonempty(query_row.get("edition_date")), archive_templates)
+    diagnostics["historical_archive_source_has_templates"] = bool(rendered_archives)
+    diagnostics["historical_archive_urls"] = rendered_archives
+    diagnostics["historical_archive_url_count"] = len(rendered_archives)
+    for archive in rendered_archives:
+        archive_url = _nonempty(archive.get("archive_url"))
+        if not archive_url:
+            continue
+        diagnostics["historical_archive_fetch_attempt_count"] += 1
+        archive_payload, archive_error, archive_meta = _fetch_url_with_metadata(fetcher, archive_url)
+        if archive_error or not archive_payload:
+            reason = _classify_fetch_error(archive_error or "empty response")
+            diagnostics["historical_archive_fetch_failure_count"] += 1
+            diagnostics["historical_archive_fetch_failure_reasons"][reason] = (
+                int(diagnostics["historical_archive_fetch_failure_reasons"].get(reason, 0)) + 1
+            )
+            continue
+        try:
+            parsed_archive_items, _ = parse_payload(
+                archive_payload,
+                current_url=archive_url,
+                content_type=_nonempty(archive_meta.get("content_type")),
+                final_response_url=_nonempty(archive_meta.get("final_response_url") or archive_url),
+            )
+        except Exception as exc:  # noqa: BLE001
+            reason = _classify_fetch_error(f"{type(exc).__name__}: {exc}")
+            diagnostics["historical_archive_fetch_failure_count"] += 1
+            diagnostics["historical_archive_fetch_failure_reasons"][reason] = (
+                int(diagnostics["historical_archive_fetch_failure_reasons"].get(reason, 0)) + 1
+            )
+            continue
+        diagnostics["historical_archive_fetch_success_count"] += 1
+        for rank, item in enumerate(parsed_archive_items, start=1):
+            item_copy = dict(item)
+            item_copy["archive_url_used"] = archive_url
+            item_copy["archive_template_used"] = _nonempty(archive.get("archive_template_used"))
+            item_copy["archive_granularity"] = _nonempty(archive.get("archive_granularity"))
+            item_copy["archive_target_date"] = _nonempty(archive.get("archive_target_date"))
+            item_copy["archive_candidate_rank"] = rank
+            archive_items.append(item_copy)
+        diagnostics["historical_archive_candidates_extracted_count"] += len(parsed_archive_items)
+
+    payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, source_url)
+    diagnostics["response_status"] = fetch_meta.get("response_status")
+    diagnostics["final_response_url"] = _nonempty(fetch_meta.get("final_response_url") or source_url)
+    diagnostics["content_type"] = _nonempty(fetch_meta.get("content_type"))
+    diagnostics["redirect_chain"] = list(fetch_meta.get("redirect_chain") or ([source_url] if source_url else []))
+    direct_items: list[dict[str, str]] = []
+    if not fetch_error and payload:
+        try:
+            direct_items, parser_attempted = parse_payload(
+                payload,
+                current_url=source_url,
+                content_type=diagnostics["content_type"],
+                final_response_url=diagnostics["final_response_url"],
+            )
+            diagnostics["parser_attempted"] = parser_attempted
+        except Exception as exc:  # noqa: BLE001
+            if _looks_like_xml_payload(payload, diagnostics["content_type"]):
+                diagnostics["parser_attempted"] = "rss_or_atom"
+            elif _looks_like_json_payload(payload, diagnostics["content_type"]):
+                diagnostics["parser_attempted"] = "json_feed"
+            elif _looks_like_html_payload(payload, diagnostics["content_type"]):
+                diagnostics["parser_attempted"] = "html_listing"
+            else:
+                diagnostics["parser_attempted"] = "unknown"
+            fetch_error = f"{type(exc).__name__}: {exc}"
+    items: list[dict[str, str]] = []
+    seen_links: set[str] = set()
+    for item in archive_items + direct_items:
+        normalized_link = _normalize_url(_nonempty(item.get("link")) or _nonempty(item.get("source_url")))
+        if normalized_link and normalized_link in seen_links:
+            continue
+        if normalized_link:
+            seen_links.add(normalized_link)
+        items.append(item)
+    diagnostics["success"] = bool(items) or (not fetch_error and bool(payload)) or diagnostics["historical_archive_fetch_success_count"] > 0
+    diagnostics["error"] = "" if diagnostics["success"] else _nonempty(fetch_error)
+    diagnostics["failure_reason"] = "" if diagnostics["success"] else _classify_fetch_error(fetch_error or "empty response")
+    diagnostics["exception_message"] = "" if diagnostics["success"] else _nonempty(fetch_error)
+    diagnostics["item_count"] = len(items)
+    return items, diagnostics
 
 
 def _extract_canonical_url(payload: bytes) -> str:
@@ -1924,6 +2087,18 @@ def run_food_line_discovery_expansion(
     historical_sources_with_exact_date_items: set[str] = set()
     historical_sources_with_url_date_items: set[str] = set()
     historical_sources_with_page_body_date_items: set[str] = set()
+    historical_archive_source_names: set[str] = set()
+    historical_archive_sources_with_templates: set[str] = set()
+    historical_archive_sources_without_templates: set[str] = set()
+    historical_archive_fetch_attempt_count = 0
+    historical_archive_fetch_success_count = 0
+    historical_archive_fetch_failure_count = 0
+    historical_archive_url_count = 0
+    historical_archive_candidates_extracted_count = 0
+    historical_archive_selected_before_broad_count = 0
+    historical_archive_fetch_failure_reasons_by_source: dict[str, Counter[str]] = {}
+    historical_archive_candidates_by_source: dict[str, int] = {}
+    historical_archive_exact_date_candidates_by_source: dict[str, int] = {}
     in_window_direct_candidate_count = 0
     out_of_window_direct_candidate_count = 0
     missing_date_direct_candidate_count = 0
@@ -1980,6 +2155,22 @@ def run_food_line_discovery_expansion(
             source_name = _nonempty(query_row.get("direct_source_name"))
             if bool(query_row.get("historical_capable")) and source_name:
                 historical_source_names.add(source_name)
+            if bool(query_row.get("historical_capable")) and discovery_channel == "direct_page" and source_name:
+                historical_archive_source_names.add(source_name)
+                if bool(direct_meta.get("historical_archive_source_has_templates")):
+                    historical_archive_sources_with_templates.add(source_name)
+                else:
+                    historical_archive_sources_without_templates.add(source_name)
+                historical_archive_fetch_attempt_count += int(direct_meta.get("historical_archive_fetch_attempt_count") or 0)
+                historical_archive_fetch_success_count += int(direct_meta.get("historical_archive_fetch_success_count") or 0)
+                historical_archive_fetch_failure_count += int(direct_meta.get("historical_archive_fetch_failure_count") or 0)
+                historical_archive_url_count += int(direct_meta.get("historical_archive_url_count") or 0)
+                historical_archive_candidates_extracted_count += int(direct_meta.get("historical_archive_candidates_extracted_count") or 0)
+                failure_reasons = dict(direct_meta.get("historical_archive_fetch_failure_reasons") or {})
+                if failure_reasons:
+                    source_counter = historical_archive_fetch_failure_reasons_by_source.setdefault(source_name, Counter())
+                    for reason, count in failure_reasons.items():
+                        source_counter[str(reason)] += int(count)
             lane = _effective_lane(query_row)
             result_row["query_url"] = query_url
             result_row["query_error"] = _nonempty(direct_meta.get("error"))
@@ -1996,6 +2187,13 @@ def run_food_line_discovery_expansion(
             result_row["exception_message"] = _nonempty(direct_meta.get("exception_message"))
             result_row["failure_reason"] = _nonempty(direct_meta.get("failure_reason") or result_row["direct_fetch_status"])
             result_row["direct_source_skipped"] = False
+            result_row["historical_archive_source_has_templates"] = bool(direct_meta.get("historical_archive_source_has_templates"))
+            result_row["historical_archive_url_count"] = int(direct_meta.get("historical_archive_url_count") or 0)
+            result_row["historical_archive_fetch_attempt_count"] = int(direct_meta.get("historical_archive_fetch_attempt_count") or 0)
+            result_row["historical_archive_fetch_success_count"] = int(direct_meta.get("historical_archive_fetch_success_count") or 0)
+            result_row["historical_archive_fetch_failure_count"] = int(direct_meta.get("historical_archive_fetch_failure_count") or 0)
+            result_row["historical_archive_candidates_extracted_count"] = int(direct_meta.get("historical_archive_candidates_extracted_count") or 0)
+            result_row["historical_archive_fetch_failure_reasons"] = dict(direct_meta.get("historical_archive_fetch_failure_reasons") or {})
             result_row["recommended_action"] = _recommended_direct_source_action(
                 discovery_channel=discovery_channel,
                 enabled=bool(query_row.get("direct_source_enabled", True)),
@@ -2033,6 +2231,13 @@ def run_food_line_discovery_expansion(
                     "exception_message": _nonempty(direct_meta.get("exception_message")),
                     "parser_attempted": _nonempty(direct_meta.get("parser_attempted")),
                     "item_count_extracted": int(direct_meta.get("item_count") or 0),
+                    "historical_archive_source_has_templates": bool(direct_meta.get("historical_archive_source_has_templates")),
+                    "historical_archive_url_count": int(direct_meta.get("historical_archive_url_count") or 0),
+                    "historical_archive_fetch_attempt_count": int(direct_meta.get("historical_archive_fetch_attempt_count") or 0),
+                    "historical_archive_fetch_success_count": int(direct_meta.get("historical_archive_fetch_success_count") or 0),
+                    "historical_archive_fetch_failure_count": int(direct_meta.get("historical_archive_fetch_failure_count") or 0),
+                    "historical_archive_candidates_extracted_count": int(direct_meta.get("historical_archive_candidates_extracted_count") or 0),
+                    "historical_archive_fetch_failure_reasons": dict(direct_meta.get("historical_archive_fetch_failure_reasons") or {}),
                     "source_disabled_or_skipped": False,
                     "recommended_action": _nonempty(result_row["recommended_action"]),
                 }
@@ -2103,11 +2308,15 @@ def run_food_line_discovery_expansion(
                         historical_sources_with_page_body_date_items.add(source_name)
             ranked_direct_items.sort(
                 key=lambda item: (
+                    0
+                    if _nonempty(item.get("archive_url_used")) and _nonempty(item.get("_date_match_status")) in {"exact_date", "within_query_window"}
+                    else 1,
                     _date_match_sort_key(
                         _nonempty(item.get("_date_match_status")),
                         item.get("_date_distance_days"),
                         _nonempty(item.get("_date_basis")),
                     ),
+                    int(item.get("archive_candidate_rank") or 99999),
                     _nonempty(item.get("title")).lower(),
                     _nonempty(item.get("link")),
                 )
@@ -2118,8 +2327,15 @@ def run_food_line_discovery_expansion(
                     direct_sources_with_in_window_items.add(source_name)
                 else:
                     direct_sources_with_no_in_window_items.add(source_name)
+            broad_candidate_exists = any(not _nonempty(item.get("archive_url_used")) for item in rss_items)
             for selected_item in rss_items[:max_results_per_query]:
                 selected_item["_selected_after_date_filter"] = True
+                if (
+                    broad_candidate_exists
+                    and _nonempty(selected_item.get("archive_url_used"))
+                    and _nonempty(selected_item.get("_date_match_status")) in {"exact_date", "within_query_window"}
+                ):
+                    historical_archive_selected_before_broad_count += 1
         for item in rss_items[:max_results_per_query]:
             discovered_url = _normalize_url(_nonempty(item.get("link")))
             direct_source_name = _nonempty(query_row.get("direct_source_name"))
@@ -2305,6 +2521,11 @@ def run_food_line_discovery_expansion(
                 lookback_days=query_lookback_days,
                 lookahead_days=query_lookahead_days,
             )
+            archive_url_used = _nonempty(item.get("archive_url_used"))
+            archive_template_used = _nonempty(item.get("archive_template_used"))
+            archive_granularity = _nonempty(item.get("archive_granularity"))
+            archive_target_date = _nonempty(item.get("archive_target_date"))
+            archive_candidate_rank = int(item.get("archive_candidate_rank") or 0)
             selected_after_date_filter = bool(item.get("_selected_after_date_filter")) or discovery_channel == "google_news_rss"
             source_url = _choose_trace_url(final_trace_url or publisher_url, canonical, discovered_url)
             traceability_status = _discovery_traceability_status(
@@ -2364,6 +2585,11 @@ def run_food_line_discovery_expansion(
                 "date_match_status": date_match_status,
                 "date_basis": date_basis,
                 "selected_after_date_filter": selected_after_date_filter,
+                "archive_url_used": archive_url_used,
+                "archive_template_used": archive_template_used,
+                "archive_granularity": archive_granularity,
+                "archive_target_date": archive_target_date,
+                "archive_candidate_rank": archive_candidate_rank,
                 "fetch_status": fetch_status,
                 "fetch_error": fetch_error,
                 "final_trace_url": final_trace_url,
@@ -2388,6 +2614,12 @@ def run_food_line_discovery_expansion(
                 "_google_news_resolved_url": resolved_wrapper_url,
                 "_google_news_resolution_status": google_news_resolution_status,
             }
+            if archive_url_used and direct_source_name:
+                historical_archive_candidates_by_source[direct_source_name] = historical_archive_candidates_by_source.get(direct_source_name, 0) + 1
+                if date_match_status == "exact_date":
+                    historical_archive_exact_date_candidates_by_source[direct_source_name] = (
+                        historical_archive_exact_date_candidates_by_source.get(direct_source_name, 0) + 1
+                    )
             if google_news_resolution_status:
                 resolution_status_counts[google_news_resolution_status] += 1
                 resolution_debug_by_candidate[row["candidate_id"]] = {
@@ -2655,6 +2887,21 @@ def run_food_line_discovery_expansion(
         "historical_sources_with_exact_date_items": sorted(historical_sources_with_exact_date_items),
         "historical_sources_with_url_date_items": sorted(historical_sources_with_url_date_items),
         "historical_sources_with_page_body_date_items": sorted(historical_sources_with_page_body_date_items),
+        "historical_archive_source_count": len(historical_archive_source_names),
+        "historical_archive_fetch_attempt_count": historical_archive_fetch_attempt_count,
+        "historical_archive_fetch_success_count": historical_archive_fetch_success_count,
+        "historical_archive_fetch_failure_count": historical_archive_fetch_failure_count,
+        "historical_archive_url_count": historical_archive_url_count,
+        "historical_archive_candidates_extracted_count": historical_archive_candidates_extracted_count,
+        "historical_archive_sources_with_templates": sorted(historical_archive_sources_with_templates),
+        "historical_archive_sources_without_templates": sorted(historical_archive_sources_without_templates),
+        "historical_archive_fetch_failure_reasons_by_source": {
+            key: dict(sorted(value.items()))
+            for key, value in sorted(historical_archive_fetch_failure_reasons_by_source.items())
+        },
+        "historical_archive_candidates_by_source": dict(sorted(historical_archive_candidates_by_source.items())),
+        "historical_archive_exact_date_candidates_by_source": dict(sorted(historical_archive_exact_date_candidates_by_source.items())),
+        "historical_archive_selected_before_broad_count": historical_archive_selected_before_broad_count,
         "public_eligible_candidate_count": public_eligible_candidate_count,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
@@ -2741,6 +2988,17 @@ def run_food_line_discovery_expansion(
             f"- Historical direct sources with exact-date items: `{audit_summary['historical_sources_with_exact_date_items']}`",
             f"- Historical direct sources with URL-date items: `{audit_summary['historical_sources_with_url_date_items']}`",
             f"- Historical direct sources with page-body-date items: `{audit_summary['historical_sources_with_page_body_date_items']}`",
+            f"- Historical archive sources with templates: `{audit_summary['historical_archive_sources_with_templates']}`",
+            f"- Historical archive sources without templates: `{audit_summary['historical_archive_sources_without_templates']}`",
+            f"- Historical archive fetch attempts: `{audit_summary['historical_archive_fetch_attempt_count']}`",
+            f"- Historical archive fetch successes: `{audit_summary['historical_archive_fetch_success_count']}`",
+            f"- Historical archive fetch failures: `{audit_summary['historical_archive_fetch_failure_count']}`",
+            f"- Historical archive URLs rendered: `{audit_summary['historical_archive_url_count']}`",
+            f"- Historical archive candidates extracted: `{audit_summary['historical_archive_candidates_extracted_count']}`",
+            f"- Historical archive failures by source: `{audit_summary['historical_archive_fetch_failure_reasons_by_source']}`",
+            f"- Historical archive candidates by source: `{audit_summary['historical_archive_candidates_by_source']}`",
+            f"- Historical archive exact-date candidates by source: `{audit_summary['historical_archive_exact_date_candidates_by_source']}`",
+            f"- Historical archive selections before broad: `{audit_summary['historical_archive_selected_before_broad_count']}`",
             f"- Disabled direct sources: `{disabled_direct_sources}`",
             f"- Recommended direct-source disables: `{direct_sources_recommended_for_disable}`",
             f"- Recommended direct-source URL refreshes: `{direct_sources_recommended_for_url_refresh}`",

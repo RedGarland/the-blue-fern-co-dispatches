@@ -39,10 +39,11 @@
       "enabled": true,
       "sampling_priority": 20,
       "direct_source_candidate_cap": 1,
+      "historical_capable": true,
       "max_age_days": 14,
       "pressure_terms": ["food insecurity", "meal gap", "child hunger", "food bank", "SNAP"],
       "exclusion_terms": ["fundraiser", "donation form", "about us"],
-      "notes": "National nonprofit reporting and institutional updates."
+      "notes": "National nonprofit reporting with archive listings that expose article dates for older backfill windows."
     },
     {
       "source_name": "Central Texas Food Bank News",
@@ -56,10 +57,11 @@
       "enabled": true,
       "sampling_priority": 30,
       "direct_source_candidate_cap": 1,
+      "historical_capable": true,
       "max_age_days": 14,
       "pressure_terms": ["food bank", "food pantry", "demand", "summer meals", "distribution", "SNAP"],
       "exclusion_terms": ["volunteer", "gala", "recipe"],
-      "notes": "Provider-operated updates that may surface direct institutional pressure reporting."
+      "notes": "Provider-operated dated archive page that exposes historical article links for backfills."
     },
     {
       "source_name": "Second Harvest Silicon Valley Blog",
@@ -192,10 +194,11 @@
       "enabled": true,
       "sampling_priority": 55,
       "direct_source_candidate_cap": 1,
+      "historical_capable": true,
       "max_age_days": 14,
       "pressure_terms": ["school meals", "summer meals", "child hunger", "meal sites", "families"],
       "exclusion_terms": ["fundraiser", "event"],
-      "notes": "Child-nutrition reporting with direct article URLs."
+      "notes": "Child-nutrition archive listing with visible article dates that can support historical backfills."
     },
     {
       "source_name": "FRAC News",

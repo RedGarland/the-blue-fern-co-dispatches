@@ -412,6 +412,9 @@ def test_food_line_google_news_wrappers_stay_out_of_public_trace_urls(tmp_path: 
             "discovery_confidence": "moderate",
             "discovery_confidence_reason": "Pressure signals were found, but some candidates still need manual review or had fetch problems.",
             "no_current_update": False,
+            "historical_source_count": 1,
+            "historical_sources": ["Historical Archive"],
+            "historical_sources_with_exact_date_items": ["Historical Archive"],
             "discovery_audit_json_path": str(tmp_path / "output" / "review" / "food-line" / edition_date / "discovery_audit.json"),
             "discovery_candidates_path": str(candidate_path),
         },
@@ -420,6 +423,7 @@ def test_food_line_google_news_wrappers_stay_out_of_public_trace_urls(tmp_path: 
     source_rows = json.loads(Path(bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))
     bridge_row = source_rows[0]
 
+    assert bridge["discovery_expansion_used"] is True
     assert bridge_row["url"] == publisher_url
     assert bridge_row["google_news_url"].lower() == google_news_url.lower()
     assert bridge_row["final_trace_url"] == publisher_url

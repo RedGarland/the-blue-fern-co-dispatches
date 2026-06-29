@@ -4576,6 +4576,9 @@ def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_pat
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children" in source_table_html
     assert "FRAC News" in claim_ledger_html
+    assert "This indicates national policy pressure around SNAP eligibility and food assistance access." in claim_ledger_html
+    assert "local food-access strain" not in claim_ledger_html
+    assert "in United States" not in claim_ledger_html
     assert "WPDE / ABC 15" not in edition_html
     assert "Tulsa Flyer" not in edition_html
     assert "WKRN" not in edition_html
@@ -4717,6 +4720,32 @@ def test_food_line_public_signal_reader_sentence_preserves_local_location():
     }
     sentence = food_line._food_line_public_signal_reader_sentence(row)
     assert sentence.startswith("In Horry County, South Carolina,")
+
+
+def test_food_line_claim_interpretation_uses_national_policy_wording():
+    row = {
+        "source_role": "policy_analysis",
+        "location_scope": "national",
+        "location_name": "United States",
+        "state": "US",
+        "pressure_type": "SNAP policy pressure",
+    }
+    interpretation = food_line._food_line_claim_interpretation(row)
+    assert interpretation == "This indicates national policy pressure around SNAP eligibility and food assistance access."
+    assert "local food-access strain" not in interpretation
+    assert "in United States" not in interpretation
+
+
+def test_food_line_claim_interpretation_preserves_local_strain_wording():
+    row = {
+        "source_role": "provider_signal",
+        "location_scope": "state_local",
+        "location_name": "Horry County",
+        "state": "SC",
+        "pressure_type": "demand strain",
+    }
+    interpretation = food_line._food_line_claim_interpretation(row)
+    assert interpretation == "This points to pantry supply strain in Horry County."
 
 
 def test_food_line_public_html_hides_internal_candidate_labels(tmp_path: Path):

@@ -2969,6 +2969,11 @@ def _food_line_clean_claim_location_tail(text: str, location: str) -> tuple[str,
 def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     location = _food_line_public_location_label(row)
+    source_role = str(row.get("source_role") or "").strip().lower()
+    if source_role == "policy_analysis" or _food_line_is_national_location(row, location):
+        if "snap" in pressure_type or "benefit" in pressure_type:
+            return "This indicates national policy pressure around SNAP eligibility and food assistance access."
+        return "This is a national policy-pressure signal related to food assistance access."
     if pressure_type == "demand strain":
         return f"This points to pantry supply strain in {location}."
     if pressure_type == "service reduction":

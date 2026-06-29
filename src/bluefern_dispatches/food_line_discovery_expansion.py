@@ -520,6 +520,17 @@ def _render_historical_archive_urls(
     return rendered
 
 
+def _render_archive_page_url(template: str, *, edition_date: str, page: int) -> str:
+    if not _nonempty(template):
+        return ""
+    variables = _historical_archive_template_vars(edition_date)
+    variables["page"] = str(int(page))
+    try:
+        return _normalize_url(template.format_map(variables))
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 def _is_homepage_only_url(url: str) -> bool:
     value = _normalize_url(url)
     if not value:
@@ -909,6 +920,12 @@ def build_food_line_discovery_query_plan(
                     or direct_source.get("archive_url_templates")
                     or direct_source.get("archive_url_template")
                 ),
+                "historical_archive_pagination_enabled": bool(direct_source.get("historical_archive_pagination_enabled", False)),
+                "archive_page_url_template": _nonempty(direct_source.get("archive_page_url_template")),
+                "archive_page_start": int(direct_source.get("archive_page_start") or 1),
+                "archive_page_max_pages": int(direct_source.get("archive_page_max_pages") or 0),
+                "archive_page_increment": int(direct_source.get("archive_page_increment") or 1),
+                "archive_pagination_notes": _nonempty(direct_source.get("archive_pagination_notes")),
                 "notes": _nonempty(direct_source.get("notes")),
             }
         )
@@ -1340,6 +1357,16 @@ def _collect_direct_source_items(
         "historical_archive_url_count": 0,
         "historical_archive_candidates_extracted_count": 0,
         "historical_archive_fetch_failure_reasons": {},
+        "historical_archive_pagination_enabled": False,
+        "historical_archive_page_fetch_attempt_count": 0,
+        "historical_archive_page_fetch_success_count": 0,
+        "historical_archive_page_fetch_failure_count": 0,
+        "historical_archive_pages_fetched": [],
+        "historical_archive_links_extracted_count": 0,
+        "historical_archive_in_window_candidates": 0,
+        "historical_archive_stop_reason": "",
+        "historical_archive_stop_context": "",
+        "historical_archive_duplicate_link_count": 0,
     }
     source_name = _nonempty(query_row.get("direct_source_name"))
 
@@ -1416,6 +1443,111 @@ def _collect_direct_source_items(
             item_copy["archive_candidate_rank"] = rank
             archive_items.append(item_copy)
         diagnostics["historical_archive_candidates_extracted_count"] += len(parsed_archive_items)
+
+    pagination_enabled = bool(query_row.get("historical_archive_pagination_enabled")) and bool(_nonempty(query_row.get("archive_page_url_template")))
+    diagnostics["historical_archive_pagination_enabled"] = pagination_enabled
+    if pagination_enabled:
+        page_template = _nonempty(query_row.get("archive_page_url_template"))
+        start_page = max(1, int(query_row.get("archive_page_start") or 1))
+        max_pages = max(0, int(query_row.get("archive_page_max_pages") or 0))
+        page_increment = max(1, int(query_row.get("archive_page_increment") or 1))
+        seen_pagination_links: set[str] = set()
+        exact_or_window_hits = 0
+        duplicate_link_count = 0
+        target_date = _nonempty(query_row.get("edition_date"))
+        lookback_days = max(0, int(query_row.get("query_lookback_days") or 0))
+        lookahead_days = max(0, int(query_row.get("query_lookahead_days") or 0))
+        older_margin_days = max(lookback_days + 3, int(query_row.get("max_age_days") or 0))
+        for page_index in range(max_pages):
+            page_number = start_page + (page_index * page_increment)
+            page_url = _render_archive_page_url(page_template, edition_date=target_date, page=page_number)
+            if not page_url:
+                diagnostics["historical_archive_stop_reason"] = "invalid_page_template"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number}"
+                break
+            diagnostics["historical_archive_page_fetch_attempt_count"] += 1
+            page_payload, page_error, page_meta = _fetch_url_with_metadata(fetcher, page_url)
+            if page_error or not page_payload:
+                reason = _classify_fetch_error(page_error or "empty response")
+                diagnostics["historical_archive_page_fetch_failure_count"] += 1
+                diagnostics["historical_archive_fetch_failure_reasons"][reason] = (
+                    int(diagnostics["historical_archive_fetch_failure_reasons"].get(reason, 0)) + 1
+                )
+                diagnostics["historical_archive_stop_reason"] = "page_fetch_failure"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number} reason={reason}"
+                continue
+            diagnostics["historical_archive_page_fetch_success_count"] += 1
+            diagnostics["historical_archive_pages_fetched"].append(page_url)
+            try:
+                page_items, parser_attempted = parse_payload(
+                    page_payload,
+                    current_url=page_url,
+                    content_type=_nonempty(page_meta.get("content_type")),
+                    final_response_url=_nonempty(page_meta.get("final_response_url") or page_url),
+                )
+            except Exception as exc:  # noqa: BLE001
+                reason = _classify_fetch_error(f"{type(exc).__name__}: {exc}")
+                diagnostics["historical_archive_page_fetch_failure_count"] += 1
+                diagnostics["historical_archive_fetch_failure_reasons"][reason] = (
+                    int(diagnostics["historical_archive_fetch_failure_reasons"].get(reason, 0)) + 1
+                )
+                diagnostics["historical_archive_stop_reason"] = "page_parse_failure"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number} parser={reason}"
+                continue
+            if parser_attempted != "html_listing":
+                diagnostics["historical_archive_stop_reason"] = "non_listing_page"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number} parser={parser_attempted}"
+                break
+            new_page_items: list[dict[str, str]] = []
+            page_dates: list[str] = []
+            for rank, item in enumerate(page_items, start=1):
+                normalized_link = _normalize_url(_nonempty(item.get("link")) or _nonempty(item.get("source_url")))
+                if normalized_link and normalized_link in seen_pagination_links:
+                    duplicate_link_count += 1
+                    continue
+                if normalized_link:
+                    seen_pagination_links.add(normalized_link)
+                item_copy = dict(item)
+                item_copy["archive_page_url_used"] = page_url
+                item_copy["archive_page_number"] = page_number
+                item_copy["archive_pagination_rank"] = rank
+                item_copy["archive_stop_context"] = ""
+                item_copy["archive_url_used"] = page_url
+                if _nonempty(item_copy.get("published_date")):
+                    page_dates.append(_nonempty(item_copy.get("published_date")))
+                    status = _date_match_status(
+                        target_date,
+                        _nonempty(item_copy.get("published_date")),
+                        lookback_days=lookback_days,
+                        lookahead_days=lookahead_days,
+                    )
+                    if status in {"exact_date", "within_query_window"}:
+                        exact_or_window_hits += 1
+                new_page_items.append(item_copy)
+            diagnostics["historical_archive_links_extracted_count"] += len(new_page_items)
+            archive_items.extend(new_page_items)
+            if not new_page_items:
+                diagnostics["historical_archive_stop_reason"] = "no_new_links"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number}"
+                break
+            if exact_or_window_hits >= max(1, int(query_row.get("direct_source_candidate_cap") or 1)):
+                diagnostics["historical_archive_stop_reason"] = "enough_in_window_hits"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number} hits={exact_or_window_hits}"
+                break
+            older_than_margin = False
+            if page_dates:
+                oldest_page_date = min(page_dates)
+                distance = _date_distance_days(target_date, oldest_page_date)
+                if distance is not None and oldest_page_date < validate_date(target_date) and distance > older_margin_days:
+                    older_than_margin = True
+            if older_than_margin and exact_or_window_hits > 0:
+                diagnostics["historical_archive_stop_reason"] = "older_than_target_margin"
+                diagnostics["historical_archive_stop_context"] = f"page={page_number} margin_days={older_margin_days}"
+                break
+        if not diagnostics["historical_archive_stop_reason"]:
+            diagnostics["historical_archive_stop_reason"] = "max_pages_reached" if max_pages > 0 else "pagination_disabled"
+        diagnostics["historical_archive_duplicate_link_count"] = duplicate_link_count
+        diagnostics["historical_archive_in_window_candidates"] = exact_or_window_hits
 
     payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, source_url)
     diagnostics["response_status"] = fetch_meta.get("response_status")
@@ -2099,6 +2231,16 @@ def run_food_line_discovery_expansion(
     historical_archive_fetch_failure_reasons_by_source: dict[str, Counter[str]] = {}
     historical_archive_candidates_by_source: dict[str, int] = {}
     historical_archive_exact_date_candidates_by_source: dict[str, int] = {}
+    historical_archive_pagination_source_names: set[str] = set()
+    historical_archive_page_fetch_attempt_count = 0
+    historical_archive_page_fetch_success_count = 0
+    historical_archive_page_fetch_failure_count = 0
+    historical_archive_pages_fetched_by_source: dict[str, int] = {}
+    historical_archive_links_extracted_by_source: dict[str, int] = {}
+    historical_archive_in_window_candidates_by_source: dict[str, int] = {}
+    historical_archive_stop_reason_by_source: dict[str, str] = {}
+    historical_archive_duplicate_link_count_by_source: dict[str, int] = {}
+    historical_archive_pagination_sources_without_hits: set[str] = set()
     in_window_direct_candidate_count = 0
     out_of_window_direct_candidate_count = 0
     missing_date_direct_candidate_count = 0
@@ -2134,6 +2276,7 @@ def run_food_line_discovery_expansion(
         query_text = _nonempty(query_row.get("query_text"))
         result_row = dict(query_row)
         result_row["result_count"] = 0
+        direct_meta: dict[str, Any] = {}
         discovery_channel = _nonempty(query_row.get("discovery_channel") or "google_news_rss")
         if discovery_channel == "google_news_rss":
             query_url = _query_url(query_text)
@@ -2171,6 +2314,28 @@ def run_food_line_discovery_expansion(
                     source_counter = historical_archive_fetch_failure_reasons_by_source.setdefault(source_name, Counter())
                     for reason, count in failure_reasons.items():
                         source_counter[str(reason)] += int(count)
+            if bool(direct_meta.get("historical_archive_pagination_enabled")) and source_name:
+                historical_archive_pagination_source_names.add(source_name)
+                historical_archive_page_fetch_attempt_count += int(direct_meta.get("historical_archive_page_fetch_attempt_count") or 0)
+                historical_archive_page_fetch_success_count += int(direct_meta.get("historical_archive_page_fetch_success_count") or 0)
+                historical_archive_page_fetch_failure_count += int(direct_meta.get("historical_archive_page_fetch_failure_count") or 0)
+                historical_archive_pages_fetched_by_source[source_name] = int(
+                    historical_archive_pages_fetched_by_source.get(source_name, 0)
+                ) + len(list(direct_meta.get("historical_archive_pages_fetched") or []))
+                historical_archive_links_extracted_by_source[source_name] = int(
+                    historical_archive_links_extracted_by_source.get(source_name, 0)
+                ) + int(direct_meta.get("historical_archive_links_extracted_count") or 0)
+                historical_archive_in_window_candidates_by_source[source_name] = int(
+                    historical_archive_in_window_candidates_by_source.get(source_name, 0)
+                ) + int(direct_meta.get("historical_archive_in_window_candidates") or 0)
+                historical_archive_duplicate_link_count_by_source[source_name] = int(
+                    historical_archive_duplicate_link_count_by_source.get(source_name, 0)
+                ) + int(direct_meta.get("historical_archive_duplicate_link_count") or 0)
+                stop_reason = _nonempty(direct_meta.get("historical_archive_stop_reason"))
+                if stop_reason:
+                    historical_archive_stop_reason_by_source[source_name] = stop_reason
+                if int(direct_meta.get("historical_archive_in_window_candidates") or 0) <= 0:
+                    historical_archive_pagination_sources_without_hits.add(source_name)
             lane = _effective_lane(query_row)
             result_row["query_url"] = query_url
             result_row["query_error"] = _nonempty(direct_meta.get("error"))
@@ -2194,6 +2359,16 @@ def run_food_line_discovery_expansion(
             result_row["historical_archive_fetch_failure_count"] = int(direct_meta.get("historical_archive_fetch_failure_count") or 0)
             result_row["historical_archive_candidates_extracted_count"] = int(direct_meta.get("historical_archive_candidates_extracted_count") or 0)
             result_row["historical_archive_fetch_failure_reasons"] = dict(direct_meta.get("historical_archive_fetch_failure_reasons") or {})
+            result_row["historical_archive_pagination_enabled"] = bool(direct_meta.get("historical_archive_pagination_enabled"))
+            result_row["historical_archive_page_fetch_attempt_count"] = int(direct_meta.get("historical_archive_page_fetch_attempt_count") or 0)
+            result_row["historical_archive_page_fetch_success_count"] = int(direct_meta.get("historical_archive_page_fetch_success_count") or 0)
+            result_row["historical_archive_page_fetch_failure_count"] = int(direct_meta.get("historical_archive_page_fetch_failure_count") or 0)
+            result_row["historical_archive_pages_fetched"] = list(direct_meta.get("historical_archive_pages_fetched") or [])
+            result_row["historical_archive_links_extracted_count"] = int(direct_meta.get("historical_archive_links_extracted_count") or 0)
+            result_row["historical_archive_in_window_candidates"] = int(direct_meta.get("historical_archive_in_window_candidates") or 0)
+            result_row["historical_archive_stop_reason"] = _nonempty(direct_meta.get("historical_archive_stop_reason"))
+            result_row["historical_archive_stop_context"] = _nonempty(direct_meta.get("historical_archive_stop_context"))
+            result_row["historical_archive_duplicate_link_count"] = int(direct_meta.get("historical_archive_duplicate_link_count") or 0)
             result_row["recommended_action"] = _recommended_direct_source_action(
                 discovery_channel=discovery_channel,
                 enabled=bool(query_row.get("direct_source_enabled", True)),
@@ -2238,6 +2413,16 @@ def run_food_line_discovery_expansion(
                     "historical_archive_fetch_failure_count": int(direct_meta.get("historical_archive_fetch_failure_count") or 0),
                     "historical_archive_candidates_extracted_count": int(direct_meta.get("historical_archive_candidates_extracted_count") or 0),
                     "historical_archive_fetch_failure_reasons": dict(direct_meta.get("historical_archive_fetch_failure_reasons") or {}),
+                    "historical_archive_pagination_enabled": bool(direct_meta.get("historical_archive_pagination_enabled")),
+                    "historical_archive_page_fetch_attempt_count": int(direct_meta.get("historical_archive_page_fetch_attempt_count") or 0),
+                    "historical_archive_page_fetch_success_count": int(direct_meta.get("historical_archive_page_fetch_success_count") or 0),
+                    "historical_archive_page_fetch_failure_count": int(direct_meta.get("historical_archive_page_fetch_failure_count") or 0),
+                    "historical_archive_pages_fetched": list(direct_meta.get("historical_archive_pages_fetched") or []),
+                    "historical_archive_links_extracted_count": int(direct_meta.get("historical_archive_links_extracted_count") or 0),
+                    "historical_archive_in_window_candidates": int(direct_meta.get("historical_archive_in_window_candidates") or 0),
+                    "historical_archive_stop_reason": _nonempty(direct_meta.get("historical_archive_stop_reason")),
+                    "historical_archive_stop_context": _nonempty(direct_meta.get("historical_archive_stop_context")),
+                    "historical_archive_duplicate_link_count": int(direct_meta.get("historical_archive_duplicate_link_count") or 0),
                     "source_disabled_or_skipped": False,
                     "recommended_action": _nonempty(result_row["recommended_action"]),
                 }
@@ -2317,6 +2502,7 @@ def run_food_line_discovery_expansion(
                         _nonempty(item.get("_date_basis")),
                     ),
                     int(item.get("archive_candidate_rank") or 99999),
+                    int(item.get("archive_pagination_rank") or 99999),
                     _nonempty(item.get("title")).lower(),
                     _nonempty(item.get("link")),
                 )
@@ -2521,11 +2707,18 @@ def run_food_line_discovery_expansion(
                 lookback_days=query_lookback_days,
                 lookahead_days=query_lookahead_days,
             )
+            if discovery_channel != "google_news_rss" and direct_source_name and date_match_status in {"exact_date", "within_query_window"}:
+                direct_sources_with_in_window_items.add(direct_source_name)
+                direct_sources_with_no_in_window_items.discard(direct_source_name)
             archive_url_used = _nonempty(item.get("archive_url_used"))
             archive_template_used = _nonempty(item.get("archive_template_used"))
             archive_granularity = _nonempty(item.get("archive_granularity"))
             archive_target_date = _nonempty(item.get("archive_target_date"))
             archive_candidate_rank = int(item.get("archive_candidate_rank") or 0)
+            archive_page_url_used = _nonempty(item.get("archive_page_url_used"))
+            archive_page_number = int(item.get("archive_page_number") or 0)
+            archive_pagination_rank = int(item.get("archive_pagination_rank") or 0)
+            archive_stop_context = _nonempty(item.get("archive_stop_context") or direct_meta.get("historical_archive_stop_context"))
             selected_after_date_filter = bool(item.get("_selected_after_date_filter")) or discovery_channel == "google_news_rss"
             source_url = _choose_trace_url(final_trace_url or publisher_url, canonical, discovered_url)
             traceability_status = _discovery_traceability_status(
@@ -2590,6 +2783,10 @@ def run_food_line_discovery_expansion(
                 "archive_granularity": archive_granularity,
                 "archive_target_date": archive_target_date,
                 "archive_candidate_rank": archive_candidate_rank,
+                "archive_page_url_used": archive_page_url_used,
+                "archive_page_number": archive_page_number,
+                "archive_pagination_rank": archive_pagination_rank,
+                "archive_stop_context": archive_stop_context,
                 "fetch_status": fetch_status,
                 "fetch_error": fetch_error,
                 "final_trace_url": final_trace_url,
@@ -2902,6 +3099,16 @@ def run_food_line_discovery_expansion(
         "historical_archive_candidates_by_source": dict(sorted(historical_archive_candidates_by_source.items())),
         "historical_archive_exact_date_candidates_by_source": dict(sorted(historical_archive_exact_date_candidates_by_source.items())),
         "historical_archive_selected_before_broad_count": historical_archive_selected_before_broad_count,
+        "historical_archive_pagination_source_count": len(historical_archive_pagination_source_names),
+        "historical_archive_page_fetch_attempt_count": historical_archive_page_fetch_attempt_count,
+        "historical_archive_page_fetch_success_count": historical_archive_page_fetch_success_count,
+        "historical_archive_page_fetch_failure_count": historical_archive_page_fetch_failure_count,
+        "historical_archive_pages_fetched_by_source": dict(sorted(historical_archive_pages_fetched_by_source.items())),
+        "historical_archive_links_extracted_by_source": dict(sorted(historical_archive_links_extracted_by_source.items())),
+        "historical_archive_in_window_candidates_by_source": dict(sorted(historical_archive_in_window_candidates_by_source.items())),
+        "historical_archive_stop_reason_by_source": dict(sorted(historical_archive_stop_reason_by_source.items())),
+        "historical_archive_duplicate_link_count_by_source": dict(sorted(historical_archive_duplicate_link_count_by_source.items())),
+        "historical_archive_pagination_sources_without_hits": sorted(historical_archive_pagination_sources_without_hits),
         "public_eligible_candidate_count": public_eligible_candidate_count,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
@@ -2999,6 +3206,16 @@ def run_food_line_discovery_expansion(
             f"- Historical archive candidates by source: `{audit_summary['historical_archive_candidates_by_source']}`",
             f"- Historical archive exact-date candidates by source: `{audit_summary['historical_archive_exact_date_candidates_by_source']}`",
             f"- Historical archive selections before broad: `{audit_summary['historical_archive_selected_before_broad_count']}`",
+            f"- Historical archive pagination source count: `{audit_summary['historical_archive_pagination_source_count']}`",
+            f"- Historical archive page fetch attempts: `{audit_summary['historical_archive_page_fetch_attempt_count']}`",
+            f"- Historical archive page fetch successes: `{audit_summary['historical_archive_page_fetch_success_count']}`",
+            f"- Historical archive page fetch failures: `{audit_summary['historical_archive_page_fetch_failure_count']}`",
+            f"- Historical archive pages fetched by source: `{audit_summary['historical_archive_pages_fetched_by_source']}`",
+            f"- Historical archive links extracted by source: `{audit_summary['historical_archive_links_extracted_by_source']}`",
+            f"- Historical archive in-window candidates by source: `{audit_summary['historical_archive_in_window_candidates_by_source']}`",
+            f"- Historical archive stop reason by source: `{audit_summary['historical_archive_stop_reason_by_source']}`",
+            f"- Historical archive duplicate link count by source: `{audit_summary['historical_archive_duplicate_link_count_by_source']}`",
+            f"- Historical archive pagination sources without hits: `{audit_summary['historical_archive_pagination_sources_without_hits']}`",
             f"- Disabled direct sources: `{disabled_direct_sources}`",
             f"- Recommended direct-source disables: `{direct_sources_recommended_for_disable}`",
             f"- Recommended direct-source URL refreshes: `{direct_sources_recommended_for_url_refresh}`",

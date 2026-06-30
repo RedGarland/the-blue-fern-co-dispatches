@@ -4718,10 +4718,14 @@ def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_pat
     assert result["render_mode"] == "review_only"
     assert result["source_count"] == 1
     assert result["public_eligible_candidate_count"] == 1
+    assert "Today’s Food Line found 1 reported pressure signal." in edition_html
+    assert "Source mix: 1 signals from 1 publishers." in edition_html
     assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "In United States" not in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children" in source_table_html
+    assert "This ledger records 1 public claim supported by source-backed Food Line signals for June 12, 2026." in claim_ledger_html
+    assert "Records reviewed: 1. Public claims: 1. Excluded records: 0." in claim_ledger_html
     assert "FRAC News" in claim_ledger_html
     assert "This indicates national policy pressure around SNAP eligibility and food assistance access." in claim_ledger_html
     assert "local food-access strain" not in claim_ledger_html
@@ -4829,9 +4833,13 @@ def test_food_line_review_only_render_source_url_selector_renders_only_selected_
 
     assert result["source_count"] == 1
     assert result["selected_candidate_count"] == 1
+    assert "Today’s Food Line found 1 reported pressure signal." in edition_html
+    assert "Source mix: 1 signals from 1 publishers." in edition_html
     assert "Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald" in edition_html
     assert "Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows." in edition_html
     assert "Summer meal programs expect increased demand this year" not in edition_html
+    assert "This ledger records 1 public claim supported by source-backed Food Line signals for June 16, 2026." in claim_ledger_html
+    assert "Records reviewed: 1. Public claims: 1. Excluded records: 0." in claim_ledger_html
     assert "TribLIVE" not in source_table_html
     assert "TribLIVE" not in claim_ledger_html
     assert manifest["selector_type"] == "source_url"

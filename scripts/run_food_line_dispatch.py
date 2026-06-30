@@ -3578,8 +3578,150 @@ def _food_line_public_edition_title(root: Path, date: str) -> str:
     return f"{date} — {title_body}"
 
 
+def _food_line_review_only_manifest_path(root: Path, date: str) -> Path:
+    return root / "output" / "site" / DISPATCH_SLUG / "editions" / date / "review_render_manifest.json"
+
+
+def _food_line_review_only_manifest(root: Path, date: str) -> dict[str, Any]:
+    path = _food_line_review_only_manifest_path(root, date)
+    if not path.exists():
+        return {}
+    payload = _read_json(path)
+    return payload if isinstance(payload, dict) else {}
+
+
+def _food_line_clean_archive_label_fragment(text: str) -> str:
+    cleaned = " ".join(str(text or "").strip().split())
+    if not cleaned:
+        return ""
+    cleaned = cleaned.rstrip(".")
+    return cleaned
+
+
+def _food_line_review_only_summary_fragment(row: dict[str, Any]) -> str:
+    summary = _food_line_clean_archive_label_fragment(str(row.get("pressure_summary") or ""))
+    if not summary:
+        return ""
+    lowered = summary.lower()
+    prefixes = (
+        "nationally, ",
+        "in a national policy signal, ",
+        "in ",
+    )
+    for prefix in prefixes:
+        if lowered.startswith(prefix):
+            summary = summary[len(prefix):].strip()
+            lowered = summary.lower()
+            break
+    if lowered.startswith("frac warned that "):
+        summary = "FRAC warns " + summary[len("FRAC warned that "):]
+    elif lowered.startswith("frac warned "):
+        summary = "FRAC warns " + summary[len("FRAC warned "):]
+    summary = summary.rstrip(".")
+    replacements = (
+        ("a usda proposal to end broad-based categorical eligibility for snap", "SNAP eligibility proposal"),
+        ("broad-based categorical eligibility for snap", "SNAP eligibility"),
+        ("would increase hunger for families and children", "could increase hunger"),
+        ("would increase hunger", "could increase hunger"),
+    )
+    lowered = summary.lower()
+    for old, new in replacements:
+        if old in lowered:
+            idx = lowered.index(old)
+            summary = summary[:idx] + new + summary[idx + len(old):]
+            lowered = summary.lower()
+    summary = _food_line_clean_archive_label_fragment(summary)
+    if not summary:
+        return ""
+    if len(summary) > 88:
+        summary = summary[:85].rstrip(" ,;:-") + "..."
+    return summary
+
+
+def _food_line_review_only_title_fragment(row: dict[str, Any]) -> str:
+    title = _food_line_clean_archive_label_fragment(str(row.get("title") or ""))
+    if not title:
+        return ""
+    source_role = str(row.get("source_role") or "").strip().lower()
+    for separator in (" - Food Research & Action Center", " | Food Research & Action Center", " - FRAC", " | FRAC"):
+        if title.endswith(separator):
+            title = title[: -len(separator)].rstrip()
+            break
+    lowered = title.lower()
+    if source_role == "policy_analysis" and "broad-based categorical eligibility for snap" in lowered and "increase hunger" in lowered:
+        return "FRAC warns SNAP eligibility proposal could increase hunger"
+    title = _food_line_clean_archive_label_fragment(title)
+    return title
+
+
+def _food_line_review_only_archive_label(root: Path, date: str) -> str:
+    manifest = _food_line_review_only_manifest(root, date)
+    if not manifest:
+        return ""
+    if str(manifest.get("render_mode") or "").strip() != "review_only":
+        return ""
+    try:
+        rendered_public_claim_count = int(manifest.get("rendered_public_claim_count") or 0)
+    except (TypeError, ValueError):
+        rendered_public_claim_count = 0
+    if rendered_public_claim_count <= 0:
+        return ""
+    lead_row = {
+        "pressure_summary": str(manifest.get("lead_pressure_summary") or ""),
+        "title": str(manifest.get("lead_title") or ""),
+        "pressure_type": str(manifest.get("lead_pressure_type") or ""),
+        "source_role": str(manifest.get("lead_source_role") or ""),
+    }
+    fragments = [
+        _food_line_review_only_summary_fragment(lead_row),
+        _food_line_review_only_title_fragment(lead_row),
+        _food_line_clean_archive_label_fragment(str(lead_row.get("pressure_type") or "")),
+    ]
+    for fragment in fragments:
+        if not fragment:
+            continue
+        if fragment.lower() == f"food line dispatch - {date}".lower():
+            continue
+        return f"{date} — {fragment}"
+    return ""
+
+
 def _food_line_public_edition_label(root: Path, date: str) -> str:
-    return _food_line_public_edition_title(root, date)
+    title = _food_line_public_edition_title(root, date)
+    if title and title != date:
+        generic = f"{date} — Food Line Dispatch - {date}"
+        if title != generic:
+            return title
+    review_only_title = _food_line_review_only_archive_label(root, date)
+    if review_only_title:
+        return review_only_title
+    return title
+
+
+def _food_line_home_archive_dates(root: Path, *, max_edition_date: str | None = None) -> list[str]:
+    site_root = root / "output" / "site"
+    public_dates = set(discover_public_edition_dates(site_root, DISPATCH_SLUG, max_edition_date=max_edition_date))
+    editions_root = site_root / DISPATCH_SLUG / "editions"
+    if editions_root.exists():
+        for path in editions_root.iterdir():
+            if not path.is_dir() or len(path.name) != 10:
+                continue
+            edition_date = path.name
+            if max_edition_date and edition_date > max_edition_date:
+                continue
+            manifest = _food_line_review_only_manifest(root, edition_date)
+            if not manifest:
+                continue
+            if str(manifest.get("render_mode") or "").strip() != "review_only":
+                continue
+            try:
+                rendered_public_claim_count = int(manifest.get("rendered_public_claim_count") or 0)
+            except (TypeError, ValueError):
+                rendered_public_claim_count = 0
+            if rendered_public_claim_count <= 0:
+                continue
+            public_dates.add(edition_date)
+    return sorted(public_dates, reverse=True)
 
 
 def _food_line_discovery_gap_report_paths(root: Path, date: str) -> tuple[Path, Path]:
@@ -6247,12 +6389,17 @@ def write_food_line_audio(
 
 def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_date: str | None = None) -> None:
     dispatch_root = root / "output" / "site" / DISPATCH_SLUG
-    public_dates = discover_public_edition_dates(root / "output" / "site", DISPATCH_SLUG, max_edition_date=max_edition_date)
+    public_dates = _food_line_home_archive_dates(root, max_edition_date=max_edition_date)
     latest_public_date = public_dates[0] if public_dates else ""
     latest_public_label = _food_line_public_edition_label(root, latest_public_date) if latest_public_date else ""
+    recent_public_dates = public_dates[: min(len(public_dates), 11)]
     archive_entries_html = "".join(
         f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
         for public_date in public_dates
+    )
+    recent_entries_html = "".join(
+        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
+        for public_date in recent_public_dates
     )
     page_footer = footer("")
     idx_body = "".join(
@@ -6274,6 +6421,12 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
             f"{'<p><a href=\"map/\">Pressure map</a></p>' if _food_line_map_is_available(root) else ''}\n",
             '    <p>This dispatch is source-backed and uses verified pressure signals only.</p>\n',
             f"    <p>{html.escape(_food_line_reported_signal_limitation())}</p>\n",
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Recent Editions</h2>\n',
+            '    <p>Recent source-backed editions, newest first.</p>\n',
+            f"    <ul>{recent_entries_html}</ul>\n" if recent_entries_html else '    <p>No public editions have been published yet.</p>\n',
+            '    <p><a href="archive.html">Open the full archive</a></p>\n',
             '  </section>\n',
             '</main>\n',
             page_footer,

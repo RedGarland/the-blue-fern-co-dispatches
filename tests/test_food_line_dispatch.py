@@ -3645,12 +3645,91 @@ def test_food_line_archive_titles_and_home_link_are_source_specific(tmp_path: Pa
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
     assert "Browse the Food Line archive" in home_html
+    assert "<h2>Recent Editions</h2>" in home_html
+    assert "Open the full archive" in home_html
     assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in home_html
     assert "2026-06-10 — Northwest Louisiana food-bank inventory" in archive_html
     assert "2026-06-11 — Roanoke St. Francis House shortage and Tucson food-bank strain" in archive_html
     assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in archive_html
     assert "Pantry demand and summer food-bank strain" not in home_html
     assert "Pantry demand and summer food-bank strain" not in archive_html
+
+
+def test_food_line_review_only_backfill_archive_label_stays_descriptive(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-12"
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text("<html><body>Review-only backfill</body></html>", encoding="utf-8")
+    (edition_dir / "review_render_manifest.json").write_text(
+        json.dumps(
+            {
+                "ok": True,
+                "render_mode": "review_only",
+                "edition_date": "2026-06-12",
+                "rendered_public_claim_count": 1,
+                "lead_title": "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children - Food Research & Action Center",
+                "lead_source_role": "policy_analysis",
+                "lead_pressure_type": "SNAP policy pressure",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    label = food_line._food_line_public_edition_label(tmp_path, "2026-06-12")
+
+    assert label == "2026-06-12 — FRAC warns SNAP eligibility proposal could increase hunger"
+    assert label != "2026-06-12 — Food Line Dispatch - 2026-06-12"
+
+
+def test_food_line_home_recent_editions_are_relative_and_date_descending(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    fixtures = [
+        ("2026-06-10", [_ktal_manual_source()]),
+        ("2026-06-11", list(_food_line_june_11_rows())),
+    ]
+    for date, rows in fixtures:
+        path = _manual_path(tmp_path, date)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+        run_food_line_dispatch(tmp_path, date, generate_audio=False)
+
+    review_only_dir = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-12"
+    review_only_dir.mkdir(parents=True, exist_ok=True)
+    (review_only_dir / "index.html").write_text("<html><body>Review-only backfill</body></html>", encoding="utf-8")
+    (review_only_dir / "review_render_manifest.json").write_text(
+        json.dumps(
+            {
+                "ok": True,
+                "render_mode": "review_only",
+                "edition_date": "2026-06-12",
+                "rendered_public_claim_count": 1,
+                "lead_title": "USDA Proposal to End Broad-Based Categorical Eligibility for SNAP Would Increase Hunger for Families and Children - Food Research & Action Center",
+                "lead_source_role": "policy_analysis",
+                "lead_pressure_type": "SNAP policy pressure",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    food_line._update_index_archive(
+        tmp_path,
+        "2026-06-12",
+        "The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting.",
+        max_edition_date="2026-06-12",
+    )
+
+    home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    recent_html = home_html.split("<h2>Recent Editions</h2>", 1)[1].split("</section>", 1)[0]
+
+    assert '<a href="editions/2026-06-12/">' in recent_html
+    assert '<a href="editions/2026-06-11/">' in recent_html
+    assert '<a href="editions/2026-06-10/">' in recent_html
+    assert 'href="/food-line/editions/2026-06-12/"' not in recent_html
+    assert "2026-06-12 — FRAC warns SNAP eligibility proposal could increase hunger" in recent_html
+    assert recent_html.index("2026-06-12") < recent_html.index("2026-06-11")
+    assert recent_html.index("2026-06-11") < recent_html.index("2026-06-10")
 
 
 def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regenerating_mp3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

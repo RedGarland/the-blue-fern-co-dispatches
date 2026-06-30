@@ -2044,6 +2044,73 @@ def test_local_news_article_derives_local_news_report(tmp_path: Path):
     assert candidate["source_role_derivation_status"] == "derived_from_source_family"
 
 
+def test_traceable_local_news_record_spending_article_derives_safe_public_prose():
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "boston-herald-public-prose",
+            "discovered_publisher": "Boston Herald",
+            "selected_title": "Greater Boston Food Bank to spend record-breaking $65M on food in 2026",
+            "source_url": "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026",
+            "final_trace_url": "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026",
+            "source_family": "local_news_direct_rss",
+            "discovery_lane": "news_article",
+            "classification_status": "qualified_pressure_signal",
+            "traceability_status": "traceable",
+            "public_claim_eligible": True,
+            "public_claim_blockers": [],
+            "fetch_status": "ok",
+            "summary_or_snippet": "The Greater Boston Food Bank is set to invest another $5 million to break their food spending record in 2026 and distribute over 94 million meals across the region as need grows.",
+            "evidence_text": "Greater Boston Food Bank to spend record-breaking $65M on food in 2026. The Greater Boston Food Bank is set to invest another $5 million to break their food spending record in 2026 and distribute over 94 million meals across the region as need grows.",
+            "evidence_text_basis": "page_text_excerpt",
+            "pressure_type": "food bank demand pressure",
+            "evidence_level": "background context",
+            "freshness_role": "fresh_daily_signal",
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-16")
+
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["missing_public_prose_fields"] == []
+    assert (
+        candidate["pressure_summary"]
+        == "Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows."
+    )
+    assert candidate["pressure_summary_derivation_status"] == "derived_from_title_and_source_text"
+    assert candidate["source_role"] == "local_news_report"
+    assert candidate["source_role_derivation_status"] == "derived_from_source_family"
+
+
+def test_local_news_record_spending_title_without_source_support_stays_blocked():
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "boston-herald-boilerplate",
+            "discovered_publisher": "Boston Herald",
+            "selected_title": "Greater Boston Food Bank to spend record-breaking $65M on food in 2026",
+            "source_url": "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026",
+            "final_trace_url": "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026",
+            "source_family": "local_news_direct_rss",
+            "discovery_lane": "news_article",
+            "classification_status": "qualified_pressure_signal",
+            "traceability_status": "traceable",
+            "public_claim_eligible": True,
+            "public_claim_blockers": [],
+            "fetch_status": "ok",
+            "summary_or_snippet": "The Boston Herald is the leading source of breaking news, local news, sports, politics, entertainment, opinion and weather in Boston, Massachusetts.",
+            "evidence_text": "The Boston Herald is the leading source of breaking news, local news, sports, politics, entertainment, opinion and weather in Boston, Massachusetts.",
+            "evidence_text_basis": "page_text_excerpt",
+            "pressure_type": "food bank demand pressure",
+            "evidence_level": "background context",
+            "freshness_role": "fresh_daily_signal",
+        }
+    )
+    _apply_public_readiness_gate(candidate, edition_date="2026-06-16")
+
+    assert candidate["public_claim_eligible"] is False
+    assert "missing_public_prose_fields" in candidate["public_claim_blockers"]
+    assert candidate["pressure_summary"] == ""
+    assert candidate["pressure_summary_derivation_status"] == "insufficient_source_support"
+
+
 def test_public_radio_article_derives_public_radio_report(tmp_path: Path):
     candidate = _normalize_candidate_row(
         {

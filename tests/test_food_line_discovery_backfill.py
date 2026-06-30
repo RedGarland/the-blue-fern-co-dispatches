@@ -296,6 +296,10 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert review["candidates"][0]["blocked_by_freshness"] is True
     assert review["candidates"][1]["blocked_by_url_filter"] is True
     assert review["candidates"][1]["google_news_resolution"]["google_news_resolution_status"] == "failed_homepage_or_landing_url"
+    assert review["candidates"][1]["google_news_resolution"]["rejected_candidate_urls_sample_limit"] == 25
+    assert review["candidates"][1]["google_news_resolution"]["rejected_candidate_urls_sample_truncated"] is False
+    assert review["candidates"][1]["google_news_resolution"]["rejected_candidate_urls_sample"][0]["candidate_url"] == "https://www.kxan.com"
+    assert review["candidates"][1]["google_news_resolution"]["rejected_candidate_urls_sample"][0]["rejection_reason"] == "homepage_or_landing_url"
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()

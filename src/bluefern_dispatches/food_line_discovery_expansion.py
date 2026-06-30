@@ -44,6 +44,7 @@ GOOGLE_ASSET_DOMAINS = (
     "schema.org",
     "ogp.me",
 )
+GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT = 25
 COMMON_PUBLISHER_SUBDOMAINS = ("www.", "m.", "amp.")
 KNOWN_PUBLISHER_CANONICAL_DOMAINS = {
     "benefitspro": {"benefitspro.com"},
@@ -2612,6 +2613,48 @@ def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str, pu
     return ""
 
 
+def _google_news_rejected_candidate_sample(
+    candidates: list[str],
+    *,
+    publisher_url: str,
+    publisher_name: str = "",
+    limit: int = GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT,
+) -> tuple[list[dict[str, Any]], bool]:
+    expected_domains = sorted(_known_publisher_domains(publisher_name))
+    if publisher_url:
+        publisher_host = _strip_common_publisher_subdomain(_host(publisher_url))
+        if publisher_host and publisher_host not in expected_domains:
+            expected_domains.append(publisher_host)
+            expected_domains.sort()
+    sample: list[dict[str, Any]] = []
+    for candidate in candidates[: max(limit, 0)]:
+        normalized = _normalize_url(candidate)
+        landing_reason = _homepage_or_landing_url_reason(normalized)
+        sample.append(
+            {
+                "candidate_url": normalized,
+                "normalized_domain": _strip_common_publisher_subdomain(_host(normalized)),
+                "candidate_match_type": _google_news_resolution_match_type(
+                    normalized,
+                    publisher_url=publisher_url,
+                    publisher_name=publisher_name,
+                ),
+                "expected_publisher_name": _nonempty(publisher_name),
+                "expected_publisher_url": _nonempty(_normalize_url(publisher_url)),
+                "expected_publisher_domain": _strip_common_publisher_subdomain(_host(publisher_url)),
+                "expected_publisher_family_domains": expected_domains,
+                "rejection_reason": _rejected_candidate_url_reason(
+                    normalized,
+                    publisher_url=publisher_url,
+                    publisher_name=publisher_name,
+                ),
+                "homepage_or_landing_reason": landing_reason,
+                "homepage_or_landing_filter_applied": bool(landing_reason),
+            }
+        )
+    return sample, len(candidates) > len(sample)
+
+
 def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str]:
     text = payload.decode("utf-8", errors="replace")
     candidates = _extract_candidate_urls(text)
@@ -2657,6 +2700,9 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         "accepted_candidate_match_type": "",
         "rejection_reason": "",
         "google_news_resolution_status": "",
+        "rejected_candidate_urls_sample": [],
+        "rejected_candidate_urls_sample_limit": GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT,
+        "rejected_candidate_urls_sample_truncated": False,
         "debug_snippet": "",
     }
     if fetch_error or not payload:
@@ -2669,6 +2715,13 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
     if meta_refresh and meta_refresh not in candidates:
         candidates.append(meta_refresh)
     debug["candidate_url_count_extracted"] = len(candidates)
+    rejected_sample, rejected_sample_truncated = _google_news_rejected_candidate_sample(
+        candidates,
+        publisher_url=publisher_url,
+        publisher_name=publisher_name,
+    )
+    debug["rejected_candidate_urls_sample"] = rejected_sample
+    debug["rejected_candidate_urls_sample_truncated"] = rejected_sample_truncated
     debug["debug_snippet"] = _extract_wrapper_debug_snippet(text)
     resolved, match_type = _extract_google_news_article_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
     if resolved:
@@ -3900,6 +3953,13 @@ def run_food_line_discovery_expansion(
                     "candidate_url_count_extracted": int(google_news_debug.get("candidate_url_count_extracted") or 0),
                     "accepted_candidate_url": _nonempty(google_news_debug.get("accepted_candidate_url")),
                     "rejection_reason": _nonempty(google_news_debug.get("rejection_reason")),
+                    "rejected_candidate_urls_sample": list(google_news_debug.get("rejected_candidate_urls_sample") or []),
+                    "rejected_candidate_urls_sample_limit": int(
+                        google_news_debug.get("rejected_candidate_urls_sample_limit") or GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT
+                    ),
+                    "rejected_candidate_urls_sample_truncated": bool(
+                        google_news_debug.get("rejected_candidate_urls_sample_truncated")
+                    ),
                     "debug_snippet": _nonempty(google_news_debug.get("debug_snippet")),
                 }
             if row["fetch_status"] != "ok":

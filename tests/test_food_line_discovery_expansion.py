@@ -909,6 +909,51 @@ def test_resolve_google_news_wrapper_reports_canonical_domain_resolution(monkeyp
     assert debug["google_news_resolution_status"] == "resolved_canonical_domain"
 
 
+def test_resolve_google_news_wrapper_records_bounded_rejected_candidate_sample():
+    homepage_url = "https://www.kxan.com"
+    listing_url = "https://www.kxan.com/news"
+    unrelated_urls = [f"https://example{i}.com/story-{i}" for i in range(30)]
+    html_links = "".join(f'<a href="{url}">link</a>' for url in [homepage_url, listing_url, *unrelated_urls])
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://news.google.com/rss/articles/CBMiDEBUG?oc=5":
+            return (
+                "<html><body>"
+                f"{html_links}"
+                "<p>article body should not be preserved</p>"
+                "</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    resolved, error, attempted, debug = expansion_module._resolve_google_news_wrapper(
+        fetcher,
+        "https://news.google.com/rss/articles/CBMiDEBUG?oc=5",
+        publisher_url=homepage_url,
+        publisher_name="KXAN",
+    )
+
+    sample = debug["rejected_candidate_urls_sample"]
+
+    assert attempted is True
+    assert error == ""
+    assert resolved == homepage_url
+    assert debug["google_news_resolution_status"] == "failed_homepage_or_landing_url"
+    assert len(sample) == expansion_module.GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT
+    assert debug["rejected_candidate_urls_sample_limit"] == expansion_module.GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT
+    assert debug["rejected_candidate_urls_sample_truncated"] is True
+    assert sample[0]["candidate_url"] == homepage_url
+    assert sample[0]["normalized_domain"] == "kxan.com"
+    assert sample[0]["expected_publisher_domain"] == "kxan.com"
+    assert sample[0]["expected_publisher_family_domains"] == ["kxan.com"]
+    assert sample[0]["rejection_reason"] == "homepage_or_landing_url"
+    assert sample[0]["homepage_or_landing_filter_applied"] is True
+    assert any(item["rejection_reason"] == "listing_or_action_url" for item in sample)
+    assert any(item["rejection_reason"] == "not_same_publisher_family" for item in sample)
+    serialized_sample = json.dumps(sample)
+    assert "article body should not be preserved" not in serialized_sample
+    assert "<html" not in serialized_sample.lower()
+
+
 def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_public(tmp_path: Path):
     edition_date = "2026-06-21"
     google_url = "https://news.google.com/rss/articles/CBMiFAIL?oc=5"
@@ -1070,9 +1115,18 @@ def test_food_line_discovery_expansion_rejects_unrelated_google_news_publisher_f
         query_lookahead_days=0,
     )
     candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
+    debug = audit["google_news_resolution_debug_by_candidate"][candidate["candidate_id"]]
 
     assert candidate["public_claim_eligible"] is False
     assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
+    assert debug["google_news_resolution_status"] == "failed_no_same_publisher_family"
+    assert debug["accepted_candidate_url"] == ""
+    assert debug["rejected_candidate_urls_sample_limit"] == expansion_module.GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT
+    assert debug["rejected_candidate_urls_sample_truncated"] is False
+    assert debug["rejected_candidate_urls_sample"]
+    assert debug["rejected_candidate_urls_sample"][0]["candidate_url"] == unrelated_url
+    assert debug["rejected_candidate_urls_sample"][0]["rejection_reason"] == "not_same_publisher_family"
 
 
 def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_fields(tmp_path: Path):

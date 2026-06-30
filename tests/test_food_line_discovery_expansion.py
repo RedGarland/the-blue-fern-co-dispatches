@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 import scripts.run_food_line_dispatch as food_line_dispatch
+from bluefern_dispatches import food_line_discovery_expansion as expansion_module
 from bluefern_dispatches.food_line_discovery_expansion import (
     _apply_public_readiness_gate,
     _normalize_candidate_row,
@@ -403,6 +404,7 @@ def test_food_line_discovery_query_plan_includes_targeted_recall_queries(tmp_pat
 def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tmp_path: Path):
     edition_date = "2026-06-18"
     article_url = "https://www.wowt.com/2026/06/18/omaha-food-programs-see-record-demand-summer-break-eliminates-school-meals/"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMPOC1Qswj4fdAw"
 
     def fetcher(url: str, timeout: int = 15):
         if url.startswith("https://news.google.com/rss/search?q="):
@@ -411,7 +413,7 @@ def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tm
                     {
                         "title": "Omaha food programs see record demand as summer break eliminates school meals",
                         "link": "https://news.google.com/rss/articles/CBMiWOWT?oc=5",
-                        "source_url": article_url,
+                        "source_url": publisher_url,
                         "publisher": "WOWT",
                         "description": "Omaha food programs reported record demand after summer break eliminated school meals for many families.",
                         "pubDate": "Thu, 18 Jun 2026 12:00:00 GMT",
@@ -447,11 +449,15 @@ def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tm
     assert candidate["pressure_signal"] is True
     assert candidate["pressure_type"] in {"demand strain", "food bank demand pressure"}
     assert candidate["source_published_date"] == edition_date
+    assert candidate["final_trace_url"].rstrip("/") == article_url.rstrip("/")
+    assert result["google_news_resolution_status_counts"]["resolved_known_alias"] == 1
+    assert not (tmp_path / "output" / "site").exists()
 
 
 def test_food_line_discovery_expansion_indyweek_meal_price_story_enters_review(tmp_path: Path):
     edition_date = "2026-06-20"
     article_url = "https://indyweek.com/news/wake-school-board-passes-meal-price-increase-creates-task-force-to-address-cost/"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMLjOlAsw2qu8Aw"
 
     def fetcher(url: str, timeout: int = 15):
         if url.startswith("https://news.google.com/rss/search?q="):
@@ -460,7 +466,7 @@ def test_food_line_discovery_expansion_indyweek_meal_price_story_enters_review(t
                     {
                         "title": "Wake school board passes meal price increase, creates task force to address cost",
                         "link": "https://news.google.com/rss/articles/CBMiINDY?oc=5",
-                        "source_url": article_url,
+                        "source_url": publisher_url,
                         "publisher": "IndyWeek",
                         "description": "Wake school board approved a meal price increase and created a task force to address meal costs for families.",
                         "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
@@ -495,11 +501,13 @@ def test_food_line_discovery_expansion_indyweek_meal_price_story_enters_review(t
     assert candidate["public_claim_eligible"] is True
     assert candidate["pressure_type"] == "school meal price pressure"
     assert candidate["pressure_summary"]
+    assert result["google_news_resolution_status_counts"]["resolved_known_alias"] == 1
 
 
 def test_food_line_discovery_expansion_health_cost_food_insecurity_story_enters_review(tmp_path: Path):
     edition_date = "2026-06-20"
     article_url = "https://www.benefitspro.com/2026/06/20/health-care-bills-are-fueling-food-insecurity/"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMPj6kgsw4uTtAw"
 
     def fetcher(url: str, timeout: int = 15):
         if url.startswith("https://news.google.com/rss/search?q="):
@@ -508,7 +516,7 @@ def test_food_line_discovery_expansion_health_cost_food_insecurity_story_enters_
                     {
                         "title": "Health care bills are fueling food insecurity for more households",
                         "link": "https://news.google.com/rss/articles/CBMiBENE?oc=5",
-                        "source_url": article_url,
+                        "source_url": publisher_url,
                         "publisher": "BenefitsPro",
                         "description": "Health care bills and medical debt are fueling food insecurity for more households.",
                         "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
@@ -543,6 +551,101 @@ def test_food_line_discovery_expansion_health_cost_food_insecurity_story_enters_
     assert candidate["public_claim_eligible"] is True
     assert candidate["pressure_summary"]
     assert candidate["pressure_type"] in {"household hardship", "household food insecurity pressure"}
+    assert result["google_news_resolution_status_counts"]["resolved_known_alias"] == 1
+
+
+def test_food_line_discovery_expansion_new_york_fed_story_enters_review_via_canonical_domain(tmp_path: Path):
+    edition_date = "2026-06-20"
+    article_url = "https://www.newyorkfed.org/research/survey/2026/rising-food-insecurity-households"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMN2l3Asw8fS4Aw"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "New York Fed says food insecurity is rising for more households",
+                        "link": "https://news.google.com/rss/articles/CBMiNYFED?oc=5",
+                        "source_url": publisher_url,
+                        "publisher": "New York Fed",
+                        "description": "A New York Fed survey found food insecurity rising for more households.",
+                        "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiNYFED?oc=5":
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "</head><body><p>survey coverage</p></body></html>"
+            ).encode("utf-8")
+        if url.rstrip("/") == article_url.rstrip("/"):
+            return _html_article(
+                title="New York Fed says food insecurity is rising for more households",
+                canonical=article_url,
+                body="A New York Fed survey found food insecurity rising for more households as budgets remain strained.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "qualified_pressure_signal"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["pressure_type"] in {"household hardship", "household food insecurity pressure"}
+    assert result["google_news_resolution_status_counts"]["resolved_known_alias"] == 1
+
+
+def test_food_line_discovery_expansion_google_news_listing_url_stays_blocked(tmp_path: Path):
+    edition_date = "2026-06-20"
+    publisher_url = "https://example.org"
+    listing_url = "https://example.org/donate"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food pantry demand is rising",
+                        "link": "https://news.google.com/rss/articles/CBMiLISTING?oc=5",
+                        "source_url": publisher_url,
+                        "publisher": "Example Pantry Network",
+                        "description": "Families are facing rising food pantry demand.",
+                        "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiLISTING?oc=5":
+            return f"<html><body><a href=\"{listing_url}\">donate</a></body></html>".encode("utf-8")
+        if url == listing_url:
+            return _html_article(title="Donate", canonical=listing_url, body="Support our pantry work.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert result["google_news_resolution_status_counts"]["failed_listing_or_action_url"] == 1
+    assert candidate["public_claim_eligible"] is False
+    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
 
 
 def test_food_line_discovery_expansion_resource_only_summer_meals_page_stays_blocked(tmp_path: Path):
@@ -767,8 +870,8 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     assert result["google_news_resolution_failure_count"] == 1
     assert result["google_news_resolved_article_url_count"] == 1
     assert result["google_news_resolved_homepage_only_count"] == 1
-    assert result["google_news_resolution_status_counts"]["success_article"] == 1
-    assert result["google_news_resolution_status_counts"]["success_homepage_only"] == 1
+    assert result["google_news_resolution_status_counts"]["resolved_same_domain"] == 1
+    assert result["google_news_resolution_status_counts"]["failed_homepage_or_landing_url"] == 1
     assert result["article_specific_url_count"] == 1
     assert result["publisher_homepage_trace_only_count"] == 1
     assert result["unresolved_google_news_count"] == 0
@@ -776,6 +879,34 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     assert result["in_window_candidate_count"] == 2
     assert result["out_of_window_candidate_count"] == 0
     assert result["public_eligible_candidate_count"] == 1
+
+
+def test_resolve_google_news_wrapper_reports_canonical_domain_resolution(monkeypatch: pytest.MonkeyPatch):
+    article_url = "https://www.newyorkfed.org/research/survey/2026/rising-food-insecurity-households"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMN2l3Asw8fS4Aw"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == "https://news.google.com/rss/articles/CBMiCANON?oc=5":
+            return (
+                "<html><head>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "</head><body><p>survey coverage</p></body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    monkeypatch.setattr(expansion_module, "_extract_candidate_urls", lambda text: [])
+
+    resolved, error, attempted, debug = expansion_module._resolve_google_news_wrapper(
+        fetcher,
+        "https://news.google.com/rss/articles/CBMiCANON?oc=5",
+        publisher_url=publisher_url,
+        publisher_name="New York Fed",
+    )
+
+    assert attempted is True
+    assert error == ""
+    assert resolved == article_url
+    assert debug["google_news_resolution_status"] == "resolved_canonical_domain"
 
 
 def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_public(tmp_path: Path):
@@ -817,7 +948,8 @@ def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_p
     assert candidate["traceability_status"] == "unresolved_google_news"
     assert candidate["public_claim_eligible"] is False
     assert "unresolved_google_news" in candidate["public_claim_blockers"]
-    assert result["google_news_resolution_status_counts"]["failed_no_candidate_urls"] == 1
+    assert result["google_news_resolution_status_counts"]["failed_no_resolved_url"] == 1
+    assert result["google_news_resolution_status_counts"]["failed_no_resolved_url"] == 1
 
 
 def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable_url(tmp_path: Path):
@@ -902,6 +1034,44 @@ def test_food_line_discovery_expansion_rejects_google_static_and_schema_urls(tmp
 
     assert candidate["final_trace_url"] == homepage_url
     assert candidate["traceability_status"] == "publisher_homepage_trace_only"
+    assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
+
+
+def test_food_line_discovery_expansion_rejects_unrelated_google_news_publisher_family(tmp_path: Path):
+    edition_date = "2026-06-21"
+    publisher_url = "https://news.google.com/publications/CAAqBwgKMPOC1Qswj4fdAw"
+    unrelated_url = "https://example.org/news/unrelated-story"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Omaha food programs see record demand as summer break eliminates school meals",
+                        "link": "https://news.google.com/rss/articles/CBMiWRONG?oc=5",
+                        "source_url": publisher_url,
+                        "publisher": "WOWT",
+                        "description": "Food programs reported higher demand.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiWRONG?oc=5":
+            return f"<html><body><a href=\"{unrelated_url}\">story</a></body></html>".encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["public_claim_eligible"] is False
     assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
 
 

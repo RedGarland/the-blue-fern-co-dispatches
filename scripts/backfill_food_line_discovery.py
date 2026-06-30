@@ -1117,10 +1117,14 @@ def run_food_line_discovery_backfill(
         google_news_url_count = sum(1 for row in typed_candidates if str(row.get("google_news_url") or "").strip())
         google_news_resolution_status_counts = dict(audit.get("google_news_resolution_status_counts") or {})
         google_news_resolution_attempt_count = sum(int(v) for v in google_news_resolution_status_counts.values())
-        google_news_resolution_success_count = int(google_news_resolution_status_counts.get("success_article", 0))
-        google_news_resolution_failure_count = sum(int(v) for k, v in google_news_resolution_status_counts.items() if str(k).startswith("failed_")) + int(google_news_resolution_status_counts.get("success_homepage_only", 0))
-        google_news_resolved_article_url_count = int(google_news_resolution_status_counts.get("success_article", 0))
-        google_news_resolved_homepage_only_count = int(google_news_resolution_status_counts.get("success_homepage_only", 0))
+        google_news_resolution_success_count = sum(
+            int(v) for k, v in google_news_resolution_status_counts.items() if str(k).startswith("resolved_")
+        )
+        google_news_resolution_failure_count = google_news_resolution_attempt_count - google_news_resolution_success_count
+        google_news_resolved_article_url_count = google_news_resolution_success_count
+        google_news_resolved_homepage_only_count = int(google_news_resolution_status_counts.get("failed_homepage_or_landing_url", 0)) + int(
+            google_news_resolution_status_counts.get("failed_listing_or_action_url", 0)
+        )
         canonical_homepage_collapse_ignored_count = sum(1 for row in typed_candidates if bool(row.get("canonical_homepage_collapse_ignored")))
         article_specific_url_count = sum(
             1

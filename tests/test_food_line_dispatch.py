@@ -4783,6 +4783,67 @@ def test_food_line_review_only_render_public_eligible_only_excludes_blocked_reco
     assert "Homepage block" not in edition_html
 
 
+def test_food_line_review_only_render_source_url_selector_renders_only_selected_candidate(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-16"
+    boston_url = "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald",
+                publisher="Boston Herald",
+                source_url=boston_url,
+                pressure_summary="Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows.",
+                pressure_type="food bank demand pressure",
+                affected_groups=["Not clearly isolated by source"],
+                source_role="policy_context",
+            ),
+            _review_only_candidate(
+                title="Summer meal programs expect increased demand this year",
+                publisher="TribLIVE",
+                source_url="https://triblive.com/local/valley-news-dispatch/summer-meal-programs-expect-increased-demand-this-year",
+                pressure_summary="TribLIVE reported summer meal programs expect increased demand this year.",
+                pressure_type="school meal access pressure",
+                affected_groups=["children"],
+                source_role="provider_signal",
+                location_scope="state_local",
+            ),
+        ],
+    )
+
+    result = food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+        source_url=boston_url,
+    )
+
+    edition_dir = tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    source_table_html = (edition_dir / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (edition_dir / "claim_ledger.html").read_text(encoding="utf-8")
+    manifest = json.loads((edition_dir / "review_render_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["source_count"] == 1
+    assert result["selected_candidate_count"] == 1
+    assert "Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald" in edition_html
+    assert "Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows." in edition_html
+    assert "Summer meal programs expect increased demand this year" not in edition_html
+    assert "TribLIVE" not in source_table_html
+    assert "TribLIVE" not in claim_ledger_html
+    assert manifest["selector_type"] == "source_url"
+    assert manifest["selector_value"] == boston_url
+    assert manifest["selector_match_count"] == 1
+    assert manifest["selector_deduplicated"] is False
+    assert manifest["selected_source_url"] == boston_url
+    assert manifest["public_eligible_candidate_count_before_selector"] == 2
+    assert manifest["rendered_public_claim_count"] == 1
+    assert manifest["lead_source_url"] == boston_url
+
+
 def test_food_line_review_only_render_fails_closed_for_missing_or_zero_public_eligible(tmp_path: Path):
     _ensure_assets(tmp_path)
     missing_path = tmp_path / "output" / "review" / "food-line" / "2026-06-12" / "candidate_review.json"
@@ -4807,6 +4868,122 @@ def test_food_line_review_only_render_fails_closed_for_missing_or_zero_public_el
     )
     with pytest.raises(ValueError, match="zero public-eligible candidates"):
         food_line.render_food_line_review_only(tmp_path, date="2026-06-12", candidate_review_path=review_path, public_eligible_only=True)
+
+
+def test_food_line_review_only_render_source_url_selector_fails_closed_for_zero_or_ineligible_match(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-16"
+    blocked_url = "https://www.bostonherald.com/2026/06/16/blocked-candidate"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="Blocked candidate",
+                publisher="Boston Herald",
+                source_url=blocked_url,
+                public_claim_eligible=False,
+                public_claim_blockers=["missing_public_prose_fields"],
+                candidate_review_status="needs_review",
+                pressure_signal_hint="record food spending",
+            ),
+            _review_only_candidate(
+                title="Eligible other candidate",
+                publisher="TribLIVE",
+                source_url="https://triblive.com/local/eligible",
+                pressure_summary="TribLIVE reported summer meal demand is rising.",
+                pressure_type="school meal access pressure",
+            ),
+        ],
+    )
+
+    with pytest.raises(ValueError, match="matched zero candidates"):
+        food_line.render_food_line_review_only(
+            tmp_path,
+            date=date,
+            candidate_review_path=review_path,
+            public_eligible_only=True,
+            source_url="https://www.bostonherald.com/2026/06/16/not-found",
+        )
+
+    with pytest.raises(ValueError, match="matched zero public-eligible candidates"):
+        food_line.render_food_line_review_only(
+            tmp_path,
+            date=date,
+            candidate_review_path=review_path,
+            public_eligible_only=True,
+            source_url=blocked_url,
+        )
+
+
+def test_food_line_review_only_render_source_url_selector_fails_closed_for_ambiguous_match(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-16"
+    shared_url = "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="Boston Herald candidate A",
+                publisher="Boston Herald",
+                source_url=shared_url,
+                pressure_summary="Greater Boston Food Bank expects record food spending.",
+                pressure_type="food bank demand pressure",
+            ),
+            _review_only_candidate(
+                title="Boston Herald candidate B",
+                publisher="Boston Herald",
+                source_url=shared_url,
+                pressure_summary="Greater Boston Food Bank expects record spending in a separate summary.",
+                pressure_type="food bank demand pressure",
+            ),
+        ],
+    )
+
+    with pytest.raises(ValueError, match="selector is ambiguous"):
+        food_line.render_food_line_review_only(
+            tmp_path,
+            date=date,
+            candidate_review_path=review_path,
+            public_eligible_only=True,
+            source_url=shared_url,
+        )
+
+
+def test_food_line_review_only_render_source_url_selector_deduplicates_exact_duplicates(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-16"
+    boston_url = "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026"
+    candidate = _review_only_candidate(
+        title="Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald",
+        publisher="Boston Herald",
+        source_url=boston_url,
+        pressure_summary="Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows.",
+        pressure_type="food bank demand pressure",
+        affected_groups=["Not clearly isolated by source"],
+        source_role="policy_context",
+    )
+    review_path = _write_review_only_candidate_review(tmp_path, date, [candidate, dict(candidate)])
+
+    result = food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+        source_url=boston_url,
+    )
+
+    manifest = json.loads(
+        (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "review_render_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert result["selected_candidate_count"] == 1
+    assert result["source_count"] == 1
+    assert manifest["selector_match_count"] == 2
+    assert manifest["selector_deduplicated"] is True
+    assert manifest["selected_source_url"] == boston_url
 
 
 def test_food_line_review_only_render_preserves_source_backed_attribution(tmp_path: Path):

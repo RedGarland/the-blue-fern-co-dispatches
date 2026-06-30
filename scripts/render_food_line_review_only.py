@@ -25,6 +25,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Render only rows where public_claim_eligible is true.",
     )
     parser.add_argument(
+        "--source-url",
+        help="Render only the candidate matching this source URL; fails closed on zero or ambiguous matches.",
+    )
+    parser.add_argument(
         "--output-root",
         default=str(Path("output") / "site-review-only" / "food-line"),
         help="Isolated local output root for review-only render artifacts.",
@@ -40,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
             date=str(args.date),
             candidate_review_path=Path(str(args.candidate_review)),
             public_eligible_only=bool(args.public_eligible_only),
+            source_url=str(args.source_url) if args.source_url is not None else None,
             output_root=Path(str(args.output_root)),
         )
     except Exception as exc:  # noqa: BLE001

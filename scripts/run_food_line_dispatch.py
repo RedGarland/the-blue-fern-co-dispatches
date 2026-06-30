@@ -4993,12 +4993,100 @@ def _food_line_review_candidate_row(
     }
 
 
+def _food_line_review_candidate_source_url(row: dict[str, Any]) -> str:
+    return str(row.get("source_url") or row.get("url") or row.get("original_source_url") or "").strip()
+
+
+def _normalize_food_line_review_selector_url(url: str) -> str:
+    raw = str(url or "").strip()
+    if not raw:
+        return ""
+    normalized = _normalize_food_line_source_collection_url(raw)
+    return normalized or raw
+
+
+def _select_food_line_review_candidate_rows(
+    candidate_rows: list[dict[str, Any]],
+    *,
+    review_path: Path,
+    public_eligible_only: bool,
+    source_url: str | None,
+) -> dict[str, Any]:
+    public_eligible_count = sum(1 for row in candidate_rows if bool(row.get("public_claim_eligible")))
+    if public_eligible_count <= 0:
+        raise ValueError(f"candidate review file contains zero public-eligible candidates: {review_path}")
+
+    pre_selector_rows = [row for row in candidate_rows if bool(row.get("public_claim_eligible"))] if public_eligible_only else list(candidate_rows)
+    if not pre_selector_rows:
+        raise ValueError(f"candidate review selection is empty after filters: {review_path}")
+
+    selector_type = ""
+    selector_value = ""
+    selector_match_count = 0
+    selector_deduplicated = False
+    selected_source_url = ""
+    selected_rows = list(pre_selector_rows)
+
+    if source_url is not None:
+        selector_type = "source_url"
+        selector_value = str(source_url).strip()
+        normalized_selector = _normalize_food_line_review_selector_url(selector_value)
+        if not normalized_selector:
+            raise ValueError("review-only selector source URL is empty")
+
+        raw_matches = [
+            row for row in candidate_rows
+            if _normalize_food_line_review_selector_url(_food_line_review_candidate_source_url(row)) == normalized_selector
+        ]
+        eligible_matches = [
+            row for row in pre_selector_rows
+            if _normalize_food_line_review_selector_url(_food_line_review_candidate_source_url(row)) == normalized_selector
+        ]
+        if not raw_matches:
+            raise ValueError(f"review-only selector matched zero candidates for source URL: {selector_value}")
+        if public_eligible_only and not eligible_matches:
+            raise ValueError(
+                f"review-only selector matched zero public-eligible candidates for source URL: {selector_value}"
+            )
+        selector_match_count = len(eligible_matches if public_eligible_only else raw_matches)
+        selected_rows = eligible_matches if public_eligible_only else raw_matches
+
+        if len(selected_rows) > 1:
+            candidate_payloads = {
+                json.dumps(row, sort_keys=True, separators=(",", ":"), ensure_ascii=True) for row in selected_rows
+            }
+            matched_urls = {
+                _normalize_food_line_review_selector_url(_food_line_review_candidate_source_url(row)) for row in selected_rows
+            }
+            if len(candidate_payloads) != 1 or len(matched_urls) != 1:
+                raise ValueError(f"review-only selector is ambiguous for source URL: {selector_value}")
+            selector_deduplicated = True
+            selected_rows = [selected_rows[0]]
+
+        selected_source_url = _food_line_review_candidate_source_url(selected_rows[0])
+
+    if not selected_rows:
+        raise ValueError(f"candidate review selection is empty after filters: {review_path}")
+
+    return {
+        "selected_rows": selected_rows,
+        "public_eligible_count": public_eligible_count,
+        "selector_type": selector_type,
+        "selector_value": selector_value,
+        "selector_match_count": selector_match_count,
+        "selector_deduplicated": selector_deduplicated,
+        "selected_source_url": selected_source_url,
+        "pre_selector_candidate_count": len(pre_selector_rows),
+    }
+
+
 def render_food_line_review_only(
     root: Path,
     *,
     date: str,
     candidate_review_path: Path,
     public_eligible_only: bool = False,
+    source_url: str | None = None,
     output_root: Path | None = None,
 ) -> dict[str, Any]:
     edition_date = validate_date(date)
@@ -5008,12 +5096,14 @@ def render_food_line_review_only(
     candidate_rows = _food_line_review_candidate_rows(review_path)
     if not candidate_rows:
         raise ValueError(f"candidate review file contains no candidate rows: {review_path}")
-    public_eligible_count = sum(1 for row in candidate_rows if bool(row.get("public_claim_eligible")))
-    if public_eligible_count <= 0:
-        raise ValueError(f"candidate review file contains zero public-eligible candidates: {review_path}")
-    selected_rows = [row for row in candidate_rows if bool(row.get("public_claim_eligible"))] if public_eligible_only else list(candidate_rows)
-    if not selected_rows:
-        raise ValueError(f"candidate review selection is empty after filters: {review_path}")
+    selection = _select_food_line_review_candidate_rows(
+        candidate_rows,
+        review_path=review_path,
+        public_eligible_only=bool(public_eligible_only),
+        source_url=source_url,
+    )
+    public_eligible_count = int(selection["public_eligible_count"])
+    selected_rows = list(selection["selected_rows"])
 
     sources = [
         _food_line_review_candidate_row(row, edition_date=edition_date, index=index)
@@ -5064,6 +5154,12 @@ def render_food_line_review_only(
         review_counts=(len(sources), max(0, len(sources) - len(public_rows))),
         exclusion_reason_counts={},
     )
+    rendered_claim_rows = _food_line_claim_ledger_rows(
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode=edition_mode,
+    )
     _write_text(edition_dir / "index.html", html_page)
     _write_text(edition_dir / "source_table.html", source_table_html)
     _write_text(edition_dir / "claim_ledger.html", claim_ledger_html)
@@ -5083,9 +5179,17 @@ def render_food_line_review_only(
         "edition_dir": str(edition_dir),
         "public_eligible_only": bool(public_eligible_only),
         "candidate_count_total": len(candidate_rows),
+        "pre_selector_candidate_count": int(selection["pre_selector_candidate_count"]),
+        "selected_candidate_count": len(selected_rows),
         "source_count": len(sources),
         "public_eligible_candidate_count": public_eligible_count,
-        "rendered_public_claim_count": len(public_rows),
+        "public_eligible_candidate_count_before_selector": public_eligible_count,
+        "rendered_public_claim_count": len(rendered_claim_rows),
+        "selector_type": str(selection["selector_type"]),
+        "selector_value": str(selection["selector_value"]),
+        "selector_match_count": int(selection["selector_match_count"]),
+        "selector_deduplicated": bool(selection["selector_deduplicated"]),
+        "selected_source_url": str(selection["selected_source_url"]),
         "source_urls": [str(row.get("url") or "") for row in sources if str(row.get("url") or "").strip()],
         "lead_source_record_id": str(lead_row.get("source_record_id") or ""),
         "lead_title": str(lead_row.get("title") or ""),

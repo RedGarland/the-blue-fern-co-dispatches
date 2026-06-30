@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import html
 import json
@@ -31,6 +32,20 @@ DISCOVERY_AUDIT_JSON_FILE = "discovery_audit.json"
 DISCOVERY_AUDIT_MD_FILE = "discovery_audit.md"
 DISCOVERY_CONFIG_FILE = "discovery_expansion_config.json"
 GOOGLE_NEWS_DOMAIN = "news.google.com"
+GOOGLE_NEWS_RPC_CONTEXT = [
+    ["en-US", "US", ["FINANCE_TOP_INDICES", "GENESIS_PUBLISHER_SECTION", "WEB_TEST_1_0_0"], None, None, 1, 1, "US:en", None, None, None, None, None, None, None, False, 5],
+    "en-US",
+    "US",
+    True,
+    [3, 5, 9, 19],
+    1,
+    True,
+    "936584890",
+    False,
+    False,
+    None,
+    False,
+]
 SOCIAL_DOMAINS = ("x.com", "twitter.com", "facebook.com", "instagram.com", "tiktok.com")
 GOOGLE_ASSET_DOMAINS = (
     "googleusercontent.com",
@@ -2655,6 +2670,85 @@ def _google_news_rejected_candidate_sample(
     return sample, len(candidates) > len(sample)
 
 
+def _google_news_article_id(url: str) -> str:
+    raw = _normalize_url(url)
+    if not _is_google_news_wrapper(raw):
+        return ""
+    path = urllib.parse.urlsplit(raw).path or ""
+    if "/articles/" not in path:
+        return ""
+    return path.rsplit("/articles/", 1)[-1].strip("/")
+
+
+def _decode_google_news_article_id_url(article_id: str) -> str:
+    token = str(article_id or "").strip()
+    if not token:
+        return ""
+    try:
+        decoded = base64.urlsafe_b64decode(token + "=" * (-len(token) % 4))
+    except Exception:  # noqa: BLE001
+        return ""
+    match = re.search(rb"https?://[^\s\"'<>\\\x00]+", decoded)
+    if not match:
+        return ""
+    return _normalize_url(match.group(0).decode("utf-8", errors="ignore"))
+
+
+def _extract_google_news_rpc_metadata(text: str, *, article_id: str = "") -> tuple[str, str, str]:
+    token = _nonempty(article_id)
+    if token:
+        match = re.search(
+            rf'data-n-a-id="{re.escape(token)}"[^>]*data-n-a-ts="([^"]+)"[^>]*data-n-a-sg="([^"]+)"',
+            text,
+        )
+        if match:
+            return token, _nonempty(match.group(1)), _nonempty(match.group(2))
+        match = re.search(
+            rf'data-p="[^"]*&quot;{re.escape(token)}&quot;,[^"]*?(\d+),&quot;([^"]+)&quot;\]"',
+            text,
+        )
+        if match:
+            return token, _nonempty(match.group(1)), _nonempty(match.group(2))
+    match = re.search(r'data-n-a-id="([^"]+)"[^>]*data-n-a-ts="([^"]+)"[^>]*data-n-a-sg="([^"]+)"', text)
+    if match:
+        return _nonempty(match.group(1)), _nonempty(match.group(2)), _nonempty(match.group(3))
+    match = re.search(r'data-p="[^"]*&quot;([^"]+)&quot;,[^"]*?(\d+),&quot;([^"]+)&quot;\]"', text)
+    if match:
+        return _nonempty(match.group(1)), _nonempty(match.group(2)), _nonempty(match.group(3))
+    return "", "", ""
+
+
+def _google_news_rpc_request(article_id: str, timestamp: str, signature: str) -> tuple[str, str]:
+    inner_payload = json.dumps(
+        ["garturlreq", GOOGLE_NEWS_RPC_CONTEXT, article_id, int(timestamp), signature],
+        separators=(",", ":"),
+    )
+    payload = json.dumps(
+        [[["Fbv4je", inner_payload, None, "generic"]]],
+        separators=(",", ":"),
+    )
+    body = urllib.parse.urlencode({"f.req": payload}).encode("utf-8")
+    request = urllib.request.Request(
+        "https://news.google.com/_/DotsSplashUi/data/batchexecute?rpcids=Fbv4je",
+        data=body,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15, context=ssl._create_unverified_context()) as response:  # noqa: S310
+            text = response.read(500_000).decode("utf-8", errors="replace")
+    except Exception as exc:  # noqa: BLE001
+        return "", f"{type(exc).__name__}: {exc}"
+    match = re.search(r'\[\\"garturlres\\",\\"(https?://[^"]+)\\",\d+\]', text)
+    if not match:
+        match = re.search(r'\["garturlres","(https?://[^"]+)",\d+\]', text)
+    if not match:
+        return "", "rpc_without_article_url"
+    return _normalize_url(match.group(1)), ""
+
+
 def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str]:
     text = payload.decode("utf-8", errors="replace")
     candidates = _extract_candidate_urls(text)
@@ -2689,6 +2783,7 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
     url = _normalize_url(google_news_url)
     if not _is_google_news_wrapper(url):
         return "", "", False, {}
+    article_id = _google_news_article_id(url)
     payload, fetch_error, fetch_meta = _fetch_url_with_metadata(fetcher, url)
     debug: dict[str, Any] = {
         "response_status": fetch_meta.get("response_status"),
@@ -2698,6 +2793,16 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         "candidate_url_count_extracted": 0,
         "accepted_candidate_url": "",
         "accepted_candidate_match_type": "",
+        "decoded_google_news_url": "",
+        "google_news_rpc_url": "",
+        "redirect_url_found": "",
+        "canonical_url_found": "",
+        "html_candidate_url_found": "",
+        "google_news_article_id": article_id,
+        "google_news_rpc_attempted": False,
+        "google_news_rpc_error": "",
+        "static_or_google_noise_only": False,
+        "fallback_to_publisher_homepage": False,
         "rejection_reason": "",
         "google_news_resolution_status": "",
         "rejected_candidate_urls_sample": [],
@@ -2705,11 +2810,45 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         "rejected_candidate_urls_sample_truncated": False,
         "debug_snippet": "",
     }
+    decoded_url = _decode_google_news_article_id_url(article_id)
+    if decoded_url:
+        debug["decoded_google_news_url"] = decoded_url
+        decoded_match_type = _google_news_resolution_match_type(decoded_url, publisher_url=publisher_url, publisher_name=publisher_name)
+        decoded_reason = _rejected_candidate_url_reason(decoded_url, publisher_url=publisher_url, publisher_name=publisher_name)
+        if not decoded_reason:
+            debug["accepted_candidate_url"] = decoded_url
+            debug["accepted_candidate_match_type"] = decoded_match_type or "same_domain"
+            debug["google_news_resolution_status"] = "resolved_known_alias" if decoded_match_type == "known_alias" else "resolved_same_domain"
+            return decoded_url, "", True, debug
     if fetch_error or not payload:
         debug["rejection_reason"] = fetch_error or "empty response"
         debug["google_news_resolution_status"] = "failed_fetch_error"
         return "", fetch_error or "empty response", True, debug
+    redirect_candidate = _normalize_url(_nonempty(fetch_meta.get("final_response_url")))
+    if redirect_candidate and redirect_candidate != url and not _is_google_news_wrapper(redirect_candidate):
+        debug["redirect_url_found"] = redirect_candidate
+        redirect_match_type = _google_news_resolution_match_type(redirect_candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+        redirect_reason = _rejected_candidate_url_reason(redirect_candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+        if not redirect_reason:
+            debug["accepted_candidate_url"] = redirect_candidate
+            debug["accepted_candidate_match_type"] = redirect_match_type or "same_domain"
+            debug["google_news_resolution_status"] = "resolved_known_alias" if redirect_match_type == "known_alias" else "resolved_same_domain"
+            return redirect_candidate, "", True, debug
     text = payload.decode("utf-8", errors="replace")
+    rpc_article_id, rpc_timestamp, rpc_signature = _extract_google_news_rpc_metadata(text, article_id=article_id)
+    if rpc_article_id and rpc_timestamp and rpc_signature:
+        debug["google_news_rpc_attempted"] = True
+        rpc_url, rpc_error = _google_news_rpc_request(rpc_article_id, rpc_timestamp, rpc_signature)
+        debug["google_news_rpc_error"] = _nonempty(rpc_error)
+        if rpc_url:
+            debug["google_news_rpc_url"] = rpc_url
+            rpc_match_type = _google_news_resolution_match_type(rpc_url, publisher_url=publisher_url, publisher_name=publisher_name)
+            rpc_reason = _rejected_candidate_url_reason(rpc_url, publisher_url=publisher_url, publisher_name=publisher_name)
+            if not rpc_reason:
+                debug["accepted_candidate_url"] = rpc_url
+                debug["accepted_candidate_match_type"] = rpc_match_type or "same_domain"
+                debug["google_news_resolution_status"] = "resolved_known_alias" if rpc_match_type == "known_alias" else "resolved_same_domain"
+                return rpc_url, "", True, debug
     candidates = _extract_candidate_urls(text)
     meta_refresh = _extract_meta_refresh_target(text)
     if meta_refresh and meta_refresh not in candidates:
@@ -2723,19 +2862,8 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
     debug["rejected_candidate_urls_sample"] = rejected_sample
     debug["rejected_candidate_urls_sample_truncated"] = rejected_sample_truncated
     debug["debug_snippet"] = _extract_wrapper_debug_snippet(text)
-    resolved, match_type = _extract_google_news_article_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
-    if resolved:
-        debug["accepted_candidate_url"] = resolved
-        debug["accepted_candidate_match_type"] = match_type
-        debug["google_news_resolution_status"] = "resolved_known_alias" if match_type == "known_alias" else "resolved_same_domain"
-        return resolved, "", True, debug
-    homepage, homepage_reason = _extract_google_news_homepage_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
-    if homepage:
-        debug["accepted_candidate_url"] = homepage
-        debug["rejection_reason"] = homepage_reason
-        debug["google_news_resolution_status"] = "failed_listing_or_action_url" if homepage_reason == "listing_or_action_url" else "failed_homepage_or_landing_url"
-        return homepage, "", True, debug
     canonical = _extract_canonical_url(payload)
+    debug["canonical_url_found"] = _nonempty(canonical)
     canonical_match_type = _google_news_resolution_match_type(canonical, publisher_url=publisher_url, publisher_name=publisher_name)
     if canonical and (canonical_match_type or (not publisher_url and not publisher_name)):
         reason = _rejected_candidate_url_reason(canonical, publisher_url=publisher_url, publisher_name=publisher_name)
@@ -2744,6 +2872,20 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
             debug["accepted_candidate_match_type"] = canonical_match_type or "same_domain"
             debug["google_news_resolution_status"] = "resolved_canonical_domain"
             return canonical, "", True, debug
+    resolved, match_type = _extract_google_news_article_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
+    if resolved:
+        debug["html_candidate_url_found"] = resolved
+        debug["accepted_candidate_url"] = resolved
+        debug["accepted_candidate_match_type"] = match_type
+        debug["google_news_resolution_status"] = "resolved_known_alias" if match_type == "known_alias" else "resolved_same_domain"
+        return resolved, "", True, debug
+    homepage, homepage_reason = _extract_google_news_homepage_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
+    if homepage:
+        debug["fallback_to_publisher_homepage"] = True
+        debug["accepted_candidate_url"] = homepage
+        debug["rejection_reason"] = homepage_reason
+        debug["google_news_resolution_status"] = "failed_listing_or_action_url" if homepage_reason == "listing_or_action_url" else "failed_homepage_or_landing_url"
+        return homepage, "", True, debug
     if not candidates:
         debug["rejection_reason"] = "no candidate urls extracted"
         debug["google_news_resolution_status"] = "failed_no_resolved_url"
@@ -2755,6 +2897,10 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
     elif any(reason == "homepage_or_landing_url" for reason in rejected_reasons):
         debug["rejection_reason"] = "homepage or landing url only"
         debug["google_news_resolution_status"] = "failed_homepage_or_landing_url"
+    elif rejected_reasons and all(reason in {"google_domain", "static_or_namespace_url"} for reason in rejected_reasons if reason):
+        debug["rejection_reason"] = "static or google noise only"
+        debug["google_news_resolution_status"] = "failed_static_or_google_noise_only"
+        debug["static_or_google_noise_only"] = True
     elif (publisher_url or publisher_name) and all(reason in {"google_domain", "static_or_namespace_url", "not_same_publisher_family"} for reason in rejected_reasons if reason):
         debug["rejection_reason"] = "no same publisher family candidate url"
         debug["google_news_resolution_status"] = "failed_no_same_publisher_family"
@@ -3952,6 +4098,16 @@ def run_food_line_discovery_expansion(
                     "redirect_chain": list(google_news_debug.get("redirect_chain") or []),
                     "candidate_url_count_extracted": int(google_news_debug.get("candidate_url_count_extracted") or 0),
                     "accepted_candidate_url": _nonempty(google_news_debug.get("accepted_candidate_url")),
+                    "decoded_google_news_url": _nonempty(google_news_debug.get("decoded_google_news_url")),
+                    "google_news_rpc_url": _nonempty(google_news_debug.get("google_news_rpc_url")),
+                    "redirect_url_found": _nonempty(google_news_debug.get("redirect_url_found")),
+                    "canonical_url_found": _nonempty(google_news_debug.get("canonical_url_found")),
+                    "html_candidate_url_found": _nonempty(google_news_debug.get("html_candidate_url_found")),
+                    "google_news_article_id": _nonempty(google_news_debug.get("google_news_article_id")),
+                    "google_news_rpc_attempted": bool(google_news_debug.get("google_news_rpc_attempted")),
+                    "google_news_rpc_error": _nonempty(google_news_debug.get("google_news_rpc_error")),
+                    "static_or_google_noise_only": bool(google_news_debug.get("static_or_google_noise_only")),
+                    "fallback_to_publisher_homepage": bool(google_news_debug.get("fallback_to_publisher_homepage")),
                     "rejection_reason": _nonempty(google_news_debug.get("rejection_reason")),
                     "rejected_candidate_urls_sample": list(google_news_debug.get("rejected_candidate_urls_sample") or []),
                     "rejected_candidate_urls_sample_limit": int(

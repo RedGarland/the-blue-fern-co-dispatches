@@ -171,9 +171,23 @@ SAFE_AFFECTED_GROUPS_FALLBACK = "Not clearly isolated by source"
 DISCOVERY_PRESSURE_TYPE_RULES: list[tuple[str, tuple[tuple[str, ...], ...]]] = [
     ("SNAP policy pressure", (("snap",), ("proposal", "rule", "eligibility", "broad-based categorical eligibility", "bbce"))),
     ("school meals pressure", (("school meals", "summer meals"), ("gap", "cut", "end", "loss", "access", "site", "sites", "hunger"))),
+    (
+        "school meal price pressure",
+        (
+            ("school meal", "school meals", "school lunch", "school breakfast", "meal price", "meal prices"),
+            ("price increase", "price increases", "higher price", "higher prices", "cost", "costs", "affordability"),
+        ),
+    ),
     ("food bank demand pressure", (("food bank", "food pantry", "pantry"), ("demand", "surge", "rising", "rise", "strain", "need", "waitlist", "shortage"))),
     ("benefit access pressure", (("snap", "ebt", "wic", "benefit", "benefits"), ("access", "eligibility", "delay", "disruption", "application", "renewal", "recertification", "backlog"))),
     ("food affordability pressure", (("grocery prices", "food costs", "food prices", "inflation", "rent and groceries"), tuple())),
+    (
+        "household food insecurity pressure",
+        (
+            ("food insecurity", "food hardship", "food insufficiency", "food sufficiency"),
+            ("rise", "rising", "increase", "increased", "higher", "worsening", "worse"),
+        ),
+    ),
     ("emergency food access pressure", (("emergency food assistance", "food distribution", "meal site", "meal sites"), ("access", "availability", "closure", "closed", "hours", "distance"))),
 ]
 DISCOVERY_POLICY_SOURCE_TERMS = (
@@ -265,10 +279,15 @@ STATE_TERRITORIES: list[tuple[str, str]] = [
 
 PRESSURE_TERMS = [
     "food insecurity",
+    "household food insecurity",
+    "rising food insecurity",
+    "food insecurity is rising",
+    "food insecurity increased",
     "food bank",
     "food pantry",
     "hunger relief",
     "demand",
+    "record demand",
     "strain",
     "shortage",
     "surge",
@@ -280,6 +299,12 @@ PRESSURE_TERMS = [
     "SNAP",
     "EBT",
     "school meals",
+    "meal price increase",
+    "meal prices",
+    "school lunch price",
+    "school lunch prices",
+    "school meal price",
+    "school meal prices",
     "summer meals",
     "WIC",
     "Meals on Wheels",
@@ -287,6 +312,9 @@ PRESSURE_TERMS = [
     "grocery prices",
     "inflation",
     "food costs",
+    "medical debt",
+    "health care bills",
+    "health-care bills",
     "rent and groceries",
     "utility bills and groceries",
 ]
@@ -298,6 +326,8 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "source_family": "local_news",
         "templates": [
             '"food insecurity"',
+            '"household food insecurity"',
+            '"rising food insecurity"',
             '"food bank"',
             '"food pantry"',
             '"food banks"',
@@ -313,6 +343,8 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '("food bank" OR "food pantry") (demand OR strain OR shortage OR surge)',
             '("food bank" OR "food pantry") ("increased need" OR waitlist OR "funding gap")',
+            '("summer food programs" OR "summer meals") "record demand"',
+            '("food program" OR "food programs") "record demand"',
             '"pantry demand"',
             '"families turn to food banks"',
         ],
@@ -325,8 +357,12 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
             '(SNAP OR EBT) (cuts OR changes OR benefits OR families)',
             '("food stamps" OR "SNAP cuts" OR "SNAP benefits" OR "SNAP rolls") ("food bank" OR pantry OR families)',
             '("summer meals" OR "school meals") (families OR children OR hunger)',
+            '("school meal" OR "school meals" OR "school lunch") ("price increase" OR "higher prices" OR affordability)',
+            '("school board" OR district) ("meal price increase" OR "school lunch price")',
             '("meal sites" OR "summer meals" OR "food distribution sites") (families OR children OR "emergency food assistance")',
             '(WIC OR TEFAP OR "Meals on Wheels") (cuts OR delays OR waitlist)',
+            '("health care bills" OR "health-care bills" OR "medical debt") "food insecurity"',
+            '("New York Fed" OR "Federal Reserve Bank of New York") "food insecurity"',
         ],
     },
     {
@@ -336,6 +372,7 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '("grocery prices" OR "food costs") ("food pantry" OR families)',
             '("rent and groceries" OR "utility bills and groceries") hunger',
+            '("health care bills" OR "health-care bills" OR "medical debt") "food insecurity"',
         ],
     },
     {
@@ -345,11 +382,13 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '"food bank demand" {geo} after:{after} before:{before}',
             '"food pantry demand" {geo} after:{after} before:{before}',
+            '"record demand" ("food programs" OR "summer meals") {geo} after:{after} before:{before}',
             '"food banks" {geo} after:{after} before:{before}',
             '"food pantries" {geo} after:{after} before:{before}',
             '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
+            '("meal price increase" OR "school lunch price") {geo} after:{after} before:{before}',
             '"emergency food assistance" {geo} after:{after} before:{before}',
             '"grocery prices" {geo} food pantry after:{after} before:{before}',
         ],
@@ -361,11 +400,13 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '"food bank demand" {geo} after:{after} before:{before}',
             '"food pantry demand" {geo} after:{after} before:{before}',
+            '"record demand" ("food programs" OR "summer meals") {geo} after:{after} before:{before}',
             '"food banks" {geo} after:{after} before:{before}',
             '"food pantries" {geo} after:{after} before:{before}',
             '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
+            '("meal price increase" OR "school lunch price") {geo} after:{after} before:{before}',
             '"emergency food assistance" {geo} after:{after} before:{before}',
             '"grocery prices" {geo} food pantry after:{after} before:{before}',
         ],
@@ -907,6 +948,13 @@ def _derive_pressure_summary_from_source_fields(
                 "derived_from_source_text",
                 ["summary_or_snippet"] if summary else ["evidence_text"],
             )
+    if pressure_type == "school meal price pressure":
+        if any(token in combined for token in ("meal price increase", "meal prices", "school lunch price", "school meal price")):
+            return (
+                f"{publisher} reported school meal price pressure for families.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
     if pressure_type == "benefit access pressure":
         if any(token in combined for token in ("snap", "ebt", "wic", "benefit", "benefits")) and any(
             token in combined for token in ("access", "eligibility", "delay", "disruption", "application", "renewal", "recertification", "backlog")
@@ -920,6 +968,13 @@ def _derive_pressure_summary_from_source_fields(
         if any(token in combined for token in ("grocery prices", "food costs", "food prices", "inflation", "rent and groceries")):
             return (
                 f"{publisher} reported food affordability pressure for households.",
+                "derived_from_source_text",
+                ["summary_or_snippet"] if summary else ["evidence_text"],
+            )
+    if pressure_type == "household food insecurity pressure":
+        if any(token in combined for token in ("food insecurity", "food hardship", "food insufficiency", "food sufficiency")):
+            return (
+                f"{publisher} reported rising household food insecurity pressure.",
                 "derived_from_source_text",
                 ["summary_or_snippet"] if summary else ["evidence_text"],
             )

@@ -44,6 +44,14 @@ GOOGLE_ASSET_DOMAINS = (
     "schema.org",
     "ogp.me",
 )
+COMMON_PUBLISHER_SUBDOMAINS = ("www.", "m.", "amp.")
+KNOWN_PUBLISHER_CANONICAL_DOMAINS = {
+    "benefitspro": {"benefitspro.com"},
+    "federal reserve bank of new york": {"newyorkfed.org"},
+    "indyweek": {"indyweek.com"},
+    "new york fed": {"newyorkfed.org"},
+    "wowt": {"wowt.com"},
+}
 STATIC_PATH_SUFFIXES = (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico", ".mp4", ".mp3", ".pdf", ".js", ".css", ".woff", ".woff2")
 HOMEPAGE_LANDING_SEGMENTS = {
     "home",
@@ -511,6 +519,22 @@ def _host(url: str) -> str:
         return urllib.parse.urlsplit(_normalize_url(url)).netloc.lower()
     except Exception:  # noqa: BLE001
         return ""
+
+
+def _strip_common_publisher_subdomain(host: str) -> str:
+    value = _nonempty(host).lower().strip(".")
+    for prefix in COMMON_PUBLISHER_SUBDOMAINS:
+        if value.startswith(prefix):
+            return value[len(prefix) :]
+    return value
+
+
+def _normalize_publisher_key(value: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", _nonempty(value).lower())).strip()
+
+
+def _known_publisher_domains(publisher_name: str) -> set[str]:
+    return set(KNOWN_PUBLISHER_CANONICAL_DOMAINS.get(_normalize_publisher_key(publisher_name), set()))
 
 
 def _extract_source_date(value: str) -> str:
@@ -2543,15 +2567,28 @@ def _extract_wrapper_debug_snippet(text: str, *, limit: int = 240) -> str:
     return cleaned[:limit]
 
 
-def _same_host_family(candidate_url: str, publisher_url: str) -> bool:
+def _google_news_resolution_match_type(candidate_url: str, *, publisher_url: str = "", publisher_name: str = "") -> str:
     candidate_host = _host(candidate_url)
-    publisher_host = _host(publisher_url)
+    if not candidate_host:
+        return ""
+    if publisher_url and _same_host_family(candidate_url, publisher_url):
+        return "same_domain"
+    candidate_base = _strip_common_publisher_subdomain(candidate_host)
+    for expected_host in _known_publisher_domains(publisher_name):
+        if candidate_base == expected_host or candidate_base.endswith(f".{expected_host}") or expected_host.endswith(f".{candidate_base}"):
+            return "known_alias"
+    return ""
+
+
+def _same_host_family(candidate_url: str, publisher_url: str) -> bool:
+    candidate_host = _strip_common_publisher_subdomain(_host(candidate_url))
+    publisher_host = _strip_common_publisher_subdomain(_host(publisher_url))
     if not candidate_host or not publisher_host:
         return False
     return candidate_host == publisher_host or candidate_host.endswith(f".{publisher_host}") or publisher_host.endswith(f".{candidate_host}")
 
 
-def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str) -> str:
+def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str, publisher_name: str = "") -> str:
     url = _normalize_url(candidate_url)
     if not url:
         return "empty_url"
@@ -2559,44 +2596,53 @@ def _rejected_candidate_url_reason(candidate_url: str, *, publisher_url: str) ->
         return "google_domain"
     if _is_static_or_namespace_url(url):
         return "static_or_namespace_url"
-    if publisher_url and not _same_host_family(url, publisher_url):
+    if (publisher_url or publisher_name) and not _google_news_resolution_match_type(
+        url,
+        publisher_url=publisher_url,
+        publisher_name=publisher_name,
+    ):
         return "not_same_publisher_family"
-    if _is_homepage_or_landing_url(url):
-        return "publisher_homepage_or_landing"
+    landing_reason = _homepage_or_landing_url_reason(url)
+    if landing_reason:
+        if landing_reason.startswith(("listing_root:", "taxonomy_listing", "action_landing:", "resource_landing:")):
+            return "listing_or_action_url"
+        return "homepage_or_landing_url"
     if not _is_article_specific_url(url):
         return "not_article_specific"
     return ""
 
 
-def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "") -> str:
+def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str]:
     text = payload.decode("utf-8", errors="replace")
     candidates = _extract_candidate_urls(text)
     for candidate in candidates:
-        if _is_article_specific_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
-            return candidate
-    if publisher_url:
-        return ""
+        match_type = _google_news_resolution_match_type(candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+        if _is_article_specific_url(candidate) and match_type and not _is_google_news_wrapper(candidate):
+            return candidate, match_type
+    if publisher_url or publisher_name:
+        return "", ""
     for candidate in candidates:
         if _is_article_specific_url(candidate) and not _is_google_news_wrapper(candidate):
-            return candidate
-    return ""
+            return candidate, "same_domain"
+    return "", ""
 
 
-def _extract_google_news_homepage_url(payload: bytes, *, publisher_url: str = "") -> str:
+def _extract_google_news_homepage_url(payload: bytes, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str]:
     text = payload.decode("utf-8", errors="replace")
     candidates = _extract_candidate_urls(text)
     for candidate in candidates:
-        if _is_homepage_or_landing_url(candidate) and _same_host_family(candidate, publisher_url) and not _is_google_news_wrapper(candidate):
-            return candidate
-    if publisher_url:
-        return ""
+        match_type = _google_news_resolution_match_type(candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+        if _is_homepage_or_landing_url(candidate) and match_type and not _is_google_news_wrapper(candidate):
+            return candidate, _rejected_candidate_url_reason(candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+    if publisher_url or publisher_name:
+        return "", ""
     for candidate in candidates:
         if _is_homepage_or_landing_url(candidate) and not _is_google_news_wrapper(candidate):
-            return candidate
-    return ""
+            return candidate, _rejected_candidate_url_reason(candidate, publisher_url=publisher_url, publisher_name=publisher_name)
+    return "", ""
 
 
-def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publisher_url: str = "") -> tuple[str, str, bool, dict[str, Any]]:
+def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str, bool, dict[str, Any]]:
     url = _normalize_url(google_news_url)
     if not _is_google_news_wrapper(url):
         return "", "", False, {}
@@ -2608,6 +2654,7 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         "redirect_chain": list(fetch_meta.get("redirect_chain") or ([url] if url else [])),
         "candidate_url_count_extracted": 0,
         "accepted_candidate_url": "",
+        "accepted_candidate_match_type": "",
         "rejection_reason": "",
         "google_news_resolution_status": "",
         "debug_snippet": "",
@@ -2623,34 +2670,44 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         candidates.append(meta_refresh)
     debug["candidate_url_count_extracted"] = len(candidates)
     debug["debug_snippet"] = _extract_wrapper_debug_snippet(text)
-    resolved = _extract_google_news_article_url(payload, publisher_url=publisher_url)
+    resolved, match_type = _extract_google_news_article_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
     if resolved:
         debug["accepted_candidate_url"] = resolved
-        debug["google_news_resolution_status"] = "success_article"
+        debug["accepted_candidate_match_type"] = match_type
+        debug["google_news_resolution_status"] = "resolved_known_alias" if match_type == "known_alias" else "resolved_same_domain"
         return resolved, "", True, debug
-    homepage = _extract_google_news_homepage_url(payload, publisher_url=publisher_url)
+    homepage, homepage_reason = _extract_google_news_homepage_url(payload, publisher_url=publisher_url, publisher_name=publisher_name)
     if homepage:
         debug["accepted_candidate_url"] = homepage
-        debug["google_news_resolution_status"] = "success_homepage_only"
+        debug["rejection_reason"] = homepage_reason
+        debug["google_news_resolution_status"] = "failed_listing_or_action_url" if homepage_reason == "listing_or_action_url" else "failed_homepage_or_landing_url"
         return homepage, "", True, debug
     canonical = _extract_canonical_url(payload)
-    if canonical and (not publisher_url or _same_host_family(canonical, publisher_url)):
-        reason = _rejected_candidate_url_reason(canonical, publisher_url=publisher_url)
+    canonical_match_type = _google_news_resolution_match_type(canonical, publisher_url=publisher_url, publisher_name=publisher_name)
+    if canonical and (canonical_match_type or (not publisher_url and not publisher_name)):
+        reason = _rejected_candidate_url_reason(canonical, publisher_url=publisher_url, publisher_name=publisher_name)
         if not reason:
             debug["accepted_candidate_url"] = canonical
-            debug["google_news_resolution_status"] = "success_article" if _is_article_specific_url(canonical) else "success_homepage_only"
+            debug["accepted_candidate_match_type"] = canonical_match_type or "same_domain"
+            debug["google_news_resolution_status"] = "resolved_canonical_domain"
             return canonical, "", True, debug
     if not candidates:
         debug["rejection_reason"] = "no candidate urls extracted"
-        debug["google_news_resolution_status"] = "failed_no_candidate_urls"
+        debug["google_news_resolution_status"] = "failed_no_resolved_url"
         return "", "unresolved google news wrapper", True, debug
-    rejected_reasons = [_rejected_candidate_url_reason(candidate, publisher_url=publisher_url) for candidate in candidates]
-    if publisher_url and all(reason in {"google_domain", "static_or_namespace_url", "not_same_publisher_family"} for reason in rejected_reasons if reason):
+    rejected_reasons = [_rejected_candidate_url_reason(candidate, publisher_url=publisher_url, publisher_name=publisher_name) for candidate in candidates]
+    if any(reason == "listing_or_action_url" for reason in rejected_reasons):
+        debug["rejection_reason"] = "listing or action url only"
+        debug["google_news_resolution_status"] = "failed_listing_or_action_url"
+    elif any(reason == "homepage_or_landing_url" for reason in rejected_reasons):
+        debug["rejection_reason"] = "homepage or landing url only"
+        debug["google_news_resolution_status"] = "failed_homepage_or_landing_url"
+    elif (publisher_url or publisher_name) and all(reason in {"google_domain", "static_or_namespace_url", "not_same_publisher_family"} for reason in rejected_reasons if reason):
         debug["rejection_reason"] = "no same publisher family candidate url"
         debug["google_news_resolution_status"] = "failed_no_same_publisher_family"
     else:
-        debug["rejection_reason"] = "only rejected candidate urls"
-        debug["google_news_resolution_status"] = "failed_only_rejected_urls"
+        debug["rejection_reason"] = "no resolved candidate url"
+        debug["google_news_resolution_status"] = "failed_no_resolved_url"
     return "", "unresolved google news wrapper", True, debug
 
 
@@ -3520,6 +3577,7 @@ def run_food_line_discovery_expansion(
                         fetch,
                         google_news_url,
                         publisher_url=publisher_url,
+                        publisher_name=_nonempty(item.get("source_name")),
                     )
                     google_news_resolution_status = _nonempty(google_news_debug.get("google_news_resolution_status"))
                     if google_news_resolution_attempted:
@@ -4027,10 +4085,14 @@ def run_food_line_discovery_expansion(
     manual_reviewable_count = sum(1 for row in candidates if bool(row.get("manual_review_required")))
     google_news_url_count = sum(1 for row in candidates if _nonempty(row.get("google_news_url")))
     google_news_resolution_attempt_count = sum(int(count) for status, count in resolution_status_counts.items())
-    google_news_resolution_success_count = int(resolution_status_counts.get("success_article", 0))
+    google_news_resolution_success_count = sum(
+        int(count) for status, count in resolution_status_counts.items() if _nonempty(status).startswith("resolved_")
+    )
     google_news_resolution_failure_count = google_news_resolution_attempt_count - google_news_resolution_success_count
     google_news_resolved_article_url_count = google_news_resolution_success_count
-    google_news_resolved_homepage_only_count = int(resolution_status_counts.get("success_homepage_only", 0))
+    google_news_resolved_homepage_only_count = int(resolution_status_counts.get("failed_homepage_or_landing_url", 0)) + int(
+        resolution_status_counts.get("failed_listing_or_action_url", 0)
+    )
     article_specific_url_count = sum(
         1 for row in candidates if _is_article_specific_url(_nonempty(row.get("source_url") or row.get("final_trace_url")))
     )

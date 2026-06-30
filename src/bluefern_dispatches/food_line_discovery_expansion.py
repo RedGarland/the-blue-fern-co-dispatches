@@ -957,6 +957,7 @@ def _derive_pressure_summary_from_source_fields(
     summary = _nonempty(source_fields.get("summary_or_snippet") or source_fields.get("pressure_evidence_summary") or source_fields.get("manually_reviewed_summary"))
     evidence = _nonempty(source_fields.get("evidence_text"))
     combined = " ".join(part for part in (title, summary, evidence) if part).lower()
+    source_support = " ".join(part for part in (summary, evidence) if part).lower()
     publisher = _publisher_attribution_name(row)
 
     if pressure_type == "SNAP policy pressure":
@@ -980,6 +981,24 @@ def _derive_pressure_summary_from_source_fields(
                 "derived_from_source_text",
                 ["summary_or_snippet"] if summary else ["evidence_text"],
             )
+        record_spending_amount = re.search(r"(\$\s?\d+(?:\.\d+)?\s*(?:[mb]|million|billion))", title, re.IGNORECASE)
+        record_spending_subject = re.search(r"^(.+?)\s+(?:to spend|is set to invest)\b", title, re.IGNORECASE)
+        if (
+            source_support
+            and ("food bank" in combined or "pantry" in combined)
+            and any(token in source_support for token in ("need grows", "need grow", "growing need", "as need grows", "need is growing"))
+            and any(token in combined for token in ("record-breaking", "record breaking", "record"))
+            and record_spending_amount
+            and record_spending_subject
+        ):
+            subject = _nonempty(record_spending_subject.group(1))
+            amount = _nonempty(record_spending_amount.group(1))
+            if subject and amount:
+                return (
+                    f"{publisher} reported that {subject} expects to spend a record {amount} on food in 2026 as need grows.",
+                    "derived_from_title_and_source_text",
+                    ["selected_title", "summary_or_snippet"] if summary else ["selected_title", "evidence_text"],
+                )
     if pressure_type == "school meals pressure":
         if ("school meals" in combined or "summer meals" in combined) and any(token in combined for token in ("gap", "end", "cut", "loss", "access")):
             meal_term = "summer meals" if "summer meals" in combined else "school meals"

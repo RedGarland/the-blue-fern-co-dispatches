@@ -93,6 +93,8 @@ Recommended roles:
 
 Codex may carry out safe mechanical source-repo workflow steps after completing a scoped code, config, test, or documentation task, but merge, publication, and editorial authority remain human-only.
 
+For the reusable step-by-step PR procedure, including preflight, staging discipline, PR creation, checks, and post-merge cleanup, see `docs/workflows/codex_pr_workflow.md`.
+
 Safe Codex-allowed actions:
 
 - create a feature branch from the approved base branch

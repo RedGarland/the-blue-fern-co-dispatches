@@ -604,7 +604,7 @@ def test_food_line_discovery_expansion_new_york_fed_story_enters_review_via_cano
     assert candidate["candidate_review_status"] == "needs_review"
     assert candidate["public_claim_eligible"] is True
     assert candidate["pressure_type"] in {"household hardship", "household food insecurity pressure"}
-    assert result["google_news_resolution_status_counts"]["resolved_known_alias"] == 1
+    assert result["google_news_resolution_status_counts"]["resolved_canonical_domain"] == 1
 
 
 def test_food_line_discovery_expansion_google_news_listing_url_stays_blocked(tmp_path: Path):
@@ -905,8 +905,92 @@ def test_resolve_google_news_wrapper_reports_canonical_domain_resolution(monkeyp
 
     assert attempted is True
     assert error == ""
-    assert resolved == article_url
+    assert resolved == article_url.rstrip("/")
     assert debug["google_news_resolution_status"] == "resolved_canonical_domain"
+
+
+def test_resolve_google_news_wrapper_prefers_decoded_article_url_without_html_scrape():
+    article_url = "https://www.trtworld.com/middle-east/gaza-health-system-strain-officials-warn-of-collapsing-care-18273645"
+    google_url = "https://news.google.com/rss/articles/CBMiT2h0dHBzOi8vd3d3LnRydHdvcmxkLmNvbS9taWRkbGUtZWFzdC9nYXphLWhlYWx0aC1zeXN0ZW0tc3RyYWluLW9mZmljaWFscy13YXJuLW9mLWNvbGxhcHNpbmctY2FyZS0xODI3MzY0NQ?oc=5"
+
+    def fetcher(url: str, timeout: int = 15):
+        raise AssertionError(f"fetch should not run for decoded wrapper: {url}")
+
+    resolved, error, attempted, debug = expansion_module._resolve_google_news_wrapper(
+        fetcher,
+        google_url,
+        publisher_url=article_url,
+        publisher_name="TRT World",
+    )
+
+    assert attempted is True
+    assert error == ""
+    assert resolved == article_url
+    assert debug["decoded_google_news_url"] == article_url
+    assert debug["accepted_candidate_url"] == article_url
+    assert debug["google_news_resolution_status"] == "resolved_same_domain"
+
+
+def test_resolve_google_news_wrapper_prefers_rpc_article_url_before_html_scrape(monkeypatch: pytest.MonkeyPatch):
+    article_url = "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026/"
+    google_url = "https://news.google.com/rss/articles/CBMirwFBVV95cUxQaER6aU4zNlY3dWd0RC1VekROQ24wQjA4LXk5eThSYmJhU2dPRkpiY2JKWkhua0NRa3Flc0d2M0hseWFOc1ZvR29mYWk3ZzNFNE14Qkh3elVnckoydWVKdkhXWkJDQTJnTFVRcmZwOHhKb2twUi02c18yc3NXUHlZMVc0Wk1XdENQM01TelNnRzdINWlGWFVkMFRKSVR0b05uckRlLWIyU1dzMmwxY3Fr?oc=5"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url == google_url:
+            return (
+                "<html><body>"
+                '<div data-n-a-id="CBMirwFBVV95cUxQaER6aU4zNlY3dWd0RC1VekROQ24wQjA4LXk5eThSYmJhU2dPRkpiY2JKWkhua0NRa3Flc0d2M0hseWFOc1ZvR29mYWk3ZzNFNE14Qkh3elVnckoydWVKdkhXWkJDQTJnTFVRcmZwOHhKb2twUi02c18yc3NXUHlZMVc0Wk1XdENQM01TelNnRzdINWlGWFVkMFRKSVR0b05uckRlLWIyU1dzMmwxY3Fr" '
+                'data-n-a-ts="1782841548" data-n-a-sg="AVvZt1FeWQBagmhL_V1m7VKOxBBR"></div>'
+                '<a href="https://news.google.com">noise</a>'
+                "</body></html>"
+            ).encode("utf-8")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    monkeypatch.setattr(expansion_module, "_google_news_rpc_request", lambda article_id, timestamp, signature: (article_url, ""))
+
+    resolved, error, attempted, debug = expansion_module._resolve_google_news_wrapper(
+        fetcher,
+        google_url,
+        publisher_url="https://www.bostonherald.com",
+        publisher_name="Boston Herald",
+    )
+
+    assert attempted is True
+    assert error == ""
+    assert resolved == article_url
+    assert debug["google_news_rpc_attempted"] is True
+    assert debug["google_news_rpc_error"] == ""
+    assert debug["google_news_rpc_url"] == article_url
+    assert debug["google_news_resolution_status"] == "resolved_same_domain"
+    assert debug["decoded_google_news_url"] == ""
+    assert debug["candidate_url_count_extracted"] == 0
+
+
+def test_google_news_rpc_request_parses_escaped_garturlres(monkeypatch: pytest.MonkeyPatch):
+    article_url = "https://www.bostonherald.com/2026/06/16/greater-boston-food-bank-to-spend-record-breaking-65m-on-food-in-2026/"
+    response_text = (
+        ")]}'\n\n"
+        '[["wrb.fr","Fbv4je","[\\"garturlres\\",\\"'
+        + article_url
+        + '\\",1]",null,null,null,"generic"],["di",16]]'
+    )
+
+    class _Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self, limit: int) -> bytes:
+            return response_text.encode("utf-8")
+
+    monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+
+    resolved, error = expansion_module._google_news_rpc_request("token", "1782841548", "sig")
+
+    assert resolved == article_url.rstrip("/")
+    assert error == ""
 
 
 def test_resolve_google_news_wrapper_records_bounded_rejected_candidate_sample():
@@ -1076,10 +1160,15 @@ def test_food_line_discovery_expansion_rejects_google_static_and_schema_urls(tmp
         query_lookahead_days=0,
     )
     candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
+    debug = audit["google_news_resolution_debug_by_candidate"][candidate["candidate_id"]]
 
     assert candidate["final_trace_url"] == homepage_url
     assert candidate["traceability_status"] == "publisher_homepage_trace_only"
-    assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
+    assert result["google_news_resolution_status_counts"]["failed_static_or_google_noise_only"] == 1
+    assert debug["google_news_resolution_status"] == "failed_static_or_google_noise_only"
+    assert debug["static_or_google_noise_only"] is True
+    assert debug["google_news_rpc_attempted"] is False
 
 
 def test_food_line_discovery_expansion_rejects_unrelated_google_news_publisher_family(tmp_path: Path):
@@ -1127,6 +1216,65 @@ def test_food_line_discovery_expansion_rejects_unrelated_google_news_publisher_f
     assert debug["rejected_candidate_urls_sample"]
     assert debug["rejected_candidate_urls_sample"][0]["candidate_url"] == unrelated_url
     assert debug["rejected_candidate_urls_sample"][0]["rejection_reason"] == "not_same_publisher_family"
+
+
+def test_food_line_discovery_expansion_boston_herald_style_wrapper_failure_stays_non_public(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    edition_date = "2026-06-16"
+    google_url = "https://news.google.com/rss/articles/CBMirwFBVV95cUxQaER6aU4zNlY3dWd0RC1VekROQ24wQjA4LXk5eThSYmJhU2dPRkpiY2JKWkhua0NRa3Flc0d2M0hseWFOc1ZvR29mYWk3ZzNFNE14Qkh3elVnckoydWVKdkhXWkJDQTJnTFVRcmZwOHhKb2twUi02c18yc3NXUHlZMVc0Wk1XdENQM01TelNnRzdINWlGWFVkMFRKSVR0b05uckRlLWIyU1dzMmwxY3Fr?oc=5"
+    homepage_url = "https://www.bostonherald.com"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald",
+                        "link": google_url,
+                        "source_url": homepage_url,
+                        "publisher": "Boston Herald",
+                        "description": "Food bank demand and operating strain in Boston.",
+                        "pubDate": "Tue, 16 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == google_url:
+            return (
+                "<html><body>"
+                '<div data-n-a-id="CBMirwFBVV95cUxQaER6aU4zNlY3dWd0RC1VekROQ24wQjA4LXk5eThSYmJhU2dPRkpiY2JKWkhua0NRa3Flc0d2M0hseWFOc1ZvR29mYWk3ZzNFNE14Qkh3elVnckoydWVKdkhXWkJDQTJnTFVRcmZwOHhKb2twUi02c18yc3NXUHlZMVc0Wk1XdENQM01TelNnRzdINWlGWFVkMFRKSVR0b05uckRlLWIyU1dzMmwxY3Fr" '
+                'data-n-a-ts="1782841548" data-n-a-sg="AVvZt1FeWQBagmhL_V1m7VKOxBBR"></div>'
+                '<a href="https://news.google.com">noise</a>'
+                '<a href="https://lh3.googleusercontent.com/example=w16">img</a>'
+                "</body></html>"
+            ).encode("utf-8")
+        if url == homepage_url:
+            return _html_article(title="Boston Herald", canonical=homepage_url, body="Homepage only trace.")
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    monkeypatch.setattr(expansion_module, "_google_news_rpc_request", lambda article_id, timestamp, signature: ("", "rpc_without_article_url"))
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
+    debug = audit["google_news_resolution_debug_by_candidate"][candidate["candidate_id"]]
+
+    assert candidate["final_trace_url"] == homepage_url
+    assert candidate["traceability_status"] == "publisher_homepage_trace_only"
+    assert candidate["public_claim_eligible"] is False
+    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
+    assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
+    assert debug["google_news_resolution_status"] == "failed_static_or_google_noise_only"
+    assert debug["google_news_rpc_attempted"] is True
+    assert debug["google_news_rpc_error"] == "rpc_without_article_url"
+    assert debug["static_or_google_noise_only"] is True
+    assert debug["google_news_rpc_url"] == ""
 
 
 def test_food_line_discovery_candidate_sources_are_plain_array_with_inspectable_fields(tmp_path: Path):

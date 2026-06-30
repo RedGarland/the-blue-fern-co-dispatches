@@ -4298,20 +4298,23 @@ def render_food_line_edition(
     primary_signal_status: str,
     continuing_rows: list[dict[str, Any]],
     edition_mode: str = "current_update",
+    display_public_rows: list[dict[str, Any]] | None = None,
 ) -> str:
     pressure_rows = _public_source_rows(sources)
     reviewed_count = len(sources)
-    excluded_count = max(0, reviewed_count - len(pressure_rows))
-    public_signal_rows = [] if edition_mode == "no_current_update" else list(pressure_rows)
+    public_signal_rows = [] if edition_mode == "no_current_update" else list(display_public_rows if display_public_rows is not None else pressure_rows)
+    excluded_count = max(0, reviewed_count - len(public_signal_rows))
+    status_signal_count = 0 if edition_mode == "no_current_update" else len(pressure_rows)
+    status_excluded_count = max(0, reviewed_count - status_signal_count)
     publisher_count = len(
         {
             str(row.get("publisher") or row.get("source_name") or "").strip()
-            for row in sources
+            for row in public_signal_rows
             if str(row.get("publisher") or row.get("source_name") or "").strip()
         }
     )
     public_signal_count = len(public_signal_rows)
-    status_label = _food_line_public_edition_status_label(edition_mode, reviewed_count, public_signal_count, excluded_count)
+    status_label = _food_line_public_edition_status_label(edition_mode, reviewed_count, status_signal_count, status_excluded_count)
     eyebrow_label = {
         "no-current-update": _food_line_no_current_update_public_label(),
         "full": "Full-source update",
@@ -5118,6 +5121,12 @@ def render_food_line_review_only(
     scope_counts = _scope_counts(sources)
     editorial_status = _editorial_status(sources)
     edition_mode = "current_update"
+    rendered_story_rows = _food_line_public_story_rows(
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode=edition_mode,
+    )
     rendered_root = (output_root or (root / "output" / "site-review-only" / DISPATCH_SLUG)).resolve()
     edition_dir = rendered_root / "editions" / edition_date
     warnings: list[str] = []
@@ -5135,8 +5144,9 @@ def render_food_line_review_only(
         primary_signal_status,
         continuing_rows,
         edition_mode=edition_mode,
+        display_public_rows=rendered_story_rows,
     )
-    public_rows = _public_source_rows(sources)
+    public_rows = list(rendered_story_rows)
     source_table_html = _source_table_html(
         edition_date,
         sources,
@@ -5151,7 +5161,7 @@ def render_food_line_review_only(
         lead_row,
         continuing_rows,
         edition_mode=edition_mode,
-        review_counts=(len(sources), max(0, len(sources) - len(public_rows))),
+        review_counts=(len(sources), max(0, len(sources) - len(rendered_story_rows))),
         exclusion_reason_counts={},
     )
     rendered_claim_rows = _food_line_claim_ledger_rows(

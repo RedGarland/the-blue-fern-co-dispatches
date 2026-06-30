@@ -291,6 +291,10 @@ def test_food_line_discovery_backfill_summary_reports_window_and_homepage_blocke
     assert review["top_blocker_reasons"]["outside_backfill_date_window"] >= 1
     assert review["top_blocker_reasons"]["homepage_or_landing_url"] >= 1
     assert review["top_blocker_reasons"]["publisher_homepage_trace_only"] >= 1
+    assert review["blocked_by_url_filter_count"] >= 1
+    assert review["blocked_by_freshness_count"] >= 1
+    assert review["candidates"][0]["blocked_by_freshness"] is True
+    assert review["candidates"][1]["blocked_by_url_filter"] is True
     assert review["candidates"][1]["google_news_resolution"]["google_news_resolution_status"] == "success_homepage_only"
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
@@ -1393,6 +1397,8 @@ def test_food_line_discovery_backfill_reports_missing_public_prose_diagnostics(t
     assert review["pressure_type_derivation_status_counts"]["insufficient_source_support"] >= 1
     assert sum(review["source_role_derivation_status_counts"].values()) >= 1
     assert sum(review["source_role_counts"].values()) >= 1
+    assert review["blocked_by_missing_public_prose_count"] >= 1
+    assert review["candidates"][0]["blocked_by_missing_public_prose"] is True
     assert summary["public_output_written"] is False
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()

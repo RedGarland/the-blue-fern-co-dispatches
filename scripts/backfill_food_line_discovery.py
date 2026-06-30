@@ -224,6 +224,21 @@ def _review_payload(
                 Counter(str(row.get("source_role") or "") for row in candidates if str(row.get("source_role") or "").strip()).items()
             )
         ),
+        "blocked_by_missing_public_prose_count": sum(
+            1 for row in candidates if "missing_public_prose_fields" in list(row.get("public_claim_blockers") or [])
+        ),
+        "blocked_by_context_only_count": sum(1 for row in candidates if "context_only" in list(row.get("public_claim_blockers") or [])),
+        "blocked_by_url_filter_count": sum(
+            1
+            for row in candidates
+            if any(
+                blocker in {"homepage_or_landing_url", "publisher_homepage_trace_only", "non_article_trace_url"}
+                for blocker in list(row.get("public_claim_blockers") or [])
+            )
+        ),
+        "blocked_by_freshness_count": sum(
+            1 for row in candidates if "outside_backfill_date_window" in list(row.get("public_claim_blockers") or [])
+        ),
         "public_eligible_blocked_by_title_count": sum(
             1
             for row in candidates
@@ -277,6 +292,13 @@ def _review_payload(
                 "pressure_type_derivation_status": str(row.get("pressure_type_derivation_status") or ""),
                 "source_role_derivation_status": str(row.get("source_role_derivation_status") or ""),
                 "source_role_derivation_source_fields": list(row.get("source_role_derivation_source_fields") or []),
+                "blocked_by_missing_public_prose": "missing_public_prose_fields" in list(row.get("public_claim_blockers") or []),
+                "blocked_as_resource_or_context_only": "context_only" in list(row.get("public_claim_blockers") or []),
+                "blocked_by_url_filter": any(
+                    blocker in {"homepage_or_landing_url", "publisher_homepage_trace_only", "non_article_trace_url"}
+                    for blocker in list(row.get("public_claim_blockers") or [])
+                ),
+                "blocked_by_freshness": "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []),
                 "traceability_status": str(row.get("traceability_status") or ""),
                 "candidate_review_status": str(row.get("candidate_review_status") or row.get("review_status") or ""),
                 "public_claim_eligible": bool(row.get("public_claim_eligible")),

@@ -390,6 +390,208 @@ def test_food_line_discovery_query_plan_covers_state_territory_and_metro_geograp
     assert any(row["geographic_scope"] == "metro" for row in plan)
 
 
+def test_food_line_discovery_query_plan_includes_targeted_recall_queries(tmp_path: Path):
+    plan = build_food_line_discovery_query_plan(tmp_path, "2026-06-19")
+    query_texts = {row["query_text"] for row in plan}
+
+    assert any('"record demand"' in text and '"summer meals"' in text for text in query_texts)
+    assert any('"meal price increase"' in text or '"school lunch price"' in text for text in query_texts)
+    assert any('"health care bills"' in text or '"medical debt"' in text for text in query_texts)
+    assert any('"New York Fed"' in text or '"Federal Reserve Bank of New York"' in text for text in query_texts)
+
+
+def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tmp_path: Path):
+    edition_date = "2026-06-18"
+    article_url = "https://www.wowt.com/2026/06/18/omaha-food-programs-see-record-demand-summer-break-eliminates-school-meals/"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Omaha food programs see record demand as summer break eliminates school meals",
+                        "link": "https://news.google.com/rss/articles/CBMiWOWT?oc=5",
+                        "source_url": article_url,
+                        "publisher": "WOWT",
+                        "description": "Omaha food programs reported record demand after summer break eliminated school meals for many families.",
+                        "pubDate": "Thu, 18 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiWOWT?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url.rstrip("/") == article_url.rstrip("/"):
+            return _html_article(
+                title="Omaha food programs see record demand as summer break eliminates school meals",
+                canonical=article_url,
+                body="Omaha food programs said they are seeing record demand as summer break eliminates school meals and more families need help.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "qualified_pressure_signal"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["pressure_signal"] is True
+    assert candidate["pressure_type"] in {"demand strain", "food bank demand pressure"}
+    assert candidate["source_published_date"] == edition_date
+
+
+def test_food_line_discovery_expansion_indyweek_meal_price_story_enters_review(tmp_path: Path):
+    edition_date = "2026-06-20"
+    article_url = "https://indyweek.com/news/wake-school-board-passes-meal-price-increase-creates-task-force-to-address-cost/"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Wake school board passes meal price increase, creates task force to address cost",
+                        "link": "https://news.google.com/rss/articles/CBMiINDY?oc=5",
+                        "source_url": article_url,
+                        "publisher": "IndyWeek",
+                        "description": "Wake school board approved a meal price increase and created a task force to address meal costs for families.",
+                        "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiINDY?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url.rstrip("/") == article_url.rstrip("/"):
+            return _html_article(
+                title="Wake school board passes meal price increase, creates task force to address cost",
+                canonical=article_url,
+                body="Wake school board passed a school meal price increase and created a task force to address meal costs and affordability for families.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "qualified_pressure_signal"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["pressure_type"] == "school meal price pressure"
+    assert candidate["pressure_summary"]
+
+
+def test_food_line_discovery_expansion_health_cost_food_insecurity_story_enters_review(tmp_path: Path):
+    edition_date = "2026-06-20"
+    article_url = "https://www.benefitspro.com/2026/06/20/health-care-bills-are-fueling-food-insecurity/"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Health care bills are fueling food insecurity for more households",
+                        "link": "https://news.google.com/rss/articles/CBMiBENE?oc=5",
+                        "source_url": article_url,
+                        "publisher": "BenefitsPro",
+                        "description": "Health care bills and medical debt are fueling food insecurity for more households.",
+                        "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiBENE?oc=5":
+            return f"<html><body><a href=\"{article_url}\">story</a></body></html>".encode("utf-8")
+        if url.rstrip("/") == article_url.rstrip("/"):
+            return _html_article(
+                title="Health care bills are fueling food insecurity for more households",
+                canonical=article_url,
+                body="Health care bills and medical debt are fueling food insecurity for more households as families struggle to afford both care and food.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "qualified_pressure_signal"
+    assert candidate["candidate_review_status"] == "needs_review"
+    assert candidate["public_claim_eligible"] is True
+    assert candidate["pressure_summary"]
+    assert candidate["pressure_type"] in {"household hardship", "household food insecurity pressure"}
+
+
+def test_food_line_discovery_expansion_resource_only_summer_meals_page_stays_blocked(tmp_path: Path):
+    edition_date = "2026-06-20"
+    article_url = "https://example.org/resources/summer-meal-sites"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Find summer meal sites for children",
+                        "link": "https://news.google.com/rss/articles/CBMiRESOURCE?oc=5",
+                        "source_url": article_url,
+                        "publisher": "Example Resource Center",
+                        "description": "Find summer meal sites and application help for families.",
+                        "pubDate": "Sat, 20 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://news.google.com/rss/articles/CBMiRESOURCE?oc=5":
+            return f"<html><body><a href=\"{article_url}\">resource</a></body></html>".encode("utf-8")
+        if url == article_url:
+            return _html_article(
+                title="Find summer meal sites for children",
+                canonical=article_url,
+                body="Find summer meal sites, application help, and resources for families needing food assistance.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert candidate["classification_status"] == "context_only"
+    assert candidate["public_claim_eligible"] is False
+    assert "context_only" in candidate["public_claim_blockers"]
+    assert candidate["source_role"] == "resource_context"
+
+
 def test_food_line_discovery_query_plan_marks_historical_direct_sources(tmp_path: Path):
     _write_direct_source_config(
         tmp_path,

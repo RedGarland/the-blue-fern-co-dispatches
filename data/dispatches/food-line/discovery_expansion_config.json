@@ -253,6 +253,8 @@
       "source_family": "local_news",
       "templates": [
         "\"food insecurity\"",
+        "\"household food insecurity\"",
+        "\"rising food insecurity\"",
         "\"food bank\"",
         "\"food pantry\"",
         "\"hunger relief\"",
@@ -394,6 +396,8 @@
       "templates": [
         "(\"food bank\" OR \"food pantry\") (demand OR strain OR shortage OR surge)",
         "(\"food bank\" OR \"food pantry\") (\"increased need\" OR waitlist OR \"funding gap\")",
+        "(\"summer food programs\" OR \"summer meals\") \"record demand\"",
+        "(\"food program\" OR \"food programs\") \"record demand\"",
         "\"food bank shelves\"",
         "\"food bank inventory\"",
         "\"food bank donations down\"",
@@ -408,7 +412,11 @@
       "templates": [
         "(SNAP OR EBT) (cuts OR changes OR benefits OR families)",
         "(\"summer meals\" OR \"school meals\") (families OR children OR hunger)",
+        "(\"school meal\" OR \"school meals\" OR \"school lunch\") (\"price increase\" OR \"higher prices\" OR affordability)",
+        "(\"school board\" OR district) (\"meal price increase\" OR \"school lunch price\")",
         "(WIC OR TEFAP OR \"Meals on Wheels\") (cuts OR delays OR waitlist)",
+        "(\"health care bills\" OR \"health-care bills\" OR \"medical debt\") \"food insecurity\"",
+        "(\"New York Fed\" OR \"Federal Reserve Bank of New York\") \"food insecurity\"",
         "\"food stamps\" \"food bank demand\"",
         "\"EBT delay\" \"food pantry\"",
         "\"Meals on Wheels\" waitlist",
@@ -422,6 +430,7 @@
       "templates": [
         "(\"grocery prices\" OR \"food costs\") (\"food pantry\" OR families)",
         "(\"rent and groceries\" OR \"utility bills and groceries\") hunger",
+        "(\"health care bills\" OR \"health-care bills\" OR \"medical debt\") \"food insecurity\"",
         "\"food bank fuel costs\"",
         "\"food bank inflation\"",
         "\"food bank rising costs\""
@@ -434,10 +443,12 @@
       "templates": [
         "\"food bank demand\" {geo} after:{after} before:{before}",
         "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"record demand\" (\"food programs\" OR \"summer meals\") {geo} after:{after} before:{before}",
         "\"pantry shortage\" {geo} after:{after} before:{before}",
         "\"food bank inventory\" {geo} after:{after} before:{before}",
         "\"SNAP cuts\" {geo} after:{after} before:{before}",
         "\"summer meals\" {geo} families after:{after} before:{before}",
+        "(\"meal price increase\" OR \"school lunch price\") {geo} after:{after} before:{before}",
         "\"grocery prices\" {geo} food pantry after:{after} before:{before}",
         "\"school meal gap\" {geo} after:{after} before:{before}",
         "\"food distribution canceled\" {geo} after:{after} before:{before}"
@@ -450,10 +461,12 @@
       "templates": [
         "\"food bank demand\" {geo} after:{after} before:{before}",
         "\"food pantry demand\" {geo} after:{after} before:{before}",
+        "\"record demand\" (\"food programs\" OR \"summer meals\") {geo} after:{after} before:{before}",
         "\"pantry shortage\" {geo} after:{after} before:{before}",
         "\"food bank inventory\" {geo} after:{after} before:{before}",
         "\"SNAP cuts\" {geo} after:{after} before:{before}",
         "\"summer meals\" {geo} families after:{after} before:{before}",
+        "(\"meal price increase\" OR \"school lunch price\") {geo} after:{after} before:{before}",
         "\"grocery prices\" {geo} food pantry after:{after} before:{before}",
         "\"school meal gap\" {geo} after:{after} before:{before}",
         "\"food distribution canceled\" {geo} after:{after} before:{before}"

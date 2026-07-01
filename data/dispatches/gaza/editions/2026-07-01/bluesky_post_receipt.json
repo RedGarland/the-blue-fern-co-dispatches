@@ -1,0 +1,15 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-01",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-01/",
+  "post_uri": "at://did:plc:q3k2kcpmvqexvxy7y6bdo46l/app.bsky.feed.post/3mpmdh6c7hx2n",
+  "posted_at": "2026-07-01T20:15:29.183475Z",
+  "post_text_sha256": "047aa96582880e7a54f682da83bdaa7eb90eadd715fca70583b341ca117d4f95",
+  "card_title": "Dispatches from Gaza - July 1, 2026",
+  "card_description": "Read the July 1 source-backed Gaza update from The Blue Fern Co.",
+  "embed_type": "app.bsky.embed.external",
+  "thumb_status": "uploaded",
+  "original_thumb_bytes": 246228,
+  "uploaded_thumb_bytes": 246228,
+  "status": "success"
+}

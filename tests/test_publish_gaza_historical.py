@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 import scripts.publish_gaza_historical as publish
+from scripts.validation_profiles import PROFILE_GAZA_DAILY
 
 
 def write_manual_sources(root: Path, edition_date: str, records: list[dict] | None = None) -> Path:
@@ -245,6 +246,50 @@ def test_push_requires_explicit_flag(isolated_root, monkeypatch, capsys):
     assert summary["pushed"] is True
     assert ["git", "status"] in git_calls
     assert ["git", "push", "origin", "gh-pages"] in git_calls
+
+
+def test_historical_publish_uses_gaza_validation_profile_with_local_basetemp(isolated_root, monkeypatch, capsys):
+    root, pages_repo = isolated_root
+    write_manual_sources(root, "2026-04-30")
+    calls: list[list[str]] = []
+
+    def fake_run(args, cwd=publish.ROOT):
+        calls.append(args)
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-04-30")
+            return completed(args)
+        if "pytest" in command:
+            return completed(args, stdout="5 passed")
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True})
+        if "publish_github_pages.py" in command:
+            write_pages_output(pages_repo, "2026-04-30")
+            return completed(args, payload={"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234"})
+        raise AssertionError(args)
+
+    monkeypatch.setattr(publish, "run_command", fake_run)
+
+    code = publish.main(["--date", "2026-04-30", "--pages-repo", str(pages_repo)])
+
+    assert code == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["validation_profile"] == PROFILE_GAZA_DAILY
+    assert summary["skipped_unrelated_tests"] is True
+    assert "tests_command" in summary
+    assert ".pytest-temp-gaza-publish-" in summary["tests_command"]
+    assert "tests/test_gaza_sources.py" in summary["tests_command"]
+    assert "tests/test_gaza_dispatch_generation.py" in summary["tests_command"]
+    assert "tests/test_gaza_backfill.py" in summary["tests_command"]
+    assert "tests/test_run_daily_gaza.py" in summary["tests_command"]
+    assert "tests/test_dispatches_site.py" in summary["tests_command"]
+    assert "-k \"not american_pressure\"" in summary["tests_command"]
+    pytest_calls = [call for call in calls if "pytest" in " ".join(call)]
+    assert len(pytest_calls) == 1
+    assert "--basetemp" in pytest_calls[0]
+    basetemp = Path(pytest_calls[0][pytest_calls[0].index("--basetemp") + 1])
+    assert basetemp.parent == root
+    assert basetemp.name.startswith(".pytest-temp-gaza-publish-")
 
 
 def test_no_old_gaza_project_path_is_referenced():

@@ -629,6 +629,38 @@ def test_ensure_pages_branch_rejects_pages_repo_that_is_behind_origin(monkeypatc
     assert "local HEAD is behind origin/gh-pages" in result["errors"][0]
 
 
+def test_ensure_pages_branch_allows_local_publish_when_fetch_fails(monkeypatch, tmp_path):
+    pages_repo = make_pages_repo(tmp_path / "pages")
+
+    def fake_git_stdout(args, cwd):
+        if args == ["branch", "--show-current"]:
+            return "gh-pages"
+        if args == ["remote"]:
+            return "origin"
+        return None
+
+    def fake_run_git(args, cwd):
+        if args[:1] == ["fetch"]:
+            return subprocess.CompletedProcess(args, 1, "", "schannel fetch failed")
+        if args[:1] == ["checkout"]:
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(generator, "git_stdout", fake_git_stdout)
+    monkeypatch.setattr(generator, "git_ref_exists", lambda ref, cwd: ref == "refs/heads/gh-pages")
+    monkeypatch.setattr(generator, "_pages_repo_active_operation_markers", lambda cwd: [])
+    monkeypatch.setattr(generator, "_git_porcelain_paths", lambda cwd: [])
+    monkeypatch.setattr(generator, "run_git", fake_run_git)
+
+    result = generator.ensure_pages_branch(pages_repo, "gh-pages", dry_run=False)
+
+    assert result["errors"] == []
+    assert result["checked_out_branch"] == "gh-pages"
+    assert result["fetch_attempted"] is True
+    assert result["fetched"] is False
+    assert any("schannel fetch failed" in warning for warning in result["warnings"])
+
+
 def test_validate_pages_repo_copy_scope_flags_detail_and_unrelated_changes(monkeypatch, tmp_path):
     pages_repo = make_pages_repo(tmp_path / "pages")
     monkeypatch.setattr(

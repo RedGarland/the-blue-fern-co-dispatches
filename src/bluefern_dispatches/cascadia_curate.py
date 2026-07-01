@@ -13,6 +13,20 @@ from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.cascadia_score import exclusion_reason, score_record
 
 
+def evaluate_cascadia_geography(record: dict[str, Any]) -> dict[str, Any]:
+    """Return the compatibility geography decision consumed by Cascadia renderers.
+
+    Geography validation is performed upstream. Renderers use this helper as a
+    final guard against records explicitly marked as geography mismatches.
+    """
+    excluded_reason = str(record.get("excluded_reason") or "").strip()
+    allowed_public = excluded_reason != "geography_sanity_mismatch"
+    return {
+        "allowed_public": allowed_public,
+        "excluded_reason": None if allowed_public else excluded_reason,
+    }
+
+
 def story_id_for(record: dict[str, Any]) -> str:
     raw = "|".join([record.get("source_record_id", ""), record.get("canonical_url", ""), record.get("title", "")])
     return f"story-{sha256(raw.encode('utf-8')).hexdigest()[:12]}"

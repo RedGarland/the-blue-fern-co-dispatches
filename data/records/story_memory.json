@@ -329,5 +329,82 @@
     "last_seen_date": "2026-06-20",
     "update_count": 1,
     "latest_classification": "major_update"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-01",
+    "story_id": "gaza-story-2026-07-01-001",
+    "title": "Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts",
+    "normalized_title": "expansion of areas under israeli control in gaza endangers civilians and relief efforts",
+    "summary": "The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts.",
+    "source_urls": [
+      "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts"
+    ],
+    "canonical_urls": [
+      "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts"
+    ],
+    "publisher_names": [
+      "OCHA oPt"
+    ],
+    "category": "humanitarian",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "0b460b40e4d15207",
+    "first_seen_date": "2026-07-01",
+    "last_seen_date": "2026-07-01",
+    "update_count": 0,
+    "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-01",
+    "story_id": "gaza-story-2026-07-01-002",
+    "title": "UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall",
+    "normalized_title": "un chief fears for millions of palestinians amid unrwa funding shortfall",
+    "summary": "UN Secretary-General Antonio Guterres called on countries to cover a $100m UNRWA funding gap, warning that millions of Palestinians are at risk and describing living conditions in Gaza as utterly appalling.",
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall"
+    ],
+    "canonical_urls": [
+      "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "category": "humanitarian",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "1bd772f9c41adc4e",
+    "first_seen_date": "2026-07-01",
+    "last_seen_date": "2026-07-01",
+    "update_count": 0,
+    "latest_classification": "new"
+  },
+  {
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-01",
+    "story_id": "gaza-story-2026-07-01-003",
+    "title": "Israeli forces kill Palestinian goalkeeper in Gaza",
+    "normalized_title": "israeli forces kill palestinian goalkeeper in gaza",
+    "summary": "Palestinian goalkeeper Saleem Al-Ashqar was shot dead by Israeli forces in Gaza.",
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss",
+      "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza"
+    ],
+    "canonical_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss",
+      "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "category": "conflict",
+    "geographies": [],
+    "source_dates": [],
+    "topic_fingerprint": "12ddee4849ca6fff",
+    "first_seen_date": "2026-06-11",
+    "last_seen_date": "2026-07-01",
+    "update_count": 1,
+    "latest_classification": "major_update"
   }
 ]

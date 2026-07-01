@@ -6,16 +6,25 @@ import os
 import re
 import subprocess
 import sys
+import time
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.generator import pages_sync_repair_message
+from scripts.validation_profiles import (
+    PROFILE_GAZA_DAILY,
+    apply_env_profile,
+    get_profile,
+    pytest_command,
+)
 
 
 DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
@@ -301,8 +310,15 @@ def validate_pages_outputs(pages_repo: Path, edition_date: str) -> list[str]:
     return [f"missing Pages repo output: {path}" for path in required if not path.exists()]
 
 
-def run_tests() -> subprocess.CompletedProcess[str]:
-    return run_command([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"])
+def make_local_pytest_basetemp(prefix: str = ".pytest-temp-gaza-publish") -> Path:
+    path = ROOT / f"{prefix}-{os.getpid()}-{int(time.time() * 1000)}"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def run_tests(validation_profile: str, pytest_basetemp: Path) -> tuple[subprocess.CompletedProcess[str], list[str]]:
+    cmd = pytest_command(validation_profile, pytest_basetemp)
+    return run_command(cmd), cmd
 
 
 def push_pages_repo(pages_repo: Path, pages_branch: str) -> tuple[bool, list[str], str]:
@@ -373,6 +389,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repo path.")
     parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL, help="Pages repo remote URL for local commit metadata.")
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Git branch GitHub Pages deploys from.")
+    parser.add_argument(
+        "--validation-profile",
+        default=PROFILE_GAZA_DAILY,
+        help="Validation profile to run before Pages publishing.",
+    )
     parser.add_argument("--skip-tests", action="store_true", help="Skip pytest before Pages publishing.")
     parser.add_argument("--dry-run", action="store_true", help="Show planned actions without updating, committing, or pushing the Pages repo.")
     parser.add_argument("--push", action="store_true", help="Push the Pages repo to origin gh-pages after local publishing succeeds.")
@@ -383,11 +404,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    args.validation_profile = apply_env_profile(args.validation_profile)
+    try:
+        profile = get_profile(args.validation_profile)
+    except ValueError as exc:
+        print(json.dumps({"ok": False, "errors": [str(exc)], "validation_profile": args.validation_profile}, indent=2))
+        return 1
     args.date = validate_date(args.date)
     args.pages_repo = str(Path(args.pages_repo))
     pages_repo = Path(args.pages_repo)
     source_file = source_file_for(args.date)
     summary = initial_summary(args, source_file)
+    summary["validation_profile"] = profile.name
+    summary["skipped_unrelated_tests"] = profile.skipped_unrelated_tests
+    pytest_basetemp = make_local_pytest_basetemp()
 
     if not source_file.exists():
         summary["errors"].append(f"Create the source file first at {source_file}.")
@@ -417,7 +447,7 @@ def main(argv: list[str] | None = None) -> int:
         command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
     ]
     if not args.dry_run:
-        planned.append(command_text([sys.executable, "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider"]))
+        planned.append(command_text(pytest_command(args.validation_profile, pytest_basetemp)))
         planned.append(command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=False)))
     if args.push:
         planned.append("git status")
@@ -453,7 +483,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.skip_tests and not args.dry_run:
         summary["tests_run"] = True
-        tests = run_tests()
+        tests, tests_cmd = run_tests(args.validation_profile, pytest_basetemp)
+        summary["tests_command"] = subprocess.list2cmdline(tests_cmd)
         summary["tests_ok"] = tests.returncode == 0
         if tests.returncode != 0:
             summary["errors"].append(tests.stdout.strip() or tests.stderr.strip() or "tests failed")

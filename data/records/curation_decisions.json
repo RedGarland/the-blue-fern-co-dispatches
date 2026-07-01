@@ -65,6 +65,51 @@
     ]
   },
   {
+    "decision_id": "decision-gaza-story-2026-07-01-001",
+    "record_id": "gaza-story-2026-07-01-001",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "included_public": true,
+    "included_detail": false,
+    "exclusion_reason": null,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ]
+  },
+  {
+    "decision_id": "decision-gaza-story-2026-07-01-002",
+    "record_id": "gaza-story-2026-07-01-002",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "included_public": true,
+    "included_detail": false,
+    "exclusion_reason": null,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ]
+  },
+  {
+    "decision_id": "decision-gaza-story-2026-07-01-003",
+    "record_id": "gaza-story-2026-07-01-003",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "included_public": true,
+    "included_detail": false,
+    "exclusion_reason": null,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ]
+  },
+  {
     "decision_id": "decision-story-b5a2f0ce428f",
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",

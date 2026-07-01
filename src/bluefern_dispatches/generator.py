@@ -2872,7 +2872,7 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool, ligh
         result["fetch_attempted"] = True
         result["fetched"] = result["fetched"] or fetch.returncode == 0
         if fetch.returncode != 0:
-            result["errors"].append(fetch.stderr.strip() or fetch.stdout.strip() or f"git fetch origin {pages_branch} failed")
+            result["warnings"].append(fetch.stderr.strip() or fetch.stdout.strip() or f"git fetch origin {pages_branch} failed")
             return result
         relation = _pages_repo_sync_relation(pages_repo, pages_branch)
         if relation != "synced":

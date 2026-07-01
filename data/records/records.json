@@ -94,6 +94,63 @@
     "public_exposed": true
   },
   {
+    "record_id": "gaza-story-2026-07-01-001",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "category": "humanitarian",
+    "title": "Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts",
+    "public_summary": "The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts.",
+    "detail_summary": null,
+    "score": 68,
+    "included_public": true,
+    "included_detail": false,
+    "source_ids": [
+      "gaza-2026-07-01-ochaopt-gaza-expansion-risks"
+    ],
+    "generated_at": "2026-07-01T18:07:31.119295+00:00",
+    "is_free_public": true,
+    "public_exposed": true
+  },
+  {
+    "record_id": "gaza-story-2026-07-01-002",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "category": "humanitarian",
+    "title": "UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall",
+    "public_summary": "UN Secretary-General Antonio Guterres called on countries to cover a $100m UNRWA funding gap, warning that millions of Palestinians are at risk and describing living conditions in Gaza as utterly appalling.",
+    "detail_summary": null,
+    "score": 65,
+    "included_public": true,
+    "included_detail": false,
+    "source_ids": [
+      "gaza-2026-07-01-aljazeera-unrwa-funding-shortfall"
+    ],
+    "generated_at": "2026-07-01T18:07:31.119295+00:00",
+    "is_free_public": true,
+    "public_exposed": true
+  },
+  {
+    "record_id": "gaza-story-2026-07-01-003",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-07-01",
+    "category": "conflict",
+    "title": "Israeli forces kill Palestinian goalkeeper in Gaza",
+    "public_summary": "Palestinian goalkeeper Saleem Al-Ashqar was shot dead by Israeli forces in Gaza.",
+    "detail_summary": null,
+    "score": 44,
+    "included_public": true,
+    "included_detail": false,
+    "source_ids": [
+      "gaza-2026-07-01-aljazeera-goalkeeper-killed-gaza"
+    ],
+    "generated_at": "2026-07-01T18:07:31.119295+00:00",
+    "is_free_public": true,
+    "public_exposed": true
+  },
+  {
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",
     "edition_id": "cascadia-2026-05-06",

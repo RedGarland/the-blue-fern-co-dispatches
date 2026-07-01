@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-01",
+  "generated_at": "2026-07-01T20:28:10.095698Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-01.mp3",
+  "audio_url": "/gaza/audio/2026-07-01.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1028,
+  "tts_input_word_count": 156,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1098624,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-01T20:28:10.095671Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-01-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-01/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 1, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts. The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts. This was reported by OCHA oPt.\n\n2. UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall. UN Secretary-General Antonio Guterres called on countries to cover a $100m UNRWA funding gap, warning that millions of Palestinians are at risk and describing living conditions in Gaza as utterly appalling. This was reported by Al Jazeera.\n\n3. Israeli forces kill Palestinian goalkeeper in Gaza. Palestinian goalkeeper Saleem Al-Ashqar was shot dead by Israeli forces in Gaza. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 1, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-01-ochaopt-gaza-expansion-risks",
+      "publisher": "OCHA oPt",
+      "url": "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts",
+      "title": "Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts"
+    },
+    {
+      "source_record_id": "gaza-2026-07-01-aljazeera-unrwa-funding-shortfall",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall",
+      "title": "UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall"
+    },
+    {
+      "source_record_id": "gaza-2026-07-01-aljazeera-goalkeeper-killed-gaza",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza",
+      "title": "Israeli forces kill Palestinian goalkeeper in Gaza"
+    }
+  ]
+}

@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 20 Jun 2026 13:00:43 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 01 Jul 2026 20:28:10 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing: July 1, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-01-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-01-transcript.html</guid>
+    <pubDate>Wed, 01 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts. The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-01.mp3" length="1098624" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing: June 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-06-20-transcript.html</link>

@@ -4842,6 +4842,7 @@ def test_food_line_review_only_render_source_url_selector_renders_only_selected_
     assert "Records reviewed: 1. Public claims: 1. Excluded records: 0." in claim_ledger_html
     assert "TribLIVE" not in source_table_html
     assert "TribLIVE" not in claim_ledger_html
+    assert ">national<" in claim_ledger_html
     assert manifest["selector_type"] == "source_url"
     assert manifest["selector_value"] == boston_url
     assert manifest["selector_match_count"] == 1
@@ -4915,6 +4916,8 @@ def test_food_line_review_only_render_local_selected_candidate_stays_source_grou
     assert "national policy pressure around SNAP eligibility and food assistance access" not in claim_ledger_html
     assert "In United States" not in claim_ledger_html
     assert "child food insecurity" not in claim_ledger_html
+    assert ">source-local<" in claim_ledger_html
+    assert ">national<" not in claim_ledger_html
 
 
 def test_food_line_review_only_render_fails_closed_for_missing_or_zero_public_eligible(tmp_path: Path):
@@ -5086,11 +5089,13 @@ def test_food_line_review_only_render_preserves_source_backed_attribution(tmp_pa
     )
 
     edition_html = (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "index.html").read_text(encoding="utf-8")
+    claim_ledger_html = (tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date / "claim_ledger.html").read_text(encoding="utf-8")
     assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "was enacted" not in edition_html
     assert "benefit cuts occurred" not in edition_html
     assert "measured hunger increased" not in edition_html
+    assert ">national<" in claim_ledger_html
 
 
 def test_food_line_public_signal_reader_sentence_polishes_national_location():
@@ -5179,6 +5184,32 @@ def test_food_line_claim_interpretation_uses_local_review_candidate_framing():
     assert interpretation == "This indicates local food-assistance demand pressure affecting children, low-income households."
     assert "national policy-pressure signal" not in interpretation
     assert "United States" not in interpretation
+
+
+def test_food_line_claim_ledger_scope_label_uses_source_local_for_local_review_candidate():
+    row = {
+        "source_type": "review_candidate",
+        "source_purpose": "review_candidate",
+        "source_role": "local_news_report",
+        "location_scope": "national",
+        "location_name": "United States",
+        "location_name_inferred": True,
+        "state": "US",
+    }
+    assert food_line._food_line_claim_ledger_scope_label(row) == "source-local"
+
+
+def test_food_line_claim_ledger_scope_label_preserves_national_for_policy_review_candidate():
+    row = {
+        "source_type": "review_candidate",
+        "source_purpose": "review_candidate",
+        "source_role": "policy_analysis",
+        "location_scope": "national",
+        "location_name": "United States",
+        "location_name_inferred": False,
+        "state": "US",
+    }
+    assert food_line._food_line_claim_ledger_scope_label(row) == "national"
 
 
 def test_food_line_review_only_publish_dry_run_makes_no_mutations(tmp_path: Path):

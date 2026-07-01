@@ -1315,6 +1315,8 @@ def _food_line_public_summary_sentence(row: dict[str, Any] | None, *, max_words:
     row = row or {}
     title = str(row.get("title") or "").strip()
     pressure_summary = str(row.get("pressure_summary") or "").strip()
+    if _food_line_review_candidate_prefers_local_framing(row) and pressure_summary:
+        return _food_line_compact_public_sentence(pressure_summary, max_words=max_words)
     if pressure_summary and not _food_line_public_summary_is_generic(pressure_summary):
         return _food_line_compact_public_sentence(pressure_summary, max_words=max_words)
 
@@ -2700,6 +2702,8 @@ def _food_line_public_pressure_type_label(row: dict[str, Any]) -> str:
 
 
 def _food_line_public_location_label(row: dict[str, Any]) -> str:
+    if _food_line_review_candidate_prefers_local_framing(row) and bool(row.get("location_name_inferred")):
+        return ""
     location = str(row.get("location_name") or "").strip()
     if location:
         return location
@@ -2727,6 +2731,8 @@ def _food_line_state_display_name(state: str) -> str:
 
 
 def _food_line_natural_location_label(row: dict[str, Any]) -> str:
+    if _food_line_review_candidate_prefers_local_framing(row) and bool(row.get("location_name_inferred")):
+        return ""
     location = str(row.get("location_name") or "").strip()
     state = str(row.get("state") or "").strip()
     state_name = _food_line_state_display_name(state)
@@ -2746,12 +2752,43 @@ def _food_line_is_national_location(row: dict[str, Any], location: str | None = 
     return scope in {"national", "us"} or state == "US" or location_label in {"united states", "the united states"}
 
 
+def _food_line_is_review_candidate_row(row: dict[str, Any]) -> bool:
+    source_type = str(row.get("source_type") or "").strip().lower()
+    source_purpose = str(row.get("source_purpose") or "").strip().lower()
+    return source_type == "review_candidate" or source_purpose == "review_candidate"
+
+
+def _food_line_review_candidate_prefers_local_framing(row: dict[str, Any]) -> bool:
+    if not _food_line_is_review_candidate_row(row):
+        return False
+    source_role = str(row.get("source_role") or "").strip().lower()
+    if source_role in {"policy_analysis", "policy_context", "resource_context"}:
+        return False
+    if source_role in {"local_news_report", "public_radio_report", "food_bank_update", "pressure_evidence", "local_signal", "daily_signal", "provider_signal"}:
+        return True
+    return not _food_line_is_national_location(row)
+
+
+def _food_line_review_candidate_local_summary_sentence(row: dict[str, Any]) -> str:
+    summary = str(row.get("pressure_summary") or "").strip()
+    if summary:
+        return _food_line_ensure_final_punctuation(summary)
+    summary = _food_line_public_summary_sentence(row, max_words=40).strip()
+    if not summary:
+        return ""
+    return _food_line_ensure_final_punctuation(summary)
+
+
 def _food_line_public_signal_reader_label(row: dict[str, Any]) -> str:
     row = row or {}
     title = str(row.get("title") or "").strip()
     publisher = str(row.get("publisher") or row.get("source_name") or "").strip().lower()
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     location = _food_line_natural_location_label(row)
+    if _food_line_review_candidate_prefers_local_framing(row):
+        summary = _food_line_review_candidate_local_summary_sentence(row).rstrip(".")
+        if summary:
+            return summary
     summary = " ".join(
         part
         for part in (
@@ -2815,6 +2852,10 @@ def _food_line_public_signal_reader_sentence(row: dict[str, Any]) -> str:
         )
         if part
     ).lower()
+    if _food_line_review_candidate_prefers_local_framing(row):
+        sentence = _food_line_review_candidate_local_summary_sentence(row)
+        if sentence:
+            return sentence
     if pressure_type == "demand strain":
         if location:
             return f"In {location}, food providers reported rising pantry demand and child food insecurity."
@@ -2883,12 +2924,18 @@ def _food_line_public_signal_metadata_line(row: dict[str, Any]) -> str:
     pressure_label = _food_line_public_pressure_type_label(row)
     location_label = _food_line_public_location_label(row)
     date_label = _food_line_public_date_label(row)
-    return f"{publisher} · {pressure_label} · {location_label} · {date_label}"
+    parts = [publisher, pressure_label]
+    if location_label:
+        parts.append(location_label)
+    parts.append(date_label)
+    return " · ".join(part for part in parts if part)
 
 
 def _food_line_public_signal_context_line(row: dict[str, Any]) -> str:
     scope = _food_line_public_location_label(row)
     date_label = _food_line_public_date_label(row)
+    if not scope:
+        return f"This source record is dated {date_label}."
     return f"This source record is scoped to {scope} and dated {date_label}."
 
 
@@ -2970,6 +3017,32 @@ def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     location = _food_line_public_location_label(row)
     source_role = str(row.get("source_role") or "").strip().lower()
+    if _food_line_review_candidate_prefers_local_framing(row):
+        affected_groups = _affected_groups_display(list(row.get("affected_groups") or []))
+        local_location = _food_line_natural_location_label(row)
+        location_phrase = ""
+        if local_location and not _food_line_is_national_location(row, local_location) and local_location != "the reported area":
+            location_phrase = f" in {local_location}"
+        groups_phrase = ""
+        if affected_groups and affected_groups.lower() != "not clearly isolated by source":
+            groups_phrase = f" affecting {affected_groups}"
+        if pressure_type == "demand strain":
+            return f"This indicates local food-assistance demand pressure{location_phrase}{groups_phrase}."
+        if pressure_type == "service reduction":
+            return f"This indicates local pantry/service strain{location_phrase}{groups_phrase}."
+        if pressure_type == "benefit disruption":
+            return f"This indicates local benefit disruption pressure{location_phrase}{groups_phrase}."
+        if pressure_type == "benefit access decline":
+            return f"This indicates local SNAP access pressure{location_phrase}{groups_phrase}."
+        if pressure_type == "child meal gap":
+            return f"This indicates local child meal pressure{location_phrase}{groups_phrase}."
+        if pressure_type == "senior meal strain":
+            return f"This indicates local senior meal strain{location_phrase}{groups_phrase}."
+        if pressure_type == "household hardship":
+            return f"This indicates local household food pressure{location_phrase}{groups_phrase}."
+        if pressure_type == "access gap":
+            return f"This indicates local food-access strain{location_phrase}{groups_phrase}."
+        return f"This indicates local food-pressure strain{location_phrase}{groups_phrase}."
     if source_role == "policy_analysis" or _food_line_is_national_location(row, location):
         if "snap" in pressure_type or "benefit" in pressure_type:
             return "This indicates national policy pressure around SNAP eligibility and food assistance access."
@@ -4949,6 +5022,11 @@ def _food_line_review_candidate_row(
     pressure_signal = bool(public_claim_eligible or pressure_summary or pressure_type or pressure_signal_hint)
     summary_text = pressure_summary or pressure_signal_hint or title
     traceability_status = str(row.get("traceability_status") or "").strip() or ("traceable" if source_url else "missing_url")
+    raw_location_name = str(row.get("location_name") or row.get("state_hint") or "").strip()
+    location_name_inferred = False
+    if not raw_location_name and location_scope == "national":
+        raw_location_name = "United States"
+        location_name_inferred = True
     return {
         "source_record_id": str(row.get("source_record_id") or f"food-line-review-{edition_date}-{index:03d}"),
         "title": title,
@@ -4958,7 +5036,8 @@ def _food_line_review_candidate_row(
         "source_traceability_role": "article_url" if source_url else "",
         "source_family": _food_line_review_candidate_source_family(row),
         "location_scope": location_scope,
-        "location_name": str(row.get("location_name") or row.get("state_hint") or ("United States" if location_scope == "national" else "")).strip(),
+        "location_name": raw_location_name,
+        "location_name_inferred": location_name_inferred,
         "state": str(row.get("state") or row.get("state_hint") or "").strip(),
         "map_category": _food_line_review_candidate_map_category(row),
         "summary_or_snippet": summary_text,

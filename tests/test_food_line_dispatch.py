@@ -4852,6 +4852,71 @@ def test_food_line_review_only_render_source_url_selector_renders_only_selected_
     assert manifest["lead_source_url"] == boston_url
 
 
+def test_food_line_review_only_render_local_selected_candidate_stays_source_grounded(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-18"
+    wrdw_url = "https://www.wrdw.com/video/2026/06/18/augusta-dream-center-sees-surge-families-needing-food-summer-begins"
+    review_path = _write_review_only_candidate_review(
+        tmp_path,
+        date,
+        [
+            _review_only_candidate(
+                title="Augusta Dream Center sees surge in families needing food as summer begins",
+                publisher="WRDW",
+                source_url=wrdw_url,
+                source_published_date="2026-06-18",
+                pressure_summary="WRDW reported rising food-assistance demand, affecting children, low-income households.",
+                pressure_type="demand strain",
+                affected_groups=["children", "low-income households"],
+                source_role="local_news_report",
+                location_scope="national",
+            ),
+            _review_only_candidate(
+                title="Other eligible candidate",
+                publisher="News12 | New Jersey",
+                source_url="https://newjersey.news12.com/2026/06/18/other",
+                source_published_date="2026-06-18",
+                pressure_summary="News12 | New Jersey reported household food hardship, affecting children, SNAP households, low-income households.",
+                pressure_type="household hardship",
+                affected_groups=["children", "SNAP households", "low-income households"],
+                source_role="policy_context",
+                location_scope="national",
+            ),
+        ],
+    )
+
+    result = food_line.render_food_line_review_only(
+        tmp_path,
+        date=date,
+        candidate_review_path=review_path,
+        public_eligible_only=True,
+        source_url=wrdw_url,
+    )
+
+    edition_dir = tmp_path / "output" / "site-review-only" / "food-line" / "editions" / date
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    source_table_html = (edition_dir / "source_table.html").read_text(encoding="utf-8")
+    claim_ledger_html = (edition_dir / "claim_ledger.html").read_text(encoding="utf-8")
+
+    assert result["selected_candidate_count"] == 1
+    assert result["rendered_public_claim_count"] == 1
+    assert "Today’s Food Line found 1 reported pressure signal." in edition_html
+    assert "WRDW reported rising food-assistance demand, affecting children, low-income households." in edition_html
+    assert "In United States, food providers reported rising pantry demand and child food insecurity." not in edition_html
+    assert "United States food providers report rising pantry demand" not in edition_html
+    assert "child food insecurity" not in edition_html
+    assert "Other eligible candidate" not in edition_html
+    assert "News12 | New Jersey" not in edition_html
+    assert wrdw_url in edition_html
+    assert "WRDW" in source_table_html
+    assert wrdw_url in source_table_html
+    assert "This indicates local food-assistance demand pressure affecting children, low-income households." in claim_ledger_html
+    assert "national policy-pressure signal" not in claim_ledger_html
+    assert "national policy pressure around SNAP eligibility and food assistance access" not in claim_ledger_html
+    assert "In United States" not in claim_ledger_html
+    assert "child food insecurity" not in claim_ledger_html
+
+
 def test_food_line_review_only_render_fails_closed_for_missing_or_zero_public_eligible(tmp_path: Path):
     _ensure_assets(tmp_path)
     missing_path = tmp_path / "output" / "review" / "food-line" / "2026-06-12" / "candidate_review.json"
@@ -5054,6 +5119,25 @@ def test_food_line_public_signal_reader_sentence_preserves_local_location():
     assert sentence.startswith("In Horry County, South Carolina,")
 
 
+def test_food_line_public_signal_reader_sentence_uses_summary_for_local_review_candidate():
+    row = {
+        "source_type": "review_candidate",
+        "source_purpose": "review_candidate",
+        "source_role": "local_news_report",
+        "location_scope": "national",
+        "location_name": "United States",
+        "state": "US",
+        "publisher": "WRDW",
+        "pressure_type": "demand strain",
+        "pressure_summary": "WRDW reported rising food-assistance demand, affecting children, low-income households.",
+        "affected_groups": ["children", "low-income households"],
+    }
+    sentence = food_line._food_line_public_signal_reader_sentence(row)
+    assert sentence == "WRDW reported rising food-assistance demand, affecting children, low-income households."
+    assert "In United States" not in sentence
+    assert "child food insecurity" not in sentence
+
+
 def test_food_line_claim_interpretation_uses_national_policy_wording():
     row = {
         "source_role": "policy_analysis",
@@ -5078,6 +5162,23 @@ def test_food_line_claim_interpretation_preserves_local_strain_wording():
     }
     interpretation = food_line._food_line_claim_interpretation(row)
     assert interpretation == "This points to pantry supply strain in Horry County."
+
+
+def test_food_line_claim_interpretation_uses_local_review_candidate_framing():
+    row = {
+        "source_type": "review_candidate",
+        "source_purpose": "review_candidate",
+        "source_role": "local_news_report",
+        "location_scope": "national",
+        "location_name": "United States",
+        "state": "US",
+        "pressure_type": "demand strain",
+        "affected_groups": ["children", "low-income households"],
+    }
+    interpretation = food_line._food_line_claim_interpretation(row)
+    assert interpretation == "This indicates local food-assistance demand pressure affecting children, low-income households."
+    assert "national policy-pressure signal" not in interpretation
+    assert "United States" not in interpretation
 
 
 def test_food_line_review_only_publish_dry_run_makes_no_mutations(tmp_path: Path):

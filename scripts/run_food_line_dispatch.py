@@ -3150,7 +3150,7 @@ def _food_line_claim_ledger_row(row: dict[str, Any]) -> dict[str, str]:
     retrieved_date = str(row.get("retrieved_at") or "").strip()
     evidence_level = str(row.get("evidence_level") or "").strip() or ("background context" if not bool(row.get("pressure_signal")) else "direct reported hardship")
     freshness_role = str(row.get("freshness_role") or "").strip()
-    location_scope = str(row.get("location_scope") or "").strip()
+    location_scope = _food_line_claim_ledger_scope_label(row)
     return {
         "claim": _food_line_claim_supported_text(row),
         "interpretation": _food_line_claim_interpretation(row),
@@ -3165,6 +3165,22 @@ def _food_line_claim_ledger_row(row: dict[str, Any]) -> dict[str, str]:
         "location_scope": location_scope,
         "limitation": _food_line_claim_limitation(row),
     }
+
+
+def _food_line_claim_ledger_scope_label(row: dict[str, Any]) -> str:
+    scope = str(row.get("location_scope") or "").strip().lower()
+    if _food_line_review_candidate_prefers_local_framing(row):
+        if bool(row.get("location_name_inferred")) and scope in {"", "national", "us"}:
+            return "source-local"
+        if scope in {"state_local", "regional"}:
+            return "local/regional"
+        if scope == "local":
+            return "local"
+    if scope == "state_local":
+        return "local/regional"
+    if scope == "us":
+        return "national"
+    return str(row.get("location_scope") or "").strip()
 
 
 def _food_line_claim_ledger_rows(

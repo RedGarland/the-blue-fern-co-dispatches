@@ -348,67 +348,53 @@ def test_invalid_manual_falls_back_to_auto_when_both(isolated, monkeypatch, caps
     assert "manual_sources.json was present but invalid" in summary["warnings"][0]
 
 
-def test_collect_or_load_sources_both_mode_does_not_rewrite_manual_sources(isolated, monkeypatch):
+def test_collect_or_load_sources_both_mode_does_not_rewrite_manual_sources(isolated, monkeypatch, capsys):
     root = isolated
     manual_path = write_manual_sources(root, "2026-05-07")
     original = manual_path.read_text(encoding="utf-8")
-
-    monkeypatch.setattr(
-        daily,
-        "collect_gaza_sources",
-        lambda *args, **kwargs: {
-            "ok": True,
-            "source_file": str(manual_path),
-            "source_count": 2,
-            "sources": [
-                {
-                    "source_record_id": "gaza-src-2026-05-07-001",
-                    "title": "UN says durable shelter materials remain blocked from Gaza",
-                    "url": "https://valid.test/gaza-source",
-                    "publisher": "Example News",
-                    "published_at": "2026-05-07T12:00:00Z",
-                    "retrieved_at": "2026-05-07T00:00:00Z",
-                    "summary_or_snippet": "A source-backed Gaza update.",
-                    "source_type": "news",
-                    "region_scope": "Gaza",
-                    "category_hint": "humanitarian",
-                    "reliability_tier": "reported-public-source",
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "warnings": [],
+                    "errors": [],
+                    "source_adequacy_status": "limited_source_update",
+                    "publisher_count": 1,
+                    "publishers": ["Example News"],
+                    "source_adequacy_warnings": [],
                 },
-                {
-                    "source_record_id": "gaza-src-2026-05-07-002",
-                    "title": "Gaza aid access update",
-                    "url": "https://valid.test/gaza-source-2",
-                    "publisher": "Example News",
-                    "published_at": "2026-05-07T13:00:00Z",
-                    "retrieved_at": "2026-05-07T01:00:00Z",
-                    "summary_or_snippet": "Another source-backed Gaza update.",
-                    "source_type": "news",
-                    "region_scope": "Gaza",
-                    "category_hint": "humanitarian",
-                    "reliability_tier": "reported-public-source",
+            )
+        if "publish_github_pages.py" in command and "--dry-run" not in args:
+            write_pages_output(root, "2026-05-07")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "errors": [],
+                    "copied": True,
+                    "committed": True,
+                    "commit_sha": "abc1234",
+                    "target_pages_branch": "gh-pages",
+                    "committed_branch": "gh-pages",
                 },
-            ],
-            "warnings": [],
-            "errors": [],
-            "failed_source_ids": [],
-            "providers_configured": ["manual_sources_json"],
-            "providers_attempted": ["manual_sources_json"],
-            "providers_successful": ["manual_sources_json"],
-            "provider_diagnostics": [{"source_id": "manual_sources_json", "status": "ok", "raw_candidates": 2}],
-            "skipped_providers": [],
-            "working_providers": [],
-        },
-    )
+            )
+        if "publish_github_pages.py" in command:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        if "pytest" in command:
+            return completed(args, stdout="1 passed")
+        return completed(args)
 
-    args = argparse.Namespace(date="2026-05-07", source_mode="both", max_sources=12, min_sources=1)
-    summary = {"warnings": [], "errors": [], "failed_source_ids": []}
-    log_path = root / "logs" / "daily.log"
-    log_path.write_text("", encoding="utf-8")
+    monkeypatch.setattr(daily, "run_command", fake_run)
 
-    source_path, records = daily.collect_or_load_sources(args, summary, log_path)
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
 
-    assert source_path == manual_path
-    assert len(records) == 2
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert summary["ok"] is True
     assert manual_path.read_text(encoding="utf-8") == original
 
 

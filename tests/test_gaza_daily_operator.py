@@ -236,6 +236,75 @@ def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypat
     assert all("push origin" not in command for command in result["commands_run"])
 
 
+@pytest.mark.parametrize("operator_status", ["ALREADY_POSTED", "PUBLISHED_AND_POSTED"])
+def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], operator_status: str) -> None:
+    args = operator.parse_args(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    monkeypatch.setattr(
+        operator,
+        "run_operator",
+        lambda parsed_args: {
+            "ok": True,
+            "operator_status": operator_status,
+            "date": parsed_args.date,
+            "source_count": 6,
+            "publisher_count": 3,
+            "public_story_count": 6,
+            "pages_commit_sha": "abc1234",
+            "bluesky_status": "skipped",
+            "audio_status": "audio_generated",
+            "email_status": "not_requested",
+            "cleanup_status": "cleaned",
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
+            "next_action": "Publication completed.",
+            "source_repo_status_after": "## clean",
+            "pages_repo_status_after": "## clean",
+        },
+    )
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(["--date", "2026-06-26", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 0
+    assert payload["ok"] is True
+    assert payload["email_status"].startswith("failed:")
+    assert "smtp outage" in output
+
+
+def test_email_failure_remains_fatal_on_dry_run(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch.setattr(
+        operator,
+        "run_operator",
+        lambda parsed_args: {
+            "ok": True,
+            "operator_status": "DRY_RUN_READY",
+            "date": parsed_args.date,
+            "source_count": 6,
+            "publisher_count": 3,
+            "public_story_count": 6,
+            "pages_commit_sha": None,
+            "bluesky_status": "skipped",
+            "audio_status": "audio_skipped",
+            "email_status": "not_requested",
+            "cleanup_status": "cleaned",
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
+            "next_action": "Review the dry-run summary; rerun with --push for live publication.",
+            "source_repo_status_after": "## clean",
+            "pages_repo_status_after": "## clean",
+        },
+    )
+    monkeypatch.setattr(operator, "send_email", lambda *args, **kwargs: (_ for _ in ()).throw(OSError("smtp outage")))
+
+    code = operator.main(["--date", "2026-06-26", "--dry-run", "--email-report", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+
+    output = capsys.readouterr().out
+    payload = json.loads(output[output.find("{") :])
+    assert code == 1
+    assert payload["ok"] is False
+    assert payload["email_status"].startswith("failed:")
+
+
 def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     (isolated / "output" / "site" / "gaza" / "audio").mkdir(parents=True, exist_ok=True)
     (isolated / "output" / "site" / "gaza" / "audio" / "2026-06-26.mp3").write_bytes(b"audio")

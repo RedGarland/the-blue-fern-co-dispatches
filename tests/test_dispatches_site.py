@@ -1,5 +1,6 @@
 ﻿import json
 import shutil
+import re
 import subprocess
 import uuid
 from datetime import date, datetime, timedelta
@@ -167,20 +168,20 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert index.exists()
     html = read(index)
     assert 'href="/gaza/"' in html
-    assert 'href="/cascadia/"' in html
     assert 'href="/food-line/"' in html
-    assert 'href="/care-line/"' in html
+    assert html.count('class="dispatch-card"') == 2
     assert 'href="/american-pressure/"' not in html
-    assert "The Cascadia Briefing" in html
+    assert "Dispatches From Gaza" in html
     assert "Food Line Dispatch" in html
-    assert "The Care Line Dispatch" in html
-    assert "Source-backed signals of where American healthcare access is under strain." in html
+    card_grid = html.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
+    assert "The Care Line Dispatch" not in card_grid
+    assert "The Cascadia Briefing" not in card_grid
     assert "Daily source-backed food insecurity pressure signals across the United States" in html
     assert '<img class="dispatch-card-logo" src="/food-line/assets/food-line-logo.png"' not in html
+    assert 'class="dispatch-card-watermark"' in html
+    assert 'class="dispatch-card-content"' in html
     assert '--dispatch-card-watermark: url(\'/food-line/assets/food-line-logo.png\')' in html
-    assert '--dispatch-card-watermark: url(\'/care-line/assets/care-line-logo.png\')' in html
     assert '--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\')' in html
-    assert '--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\')' in html
     assert 'href="/cascadia/detention-watch/"' not in html
     assert "Related: Cascadia Detention Watch" not in html
     assert "Immigration detention monitoring for WA, OR, and ID." not in html
@@ -188,8 +189,12 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert "Cascadia Systems Dispatch" not in html
     css_text = read(css)
     assert "--blue-fern: #2F6F88" in css_text
+    assert "opacity: 0.06;" in css_text
+    assert "pointer-events: none;" in css_text
+    assert "position: absolute;" in css_text
+    assert "z-index: 2;" in css_text
     assert "background-position: center" in css_text
-    assert "background-size: min(82%, 320px) auto" in css_text
+    assert "background-size: min(76%, 19rem) auto" in css_text
     assert f'src="assets/{ROOT_MASTHEAD_ASSET}"' in html
     assert ROOT_DESCRIPTION in html
     assert "<h1>Dispatches From The Blue Fern Co.</h1>" not in html
@@ -295,13 +300,27 @@ def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
     assert 'class="dispatch-card"' in index
     assert 'class="dispatch-card-logo"' not in index
     css_text = read(css_path)
-    assert 'background-image: var(--dispatch-card-watermark)' in css_text
-    assert 'background-position: center' in css_text
-    assert 'background-size: min(82%, 320px) auto' in css_text
-    assert "repeat(auto-fit" in css_text
-    assert "minmax(min(100%, 240px), 1fr)" in css_text
+    assert 'class="dispatch-card-watermark"' in index
+    assert 'class="dispatch-card-content"' in index
+    assert 'grid-template-columns: repeat(2, minmax(0, 1fr));' in css_text
+    assert '@media (max-width: 768px)' in css_text
+    assert 'grid-template-columns: 1fr;' in css_text
     assert (work / "output" / "site" / "assets" / ROOT_MASTHEAD_ASSET).exists()
     assert (work / "output" / "site" / "food-line" / "assets" / "food-line-logo.png").exists()
+
+
+def test_homepage_only_lists_gaza_and_food_line_cards(built_site):
+    work, _, _ = built_site
+    index = read(work / "output" / "site" / "index.html")
+    card_grid = index.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
+    cards = re.findall(r'<li class="dispatch-card".*?<a href="([^"]+)">.*?<strong>([^<]+)</strong>', card_grid, re.DOTALL)
+
+    assert cards == [
+        ("/gaza/", "Dispatches From Gaza"),
+        ("/food-line/", "Food Line Dispatch"),
+    ]
+    assert 'href="/care-line/"' not in card_grid
+    assert 'href="/cascadia/"' not in card_grid
 
 
 def test_gaza_content_and_requested_logo_placement(built_site):
@@ -1676,7 +1695,6 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     assert (work / "output" / "site" / "cascadia" / "editions" / "2026-05-10" / "index.html").exists()
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
-    assert "The Cascadia Briefing" in root_index
     assert "Food Line Dispatch" in root_index
     assert "The American Pressure Dispatch" not in root_index
 

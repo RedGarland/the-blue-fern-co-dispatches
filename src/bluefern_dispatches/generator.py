@@ -816,32 +816,30 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     card_rows: list[str] = []
     summaries = {
         "gaza": "Daily source-backed briefings from Gaza.",
-        "cascadia": "Weekly source-backed regional briefings for Washington, Oregon, and Idaho.",
         "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
-        "care-line": CARE_LINE_DISPATCH_TAGLINE,
     }
     for dispatch in dispatches:
-        if dispatch.slug not in {"gaza", "cascadia", "care-line"}:
+        if dispatch.slug != "gaza":
             continue
-        card_style = ""
-        if dispatch.slug == "cascadia":
-            card_style = ' style="--dispatch-card-watermark: url(\'/cascadia/assets/cascadia-logo-placeholder.png\');"'
-        elif dispatch.slug == "care-line":
-            card_style = ' style="--dispatch-card-watermark: url(\'/care-line/assets/care-line-logo.png\');"'
-        else:
-            card_style = ' style="--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\');"'
+        card_style = ' style="--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\');"'
         card_rows.append(
             f"""      <li class="dispatch-card"{card_style}>
         <a href="/{dispatch.slug}/">
-          <span class="edition-date">{html.escape(summaries.get(dispatch.slug, dispatch.tagline))}</span>
-          <strong>{html.escape(dispatch.name)}</strong>
+          <span class="dispatch-card-watermark" aria-hidden="true"></span>
+          <span class="dispatch-card-content">
+            <span class="edition-date">{html.escape(summaries.get(dispatch.slug, dispatch.tagline))}</span>
+            <strong>{html.escape(dispatch.name)}</strong>
+          </span>
         </a>
       </li>"""
         )
     food_line_card = f"""      <li class="dispatch-card" style="--dispatch-card-watermark: url('/food-line/assets/food-line-logo.png');">
         <a href="/food-line/">
-          <span class="edition-date">{html.escape(summaries["food-line"])}</span>
-          <strong>Food Line Dispatch</strong>
+          <span class="dispatch-card-watermark" aria-hidden="true"></span>
+          <span class="dispatch-card-content">
+            <span class="edition-date">{html.escape(summaries["food-line"])}</span>
+            <strong>Food Line Dispatch</strong>
+          </span>
         </a>
       </li>"""
     card_rows.append(food_line_card)

@@ -1068,6 +1068,22 @@ def _repair_malformed_punctuation_before_entities(text: str) -> str:
     return fixed
 
 
+_GAZA_BOARD_OF_PEACE_RE = re.compile(
+    r"(?P<prefix>(?:In 1,000 days since October 7, 2023,\s*)?Gaza lies in ruins,\s*)"
+    r"(?:the\s+)?Board of Peace falters(?:,\s*)?(?:and\.?|\s+and)\s*"
+    r"Israel expands control of (?:the\s+)?enclave\.?",
+    re.IGNORECASE,
+)
+
+
+def _repair_gaza_summary_phrasing(text: str) -> str:
+    fixed = str(text or "")
+    return _GAZA_BOARD_OF_PEACE_RE.sub(
+        lambda match: f"{match.group('prefix')}the Board of Peace falters, and Israel expands control of the enclave.",
+        fixed,
+    )
+
+
 def _drop_incomplete_summary_tail(text: str) -> str:
     value = str(text or "").strip()
     if not value:
@@ -1136,8 +1152,10 @@ def _sanitize_story_summary(title: str, summary: str) -> str:
     if not clean_summary:
         return ""
     clean_summary = _repair_malformed_punctuation_before_entities(clean_summary)
+    clean_summary = _repair_gaza_summary_phrasing(clean_summary)
     clean_summary = _repair_missing_sentence_boundaries(clean_summary)
     clean_summary = _repair_malformed_punctuation_before_entities(clean_summary)
+    clean_summary = _repair_gaza_summary_phrasing(clean_summary)
     clean_summary = _drop_incomplete_summary_tail(clean_summary)
     clean_summary = sanitize_public_prose(clean_summary)
     cleaned_lines = _cleanup_summary_paragraphs(clean_summary)

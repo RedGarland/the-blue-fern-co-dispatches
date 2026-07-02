@@ -116,12 +116,23 @@ def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
     items: list[str] = []
     for row in entries:
         date_text = row["edition_date"]
-        line = [f'<li><strong>{html.escape(date_text)}</strong> - <a href="{html.escape(row["transcript_url"])}">Transcript</a>']
-        if row.get("audio_url"):
-            line.append(f' | <a href="{html.escape(row["audio_url"])}">MP3</a>')
-            line.append(f' | <audio controls preload="none" src="{html.escape(row["audio_url"])}"></audio>')
-        line.append(f' | <a href="{html.escape(row["edition_url"])}">Full edition</a></li>')
-        items.append("".join(line))
+        transcript_url = html.escape(row["transcript_url"])
+        audio_url = str(row.get("audio_url") or "").strip()
+        edition_url = html.escape(row["edition_url"])
+        media_cell = (
+            f'<a href="{html.escape(audio_url)}">MP3</a> '
+            f'<audio controls preload="none" src="{html.escape(audio_url)}"></audio>'
+            if audio_url
+            else '<span class="gaza-audio-index-empty">No MP3 yet</span>'
+        )
+        items.append(
+            "\n      <li class=\"gaza-audio-index-row\">"
+            f'<span class="gaza-audio-index-date"><strong>{html.escape(date_text)}</strong></span>'
+            f'<span class="gaza-audio-index-transcript"><a href="{transcript_url}">Transcript</a></span>'
+            f'<span class="gaza-audio-index-media">{media_cell}</span>'
+            f'<span class="gaza-audio-index-edition"><a href="{edition_url}">Full edition</a></span>'
+            "</li>"
+        )
     body = [
         "<!doctype html>",
         '<html lang="en">',
@@ -136,8 +147,8 @@ def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
         "    <h1>Gaza Audio and Transcript Index</h1>",
         '    <p><a href="/gaza/">Back to Gaza dispatch home</a></p>',
         '    <p><a href="/gaza/audio/podcast.xml">Podcast feed</a></p>',
-        "    <ul>",
-        *[f"      {line}" for line in items],
+        '    <ul class="gaza-audio-index">',
+        *items,
         "    </ul>",
         "  </main>",
         "</body>",

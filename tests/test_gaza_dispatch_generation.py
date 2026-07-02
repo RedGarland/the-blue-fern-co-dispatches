@@ -2708,6 +2708,71 @@ def test_summary_keeps_complete_sentence_and_drops_bad_trailing_fragment(monkeyp
     assert guardian_block.split("<p><strong>Context:</strong>", 1)[0].count("<p>") >= 2
 
 
+def test_board_of_peace_sentence_is_repaired_in_edition_and_audio(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-07-02",
+        [
+            {
+                "source_record_id": "gaza-src-2026-07-02-001",
+                "title": "Gaza war's 1,000 days: 90% of strip 'destroyed', 80% 'seized' by Israel",
+                "url": "https://www.aljazeera.com/news/2026/7/2/gaza-wars-1000-days-90-of-strip-destroyed-80-seized-by-israel?traffic_source=rss",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-07-02T13:14:53+00:00",
+                "retrieved_at": "2026-07-02T18:25:20.309245+00:00",
+                "summary_or_snippet": "In 1,000 days since October 7, 2023, Gaza lies in ruins, Board of Peace falters and Israel expands control of enclave.",
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+                "attribution_mode": "reported_public_source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-07-02-002",
+                "title": "Gaza aid access update",
+                "url": "https://example.com/gaza-aid",
+                "publisher": "Reuters",
+                "published_at": "2026-07-02T09:00:00Z",
+                "retrieved_at": "2026-07-02T09:05:00Z",
+                "summary_or_snippet": "Aid access conditions were updated in Gaza.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-src-2026-07-02-003",
+                "title": "Gaza hospital pressure update",
+                "url": "https://example.com/gaza-hospital",
+                "publisher": "BBC News",
+                "published_at": "2026-07-02T10:00:00Z",
+                "retrieved_at": "2026-07-02T10:05:00Z",
+                "summary_or_snippet": "Hospital access conditions in Gaza were updated later the same day.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+
+    result = run_gaza_dispatch(work, "2026-07-02", from_manual_sources=True, dry_run=False, render=False, all_steps=True, allow_thin_edition=True)
+    html = read(work / "output" / "site" / "gaza" / "editions" / "2026-07-02" / "index.html")
+    audio_result = write_gaza_audio_outputs(work, "2026-07-02", dry_run=False, tts_provider="none")
+    transcript = audio_result.transcript_path.read_text(encoding="utf-8")
+    audio_json = json.loads(audio_result.metadata_path.read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert "the Board of Peace falters, and Israel expands control of the enclave" in html
+    assert "Board of Peace falters and. Israel expands control of enclave" not in html
+    assert "the Board of Peace falters, and Israel expands control of the enclave" in audio_json["script_text"]
+    assert "Board of Peace falters and. Israel expands control of enclave" not in audio_json["script_text"]
+    assert "the Board of Peace falters, and Israel expands control of the enclave" in transcript
+
+
 def test_summary_with_only_bad_fragment_gets_title_fallback_and_today_read_not_empty(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)

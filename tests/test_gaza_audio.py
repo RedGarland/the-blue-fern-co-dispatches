@@ -418,6 +418,48 @@ def test_audio_index_includes_archived_pages_episode_and_skips_incomplete_rows(t
     assert "2026-06-29" not in podcast_body
 
 
+def test_audio_index_keeps_mp3_column_aligned_when_some_rows_have_no_file(tmp_path: Path):
+    local_date = "2026-07-01"
+    _write_edition(
+        tmp_path,
+        local_date,
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
+    )
+    local_mp3 = tmp_path / "output" / "site" / "gaza" / "audio" / f"{local_date}.mp3"
+    local_mp3.parent.mkdir(parents=True, exist_ok=True)
+    local_mp3.write_bytes(b"local-audio")
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    pages_date = "2026-06-30"
+    (pages_audio_root / f"{pages_date}-transcript.html").write_text("<html>archived transcript</html>", encoding="utf-8")
+    (pages_audio_root / f"{pages_date}.json").write_text(
+        json.dumps(
+            {
+                "edition_date": pages_date,
+                "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{pages_date}-transcript.html",
+                "audio_status": "script_ready_no_audio_file",
+                "script_text": "Archived Gaza episode.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    write_gaza_audio_outputs(tmp_path, local_date, dry_run=False, tts_provider="none")
+
+    index_body = (tmp_path / "output" / "site" / "gaza" / "audio" / "index.html").read_text(encoding="utf-8")
+    css_text = (Path(__file__).resolve().parents[1] / "assets" / "site.css").read_text(encoding="utf-8")
+
+    assert index_body.count("gaza-audio-index-row") == 2
+    assert index_body.count("gaza-audio-index-media") == 2
+    assert "No MP3 yet" in index_body
+    assert f"/gaza/audio/{local_date}.mp3" in index_body
+    assert f"/gaza/audio/{pages_date}.mp3" not in index_body
+    assert "grid-template-columns: minmax(7.5rem, 8.5rem) minmax(8.5rem, 10rem) minmax(16rem, 1.2fr) minmax(8rem, 9rem);" in css_text
+
+
 def test_openai_provider_without_api_key_fails_safely(tmp_path: Path, monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     date = "2026-05-31"

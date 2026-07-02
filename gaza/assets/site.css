@@ -170,38 +170,6 @@ li + li { margin-top: 0.35rem; }
   list-style: none;
   padding: 0;
 }
-.dispatch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  align-items: stretch;
-  gap: 16px;
-  list-style: none;
-  margin: 28px 0 0;
-  padding: 0;
-}
-.dispatch-card {
-  min-height: 132px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-}
-.dispatch-card a {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 132px;
-  height: 100%;
-  padding: 20px;
-  color: var(--navy);
-  text-decoration: none;
-}
-.dispatch-card a:hover {
-  background: var(--soft-blue);
-}
-.dispatch-card strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.35rem;
-  line-height: 1.25;
-}
 .edition-list li {
   padding: 14px 0;
   border-top: 1px solid var(--border);
@@ -269,47 +237,15 @@ li + li { margin-top: 0.35rem; }
   text-decoration: underline;
 }
 
-/* Root landing page dispatch card grid: equal-height scalable cards */
-.dispatch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-  gap: 1rem;
-  align-items: stretch;
-}
-
-.dispatch-card {
-  min-height: 145px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-}
-
-.dispatch-card h2,
-.dispatch-card h3 {
-  margin-top: 0.35rem;
-  line-height: 1.15;
-}
-
-@media (max-width: 700px) {
-  .dispatch-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dispatch-card {
-    min-height: 135px;
-  }
-}
-/* Final root landing page card alignment fix */
+/* Root landing page dispatch cards */
 .dispatch-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   align-items: stretch;
   list-style: none;
-  padding: 0;
   margin: 2rem 0 0;
+  padding: 0;
 }
 
 .dispatch-grid > li {
@@ -320,39 +256,114 @@ li + li { margin-top: 0.35rem; }
 }
 
 .dispatch-card {
+  position: relative;
   width: 100%;
-  min-height: 155px;
+  min-height: 15rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 248, 244, 0.98));
+  box-shadow: 0 20px 45px rgba(15, 42, 51, 0.08);
+}
+
+.dispatch-card a {
+  position: relative;
+  display: block;
+  min-height: 15rem;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
+  padding: clamp(1.4rem, 2vw, 1.9rem);
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.dispatch-card-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-content: end;
+  gap: 0.6rem;
+  min-height: 100%;
+  max-width: 30rem;
+}
+
+.dispatch-card-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   background-image: var(--dispatch-card-watermark);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: min(82%, 320px) auto;
+  background-size: min(76%, 19rem) auto;
+  opacity: 0.05;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
 }
 
-.dispatch-card .eyebrow,
-.dispatch-card p,
-.dispatch-card h2,
-.dispatch-card h3 {
-  margin-left: 0;
+.dispatch-card .edition-date {
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
 }
 
-.dispatch-card h2,
-.dispatch-card h3 {
-  margin-top: 0.35rem;
-  margin-bottom: 0;
-  line-height: 1.15;
+.dispatch-card strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.55rem, 2.2vw, 2rem);
+  line-height: 1.14;
 }
 
-@media (max-width: 760px) {
+.dispatch-card a:hover,
+.dispatch-card a:focus-visible {
+  background: rgba(221, 236, 241, 0.35);
+}
+
+.dispatch-card a:focus-visible {
+  outline: 3px solid var(--blue-fern);
+  outline-offset: -3px;
+}
+
+@media (max-width: 1024px) {
+  .dispatch-grid {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
   .dispatch-grid {
     grid-template-columns: 1fr;
   }
-
   .dispatch-card {
-    min-height: 145px;
+    min-height: 13.5rem;
+  }
+
+  .dispatch-card a {
+    min-height: 13.5rem;
+  }
+
+  .dispatch-card-watermark {
+    background-size: min(64vw, 17rem) auto;
+  }
+}
+
+@media (max-width: 430px) {
+  .dispatch-card {
+    min-height: 12.75rem;
+  }
+
+  .dispatch-card a {
+    min-height: 12.75rem;
+    padding: 1.2rem;
+  }
+
+  .dispatch-card-content {
+    gap: 0.5rem;
+  }
+
+  .dispatch-card strong {
+    font-size: 1.45rem;
+  }
+
+  .dispatch-card-watermark {
+    background-position: center 42%;
+    background-size: min(70vw, 15rem) auto;
   }
 }

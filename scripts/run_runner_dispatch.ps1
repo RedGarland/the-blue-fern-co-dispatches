@@ -7,6 +7,7 @@ param(
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
+    [switch]$CheckOnly,
     [switch]$SmtpDebug,
     [int]$KeepLogs = 30
 )
@@ -55,17 +56,41 @@ function Load-SmtpCredential {
     }
 }
 
+function ConvertTo-JsonTailObject {
+    param([string]$Text)
+
+    if ([string]::IsNullOrWhiteSpace($Text)) {
+        return $null
+    }
+
+    $trimmed = $Text.TrimEnd()
+    $start = $trimmed.LastIndexOf("{")
+    while ($start -ge 0) {
+        try {
+            return ($trimmed.Substring($start) | ConvertFrom-Json -ErrorAction Stop)
+        } catch {
+            if ($start -eq 0) {
+                break
+            }
+            $start = $trimmed.LastIndexOf("{", $start - 1)
+        }
+    }
+    return $null
+}
+
 function Invoke-LoggedCommand {
     param(
         [string]$Python,
-        [string[]]$Arguments
+        [string[]]$Arguments,
+        [switch]$ParseJsonTail
     )
 
     Write-Log ("Running: {0} {1}" -f $Python, ($Arguments -join " "))
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        & $Python @Arguments 2>&1 |
+        $combinedOutput = @(
+            & $Python @Arguments 2>&1 |
             ForEach-Object {
                 if ($_ -is [System.Management.Automation.ErrorRecord]) {
                     $_.Exception.Message
@@ -74,7 +99,18 @@ function Invoke-LoggedCommand {
                 }
             } |
             Tee-Object -FilePath $LogFile -Append
-        return $LASTEXITCODE
+        )
+        $exitCode = $LASTEXITCODE
+        $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
+        $json = $null
+        if ($ParseJsonTail) {
+            $json = ConvertTo-JsonTailObject -Text $outputText
+        }
+        return [pscustomobject]@{
+            ExitCode = $exitCode
+            OutputText = $outputText
+            Json = $json
+        }
     } finally {
         $ErrorActionPreference = $previousErrorActionPreference
     }
@@ -107,12 +143,37 @@ try {
         "--source-branch", $SourceBranch,
         "--pages-branch", $PagesBranch
     )
-    $exitCode = Invoke-LoggedCommand -Python $python -Arguments $syncArgs
-    if ($exitCode -ne 0) {
-        throw "Runner sync/preflight failed with exit code $exitCode."
+    $syncResult = Invoke-LoggedCommand -Python $python -Arguments $syncArgs -ParseJsonTail
+    if ($syncResult.ExitCode -ne 0) {
+        throw "Runner sync/preflight failed with exit code $($syncResult.ExitCode)."
+    }
+    if ($syncResult.Json -and ($syncResult.Json.PSObject.Properties.Name -contains "ok") -and (-not [bool]$syncResult.Json.ok)) {
+        $syncErrors = @($syncResult.Json.errors)
+        $syncMessage = if ($syncErrors.Count -gt 0) { $syncErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
+        throw "Runner sync/preflight reported ok=false: $syncMessage"
     }
 
-    if ($Dispatch -eq "gaza") {
+    if ($CheckOnly) {
+        if ($Dispatch -eq "gaza") {
+            $dispatchArgs = @(
+                "scripts\smoke_gaza_operator.py",
+                "--date", $Date,
+                "--source-repo", $RepoRoot,
+                "--pages-repo", $PagesRepo,
+                "--source-branch", $SourceBranch,
+                "--pages-branch", $PagesBranch
+            )
+        } else {
+            $dispatchArgs = @(
+                "scripts\runner_repo_maintenance.py",
+                "postflight",
+                "--source-repo", $RepoRoot,
+                "--pages-repo", $PagesRepo,
+                "--source-branch", $SourceBranch,
+                "--pages-branch", $PagesBranch
+            )
+        }
+    } elseif ($Dispatch -eq "gaza") {
         $dispatchArgs = @(
             "scripts\run_gaza_daily_operator.py",
             "--date", $Date,
@@ -138,22 +199,44 @@ try {
         )
     }
 
-    $exitCode = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs
-
-    $postflightArgs = @(
-        "scripts\runner_repo_maintenance.py",
-        "postflight",
-        "--source-repo", $RepoRoot,
-        "--pages-repo", $PagesRepo,
-        "--source-branch", $SourceBranch,
-        "--pages-branch", $PagesBranch
-    )
-    $postflightCode = Invoke-LoggedCommand -Python $python -Arguments $postflightArgs
-    if ($postflightCode -ne 0) {
-        throw "Runner postflight cleanup/check failed with exit code $postflightCode."
+    $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$CheckOnly
+    $exitCode = $dispatchResult.ExitCode
+    if ($exitCode -ne 0) {
+        throw "Runner dispatch command failed with exit code $exitCode."
+    }
+    if ($CheckOnly -and $Dispatch -eq "gaza") {
+        if (-not $dispatchResult.Json) {
+            throw "CheckOnly smoke run did not return parseable JSON."
+        }
+        $operatorStatus = [string]$dispatchResult.Json.operator_status
+        if (-not [bool]$dispatchResult.Json.ok -or $operatorStatus -ne "MANUAL_SOURCE_VALID") {
+            throw "CheckOnly smoke run failed: ok=$($dispatchResult.Json.ok) operator_status=$operatorStatus"
+        }
     }
 
-    Write-Log "Runner dispatch finished with exit code $exitCode."
+    if (-not $CheckOnly -or $Dispatch -ne "gaza") {
+        $postflightArgs = @(
+            "scripts\runner_repo_maintenance.py",
+            "postflight",
+            "--source-repo", $RepoRoot,
+            "--pages-repo", $PagesRepo,
+            "--source-branch", $SourceBranch,
+            "--pages-branch", $PagesBranch
+        )
+        $postflightResult = Invoke-LoggedCommand -Python $python -Arguments $postflightArgs -ParseJsonTail
+        if ($postflightResult.ExitCode -ne 0) {
+            throw "Runner postflight cleanup/check failed with exit code $($postflightResult.ExitCode)."
+        }
+        if ($postflightResult.Json -and ($postflightResult.Json.PSObject.Properties.Name -contains "ok") -and (-not [bool]$postflightResult.Json.ok)) {
+            throw "Runner postflight cleanup/check reported ok=false."
+        }
+    }
+
+    if ($CheckOnly) {
+        Write-Log "Runner check-only validation finished with exit code $exitCode."
+    } else {
+        Write-Log "Runner dispatch finished with exit code $exitCode."
+    }
 
     Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
         Sort-Object LastWriteTime -Descending |

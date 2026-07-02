@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-02",
-  "candidates_seen": 6,
+  "candidates_seen": 4,
   "included_stories": [
     {
       "story_id": "gaza-story-2026-07-02-001",
@@ -17,28 +17,6 @@
     {
       "story_id": "gaza-story-2026-07-02-004",
       "title": "'Collateral damage': 73 Palestinian children Israel shot in the head",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-07-02-006",
-      "title": "Gaza war's 1,000 days: 90% of strip 'destroyed', 80% 'seized' by Israel",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-07-02-005",
-      "title": "Gaza's first women's amputee football team reclaims the pitch after war",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -93,34 +71,6 @@
     {
       "story_id": "gaza-story-2026-07-02-004",
       "title": "'Collateral damage': 73 Palestinian children Israel shot in the head",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-07-02-006",
-      "title": "Gaza war's 1,000 days: 90% of strip 'destroyed', 80% 'seized' by Israel",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-07-02-005",
-      "title": "Gaza's first women's amputee football team reclaims the pitch after war",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

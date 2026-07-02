@@ -218,9 +218,13 @@ try {
         if (-not $dispatchResult.Json) {
             throw "CheckOnly smoke run did not return parseable JSON."
         }
+        $topLevelOk = [bool]$dispatchResult.Json.ok
         $operatorStatus = [string]$dispatchResult.Json.operator_status
-        if (-not [bool]$dispatchResult.Json.ok -or $operatorStatus -ne "MANUAL_SOURCE_VALID") {
-            throw "CheckOnly smoke run failed: ok=$($dispatchResult.Json.ok) operator_status=$operatorStatus"
+        if (-not $operatorStatus -and $dispatchResult.Json.operator_result) {
+            $operatorStatus = [string]$dispatchResult.Json.operator_result.operator_status
+        }
+        if (-not $topLevelOk -or $operatorStatus -ne "MANUAL_SOURCE_VALID") {
+            throw "CheckOnly smoke run failed: ok=$topLevelOk operator_status=$operatorStatus"
         }
     }
 

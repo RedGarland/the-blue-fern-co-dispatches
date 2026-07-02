@@ -60,7 +60,10 @@ import json
 print("manual source smoke gate")
 print(json.dumps({
     "ok": True,
-    "operator_status": "MANUAL_SOURCE_VALID",
+    "operator_result": {
+        "ok": True,
+        "operator_status": "MANUAL_SOURCE_VALID"
+    },
     "sync_result": {"ok": True, "errors": []}
 }, indent=2))
 """.strip()

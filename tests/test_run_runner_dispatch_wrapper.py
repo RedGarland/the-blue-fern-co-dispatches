@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 from pathlib import Path
@@ -24,7 +25,13 @@ def _read_log(path: Path) -> str:
     raise AssertionError(f"could not decode log file: {path}")
 
 
-def _make_fake_runner_repo(tmp_path: Path, *, sync_ok: bool = True) -> Path:
+def _make_fake_runner_repo(
+    tmp_path: Path,
+    *,
+    sync_ok: bool = True,
+    smoke_payload: object | None = None,
+    smoke_mode: str = "json",
+) -> Path:
     repo = tmp_path / "runner-repo"
     scripts_dir = repo / "scripts"
     pages_repo = repo / "bluefern-dispatches-pages"
@@ -52,20 +59,19 @@ raise SystemExit(1)
 """.strip()
         + "\n",
     )
-    _write_runner_script(
-        scripts_dir / "smoke_gaza_operator.py",
-        """
-import json
-
-print("manual source smoke gate")
-print(json.dumps({
-    "ok": True,
-    "operator_status": "MANUAL_SOURCE_VALID",
-    "sync_result": {"ok": True, "errors": []}
-}, indent=2))
-""".strip()
-        + "\n",
-    )
+    smoke_python = [
+        "import json",
+        "print('manual source smoke gate')",
+    ]
+    if smoke_mode == "json":
+        smoke_python.append(f"payload = json.loads({json.dumps(json.dumps(smoke_payload))})")
+        smoke_python.append("print(json.dumps(payload, indent=2))")
+    elif smoke_mode == "array_json":
+        smoke_python.append(f"payload = json.loads({json.dumps(json.dumps(smoke_payload))})")
+        smoke_python.append("print(json.dumps([payload], indent=2))")
+    else:
+        raise AssertionError(f"unknown smoke_mode: {smoke_mode}")
+    _write_runner_script(scripts_dir / "smoke_gaza_operator.py", "\n".join(smoke_python) + "\n")
     return repo
 
 
@@ -97,22 +103,115 @@ def _run_wrapper(repo: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def test_wrapper_check_only_succeeds_when_sync_outputs_json_and_exit_zero(tmp_path: Path) -> None:
-    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+def _latest_log(repo: Path) -> str:
+    return _read_log(max((repo / "logs").glob("runner-gaza-*.log"), key=lambda p: p.stat().st_mtime))
+
+
+def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "operator_result": {
+                "ok": True,
+                "operator_status": "MANUAL_SOURCE_VALID",
+            },
+            "postflight_result": {"ok": True, "errors": []},
+        },
+    )
 
     result = _run_wrapper(repo)
 
     assert result.returncode == 0, result.stdout + result.stderr
-    log_text = _read_log(max((repo / "logs").glob("runner-gaza-*.log"), key=lambda p: p.stat().st_mtime))
-    assert "Runner sync/preflight failed" not in log_text
+    log_text = _latest_log(repo)
     assert "Runner check-only validation finished with exit code 0." in log_text
+    assert "root_ok_present=True" in log_text
+    assert "root_smoke_mode_present=True" in log_text
+    assert "operator_result_present=True" in log_text
+    assert "postflight_result_present=True" in log_text
+    assert "nested_operator_status_present=True" in log_text
+
+
+def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "operator_result": {
+                "operator_status": "MANUAL_SOURCE_VALID",
+            },
+            "postflight_result": {"ok": True},
+        },
+        smoke_mode="array_json",
+    )
+
+    result = _run_wrapper(repo)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Runner check-only validation finished with exit code 0." in _latest_log(repo)
 
 
 def test_wrapper_check_only_fails_closed_when_sync_json_reports_not_ok(tmp_path: Path) -> None:
-    repo = _make_fake_runner_repo(tmp_path, sync_ok=False)
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=False,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "operator_result": {"operator_status": "MANUAL_SOURCE_VALID"},
+            "postflight_result": {"ok": True},
+        },
+    )
 
     result = _run_wrapper(repo)
 
     assert result.returncode == 10
-    log_text = _read_log(max((repo / "logs").glob("runner-gaza-*.log"), key=lambda p: p.stat().st_mtime))
-    assert "Runner sync/preflight reported ok=false" in log_text
+    assert "Runner sync/preflight reported ok=false" in _latest_log(repo)
+
+
+def test_wrapper_check_only_fails_clearly_when_operator_status_missing(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "postflight_result": {"ok": True},
+        },
+    )
+
+    result = _run_wrapper(repo)
+
+    assert result.returncode == 10
+    log_text = _latest_log(repo)
+    assert "parsed JSON missing operator_status" in log_text
+    assert "operator_result_present=False" in log_text
+
+
+def test_wrapper_check_only_fails_when_nested_object_contains_status_but_root_lacks_operator_result(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "postflight_result": {
+                "ok": True,
+                "operator_result": {
+                    "operator_status": "MANUAL_SOURCE_VALID",
+                },
+            },
+        },
+    )
+
+    result = _run_wrapper(repo)
+
+    assert result.returncode == 10
+    log_text = _latest_log(repo)
+    assert "postflight_result_present=True" in log_text
+    assert "operator_result_present=False" in log_text
+    assert "parsed JSON missing operator_status" in log_text

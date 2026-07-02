@@ -64,28 +64,96 @@ function ConvertTo-JsonTailObject {
     }
 
     $trimmed = $Text.TrimEnd()
-    $candidateStarts = New-Object System.Collections.Generic.List[int]
+    $firstJsonStart = -1
     for ($i = 0; $i -lt $trimmed.Length; $i++) {
-        if ($trimmed[$i] -eq '{' -and ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r")) {
-            $candidateStarts.Add($i)
+        $char = $trimmed[$i]
+        if ($char -ne '{' -and $char -ne '[') {
+            continue
+        }
+        if ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r") {
+            $firstJsonStart = $i
+            break
         }
     }
-    if ($candidateStarts.Count -eq 0) {
-        $candidateStarts.Add($trimmed.LastIndexOf("{"))
+    if ($firstJsonStart -lt 0) {
+        $braceIndex = $trimmed.IndexOf("{")
+        $arrayIndex = $trimmed.IndexOf("[")
+        $candidates = @($braceIndex, $arrayIndex) | Where-Object { $_ -ge 0 }
+        if ($candidates.Count -eq 0) {
+            return $null
+        }
+        $firstJsonStart = ($candidates | Measure-Object -Minimum).Minimum
     }
 
-    for ($index = $candidateStarts.Count - 1; $index -ge 0; $index--) {
-        $start = $candidateStarts[$index]
-        if ($start -lt 0) {
-            continue
+    try {
+        return ($trimmed.Substring($firstJsonStart) | ConvertFrom-Json -ErrorAction Stop)
+    } catch {
+        return $null
+    }
+}
+
+function Get-JsonField {
+    param(
+        $Object,
+        [string]$FieldName
+    )
+
+    if ($null -eq $Object -or [string]::IsNullOrWhiteSpace($FieldName)) {
+        return $null
+    }
+
+    if ($Object -is [System.Array]) {
+        if ($Object.Length -eq 1) {
+            return Get-JsonField -Object $Object[0] -FieldName $FieldName
         }
-        try {
-            return ($trimmed.Substring($start) | ConvertFrom-Json -ErrorAction Stop)
-        } catch {
-            continue
+        return $null
+    }
+
+    if ($Object -is [System.Collections.IList] -and -not ($Object -is [string])) {
+        if ($Object.Count -eq 1) {
+            return Get-JsonField -Object $Object[0] -FieldName $FieldName
+        }
+        return $null
+    }
+
+    if ($Object -is [System.Collections.IDictionary]) {
+        if ($Object.Contains($FieldName)) {
+            return $Object[$FieldName]
+        }
+        return $null
+    }
+
+    $property = $Object.PSObject.Properties[$FieldName]
+    if ($property) {
+        return $property.Value
+    }
+
+    return $null
+}
+
+function Get-JsonFieldPath {
+    param(
+        $Object,
+        [string[]]$Path
+    )
+
+    $current = $Object
+    foreach ($segment in $Path) {
+        $current = Get-JsonField -Object $current -FieldName $segment
+        if ($null -eq $current) {
+            return $null
         }
     }
-    return $null
+    return $current
+}
+
+function Test-JsonFieldPresent {
+    param(
+        $Object,
+        [string]$FieldName
+    )
+
+    return $null -ne (Get-JsonField -Object $Object -FieldName $FieldName)
 }
 
 function Invoke-LoggedCommand {
@@ -157,8 +225,9 @@ try {
     if ($syncResult.ExitCode -ne 0) {
         throw "Runner sync/preflight failed with exit code $($syncResult.ExitCode)."
     }
-    if ($syncResult.Json -and ($syncResult.Json.PSObject.Properties.Name -contains "ok") -and (-not [bool]$syncResult.Json.ok)) {
-        $syncErrors = @($syncResult.Json.errors)
+    $syncOk = Get-JsonField -Object $syncResult.Json -FieldName "ok"
+    if ($null -ne $syncOk -and (-not [bool]$syncOk)) {
+        $syncErrors = @(Get-JsonField -Object $syncResult.Json -FieldName "errors")
         $syncMessage = if ($syncErrors.Count -gt 0) { $syncErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
         throw "Runner sync/preflight reported ok=false: $syncMessage"
     }
@@ -218,9 +287,54 @@ try {
         if (-not $dispatchResult.Json) {
             throw "CheckOnly smoke run did not return parseable JSON."
         }
-        $operatorStatus = [string]$dispatchResult.Json.operator_status
-        if (-not [bool]$dispatchResult.Json.ok -or $operatorStatus -ne "MANUAL_SOURCE_VALID") {
-            throw "CheckOnly smoke run failed: ok=$($dispatchResult.Json.ok) operator_status=$operatorStatus"
+
+        $jsonObject = $dispatchResult.Json
+        if (($jsonObject -is [System.Array] -and $jsonObject.Length -eq 1) -or ($jsonObject -is [System.Collections.IList] -and -not ($jsonObject -is [string]) -and $jsonObject.Count -eq 1)) {
+            $jsonObject = $jsonObject[0]
+        }
+
+        $jsonType = if ($null -eq $jsonObject) { "<null>" } else { $jsonObject.GetType().FullName }
+        $rootOk = Get-JsonField -Object $jsonObject -FieldName "ok"
+        $rootSmokeMode = Get-JsonField -Object $jsonObject -FieldName "smoke_mode"
+        $rootOperatorStatus = Get-JsonField -Object $jsonObject -FieldName "operator_status"
+        $operatorResult = Get-JsonField -Object $jsonObject -FieldName "operator_result"
+        $postflightResult = Get-JsonField -Object $jsonObject -FieldName "postflight_result"
+        $nestedOperatorStatus = Get-JsonFieldPath -Object $jsonObject -Path @("operator_result", "operator_status")
+
+        Write-Log ("CheckOnly JSON diagnostics: type={0}; root_ok_present={1}; root_smoke_mode_present={2}; root_operator_status_present={3}; operator_result_present={4}; postflight_result_present={5}; nested_operator_status_present={6}" -f `
+            $jsonType, `
+            ($null -ne $rootOk), `
+            ($null -ne $rootSmokeMode), `
+            ($null -ne $rootOperatorStatus), `
+            ($null -ne $operatorResult), `
+            ($null -ne $postflightResult), `
+            ($null -ne $nestedOperatorStatus))
+
+        $topLevelOk = [bool]$rootOk
+        $smokeMode = [string]$rootSmokeMode
+        $operatorStatus = if ($null -ne $rootOperatorStatus -and -not [string]::IsNullOrWhiteSpace([string]$rootOperatorStatus)) {
+            [string]$rootOperatorStatus
+        } else {
+            [string]$nestedOperatorStatus
+        }
+
+        if ($null -eq $rootOk) {
+            throw "CheckOnly smoke run failed: parsed JSON missing root ok field."
+        }
+        if (-not $topLevelOk) {
+            throw "CheckOnly smoke run failed: ok=false"
+        }
+        if ([string]::IsNullOrWhiteSpace($smokeMode)) {
+            throw "CheckOnly smoke run failed: parsed JSON missing smoke_mode."
+        }
+        if ($smokeMode -ne "gate_only") {
+            throw "CheckOnly smoke run failed: smoke_mode=$smokeMode"
+        }
+        if ([string]::IsNullOrWhiteSpace($operatorStatus)) {
+            throw "CheckOnly smoke run failed: parsed JSON missing operator_status."
+        }
+        if ($operatorStatus -ne "MANUAL_SOURCE_VALID") {
+            throw "CheckOnly smoke run failed: ok=$topLevelOk operator_status=$operatorStatus"
         }
     }
 
@@ -237,7 +351,8 @@ try {
         if ($postflightResult.ExitCode -ne 0) {
             throw "Runner postflight cleanup/check failed with exit code $($postflightResult.ExitCode)."
         }
-        if ($postflightResult.Json -and ($postflightResult.Json.PSObject.Properties.Name -contains "ok") -and (-not [bool]$postflightResult.Json.ok)) {
+        $postflightOk = Get-JsonField -Object $postflightResult.Json -FieldName "ok"
+        if ($null -ne $postflightOk -and (-not [bool]$postflightOk)) {
             throw "Runner postflight cleanup/check reported ok=false."
         }
     }

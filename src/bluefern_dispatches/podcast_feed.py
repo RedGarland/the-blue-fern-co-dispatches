@@ -55,6 +55,10 @@ def _site_root(project_root: Path) -> Path:
     return project_root / "output" / "site"
 
 
+def _pages_gaza_audio_root(project_root: Path) -> Path:
+    return project_root / "bluefern-dispatches-pages" / "gaza" / "audio"
+
+
 def _food_line_public_cutoff(max_edition_date: str | None = None) -> str | None:
     if max_edition_date == "":
         return None
@@ -152,7 +156,7 @@ def _sanitize_rss_text(value: str) -> str:
 
 
 def _episode_title(edition_date: str) -> str:
-    return f"Gaza Briefing: {_format_human_date(edition_date)}"
+    return f"Gaza Briefing for {_format_human_date(edition_date)}"
 
 
 def _normalize_spaces(text: str) -> str:
@@ -229,7 +233,7 @@ def _episode_description(row: dict[str, Any], edition_date: str) -> str:
             fallback = _headline_fallback(row)
             base = _sentence_chunks(fallback)[:1] if fallback else []
     if not base:
-        base = [f"Source-backed Dispatches from Gaza audio briefing for {_format_human_date(edition_date)}."]
+        base = [f"Source-backed Gaza Dispatch audio briefing for {_format_human_date(edition_date)}."]
     suffix = "Transcript and source links are available from The Blue Fern Co."
     if not is_food_line and not any("Transcript and source links" in sentence for sentence in base):
         base.append(suffix)
@@ -248,34 +252,109 @@ def _metadata_files(project_root: Path) -> list[Path]:
     return sorted(rows, key=lambda p: p.name, reverse=True)
 
 
+def _candidate_gaza_audio_roots(project_root: Path) -> list[Path]:
+    roots: list[Path] = []
+    seen: set[Path] = set()
+    for candidate in (_audio_root(project_root), _pages_gaza_audio_root(project_root)):
+        normalized = candidate.resolve(strict=False)
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        roots.append(candidate)
+    return roots
+
+
+def _audio_relative_path(audio_file: str) -> Path:
+    normalized = str(audio_file or "").strip().lstrip("/").replace("\\", "/")
+    if not normalized:
+        return Path()
+    if "/" not in normalized:
+        normalized = f"gaza/audio/{normalized}"
+    return Path(normalized)
+
+
+def _discover_existing_audio_path(project_root: Path, audio_root: Path, edition_date: str, audio_file: str) -> Path | None:
+    relative_audio_path = _audio_relative_path(audio_file)
+    if not relative_audio_path.parts:
+        return None
+    candidates = [
+        (project_root / "output" / "site" / relative_audio_path).resolve(strict=False),
+        (audio_root / relative_audio_path.name).resolve(strict=False),
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def discover_gaza_audio_episode_rows(project_root: Path) -> list[dict[str, Any]]:
+    episodes: dict[str, dict[str, Any]] = {}
+    for audio_root in _candidate_gaza_audio_roots(project_root):
+        if not audio_root.exists():
+            continue
+        for path in sorted(audio_root.glob("*.json"), key=lambda item: item.name, reverse=True):
+            if path.name.endswith("flash-briefing.json"):
+                continue
+            try:
+                payload = _read_json(path)
+            except Exception:  # noqa: BLE001
+                continue
+            if not isinstance(payload, dict):
+                continue
+            edition_date = str(payload.get("edition_date") or "").strip()
+            if not edition_date:
+                continue
+            transcript_url = str(payload.get("transcript_url") or "").strip()
+            if not transcript_url:
+                transcript_url = f"{BASE_URL}/gaza/audio/{edition_date}-transcript.html"
+            transcript_path = audio_root / f"{edition_date}-transcript.html"
+            if not transcript_path.exists():
+                continue
+            audio_file = str(payload.get("audio_file") or "").strip()
+            row = dict(payload)
+            row["edition_date"] = edition_date
+            row["transcript_url"] = transcript_url
+            row["_transcript_path"] = str(transcript_path)
+            row["_audio_root"] = str(audio_root)
+            row["_audio_path"] = ""
+            if not audio_file:
+                inferred_name = f"{edition_date}.mp3"
+                inferred_path = _discover_existing_audio_path(project_root, audio_root, edition_date, inferred_name)
+                if inferred_path is not None:
+                    audio_file = inferred_name
+                    row["audio_file"] = inferred_name
+                    row["audio_url"] = f"/gaza/audio/{inferred_name}"
+                    row["audio_mime_type"] = "audio/mpeg"
+                    row["_audio_path"] = str(inferred_path)
+            if audio_file:
+                audio_path = _discover_existing_audio_path(project_root, audio_root, edition_date, audio_file)
+                if audio_path is not None:
+                    row["_audio_path"] = str(audio_path)
+                else:
+                    row["audio_file"] = None
+                    row["audio_url"] = None
+                    row["audio_mime_type"] = None
+            existing = episodes.get(edition_date)
+            if existing is None:
+                episodes[edition_date] = row
+                continue
+            if not str(existing.get("_audio_path") or "").strip() and str(row.get("_audio_path") or "").strip():
+                existing["audio_file"] = row.get("audio_file")
+                existing["audio_url"] = row.get("audio_url")
+                existing["audio_mime_type"] = row.get("audio_mime_type")
+                existing["_audio_path"] = row.get("_audio_path")
+    return [episodes[key] for key in sorted(episodes.keys(), reverse=True)]
+
+
 def _load_items(project_root: Path) -> list[dict[str, Any]]:
-    items: list[dict[str, Any]] = []
-    for path in _metadata_files(project_root):
-        try:
-            payload = _read_json(path)
-        except Exception:  # noqa: BLE001
-            continue
-        if not isinstance(payload, dict):
-            continue
-        edition_date = str(payload.get("edition_date") or "").strip()
-        transcript_url = str(payload.get("transcript_url") or "").strip()
-        if not edition_date or not transcript_url:
-            continue
-        items.append(payload)
-    items.sort(key=lambda row: str(row.get("edition_date") or ""), reverse=True)
-    return items[:MAX_ITEMS]
+    return discover_gaza_audio_episode_rows(project_root)
 
 
 def _enclosure_tag(project_root: Path, row: dict[str, Any]) -> str:
-    audio_file_raw = row.get("audio_file")
-    if not isinstance(audio_file_raw, str) or not audio_file_raw.strip():
+    audio_path_raw = str(row.get("_audio_path") or "").strip()
+    if not audio_path_raw:
         return ""
-    audio_file = audio_file_raw.strip()
-    if "/" in audio_file or "\\" in audio_file:
-        relative = audio_file.lstrip("/").replace("\\", "/")
-    else:
-        relative = f"gaza/audio/{audio_file}"
-    site_path = project_root / "output" / "site" / Path(relative)
+    site_path = Path(audio_path_raw)
     if not site_path.exists():
         return ""
     length = site_path.stat().st_size
@@ -284,7 +363,11 @@ def _enclosure_tag(project_root: Path, row: dict[str, Any]) -> str:
     if audio_url:
         public_url = BASE_URL + audio_url if audio_url.startswith("/") else audio_url
     else:
-        public_url = BASE_URL + "/" + relative.replace("\\", "/")
+        audio_file = str(row.get("audio_file") or "").strip()
+        if not audio_file:
+            return ""
+        relative = _audio_relative_path(audio_file).as_posix()
+        public_url = BASE_URL + "/" + relative
     return f'<enclosure url="{escape(public_url)}" length="{length}" type="{escape(mime)}" />'
 
 

@@ -293,7 +293,7 @@ li + li { margin-top: 0.35rem; }
   background-position: center;
   background-repeat: no-repeat;
   background-size: min(76%, 19rem) auto;
-  opacity: 0.06;
+  opacity: 0.05;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
 }

@@ -307,8 +307,8 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
     if args.source_mode == "both":
         source_mode_used = "both"
         records = _dedupe_source_rows([*auto_records, *manual_records], args.max_sources)
-        manual_path.parent.mkdir(parents=True, exist_ok=True)
-        manual_path.write_text(json.dumps(records, indent=2), encoding="utf-8")
+        # Keep the source-controlled manual pack immutable during production runs.
+        # The merged record set is carried forward in-memory only.
     source_path = Path(str(collected["source_file"])) if collected.get("source_file") else manual_path
     if args.source_mode == "both":
         source_path = manual_path
@@ -842,6 +842,11 @@ def main(argv: list[str] | None = None) -> int:
             message = notification_error_message(exc)
             summary["email_ok"] = False
             summary["notification_error"] = message
+            if summary["overall_ok"] and not args.dry_run:
+                summary["warnings"].append(f"Email report failed: {message}")
+                summary["ok"] = True
+                write_summary(summary)
+                return 0
             summary["overall_ok"] = False
             summary["errors"].append(f"Email report failed: {message}")
             log_line(log_path, f"Email report failed: {message}")

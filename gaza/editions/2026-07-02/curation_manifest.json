@@ -46,7 +46,7 @@
         "summary_or_snippet": "An estimated 300 Palestinians referred for treatment abroad have died since the ceasefire began, according to Gaza's Hamas-run health ministry."
       }
     ],
-    "generated_at": "2026-07-02T22:06:52.671567+00:00",
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -54,8 +54,8 @@
     "top_story_relevance_score": 56,
     "substantive_ground": true,
     "flotilla_only": false,
-    "attribution_mode": "independently_reported",
-    "claim_status": "independently_reported",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
     "include_decision": "include",
@@ -110,12 +110,138 @@
         "summary_or_snippet": "Israel has rejected a UN Commission report that says its army deliberately targets Palestinian children."
       }
     ],
-    "generated_at": "2026-07-02T22:06:52.671567+00:00",
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
     ],
     "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-02-006",
+    "title": "Gaza war's 1,000 days: 90% of strip 'destroyed', 80% 'seized' by Israel",
+    "summary": "In 1,000 days since October 7, 2023, Gaza lies in ruins, Board of Peace falters and. Israel expands control of enclave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-02-aljazeera-middle-east-41c175d343f0"
+    ],
+    "source_ids": [
+      "gaza-2026-07-02-aljazeera-middle-east-41c175d343f0"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/2/gaza-wars-1000-days-90-of-strip-destroyed-80-seized-by-israel?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-02-aljazeera-middle-east-41c175d343f0",
+        "title": "Gaza war's 1,000 days: 90% of strip 'destroyed', 80% 'seized' by Israel",
+        "url": "https://www.aljazeera.com/news/2026/7/2/gaza-wars-1000-days-90-of-strip-destroyed-80-seized-by-israel?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "In 1,000 days since October 7, 2023, Gaza lies in ruins, Board of Peace falters and Israel expands control of enclave."
+      }
+    ],
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-02-005",
+    "title": "Gaza's first women's amputee football team reclaims the pitch after war",
+    "summary": "Gaza's first women's amputee football team is reclaiming a space that war tried to take from them.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-02-aljazeera-middle-east-d7eec974ec2d"
+    ],
+    "source_ids": [
+      "gaza-2026-07-02-aljazeera-middle-east-d7eec974ec2d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/2/gazas-first-womens-amputee-football-team-reclaims-the-pitch-after-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-02-aljazeera-middle-east-d7eec974ec2d",
+        "title": "Gaza's first women's amputee football team reclaims the pitch after war",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/2/gazas-first-womens-amputee-football-team-reclaims-the-pitch-after-war?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Gaza's first women's amputee football team is reclaiming a space that war tried to take from them."
+      }
+    ],
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
     "substantive_ground": false,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -174,7 +300,7 @@
         "summary_or_snippet": "Students and supporters of a Luxembourg teacher fired over social media posts held a demonstration for her this week."
       }
     ],
-    "generated_at": "2026-07-02T22:06:52.671567+00:00",
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -198,7 +324,7 @@
     "summary": "Israel Defense Forces in Gaza. A 61-page brief has been handed to the AFP by the Australian Centre for International Justice detailing alleged war crimes committed by an IDF battalion in Gaza across 2023 and 2024.",
     "category": "conflict",
     "story_scope": "core_gaza",
-    "score": 18,
+    "score": 28,
     "scoring_reasons": [
       "source_reliability",
       "date_confidence"
@@ -234,18 +360,18 @@
         "title": "AFP assessing allegation of Gaza war crimes committed by Australian citizen serving in IDF",
         "url": "https://www.theguardian.com/australia-news/2026/jul/03/afp-investigating-alleged-war-crimes-committed-by-australian-citizen-serving-in-idf-in-gaza-ntwnfb",
         "publisher": "The Guardian",
-        "summary_or_snippet": "Exclusive : Claims against Israel Defense Forces battalion include deliberate targeting and destruction of residential buildings in 2023 and 2024 without military justification Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast Australian federal police investigators are assessing a brief detailing alleged war crimes committed by an Australian citizen serving in the Israel Defense Forces in Gaza. A 61-page brief has been handed to the AFP by the Australian Centre for International Justice detailing alleged war crimes committed by an IDF battalion in Gaza across 2023 and 2024."
+        "summary_or_snippet": "Claims against Israel Defense Forces battalion include deliberate targeting and destruction of residential buildings in 2023 and 2024 without military justification Get our breaking news email , free app or daily news podcast Australian federal police investigators are assessing a brief detailing alleged war crimes committed by an Australian citizen serving in the Israel Defense Forces in Gaza. A 61-page brief has been handed to the AFP by the Australian Centre for International Justice detailing alleged war crimes committed by an IDF battalion in Gaza across 2023 and 2024."
       }
     ],
-    "generated_at": "2026-07-02T22:06:52.671567+00:00",
+    "generated_at": "2026-07-02T22:37:30.226001+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
-    "top_story_relevance_score": 18,
+    "top_story_relevance_score": 28,
     "substantive_ground": true,
     "flotilla_only": false,
-    "attribution_mode": "independently_reported",
-    "claim_status": "independently_reported",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
     "context_only": false,
     "core_ground_development": true,
     "include_decision": "include",

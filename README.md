@@ -533,6 +533,16 @@ powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 
 Use `scripts/run_and_notify.py` for the scheduled Gaza daily workflow and SMTP diagnostics. Normal mode delegates to `scripts/run_daily_gaza.py --email-report`; `--publish` performs the local Pages publish behavior, while omitting `--publish` runs the Gaza workflow in dry-run mode. `--send-test-email` sends only the SMTP diagnostic message and does not run Gaza, tests, publish, push, or touch the Pages repo.
 
+## Dedicated Runner Clone
+
+Scheduled Gaza and Food Line jobs should run from a dedicated clean runner clone, not from an active development worktree. See [docs/runner-operations.md](/c:/PythonProjects/Dispatches%20From%20The%20Blue%20Fern%20Co/docs/runner-operations.md) for:
+
+- runner folder layout
+- clean-runner setup commands
+- scheduled Gaza and Food Line commands
+- the safe Gaza smoke test
+- dirty-runner recovery
+
 Required environment variables:
 
 - `SMTP_HOST` (required)

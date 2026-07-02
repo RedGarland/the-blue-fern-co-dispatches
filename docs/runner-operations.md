@@ -1,0 +1,169 @@
+# Runner Operations
+
+Use a dedicated clean runner clone for scheduled Gaza and Food Line jobs. Do not point scheduled tasks at an active development worktree.
+
+## Layout
+
+Recommended Windows layout:
+
+```text
+C:\BlueFernRunner\
+  Dispatches From The Blue Fern Co\            # runner source repo
+  Dispatches From The Blue Fern Co\bluefern-dispatches-pages\  # runner Pages repo
+```
+
+Development layout stays separate, for example:
+
+```text
+C:\PythonProjects\Dispatches From The Blue Fern Co\            # dev source repo
+C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages\  # dev Pages repo
+```
+
+Rules:
+
+- The runner source repo tracks `add/pages-repo-default`.
+- The runner Pages repo tracks `gh-pages`.
+- Scheduled jobs run only from the runner clone.
+- Development artifacts in the dev repo must never block the runner job.
+- `REPO_DIRTY_BLOCKED` remains enforced in the runner clone.
+
+## Setup
+
+Example setup commands for a dedicated runner clone:
+
+```powershell
+New-Item -ItemType Directory -Force -Path C:\BlueFernRunner | Out-Null
+git clone --branch add/pages-repo-default <SOURCE_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
+git clone --branch gh-pages <PAGES_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+Set-Location "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -U pip
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+Verify tracking:
+
+```powershell
+git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co" branch --show-current
+git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" branch --show-current
+```
+
+Expected output:
+
+- source repo: `add/pages-repo-default`
+- Pages repo: `gh-pages`
+
+## Scheduled Commands
+
+Recommended Task Scheduler action for Gaza:
+
+```text
+Program/script:
+powershell.exe
+```
+
+```text
+Arguments:
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza
+```
+
+Recommended Task Scheduler action for Food Line:
+
+```text
+Program/script:
+powershell.exe
+```
+
+```text
+Arguments:
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch food-line
+```
+
+Wrapper behavior:
+
+1. Sync source repo to `origin/add/pages-repo-default`.
+2. Sync Pages repo to `origin/gh-pages`.
+3. Run `python scripts\preflight_repo_state.py` logic through `scripts\runner_repo_maintenance.py sync`.
+4. Fail early if either repo is dirty or on the wrong branch.
+5. Run the dispatch command from the clean runner clone.
+6. Re-check both repos after the run.
+7. Clean only approved generated/temp paths in the source repo.
+8. Fail if risky drift remains.
+
+## Smoke Test
+
+Use this to verify tomorrow's Gaza runner state without publish, email, audio, Pages updates, or Bluesky:
+
+```powershell
+python scripts\smoke_gaza_operator.py --date YYYY-MM-DD
+```
+
+Example:
+
+```powershell
+python scripts\smoke_gaza_operator.py --date 2026-07-02
+```
+
+Smoke-test scope:
+
+- syncs the runner source repo and runner Pages repo
+- runs repo preflight after sync
+- checks branch expectations
+- resolves the requested date
+- runs `run_gaza_daily_operator.py --manual-source-check-only`
+- runs postflight drift classification and approved cleanup
+
+The smoke test intentionally does not run the full Gaza dry-run path because the current daily/operator dry-run path still writes dated artifacts.
+
+## Recovery
+
+If the runner clone is dirty before a scheduled run:
+
+1. Inspect both repos:
+
+```powershell
+git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co" status --short --branch
+git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" status --short --branch
+python "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\preflight_repo_state.py" --source-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co" --pages-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+2. If drift is limited to approved generated/temp paths, run:
+
+```powershell
+python "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\runner_repo_maintenance.py" postflight --source-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co" --pages-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+3. If source or data drift remains under `src/`, `scripts/`, `docs/`, `data/`, or other non-approved paths, stop and inspect manually. Do not add new ignore rules to silence it.
+
+4. If the runner clone is confused or repeatedly dirty, rebuild it:
+
+```powershell
+Remove-Item -LiteralPath "C:\BlueFernRunner\Dispatches From The Blue Fern Co" -Recurse -Force
+git clone --branch add/pages-repo-default <SOURCE_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
+git clone --branch gh-pages <PAGES_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+```
+
+## Cleanup Policy
+
+The runner postflight cleanup is intentionally narrow.
+
+It may restore or delete only these source-repo path families:
+
+- `logs/`
+- `.pytest_cache/`
+- `.pytest-temp*`
+- `.pytest_tmp*`
+- `output/review/`
+- `output/site/`
+- `output/dispatches/`
+- `output/tmp-backups-pages/`
+
+It does not auto-clean:
+
+- `src/`
+- `scripts/`
+- `docs/`
+- `data/`
+- `bluefern-dispatches-pages/`
+
+That keeps normal temp/generated noise out of the runner clone without masking real source or data drift.

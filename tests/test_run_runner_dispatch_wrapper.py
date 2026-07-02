@@ -113,11 +113,12 @@ def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: 
         sync_ok=True,
         smoke_payload={
             "ok": True,
+            "smoke_mode": "gate_only",
             "operator_result": {
                 "ok": True,
                 "operator_status": "MANUAL_SOURCE_VALID",
             },
-            "sync_result": {"ok": True, "errors": []},
+            "postflight_result": {"ok": True, "errors": []},
         },
     )
 
@@ -127,7 +128,9 @@ def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: 
     log_text = _latest_log(repo)
     assert "Runner check-only validation finished with exit code 0." in log_text
     assert "root_ok_present=True" in log_text
+    assert "root_smoke_mode_present=True" in log_text
     assert "operator_result_present=True" in log_text
+    assert "postflight_result_present=True" in log_text
     assert "nested_operator_status_present=True" in log_text
 
 
@@ -137,9 +140,11 @@ def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Pa
         sync_ok=True,
         smoke_payload={
             "ok": True,
+            "smoke_mode": "gate_only",
             "operator_result": {
                 "operator_status": "MANUAL_SOURCE_VALID",
             },
+            "postflight_result": {"ok": True},
         },
         smoke_mode="array_json",
     )
@@ -149,11 +154,17 @@ def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Pa
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Runner check-only validation finished with exit code 0." in _latest_log(repo)
 
+
 def test_wrapper_check_only_fails_closed_when_sync_json_reports_not_ok(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
         sync_ok=False,
-        smoke_payload={"ok": True, "operator_result": {"operator_status": "MANUAL_SOURCE_VALID"}},
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "operator_result": {"operator_status": "MANUAL_SOURCE_VALID"},
+            "postflight_result": {"ok": True},
+        },
     )
 
     result = _run_wrapper(repo)
@@ -168,7 +179,8 @@ def test_wrapper_check_only_fails_clearly_when_operator_status_missing(tmp_path:
         sync_ok=True,
         smoke_payload={
             "ok": True,
-            "sync_result": {"ok": True, "errors": []},
+            "smoke_mode": "gate_only",
+            "postflight_result": {"ok": True},
         },
     )
 
@@ -178,3 +190,28 @@ def test_wrapper_check_only_fails_clearly_when_operator_status_missing(tmp_path:
     log_text = _latest_log(repo)
     assert "parsed JSON missing operator_status" in log_text
     assert "operator_result_present=False" in log_text
+
+
+def test_wrapper_check_only_fails_when_nested_object_contains_status_but_root_lacks_operator_result(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "smoke_mode": "gate_only",
+            "postflight_result": {
+                "ok": True,
+                "operator_result": {
+                    "operator_status": "MANUAL_SOURCE_VALID",
+                },
+            },
+        },
+    )
+
+    result = _run_wrapper(repo)
+
+    assert result.returncode == 10
+    log_text = _latest_log(repo)
+    assert "postflight_result_present=True" in log_text
+    assert "operator_result_present=False" in log_text
+    assert "parsed JSON missing operator_status" in log_text

@@ -64,30 +64,32 @@ function ConvertTo-JsonTailObject {
     }
 
     $trimmed = $Text.TrimEnd()
-    $candidateStarts = New-Object System.Collections.Generic.List[int]
+    $firstJsonStart = -1
     for ($i = 0; $i -lt $trimmed.Length; $i++) {
-        if (($trimmed[$i] -eq '{' -or $trimmed[$i] -eq '[') -and ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r")) {
-            $candidateStarts.Add($i)
+        $char = $trimmed[$i]
+        if ($char -ne '{' -and $char -ne '[') {
+            continue
+        }
+        if ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r") {
+            $firstJsonStart = $i
+            break
         }
     }
-    if ($candidateStarts.Count -eq 0) {
-        $braceIndex = $trimmed.LastIndexOf("{")
-        $arrayIndex = $trimmed.LastIndexOf("[")
-        $candidateStarts.Add([Math]::Max($braceIndex, $arrayIndex))
+    if ($firstJsonStart -lt 0) {
+        $braceIndex = $trimmed.IndexOf("{")
+        $arrayIndex = $trimmed.IndexOf("[")
+        $candidates = @($braceIndex, $arrayIndex) | Where-Object { $_ -ge 0 }
+        if ($candidates.Count -eq 0) {
+            return $null
+        }
+        $firstJsonStart = ($candidates | Measure-Object -Minimum).Minimum
     }
 
-    for ($index = $candidateStarts.Count - 1; $index -ge 0; $index--) {
-        $start = $candidateStarts[$index]
-        if ($start -lt 0) {
-            continue
-        }
-        try {
-            return ($trimmed.Substring($start) | ConvertFrom-Json -ErrorAction Stop)
-        } catch {
-            continue
-        }
+    try {
+        return ($trimmed.Substring($firstJsonStart) | ConvertFrom-Json -ErrorAction Stop)
+    } catch {
+        return $null
     }
-    return $null
 }
 
 function Get-JsonField {
@@ -293,18 +295,23 @@ try {
 
         $jsonType = if ($null -eq $jsonObject) { "<null>" } else { $jsonObject.GetType().FullName }
         $rootOk = Get-JsonField -Object $jsonObject -FieldName "ok"
+        $rootSmokeMode = Get-JsonField -Object $jsonObject -FieldName "smoke_mode"
         $rootOperatorStatus = Get-JsonField -Object $jsonObject -FieldName "operator_status"
         $operatorResult = Get-JsonField -Object $jsonObject -FieldName "operator_result"
+        $postflightResult = Get-JsonField -Object $jsonObject -FieldName "postflight_result"
         $nestedOperatorStatus = Get-JsonFieldPath -Object $jsonObject -Path @("operator_result", "operator_status")
 
-        Write-Log ("CheckOnly JSON diagnostics: type={0}; root_ok_present={1}; root_operator_status_present={2}; operator_result_present={3}; nested_operator_status_present={4}" -f `
+        Write-Log ("CheckOnly JSON diagnostics: type={0}; root_ok_present={1}; root_smoke_mode_present={2}; root_operator_status_present={3}; operator_result_present={4}; postflight_result_present={5}; nested_operator_status_present={6}" -f `
             $jsonType, `
             ($null -ne $rootOk), `
+            ($null -ne $rootSmokeMode), `
             ($null -ne $rootOperatorStatus), `
             ($null -ne $operatorResult), `
+            ($null -ne $postflightResult), `
             ($null -ne $nestedOperatorStatus))
 
         $topLevelOk = [bool]$rootOk
+        $smokeMode = [string]$rootSmokeMode
         $operatorStatus = if ($null -ne $rootOperatorStatus -and -not [string]::IsNullOrWhiteSpace([string]$rootOperatorStatus)) {
             [string]$rootOperatorStatus
         } else {
@@ -316,6 +323,12 @@ try {
         }
         if (-not $topLevelOk) {
             throw "CheckOnly smoke run failed: ok=false"
+        }
+        if ([string]::IsNullOrWhiteSpace($smokeMode)) {
+            throw "CheckOnly smoke run failed: parsed JSON missing smoke_mode."
+        }
+        if ($smokeMode -ne "gate_only") {
+            throw "CheckOnly smoke run failed: smoke_mode=$smokeMode"
         }
         if ([string]::IsNullOrWhiteSpace($operatorStatus)) {
             throw "CheckOnly smoke run failed: parsed JSON missing operator_status."

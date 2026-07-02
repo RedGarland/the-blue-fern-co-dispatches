@@ -270,6 +270,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
             min_sources=0 if args.source_mode == "both" else args.min_sources,
             output_filename="manual_sources.json",
             prefer_manual=False,
+            write_output=args.source_mode != "both",
         )
     except Exception as exc:  # noqa: BLE001
         if args.source_mode == "both" and manual_valid and manual_records:

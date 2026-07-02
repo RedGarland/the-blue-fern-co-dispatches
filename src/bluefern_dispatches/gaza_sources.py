@@ -1148,6 +1148,7 @@ def collect_gaza_sources(
     min_sources: int = 1,
     output_filename: str = "manual_sources.json",
     prefer_manual: bool = True,
+    write_output: bool = True,
 ) -> dict[str, Any]:
     retrieved_at = utc_now()
     warnings: list[str] = []
@@ -1440,7 +1441,10 @@ def collect_gaza_sources(
     errors.extend(validation_errors)
     source_file = None
     if not errors:
-        source_file = write_source_records(root, edition_date, records, output_filename)
+        if write_output:
+            source_file = write_source_records(root, edition_date, records, output_filename)
+        else:
+            source_file = manual_path
     return {
         "ok": not errors,
         "date": edition_date,

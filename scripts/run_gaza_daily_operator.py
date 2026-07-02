@@ -850,6 +850,14 @@ def main(argv: list[str] | None = None) -> int:
             result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))
         except Exception as exc:  # noqa: BLE001
             result["email_status"] = f"failed: {notification_error_message(exc)}"
+            if result.get("ok") and not args.dry_run:
+                result.setdefault("warnings", []).append(result["email_status"])
+                result["source_repo_status_after"] = _git_status_branch(ROOT)
+                result["pages_repo_status_after"] = _git_status_branch(Path(args.pages_repo))
+                print(f"Email warning: {result['email_status']}")
+                _print_human_summary(result)
+                print(json.dumps(result, indent=2))
+                return 0
             if result.get("ok"):
                 result["ok"] = False
                 result["next_action"] = result["email_status"]

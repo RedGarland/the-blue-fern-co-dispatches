@@ -8,6 +8,7 @@ def _write_audio_metadata(tmp_path: Path, edition_date: str, payload: dict) -> P
     root = tmp_path / "output" / "site" / "gaza" / "audio"
     root.mkdir(parents=True, exist_ok=True)
     path = root / f"{edition_date}.json"
+    (root / f"{edition_date}-transcript.html").write_text("<html>Transcript</html>", encoding="utf-8")
     data = {
         "edition_date": edition_date,
         "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{edition_date}-transcript.html",
@@ -15,6 +16,24 @@ def _write_audio_metadata(tmp_path: Path, edition_date: str, payload: dict) -> P
         "audio_file": None,
         "audio_url": None,
         "audio_mime_type": None,
+    }
+    data.update(payload)
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return path
+
+
+def _write_pages_audio_metadata(tmp_path: Path, edition_date: str, payload: dict) -> Path:
+    root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / f"{edition_date}.json"
+    (root / f"{edition_date}-transcript.html").write_text("<html>Archived transcript</html>", encoding="utf-8")
+    data = {
+        "edition_date": edition_date,
+        "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{edition_date}-transcript.html",
+        "script_text": "Archived Gaza audio summary.",
+        "audio_file": f"{edition_date}.mp3",
+        "audio_url": f"/gaza/audio/{edition_date}.mp3",
+        "audio_mime_type": "audio/mpeg",
     }
     data.update(payload)
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
@@ -161,6 +180,114 @@ def test_existing_mp3_still_produces_enclosure_without_new_tts(tmp_path: Path):
     assert f'length="{len(b"existing-mp3-data")}"' in xml
 
 
+def test_podcast_feed_includes_archived_pages_audio_episodes_newest_first(tmp_path: Path):
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    local_audio_root = tmp_path / "output" / "site" / "gaza" / "audio"
+    local_audio_root.mkdir(parents=True, exist_ok=True)
+    (local_audio_root / "2026-07-01.mp3").write_bytes(b"latest-audio")
+    (local_audio_root / "2026-07-01-transcript.html").write_text("<html>latest transcript</html>", encoding="utf-8")
+    _write_audio_metadata(
+        tmp_path,
+        "2026-07-01",
+        {"audio_file": "2026-07-01.mp3", "audio_url": "/gaza/audio/2026-07-01.mp3", "audio_mime_type": "audio/mpeg"},
+    )
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    (pages_audio_root / "2026-06-30.mp3").write_bytes(b"archived-audio")
+    (pages_audio_root / "2026-06-30-transcript.html").write_text("<html>archived transcript</html>", encoding="utf-8")
+    _write_pages_audio_metadata(tmp_path, "2026-06-30", {})
+
+    xml = build_gaza_podcast_xml(tmp_path)
+
+    assert "2026-07-01.mp3" in xml
+    assert "2026-06-30.mp3" in xml
+    assert xml.index("2026-07-01") < xml.index("2026-06-30")
+
+
+def test_podcast_feed_skips_incomplete_archived_audio_rows(tmp_path: Path):
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    _write_pages_audio_metadata(tmp_path, "2026-06-29", {})
+    (pages_audio_root / "2026-06-29-transcript.html").unlink()
+
+    xml = build_gaza_podcast_xml(tmp_path)
+
+    assert "2026-06-29" not in xml
+
+
+def test_local_audio_metadata_overrides_duplicate_pages_row(tmp_path: Path):
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    local_audio_root = tmp_path / "output" / "site" / "gaza" / "audio"
+    local_audio_root.mkdir(parents=True, exist_ok=True)
+    (local_audio_root / "2026-07-01.mp3").write_bytes(b"local-audio")
+    (local_audio_root / "2026-07-01-transcript.html").write_text("<html>local transcript</html>", encoding="utf-8")
+    _write_audio_metadata(
+        tmp_path,
+        "2026-07-01",
+        {
+            "script_text": "Local episode summary should win.",
+            "audio_file": "2026-07-01.mp3",
+            "audio_url": "/gaza/audio/2026-07-01.mp3",
+            "audio_mime_type": "audio/mpeg",
+        },
+    )
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    (pages_audio_root / "2026-07-01.mp3").write_bytes(b"pages-audio")
+    (pages_audio_root / "2026-07-01-transcript.html").write_text("<html>pages transcript</html>", encoding="utf-8")
+    _write_pages_audio_metadata(tmp_path, "2026-07-01", {"script_text": "Pages archived summary should lose."})
+
+    xml = build_gaza_podcast_xml(tmp_path)
+
+    assert "Local episode summary should win." in xml
+    assert "Pages archived summary should lose." not in xml
+    assert "<enclosure " in xml
+
+
+def test_local_transcript_refresh_keeps_pages_mp3_enclosure_for_same_date(tmp_path: Path):
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    _write_audio_metadata(
+        tmp_path,
+        "2026-07-01",
+        {
+            "script_text": "Fresh local transcript-only metadata should keep existing pages audio.",
+            "audio_file": None,
+            "audio_url": None,
+            "audio_mime_type": None,
+        },
+    )
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    (pages_audio_root / "2026-07-01.mp3").write_bytes(b"pages-audio")
+    _write_pages_audio_metadata(
+        tmp_path,
+        "2026-07-01",
+        {"audio_file": None, "audio_url": None, "audio_mime_type": None},
+    )
+
+    xml = build_gaza_podcast_xml(tmp_path)
+
+    assert "Fresh local transcript-only metadata should keep existing pages audio." in xml
+    assert "<enclosure " in xml
+    assert "2026-07-01.mp3" in xml
+
+
 def test_write_gaza_podcast_feed_outputs_file(tmp_path: Path):
     assets = tmp_path / "assets"
     assets.mkdir(parents=True, exist_ok=True)
@@ -183,4 +310,24 @@ def test_write_gaza_podcast_feed_outputs_file(tmp_path: Path):
     assert artwork.exists()
     assert "output\\detail" not in str(artwork).lower()
     assert "output\\paid" not in str(artwork).lower()
+
+
+def test_write_gaza_podcast_feed_mirrors_full_archived_episode_set(tmp_path: Path):
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    for edition_date in ("2026-06-30", "2026-06-29"):
+        (pages_audio_root / f"{edition_date}.mp3").write_bytes(edition_date.encode("utf-8"))
+        (pages_audio_root / f"{edition_date}-transcript.html").write_text("<html>archived transcript</html>", encoding="utf-8")
+        _write_pages_audio_metadata(tmp_path, edition_date, {})
+
+    path = write_gaza_podcast_feed(project_root=tmp_path, dry_run=False)
+
+    body = path.read_text(encoding="utf-8")
+    mirrored = (tmp_path / "output" / "site" / "gaza" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+    assert body == mirrored
+    assert "2026-06-30.mp3" in body
+    assert "2026-06-29.mp3" in body
 

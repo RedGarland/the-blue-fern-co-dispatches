@@ -24,6 +24,17 @@ def _write_edition(tmp_path: Path, edition_date: str, *, curation: list[dict], s
     (assets / "gaza-logo.png").write_bytes(b"png")
 
 
+def _write_dispatch_only_edition(tmp_path: Path, edition_date: str, *, curation: list[dict], sources: list[dict]) -> None:
+    root = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "curation_manifest.json").write_text(json.dumps(curation, indent=2), encoding="utf-8")
+    (root / "sources_manifest.json").write_text(json.dumps(sources, indent=2), encoding="utf-8")
+    (root / "edition_manifest.json").write_text(json.dumps({"edition_date": edition_date}, indent=2), encoding="utf-8")
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+
 def test_audio_script_includes_source_attribution():
     curation = [
         {
@@ -275,6 +286,20 @@ def test_missing_date_source_records_fails_safely(tmp_path: Path):
         write_gaza_audio_outputs(tmp_path, "2026-05-31", dry_run=False)
 
 
+def test_audio_generation_can_use_dispatch_manifests_when_public_site_manifests_are_absent(tmp_path: Path):
+    date = "2026-07-01"
+    _write_dispatch_only_edition(
+        tmp_path,
+        date,
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
+    )
+    result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
+    assert result.transcript_path.exists()
+    assert result.metadata_path.exists()
+    assert result.podcast_path.exists()
+
+
 def test_output_paths_stay_under_public_audio_root(tmp_path: Path):
     date = "2026-05-31"
     _write_edition(
@@ -333,6 +358,64 @@ def test_provider_none_refresh_preserves_existing_mp3_enclosure(tmp_path: Path):
     feed = (tmp_path / "output" / "site" / "gaza" / "audio" / "podcast.xml").read_text(encoding="utf-8")
     assert "<enclosure " in feed
     assert f'length="{len(b"existing-audio")}"' in feed
+
+
+def test_audio_index_includes_archived_pages_episode_and_skips_incomplete_rows(tmp_path: Path):
+    date = "2026-07-01"
+    _write_edition(
+        tmp_path,
+        date,
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
+    )
+    existing_mp3 = tmp_path / "output" / "site" / "gaza" / "audio" / f"{date}.mp3"
+    existing_mp3.parent.mkdir(parents=True, exist_ok=True)
+    existing_mp3.write_bytes(b"latest-audio")
+    write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    (pages_audio_root / "2026-06-30.mp3").write_bytes(b"archived-audio")
+    (pages_audio_root / "2026-06-30-transcript.html").write_text("<html>archived transcript</html>", encoding="utf-8")
+    (pages_audio_root / "2026-06-30.json").write_text(
+        json.dumps(
+            {
+                "edition_date": "2026-06-30",
+                "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-30-transcript.html",
+                "audio_file": "2026-06-30.mp3",
+                "audio_url": "/gaza/audio/2026-06-30.mp3",
+                "audio_mime_type": "audio/mpeg",
+                "script_text": "Archived Gaza episode.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (pages_audio_root / "2026-06-29.json").write_text(
+        json.dumps(
+            {
+                "edition_date": "2026-06-29",
+                "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-06-29-transcript.html",
+                "audio_file": "2026-06-29.mp3",
+                "audio_url": "/gaza/audio/2026-06-29.mp3",
+                "audio_mime_type": "audio/mpeg",
+                "script_text": "Incomplete archived Gaza episode.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = write_gaza_audio_outputs(tmp_path, date, dry_run=False, tts_provider="none")
+    index_body = (tmp_path / "output" / "site" / "gaza" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_body = result.podcast_path.read_text(encoding="utf-8")
+
+    assert "2026-07-01" in index_body
+    assert "2026-06-30" in index_body
+    assert "2026-06-29" not in index_body
+    assert "2026-07-01.mp3" in podcast_body
+    assert "2026-06-30.mp3" in podcast_body
+    assert "2026-06-29" not in podcast_body
 
 
 def test_openai_provider_without_api_key_fails_safely(tmp_path: Path, monkeypatch):

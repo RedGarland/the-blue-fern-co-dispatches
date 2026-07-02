@@ -73,6 +73,10 @@ def _edition_root(project_root: Path, edition_date: str) -> Path:
     return project_root / "output" / "site" / "gaza" / "editions" / edition_date
 
 
+def _dispatch_edition_root(project_root: Path, edition_date: str) -> Path:
+    return project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date
+
+
 def _audio_root(project_root: Path) -> Path:
     return project_root / "output" / "site" / "gaza" / "audio"
 
@@ -84,29 +88,24 @@ def _gaza_public_root(project_root: Path) -> Path:
 
 
 def _discover_audio_entries(project_root: Path) -> list[dict[str, str]]:
-    root = _audio_root(project_root)
-    if not root.exists():
-        return []
+    from bluefern_dispatches.podcast_feed import discover_gaza_audio_episode_rows
+
     rows: list[dict[str, str]] = []
-    for path in sorted(root.glob("*.json"), reverse=True):
-        try:
-            payload = _read_json(path)
-        except Exception:  # noqa: BLE001
-            continue
-        if not isinstance(payload, dict):
-            continue
+    for payload in discover_gaza_audio_episode_rows(project_root):
         date_text = str(payload.get("edition_date") or "").strip()
         if not DATE_RE.match(date_text):
             continue
+        transcript_url = str(payload.get("transcript_url") or "").strip()
+        if not transcript_url:
+            transcript_url = f"{BASE_URL}/gaza/audio/{date_text}-transcript.html"
         rows.append(
             {
                 "edition_date": date_text,
-                "transcript_url": f"/gaza/audio/{date_text}-transcript.html",
+                "transcript_url": transcript_url.replace(BASE_URL, "") if transcript_url.startswith(BASE_URL) else transcript_url,
                 "audio_url": str(payload.get("audio_url") or "").strip(),
                 "edition_url": f"/gaza/editions/{date_text}/",
             }
         )
-    rows.sort(key=lambda row: row["edition_date"], reverse=True)
     return rows
 
 
@@ -682,6 +681,14 @@ def load_gaza_audio_inputs(project_root: Path, edition_date: str) -> tuple[list[
     edition_dir = _edition_root(project_root, edition_date)
     curation_path = edition_dir / "curation_manifest.json"
     sources_path = edition_dir / "sources_manifest.json"
+    if not curation_path.exists() or not sources_path.exists():
+        dispatch_dir = _dispatch_edition_root(project_root, edition_date)
+        dispatch_curation = dispatch_dir / "curation_manifest.json"
+        dispatch_sources = dispatch_dir / "sources_manifest.json"
+        if dispatch_curation.exists() and dispatch_sources.exists():
+            edition_dir = dispatch_dir
+            curation_path = dispatch_curation
+            sources_path = dispatch_sources
     missing = [str(p) for p in (curation_path, sources_path) if not p.exists()]
     if missing:
         raise FileNotFoundError(f"required Gaza edition artifacts missing for {edition_date}: {', '.join(missing)}")

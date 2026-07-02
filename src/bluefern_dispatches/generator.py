@@ -844,7 +844,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
       </li>"""
     card_rows.append(food_line_card)
     cards = "\n".join(card_rows)
-    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "cascadia", "food-line", "care-line"))}
+    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "food-line"))}
   <main class="home">
     <section class="hero root-hero">
       <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">

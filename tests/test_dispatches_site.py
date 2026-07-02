@@ -167,8 +167,12 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert result["ok"] is True
     assert index.exists()
     html = read(index)
-    assert 'href="/gaza/"' in html
-    assert 'href="/food-line/"' in html
+    nav = html.split("<nav>", 1)[1].split("</nav>", 1)[0]
+    assert nav == '<a href="/gaza/">Gaza</a><a href="/food-line/">Food Line Dispatch</a>'
+    assert 'href="/gaza/"' in nav
+    assert 'href="/food-line/"' in nav
+    assert 'href="/cascadia/"' not in nav
+    assert 'href="/care-line/"' not in nav
     assert html.count('class="dispatch-card"') == 2
     assert 'href="/american-pressure/"' not in html
     assert "Dispatches From Gaza" in html
@@ -189,7 +193,7 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert "Cascadia Systems Dispatch" not in html
     css_text = read(css)
     assert "--blue-fern: #2F6F88" in css_text
-    assert "opacity: 0.06;" in css_text
+    assert "opacity: 0.05;" in css_text
     assert "pointer-events: none;" in css_text
     assert "position: absolute;" in css_text
     assert "z-index: 2;" in css_text
@@ -312,9 +316,15 @@ def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
 def test_homepage_only_lists_gaza_and_food_line_cards(built_site):
     work, _, _ = built_site
     index = read(work / "output" / "site" / "index.html")
+    nav = index.split("<nav>", 1)[1].split("</nav>", 1)[0]
     card_grid = index.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
     cards = re.findall(r'<li class="dispatch-card".*?<a href="([^"]+)">.*?<strong>([^<]+)</strong>', card_grid, re.DOTALL)
 
+    assert nav.count("<a ") == 2
+    assert 'href="/gaza/">Gaza</a>' in nav
+    assert 'href="/food-line/">Food Line Dispatch</a>' in nav
+    assert 'href="/care-line/"' not in nav
+    assert 'href="/cascadia/"' not in nav
     assert cards == [
         ("/gaza/", "Dispatches From Gaza"),
         ("/food-line/", "Food Line Dispatch"),

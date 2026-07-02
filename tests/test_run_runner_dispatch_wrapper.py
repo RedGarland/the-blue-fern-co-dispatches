@@ -58,7 +58,11 @@ raise SystemExit(1)
 import json
 
 print("manual source smoke gate")
-print(json.dumps({"ok": True, "operator_status": "MANUAL_SOURCE_VALID"}, indent=2))
+print(json.dumps({
+    "ok": True,
+    "operator_status": "MANUAL_SOURCE_VALID",
+    "sync_result": {"ok": True, "errors": []}
+}, indent=2))
 """.strip()
         + "\n",
     )

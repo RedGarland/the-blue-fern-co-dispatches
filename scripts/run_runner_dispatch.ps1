@@ -64,15 +64,25 @@ function ConvertTo-JsonTailObject {
     }
 
     $trimmed = $Text.TrimEnd()
-    $start = $trimmed.LastIndexOf("{")
-    while ($start -ge 0) {
+    $candidateStarts = New-Object System.Collections.Generic.List[int]
+    for ($i = 0; $i -lt $trimmed.Length; $i++) {
+        if ($trimmed[$i] -eq '{' -and ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r")) {
+            $candidateStarts.Add($i)
+        }
+    }
+    if ($candidateStarts.Count -eq 0) {
+        $candidateStarts.Add($trimmed.LastIndexOf("{"))
+    }
+
+    for ($index = $candidateStarts.Count - 1; $index -ge 0; $index--) {
+        $start = $candidateStarts[$index]
+        if ($start -lt 0) {
+            continue
+        }
         try {
             return ($trimmed.Substring($start) | ConvertFrom-Json -ErrorAction Stop)
         } catch {
-            if ($start -eq 0) {
-                break
-            }
-            $start = $trimmed.LastIndexOf("{", $start - 1)
+            continue
         }
     }
     return $null

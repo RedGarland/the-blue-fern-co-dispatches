@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-03",
+  "generated_at": "2026-07-03T16:37:51.957154Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-03.mp3",
+  "audio_url": "/gaza/audio/2026-07-03.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 936,
+  "tts_input_word_count": 148,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 996096,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-03T16:37:51.957129Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-03-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 3, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'. This was reported by EL PAIS English.\n\n2. Gaza sports community pledges to continue legacy of killed goalkeeper. Slain seeking cooking gas, Gaza goalkeeper Saleem al-Ashqar joins more than 1,000 Palestinian athletes killed in war. This was reported by Al Jazeera.\n\n3. Israel approves plan to establish 13 new settlements in occupied West Bank. Palestinian officials warn against the implications of the plan, saying it would further isolate East Jerusalem. This was reported by Al Jazeera.\n\n4. IDF probes soldiers after video shows blindfolded Palestinian tied to broomstick in Gaza. This was reported by The Jerusalem Post.\n\nFor the full source-backed dispatch, read the July 3, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-03-elpais-heatwave-water-displacement",
+      "publisher": "EL PAIS English",
+      "url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+      "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'"
+    },
+    {
+      "source_record_id": "gaza-2026-07-03-aljazeera-middle-east-877232c09001",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/sports/2026/7/3/gaza-sports-community-pledges-to-continue-legacy-of-killed-goalkeeper?traffic_source=rss",
+      "title": "Gaza sports community pledges to continue legacy of killed goalkeeper"
+    },
+    {
+      "source_record_id": "gaza-2026-07-03-aljazeera-middle-east-b599025e043e",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/3/israel-approves-plan-to-establish-13-new-settlements-in-occupied-west-bank?traffic_source=rss",
+      "title": "Israel approves plan to establish 13 new settlements in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-07-02-jpost-idf-palestinian-broomstick-video",
+      "publisher": "The Jerusalem Post",
+      "url": "https://www.jpost.com/israel-news/article-901263",
+      "title": "IDF probes soldiers after video shows blindfolded Palestinian tied to broomstick in Gaza"
+    }
+  ]
+}

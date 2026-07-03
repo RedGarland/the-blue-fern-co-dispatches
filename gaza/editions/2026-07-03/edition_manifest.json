@@ -1,94 +1,51 @@
 {
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
+  "public_visible": true,
   "edition_date": "2026-07-03",
-  "generated_at": "2026-07-03T16:18:35.514902+00:00",
+  "generated_at": "2026-07-03T16:38:20.701746+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03",
-  "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-07-03",
-  "local_backup_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-07-03",
-  "template_version": "gaza-source-record-v1",
-  "source_count": 4,
-  "story_count": 4,
-  "source_adequacy_status": "limited_source_update",
-  "source_adequacy_label": "Limited-source update",
-  "publisher_count": 3,
-  "publishers": [
-    "Al Jazeera",
-    "EL PAIS English",
-    "The Jerusalem Post"
-  ],
-  "source_adequacy_warnings": [
-    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
-  ],
-  "allow_post_edition_date_sources": false,
-  "post_edition_date_sources_included": false,
-  "post_edition_date_source_count": 0,
+  "local_backup_path": "output\\tmp-backups-pages\\gaza\\2026-07-03",
+  "template_version": "dispatches-static-v1",
+  "source_count": 3,
+  "story_count": 1,
   "source_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\sources_manifest.json",
   "curation_manifest_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\curation_manifest.json",
   "free_public_artifacts": [
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\index.html",
-    "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\edition_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\sources_manifest.json",
     "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03\\curation_manifest.json"
   ],
   "paid_or_detail_artifacts": [],
+  "claim_count": 1,
+  "qualified_public_claim_count": 1,
+  "lead_signal_count": 0,
+  "public_signal_count": 0,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 0,
+  "source_families": [],
+  "pressure_source_count_by_family": {},
+  "pressure_source_count_by_state": {},
+  "exclusion_reason_counts": {},
+  "exclusion_reason_summary": "",
+  "discovery_gap_check": {},
+  "public_summary": "",
+  "public_archive_title": "",
+  "public_archive_subtitle": "",
+  "edition_mode": "",
+  "reviewed_source_count": 0,
+  "excluded_source_count": 0,
+  "source_table_path": "",
+  "claim_ledger_path": "",
+  "future_paid_fields_todo": [],
   "detail_artifacts_publicly_exposed": false,
-  "is_free_public": true,
-  "has_detail_tier": false,
-  "public_exposed": true,
   "warnings": [
-    "suppressed 2 repeated/stale candidate sources via cross-edition dedupe",
-    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-07-03\\manual_sources.template.json"
+    "detention watch generation skipped: detention watch input not found: C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-03.json"
   ],
-  "errors": [],
-  "scheduled_run_local_time": "2026-07-03T06:00:00-07:00",
-  "actual_run_local_time": "2026-07-03T09:18:35-07:00",
-  "source_window_start_utc": "2026-07-02T15:05:00Z",
-  "source_window_end_utc": "2026-07-03T14:43:21Z",
-  "first_source_retrieved_at": "2026-07-02T15:05:00Z",
-  "last_source_retrieved_at": "2026-07-03T16:18:32.153955Z",
-  "contains_later_same_day_update": false,
-  "later_same_day_update_count": 0,
-  "later_same_day_update_batch_count": 0,
-  "later_same_day_update_source_count": 0,
-  "contains_post_edition_date_update": false,
-  "post_edition_date_update_count": 0,
-  "post_edition_date_update_batch_count": 0,
-  "post_edition_date_update_source_count": 0,
-  "post_edition_date_retrieval_batches": [],
-  "retrieval_batches": [
-    {
-      "retrieved_at": "2026-07-02T15:05:00Z",
-      "retrieved_at_local": "2026-07-02T08:05:00-07:00",
-      "retrieved_local_date": "2026-07-02",
-      "batch_classification": "scheduled_or_pre_scheduled_batch",
-      "source_record_ids": [
-        "gaza-2026-07-02-jpost-idf-palestinian-broomstick-video"
-      ],
-      "source_count": 1
-    },
-    {
-      "retrieved_at": "2026-07-03T02:28:00Z",
-      "retrieved_at_local": "2026-07-02T19:28:00-07:00",
-      "retrieved_local_date": "2026-07-02",
-      "batch_classification": "scheduled_or_pre_scheduled_batch",
-      "source_record_ids": [
-        "gaza-2026-07-03-elpais-heatwave-water-displacement"
-      ],
-      "source_count": 1
-    },
-    {
-      "retrieved_at": "2026-07-03T16:18:32.153955Z",
-      "retrieved_at_local": "2026-07-03T09:18:32-07:00",
-      "retrieved_local_date": "2026-07-03",
-      "batch_classification": "scheduled_or_pre_scheduled_batch",
-      "source_record_ids": [
-        "gaza-2026-07-03-aljazeera-middle-east-877232c09001",
-        "gaza-2026-07-03-aljazeera-middle-east-b599025e043e"
-      ],
-      "source_count": 2
-    }
-  ]
+  "errors": []
 }

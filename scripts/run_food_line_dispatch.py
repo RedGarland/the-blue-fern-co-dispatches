@@ -16,6 +16,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -52,6 +53,10 @@ FOOD_LINE_SOCIAL_IMAGE_URL = f"{BASE_URL}/food-line/assets/{FOOD_LINE_SOCIAL_IMA
 FOOD_LINE_SOCIAL_IMAGE_ALT = "The Food Line Dispatch social card from The Blue Fern Co., with wheat, a U.S. map outline, and the subtitle Source-backed daily food-pressure briefing."
 FOOD_LINE_PAGE_DESCRIPTION = "Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States."
 MAP_RENDERED_COUNT_RE = re.compile(r'data-rendered-marker-count="(\d+)"')
+try:
+    FOOD_LINE_PACIFIC_TZ = ZoneInfo("America/Los_Angeles")
+except ZoneInfoNotFoundError:
+    FOOD_LINE_PACIFIC_TZ = timezone(timedelta(hours=-8), "America/Los_Angeles")
 _FOOD_LINE_STATE_NAMES = {
     "AZ": "Arizona",
     "OH": "Ohio",
@@ -3461,24 +3466,32 @@ def _food_line_skip_reason() -> str:
 
 
 def _food_line_future_date_reason() -> str:
-    return "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    return "Future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
-def _food_line_local_today() -> date_type:
+def _food_line_pacific_today(now: datetime | None = None) -> date_type:
+    current = now or datetime.now(FOOD_LINE_PACIFIC_TZ)
+    if current.tzinfo is None:
+        current = current.replace(tzinfo=FOOD_LINE_PACIFIC_TZ)
+    return current.astimezone(FOOD_LINE_PACIFIC_TZ).date()
+
+
+def _food_line_local_today(now: datetime | None = None) -> date_type:
     override = str(os.getenv("BLUEFERN_FOOD_LINE_CURRENT_DATE") or "").strip()
     if override:
         try:
             return datetime.strptime(override, "%Y-%m-%d").date()
         except ValueError:
             pass
-    return date_type.today()
+    return _food_line_pacific_today(now)
 
 
-def _food_line_future_date_blocked(edition_date: str, *, allow_future_date: bool) -> tuple[bool, bool]:
+def _food_line_future_date_blocked(edition_date: str, *, allow_future_date: bool) -> tuple[bool, bool, bool]:
     edition_day = datetime.strptime(validate_date(edition_date), "%Y-%m-%d").date()
     local_today = _food_line_local_today()
-    is_future = edition_day >= local_today
-    return is_future and not allow_future_date, is_future and allow_future_date
+    is_future = edition_day > local_today
+    same_day_allowed = edition_day == local_today
+    return is_future and not allow_future_date, is_future and allow_future_date, same_day_allowed
 
 
 def _food_line_diagnostics_paths(root: Path, date: str) -> list[Path]:
@@ -6878,7 +6891,7 @@ def run_food_line_dispatch(
             primary_disqualification_reason = why_lead
         elif not primary_disqualification_reason:
             primary_disqualification_reason = why_lead
-    future_date_blocked, future_date_override_used = _food_line_future_date_blocked(date, allow_future_date=allow_future_date)
+    future_date_blocked, future_date_override_used, same_day_allowed = _food_line_future_date_blocked(date, allow_future_date=allow_future_date)
     if future_date_blocked:
         primary_signal_status = "future_date_blocked"
         primary_disqualification_reason = _food_line_future_date_reason()
@@ -7251,6 +7264,7 @@ def run_food_line_dispatch(
         "validation_status": "pending",
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
+        "same_day_allowed": same_day_allowed,
         "edition_mode": edition_mode,
         "continuing_context_count": continuing_context_count,
         "continuing_pressure_count": continuing_pressure_count,
@@ -7575,6 +7589,7 @@ def run_food_line_dispatch(
         "qualified_but_not_public_warning": qualified_but_not_public_warning,
         "future_date_blocked": future_date_blocked,
         "future_date_override_used": future_date_override_used,
+        "same_day_allowed": same_day_allowed,
         "edition_mode": edition_mode,
         **source_collection_audit_summary,
         "bluesky_post_text": manifest["bluesky_post_text"],

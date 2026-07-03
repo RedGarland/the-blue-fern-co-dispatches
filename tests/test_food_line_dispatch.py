@@ -11,7 +11,7 @@ import tempfile
 import textwrap
 import types
 import urllib.error
-from datetime import date as dt_date
+from datetime import date as dt_date, datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -2310,7 +2310,7 @@ def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: P
     assert result["public_rendered"] is False
     assert result["future_date_blocked"] is True
     assert result["future_date_override_used"] is False
-    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
     assert result["bluesky_post_ready"] is False
     assert result["bluesky_post_text"] is None
     assert result["qualified_primary_count"] == 0
@@ -2321,8 +2321,9 @@ def test_food_line_2026_06_13_is_blocked_by_default_without_override(tmp_path: P
     assert manifest["public_rendered"] is False
     assert manifest["future_date_blocked"] is True
     assert manifest["future_date_override_used"] is False
+    assert manifest["same_day_allowed"] is False
     assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -2346,7 +2347,7 @@ def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: P
     assert result["public_rendered"] is False
     assert result["future_date_blocked"] is True
     assert result["future_date_override_used"] is False
-    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert result["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
     assert result["bluesky_post_ready"] is False
     assert result["bluesky_post_text"] is None
     assert result["qualified_primary_count"] == 0
@@ -2357,8 +2358,9 @@ def test_food_line_2026_06_12_is_blocked_by_default_without_override(tmp_path: P
     assert manifest["public_rendered"] is False
     assert manifest["future_date_blocked"] is True
     assert manifest["future_date_override_used"] is False
+    assert manifest["same_day_allowed"] is False
     assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert manifest["skip_reason"] == "Future-dated Food Line public editions are blocked unless explicitly allowed."
 
 
 def test_food_line_2026_06_13_can_publish_when_future_override_is_allowed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -2435,7 +2437,12 @@ def test_food_line_2026_06_06_scheduled_yesterday_public_renders_and_generates_a
     assert "editions/2026-06-06/" in archive_html
 
 
-def test_food_line_same_day_is_blocked_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_food_line_local_today_uses_pacific_timezone_when_utc_is_next_day():
+    utc_late_night = datetime(2026, 7, 3, 1, 6, 12, tzinfo=timezone.utc)
+    assert food_line._food_line_pacific_today(utc_late_night) == dt_date(2026, 7, 2)
+
+
+def test_food_line_same_day_is_allowed_without_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     monkeypatch.setattr(food_line, "_food_line_local_today", lambda: dt_date(2026, 6, 7))
@@ -2454,22 +2461,24 @@ def test_food_line_same_day_is_blocked_without_override(tmp_path: Path, monkeypa
     podcast_feed = (tmp_path / "output" / "site" / "food-line" / "audio" / "podcast.xml").read_text(encoding="utf-8")
     manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
-    assert result["public_rendered"] is False
-    assert result["future_date_blocked"] is True
+    assert result["public_rendered"] is True
+    assert result["future_date_blocked"] is False
     assert result["future_date_override_used"] is False
-    assert result["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
-    assert result["bluesky_post_ready"] is False
-    assert result["bluesky_post_text"] is None
-    assert result["qualified_primary_count"] == 0
-    assert site_edition.exists() is False
-    assert "2026-06-07" not in archive_html
-    assert "2026-06-07" not in audio_index
-    assert "2026-06-07" not in podcast_feed
-    assert manifest["public_rendered"] is False
-    assert manifest["future_date_blocked"] is True
+    assert result["same_day_allowed"] is True
+    assert result["skip_reason"] == ""
+    assert result["bluesky_post_ready"] is True
+    assert result["bluesky_post_text"]
+    assert result["qualified_primary_count"] >= 1
+    assert site_edition.exists() is True
+    assert "2026-06-07" in archive_html
+    assert "2026-06-07" in audio_index
+    assert "2026-06-07" in podcast_feed
+    assert manifest["public_rendered"] is True
+    assert manifest["future_date_blocked"] is False
     assert manifest["future_date_override_used"] is False
-    assert manifest["qualified_primary_count"] == 0
-    assert manifest["skip_reason"] == "Same-day and future-dated Food Line public editions are blocked unless explicitly allowed."
+    assert manifest["same_day_allowed"] is True
+    assert manifest["qualified_primary_count"] >= 1
+    assert manifest["skip_reason"] == ""
 
 
 def test_food_line_podcast_description_varies_by_pressure_summary(tmp_path: Path):

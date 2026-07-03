@@ -45,6 +45,22 @@ def write_manual_sources(root: Path, edition_date: str, text: str | None = None)
     return path
 
 
+def make_manual_source_record(edition_date: str, index: int = 1) -> dict[str, str]:
+    return {
+        "source_record_id": f"gaza-src-{edition_date}-{index:03d}",
+        "title": f"Gaza source {index}",
+        "url": f"https://valid.test/gaza-source-{index}",
+        "publisher": "Example News",
+        "published_at": f"{edition_date}T12:00:00Z",
+        "retrieved_at": f"{edition_date}T00:00:00Z",
+        "summary_or_snippet": "A source-backed Gaza update.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+    }
+
+
 def write_generated_output(root: Path, edition_date: str, source_links: bool = True) -> None:
     edition = root / "output" / "site" / "gaza" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
@@ -348,14 +364,49 @@ def test_invalid_manual_falls_back_to_auto_when_both(isolated, monkeypatch, caps
     assert "manual_sources.json was present but invalid" in summary["warnings"][0]
 
 
-def test_collect_or_load_sources_both_mode_does_not_rewrite_manual_sources(isolated, monkeypatch, capsys):
+def test_collect_or_load_sources_both_mode_writes_manual_sources_before_generation(isolated, monkeypatch, capsys):
     root = isolated
-    manual_path = write_manual_sources(root, "2026-05-07")
-    original = manual_path.read_text(encoding="utf-8")
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    records = [make_manual_source_record("2026-05-07", 1), make_manual_source_record("2026-05-07", 2)]
+    calls = []
+
+    def fake_collect(*args, **kwargs):
+        _ = args, kwargs
+        return {"ok": True, "source_file": str(manual_path), "source_count": len(records), "sources": records, "warnings": [], "errors": [], "failed_source_ids": []}
+
     def fake_run(args, cwd=daily.ROOT):
+        calls.append(args)
         command = " ".join(args)
         if "run_gaza_dispatch.py" in command:
+            assert manual_path.exists()
+            persisted = json.loads(manual_path.read_text(encoding="utf-8"))
+            assert len(persisted) == len(records)
             write_generated_output(root, "2026-05-07")
+            (root / "output" / "site" / "gaza" / "editions" / "2026-05-07" / "sources_manifest.json").write_text(
+                json.dumps(
+                    [
+                        {"source_record_id": records[0]["source_record_id"], "source_id": records[0]["source_record_id"], "url": records[0]["url"]},
+                        {"source_record_id": records[1]["source_record_id"], "source_id": records[1]["source_record_id"], "url": records[1]["url"]},
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            (root / "output" / "site" / "gaza" / "editions" / "2026-05-07" / "edition_manifest.json").write_text(
+                json.dumps({"source_count": len(records)}),
+                encoding="utf-8",
+            )
+            (root / "output" / "site" / "gaza" / "editions" / "2026-05-07" / "curation_manifest.json").write_text(
+                json.dumps(
+                    [
+                        {
+                            "story_id": "story",
+                            "included_in_public_summary": True,
+                            "source_ids": [records[0]["source_record_id"]],
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
             return completed(
                 args,
                 payload={
@@ -388,6 +439,7 @@ def test_collect_or_load_sources_both_mode_does_not_rewrite_manual_sources(isola
             return completed(args, stdout="1 passed")
         return completed(args)
 
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
     monkeypatch.setattr(daily, "run_command", fake_run)
 
     code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
@@ -395,7 +447,70 @@ def test_collect_or_load_sources_both_mode_does_not_rewrite_manual_sources(isola
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert summary["ok"] is True
-    assert manual_path.read_text(encoding="utf-8") == original
+    assert summary["source_count"] == len(records)
+    assert summary["source_file"] == str(manual_path)
+    assert manual_path.exists()
+    assert len(json.loads(manual_path.read_text(encoding="utf-8"))) == len(records)
+    assert any("run_gaza_dispatch.py" in " ".join(call) for call in calls)
+
+
+def test_collect_or_load_sources_both_mode_fails_when_manual_sources_are_not_persisted(isolated, monkeypatch, capsys):
+    root = isolated
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    records = [make_manual_source_record("2026-05-07", 1), make_manual_source_record("2026-05-07", 2)]
+    calls = []
+
+    def fake_collect(*args, **kwargs):
+        _ = args, kwargs
+        return {"ok": True, "source_file": str(manual_path), "source_count": len(records), "sources": records, "warnings": [], "errors": [], "failed_source_ids": []}
+
+    def fake_write(*args, **kwargs):
+        _ = args, kwargs
+        return manual_path
+
+    def fake_run(args, cwd=daily.ROOT):
+        calls.append(args)
+        return completed(args)
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
+    monkeypatch.setattr(daily, "write_source_records", fake_write)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert summary["generated"] is False
+    assert "failed to persist manual_sources.json" in summary["errors"][0]
+    assert not manual_path.exists()
+    assert all("run_gaza_dispatch.py" not in " ".join(call) for call in calls)
+
+
+def test_collect_or_load_sources_both_mode_reports_persisted_file_count(isolated, monkeypatch, capsys):
+    root = isolated
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    in_memory_records = [make_manual_source_record("2026-05-07", 1), make_manual_source_record("2026-05-07", 2)]
+    persisted_record = make_manual_source_record("2026-05-07", 1)
+
+    def fake_collect(*args, **kwargs):
+        _ = args, kwargs
+        return {"ok": True, "source_file": str(manual_path), "source_count": len(in_memory_records), "sources": in_memory_records, "warnings": [], "errors": [], "failed_source_ids": []}
+
+    def fake_write(*args, **kwargs):
+        _ = args, kwargs
+        manual_path.parent.mkdir(parents=True, exist_ok=True)
+        manual_path.write_text(json.dumps([persisted_record], indent=2), encoding="utf-8")
+        return manual_path
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
+    monkeypatch.setattr(daily, "write_source_records", fake_write)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert summary["generated"] is False
+    assert "manual_sources.json contains 1 records" in summary["errors"][0]
 
 
 def test_generated_page_requires_visible_source_links(isolated, monkeypatch, capsys):

@@ -320,6 +320,7 @@ li + li { margin-top: 0.35rem; }
   outline: 3px solid var(--blue-fern);
   outline-offset: -3px;
 }
+
 .gaza-audio-index {
   list-style: none;
   margin: 1.5rem 0 0;
@@ -369,6 +370,7 @@ li + li { margin-top: 0.35rem; }
   outline: 3px solid var(--blue-fern);
   outline-offset: 2px;
 }
+
 @media (max-width: 1024px) {
   .dispatch-grid {
     gap: 1rem;

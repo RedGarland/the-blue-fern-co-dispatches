@@ -1,0 +1,263 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-03-003",
+    "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'",
+    "summary": "",
+    "category": "humanitarian_conditions",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-03-elpais-heatwave-water-displacement"
+    ],
+    "source_ids": [
+      "gaza-2026-07-03-elpais-heatwave-water-displacement"
+    ],
+    "source_urls": [
+      "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html"
+    ],
+    "publisher_names": [
+      "EL PAIS English"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-03-elpais-heatwave-water-displacement",
+        "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'",
+        "url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+        "publisher": "EL PAIS English",
+        "summary_or_snippet": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'"
+      }
+    ],
+    "generated_at": "2026-07-03T16:18:35.514902+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-03-001",
+    "title": "Gaza sports community pledges to continue legacy of killed goalkeeper",
+    "summary": "Slain seeking cooking gas, Gaza goalkeeper Saleem al-Ashqar joins more than 1,000 Palestinian athletes killed in war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-03-aljazeera-middle-east-877232c09001"
+    ],
+    "source_ids": [
+      "gaza-2026-07-03-aljazeera-middle-east-877232c09001"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/sports/2026/7/3/gaza-sports-community-pledges-to-continue-legacy-of-killed-goalkeeper?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-03-aljazeera-middle-east-877232c09001",
+        "title": "Gaza sports community pledges to continue legacy of killed goalkeeper",
+        "url": "https://www.aljazeera.com/sports/2026/7/3/gaza-sports-community-pledges-to-continue-legacy-of-killed-goalkeeper?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Slain seeking cooking gas, Gaza goalkeeper Saleem al-Ashqar joins more than 1,000 Palestinian athletes killed in war."
+      }
+    ],
+    "generated_at": "2026-07-03T16:18:35.514902+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-01-003",
+    "prior_edition_date": "2026-07-01",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-03-002",
+    "title": "Israel approves plan to establish 13 new settlements in occupied West Bank",
+    "summary": "Palestinian officials warn against the implications of the plan, saying it would further isolate East Jerusalem.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 56,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-03-aljazeera-middle-east-b599025e043e"
+    ],
+    "source_ids": [
+      "gaza-2026-07-03-aljazeera-middle-east-b599025e043e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/3/israel-approves-plan-to-establish-13-new-settlements-in-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-03-aljazeera-middle-east-b599025e043e",
+        "title": "Israel approves plan to establish 13 new settlements in occupied West Bank",
+        "url": "https://www.aljazeera.com/news/2026/7/3/israel-approves-plan-to-establish-13-new-settlements-in-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinian officials warn against the implications of the plan, saying it would further isolate East Jerusalem."
+      }
+    ],
+    "generated_at": "2026-07-03T16:18:35.514902+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-03-004",
+    "title": "IDF probes soldiers after video shows blindfolded Palestinian tied to broomstick in Gaza",
+    "summary": "",
+    "category": "military_conduct_accountability",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-02-jpost-idf-palestinian-broomstick-video"
+    ],
+    "source_ids": [
+      "gaza-2026-07-02-jpost-idf-palestinian-broomstick-video"
+    ],
+    "source_urls": [
+      "https://www.jpost.com/israel-news/article-901263"
+    ],
+    "publisher_names": [
+      "The Jerusalem Post"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-02-jpost-idf-palestinian-broomstick-video",
+        "title": "IDF probes soldiers after video shows blindfolded Palestinian tied to broomstick in Gaza",
+        "url": "https://www.jpost.com/israel-news/article-901263",
+        "publisher": "The Jerusalem Post",
+        "summary_or_snippet": "IDF probes soldiers after video shows blindfolded Palestinian tied to broomstick in Gaza"
+      }
+    ],
+    "generated_at": "2026-07-03T16:18:35.514902+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

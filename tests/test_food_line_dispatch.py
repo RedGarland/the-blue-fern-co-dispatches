@@ -8021,8 +8021,115 @@ def test_food_line_source_collection_audit_is_disabled_without_flag(tmp_path: Pa
     date = "2026-06-25"
     result = run_food_line_dispatch(tmp_path, date, generate_audio=False)
     assert result["source_collection_audit_run"] is False
+    assert result["source_collection_audit_skipped_reason"] == ""
+    assert result["source_collection_audit_warning"] == ""
+    assert result["source_collection_gold_set_path"] == ""
     assert result["source_collection_gold_count"] == 0
     assert result["source_collection_audit_path"] == ""
+
+
+def test_food_line_source_collection_audit_skips_missing_default_gold_set_without_failing_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    date = "2026-06-25"
+    auto_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    collector_audit_path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "collector_audit.json"
+    default_gold_set_path = tmp_path / "data" / "dispatches" / "food-line" / "source_collection_gold_sets" / f"{date}.json"
+    monkeypatch.setattr(
+        food_line,
+        "write_food_line_audio",
+        lambda *args, **kwargs: {
+            "audio_generated": False,
+            "audio_available": False,
+            "audio_reused_existing": False,
+            "audio_required": False,
+            "force_audio_regenerate": False,
+            "audio_status": "skipped",
+            "audio_story_section_count": 0,
+            "audio_story_sections": [],
+            "warnings": [],
+            "errors": [],
+        },
+    )
+    monkeypatch.setattr(food_line, "write_food_line_podcast_feed", lambda *args, **kwargs: None)
+
+    def fake_collect(root: Path, edition_date: str, fetcher=None):
+        auto_path.parent.mkdir(parents=True, exist_ok=True)
+        row = {
+            **_pressure_row(
+                41,
+                "Food bank lines lengthen as pantry inventory tightens",
+                "Pantry lines lengthened and food bank inventory tightened as more families sought help.",
+                family="local_news",
+                state="TX",
+            ),
+            "url": "https://example.com/food-line/2026/06/25/pantry-lines-lengthen",
+            "published_at": f"{edition_date}T12:00:00Z",
+            "retrieved_at": f"{edition_date}T13:00:00Z",
+        }
+        auto_path.write_text(json.dumps([row], indent=2), encoding="utf-8")
+        collector_audit_path.write_text(
+            json.dumps(
+                [
+                    {
+                        "source_id": "food-line-src-041",
+                        "source_name": row["title"],
+                        "source_family": row["source_family"],
+                        "url": row["url"],
+                        "fetched": True,
+                        "item_count": 1,
+                        "accepted_pressure_count": 1,
+                        "demoted_count": 0,
+                        "rejected_count": 0,
+                        "top_rejection_reasons": [],
+                        "extraction_basis_used": ["rss_summary"],
+                    }
+                ],
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        return {
+            "ok": True,
+            "source_count": 1,
+            "collector_audit_path": str(collector_audit_path),
+            "collected_source_count_by_source_id": {"food-line-src-041": 1},
+            "pressure_verified_count": 1,
+            "pressure_evidence_basis_counts": {"rss_summary": 1},
+            "collected_count_by_extraction_quality": {"high": 1},
+            "verified_pressure_count_by_extraction_quality": {"high": 1},
+        }
+
+    monkeypatch.setattr(food_line, "collect_food_line_auto_sources", fake_collect)
+
+    result = run_food_line_dispatch(
+        tmp_path,
+        date,
+        collect=True,
+        generate_audio=False,
+        audit_source_collection=True,
+    )
+
+    edition_manifest = json.loads(
+        (tmp_path / "output" / "dispatches" / "food-line" / "editions" / date / "edition_manifest.json").read_text(encoding="utf-8")
+    )
+
+    assert result["ok"] is True
+    assert result["source_collection_audit_run"] is False
+    assert result["source_collection_audit_skipped_reason"] == "gold set missing"
+    assert result["source_collection_gold_count"] == 0
+    assert result["source_collection_gold_set_path"] == str(default_gold_set_path)
+    assert result["source_collection_audit_path"] == ""
+    assert result["source_collection_collect_live_ran"] is True
+    assert result["collector_result"]["source_count"] == 1
+    assert auto_path.exists()
+    assert default_gold_set_path.exists() is False
+    assert "default gold set file was missing" in result["source_collection_audit_warning"]
+    assert str(default_gold_set_path) in result["source_collection_audit_warning"]
+    assert result["warnings"]
+    assert result["warnings"][0] == result["source_collection_audit_warning"]
+    assert edition_manifest["source_collection_audit_skipped_reason"] == "gold set missing"
+    assert edition_manifest["source_collection_gold_set_path"] == str(default_gold_set_path)
+    assert edition_manifest["source_collection_audit_warning"] == result["source_collection_audit_warning"]
 
 
 def test_food_line_source_collection_audit_uses_discovery_intake_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

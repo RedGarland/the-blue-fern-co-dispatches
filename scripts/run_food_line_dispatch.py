@@ -7104,6 +7104,9 @@ def run_food_line_dispatch(
     )
     source_collection_audit_summary = {
         "source_collection_audit_run": False,
+        "source_collection_audit_skipped_reason": "",
+        "source_collection_audit_warning": "",
+        "source_collection_gold_set_path": "",
         "source_collection_gold_count": 0,
         "source_collection_found_count": 0,
         "source_collection_reached_review_count": 0,
@@ -7128,34 +7131,54 @@ def run_food_line_dispatch(
     }
     if audit_source_collection:
         audit_started_at = time.monotonic()
-        should_bootstrap_discovery_audit = bool(collect or include_discovery_gap_summary)
-        if should_bootstrap_discovery_audit and not _food_line_discovery_candidates_path(root, date).exists():
-            if dry_run_requested and not audit_allow_live_discovery:
-                discovery_bootstrap_skipped_reason = "live_discovery_skipped_for_bounded_audit_dry_run"
-                audit_runtime_bounded = True
-                if not audit_runtime_bound_reason:
-                    audit_runtime_bound_reason = discovery_bootstrap_skipped_reason
-            else:
-                run_food_line_discovery_expansion(
-                    root,
-                    date,
-                    edition_mode="no_current_update" if no_current_update_candidate else "current_update",
-                    dry_run=False,
-                )
-                discovery_bootstrap_ran = True
-        if should_bootstrap_discovery_audit and not _food_line_discovery_intake_review_path(root, date).exists():
-            if _food_line_discovery_candidates_path(root, date).exists():
-                run_food_line_discovery_intake_bridge(root, date, dry_run=False)
-                discovery_bootstrap_ran = True
-        source_collection_audit_summary = run_food_line_source_collection_audit(
-            root,
-            date,
-            gold_set_path=gold_set_path or _food_line_source_collection_gold_set_path(root, date),
-            sources=sources,
-            rejected_records=rejected_records,
-            pressure_review_path=pressure_review_path,
-            collect_result=collect_result,
-        )
+        using_default_gold_set_path = gold_set_path is None
+        resolved_gold_set_path = gold_set_path or _food_line_source_collection_gold_set_path(root, date)
+        if not resolved_gold_set_path.exists() and using_default_gold_set_path:
+            source_collection_audit_summary.update(
+                {
+                    "source_collection_audit_skipped_reason": "gold set missing",
+                    "source_collection_audit_warning": (
+                        f"Food Line source collection audit skipped because the default gold set file was missing: {resolved_gold_set_path}"
+                    ),
+                    "source_collection_gold_set_path": str(resolved_gold_set_path),
+                }
+            )
+        else:
+            should_bootstrap_discovery_audit = bool(collect or include_discovery_gap_summary)
+            if should_bootstrap_discovery_audit and not _food_line_discovery_candidates_path(root, date).exists():
+                if dry_run_requested and not audit_allow_live_discovery:
+                    discovery_bootstrap_skipped_reason = "live_discovery_skipped_for_bounded_audit_dry_run"
+                    audit_runtime_bounded = True
+                    if not audit_runtime_bound_reason:
+                        audit_runtime_bound_reason = discovery_bootstrap_skipped_reason
+                else:
+                    run_food_line_discovery_expansion(
+                        root,
+                        date,
+                        edition_mode="no_current_update" if no_current_update_candidate else "current_update",
+                        dry_run=False,
+                    )
+                    discovery_bootstrap_ran = True
+            if should_bootstrap_discovery_audit and not _food_line_discovery_intake_review_path(root, date).exists():
+                if _food_line_discovery_candidates_path(root, date).exists():
+                    run_food_line_discovery_intake_bridge(root, date, dry_run=False)
+                    discovery_bootstrap_ran = True
+            source_collection_audit_summary = run_food_line_source_collection_audit(
+                root,
+                date,
+                gold_set_path=resolved_gold_set_path,
+                sources=sources,
+                rejected_records=rejected_records,
+                pressure_review_path=pressure_review_path,
+                collect_result=collect_result,
+            )
+            source_collection_audit_summary.update(
+                {
+                    "source_collection_audit_skipped_reason": "",
+                    "source_collection_audit_warning": "",
+                    "source_collection_gold_set_path": str(resolved_gold_set_path),
+                }
+            )
         discovery_expansion_audit_for_summary = _food_line_discovery_expansion_audit(root, date)
         source_collection_audit_summary.update(
             {
@@ -7469,7 +7492,10 @@ def run_food_line_dispatch(
     existing_audio_mp3_size = audio_result.get("existing_audio_mp3_size")
     audio_temp_path = audio_result.get("audio_temp_path")
     audio_replacement_performed = bool(audio_result.get("audio_replacement_performed"))
+    audit_warning = str(source_collection_audit_summary.get("source_collection_audit_warning") or "").strip()
     audio_warnings = list(audio_result.get("warnings") or [])
+    if audit_warning:
+        audio_warnings = [audit_warning, *audio_warnings]
     audio_errors = list(audio_result.get("errors") or [])
     ok = not audio_errors
     return {

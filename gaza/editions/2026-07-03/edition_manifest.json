@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-03",
-  "generated_at": "2026-07-03T16:44:39.908679+00:00",
+  "generated_at": "2026-07-03T17:52:46.640951+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-03",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-07-03",
@@ -44,11 +44,11 @@
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-07-03T06:00:00-07:00",
-  "actual_run_local_time": "2026-07-03T09:44:39-07:00",
+  "actual_run_local_time": "2026-07-03T10:52:46-07:00",
   "source_window_start_utc": "2026-07-02T15:05:00Z",
   "source_window_end_utc": "2026-07-03T14:43:21Z",
   "first_source_retrieved_at": "2026-07-02T15:05:00Z",
-  "last_source_retrieved_at": "2026-07-03T16:44:36.651401Z",
+  "last_source_retrieved_at": "2026-07-03T17:52:42.998708Z",
   "contains_later_same_day_update": true,
   "later_same_day_update_count": 1,
   "later_same_day_update_batch_count": 1,
@@ -90,8 +90,8 @@
       "source_count": 1
     },
     {
-      "retrieved_at": "2026-07-03T16:44:36.651401Z",
-      "retrieved_at_local": "2026-07-03T09:44:36-07:00",
+      "retrieved_at": "2026-07-03T17:52:42.998708Z",
+      "retrieved_at_local": "2026-07-03T10:52:42-07:00",
       "retrieved_local_date": "2026-07-03",
       "batch_classification": "later_same_day_update",
       "source_record_ids": [

@@ -43,6 +43,7 @@ from bluefern_dispatches.food_line_discovery_expansion import read_food_line_dis
 from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
+from scripts.discover_food_line_sources import run_food_line_discovery_gap_check
 
 PAGES_REPO = ROOT / "bluefern-dispatches-pages"
 PAGES_BRANCH = "gh-pages"
@@ -3831,21 +3832,27 @@ def _food_line_discovery_gap_report_paths(root: Path, date: str) -> tuple[Path, 
     return report_dir / "discovery_gap_report.json", report_dir / "discovery_gap_report.md"
 
 
-def _food_line_discovery_gap_summary(
-    root: Path,
-    date: str,
-    public_story_rows: list[dict[str, Any]],
-) -> dict[str, Any]:
+def _food_line_default_discovery_gap_summary(root: Path, date: str) -> dict[str, Any]:
     report_path, report_markdown_path = _food_line_discovery_gap_report_paths(root, date)
-    summary = {
+    return {
         "run": False,
         "report_found": False,
         "report_path": str(report_path),
         "report_markdown_path": str(report_markdown_path),
         "likely_qualifying_count": 0,
         "unreviewed_likely_qualifying_count": 0,
+        "public_no_qualifying_update_validated": False,
         "warning": "",
     }
+
+
+def _food_line_discovery_gap_summary(
+    root: Path,
+    date: str,
+    public_story_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    report_path, report_markdown_path = _food_line_discovery_gap_report_paths(root, date)
+    summary = _food_line_default_discovery_gap_summary(root, date)
     if not report_path.exists():
         return summary
     summary["report_found"] = True
@@ -3888,7 +3895,68 @@ def _food_line_discovery_gap_summary(
             f"{'s' if count != 1 else ''} not included in this edition."
             f" See {report_markdown_path}."
         )
+    summary["public_no_qualifying_update_validated"] = summary["run"] and summary["unreviewed_likely_qualifying_count"] == 0
     return summary
+
+
+def _food_line_should_auto_run_discovery_gap_check(
+    *,
+    collector_result: dict[str, Any] | None,
+    news_item_count: int,
+    local_signal_count: int,
+    state_signal_count: int,
+) -> bool:
+    collector_source_count = _food_line_int((collector_result or {}).get("source_count"))
+    if not bool((collector_result or {}).get("ok")):
+        return False
+    if collector_source_count is None or collector_source_count < FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT:
+        return False
+    local_state_signal_count = int(local_signal_count) + int(state_signal_count)
+    return (
+        int(news_item_count) >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT
+        or local_state_signal_count >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_LOCAL_STATE_SIGNAL_COUNT
+    )
+
+
+def _food_line_resolve_discovery_gap_summary(
+    *,
+    root: Path,
+    date: str,
+    public_story_rows: list[dict[str, Any]],
+    include_discovery_gap_summary: bool,
+    no_current_update_candidate: bool,
+    future_date_blocked: bool,
+    collector_result: dict[str, Any] | None,
+    discovery_bridge_result: dict[str, Any] | None,
+    news_item_count: int,
+    local_signal_count: int,
+    state_signal_count: int,
+) -> dict[str, Any]:
+    summary = (
+        _food_line_discovery_gap_summary(root, date, public_story_rows)
+        if include_discovery_gap_summary
+        else _food_line_default_discovery_gap_summary(root, date)
+    )
+    if future_date_blocked or not no_current_update_candidate:
+        return summary
+    if bool(summary.get("public_no_qualifying_update_validated")):
+        return summary
+    if bool((discovery_bridge_result or {}).get("public_no_qualifying_update_validated")):
+        return summary
+    if not _food_line_should_auto_run_discovery_gap_check(
+        collector_result=collector_result,
+        news_item_count=news_item_count,
+        local_signal_count=local_signal_count,
+        state_signal_count=state_signal_count,
+    ):
+        return summary
+    try:
+        run_food_line_discovery_gap_check(root, date, fast=True)
+    except Exception as exc:  # noqa: BLE001
+        summary = dict(summary)
+        summary["warning"] = f"Food Line discovery gap check auto-run failed: {exc}"
+        return summary
+    return _food_line_discovery_gap_summary(root, date, public_story_rows)
 
 
 def _food_line_map_rendered_marker_count_from_data(map_data: dict[str, Any]) -> int:
@@ -6994,18 +7062,18 @@ def run_food_line_dispatch(
             f"{'s' if qualified_but_not_public_count != 1 else ''} that qualified for public inclusion but were not published."
         )
     claim_rows = _food_line_claim_ledger_rows(sources, lead_row, continuing_rows, edition_mode=edition_mode)
-    discovery_gap_summary = (
-        _food_line_discovery_gap_summary(root, date, public_story_rows)
-        if include_discovery_gap_summary
-        else {
-            "run": False,
-            "report_found": False,
-            "report_path": str(_food_line_discovery_gap_report_paths(root, date)[0]),
-            "report_markdown_path": str(_food_line_discovery_gap_report_paths(root, date)[1]),
-            "likely_qualifying_count": 0,
-            "unreviewed_likely_qualifying_count": 0,
-            "warning": "",
-        }
+    discovery_gap_summary = _food_line_resolve_discovery_gap_summary(
+        root=root,
+        date=date,
+        public_story_rows=public_story_rows,
+        include_discovery_gap_summary=include_discovery_gap_summary,
+        no_current_update_candidate=no_current_update_candidate,
+        future_date_blocked=future_date_blocked,
+        collector_result=collect_result,
+        discovery_bridge_result=discovery_bridge_result,
+        news_item_count=news_item_count,
+        local_signal_count=scope_counts["local_signal_count"],
+        state_signal_count=scope_counts["state_signal_count"],
     )
     provisional_source_freshness_status = _food_line_no_current_update_policy_freshness_status(
         future_date_blocked=future_date_blocked,

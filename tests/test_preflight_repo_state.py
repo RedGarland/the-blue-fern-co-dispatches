@@ -14,7 +14,33 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("logs/gaza-daily-2026-06-22.log") == "logs"
     assert preflight_repo_state.classify_path(".pytest-temp-gaza-wide/") == "cache"
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/source_performance_history.json") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
+
+
+def test_food_line_source_performance_history_is_allowed_but_other_data_paths_are_not(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+
+    def fake_run_git_status(_repo: Path):
+        return 0, [
+            "## add/food-line-fix",
+            " M data/dispatches/food-line/source_performance_history.json",
+            " M data/dispatches/food-line/source_registry.json",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "data/dispatches/food-line/source_performance_history.json"
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "data/dispatches/food-line/source_registry.json"
+    }
 
 
 def test_allowed_local_generated_entries_do_not_fail_preflight(monkeypatch, tmp_path):

@@ -1190,6 +1190,14 @@ def main(argv: list[str] | None = None) -> int:
     summary["bluesky_edition_date_verified"] = bool(bluesky_result.get("edition_date_verified"))
     summary["bluesky_stale_content_guard_status"] = bluesky_result.get("stale_content_guard_status")
     summary["bluesky_thumb_status"] = bluesky_result.get("thumb_status") or "not_attempted"
+    summary["bluesky_requested_date"] = bluesky_result.get("requested_date")
+    summary["bluesky_manifest_edition_date"] = bluesky_result.get("manifest_edition_date")
+    summary["bluesky_public_url"] = bluesky_result.get("public_url")
+    summary["bluesky_canonical_url"] = bluesky_result.get("canonical_url")
+    summary["bluesky_page_title"] = bluesky_result.get("page_title")
+    summary["bluesky_page_heading"] = bluesky_result.get("page_heading")
+    summary["bluesky_mismatched_field"] = bluesky_result.get("mismatched_field")
+    summary["bluesky_date_issues"] = list(bluesky_result.get("date_issues") or [])
     if summary["bluesky_status"] == "failure":
         summary["warnings"].append(f"Bluesky post failed: {summary['bluesky_reason']}")
     elif summary["bluesky_status"] == "success":

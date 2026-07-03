@@ -34,6 +34,9 @@ URL_RE = re.compile(r"https?://\S+", re.IGNORECASE)
 TAG_RE = re.compile(r"<[^>]+>")
 WHITESPACE_RE = re.compile(r"\s+")
 GAZA_EDITION_DATE_PATH_RE = re.compile(r"/gaza/editions/(\d{4}-\d{2}-\d{2})/", re.IGNORECASE)
+HTML_TITLE_RE = re.compile(r"<title\b[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
+HTML_CANONICAL_RE = re.compile(r'<link\b[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)["\']', re.IGNORECASE)
+HTML_H1_RE = re.compile(r"<h1\b[^>]*>(.*?)</h1>", re.IGNORECASE | re.DOTALL)
 DATE_VALUE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 BEARER_RE = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._\-]+")
 JWT_FIELD_RE = re.compile(r'(?i)"(accessJwt|refreshJwt)"\s*:\s*"[^"]*"')
@@ -180,6 +183,137 @@ def _artifact_mentions_other_edition_date(text: str, edition_date: str) -> bool:
         if match.group(1) != edition_date:
             return True
     return False
+
+
+def _extract_iso_date_from_text(text: str) -> str | None:
+    cleaned = WHITESPACE_RE.sub(" ", unescape(TAG_RE.sub(" ", str(text or "")))).strip()
+    if not cleaned:
+        return None
+    iso_match = re.search(r"\b(\d{4}-\d{2}-\d{2})\b", cleaned)
+    if iso_match:
+        return iso_match.group(1)
+    month_match = re.search(r"\b([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\b", cleaned)
+    if not month_match:
+        return None
+    candidate = f"{month_match.group(1)} {month_match.group(2)} {month_match.group(3)}"
+    for fmt in ("%B %d %Y", "%b %d %Y"):
+        try:
+            return datetime.strptime(candidate, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+    return None
+
+
+def _extract_html_field(html_text: str, pattern: re.Pattern[str]) -> str:
+    match = pattern.search(html_text or "")
+    if not match:
+        return ""
+    return WHITESPACE_RE.sub(" ", unescape(TAG_RE.sub(" ", match.group(1)))).strip()
+
+
+def _extract_gaza_edition_identity(project_root: Path, edition_date: str, public_url: str | None) -> dict[str, Any]:
+    manifest_path = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json"
+    page_path = project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html"
+    result: dict[str, Any] = {
+        "requested_date": edition_date,
+        "manifest_edition_date": None,
+        "public_url": str(public_url or "").strip() or None,
+        "canonical_url": None,
+        "page_title": None,
+        "page_heading": None,
+        "mismatched_field": None,
+        "date_issues": [],
+        "verified": False,
+        "manifest_path": str(manifest_path),
+        "page_path": str(page_path),
+    }
+    issues: list[str] = []
+    matched_fields: set[str] = set()
+
+    if manifest_path.exists():
+        try:
+            payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception as exc:  # noqa: BLE001
+            issues.append(f"manifest_edition_date could not be read from {manifest_path}: {exc}")
+            result["mismatched_field"] = result["mismatched_field"] or "manifest_edition_date"
+        else:
+            if isinstance(payload, dict):
+                manifest_value = str(payload.get("edition_date") or "").strip()
+                result["manifest_edition_date"] = manifest_value or None
+                if manifest_value:
+                    if manifest_value == edition_date:
+                        matched_fields.add("manifest_edition_date")
+                    else:
+                        issues.append(f"manifest_edition_date={manifest_value} does not match requested {edition_date}")
+                        result["mismatched_field"] = result["mismatched_field"] or "manifest_edition_date"
+            else:
+                issues.append(f"manifest_edition_date could not be verified from {manifest_path}: expected a JSON object")
+                result["mismatched_field"] = result["mismatched_field"] or "manifest_edition_date"
+    else:
+        result["mismatched_field"] = result["mismatched_field"] or "manifest_edition_date"
+
+    public_url_value = str(public_url or "").strip()
+    if public_url_value:
+        result["public_url"] = public_url_value
+        match = GAZA_EDITION_DATE_PATH_RE.search(public_url_value)
+        public_url_date = match.group(1) if match else None
+        if public_url_date == edition_date:
+            matched_fields.add("public_url")
+        elif public_url_date:
+            issues.append(f"public_url={public_url_value} does not match requested {edition_date}")
+            result["mismatched_field"] = result["mismatched_field"] or "public_url"
+        else:
+            issues.append(f"public_url could not be verified for requested {edition_date}")
+            result["mismatched_field"] = result["mismatched_field"] or "public_url"
+    else:
+        issues.append(f"public_url missing for requested {edition_date}")
+        result["mismatched_field"] = result["mismatched_field"] or "public_url"
+
+    if page_path.exists():
+        try:
+            html_text = page_path.read_text(encoding="utf-8")
+        except Exception as exc:  # noqa: BLE001
+            issues.append(f"page_title could not be read from {page_path}: {exc}")
+            issues.append(f"canonical_url could not be read from {page_path}: {exc}")
+            result["mismatched_field"] = result["mismatched_field"] or "page_title"
+        else:
+            page_title = _extract_html_field(html_text, HTML_TITLE_RE)
+            page_heading = _extract_html_field(html_text, HTML_H1_RE)
+            canonical_url = _extract_html_field(html_text, HTML_CANONICAL_RE)
+            result["page_title"] = page_title or None
+            result["page_heading"] = page_heading or None
+            result["canonical_url"] = canonical_url or None
+            for field_name, value in (("page_title", page_title), ("page_heading", page_heading)):
+                if not value:
+                    continue
+                parsed = _extract_iso_date_from_text(value)
+                if parsed == edition_date:
+                    matched_fields.add(field_name)
+                elif parsed:
+                    issues.append(f"{field_name}={value} does not match requested {edition_date}")
+                    result["mismatched_field"] = result["mismatched_field"] or field_name
+            if canonical_url:
+                canonical_match = GAZA_EDITION_DATE_PATH_RE.search(canonical_url)
+                canonical_date = canonical_match.group(1) if canonical_match else None
+                if canonical_date == edition_date:
+                    matched_fields.add("canonical_url")
+                elif canonical_date:
+                    issues.append(f"canonical_url={canonical_url} does not match requested {edition_date}")
+                    result["mismatched_field"] = result["mismatched_field"] or "canonical_url"
+                else:
+                    issues.append(f"canonical_url could not be verified for requested {edition_date}")
+                    result["mismatched_field"] = result["mismatched_field"] or "canonical_url"
+    else:
+        result["mismatched_field"] = result["mismatched_field"] or "page_title"
+
+    if not matched_fields:
+        if not result["mismatched_field"]:
+            result["mismatched_field"] = "requested_date"
+        issues.append(f"requested_date={edition_date} could not be verified from manifest, public_url, canonical_url, or page_title")
+
+    result["verified"] = not issues
+    result["date_issues"] = issues
+    return result
 
 
 def _collect_artifact_date_issues(payload: Any, edition_date: str, *, artifact_path: Path | None = None) -> list[str]:
@@ -1196,12 +1330,31 @@ def maybe_post_gaza_dispatch_to_bluesky(
     root = project_root or Path.cwd()
     context = _gaza_bluesky_context(root, edition_date)
     result["source_artifact_paths"] = list(context.get("source_artifact_paths") or [])
-    result["edition_date_verified"] = not bool(context.get("date_issues"))
-    if context.get("date_issues"):
+    verification = _extract_gaza_edition_identity(root, edition_date, public_url)
+    result["edition_date_verified"] = bool(verification.get("verified"))
+    result["requested_date"] = verification.get("requested_date")
+    result["manifest_edition_date"] = verification.get("manifest_edition_date")
+    result["public_url"] = verification.get("public_url")
+    result["canonical_url"] = verification.get("canonical_url")
+    result["page_title"] = verification.get("page_title")
+    result["page_heading"] = verification.get("page_heading")
+    result["mismatched_field"] = verification.get("mismatched_field")
+    result["date_issues"] = list(verification.get("date_issues") or [])
+    if verification.get("date_issues"):
         result["status"] = "blocked"
         result["reason"] = "current-edition-date-mismatch"
         result["stale_content_guard_status"] = "blocked"
         return result
+    verification_fields = {
+        "requested_date": result["requested_date"],
+        "manifest_edition_date": result["manifest_edition_date"],
+        "public_url": result["public_url"],
+        "canonical_url": result["canonical_url"],
+        "page_title": result["page_title"],
+        "page_heading": result["page_heading"],
+        "mismatched_field": result["mismatched_field"],
+        "date_issues": result["date_issues"],
+    }
     text = build_gaza_bluesky_post_text(
         edition_date,
         public_url,
@@ -1265,6 +1418,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "source_artifact_paths": result["source_artifact_paths"],
                 "edition_date_verified": result["edition_date_verified"],
                 "stale_content_guard_status": result["stale_content_guard_status"],
+                **verification_fields,
             }
     try:
         session = _post_json(
@@ -1286,6 +1440,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "source_artifact_paths": result["source_artifact_paths"],
                 "edition_date_verified": result["edition_date_verified"],
                 "stale_content_guard_status": result["stale_content_guard_status"],
+                **verification_fields,
             }
         thumb_blob = None
         thumb_status = "not_attempted"
@@ -1330,6 +1485,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
                 "source_artifact_paths": result["source_artifact_paths"],
                 "edition_date_verified": result["edition_date_verified"],
                 "stale_content_guard_status": result["stale_content_guard_status"],
+                **verification_fields,
             }
         _write_success_receipt(
             project_root=root,
@@ -1362,6 +1518,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "source_artifact_paths": result["source_artifact_paths"],
             "edition_date_verified": result["edition_date_verified"],
             "stale_content_guard_status": result["stale_content_guard_status"],
+            **verification_fields,
         }
     except error.HTTPError as exc:
         reason, err_type, err_message = _safe_http_error(exc, app_password)
@@ -1377,6 +1534,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "source_artifact_paths": result["source_artifact_paths"],
             "edition_date_verified": result["edition_date_verified"],
             "stale_content_guard_status": result["stale_content_guard_status"],
+            **verification_fields,
         }
     except Exception as exc:  # noqa: BLE001
         return {
@@ -1391,6 +1549,7 @@ def maybe_post_gaza_dispatch_to_bluesky(
             "source_artifact_paths": result["source_artifact_paths"],
             "edition_date_verified": result["edition_date_verified"],
             "stale_content_guard_status": result["stale_content_guard_status"],
+            **verification_fields,
         }
 
 

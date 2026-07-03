@@ -733,6 +733,153 @@ def test_bluesky_blocks_when_artifact_date_mismatches_requested_date(monkeypatch
     assert result["status"] == "blocked"
     assert result["reason"] == "current-edition-date-mismatch"
     assert result["edition_date_verified"] is False
+    assert result["mismatched_field"] == "manifest_edition_date"
+    assert result["manifest_edition_date"] == "2026-06-06"
+
+
+def test_gaza_post_allows_prior_day_source_date_and_previous_edition_link_when_identity_matches(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    current = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-07-03"
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current edition summary",
+                    "summary": "A July 2 source record appears in the July 3 edition.",
+                    "included_in_public_summary": True,
+                    "source_record_id": "gaza-2026-07-02-example",
+                    "published_at": "2026-07-02T12:00:00Z",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-07-03", "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / "2026-07-03"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text(
+        """
+        <html>
+          <head>
+            <title>Dispatches From Gaza - 2026-07-03</title>
+            <link rel="canonical" href="https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/">
+          </head>
+          <body>
+            <h1>Dispatches From Gaza - 2026-07-03</h1>
+            <p>Previous edition: <a href="/gaza/editions/2026-07-02/">July 2 edition</a></p>
+          </body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+
+    allowed_text = "A July 2 source record appears in the July 3 edition."
+    monkeypatch.setattr(bluesky_post, "build_gaza_bluesky_post_text", lambda *_args, **_kwargs: allowed_text)
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: allowed_text)
+
+    def fake_post_json(url, payload, timeout=20.0):
+        _ = timeout
+        assert url.endswith("/com.atproto.server.createSession")
+        assert payload["identifier"] == "bluefern.test"
+        return {"accessJwt": "token-123", "did": "did:plc:abc123"}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            _ = (exc_type, exc, tb)
+            return False
+
+        def read(self):
+            return json.dumps({"uri": "at://did:plc:abc123/app.bsky.feed.post/xyz"}).encode("utf-8")
+
+    def fake_urlopen(req, timeout=20.0):
+        _ = timeout
+        assert req.full_url.endswith("/com.atproto.repo.createRecord")
+        body = json.loads(req.data.decode("utf-8"))
+        assert body["record"]["text"] == allowed_text
+        return FakeResponse()
+
+    monkeypatch.setattr(bluesky_post, "_post_json", fake_post_json)
+    monkeypatch.setattr(bluesky_post.request, "urlopen", fake_urlopen)
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-07-03",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+        force_post=True,
+    )
+    assert result["status"] == "success"
+    assert result["edition_date_verified"] is True
+    assert result["stale_content_guard_status"] == "passed"
+    assert result["mismatched_field"] is None
+    assert result["manifest_edition_date"] == "2026-07-03"
+    assert result["canonical_url"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/"
+
+
+def test_gaza_post_blocks_when_canonical_url_date_mismatches_requested_date(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    current = tmp_path / "output" / "dispatches" / "gaza" / "editions" / "2026-07-03"
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current edition summary",
+                    "summary": "Palestinians inspect the aftermath of an Israeli strike in Khan Younis.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": "2026-07-03", "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / "2026-07-03"
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text(
+        """
+        <html>
+          <head>
+            <title>Dispatches From Gaza - 2026-07-03</title>
+            <link rel="canonical" href="https://dispatches.thebluefernco.com/gaza/editions/2026-07-02/">
+          </head>
+          <body>
+            <h1>Dispatches From Gaza - 2026-07-03</h1>
+          </body>
+        </html>
+        """,
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(bluesky_post, "build_gaza_bluesky_post_text", lambda *_args, **_kwargs: "Safe current-edition text.")
+    monkeypatch.setattr(bluesky_post, "build_gaza_card_description", lambda *_args, **_kwargs: "Safe summary.")
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date="2026-07-03",
+        public_url="https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+    assert result["status"] == "blocked"
+    assert result["reason"] == "current-edition-date-mismatch"
+    assert result["edition_date_verified"] is False
+    assert result["mismatched_field"] == "canonical_url"
+    assert result["canonical_url"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-07-02/"
 
 
 def test_card_description_uses_daily_specific_summary(tmp_path: Path):

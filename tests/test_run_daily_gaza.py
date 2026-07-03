@@ -361,7 +361,53 @@ def test_invalid_manual_falls_back_to_auto_when_both(isolated, monkeypatch, caps
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
     assert summary["source_count"] == 1
-    assert "manual_sources.json was present but invalid" in summary["warnings"][0]
+    warning = summary["warnings"][0]
+    assert "manual_sources.json at" in warning
+    assert "was present but invalid and was skipped" in warning
+    assert "Run: python scripts/add_gaza_manual_source.py --date 2026-05-07 --validate-only" in warning
+
+
+def test_invalid_manual_source_fields_are_reported_in_both_mode(isolated, monkeypatch, capsys):
+    root = isolated
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    write_manual_sources(
+        root,
+        "2026-05-07",
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-2026-05-07-001",
+                    "title": "",
+                    "url": "https://valid.test/gaza-source",
+                    "publisher": "",
+                    "published_at": "2026-05-07T12:00:00Z",
+                    "retrieved_at": "2026-05-07T12:00:00Z",
+                    "summary_or_snippet": "A source-backed Gaza update.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                }
+            ]
+        ),
+    )
+
+    def fake_collect(root_arg, edition_date, max_sources, min_sources, output_filename, **kwargs):
+        _ = root_arg, edition_date, max_sources, min_sources, output_filename, kwargs
+        path = write_manual_sources(root, "2026-05-07")
+        return {"ok": True, "source_file": str(path), "source_count": 1, "sources": json.loads(path.read_text(encoding="utf-8")), "warnings": [], "errors": [], "failed_source_ids": []}
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
+    monkeypatch.setattr(daily, "run_command", lambda args, cwd=daily.ROOT: completed(args, payload={"ok": False, "errors": ["stop after source test"]}, returncode=1) if "run_gaza_dispatch.py" in " ".join(args) else completed(args))
+
+    code = daily.main(["--date", "2026-05-07", "--source-mode", "both", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    warning = summary["warnings"][0]
+    assert str(manual_path) in warning
+    assert "source record 1 missing required fields: publisher, title" in warning
+    assert "Run: python scripts/add_gaza_manual_source.py --date 2026-05-07 --validate-only" in warning
 
 
 def test_collect_or_load_sources_both_mode_writes_manual_sources_before_generation(isolated, monkeypatch, capsys):

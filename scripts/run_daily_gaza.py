@@ -153,7 +153,7 @@ def log_path_for(edition_date: str) -> Path:
 
 
 def read_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def load_source_records(path: Path) -> list[dict[str, Any]]:
@@ -176,12 +176,34 @@ def log_line(log_path: Path, message: str) -> None:
 
 
 def validate_source_file(path: Path, min_sources: int) -> tuple[list[dict[str, Any]], list[str]]:
-    records = load_source_records(path)
-    errors = valid_source_errors(records)
-    errors.extend(error for error in validate_collected_source_records(records, min_sources=0) if error not in errors)
-    if len(records) < min_sources:
-        errors.append(f"{path.name} contains {len(records)} valid source records; minimum is {min_sources}")
-    return records, errors
+    payload = read_json(path)
+    records = payload.get("sources") if isinstance(payload, dict) else payload
+    if not isinstance(records, list):
+        raise ValueError(f"{path.name} must be a list or an object with a sources list")
+    dict_records: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for index, record in enumerate(records, start=1):
+        if not isinstance(record, dict):
+            errors.append(f"source record {index} is not a JSON object")
+            continue
+        dict_records.append(record)
+    errors.extend(valid_source_errors(dict_records))
+    errors.extend(error for error in validate_collected_source_records(dict_records, min_sources=0) if error not in errors)
+    if len(dict_records) < min_sources:
+        errors.append(f"{path.name} contains {len(dict_records)} valid source records; minimum is {min_sources}")
+    return dict_records, errors
+
+
+def manual_source_validation_help(edition_date: str) -> str:
+    return f"python scripts/add_gaza_manual_source.py --date {edition_date} --validate-only"
+
+
+def manual_source_invalid_message(path: Path, reason: str, edition_date: str, *, skipped: bool) -> str:
+    suffix = " and was skipped" if skipped else ""
+    return (
+        f"manual_sources.json at {path} was present but invalid{suffix}: {reason}. "
+        f"Run: {manual_source_validation_help(edition_date)}"
+    )
 
 
 def _dedupe_source_rows(rows: list[dict[str, Any]], max_sources: int) -> list[dict[str, Any]]:
@@ -225,16 +247,19 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                 summary["errors"].append(str(exc))
                 return manual_path, []
             tried_invalid_manual = True
-            summary["warnings"].append(f"manual_sources.json was present but invalid: {exc}")
-            log_line(log_path, f"Manual source file invalid; falling back to auto collection: {exc}")
+            warning = manual_source_invalid_message(manual_path, str(exc), args.date, skipped=True)
+            summary["warnings"].append(warning)
+            log_line(log_path, warning)
         else:
             if errors:
                 if args.source_mode == "manual":
                     summary["errors"].extend(errors)
                     return manual_path, []
                 tried_invalid_manual = True
-                summary["warnings"].append(f"manual_sources.json was present but invalid: {'; '.join(errors)}")
-                log_line(log_path, f"Manual source file invalid; falling back to auto collection: {errors}")
+                reason = "; ".join(errors)
+                warning = manual_source_invalid_message(manual_path, reason, args.date, skipped=True)
+                summary["warnings"].append(warning)
+                log_line(log_path, warning)
             else:
                 manual_records = records[: args.max_sources]
                 manual_valid = True

@@ -271,6 +271,8 @@ try {
         $dispatchArgs = @(
             "scripts\run_food_line_dispatch.py",
             "--date", $Date,
+            "--collect",
+            "--audit-source-collection",
             "--publish",
             "--push",
             "--post-bluesky",

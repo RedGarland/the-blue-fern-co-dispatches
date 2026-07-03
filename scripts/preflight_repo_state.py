@@ -4,11 +4,15 @@ import argparse
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
+import re
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
+FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
+    r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
+)
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -54,6 +58,8 @@ def classify_path(path_text: str) -> str:
     if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
         return "source"
     if lower == "data/dispatches/food-line/source_performance_history.json":
+        return "local_run_state"
+    if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(lower):
         return "local_run_state"
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"

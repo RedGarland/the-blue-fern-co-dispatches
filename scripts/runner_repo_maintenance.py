@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+import re
 from typing import Any
 
 
@@ -26,6 +27,9 @@ SAFE_CLEANUP_PREFIXES = (
     "output/site/",
     "output/dispatches/",
     "output/tmp-backups-pages/",
+)
+FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
+    r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
 )
 
 
@@ -68,6 +72,8 @@ def _git_current_branch(repo: Path) -> str:
 
 def _is_safe_cleanup_path(path: str) -> bool:
     normalized = str(path or "").replace("\\", "/").strip()
+    if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(normalized.lower()):
+        return True
     return any(
         normalized == prefix.rstrip("/") or normalized.startswith(prefix)
         for prefix in SAFE_CLEANUP_PREFIXES

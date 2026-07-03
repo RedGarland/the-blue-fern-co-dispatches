@@ -23,6 +23,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 from bluefern_dispatches.gaza_sources import collect_gaza_sources
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
+from bluefern_dispatches.gaza_sources import write_source_records
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from scripts.run_and_notify import notification_error_message, send_email
 from scripts.publish_gaza_historical import (
@@ -308,13 +309,10 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
     if args.source_mode == "both":
         source_mode_used = "both"
         records = _dedupe_source_rows([*auto_records, *manual_records], args.max_sources)
-        # Keep the source-controlled manual pack immutable during production runs.
-        # The merged record set is carried forward in-memory only.
     source_path = Path(str(collected["source_file"])) if collected.get("source_file") else manual_path
     if args.source_mode == "both":
         source_path = manual_path
     summary["source_file"] = str(source_path)
-    summary["source_count"] = len(records)
     providers_configured = list(collected.get("providers_configured") or [])
     providers_attempted = list(collected.get("providers_attempted") or [])
     providers_successful = list(collected.get("providers_successful") or [])
@@ -328,6 +326,20 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
         provider_diagnostics.append(
             {"source_id": "manual_sources_json", "status": "ok" if manual_valid and manual_records else "no_candidates", "raw_candidates": len(manual_records)}
         )
+    if len(records) > 0:
+        if args.source_mode == "both":
+            source_path = write_source_records(ROOT, args.date, records, "manual_sources.json")
+        if source_path is None or not source_path.exists():
+            raise RuntimeError(f"source collection produced {len(records)} records but failed to persist manual_sources.json")
+        persisted_records, persisted_errors = validate_source_file(source_path, args.min_sources)
+        if persisted_errors:
+            raise RuntimeError(f"source collection persisted invalid manual_sources.json: {'; '.join(persisted_errors)}")
+        if len(persisted_records) != len(records):
+            raise RuntimeError(
+                f"source collection produced {len(records)} records but manual_sources.json contains {len(persisted_records)} records"
+            )
+        records = persisted_records
+    summary["source_count"] = len(records)
     _write_collection_context(
         args.date,
         {
@@ -349,6 +361,8 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
             **build_gaza_collection_timing_metadata(records, args.date),
         },
     )
+    summary["source_file"] = str(source_path) if source_path else None
+    summary["source_count"] = len(records)
     log_line(log_path, f"Source collection resolved {len(records)} records to {source_path}")
     return source_path, records
 

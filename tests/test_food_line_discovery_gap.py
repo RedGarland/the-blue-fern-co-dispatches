@@ -467,6 +467,58 @@ def test_food_line_discovery_gap_fast_mode_preserves_unresolved_urls(tmp_path: P
     assert report["candidate_count"] == 1
 
 
+def test_food_line_discovery_gap_report_distinguishes_traceable_blocking_and_unresolved_likely_candidates(tmp_path: Path, monkeypatch):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food insecurity"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+    items = [
+        _gap_item(
+            title="New data show food insecurity higher than during COVID-19 with Horry County at 14%",
+            publisher="WPDE / ABC 15",
+            source_url="https://wpde.com",
+            link="https://news.google.com/rss/articles/CBMiWPDE?oc=5",
+            description="Lowcountry Food Bank says demand is rising and some distributions served 185 families.",
+        ),
+        _gap_item(
+            title="Food Bank of Eastern Oklahoma is grappling with record fuel costs as it races to feed kids this summer",
+            publisher="Tulsa Flyer",
+            source_url="https://tulsaflyer.org",
+            link="https://news.google.com/rss/articles/CBMiUNRESOLVED?oc=5",
+            description="Record fuel costs are taking away meals and deliveries are affected.",
+        ),
+    ]
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    monkeypatch.setattr(food_line_gap, "_gap_resolve_google_news_url", _fake_gap_resolve_google_news_url)
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-06-12",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=10,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    rows = {row["title"]: row for row in report["candidates"]}
+
+    assert report["likely_qualifying_count"] == 2
+    assert report["blocking_likely_qualifying_count"] == 1
+    assert report["unresolved_likely_qualifying_count"] == 1
+    assert report["manual_review_only_count"] == 0
+    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["publication_blocking_candidate"] is True
+    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["traceable_review_url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"
+    assert rows["Food Bank of Eastern Oklahoma is grappling with record fuel costs as it races to feed kids this summer"]["publication_blocking_candidate"] is False
+    assert rows["Food Bank of Eastern Oklahoma is grappling with record fuel costs as it races to feed kids this summer"]["review_traceability_status"] == "unresolved_google_news"
+    assert rows["Food Bank of Eastern Oklahoma is grappling with record fuel costs as it races to feed kids this summer"]["traceable_review_url"] == ""
+
+
 def test_food_line_discovery_gap_scoring_classifies_pressure_and_resource_items():
     wpde = {
         "title": "New data show food insecurity higher than during COVID-19 with Horry County at 14%",

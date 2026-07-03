@@ -120,7 +120,7 @@ def evaluate_food_line_no_current_update_publication_policy(
     news_item_count: int,
     local_signal_count: int,
     state_signal_count: int,
-    discovery_gap_unreviewed_likely_qualifying_count: int | None,
+    discovery_gap_blocking_likely_qualifying_count: int | None,
 ) -> dict[str, Any]:
     metrics = {
         "collector_ok": bool((collector_result or {}).get("ok")),
@@ -131,7 +131,7 @@ def evaluate_food_line_no_current_update_publication_policy(
         "local_state_signal_count": int(local_signal_count) + int(state_signal_count),
         "discovery_gap_run": bool((discovery_gap_check or {}).get("run")),
         "discovery_expansion_used": bool(discovery_expansion_used),
-        "discovery_gap_unreviewed_likely_qualifying_count": discovery_gap_unreviewed_likely_qualifying_count,
+        "discovery_gap_blocking_likely_qualifying_count": discovery_gap_blocking_likely_qualifying_count,
         "source_freshness_status": str(source_freshness_status or "").strip(),
         "min_collector_source_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT,
         "min_news_item_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT,
@@ -172,12 +172,12 @@ def evaluate_food_line_no_current_update_publication_policy(
     if not (metrics["discovery_gap_run"] or metrics["discovery_expansion_used"]):
         reasons.append("discovery-gap or equivalent expanded discovery did not run")
 
-    if discovery_gap_unreviewed_likely_qualifying_count is None:
-        reasons.append("unreviewed likely qualifying discovery candidate count is missing")
-    elif discovery_gap_unreviewed_likely_qualifying_count > 0:
+    if discovery_gap_blocking_likely_qualifying_count is None:
+        reasons.append("blocking likely qualifying discovery candidate count is missing")
+    elif discovery_gap_blocking_likely_qualifying_count > 0:
         reasons.append(
-            f"{discovery_gap_unreviewed_likely_qualifying_count} unreviewed likely qualifying discovery candidate"
-            f"{'s remain' if discovery_gap_unreviewed_likely_qualifying_count != 1 else ' remains'}"
+            f"{discovery_gap_blocking_likely_qualifying_count} traceable likely qualifying discovery candidate"
+            f"{'s remain' if discovery_gap_blocking_likely_qualifying_count != 1 else ' remains'}"
         )
 
     if _food_line_no_current_update_blocked_freshness_status(metrics["source_freshness_status"]):
@@ -3842,6 +3842,9 @@ def _food_line_default_discovery_gap_summary(root: Path, date: str) -> dict[str,
         "report_path": str(report_path),
         "report_markdown_path": str(report_markdown_path),
         "likely_qualifying_count": 0,
+        "blocking_likely_qualifying_count": 0,
+        "unresolved_likely_qualifying_count": 0,
+        "manual_review_only_count": 0,
         "unreviewed_likely_qualifying_count": 0,
         "public_no_qualifying_update_validated": False,
         "warning": "",
@@ -3853,6 +3856,23 @@ def _food_line_discovery_gap_summary(
     date: str,
     public_story_rows: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    def _gap_is_google_news_url(url: str) -> bool:
+        value = canonical_url(str(url or ""))
+        if not value:
+            return False
+        parsed = urlsplit(value)
+        return parsed.netloc.lower() in {"news.google.com", "www.news.google.com"} or "news.google.com" in value.lower()
+
+    def _gap_traceable_review_url(row: dict[str, Any]) -> str:
+        explicit = canonical_url(str(row.get("traceable_review_url") or ""))
+        if explicit and not _gap_is_google_news_url(explicit):
+            return explicit
+        for key in ("resolved_url", "url", "source_url", "normalized_url"):
+            value = canonical_url(str(row.get(key) or ""))
+            if value and not _gap_is_google_news_url(value):
+                return value
+        return ""
+
     report_path, report_markdown_path = _food_line_discovery_gap_report_paths(root, date)
     summary = _food_line_default_discovery_gap_summary(root, date)
     if not report_path.exists():
@@ -3881,23 +3901,38 @@ def _food_line_discovery_gap_summary(
         for row in public_story_rows
         if canonical_url(str(row.get("url") or row.get("source_url") or row.get("normalized_url") or ""))
     }
-    unreviewed_rows = []
+    blocking_rows = []
+    unresolved_rows = []
     for row in likely_rows:
-        candidate_url = canonical_url(str(row.get("url") or row.get("source_url") or row.get("normalized_url") or ""))
-        if not candidate_url:
+        candidate_url = _gap_traceable_review_url(row)
+        if candidate_url and candidate_url in included_urls:
             continue
-        if candidate_url in included_urls:
-            continue
-        unreviewed_rows.append(row)
-    summary["unreviewed_likely_qualifying_count"] = len(unreviewed_rows)
-    if unreviewed_rows:
-        count = len(unreviewed_rows)
+        is_blocking = row.get("publication_blocking_candidate")
+        if not isinstance(is_blocking, bool):
+            is_blocking = bool(candidate_url)
+        if is_blocking:
+            blocking_rows.append(row)
+        else:
+            unresolved_rows.append(row)
+    summary["blocking_likely_qualifying_count"] = len(blocking_rows)
+    summary["unresolved_likely_qualifying_count"] = len(unresolved_rows)
+    summary["manual_review_only_count"] = int(report.get("manual_review_only_count") or report.get("needs_review_count") or 0)
+    summary["unreviewed_likely_qualifying_count"] = len(blocking_rows)
+    if blocking_rows:
+        count = len(blocking_rows)
         summary["warning"] = (
-            f"Food Line discovery gap check found {count} likely qualifying candidate"
+            f"Food Line discovery gap check found {count} traceable likely qualifying candidate"
             f"{'s' if count != 1 else ''} not included in this edition."
             f" See {report_markdown_path}."
         )
-    summary["public_no_qualifying_update_validated"] = summary["run"] and summary["unreviewed_likely_qualifying_count"] == 0
+    elif unresolved_rows:
+        count = len(unresolved_rows)
+        summary["warning"] = (
+            f"Food Line discovery gap check found {count} unresolved likely qualifying candidate"
+            f"{'s' if count != 1 else ''} for manual review only; unresolved Google News/title-only candidates do not block public no-qualifying-update publication."
+            f" See {report_markdown_path}."
+        )
+    summary["public_no_qualifying_update_validated"] = summary["run"] and summary["blocking_likely_qualifying_count"] == 0
     return summary
 
 
@@ -3918,6 +3953,14 @@ def _food_line_should_auto_run_discovery_gap_check(
         int(news_item_count) >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT
         or local_state_signal_count >= FOOD_LINE_NO_CURRENT_UPDATE_MIN_LOCAL_STATE_SIGNAL_COUNT
     )
+
+
+def _food_line_discovery_gap_blocking_count(summary: dict[str, Any] | None) -> int | None:
+    blocking_count = _food_line_int((summary or {}).get("blocking_likely_qualifying_count"))
+    if blocking_count is not None:
+        return blocking_count
+    # Backward compatibility for older reports/tests that only provide the legacy field.
+    return _food_line_int((summary or {}).get("unreviewed_likely_qualifying_count"))
 
 
 def _food_line_resolve_discovery_gap_summary(
@@ -7094,7 +7137,7 @@ def run_food_line_dispatch(
         news_item_count=news_item_count,
         local_signal_count=scope_counts["local_signal_count"],
         state_signal_count=scope_counts["state_signal_count"],
-        discovery_gap_unreviewed_likely_qualifying_count=_food_line_int(discovery_gap_summary.get("unreviewed_likely_qualifying_count")),
+        discovery_gap_blocking_likely_qualifying_count=_food_line_discovery_gap_blocking_count(discovery_gap_summary),
     )
     if no_current_update_candidate and not no_current_update_policy["allowed"]:
         no_current_update = False
@@ -7417,6 +7460,9 @@ def run_food_line_dispatch(
         "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
+        "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
+        "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
+        "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
@@ -7629,6 +7675,9 @@ def run_food_line_dispatch(
         "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
+        "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
+        "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
+        "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),

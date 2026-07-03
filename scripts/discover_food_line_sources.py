@@ -1407,6 +1407,42 @@ def classify_food_line_discovery_gap_candidate(
     }
 
 
+def _gap_is_google_news_url(url: str) -> bool:
+    value = _gap_normalize_url(url)
+    if not value:
+        return False
+    parsed = urllib.parse.urlsplit(value)
+    return parsed.netloc.lower() in {"news.google.com", "www.news.google.com"} or "news.google.com" in value.lower()
+
+
+def _gap_traceable_review_url(candidate: dict[str, Any]) -> str:
+    for key in ("resolved_url", "url", "normalized_url"):
+        value = _gap_normalize_url(_nonempty(candidate.get(key)))
+        if value and not _gap_is_google_news_url(value):
+            return value
+    return ""
+
+
+def _gap_review_traceability_status(candidate: dict[str, Any]) -> str:
+    traceable_url = _gap_traceable_review_url(candidate)
+    if traceable_url:
+        return "traceable_article_url"
+    google_news_url = _gap_normalize_url(_nonempty(candidate.get("google_news_url") or candidate.get("url")))
+    if google_news_url and _gap_is_google_news_url(google_news_url):
+        return "unresolved_google_news"
+    if _gap_normalize_url(_nonempty(candidate.get("url") or candidate.get("normalized_url"))):
+        return "source_wrapper_only"
+    return "missing_review_url"
+
+
+def _gap_candidate_is_publication_blocking(candidate: dict[str, Any]) -> bool:
+    if str(candidate.get("classification") or "").strip() != "likely_qualifying":
+        return False
+    if not _gap_traceable_review_url(candidate):
+        return False
+    return bool(_nonempty(candidate.get("title")) and _nonempty(candidate.get("publisher")))
+
+
 def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
     if not rows:
         return "_None._"
@@ -1677,6 +1713,9 @@ def run_food_line_discovery_gap_check(
             "reason": classification["reason"],
             "classification": classification["classification"],
         }
+        row["traceable_review_url"] = _gap_traceable_review_url(row)
+        row["review_traceability_status"] = _gap_review_traceability_status(row)
+        row["publication_blocking_candidate"] = _gap_candidate_is_publication_blocking(row)
         candidates.append(row)
     candidates.sort(key=lambda row: (row["classification"], -int(row["score"] or 0), str(row["title"] or ""), str(row["url"] or "")))
     wrapper_candidate_count = sum(1 for row in candidates if _nonempty(row.get("wrapper_kind")))
@@ -1686,6 +1725,8 @@ def run_food_line_discovery_gap_check(
         "likely_resource_only": [row for row in candidates if row["classification"] == "likely_resource_only"],
         "duplicate_or_known": [row for row in candidates if row["classification"] == "duplicate_or_known"],
     }
+    blocking_likely_qualifying = [row for row in grouped_by_class["likely_qualifying"] if bool(row.get("publication_blocking_candidate"))]
+    unresolved_likely_qualifying = [row for row in grouped_by_class["likely_qualifying"] if not bool(row.get("publication_blocking_candidate"))]
     report_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / edition_date
     report_dir.mkdir(parents=True, exist_ok=True)
     report_json_path = report_dir / "discovery_gap_report.json"
@@ -1703,6 +1744,9 @@ def run_food_line_discovery_gap_check(
         "exclude_domains": sorted(exclude_domains),
         "candidate_count": len(candidates),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
+        "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
+        "unresolved_likely_qualifying_count": len(unresolved_likely_qualifying),
+        "manual_review_only_count": len(grouped_by_class["needs_review"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
@@ -1718,6 +1762,9 @@ def run_food_line_discovery_gap_check(
         "summary": {
             "candidates_reviewed": len(candidates),
             "likely_qualifying": len(grouped_by_class["likely_qualifying"]),
+            "blocking_likely_qualifying": len(blocking_likely_qualifying),
+            "unresolved_likely_qualifying": len(unresolved_likely_qualifying),
+            "manual_review_only": len(grouped_by_class["needs_review"]),
             "needs_review": len(grouped_by_class["needs_review"]),
             "already_known": len(grouped_by_class["duplicate_or_known"]),
             "likely_resource_only": len(grouped_by_class["likely_resource_only"]),
@@ -1746,6 +1793,9 @@ def run_food_line_discovery_gap_check(
         "## Summary",
         f"- candidates reviewed: {len(candidates)}",
         f"- likely qualifying: {len(grouped_by_class['likely_qualifying'])}",
+        f"- blocking likely qualifying: {len(blocking_likely_qualifying)}",
+        f"- unresolved likely qualifying: {len(unresolved_likely_qualifying)}",
+        f"- manual-review-only: {len(grouped_by_class['needs_review'])}",
         f"- needs review: {len(grouped_by_class['needs_review'])}",
         f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
         f"- likely resource-only: {len(grouped_by_class['likely_resource_only'])}",
@@ -1765,6 +1815,9 @@ def run_food_line_discovery_gap_check(
         "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
         "elapsed_seconds": round(time.monotonic() - start, 3),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
+        "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
+        "unresolved_likely_qualifying_count": len(unresolved_likely_qualifying),
+        "manual_review_only_count": len(grouped_by_class["needs_review"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),

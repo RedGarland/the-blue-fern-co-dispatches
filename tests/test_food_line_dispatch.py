@@ -591,6 +591,9 @@ def _write_food_line_discovery_gap_report(
     candidates: list[dict],
     *,
     likely_qualifying_count: int | None = None,
+    blocking_likely_qualifying_count: int | None = None,
+    unresolved_likely_qualifying_count: int | None = None,
+    manual_review_only_count: int | None = None,
     likely_resource_only_count: int | None = None,
     duplicate_or_known_count: int | None = None,
     needs_review_count: int | None = None,
@@ -610,6 +613,9 @@ def _write_food_line_discovery_gap_report(
         "exclude_domains": ["facebook.com"],
         "candidate_count": len(candidates),
         "likely_qualifying_count": likely_qualifying_count if likely_qualifying_count is not None else len(likely_qualifying),
+        "blocking_likely_qualifying_count": blocking_likely_qualifying_count if blocking_likely_qualifying_count is not None else sum(1 for row in likely_qualifying if row.get("publication_blocking_candidate", True)),
+        "unresolved_likely_qualifying_count": unresolved_likely_qualifying_count if unresolved_likely_qualifying_count is not None else sum(1 for row in likely_qualifying if not row.get("publication_blocking_candidate", True)),
+        "manual_review_only_count": manual_review_only_count if manual_review_only_count is not None else len(needs_review),
         "needs_review_count": needs_review_count if needs_review_count is not None else len(needs_review),
         "likely_resource_only_count": likely_resource_only_count if likely_resource_only_count is not None else len(likely_resource_only),
         "duplicate_or_known_count": duplicate_or_known_count if duplicate_or_known_count is not None else len(duplicate_or_known),
@@ -618,6 +624,9 @@ def _write_food_line_discovery_gap_report(
         "summary": {
             "candidates_reviewed": len(candidates),
             "likely_qualifying": likely_qualifying_count if likely_qualifying_count is not None else len(likely_qualifying),
+            "blocking_likely_qualifying": blocking_likely_qualifying_count if blocking_likely_qualifying_count is not None else sum(1 for row in likely_qualifying if row.get("publication_blocking_candidate", True)),
+            "unresolved_likely_qualifying": unresolved_likely_qualifying_count if unresolved_likely_qualifying_count is not None else sum(1 for row in likely_qualifying if not row.get("publication_blocking_candidate", True)),
+            "manual_review_only": manual_review_only_count if manual_review_only_count is not None else len(needs_review),
             "needs_review": needs_review_count if needs_review_count is not None else len(needs_review),
             "already_known": duplicate_or_known_count if duplicate_or_known_count is not None else len(duplicate_or_known),
             "likely_resource_only": likely_resource_only_count if likely_resource_only_count is not None else len(likely_resource_only),
@@ -1518,7 +1527,7 @@ def test_food_line_no_current_update_policy_blocks_when_discovery_gap_did_not_ru
         news_item_count=6,
         local_signal_count=3,
         state_signal_count=2,
-        discovery_gap_unreviewed_likely_qualifying_count=0,
+        discovery_gap_blocking_likely_qualifying_count=0,
     )
 
     assert result["allowed"] is False
@@ -1536,7 +1545,7 @@ def test_food_line_no_current_update_policy_blocks_when_freshness_status_is_bloc
         news_item_count=8,
         local_signal_count=4,
         state_signal_count=2,
-        discovery_gap_unreviewed_likely_qualifying_count=0,
+        discovery_gap_blocking_likely_qualifying_count=0,
     )
 
     assert result["allowed"] is False
@@ -1554,7 +1563,7 @@ def test_food_line_no_current_update_policy_blocks_when_collector_failed() -> No
         news_item_count=8,
         local_signal_count=4,
         state_signal_count=2,
-        discovery_gap_unreviewed_likely_qualifying_count=0,
+        discovery_gap_blocking_likely_qualifying_count=0,
     )
 
     assert result["allowed"] is False
@@ -1572,7 +1581,7 @@ def test_food_line_no_current_update_policy_allows_public_no_qualifying_update_o
         news_item_count=8,
         local_signal_count=4,
         state_signal_count=2,
-        discovery_gap_unreviewed_likely_qualifying_count=0,
+        discovery_gap_blocking_likely_qualifying_count=0,
     )
 
     assert result["allowed"] is True
@@ -1590,7 +1599,7 @@ def test_food_line_no_current_update_policy_blocks_stale_candidate_even_with_dis
         news_item_count=8,
         local_signal_count=4,
         state_signal_count=2,
-        discovery_gap_unreviewed_likely_qualifying_count=0,
+        discovery_gap_blocking_likely_qualifying_count=0,
     )
 
     assert result["allowed"] is False
@@ -6626,12 +6635,16 @@ def test_food_line_discovery_gap_summary_warns_for_unreviewed_likely_qualifying_
     assert gap_summary["run"] is True
     assert gap_summary["report_found"] is True
     assert gap_summary["likely_qualifying_count"] == 2
+    assert gap_summary["blocking_likely_qualifying_count"] == 1
+    assert gap_summary["unresolved_likely_qualifying_count"] == 0
     assert gap_summary["unreviewed_likely_qualifying_count"] == 1
     assert gap_summary["warning"]
     assert gap_summary["warning"].endswith(".")
     assert gap_summary["report_markdown_path"].endswith(".md")
-    assert "Food Line discovery gap check found 1 likely qualifying candidate not included in this edition." in gap_summary["warning"]
+    assert "Food Line discovery gap check found 1 traceable likely qualifying candidate not included in this edition." in gap_summary["warning"]
     assert result["discovery_gap_likely_qualifying_count"] == 2
+    assert result["discovery_gap_blocking_likely_qualifying_count"] == 1
+    assert result["discovery_gap_unresolved_likely_qualifying_count"] == 0
     assert result["discovery_gap_unreviewed_likely_qualifying_count"] == 1
     assert result["discovery_gap_warning"] == gap_summary["warning"]
     assert manifest["discovery_gap_check"]["unreviewed_likely_qualifying_count"] == 1
@@ -6680,6 +6693,45 @@ def test_food_line_discovery_gap_summary_ignores_duplicates_and_resource_only_ca
     assert result["discovery_gap_unreviewed_likely_qualifying_count"] == 0
 
 
+def test_food_line_discovery_gap_summary_treats_unresolved_google_news_likely_candidates_as_manual_review_only(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-17"
+    _write_food_line_discovery_gap_report(
+        tmp_path,
+        date,
+        [
+            {
+                "title": "Google News only likely candidate",
+                "url": "https://news.google.com/rss/articles/CBMiUNRESOLVED?oc=5",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiUNRESOLVED?oc=5",
+                "resolved_url": "",
+                "url_resolution_status": "resolution_skipped_max_candidates",
+                "reason": "title-only pressure match",
+                "known_status": "unknown_domain_new_article",
+                "classification": "likely_qualifying",
+                "publication_blocking_candidate": False,
+            }
+        ],
+        likely_qualifying_count=1,
+        blocking_likely_qualifying_count=0,
+        unresolved_likely_qualifying_count=1,
+    )
+
+    result = run_food_line_dispatch(tmp_path, date, include_discovery_gap_summary=True)
+    gap_summary = result["discovery_gap_check"]
+
+    assert result["ok"] is True
+    assert gap_summary["run"] is True
+    assert gap_summary["likely_qualifying_count"] == 1
+    assert gap_summary["blocking_likely_qualifying_count"] == 0
+    assert gap_summary["unresolved_likely_qualifying_count"] == 1
+    assert gap_summary["unreviewed_likely_qualifying_count"] == 0
+    assert gap_summary["public_no_qualifying_update_validated"] is True
+    assert "manual review only" in gap_summary["warning"]
+    assert result["discovery_gap_blocking_likely_qualifying_count"] == 0
+    assert result["discovery_gap_unresolved_likely_qualifying_count"] == 1
+
+
 def test_food_line_discovery_gap_summary_missing_report_does_not_fail(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-14"
@@ -6712,7 +6764,7 @@ def test_food_line_discovery_gap_summary_marks_validated_when_no_unreviewed_cand
     assert summary["public_no_qualifying_update_validated"] is True
 
 
-def test_food_line_discovery_gap_summary_blocks_validation_when_unreviewed_candidates_remain(tmp_path: Path):
+def test_food_line_discovery_gap_summary_blocks_validation_when_traceable_candidates_remain(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-16"
     _write_food_line_discovery_gap_report(

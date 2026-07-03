@@ -10757,6 +10757,23 @@ def test_food_line_daily_wrapper_logs_before_python_and_supports_date_and_dry_ru
     assert '"git_push"' not in wrapper_text
 
 
+def test_run_food_line_dispatch_help_executes_by_path_without_script_import_failure() -> None:
+    script_path = Path(__file__).resolve().parents[1] / "scripts" / "run_food_line_dispatch.py"
+    completed = subprocess.run(
+        [sys.executable, str(script_path), "--help"],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    combined_output = completed.stdout + completed.stderr
+    assert "usage:" in combined_output.lower()
+    assert "ModuleNotFoundError" not in combined_output
+    assert "No module named 'scripts'" not in combined_output
+
+
 def _write_food_line_wrapper_fake_dispatch(project_root: Path, exit_code: int, payload: dict) -> None:
     scripts_dir = project_root / "scripts"
     scripts_dir.mkdir(parents=True, exist_ok=True)

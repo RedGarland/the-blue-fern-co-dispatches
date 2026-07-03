@@ -18,14 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 03 Jul 2026 16:37:52 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 03 Jul 2026 16:42:25 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing for July 3, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-03-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-03-transcript.html</guid>
     <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
     <description>A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'. This was reported by EL PAIS English. Transcript and source links are available from The Blue Fern Co.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-03.mp3" length="996096" type="audio/mpeg" />
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-03.mp3" length="1016064" type="audio/mpeg" />
   </item>
   <item>
     <title>Gaza Briefing for July 2, 2026</title>
@@ -33,6 +33,7 @@
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-02-transcript.html</guid>
     <pubDate>Thu, 02 Jul 2026 00:00:00 +0000</pubDate>
     <description>'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation. An estimated 300 Palestinians referred for treatment abroad have died since the ceasefire began, according to Gaza's Hamas-run health ministry. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-02.mp3" length="1577088" type="audio/mpeg" />
   </item>
   <item>
     <title>Gaza Briefing for July 1, 2026</title>

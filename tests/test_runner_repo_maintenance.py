@@ -41,3 +41,16 @@ def test_cleanup_plan_dedupes_paths() -> None:
 
     assert plan["restore_paths"] == ["output/dispatches/gaza/editions/2026-07-02/index.html"]
     assert plan["clean_paths"] == ["logs/runner.log"]
+
+
+def test_cleanup_plan_keeps_food_line_source_performance_history_outside_auto_cleanup() -> None:
+    entries = [
+        {"path": "data/dispatches/food-line/source_performance_history.json", "is_untracked": False},
+        {"path": "logs/runner-food-line.log", "is_untracked": True},
+    ]
+
+    plan = build_cleanup_plan(entries)
+
+    assert plan["restore_paths"] == []
+    assert plan["clean_paths"] == ["logs/runner-food-line.log"]
+    assert plan["skipped_paths"] == ["data/dispatches/food-line/source_performance_history.json"]

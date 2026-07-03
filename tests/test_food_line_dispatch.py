@@ -1624,7 +1624,7 @@ def test_food_line_no_current_update_policy_freshness_status_allows_validated_no
     assert status == "passed_no_qualifying_update"
 
 
-def test_food_line_no_current_update_without_discovery_gap_is_internal_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_food_line_no_current_update_auto_runs_discovery_gap_when_coverage_is_sufficient(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     _clear_food_line_registries(tmp_path)
     monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
@@ -1640,19 +1640,32 @@ def test_food_line_no_current_update_without_discovery_gap_is_internal_only(tmp_
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
+    calls: list[str] = []
+
+    def fake_run_gap_check(root: Path, edition_date: str, **kwargs):
+        calls.append(edition_date)
+        assert root == tmp_path
+        assert kwargs["fast"] is True
+        _write_food_line_discovery_gap_report(tmp_path, edition_date, [])
+        return {"date": edition_date}
+
+    monkeypatch.setattr(food_line, "run_food_line_discovery_gap_check", fake_run_gap_check)
+
     result = run_food_line_dispatch(tmp_path, date, collect=True, include_discovery_gap_summary=False)
     manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
 
     assert result["ok"] is True
-    assert result["public_rendered"] is False
-    assert result["edition_mode"] == "internal_no_qualifying_update"
-    assert result["food_line_no_current_update_policy_status"] == "blocked"
-    assert result["food_line_no_current_update_policy_metrics"]["source_freshness_status"] == "blocked_insufficient_fresh_current_stories"
-    assert any("discovery-gap or equivalent expanded discovery did not run" in reason for reason in result["food_line_no_current_update_policy_reasons"])
-    assert "Food Line public no-qualifying-update policy blocked publication" in result["food_line_publish_blocked_reason"]
-    assert manifest["public_rendered"] is False
-    assert manifest["edition_mode"] == "internal_no_qualifying_update"
-    assert (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists() is False
+    assert calls == [date]
+    assert result["public_rendered"] is True
+    assert result["edition_mode"] == "no_current_update"
+    assert result["food_line_no_current_update_policy_status"] == "allowed"
+    assert result["food_line_no_current_update_policy_metrics"]["source_freshness_status"] == "passed_no_qualifying_update"
+    assert result["discovery_gap_check"]["run"] is True
+    assert result["discovery_gap_check"]["public_no_qualifying_update_validated"] is True
+    assert result["food_line_publish_blocked_reason"] == ""
+    assert manifest["public_rendered"] is True
+    assert manifest["edition_mode"] == "no_current_update"
+    assert (tmp_path / "output" / "site" / "food-line" / "editions" / date / "index.html").exists() is True
 
 
 def test_food_line_archive_lists_no_current_update_edition_is_archive_safe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -6686,6 +6699,41 @@ def test_food_line_discovery_gap_summary_missing_report_does_not_fail(tmp_path: 
     assert result["discovery_gap_report_path"].endswith("discovery_gap_report.json")
     assert result["discovery_gap_report_markdown_path"].endswith("discovery_gap_report.md")
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_food_line_discovery_gap_summary_marks_validated_when_no_unreviewed_candidates(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-15"
+    _write_food_line_discovery_gap_report(tmp_path, date, [])
+
+    summary = food_line._food_line_discovery_gap_summary(tmp_path, date, [])
+
+    assert summary["run"] is True
+    assert summary["public_no_qualifying_update_validated"] is True
+
+
+def test_food_line_discovery_gap_summary_blocks_validation_when_unreviewed_candidates_remain(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-16"
+    _write_food_line_discovery_gap_report(
+        tmp_path,
+        date,
+        [
+            {
+                "title": "Qualifying candidate",
+                "url": "https://example.com/2026/06/16/qualifying-candidate",
+                "classification": "likely_qualifying",
+                "score": 4,
+                "reason": "food bank demand; local news domain",
+                "known_status": "known_domain_new_article",
+            }
+        ],
+    )
+
+    summary = food_line._food_line_discovery_gap_summary(tmp_path, date, [])
+
+    assert summary["run"] is True
+    assert summary["public_no_qualifying_update_validated"] is False
 
 
 def test_food_line_collect_reports_rejected_news_reasons(tmp_path: Path):

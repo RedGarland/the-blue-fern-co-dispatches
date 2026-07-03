@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote, quote_plus
 from zoneinfo import ZoneInfo
 
 
@@ -150,6 +150,7 @@ OPINION_COMMENTARY_URL_HINTS = (
 SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
 TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
+GOOGLE_NEWS_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 
 
 @dataclass(frozen=True)
@@ -165,9 +166,11 @@ class SourceDefinition:
     region_scope: str
     source_tier: str = "unspecified"
     source_group: str = "unspecified"
+    discovery_role: str = "strong_ground_development"
     source_state: str = "enabled"
     disabled_reason: str = ""
     diagnostics_reason: str = ""
+    query: str = ""
 
 
 def has_palestinian_anchor_text(text: str) -> bool:
@@ -237,6 +240,13 @@ def canonicalize_url(url: str) -> str:
     ]
     query = urlencode(filtered)
     return urlunsplit((scheme, netloc, path, query, ""))
+
+
+def build_google_news_rss_url(query: str) -> str:
+    text = str(query or "").strip()
+    if not text:
+        return ""
+    return GOOGLE_NEWS_RSS_TEMPLATE.format(query=quote_plus(text))
 
 
 def extract_canonical_from_google_wrapper(url: str) -> tuple[str, str]:
@@ -553,6 +563,7 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
                 source_id=str(item.get("source_id") or item.get("id") or "").strip(),
                 name=str(item.get("name") or "").strip(),
                 url=str(item.get("url") or "").strip(),
+                query=str(item.get("query") or "").strip(),
                 type=source_type,
                 enabled=enabled,
                 publisher=str(item.get("publisher") or item.get("name") or "").strip(),
@@ -561,6 +572,7 @@ def load_sources_config(path: Path) -> list[SourceDefinition]:
                 region_scope=str(item.get("region_scope") or "").strip(),
                 source_tier=str(item.get("source_tier") or item.get("tier") or "unspecified").strip(),
                 source_group=str(item.get("source_group") or item.get("group") or "unspecified").strip(),
+                discovery_role=str(item.get("discovery_role") or "strong_ground_development").strip() or "strong_ground_development",
                 source_state=source_state,
                 disabled_reason=str(item.get("disabled_reason") or "").strip(),
                 diagnostics_reason=str(item.get("diagnostics_reason") or "").strip(),
@@ -1015,6 +1027,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
     return {
         "source_record_id": source_record_id(source.source_id, title, url, edition_date),
+        "source_id": source.source_id,
         "title": title,
         "url": url,
         "publisher": source.publisher,
@@ -1022,11 +1035,14 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "retrieved_at": retrieved_at,
         "summary_or_snippet": summary,
         "source_type": "rss",
+        "provider_id": source.source_id,
+        "collector_source_type": source.type,
         "region_scope": source.region_scope,
         "category_hint": source.category_hint,
         "reliability_tier": source.reliability_tier,
         "source_tier": source.source_tier,
         "source_group": source.source_group,
+        "discovery_role": source.discovery_role,
         "canonical_url_attempted": bool(wrapper_url),
         "canonical_url": canonical_url,
         "canonicalization_status": canonical_status,
@@ -1267,7 +1283,7 @@ def collect_gaza_sources(
             provider_diagnostics.append(skipped)
             skipped_providers.append(skipped)
             continue
-        if source.type != "rss":
+        if source.type not in {"rss", "google_news_rss"}:
             skipped = {
                 "source_id": source.source_id,
                 "source_state": source.source_state,
@@ -1281,10 +1297,33 @@ def collect_gaza_sources(
             continue
         stage_counts["providers_attempted"] += 1
         source_record_start = len(records)
+        fetch_url = source.url
+        if source.type == "google_news_rss":
+            fetch_url = build_google_news_rss_url(source.query or source.url)
+        if not str(fetch_url or "").strip():
+            warnings.append(f"{source.source_id}: missing_fetch_url")
+            failed_source_ids.append({"source_id": source.source_id, "reason": "missing_fetch_url"})
+            provider_diagnostics.append(
+                {
+                    "source_id": source.source_id,
+                    "publisher": source.publisher,
+                    "url": source.url,
+                    "query": source.query,
+                    "status": "failed",
+                    "error": "missing_fetch_url",
+                    "source_tier": source.source_tier,
+                    "source_state": source.source_state,
+                    "backend_used": "python",
+                    "tls_error": False,
+                }
+            )
+            continue
         diag: dict[str, Any] = {
             "source_id": source.source_id,
             "publisher": source.publisher,
-            "url": source.url,
+            "url": fetch_url,
+            "configured_url": source.url,
+            "query": source.query,
             "status": "ok",
             "raw_items": 0,
             "accepted": 0,
@@ -1307,7 +1346,7 @@ def collect_gaza_sources(
             },
             "top_rejected_examples": [],
         }
-        fetch = fetch_feed_payload(source.source_id, source.url)
+        fetch = fetch_feed_payload(source.source_id, fetch_url)
         diag["backend_used"] = str(fetch.get("backend_used") or "python")
         diag["tls_error"] = bool(fetch.get("tls_error"))
         if not fetch.get("ok"):

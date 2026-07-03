@@ -104,6 +104,17 @@ def test_sources_yml_loads(work_root):
     assert sources[0].region_scope == "Gaza"
 
 
+def test_repo_gaza_sources_config_includes_targeted_query_providers():
+    config = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "gaza" / "sources.yml"
+
+    sources = gaza_sources.load_sources_config(config)
+    by_id = {source.source_id: source for source in sources}
+
+    assert by_id["bbc-gaza-health-query"].type == "google_news_rss"
+    assert by_id["elpais-gaza-humanitarian-query"].type == "google_news_rss"
+    assert by_id["jpost-gaza-accountability-query"].type == "google_news_rss"
+
+
 def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
     write_config(work_root)
 
@@ -1096,6 +1107,62 @@ def test_guardian_gaza_title_item_accepted(work_root, monkeypatch):
     )
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 1
+
+
+def test_google_news_query_provider_builds_wrapper_feed_and_extracts_canonical_url(work_root, monkeypatch):
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: elpais-query
+    name: EL PAIS Query
+    query: site:english.elpais.com Gaza heatwave water displacement
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: EL PAIS English
+    reliability_tier: reported-public-source
+    category_hint: humanitarian_conditions
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+
+    def fake_fetch(source_id, url, timeout=20):
+        assert source_id == "elpais-query"
+        assert url.startswith("https://news.google.com/rss/search?q=")
+        return {
+            "ok": True,
+            "source_id": source_id,
+            "url": url,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([
+                {
+                    "title": "Heatwave in Gaza tents",
+                    "url": "https://news.google.com/rss/articles/abc123?url=https%3A%2F%2Fenglish.elpais.com%2Finternational%2F2026%2F07%2F03%2Fgaza-heatwave.html",
+                    "published_at": "2026-05-07T08:00:00+00:00",
+                    "summary_or_snippet": "Heat and water shortages in Gaza.",
+                }
+            ]),
+            "content_text": None,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_fetch)
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", max_sources=12, min_sources=1, prefer_manual=False)
+
+    assert result["ok"] is True
+    assert result["source_count"] == 1
+    record = result["sources"][0]
+    assert record["canonical_url"] == "https://english.elpais.com/international/2026/07/03/gaza-heatwave.html"
+    assert record["collector_source_type"] == "google_news_rss"
+    assert record["provider_id"] == "elpais-query"
 
 
 def test_aljazeera_gaza_or_palestine_context_item_accepted(work_root, monkeypatch):

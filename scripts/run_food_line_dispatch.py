@@ -3955,6 +3955,14 @@ def _food_line_should_auto_run_discovery_gap_check(
     )
 
 
+def _food_line_discovery_gap_blocking_count(summary: dict[str, Any] | None) -> int | None:
+    blocking_count = _food_line_int((summary or {}).get("blocking_likely_qualifying_count"))
+    if blocking_count is not None:
+        return blocking_count
+    # Backward compatibility for older reports/tests that only provide the legacy field.
+    return _food_line_int((summary or {}).get("unreviewed_likely_qualifying_count"))
+
+
 def _food_line_resolve_discovery_gap_summary(
     *,
     root: Path,
@@ -7129,7 +7137,7 @@ def run_food_line_dispatch(
         news_item_count=news_item_count,
         local_signal_count=scope_counts["local_signal_count"],
         state_signal_count=scope_counts["state_signal_count"],
-        discovery_gap_blocking_likely_qualifying_count=_food_line_int(discovery_gap_summary.get("blocking_likely_qualifying_count")),
+        discovery_gap_blocking_likely_qualifying_count=_food_line_discovery_gap_blocking_count(discovery_gap_summary),
     )
     if no_current_update_candidate and not no_current_update_policy["allowed"]:
         no_current_update = False
@@ -7452,7 +7460,7 @@ def run_food_line_dispatch(
         "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
-        "discovery_gap_blocking_likely_qualifying_count": int(discovery_gap_summary.get("blocking_likely_qualifying_count") or 0),
+        "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
         "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
         "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
@@ -7667,7 +7675,7 @@ def run_food_line_dispatch(
         "food_line_no_current_update_policy_metrics": no_current_update_policy.get("metrics") or {},
         "discovery_gap_check": discovery_gap_summary,
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
-        "discovery_gap_blocking_likely_qualifying_count": int(discovery_gap_summary.get("blocking_likely_qualifying_count") or 0),
+        "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
         "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
         "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),

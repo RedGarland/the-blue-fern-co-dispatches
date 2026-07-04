@@ -1,0 +1,54 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-04",
+  "generated_at": "2026-07-04T17:18:59.175345Z",
+  "audio_status": "script_ready_no_audio_file",
+  "audio_file": null,
+  "audio_url": null,
+  "audio_mime_type": null,
+  "tts_provider": "none",
+  "tts_model": null,
+  "tts_voice": null,
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [],
+  "segment_voice_map": [],
+  "tts_input_character_count": 0,
+  "tts_input_word_count": 0,
+  "tts_story_count": 3,
+  "tts_segment_count": 0,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": null,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-04T17:18:59.175325Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-04-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-04/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 4, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. At least 7 Palestinians killed by Israeli forces over past 48 hours in Gaza. A further nine bodies were recovered from under the rubble, according to Gaza's Ministry of Health. This was reported by Al Jazeera.\n\n2. A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PA\u00cdS English. A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' EL PA\u00cdS English. This was reported by EL PAIS English.\n\n3. 'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation - BBC. 'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation BBC. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the July 4, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-04-aljazeera-middle-east-41f2dee0185c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/4/at-least-7-palestinians-killed-by-israeli-forces-over-past-48-hours-in-gaza?traffic_source=rss",
+      "title": "At least 7 Palestinians killed by Israeli forces over past 48 hours in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32",
+      "publisher": "EL PAIS English",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOQTFPWmJVUDVITWZDNWE0Tkl0TEdDOHZiMUtCcE5mZlBPeTlmeUtQbV9CN2ZqbjY0MXpYTXgtRTJsanZ4cm9VTGdrdGFaVGZGNEFRa1B0My03VGNuWDEtMTZ4cGJYOFMwZDRFUlNJUl81eFN6SzlBalI4Z194MUpGUDJFUkxQbl9jM0xmZTY1Q1RocV9sanZvUEVlR05RSUVXZTF0Q204dm42b2E2MWlSV0lFblVuU3Zhemd0ZloyS1RjaVNhZno00gHbAUFVX3lxTE54azR5b0pCSHNXUVd1djZjM05oUl9XSFRyX1JHLVA5TnpETVhyX1lzbGhqTlBLZDhNY1RsQVVBeWNEMDBvMVNtMGxtZWlOSW9PQ2lNUjVKSTI3MkkzMEgxb0RwWUdRWTEzOXo5WnZ6dTZ4VXVIXzdhWWZ0UkY5Z1UzbFFtQ2NMS1VOX1c1bnpHc0JEb09FZTRtLTBkVTJSdjRHOHNCeWRWRzA1dUlCbm8wSXRyVmVDSkVvbURmSlN0VS1NbHBpMlRrZUFmc0cxMDljTVYyQWhMd2tXMA?oc=5",
+      "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PA\u00cdS English"
+    },
+    {
+      "source_record_id": "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
+      "publisher": "BBC News",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9KTVZaZjgwWWxqblB0REYxeUJPLVBuYlV3amFXUE1SWVhneXR6SldyZEZfNzFHQlZsb0RhblFjbllyVjlYTTNOWVFMX1FmVVZnNGlGTTk5VG9Fdw?oc=5",
+      "title": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation - BBC"
+    }
+  ]
+}

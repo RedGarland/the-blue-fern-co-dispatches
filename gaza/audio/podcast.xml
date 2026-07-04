@@ -18,7 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 03 Jul 2026 16:42:25 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 04 Jul 2026 17:18:59 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 4, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-04-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-04-transcript.html</guid>
+    <pubDate>Sat, 04 Jul 2026 00:00:00 +0000</pubDate>
+    <description>At least 7 Palestinians killed by Israeli forces over past 48 hours in Gaza. A further nine bodies were recovered from under the rubble, according to Gaza's Ministry of Health. Transcript and source links are available from The Blue Fern Co.</description>
+  </item>
   <item>
     <title>Gaza Briefing for July 3, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-03-transcript.html</link>

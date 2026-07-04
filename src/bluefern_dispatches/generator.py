@@ -1059,55 +1059,7 @@ def public_edition_is_listable(site_root: Path, slug: str, edition_date: str) ->
     if slug == CARE_LINE_DISPATCH_SLUG:
         return bool(care_line_public_edition_report(site_root, edition_date).get("listable"))
     if slug == "gaza":
-        manifest_path = site_root / slug / "editions" / edition_date / "edition_manifest.json"
-        if not manifest_path.exists():
-            return False
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return False
-        if not isinstance(manifest, dict):
-            return False
-        errors = manifest.get("errors")
-        if isinstance(errors, list) and any(
-            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
-            for item in errors
-        ):
-            return False
-        sources_manifest_path = site_root / slug / "editions" / edition_date / "sources_manifest.json"
-        curation_manifest_path = site_root / slug / "editions" / edition_date / "curation_manifest.json"
-        sources_payload: list[dict[str, Any]] | None = None
-        curation_payload: list[dict[str, Any]] | None = None
-        if sources_manifest_path.exists():
-            try:
-                loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            if isinstance(loaded, list):
-                sources_payload = loaded
-        if curation_manifest_path.exists():
-            try:
-                loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            if isinstance(loaded, list):
-                curation_payload = loaded
-        source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
-        story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
-        if source_count <= 0 or story_count <= 0:
-            return False
-        # Cross-edition dedupe failures are recorded in project-local Gaza run artifacts.
-        dedupe_path = site_root.parents[1] / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
-        if dedupe_path.exists():
-            try:
-                dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                return False
-            input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
-            kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
-            if input_count > 0 and kept_count == 0:
-                return False
-        return True
+        return _gaza_public_edition_is_listable(site_root, edition_date)
     if slug == "food-line":
         return bool(_food_line_public_edition_listability_report(site_root, edition_date).get("listable"))
     if slug == CARE_LINE_DISPATCH_SLUG:
@@ -1257,6 +1209,86 @@ def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> di
     return payload if isinstance(payload, dict) else {}
 
 
+def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
+    try:
+        repo_root = site_root.parents[1]
+    except IndexError:
+        return None
+    pages_repo = repo_root / "bluefern-dispatches-pages"
+    return pages_repo if pages_repo.exists() else None
+
+
+def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
+    editions_root = site_root / "gaza" / "editions"
+    roots = [editions_root]
+    pages_repo = _pages_repo_root_for_site_root(site_root)
+    if pages_repo is not None:
+        pages_editions_root = pages_repo / "gaza" / "editions"
+        if pages_editions_root.resolve(strict=False) not in {root.resolve(strict=False) for root in roots}:
+            roots.append(pages_editions_root)
+    return [root for root in roots if root.exists()]
+
+
+def _gaza_public_edition_is_listable(site_root: Path, edition_date: str) -> bool:
+    repo_root = site_root.parents[1]
+    pages_repo = _pages_repo_root_for_site_root(site_root)
+    candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
+    if pages_repo is not None:
+        candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
+    for edition_dir in candidate_dirs:
+        if not edition_dir.exists():
+            continue
+        manifest_path = edition_dir / "edition_manifest.json"
+        if not manifest_path.exists():
+            continue
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(manifest, dict):
+            continue
+        errors = manifest.get("errors")
+        if isinstance(errors, list) and any(
+            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
+            for item in errors
+        ):
+            continue
+        sources_manifest_path = edition_dir / "sources_manifest.json"
+        curation_manifest_path = edition_dir / "curation_manifest.json"
+        sources_payload: list[dict[str, Any]] | None = None
+        curation_payload: list[dict[str, Any]] | None = None
+        if sources_manifest_path.exists():
+            try:
+                loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(loaded, list):
+                sources_payload = loaded
+        if curation_manifest_path.exists():
+            try:
+                loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(loaded, list):
+                curation_payload = loaded
+        source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
+        story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
+        if source_count <= 0 or story_count <= 0:
+            continue
+        dedupe_path = repo_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+        if dedupe_path.exists():
+            try:
+                dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
+            kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
+            if input_count > 0 and kept_count == 0:
+                continue
+        return True
+    return False
+
+
 def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
     if dispatch.slug != "cascadia":
         if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
@@ -1338,6 +1370,21 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
             dated.append((edition_date, coverage_end))
         # For Cascadia, sort by weekly coverage_end (newest first), then by edition folder date.
         return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
+    if slug == "gaza":
+        dated: set[str] = set()
+        for candidate_root in _gaza_public_edition_dirs(site_root):
+            for path in candidate_root.iterdir():
+                if path.is_dir() and len(path.name) == 10:
+                    dated.add(path.name)
+        return sorted(
+            (
+                edition_date
+                for edition_date in dated
+                if (not max_edition_date or edition_date <= max_edition_date)
+                and _gaza_public_edition_is_listable(site_root, edition_date)
+            ),
+            reverse=True,
+        )
     return sorted(
         (
             path.name

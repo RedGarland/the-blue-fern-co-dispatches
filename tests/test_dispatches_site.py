@@ -1828,6 +1828,66 @@ def test_pages_publish_commits_on_gh_pages_branch(built_site):
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
 
 
+def test_gaza_public_lists_merge_pages_repo_history_when_local_site_is_sparser(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    local_edition = site_root / "gaza" / "editions" / "2026-07-04"
+    local_edition.mkdir(parents=True, exist_ok=True)
+    (local_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": "2026-07-04",
+                "source_count": 1,
+                "story_count": 1,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (local_edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "gaza-local-1"}], indent=2),
+        encoding="utf-8",
+    )
+    (local_edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "gaza-local-story-1"}], indent=2),
+        encoding="utf-8",
+    )
+
+    pages_edition = tmp_path / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03"
+    pages_edition.mkdir(parents=True, exist_ok=True)
+    (pages_edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": "2026-07-03",
+                "source_count": 1,
+                "story_count": 1,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (pages_edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "gaza-pages-1"}], indent=2),
+        encoding="utf-8",
+    )
+    (pages_edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "gaza-pages-story-1"}], indent=2),
+        encoding="utf-8",
+    )
+
+    dates = generator.discover_public_edition_dates(site_root, "gaza")
+    dispatch = DispatchConfig(slug="gaza", name="Dispatches From Gaza", edition_date="2026-07-04", tagline="Daily briefing", logo="gaza-logo.png", sources=[], stories=[], detail_artifacts=[])
+    index_html = generator.render_dispatch_index_for_dates(dispatch, dates, site_root)
+    archive_html = generator.render_archive_for_dates(dispatch, dates, site_root)
+    rss_xml = generator.render_rss_for_dates(dispatch, dates, site_root)
+
+    assert dates == ["2026-07-04", "2026-07-03"]
+    for body in (index_html, archive_html, rss_xml):
+        assert "2026-07-04" in body
+        assert "2026-07-03" in body
+
+
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"

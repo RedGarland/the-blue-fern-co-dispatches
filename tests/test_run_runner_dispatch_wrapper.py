@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -37,10 +38,13 @@ def _make_fake_runner_repo(
     scripts_dir = repo / "scripts"
     pages_repo = repo / "bluefern-dispatches-pages"
     logs_dir = repo / "logs"
+    venv_scripts_dir = repo / ".venv" / "Scripts"
     scripts_dir.mkdir(parents=True)
     pages_repo.mkdir(parents=True)
     logs_dir.mkdir(parents=True)
+    venv_scripts_dir.mkdir(parents=True)
     shutil.copy2(WRAPPER_PATH, scripts_dir / "run_runner_dispatch.ps1")
+    shutil.copy2(Path(sys.executable), venv_scripts_dir / "python.exe")
     _write_runner_script(
         scripts_dir / "runner_repo_maintenance.py",
         f"""
@@ -57,6 +61,18 @@ if command == "postflight":
     raise SystemExit(0)
 print(json.dumps({{"ok": False, "errors": ["unexpected command"]}}, indent=2))
 raise SystemExit(1)
+""".strip()
+        + "\n",
+    )
+    _write_runner_script(
+        scripts_dir / "run_gaza_daily_operator.py",
+        """
+import json
+import sys
+
+print("gaza operator invoked")
+print(json.dumps({"argv": sys.argv[1:]}, indent=2))
+raise SystemExit(0)
 """.strip()
         + "\n",
     )
@@ -108,6 +124,8 @@ def _run_wrapper_with_args(repo: Path, extra_args: list[str]) -> subprocess.Comp
             "Bypass",
             "-File",
             str(repo / "scripts" / "run_runner_dispatch.ps1"),
+            "-RepoRoot",
+            str(repo),
             *extra_args,
         ],
         cwd=str(repo),
@@ -211,6 +229,63 @@ def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Pa
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Runner check-only validation finished with exit code 0." in _latest_log(repo)
+
+
+def test_wrapper_gaza_non_check_only_defaults_to_no_push_no_post_no_audio(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert f"Resolved repo root: {repo}" in log_text
+    assert f"Resolved Pages repo: {repo / 'bluefern-dispatches-pages'}" in log_text
+    assert f"Selected Python path: {repo / '.venv' / 'Scripts' / 'python.exe'}" in log_text
+    assert "Push enabled: False" in log_text
+    assert "Bluesky enabled: False" in log_text
+    assert "Audio enabled: False" in log_text
+    assert "Check-only: False" in log_text
+    assert "scripts\\run_gaza_daily_operator.py --date 2026-07-02" in log_text
+    assert "--email-report" in log_text
+    assert "--push" not in log_text
+    assert "--post-bluesky" not in log_text
+    assert "--generate-audio" not in log_text
+
+
+def test_wrapper_gaza_non_check_only_appends_explicit_live_flags_only_when_requested(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-02", "-Push", "-PostBluesky", "-GenerateAudio"],
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "Push enabled: True" in log_text
+    assert "Bluesky enabled: True" in log_text
+    assert "Audio enabled: True" in log_text
+    assert "scripts\\run_gaza_daily_operator.py --date 2026-07-02" in log_text
+    assert "--email-report" in log_text
+    assert "--push" in log_text
+    assert "--post-bluesky" in log_text
+    assert "--generate-audio" in log_text
 
 
 def test_wrapper_check_only_fails_closed_when_sync_json_reports_not_ok(tmp_path: Path) -> None:

@@ -2503,7 +2503,11 @@ def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry
         for edition_dir in sorted(editions_root.iterdir()):
             if not edition_dir.is_dir() or len(edition_dir.name) != 10:
                 continue
-            if public_edition_is_listable(site_root, slug, edition_dir.name):
+            source_edition_dir = site_root / slug / "editions" / edition_dir.name
+            if source_edition_dir.exists():
+                if public_edition_is_listable(site_root, slug, edition_dir.name):
+                    continue
+            elif public_edition_is_listable(pages_repo, slug, edition_dir.name):
                 continue
             removed.append(
                 {

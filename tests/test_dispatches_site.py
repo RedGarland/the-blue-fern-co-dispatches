@@ -600,6 +600,43 @@ def make_pages_repo(path):
     return path
 
 
+def write_min_food_line_public_edition(
+    root: Path,
+    edition_date: str,
+    *,
+    body_html: str = "<html><body>Food Line edition</body></html>",
+    manifest_overrides: dict[str, object] | None = None,
+) -> Path:
+    edition_dir = root / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "dispatch_slug": "food-line",
+        "edition_date": edition_date,
+        "public_rendered": True,
+        "edition_mode": "current_update",
+        "source_freshness_status": "passed",
+        "freshness_window_days": 3,
+        "stale_public_story_count": 0,
+        "excluded_stale_source_count": 0,
+        "stale_source_ids": [],
+        "qualified_primary_count": 1,
+        "skip_reason": "",
+    }
+    if manifest_overrides:
+        manifest.update(manifest_overrides)
+    (edition_dir / "index.html").write_text(body_html, encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (edition_dir / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": f"food-src-{edition_date}", "title": "Source", "url": "https://example.com"}], indent=2),
+        encoding="utf-8",
+    )
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": f"food-story-{edition_date}", "source_ids": [f"food-src-{edition_date}"]}], indent=2),
+        encoding="utf-8",
+    )
+    return edition_dir
+
+
 def test_pages_sync_repair_message_is_explicit_about_resetting_to_origin(tmp_path):
     message = generator.pages_sync_repair_message(tmp_path / "pages", "gh-pages")
     assert "pages_repo_not_synced_with_origin" in message
@@ -1573,6 +1610,113 @@ def test_pages_publish_removes_skipped_food_line_editions(built_site):
 
     assert result["ok"] is True
     assert not (pages_repo / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
+
+
+def test_pages_publish_preserves_existing_food_line_history_when_source_site_is_scoped_to_new_backfill(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    food_root = site_root / "food-line"
+
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (food_root / "rss.xml").write_text("<rss/>", encoding="utf-8")
+    (food_root / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+
+    write_min_food_line_public_edition(
+        pages_repo,
+        "2026-06-25",
+        body_html="<html><body>Pages 2026-06-25</body></html>",
+    )
+    write_min_food_line_public_edition(
+        pages_repo,
+        "2026-06-26",
+        body_html="<html><body>Pages 2026-06-26</body></html>",
+    )
+    write_min_food_line_public_edition(
+        site_root,
+        "2026-06-27",
+        body_html="<html><body>Site 2026-06-27</body></html>",
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert (pages_repo / "food-line" / "editions" / "2026-06-25" / "index.html").exists()
+    assert (pages_repo / "food-line" / "editions" / "2026-06-26" / "index.html").exists()
+    assert (pages_repo / "food-line" / "editions" / "2026-06-27" / "index.html").read_text(encoding="utf-8") == "<html><body>Site 2026-06-27</body></html>"
+    preserved = {(item["dispatch"], item["edition_date"]) for item in result["public_pages_editions_preserved"]}
+    assert ("food-line", "2026-06-25") in preserved
+    assert ("food-line", "2026-06-26") in preserved
+
+
+def test_pages_publish_preserves_prior_food_line_backfills_across_sequential_dates(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    food_root = site_root / "food-line"
+
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (food_root / "rss.xml").write_text("<rss/>", encoding="utf-8")
+    (food_root / "podcast.xml").write_text("<rss/>", encoding="utf-8")
+
+    write_min_food_line_public_edition(
+        pages_repo,
+        "2026-06-25",
+        body_html="<html><body>Pages 2026-06-25</body></html>",
+    )
+    write_min_food_line_public_edition(
+        site_root,
+        "2026-06-27",
+        body_html="<html><body>Site 2026-06-27</body></html>",
+    )
+
+    first = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert first["ok"] is True
+    assert (pages_repo / "food-line" / "editions" / "2026-06-25" / "index.html").exists()
+    assert (pages_repo / "food-line" / "editions" / "2026-06-27" / "index.html").exists()
+
+    shutil.rmtree(site_root / "food-line" / "editions" / "2026-06-27")
+    write_min_food_line_public_edition(
+        site_root,
+        "2026-06-28",
+        body_html="<html><body>Site 2026-06-28</body></html>",
+    )
+
+    second = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert second["ok"] is True
+    for edition_date in ("2026-06-25", "2026-06-27", "2026-06-28"):
+        assert (pages_repo / "food-line" / "editions" / edition_date / "index.html").exists()
 
 
 def test_food_line_only_dispatch_publish_does_not_copy_other_dispatch_files(built_site):

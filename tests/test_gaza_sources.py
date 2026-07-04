@@ -411,7 +411,9 @@ def test_cross_edition_dedupe_suppresses_repeated_url_and_writes_diagnostic(work
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
 
-    assert kept == []
+    assert len(kept) == 1
+    assert kept[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
+    assert kept[0]["prior_duplicate_edition_date"] == "2026-05-10"
     assert report["suppressed_candidate_count"] == 1
     assert report["suppressed_candidates"][0]["matched_prior_edition"] == "2026-05-10"
     assert report["suppressed_candidates"][0]["matched_key_type"] in {
@@ -458,7 +460,8 @@ def test_retrieved_at_alone_does_not_make_repeated_source_fresh(work_root):
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
 
-    assert kept == []
+    assert len(kept) == 1
+    assert kept[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
     assert report["suppressed_candidate_count"] == 1
 
 
@@ -491,7 +494,8 @@ def test_google_wrapper_with_different_wrapper_urls_suppresses_by_canonical(work
         }
     ]
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
-    assert kept == []
+    assert len(kept) == 1
+    assert kept[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
     assert report["suppressed_candidate_count"] == 1
 
 
@@ -528,7 +532,8 @@ def test_missing_published_at_is_stale_risk_when_repeated(work_root):
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
 
-    assert kept == []
+    assert len(kept) == 1
+    assert kept[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
     assert report["stale_risk_candidates"]
 
 
@@ -566,6 +571,7 @@ def test_new_distinct_source_passes_cross_edition_dedupe(work_root):
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-11", candidates)
 
     assert len(kept) == 1
+    assert "story_selection_excluded_reason" not in kept[0]
     assert report["suppressed_candidate_count"] == 0
 
 
@@ -609,7 +615,8 @@ def test_cross_edition_dedupe_reads_pages_repo_and_suppresses_retrieved_at_only_
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-12", candidates)
 
-    assert kept == []
+    assert len(kept) == 3
+    assert all(item["story_selection_excluded_reason"] == "duplicate_recent_story" for item in kept)
     assert report["kept_candidate_count"] == 0
     assert report["suppressed_candidate_count"] == 3
     assert all(item["matched_prior_edition"] == "2026-05-10" for item in report["suppressed_candidates"])
@@ -648,9 +655,111 @@ def test_cross_edition_dedupe_reads_output_site_manifest(work_root):
 
     kept, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-05-12", candidates)
 
-    assert kept == []
+    assert len(kept) == 1
+    assert kept[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
     assert report["suppressed_candidate_count"] == 1
     assert report["suppressed_candidates"][0]["matched_prior_edition"] == "2026-05-10"
+
+
+def test_normalize_title_strips_publisher_suffix_and_folds_diacritics():
+    title = "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PAÍS English"
+
+    assert gaza_sources.normalize_title(title, publisher="EL PAIS English") == (
+        "a heatwave in a miserable tent in gaza i dream of a glass of cold water"
+    )
+
+
+def test_july_3_july_4_elpais_duplicate_marks_recent_story_but_keeps_audit_record(work_root):
+    prior_manifest = work_root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-07-03-elpais-heatwave-water-displacement",
+                    "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'",
+                    "url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+                    "canonical_url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+                    "publisher": "EL PAIS English",
+                    "published_at": "2026-07-03T04:28:00+02:00",
+                    "retrieved_at": "2026-07-03T04:28:00+02:00",
+                    "category_hint": "humanitarian_conditions",
+                    "dispatch_slug": "gaza",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-2026-07-04-elpais-wrapper-001",
+            "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PAÍS English",
+            "url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVk?oc=5",
+            "canonical_url": "",
+            "publisher": "EL PAÍS English",
+            "published_at": "2026-07-03T04:28:00+02:00",
+            "retrieved_at": "2026-07-04T07:15:00+00:00",
+            "category_hint": "humanitarian_conditions",
+            "dispatch_slug": "gaza",
+        }
+    ]
+
+    normalized, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-07-04", candidates)
+
+    assert len(normalized) == 1
+    assert normalized[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
+    assert normalized[0]["prior_duplicate_edition_date"] == "2026-07-03"
+    assert normalized[0]["prior_duplicate_source_record_id"] == "gaza-2026-07-03-elpais-heatwave-water-displacement"
+    assert normalized[0]["wrapper_url"].startswith("https://news.google.com/rss/articles/")
+    assert report["suppressed_candidate_count"] == 1
+    assert report["suppressed_candidates"][0]["matched_prior_source_record_id"] == "gaza-2026-07-03-elpais-heatwave-water-displacement"
+    assert report["suppressed_candidates"][0]["story_selection_excluded_reason"] == "duplicate_recent_story"
+
+
+def test_recent_duplicate_can_pass_with_explicit_material_update_override(work_root):
+    prior_manifest = work_root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-07-03-elpais-heatwave-water-displacement",
+                    "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'",
+                    "url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+                    "canonical_url": "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+                    "publisher": "EL PAIS English",
+                    "published_at": "2026-07-03T04:28:00+02:00",
+                    "retrieved_at": "2026-07-03T04:28:00+02:00",
+                    "category_hint": "humanitarian_conditions",
+                    "dispatch_slug": "gaza",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-2026-07-04-elpais-wrapper-002",
+            "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PAÍS English",
+            "url": "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVk?oc=5",
+            "canonical_url": "",
+            "publisher": "EL PAÍS English",
+            "published_at": "2026-07-04T08:00:00+02:00",
+            "retrieved_at": "2026-07-04T08:10:00+02:00",
+            "category_hint": "humanitarian_conditions",
+            "dispatch_slug": "gaza",
+            "allow_recent_duplicate_story": True,
+        }
+    ]
+
+    normalized, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-07-04", candidates)
+
+    assert len(normalized) == 1
+    assert "story_selection_excluded_reason" not in normalized[0]
+    assert report["suppressed_candidate_count"] == 0
+    assert report["kept_candidate_count"] == 1
 
 
 def test_rank_gaza_candidates_prioritizes_humanitarian_high_value_items():

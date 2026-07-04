@@ -1,5 +1,59 @@
 [
   {
+    "source_record_id": "gaza-2026-07-04-bbc-middle-east-ea252f4eaf7e",
+    "source_id": "gaza-2026-07-04-bbc-middle-east-ea252f4eaf7e",
+    "title": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation",
+    "url": "https://www.bbc.co.uk/news/articles/cn75ex1dv61o?at_medium=RSS&at_campaign=rss",
+    "canonical_url": "https://www.bbc.co.uk/news/articles/cn75ex1dv61o?at_medium=RSS&at_campaign=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "BBC News",
+    "published_at": "2026-07-02T04:59:55+00:00",
+    "retrieved_at": "2026-07-04T17:18:54.213178+00:00",
+    "retrieved_local_date": "2026-07-04",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "An estimated 300 Palestinians referred for treatment abroad have died since the ceasefire began, according to Gaza's Hamas-run health ministry.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "bbc-middle-east",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
+    "traceability_note": "",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-04",
+    "used_in_story_ids": [],
+    "claim_ids": [],
+    "story_selection_excluded_reason": "duplicate_recent_story",
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "ceasefire_diplomacy",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation|conflict|2026-07-02",
+    "title_fingerprint": "two weeks after her death i got a call gaza patients face agonising delays for evacuation",
+    "claim_fingerprint": "gaza|bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation|conflict|2026-07-02",
+    "repeated_from_edition_date": "2026-07-02",
+    "prior_duplicate_edition_date": "2026-07-02",
+    "prior_duplicate_source_record_id": "gaza-2026-07-02-bbc-middle-east-ea252f4eaf7e"
+  },
+  {
     "source_record_id": "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
     "source_id": "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
     "title": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation - BBC",
@@ -24,11 +78,9 @@
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-04",
-    "used_in_story_ids": [
-      "gaza-story-2026-07-04-001"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
-    "story_selection_excluded_reason": null,
+    "story_selection_excluded_reason": "duplicate_recent_story",
     "candidate_score": 32,
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
@@ -47,9 +99,12 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation bbc",
-    "title_fingerprint": "two weeks after her death i got a call gaza patients face agonising delays for evacuation bbc",
-    "claim_fingerprint": "bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation bbc|medical evacuation health system"
+    "dedupe_key": "gaza|bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation|medical evacuation health system|2026-07-02",
+    "title_fingerprint": "two weeks after her death i got a call gaza patients face agonising delays for evacuation",
+    "claim_fingerprint": "gaza|bbc|two weeks after her death i got a call gaza patients face agonising delays for evacuation|medical evacuation health system|2026-07-02",
+    "repeated_from_edition_date": "2026-07-02",
+    "prior_duplicate_edition_date": "2026-07-02",
+    "prior_duplicate_source_record_id": "gaza-2026-07-02-bbc-middle-east-ea252f4eaf7e"
   },
   {
     "source_record_id": "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32",
@@ -76,11 +131,9 @@
     "traceability_note": "",
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-04",
-    "used_in_story_ids": [
-      "gaza-story-2026-07-04-002"
-    ],
+    "used_in_story_ids": [],
     "claim_ids": [],
-    "story_selection_excluded_reason": null,
+    "story_selection_excluded_reason": "duplicate_recent_story",
     "candidate_score": 44,
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -100,9 +153,12 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "el pais english|a heatwave in a miserable tent in gaza i dream of a glass of cold water el pa\u00eds english",
-    "title_fingerprint": "a heatwave in a miserable tent in gaza i dream of a glass of cold water el pa\u00eds english",
-    "claim_fingerprint": "el pais english|a heatwave in a miserable tent in gaza i dream of a glass of cold water el pa\u00eds english|humanitarian conditions"
+    "dedupe_key": "gaza|el pais english|a heatwave in a miserable tent in gaza i dream of a glass of cold water|humanitarian conditions|2026-07-03",
+    "title_fingerprint": "a heatwave in a miserable tent in gaza i dream of a glass of cold water",
+    "claim_fingerprint": "gaza|el pais english|a heatwave in a miserable tent in gaza i dream of a glass of cold water|humanitarian conditions|2026-07-03",
+    "repeated_from_edition_date": "2026-07-03",
+    "prior_duplicate_edition_date": "2026-07-03",
+    "prior_duplicate_source_record_id": "gaza-2026-07-03-elpais-heatwave-water-displacement"
   },
   {
     "source_record_id": "gaza-2026-07-04-aljazeera-middle-east-41f2dee0185c",
@@ -130,7 +186,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-04",
     "used_in_story_ids": [
-      "gaza-story-2026-07-04-003"
+      "gaza-story-2026-07-04-004"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -152,8 +208,8 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "al jazeera|at least 7 palestinians killed by israeli forces over past 48 hours in gaza",
+    "dedupe_key": "gaza|al jazeera|at least 7 palestinians killed by israeli forces over past 48 hours in gaza|conflict|2026-07-04",
     "title_fingerprint": "at least 7 palestinians killed by israeli forces over past 48 hours in gaza",
-    "claim_fingerprint": "al jazeera|at least 7 palestinians killed by israeli forces over past 48 hours in gaza|conflict"
+    "claim_fingerprint": "gaza|al jazeera|at least 7 palestinians killed by israeli forces over past 48 hours in gaza|conflict|2026-07-04"
   }
 ]

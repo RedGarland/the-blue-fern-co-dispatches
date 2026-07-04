@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-07-04-003",
+    "story_id": "gaza-story-2026-07-04-004",
     "title": "At least 7 Palestinians killed by Israeli forces over past 48 hours in Gaza",
     "summary": "A further nine bodies were recovered from under the rubble, according to Gaza's Ministry of Health.",
     "category": "conflict",
@@ -45,7 +45,7 @@
         "summary_or_snippet": "A further nine bodies were recovered from under the rubble, according to Gaza's Ministry of Health."
       }
     ],
-    "generated_at": "2026-07-04T17:18:58.991793+00:00",
+    "generated_at": "2026-07-04T18:13:38.381278+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -59,138 +59,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-07-04-002",
-    "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PA\u00cdS English",
-    "summary": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' EL PA\u00cdS English.",
-    "category": "humanitarian_conditions",
-    "story_scope": "core_gaza",
-    "score": 53,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "health_infrastructure",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 8,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32"
-    ],
-    "source_ids": [
-      "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32"
-    ],
-    "source_urls": [
-      "https://news.google.com/rss/articles/CBMixwFBVV95cUxOQTFPWmJVUDVITWZDNWE0Tkl0TEdDOHZiMUtCcE5mZlBPeTlmeUtQbV9CN2ZqbjY0MXpYTXgtRTJsanZ4cm9VTGdrdGFaVGZGNEFRa1B0My03VGNuWDEtMTZ4cGJYOFMwZDRFUlNJUl81eFN6SzlBalI4Z194MUpGUDJFUkxQbl9jM0xmZTY1Q1RocV9sanZvUEVlR05RSUVXZTF0Q204dm42b2E2MWlSV0lFblVuU3Zhemd0ZloyS1RjaVNhZno00gHbAUFVX3lxTE54azR5b0pCSHNXUVd1djZjM05oUl9XSFRyX1JHLVA5TnpETVhyX1lzbGhqTlBLZDhNY1RsQVVBeWNEMDBvMVNtMGxtZWlOSW9PQ2lNUjVKSTI3MkkzMEgxb0RwWUdRWTEzOXo5WnZ6dTZ4VXVIXzdhWWZ0UkY5Z1UzbFFtQ2NMS1VOX1c1bnpHc0JEb09FZTRtLTBkVTJSdjRHOHNCeWRWRzA1dUlCbm8wSXRyVmVDSkVvbURmSlN0VS1NbHBpMlRrZUFmc0cxMDljTVYyQWhMd2tXMA?oc=5"
-    ],
-    "publisher_names": [
-      "EL PAIS English"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32",
-        "title": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PA\u00cdS English",
-        "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOQTFPWmJVUDVITWZDNWE0Tkl0TEdDOHZiMUtCcE5mZlBPeTlmeUtQbV9CN2ZqbjY0MXpYTXgtRTJsanZ4cm9VTGdrdGFaVGZGNEFRa1B0My03VGNuWDEtMTZ4cGJYOFMwZDRFUlNJUl81eFN6SzlBalI4Z194MUpGUDJFUkxQbl9jM0xmZTY1Q1RocV9sanZvUEVlR05RSUVXZTF0Q204dm42b2E2MWlSV0lFblVuU3Zhemd0ZloyS1RjaVNhZno00gHbAUFVX3lxTE54azR5b0pCSHNXUVd1djZjM05oUl9XSFRyX1JHLVA5TnpETVhyX1lzbGhqTlBLZDhNY1RsQVVBeWNEMDBvMVNtMGxtZWlOSW9PQ2lNUjVKSTI3MkkzMEgxb0RwWUdRWTEzOXo5WnZ6dTZ4VXVIXzdhWWZ0UkY5Z1UzbFFtQ2NMS1VOX1c1bnpHc0JEb09FZTRtLTBkVTJSdjRHOHNCeWRWRzA1dUlCbm8wSXRyVmVDSkVvbURmSlN0VS1NbHBpMlRrZUFmc0cxMDljTVYyQWhMd2tXMA?oc=5",
-        "publisher": "EL PAIS English",
-        "summary_or_snippet": "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' EL PA\u00cdS English"
-      }
-    ],
-    "generated_at": "2026-07-04T17:18:58.991793+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 53,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "independently_reported",
-    "claim_status": "independently_reported",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-07-04-001",
-    "title": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation - BBC",
-    "summary": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation BBC.",
-    "category": "medical_evacuation_health_system",
-    "story_scope": "core_gaza",
-    "score": 31,
-    "scoring_reasons": [
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331"
-    ],
-    "source_ids": [
-      "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331"
-    ],
-    "source_urls": [
-      "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9KTVZaZjgwWWxqblB0REYxeUJPLVBuYlV3amFXUE1SWVhneXR6SldyZEZfNzFHQlZsb0RhblFjbllyVjlYTTNOWVFMX1FmVVZnNGlGTTk5VG9Fdw?oc=5"
-    ],
-    "publisher_names": [
-      "BBC News"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
-        "title": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation - BBC",
-        "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9KTVZaZjgwWWxqblB0REYxeUJPLVBuYlV3amFXUE1SWVhneXR6SldyZEZfNzFHQlZsb0RhblFjbllyVjlYTTNOWVFMX1FmVVZnNGlGTTk5VG9Fdw?oc=5",
-        "publisher": "BBC News",
-        "summary_or_snippet": "'Two weeks after her death I got a call': Gaza patients face agonising delays for evacuation BBC"
-      }
-    ],
-    "generated_at": "2026-07-04T17:18:58.991793+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 31,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "independently_reported",
-    "claim_status": "independently_reported",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-06-28-008",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

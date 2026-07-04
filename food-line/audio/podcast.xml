@@ -7,14 +7,14 @@
   <language>en-us</language>
   <itunes:image href="https://dispatches.thebluefernco.com/food-line/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/food-line/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 04 Jul 2026 03:29:03 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 04 Jul 2026 03:30:32 +0000</lastBuildDate>
   <item>
-    <title>Food Line Briefing — June 23, 2026</title>
-    <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-23-transcript.html</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-23-transcript.html</guid>
-    <pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+    <title>Food Line Briefing — June 24, 2026</title>
+    <link>https://dispatches.thebluefernco.com/food-line/audio/2026-06-24-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/food-line/audio/2026-06-24-transcript.html</guid>
+    <pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate>
     <description>No qualifying Food Line update was published because no fresh source-backed current-story records qualified for public release. Stale sources remain in the source audit, but they are not presented as current stories. Background and source links are available in the public source table. This edition is a public no-qualifying-update fallback.</description>
-    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-23.mp3" length="572928" type="audio/mpeg" />
+    <enclosure url="https://dispatches.thebluefernco.com/food-line/audio/2026-06-24.mp3" length="569856" type="audio/mpeg" />
   </item>
 </channel>
 </rss>

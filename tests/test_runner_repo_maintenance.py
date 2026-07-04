@@ -54,3 +54,22 @@ def test_cleanup_plan_keeps_food_line_source_performance_history_outside_auto_cl
     assert plan["restore_paths"] == []
     assert plan["clean_paths"] == ["logs/runner-food-line.log"]
     assert plan["skipped_paths"] == ["data/dispatches/food-line/source_performance_history.json"]
+
+
+def test_cleanup_plan_cleans_only_date_scoped_food_line_discovery_candidates() -> None:
+    entries = [
+        {"path": "data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json", "is_untracked": True},
+        {"path": "data/dispatches/food-line/discovery/2026-06-25/unexpected.json", "is_untracked": True},
+        {"path": "data/dispatches/food-line/discovery/foo/discovery_candidates.json", "is_untracked": True},
+        {"path": "data/dispatches/gaza/discovery/2026-06-25/discovery_candidates.json", "is_untracked": True},
+    ]
+
+    plan = build_cleanup_plan(entries)
+
+    assert plan["restore_paths"] == []
+    assert plan["clean_paths"] == ["data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json"]
+    assert plan["skipped_paths"] == [
+        "data/dispatches/food-line/discovery/2026-06-25/unexpected.json",
+        "data/dispatches/food-line/discovery/foo/discovery_candidates.json",
+        "data/dispatches/gaza/discovery/2026-06-25/discovery_candidates.json",
+    ]

@@ -67,6 +67,16 @@ Arguments:
 -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza
 ```
 
+This safe Gaza command uses the documented source repo root `C:\PythonProjects\Dispatches From The Blue Fern Co` by default, sends the email report, and does not push Pages, post to Bluesky, or generate Gaza audio unless those switches are explicitly added.
+
+Explicit live Gaza command:
+
+```text
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza -Push -PostBluesky
+```
+
+Add `-GenerateAudio` only when the scheduled Gaza run should also create dated audio artifacts.
+
 Recommended Task Scheduler action for Food Line:
 
 ```text
@@ -76,7 +86,7 @@ powershell.exe
 
 ```text
 Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch food-line
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch food-line -RepoRoot "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
 ```
 
 Wrapper behavior:

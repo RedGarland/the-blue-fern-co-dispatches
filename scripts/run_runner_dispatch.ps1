@@ -3,31 +3,30 @@ param(
     [ValidateSet("gaza", "food-line")]
     [string]$Dispatch,
     [string]$Date = "",
+    [string]$RepoRoot = "C:\PythonProjects\Dispatches From The Blue Fern Co",
     [string]$PagesRepo = "",
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
     [switch]$CheckOnly,
+    [switch]$Push,
+    [switch]$PostBluesky,
+    [switch]$GenerateAudio,
     [switch]$SmtpDebug,
     [int]$KeepLogs = 30
 )
 
 $ErrorActionPreference = "Stop"
-
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-if (-not $PagesRepo) {
-    $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"
-}
-$LogDir = Join-Path $RepoRoot "logs"
-New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
-
-$Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp.log"
+$script:LogFile = $null
 
 function Write-Log {
     param([string]$Message)
     $line = "[{0}] {1}" -f (Get-Date -Format "s"), $Message
-    $line | Tee-Object -FilePath $LogFile -Append
+    if ($script:LogFile) {
+        $line | Tee-Object -FilePath $script:LogFile -Append
+    } else {
+        Write-Host $line
+    }
 }
 
 function Load-SmtpCredential {
@@ -195,26 +194,86 @@ function Invoke-LoggedCommand {
 }
 
 try {
-    Set-Location $RepoRoot
-
-    $venvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
-    if (Test-Path $venvPython) {
-        $python = $venvPython
-        Write-Log "Using repository virtualenv Python."
-    } else {
-        $python = "python"
-        Write-Log "Repository virtualenv not found; using system Python from PATH."
+    if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+        throw "RepoRoot must not be empty."
     }
+    if (-not (Test-Path -LiteralPath $RepoRoot -PathType Container)) {
+        throw "RepoRoot does not exist: $RepoRoot"
+    }
+    $RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
+
+    $LogDir = Join-Path $RepoRoot "logs"
+    New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+    $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+    $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp.log"
+
+    if (-not $PagesRepo) {
+        $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"
+    }
+    if (-not (Test-Path -LiteralPath $PagesRepo -PathType Container)) {
+        throw "Pages repo does not exist: $PagesRepo"
+    }
+    $PagesRepo = (Resolve-Path -LiteralPath $PagesRepo).Path
+
+    $python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+    if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
+        throw "Repository virtualenv Python not found: $python"
+    }
+
+    $runnerMaintenanceScript = Join-Path $RepoRoot "scripts\runner_repo_maintenance.py"
+    if (-not (Test-Path -LiteralPath $runnerMaintenanceScript -PathType Leaf)) {
+        throw "Runner maintenance script not found: $runnerMaintenanceScript"
+    }
+
+    $gazaOperatorScript = Join-Path $RepoRoot "scripts\run_gaza_daily_operator.py"
+    $gazaSmokeScript = Join-Path $RepoRoot "scripts\smoke_gaza_operator.py"
+    $foodLineScript = Join-Path $RepoRoot "scripts\run_food_line_dispatch.py"
+    if ($Dispatch -eq "gaza") {
+        if (-not (Test-Path -LiteralPath $gazaOperatorScript -PathType Leaf)) {
+            throw "Gaza operator script not found: $gazaOperatorScript"
+        }
+        if ($CheckOnly -and -not (Test-Path -LiteralPath $gazaSmokeScript -PathType Leaf)) {
+            throw "Gaza smoke script not found: $gazaSmokeScript"
+        }
+    } elseif (-not (Test-Path -LiteralPath $foodLineScript -PathType Leaf)) {
+        throw "Food Line dispatch script not found: $foodLineScript"
+    }
+
+    Set-Location $RepoRoot
 
     if (-not $Date) {
         $Date = Get-Date -Format "yyyy-MM-dd"
     }
+
+    $pushEnabled = $false
+    $blueskyEnabled = $false
+    $audioEnabled = $false
+    if ($Dispatch -eq "gaza") {
+        $pushEnabled = [bool]$Push
+        $blueskyEnabled = [bool]$PostBluesky
+        $audioEnabled = [bool]$GenerateAudio
+    } elseif (-not $CheckOnly) {
+        $pushEnabled = $true
+        $blueskyEnabled = $true
+        $audioEnabled = $true
+    }
+
+    Write-Log "Resolved repo root: $RepoRoot"
+    Write-Log "Resolved Pages repo: $PagesRepo"
+    Write-Log "Selected Python path: $python"
+    Write-Log "Dispatch: $Dispatch"
+    Write-Log "Date: $Date"
+    Write-Log "Push enabled: $pushEnabled"
+    Write-Log "Bluesky enabled: $blueskyEnabled"
+    Write-Log "Audio enabled: $audioEnabled"
+    Write-Log "Check-only: $([bool]$CheckOnly)"
+
     if ($Dispatch -eq "gaza") {
         Load-SmtpCredential -Target $CredentialTarget
     }
 
     $syncArgs = @(
-        "scripts\runner_repo_maintenance.py",
+        $runnerMaintenanceScript,
         "sync",
         "--source-repo", $RepoRoot,
         "--pages-repo", $PagesRepo,
@@ -235,7 +294,7 @@ try {
     if ($CheckOnly) {
         if ($Dispatch -eq "gaza") {
             $dispatchArgs = @(
-                "scripts\smoke_gaza_operator.py",
+                $gazaSmokeScript,
                 "--date", $Date,
                 "--source-repo", $RepoRoot,
                 "--pages-repo", $PagesRepo,
@@ -244,7 +303,7 @@ try {
             )
         } else {
             $dispatchArgs = @(
-                "scripts\runner_repo_maintenance.py",
+                $runnerMaintenanceScript,
                 "postflight",
                 "--source-repo", $RepoRoot,
                 "--pages-repo", $PagesRepo,
@@ -254,22 +313,28 @@ try {
         }
     } elseif ($Dispatch -eq "gaza") {
         $dispatchArgs = @(
-            "scripts\run_gaza_daily_operator.py",
+            $gazaOperatorScript,
             "--date", $Date,
             "--pages-repo", $PagesRepo,
             "--pages-branch", $PagesBranch,
             "--expected-source-branch", $SourceBranch,
-            "--push",
-            "--post-bluesky",
-            "--generate-audio",
             "--email-report"
         )
+        if ($Push) {
+            $dispatchArgs += "--push"
+        }
+        if ($PostBluesky) {
+            $dispatchArgs += "--post-bluesky"
+        }
+        if ($GenerateAudio) {
+            $dispatchArgs += "--generate-audio"
+        }
         if ($SmtpDebug) {
             $dispatchArgs += "--smtp-debug"
         }
     } else {
         $dispatchArgs = @(
-            "scripts\run_food_line_dispatch.py",
+            $foodLineScript,
             "--date", $Date,
             "--collect",
             "--audit-source-collection",
@@ -342,7 +407,7 @@ try {
 
     if (-not $CheckOnly -or $Dispatch -ne "gaza") {
         $postflightArgs = @(
-            "scripts\runner_repo_maintenance.py",
+            $runnerMaintenanceScript,
             "postflight",
             "--source-repo", $RepoRoot,
             "--pages-repo", $PagesRepo,

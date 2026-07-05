@@ -4,6 +4,7 @@ import json
 import shutil
 import subprocess
 import sys
+import re
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,22 @@ def _write_runner_script(path: Path, body: str) -> None:
     path.write_text(body, encoding="utf-8")
 
 
+def _git(repo: Path, *args: str) -> None:
+    subprocess.run(["git", *args], cwd=str(repo), check=True, capture_output=True, text=True)
+
+
+def _init_git_repo(repo: Path, branch: str) -> None:
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "codex@example.com")
+    _git(repo, "config", "user.name", "Codex")
+    _git(repo, "checkout", "-b", branch)
+
+
+def _commit_all(repo: Path, message: str) -> None:
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", message, "--no-gpg-sign")
+
+
 def _read_log(path: Path) -> str:
     for encoding in ("utf-8", "utf-16", "utf-16-le"):
         try:
@@ -24,6 +41,20 @@ def _read_log(path: Path) -> str:
         except UnicodeError:
             continue
     raise AssertionError(f"could not decode log file: {path}")
+
+
+def _git_status_short(repo: Path) -> str:
+    result = subprocess.run(
+        ["git", "status", "--short"],
+        cwd=str(repo),
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    return result.stdout.strip()
 
 
 def _make_fake_runner_repo(
@@ -44,7 +75,18 @@ def _make_fake_runner_repo(
     logs_dir.mkdir(parents=True)
     venv_scripts_dir.mkdir(parents=True)
     shutil.copy2(WRAPPER_PATH, scripts_dir / "run_runner_dispatch.ps1")
-    shutil.copy2(Path(sys.executable), venv_scripts_dir / "python.exe")
+    (repo / ".gitignore").write_text(
+        "\n".join(
+            [
+                "logs/",
+                ".venv/",
+                "bluefern-dispatches-pages/",
+                "output/",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     _write_runner_script(
         scripts_dir / "runner_repo_maintenance.py",
         f"""
@@ -67,11 +109,41 @@ raise SystemExit(1)
     _write_runner_script(
         scripts_dir / "run_gaza_daily_operator.py",
         """
+from __future__ import annotations
+
 import json
+from pathlib import Path
 import sys
 
+ROOT = Path(__file__).resolve().parents[1]
+
 print("gaza operator invoked")
-print(json.dumps({"argv": sys.argv[1:]}, indent=2))
+args = sys.argv[1:]
+date = "unknown"
+if "--date" in args:
+    try:
+        date = args[args.index("--date") + 1]
+    except (ValueError, IndexError):
+        date = "unknown"
+workspace_output = ROOT / "output" / "site" / "gaza" / "editions" / date
+workspace_output.mkdir(parents=True, exist_ok=True)
+(workspace_output / "index.html").write_text("dry-run", encoding="utf-8")
+result = {
+    "ok": True,
+    "operator_status": "DRY_RUN_READY",
+    "email_status": "not_requested",
+    "bluesky_status": "skipped",
+    "pages_push_ok": None,
+    "pages_repo_updated": False,
+    "publish_ok": False,
+    "generation_ok": True,
+    "validation_ok": True,
+    "cwd": str(Path.cwd()),
+    "root": str(ROOT),
+    "output_root": str(ROOT / "output"),
+    "argv": args,
+}
+print(json.dumps(result, indent=2))
 raise SystemExit(0)
 """.strip()
         + "\n",
@@ -104,6 +176,12 @@ raise SystemExit(0)
 """.strip()
         + "\n",
     )
+    _init_git_repo(repo, "add/pages-repo-default")
+    _commit_all(repo, "initial source commit")
+    _init_git_repo(pages_repo, "gh-pages")
+    (pages_repo / "index.html").write_text("pages", encoding="utf-8")
+    _commit_all(pages_repo, "initial pages commit")
+    shutil.copy2(Path(sys.executable), venv_scripts_dir / "python.exe")
     return repo
 
 
@@ -348,3 +426,48 @@ def test_wrapper_check_only_fails_when_nested_object_contains_status_but_root_la
     assert "postflight_result_present=True" in log_text
     assert "operator_result_present=False" in log_text
     assert "parsed JSON missing operator_status" in log_text
+
+
+def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_actions(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "Dry-run full: True" in log_text
+    assert "Isolated Gaza dry-run workspace:" in log_text
+    assert "--generate-audio" in log_text
+    assert "--tts-provider none" in log_text
+    assert "--push" not in log_text
+    assert "--post-bluesky" not in log_text
+    assert "--email-report" not in log_text
+    assert '"email_status": "not_requested"' in log_text
+    assert '"bluesky_status": "skipped"' in log_text
+    assert '"pages_push_ok": null' in log_text
+
+    source_clone_match = re.search(r"Isolated source clone: (.+)", log_text)
+    workspace_match = re.search(r"Isolated Gaza dry-run workspace: (.+)", log_text)
+    assert source_clone_match, log_text
+    assert workspace_match, log_text
+    source_clone = Path(source_clone_match.group(1).strip())
+    workspace = Path(workspace_match.group(1).strip())
+    assert source_clone.is_dir()
+    assert workspace.is_dir()
+    assert (source_clone / "output" / "site" / "gaza" / "editions" / "2026-07-05" / "index.html").is_file()
+    assert _git_status_short(repo) == ""
+    assert _git_status_short(repo / "bluefern-dispatches-pages") == ""
+
+
+@pytest.mark.parametrize("extra_flag", ["-Push", "-PostBluesky"])
+def test_wrapper_gaza_dry_run_full_rejects_live_action_flags(tmp_path: Path, extra_flag: str) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull", extra_flag],
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "-DryRunFull cannot be combined with -CheckOnly, -Push, or -PostBluesky." in log_text

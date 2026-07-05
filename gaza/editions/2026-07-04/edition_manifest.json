@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-04",
-  "generated_at": "2026-07-04T18:13:38.381278+00:00",
+  "generated_at": "2026-07-05T17:26:47.022702+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-04/",
   "local_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-04",
   "local_dispatch_output_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-07-04",
@@ -47,33 +47,55 @@
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-07-04T06:00:00-07:00",
-  "actual_run_local_time": "2026-07-04T11:13:38-07:00",
+  "actual_run_local_time": "2026-07-05T10:26:47-07:00",
   "source_window_start_utc": "2026-07-02T04:59:55Z",
   "source_window_end_utc": "2026-07-04T16:23:48Z",
-  "first_source_retrieved_at": "2026-07-04T17:18:54.213178Z",
-  "last_source_retrieved_at": "2026-07-04T17:18:54.213178Z",
+  "first_source_retrieved_at": "2026-07-05T04:00:07.774856Z",
+  "last_source_retrieved_at": "2026-07-05T17:26:43.283352Z",
   "contains_later_same_day_update": false,
   "later_same_day_update_count": 0,
   "later_same_day_update_batch_count": 0,
   "later_same_day_update_source_count": 0,
-  "contains_post_edition_date_update": false,
-  "post_edition_date_update_count": 0,
-  "post_edition_date_update_batch_count": 0,
-  "post_edition_date_update_source_count": 0,
-  "post_edition_date_retrieval_batches": [],
-  "retrieval_batches": [
+  "contains_post_edition_date_update": true,
+  "post_edition_date_update_count": 3,
+  "post_edition_date_update_batch_count": 1,
+  "post_edition_date_update_source_count": 3,
+  "post_edition_date_retrieval_batches": [
     {
-      "retrieved_at": "2026-07-04T17:18:54.213178Z",
-      "retrieved_at_local": "2026-07-04T10:18:54-07:00",
-      "retrieved_local_date": "2026-07-04",
-      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "retrieved_at": "2026-07-05T17:26:43.283352Z",
+      "retrieved_at_local": "2026-07-05T10:26:43-07:00",
+      "retrieved_local_date": "2026-07-05",
+      "batch_classification": "post_edition_date_update",
       "source_record_ids": [
         "gaza-2026-07-04-bbc-middle-east-ea252f4eaf7e",
         "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
-        "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32",
+        "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32"
+      ],
+      "source_count": 3
+    }
+  ],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-07-05T04:00:07.774856Z",
+      "retrieved_at_local": "2026-07-04T21:00:07-07:00",
+      "retrieved_local_date": "2026-07-04",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
         "gaza-2026-07-04-aljazeera-middle-east-41f2dee0185c"
       ],
-      "source_count": 4
+      "source_count": 1
+    },
+    {
+      "retrieved_at": "2026-07-05T17:26:43.283352Z",
+      "retrieved_at_local": "2026-07-05T10:26:43-07:00",
+      "retrieved_local_date": "2026-07-05",
+      "batch_classification": "post_edition_date_update",
+      "source_record_ids": [
+        "gaza-2026-07-04-bbc-middle-east-ea252f4eaf7e",
+        "gaza-2026-07-04-bbc-gaza-health-query-c5b23b5af331",
+        "gaza-2026-07-04-elpais-gaza-humanitarian-query-d16828de7b32"
+      ],
+      "source_count": 3
     }
   ]
 }

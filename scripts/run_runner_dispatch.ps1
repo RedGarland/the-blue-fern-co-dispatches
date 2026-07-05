@@ -9,6 +9,8 @@ param(
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
     [switch]$CheckOnly,
+    [Alias("SmokeFull")]
+    [switch]$DryRunFull,
     [switch]$Push,
     [switch]$PostBluesky,
     [switch]$GenerateAudio,
@@ -193,6 +195,169 @@ function Invoke-LoggedCommand {
     }
 }
 
+function Invoke-LoggedGitCommand {
+    param(
+        [string[]]$Arguments
+    )
+
+    Write-Log ("Running: git {0}" -f ($Arguments -join " "))
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $combinedOutput = @(
+            & git @Arguments 2>&1 |
+            ForEach-Object {
+                if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    $_.Exception.Message
+                } else {
+                    $_
+                }
+            } |
+            Tee-Object -FilePath $LogFile -Append
+        )
+        $exitCode = $LASTEXITCODE
+        $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
+        return [pscustomobject]@{
+            ExitCode = $exitCode
+            OutputText = $outputText
+        }
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
+function Invoke-IsolatedGazaDryRun {
+    param(
+        [string]$Python,
+        [string]$SourceRepo,
+        [string]$PagesRepo,
+        [string]$Date,
+        [string]$SourceBranch,
+        [string]$PagesBranch
+    )
+
+    $tempWorkspace = Join-Path ([System.IO.Path]::GetTempPath()) ("bluefern-gaza-dryrun-{0}-{1}" -f $Stamp, $PID)
+    if (Test-Path -LiteralPath $tempWorkspace) {
+        Remove-Item -LiteralPath $tempWorkspace -Recurse -Force
+    }
+    New-Item -ItemType Directory -Force -Path $tempWorkspace | Out-Null
+    $tempSourceRepo = Join-Path $tempWorkspace "source"
+    $tempPagesRepo = Join-Path $tempWorkspace "pages"
+
+    try {
+        $sourceClone = Invoke-LoggedGitCommand -Arguments @(
+            "clone",
+            "--local",
+            "--branch", $SourceBranch,
+            "--single-branch",
+            $SourceRepo,
+            $tempSourceRepo
+        )
+        if ($sourceClone.ExitCode -ne 0) {
+            throw "Isolated source clone failed: $($sourceClone.OutputText)"
+        }
+
+        $pagesClone = Invoke-LoggedGitCommand -Arguments @(
+            "clone",
+            "--local",
+            "--branch", $PagesBranch,
+            "--single-branch",
+            $PagesRepo,
+            $tempPagesRepo
+        )
+        if ($pagesClone.ExitCode -ne 0) {
+            throw "Isolated Pages clone failed: $($pagesClone.OutputText)"
+        }
+
+        $tempOperatorScript = Join-Path $tempSourceRepo "scripts\run_gaza_daily_operator.py"
+        if (-not (Test-Path -LiteralPath $tempOperatorScript -PathType Leaf)) {
+            throw "Temp Gaza operator script not found: $tempOperatorScript"
+        }
+
+        $dispatchArgs = @(
+            $tempOperatorScript,
+            "--date", $Date,
+            "--dry-run",
+            "--generate-audio",
+            "--pages-repo", $tempPagesRepo,
+            "--pages-branch", $PagesBranch,
+            "--expected-source-branch", $SourceBranch,
+            "--tts-provider", "none"
+        )
+
+        Write-Log "Isolated Gaza dry-run workspace: $tempWorkspace"
+        Write-Log "Isolated source clone: $tempSourceRepo"
+        Write-Log "Isolated Pages clone: $tempPagesRepo"
+
+        $dispatchResult = Invoke-LoggedCommand -Python $Python -Arguments $dispatchArgs -ParseJsonTail
+        if ($dispatchResult.ExitCode -ne 0) {
+            throw "Isolated Gaza dry-run failed with exit code $($dispatchResult.ExitCode)."
+        }
+        if (-not $dispatchResult.Json) {
+            throw "Isolated Gaza dry-run did not return parseable JSON."
+        }
+
+        $jsonObject = $dispatchResult.Json
+        if (($jsonObject -is [System.Array] -and $jsonObject.Length -eq 1) -or ($jsonObject -is [System.Collections.IList] -and -not ($jsonObject -is [string]) -and $jsonObject.Count -eq 1)) {
+            $jsonObject = $jsonObject[0]
+        }
+
+        $jsonType = if ($null -eq $jsonObject) { "<null>" } else { $jsonObject.GetType().FullName }
+        $rootOk = Get-JsonField -Object $jsonObject -FieldName "ok"
+        $operatorStatus = Get-JsonField -Object $jsonObject -FieldName "operator_status"
+        $pagesPushOk = Get-JsonField -Object $jsonObject -FieldName "pages_push_ok"
+        $blueskyStatus = Get-JsonField -Object $jsonObject -FieldName "bluesky_status"
+        $emailStatus = Get-JsonField -Object $jsonObject -FieldName "email_status"
+
+        Write-Log ("DryRunFull JSON diagnostics: type={0}; ok_present={1}; operator_status_present={2}; pages_push_ok_present={3}; bluesky_status_present={4}; email_status_present={5}" -f `
+            $jsonType, `
+            ($null -ne $rootOk), `
+            ($null -ne $operatorStatus), `
+            ($null -ne $pagesPushOk), `
+            ($null -ne $blueskyStatus), `
+            ($null -ne $emailStatus))
+
+        if ($null -eq $rootOk) {
+            throw "DryRunFull run failed: parsed JSON missing root ok field."
+        }
+        if (-not [bool]$rootOk) {
+            throw "DryRunFull run failed: ok=false"
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$operatorStatus)) {
+            throw "DryRunFull run failed: parsed JSON missing operator_status."
+        }
+        if ([string]$operatorStatus -ne "DRY_RUN_READY") {
+            throw "DryRunFull run failed: operator_status=$operatorStatus"
+        }
+        if ($null -ne $pagesPushOk -and [bool]$pagesPushOk) {
+            throw "DryRunFull run failed: pages_push_ok=true"
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$emailStatus)) {
+            throw "DryRunFull run failed: parsed JSON missing email_status."
+        }
+        if ([string]$emailStatus -ne "not_requested") {
+            throw "DryRunFull run failed: email_status=$emailStatus"
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$blueskyStatus)) {
+            throw "DryRunFull run failed: parsed JSON missing bluesky_status."
+        }
+        if ([string]$blueskyStatus -eq "success") {
+            throw "DryRunFull run failed: bluesky_status=success"
+        }
+
+        return [pscustomobject]@{
+            ExitCode = 0
+            OutputText = $dispatchResult.OutputText
+            Json = $jsonObject
+            TempWorkspace = $tempWorkspace
+            TempSourceRepo = $tempSourceRepo
+            TempPagesRepo = $tempPagesRepo
+        }
+    } catch {
+        throw
+    }
+}
+
 try {
     if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
         throw "RepoRoot must not be empty."
@@ -245,14 +410,20 @@ try {
         $Date = Get-Date -Format "yyyy-MM-dd"
     }
 
+    $checkOnlyRequested = $PSBoundParameters.ContainsKey("CheckOnly")
+    $dryRunFullRequested = $PSBoundParameters.ContainsKey("DryRunFull")
+    $pushRequested = $PSBoundParameters.ContainsKey("Push")
+    $postBlueskyRequested = $PSBoundParameters.ContainsKey("PostBluesky")
+    $generateAudioRequested = $PSBoundParameters.ContainsKey("GenerateAudio")
+
     $pushEnabled = $false
     $blueskyEnabled = $false
     $audioEnabled = $false
     if ($Dispatch -eq "gaza") {
-        $pushEnabled = [bool]$Push
-        $blueskyEnabled = [bool]$PostBluesky
-        $audioEnabled = [bool]$GenerateAudio
-    } elseif (-not $CheckOnly) {
+        $pushEnabled = $pushRequested
+        $blueskyEnabled = $postBlueskyRequested
+        $audioEnabled = [bool]($generateAudioRequested -or $dryRunFullRequested)
+    } elseif (-not $checkOnlyRequested) {
         $pushEnabled = $true
         $blueskyEnabled = $true
         $audioEnabled = $true
@@ -263,12 +434,19 @@ try {
     Write-Log "Selected Python path: $python"
     Write-Log "Dispatch: $Dispatch"
     Write-Log "Date: $Date"
+    Write-Log "Dry-run full: $dryRunFullRequested"
     Write-Log "Push enabled: $pushEnabled"
     Write-Log "Bluesky enabled: $blueskyEnabled"
     Write-Log "Audio enabled: $audioEnabled"
-    Write-Log "Check-only: $([bool]$CheckOnly)"
+    Write-Log "Check-only: $checkOnlyRequested"
 
-    if ($Dispatch -eq "gaza") {
+    if ($dryRunFullRequested -and $Dispatch -ne "gaza") {
+        throw "-DryRunFull is only supported for Gaza."
+    }
+    if ($dryRunFullRequested -and ($checkOnlyRequested -or $pushRequested -or $postBlueskyRequested)) {
+        throw "-DryRunFull cannot be combined with -CheckOnly, -Push, or -PostBluesky."
+    }
+    if ($Dispatch -eq "gaza" -and -not $dryRunFullRequested) {
         Load-SmtpCredential -Target $CredentialTarget
     }
 
@@ -291,7 +469,54 @@ try {
         throw "Runner sync/preflight reported ok=false: $syncMessage"
     }
 
-    if ($CheckOnly) {
+    if ($dryRunFullRequested) {
+        $preflightOk = Get-JsonField -Object $syncResult.Json -FieldName "ok"
+        if ($null -ne $preflightOk -and (-not [bool]$preflightOk)) {
+            $preflightErrors = @(Get-JsonField -Object $syncResult.Json -FieldName "errors")
+            $preflightMessage = if ($preflightErrors.Count -gt 0) { $preflightErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
+            throw "Runner sync/preflight reported ok=false: $preflightMessage"
+        }
+
+        $sourceBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $RepoRoot, "branch", "--show-current")
+        if ($sourceBranchNow.ExitCode -ne 0) {
+            throw "Could not determine source branch: $($sourceBranchNow.OutputText)"
+        }
+        $pagesBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $PagesRepo, "branch", "--show-current")
+        if ($pagesBranchNow.ExitCode -ne 0) {
+            throw "Could not determine Pages branch: $($pagesBranchNow.OutputText)"
+        }
+        $resolvedSourceBranch = $sourceBranchNow.OutputText.Trim()
+        $resolvedPagesBranch = $pagesBranchNow.OutputText.Trim()
+        if ($resolvedSourceBranch -ne $SourceBranch) {
+            $sourceBranchLabel = if ([string]::IsNullOrWhiteSpace($resolvedSourceBranch)) { "<detached>" } else { $resolvedSourceBranch }
+            throw "Source repo must be on $SourceBranch; found $sourceBranchLabel."
+        }
+        if ($resolvedPagesBranch -ne $PagesBranch) {
+            $pagesBranchLabel = if ([string]::IsNullOrWhiteSpace($resolvedPagesBranch)) { "<detached>" } else { $resolvedPagesBranch }
+            throw "Pages repo must be on $PagesBranch; found $pagesBranchLabel."
+        }
+
+        $dryRunFullResult = Invoke-IsolatedGazaDryRun `
+            -Python $python `
+            -SourceRepo $RepoRoot `
+            -PagesRepo $PagesRepo `
+            -Date $Date `
+            -SourceBranch $SourceBranch `
+            -PagesBranch $PagesBranch
+        Write-Log "Runner isolated dry-run smoke finished with exit code 0."
+        Write-Log "Runner isolated dry-run workspace retained at $($dryRunFullResult.TempWorkspace)"
+        $exitCode = 0
+        if ($checkOnlyRequested) {
+            Write-Log "Runner check-only validation finished with exit code $exitCode."
+        } else {
+            Write-Log "Runner dispatch finished with exit code $exitCode."
+        }
+        Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -Skip $KeepLogs |
+            Remove-Item -Force
+        exit $exitCode
+    } elseif ($checkOnlyRequested) {
         if ($Dispatch -eq "gaza") {
             $dispatchArgs = @(
                 $gazaSmokeScript,
@@ -345,12 +570,12 @@ try {
         )
     }
 
-    $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$CheckOnly
+    $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$checkOnlyRequested
     $exitCode = $dispatchResult.ExitCode
     if ($exitCode -ne 0) {
         throw "Runner dispatch command failed with exit code $exitCode."
     }
-    if ($CheckOnly -and $Dispatch -eq "gaza") {
+    if ($checkOnlyRequested -and $Dispatch -eq "gaza") {
         if (-not $dispatchResult.Json) {
             throw "CheckOnly smoke run did not return parseable JSON."
         }
@@ -405,7 +630,7 @@ try {
         }
     }
 
-    if (-not $CheckOnly -or $Dispatch -ne "gaza") {
+    if (-not $checkOnlyRequested -or $Dispatch -ne "gaza") {
         $postflightArgs = @(
             $runnerMaintenanceScript,
             "postflight",

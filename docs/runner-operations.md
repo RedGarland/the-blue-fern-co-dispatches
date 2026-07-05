@@ -2,6 +2,8 @@
 
 Use a dedicated clean runner clone for scheduled Gaza and Food Line jobs. Do not point scheduled tasks at an active development worktree.
 
+For the day-to-day Gaza operator sequence, see [docs/gaza-daily-operator-guide.md](./gaza-daily-operator-guide.md).
+
 ## Layout
 
 Recommended Windows layout:

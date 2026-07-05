@@ -109,6 +109,7 @@ Additional useful context files:
 
 - `scripts/doctor.py`
 - `scripts/status_pages_repo.py`
+- `docs/gaza-daily-operator-guide.md`
 - `src/bluefern_dispatches/gaza_sources.py`
 - `data/dispatches/gaza/` (source and edition artifacts)
 - `output/site/` (sample generated public output)

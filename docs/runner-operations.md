@@ -69,6 +69,8 @@ Arguments:
 
 This safe Gaza command uses the documented source repo root `C:\PythonProjects\Dispatches From The Blue Fern Co` by default, sends the email report, and does not push Pages, post to Bluesky, or generate Gaza audio unless those switches are explicitly added.
 
+Gaza publishes also preserve existing public-history dates on the archive, RSS, and audio listing/feed surfaces by default. If a reviewed archival pruning is intentional, add `--allow-listing-shrink` explicitly and inspect the resulting diff before any push.
+
 Explicit live Gaza command:
 
 ```text

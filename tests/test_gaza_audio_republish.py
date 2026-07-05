@@ -55,6 +55,29 @@ def _write_audio_fixture(root: Path, edition_date: str, *, audio_file: str = "20
     (root / "output" / "site" / "gaza" / "podcast.xml").write_text("<enclosure url=\"/gaza/audio/2026-07-05.mp3\" />", encoding="utf-8")
 
 
+def _mirror_audio_fixture_to_pages(root: Path, pages: Path, edition_date: str, *, audio_file: str = "2026-07-05.mp3") -> None:
+    source_audio = root / "output" / "site" / "gaza" / "audio"
+    pages_audio = pages / "gaza" / "audio"
+    pages_audio.mkdir(parents=True, exist_ok=True)
+    for name in (
+        f"{edition_date}-transcript.html",
+        f"{edition_date}.json",
+        audio_file,
+        "index.html",
+        "podcast.xml",
+        "podcast-artwork.png",
+    ):
+        source = source_audio / name
+        target = pages_audio / name
+        if source.suffix == ".json":
+            target.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+        elif source.suffix in {".html", ".xml"}:
+            target.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+        else:
+            target.write_bytes(source.read_bytes())
+    (pages / "gaza" / "podcast.xml").write_text((source_audio / "podcast.xml").read_text(encoding="utf-8"), encoding="utf-8")
+
+
 @pytest.fixture()
 def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
     repo = Path(__file__).resolve().parents[1]
@@ -66,22 +89,52 @@ def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
         shutil.rmtree(root.parent, ignore_errors=True)
 
 
-def test_check_reports_missing_pages_artifacts_and_does_not_modify_source(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_check_is_healthy_when_pages_are_complete_even_if_source_audio_was_cleaned(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
     _write_audio_fixture(isolated, "2026-07-05")
     pages = _init_pages_repo(isolated)
-    before = (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05-transcript.html").read_text(encoding="utf-8")
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    shutil.rmtree(isolated / "output" / "site" / "gaza" / "audio")
 
     code = republish.main(["--date", "2026-07-05", "--check", "--no-live"])
 
     output = capsys.readouterr().out
-    after = (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05-transcript.html").read_text(encoding="utf-8")
+    assert code == 0
+    assert "Status: ready" in output
+    assert "Source audio" in output
+    assert "Source gaps" in output
+    assert "Pages audio" in output
+    assert "Next action:\nNo action needed." in output
+
+
+def test_check_suggests_generate_when_source_and_pages_mp3_are_missing(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_audio_fixture(isolated, "2026-07-05")
+    pages = _init_pages_repo(isolated)
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+    (pages / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+
+    code = republish.main(["--date", "2026-07-05", "--check", "--no-live"])
+
+    output = capsys.readouterr().out
     assert code == 1
-    assert before == after
-    assert "GAZA AUDIO REPUBLISH - 2026-07-05" in output
-    assert "Status: repair needed" in output
-    assert "Pages artifacts" in output
-    assert "missing" in output
-    assert pages.exists()
+    assert "repair needed" in output.lower()
+    assert "--generate" in output
+    assert "MP3 missing from both source and Pages" in output
+
+
+def test_check_suggests_publish_when_source_has_mp3_but_pages_is_missing_it(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_audio_fixture(isolated, "2026-07-05")
+    pages = _init_pages_repo(isolated)
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    (pages / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+    (pages / "gaza" / "audio" / "index.html").write_text("<a href=\"2026-07-05-transcript.html\">Transcript</a>", encoding="utf-8")
+
+    code = republish.main(["--date", "2026-07-05", "--check", "--no-live"])
+
+    output = capsys.readouterr().out
+    assert code == 1
+    assert "--publish" in output
+    assert "MP3 is present in source but missing from Pages" in output
 
 
 def test_generate_forwards_audio_settings_and_writes_source_outputs(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
@@ -169,12 +222,14 @@ def test_publish_copies_audio_and_feed_files_without_touching_unrelated_pages_fi
     assert (pages / "gaza" / "keep.txt").read_text(encoding="utf-8") == "keep\n"
 
 
-def test_missing_pages_repo_returns_actionable_failure(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_publish_requires_source_side_artifacts(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
     _write_audio_fixture(isolated, "2026-07-05")
+    pages = _init_pages_repo(isolated)
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    shutil.rmtree(isolated / "output" / "site" / "gaza" / "audio")
 
-    code = republish.main(["--date", "2026-07-05", "--check", "--no-live"])
+    code = republish.main(["--date", "2026-07-05", "--publish", "--no-live"])
 
     output = capsys.readouterr().out
     assert code == 1
-    assert "Pages repo missing" in output
-    assert "Next action:" in output
+    assert "Repair the listed audio files before publishing." in output

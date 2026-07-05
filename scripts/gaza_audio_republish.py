@@ -161,6 +161,20 @@ def _artifact_status(source: Path, target: Path | None = None) -> dict[str, Any]
     return data
 
 
+def _artifact_ready(item: dict[str, Any]) -> bool:
+    return bool(item.get("exists"))
+
+
+def _artifact_published(item: dict[str, Any]) -> bool:
+    return bool(item.get("target_exists"))
+
+
+def _read_text(path: Path) -> str:
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
 def _build_source_report(project_root: Path, edition_date: str) -> dict[str, Any]:
     audio_root = _source_audio_root(project_root)
     metadata_path = audio_root / f"{edition_date}.json"
@@ -234,6 +248,8 @@ def _build_source_report(project_root: Path, edition_date: str) -> dict[str, Any
         "files": source_paths,
         "issues": issues,
         "status": status,
+        "ready": all(_artifact_ready(source_paths[key]) for key in ("transcript", "metadata", "audio_file", "audio_index", "podcast_feed", "podcast_root_feed")),
+        "mp3_ready": _artifact_ready(source_paths["audio_file"]),
     }
 
 
@@ -252,6 +268,9 @@ def _build_pages_report(project_root: Path, edition_date: str) -> dict[str, Any]
         "podcast_root_feed": _artifact_status(project_root / "output" / "site" / "gaza" / "podcast.xml", pages_repo / "gaza" / "podcast.xml"),
         "podcast_artwork": _artifact_status(source_root / "podcast-artwork.png", _pages_audio_root(pages_repo) / "podcast-artwork.png"),
     }
+    index_text = _read_text(_pages_audio_root(pages_repo) / "index.html")
+    podcast_text = _read_text(_pages_audio_root(pages_repo) / "podcast.xml")
+    root_podcast_text = _read_text(pages_repo / "gaza" / "podcast.xml")
     return {
         "path": str(pages_repo),
         "exists": status.exists,
@@ -259,6 +278,13 @@ def _build_pages_report(project_root: Path, edition_date: str) -> dict[str, Any]
         "branch": status.branch,
         "dirty_paths": list(status.dirty_paths),
         "files": files,
+        "ready": all(_artifact_published(files[key]) for key in ("transcript", "metadata", "audio_file", "audio_index", "podcast_feed", "podcast_root_feed")),
+        "mp3_ready": _artifact_published(files["audio_file"]),
+        "links_ready": bool(index_text) and edition_date in index_text and ".mp3" in index_text and bool(podcast_text) and ".mp3" in podcast_text and bool(root_podcast_text) and ".mp3" in root_podcast_text,
+        "index_links_date": bool(index_text) and edition_date in index_text,
+        "index_links_mp3": bool(index_text) and ".mp3" in index_text,
+        "podcast_feed_includes_mp3": bool(podcast_text) and ".mp3" in podcast_text,
+        "site_podcast_includes_mp3": bool(root_podcast_text) and ".mp3" in root_podcast_text,
     }
 
 
@@ -340,7 +366,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     mode = "check" if args.check else "generate" if args.generate else "publish"
     source_report = _build_source_report(ROOT, edition_date)
     pages_report = _build_pages_report(ROOT, edition_date)
-    issues = list(source_report["issues"])
+    issues: list[str] = []
 
     pages_repo = Path(args.pages_repo).resolve()
     pages_ready = pages_report["exists"] and pages_report["is_git_repo"] and pages_report["branch"] == args.pages_branch and not pages_report["dirty_paths"]
@@ -354,6 +380,13 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         elif pages_report["dirty_paths"]:
             issues.append(f"Pages repo is dirty: {pages_repo}")
 
+    source_missing_keys = [name for name, item in (source_report.get("files") or {}).items() if not _artifact_ready(item)]
+    pages_missing_keys = [name for name, item in (pages_report.get("files") or {}).items() if not _artifact_published(item)]
+    pages_has_complete_set = bool(pages_report.get("ready")) and bool(pages_report.get("links_ready"))
+    source_has_complete_set = bool(source_report.get("ready"))
+    source_has_mp3 = bool(source_report.get("mp3_ready"))
+    pages_has_mp3 = bool(pages_report.get("mp3_ready"))
+
     report: dict[str, Any] = {
         "date": edition_date,
         "mode": mode,
@@ -363,6 +396,8 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         },
         "pages_repo": pages_report,
         "source_artifacts": source_report,
+        "source_missing_keys": source_missing_keys,
+        "pages_missing_keys": pages_missing_keys,
         "issues": issues,
         "ok": False,
         "next_action": "",
@@ -371,20 +406,24 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     }
 
     if mode == "check":
-        for key, item in (pages_report.get("files") or {}).items():
-            if not isinstance(item, dict):
-                continue
-            target = _clean_text(item.get("target_path"))
-            if not item.get("target_exists"):
-                issues.append(f"Pages artifact missing: {target}")
-            elif item.get("matches_target") is False:
-                issues.append(f"Pages artifact differs from source: {target}")
-        report["ok"] = not issues
-        report["next_action"] = "Run with --generate to refresh Gaza audio artifacts." if not issues else "Run with --generate or --publish after repairing the listed audio files."
+        if pages_has_complete_set:
+            report["ok"] = True
+            report["next_action"] = "No action needed."
+            return report
+        if not pages_has_mp3 and not source_has_mp3:
+            issues.append("MP3 missing from both source and Pages; run --generate.")
+        elif not pages_has_mp3 and source_has_mp3:
+            issues.append("MP3 is present in source but missing from Pages; run --publish.")
+        else:
+            issues.append("Pages audio set is incomplete; run --publish after repairing the listed source audio files.")
+        if not pages_report.get("links_ready"):
+            issues.append("Pages audio index or podcast links are incomplete.")
+        report["ok"] = False
+        report["next_action"] = "Run --generate to create source audio outputs." if not source_has_mp3 else "Run --publish to refresh the Pages audio mirror."
         return report
 
     if mode == "generate":
-        if issues:
+        if source_report["issues"]:
             report["ok"] = False
             report["next_action"] = "Repair the listed audio files before generating." if issues else ""
             return report
@@ -419,21 +458,13 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         report["next_action"] = f'Run --publish to copy Gaza audio files into {pages_repo}.' if pages_ready else "Publish once the Pages repo is clean and on gh-pages."
         return report
 
-    if issues:
+    if source_report["issues"]:
+        report["issues"].extend(source_report["issues"])
         report["ok"] = False
         report["next_action"] = "Repair the listed audio files before publishing."
         return report
 
     try:
-        write_gaza_audio_outputs(
-            ROOT,
-            edition_date,
-            dry_run=False,
-            tts_provider=str(args.tts_provider or os.getenv("GAZA_AUDIO_TTS_PROVIDER", DEFAULT_TTS_PROVIDER)).strip().lower() or DEFAULT_TTS_PROVIDER,
-            tts_model=str(args.audio_model or os.getenv("GAZA_AUDIO_MODEL", DEFAULT_AUDIO_MODEL)).strip() or DEFAULT_AUDIO_MODEL,
-            tts_voice=str(args.audio_voice or os.getenv("GAZA_AUDIO_VOICE", DEFAULT_AUDIO_VOICE)).strip() or DEFAULT_AUDIO_VOICE,
-            audio_format=str(args.audio_format or DEFAULT_AUDIO_FORMAT).strip().lower() or DEFAULT_AUDIO_FORMAT,
-        )
         publish_result = _publish_audio_artifacts(ROOT, edition_date, pages_repo)
         report["publish"] = publish_result
         if args.commit:
@@ -469,7 +500,7 @@ def render_text_report(report: dict[str, Any]) -> str:
         f"Pages repo: {pages.get('path')}",
         f"Status: {'ready' if report.get('ok') else 'repair needed'}",
         "",
-        "Source artifacts",
+        "Source audio",
     ]
     files = source.get("files") or {}
     for key in ("transcript", "metadata", "audio_file", "audio_index", "podcast_feed", "podcast_root_feed", "podcast_artwork"):
@@ -479,7 +510,7 @@ def render_text_report(report: dict[str, Any]) -> str:
             status = "in sync"
         lines.append(f"- {key.replace('_', ' ').title()}: {status}")
     lines.append("")
-    lines.append("Pages artifacts")
+    lines.append("Pages audio")
     pages_files = pages.get("files") or {}
     for key in ("transcript", "metadata", "audio_file", "audio_index", "podcast_feed", "podcast_root_feed", "podcast_artwork"):
         item = pages_files.get(key) or {}
@@ -487,6 +518,16 @@ def render_text_report(report: dict[str, Any]) -> str:
         if item.get("matches_target") is True:
             status = "in sync"
         lines.append(f"- {key.replace('_', ' ').title()}: {status}")
+    if report.get("source_missing_keys"):
+        lines.append("")
+        lines.append("Source gaps")
+        for key in report["source_missing_keys"]:
+            lines.append(f"- {key.replace('_', ' ').title()}")
+    if report.get("pages_missing_keys"):
+        lines.append("")
+        lines.append("Pages gaps")
+        for key in report["pages_missing_keys"]:
+            lines.append(f"- {key.replace('_', ' ').title()}")
     if report.get("generation"):
         generation = report["generation"]
         lines.append("")

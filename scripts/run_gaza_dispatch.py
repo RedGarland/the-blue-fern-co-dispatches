@@ -738,6 +738,24 @@ def _build_stage_drop_diagnostics(
                 "reason": reason,
             }
         )
+    normalization_drop_ids = {str(row.get("source_record_id") or "").strip() for row in normalization_drops}
+    for suppressed in list(cross_edition_report.get("suppressed_candidates") or []):
+        if not isinstance(suppressed, dict):
+            continue
+        source_id = raw_key_to_id.get(_record_key(suppressed))
+        if not source_id or source_id in normalization_drop_ids:
+            continue
+        source_row = raw_by_id.get(source_id) or suppressed
+        normalization_drops.append(
+            {
+                "source_record_id": source_id,
+                "publisher": str(source_row.get("publisher") or ""),
+                "source_id": str(source_row.get("source_id") or source_id),
+                "title": str(source_row.get("title") or ""),
+                "reason": "cross_edition_duplicate",
+            }
+        )
+        normalization_drop_ids.add(source_id)
     relevance_by_source_id = {
         str(item.get("source_record_id") or "").strip(): item
         for item in curation_relevance_diagnostics

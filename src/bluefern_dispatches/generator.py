@@ -2346,10 +2346,15 @@ def build_site(
                 warnings.append(
                     f"gaza synthetic fallback suppressed {dedupe_report['suppressed_candidate_count']} repeated candidates via cross-edition dedupe"
                 )
-            if dedupe_report.get("input_candidate_count", 0) > 0 and not filtered_candidates:
+            active_filtered_candidates = [
+                candidate
+                for candidate in filtered_candidates
+                if not str(candidate.get("story_selection_excluded_reason") or "").strip()
+            ]
+            if dedupe_report.get("input_candidate_count", 0) > 0 and not active_filtered_candidates:
                 errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
                 continue
-            kept_ids = {str(item.get("source_record_id") or "") for item in filtered_candidates}
+            kept_ids = {str(item.get("source_record_id") or "") for item in active_filtered_candidates}
             kept_sources = [source for source in dispatch.sources if source.source_id in kept_ids]
             kept_stories = [
                 story

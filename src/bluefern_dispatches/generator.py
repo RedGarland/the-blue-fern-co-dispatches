@@ -78,6 +78,12 @@ AMERICAN_PRESSURE_REQUIRED_SOURCE_FIELDS = {
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_IDENTIFIED = "Reviewed week | No qualifying source-backed regional signals identified"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying source-backed regional signals surfaced"
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
+GAZA_HOME_RECENT_EDITION_LIMIT = 10
+GAZA_HOME_RECENT_EDITION_MIN = 3
+GAZA_PUBLIC_HISTORY_DATE_RE = re.compile(r"(?:/gaza/)?editions/(\d{4}-\d{2}-\d{2})/")
+GAZA_AUDIO_INDEX_DATE_RE = re.compile(r'<span class="gaza-audio-index-date"><strong>(\d{4}-\d{2}-\d{2})</strong>')
+GAZA_AUDIO_PODCAST_DATE_RE = re.compile(r"/gaza/audio/(\d{4}-\d{2}-\d{2})-transcript\.html")
+GAZA_HOME_EDITION_LIST_RE = re.compile(r'<ul class="edition-list">(.*?)</ul>', re.DOTALL)
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
 DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
@@ -1289,6 +1295,131 @@ def _gaza_public_edition_is_listable(site_root: Path, edition_date: str) -> bool
     return False
 
 
+def _read_text_if_exists(path: Path) -> str:
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
+def _extract_gaza_public_history_dates(text: str) -> set[str]:
+    return set(GAZA_PUBLIC_HISTORY_DATE_RE.findall(text))
+
+
+def _extract_gaza_audio_index_dates(text: str) -> set[str]:
+    return set(GAZA_AUDIO_INDEX_DATE_RE.findall(text))
+
+
+def _extract_gaza_audio_feed_dates(text: str) -> set[str]:
+    return set(GAZA_AUDIO_PODCAST_DATE_RE.findall(text))
+
+
+def _gaza_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
+    gaza_root = public_root / "gaza"
+    surface_paths: dict[str, tuple[Path, Any]] = {
+        "gaza/archive.html": (gaza_root / "archive.html", _extract_gaza_public_history_dates),
+        "gaza/rss.xml": (gaza_root / "rss.xml", _extract_gaza_public_history_dates),
+        "gaza/audio/index.html": (gaza_root / "audio" / "index.html", _extract_gaza_audio_index_dates),
+        "gaza/audio/podcast.xml": (gaza_root / "audio" / "podcast.xml", _extract_gaza_audio_feed_dates),
+        "gaza/podcast.xml": (gaza_root / "podcast.xml", _extract_gaza_audio_feed_dates),
+    }
+    result: dict[str, set[str]] = {}
+    for surface, (path, extractor) in surface_paths.items():
+        result[surface] = extractor(_read_text_if_exists(path))
+    return result
+
+
+def _gaza_public_surface_history_diagnostics(previous_root: Path, current_root: Path) -> list[dict[str, Any]]:
+    diagnostics: list[dict[str, Any]] = []
+    previous = _gaza_public_surface_date_sets(previous_root)
+    current = _gaza_public_surface_date_sets(current_root)
+    for surface in sorted(previous.keys() | current.keys()):
+        before_dates = previous.get(surface, set())
+        after_dates = current.get(surface, set())
+        dropped_dates = sorted(before_dates - after_dates, reverse=True)
+        added_dates = sorted(after_dates - before_dates, reverse=True)
+        diagnostics.append(
+            {
+                "surface": surface,
+                "previous_count": len(before_dates),
+                "current_count": len(after_dates),
+                "preserved_dates": sorted(before_dates & after_dates, reverse=True),
+                "added_dates": added_dates,
+                "dropped_dates": dropped_dates,
+                "ok": not dropped_dates,
+            }
+        )
+    return diagnostics
+
+
+def _gaza_homepage_recent_edition_dates_from_html(html_text: str) -> list[str]:
+    if not html_text:
+        return []
+    match = GAZA_HOME_EDITION_LIST_RE.search(html_text)
+    if not match:
+        return []
+    block = match.group(1)
+    dates: list[str] = []
+    seen: set[str] = set()
+    for edition_date in GAZA_PUBLIC_HISTORY_DATE_RE.findall(block):
+        if edition_date in seen:
+            continue
+        seen.add(edition_date)
+        dates.append(edition_date)
+    return dates
+
+
+def _gaza_homepage_recent_edition_guard(
+    previous_homepage_html: str,
+    current_homepage_html: str,
+    recent_dates: list[str],
+    *,
+    allow_listing_shrink: bool = False,
+) -> dict[str, Any]:
+    old_dates = _gaza_homepage_recent_edition_dates_from_html(previous_homepage_html)
+    new_dates = _gaza_homepage_recent_edition_dates_from_html(current_homepage_html)
+    added_dates = [date for date in new_dates if date not in old_dates]
+    removed_dates = [date for date in old_dates if date not in new_dates]
+    latest_expected_date = recent_dates[0] if recent_dates else (new_dates[0] if new_dates else "")
+    decision = "allowed"
+    reasons: list[str] = []
+    if not allow_listing_shrink:
+        baseline_is_healthy = len(old_dates) >= GAZA_HOME_RECENT_EDITION_MIN
+        if not new_dates:
+            reasons.append("homepage recent-editions list is empty")
+        if baseline_is_healthy and latest_expected_date and latest_expected_date not in new_dates:
+            reasons.append(f"homepage lost latest expected edition date: {latest_expected_date}")
+        if baseline_is_healthy and len(new_dates) < GAZA_HOME_RECENT_EDITION_MIN:
+            reasons.append(
+                f"homepage recent-editions list below minimum: {len(new_dates)} < {GAZA_HOME_RECENT_EDITION_MIN}"
+            )
+        if len(old_dates) >= GAZA_HOME_RECENT_EDITION_LIMIT and len(new_dates) != GAZA_HOME_RECENT_EDITION_LIMIT:
+            reasons.append(
+                f"homepage recent-editions list no longer at configured limit: {len(new_dates)} != {GAZA_HOME_RECENT_EDITION_LIMIT}"
+            )
+        if baseline_is_healthy and len(removed_dates) > 1:
+            reasons.append(f"homepage dropped multiple recent dates: {', '.join(removed_dates)}")
+        if baseline_is_healthy and old_dates and len(old_dates) - len(new_dates) >= 3:
+            reasons.append(
+                f"homepage count reduction too large: previous_count={len(old_dates)} current_count={len(new_dates)}"
+            )
+        if reasons:
+            decision = "blocked"
+    else:
+        decision = "allowed_by_override"
+    return {
+        "old_dates": old_dates,
+        "new_dates": new_dates,
+        "added_dates": added_dates,
+        "removed_dates": removed_dates,
+        "recent_edition_limit": GAZA_HOME_RECENT_EDITION_LIMIT,
+        "recent_edition_minimum": GAZA_HOME_RECENT_EDITION_MIN,
+        "latest_expected_date": latest_expected_date,
+        "decision": decision,
+        "reasons": reasons,
+        "ok": decision.startswith("allowed"),
+    }
+
+
 def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
     if dispatch.slug != "cascadia":
         if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
@@ -1681,7 +1812,7 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
     site_root = site_root or Path("output") / "site"
     recent = "\n".join(
         render_edition_list_item(site_root, dispatch, date)
-        for date in edition_dates[:10]
+        for date in edition_dates[:GAZA_HOME_RECENT_EDITION_LIMIT]
     )
     map_link = ""
     dashboard_link = ""
@@ -3188,6 +3319,7 @@ def publish_pages(
     expect_date: str | None = None,
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
+    allow_listing_shrink: bool = False,
 ) -> dict[str, Any]:
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
@@ -3234,6 +3366,42 @@ def publish_pages(
     )
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
+    gaza_homepage_guard: dict[str, Any] = {
+        "old_dates": [],
+        "new_dates": [],
+        "added_dates": [],
+        "removed_dates": [],
+        "recent_edition_limit": GAZA_HOME_RECENT_EDITION_LIMIT,
+        "recent_edition_minimum": GAZA_HOME_RECENT_EDITION_MIN,
+        "latest_expected_date": "",
+        "decision": "not_checked",
+        "reasons": [],
+        "ok": True,
+    }
+    gaza_history_diagnostics: list[dict[str, Any]] = []
+    gaza_surface_error_messages: list[str] = []
+    gaza_scope_selected = (not only_dispatches) or ("gaza" in only_dispatches)
+    if gaza_scope_selected:
+        gaza_homepage_guard = _gaza_homepage_recent_edition_guard(
+            _read_text_if_exists(pages_repo / "gaza" / "index.html"),
+            _read_text_if_exists(site_root / "gaza" / "index.html"),
+            discover_public_edition_dates(site_root, "gaza"),
+            allow_listing_shrink=allow_listing_shrink,
+        )
+        if not gaza_homepage_guard["ok"]:
+            guard_reasons = "; ".join(str(item) for item in gaza_homepage_guard.get("reasons") or []) or "no specific reason recorded"
+            errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
+        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root)
+        for report in gaza_history_diagnostics:
+            if report["dropped_dates"] and not allow_listing_shrink:
+                surface = str(report.get("surface") or "gaza surface")
+                dropped = ", ".join(str(item) for item in report["dropped_dates"])
+                previous_count = int(report.get("previous_count") or 0)
+                current_count = int(report.get("current_count") or 0)
+                gaza_surface_error_messages.append(
+                    f"gaza public history shrink detected for {surface}: previous_count={previous_count}; current_count={current_count}; dropped_dates={dropped}"
+                )
+        errors.extend(gaza_surface_error_messages)
     branch_result = {
         "current_branch": None,
         "target_pages_branch": pages_branch,
@@ -3366,6 +3534,8 @@ def publish_pages(
         "warnings": warnings,
         "errors": errors,
         "build": build,
+        "gaza_public_surface_history": gaza_history_diagnostics,
+        "gaza_homepage_recent_edition_guard": gaza_homepage_guard,
     }
 
 
@@ -3418,6 +3588,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
+    parser.add_argument(
+        "--allow-listing-shrink",
+        action="store_true",
+        help="Allow Gaza public history surfaces to lose dates when intentionally pruning historical public listings.",
+    )
     args = parser.parse_args(argv)
     try:
         expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
@@ -3432,6 +3607,7 @@ def main(argv: list[str] | None = None) -> int:
             dry_run=args.dry_run,
             commit=args.commit,
             no_push=args.no_push,
+            allow_listing_shrink=args.allow_listing_shrink,
             backup_root=Path(args.backup_root),
             pages_branch=args.pages_branch,
             expect_date=args.expect_date,

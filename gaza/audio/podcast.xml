@@ -18,13 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 05 Jul 2026 17:26:53 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 05 Jul 2026 17:34:37 +0000</lastBuildDate>
   <item>
     <title>Gaza Briefing for July 5, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-05-transcript.html</link>
     <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-05-transcript.html</guid>
     <pubDate>Sun, 05 Jul 2026 00:00:00 +0000</pubDate>
     <description>Jailed Gaza hospital chief in life-threatening condition, rights group says. Elyas Abu Safia says his father Hussam can barely breathe or speak after more than 555 days in Israeli prison. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-05.mp3" length="804096" type="audio/mpeg" />
   </item>
   <item>
     <title>Gaza Briefing for July 4, 2026</title>

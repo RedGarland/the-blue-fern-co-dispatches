@@ -1,21 +1,196 @@
 [
   {
-    "story_id": "gaza-story-001",
-    "title": "Dispatches From Gaza - 2026-07-05",
-    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
-    "category": "humanitarian",
-    "score": 100,
+    "story_id": "gaza-story-2026-07-05-003",
+    "title": "Jailed Gaza hospital chief in life-threatening condition, rights group says",
+    "summary": "Elyas Abu Safia says his father Hussam can barely breathe or speak after more than 555 days in Israeli prison.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 57,
     "scoring_reasons": [
-      "Preserved from existing Gaza public edition."
+      "health_infrastructure",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
     ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
-    "source_ids": [
-      "gaza-src-001",
-      "gaza-src-002",
-      "gaza-src-003"
+    "source_record_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-d14b4612b8c3"
     ],
-    "excluded_reason": null,
-    "editorial_admin_copy": false
+    "source_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-d14b4612b8c3"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/5/jailed-gaza-hospital-chief-in-life-threatening-condition-rights-group-says?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-05-aljazeera-middle-east-d14b4612b8c3",
+        "title": "Jailed Gaza hospital chief in life-threatening condition, rights group says",
+        "url": "https://www.aljazeera.com/news/2026/7/5/jailed-gaza-hospital-chief-in-life-threatening-condition-rights-group-says?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Elyas Abu Safia says his father Hussam can barely breathe or speak after more than 555 days in Israeli prison."
+      }
+    ],
+    "generated_at": "2026-07-05T17:34:29.489837+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-09-003",
+    "prior_edition_date": "2026-06-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-05-002",
+    "title": "Photo of abused Palestinian detainee causes anguish for two Gaza mothers",
+    "summary": "Disturbing image showing restrained detainee adds to agony of two mothers, each of whom is certain he is their son.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-1883e732acab"
+    ],
+    "source_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-1883e732acab"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/7/5/photo-of-abused-palestinian-detainee-sparks-anguish-for-two-gaza-mothers?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-05-aljazeera-middle-east-1883e732acab",
+        "title": "Photo of abused Palestinian detainee causes anguish for two Gaza mothers",
+        "url": "https://www.aljazeera.com/features/2026/7/5/photo-of-abused-palestinian-detainee-sparks-anguish-for-two-gaza-mothers?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Disturbing image showing restrained detainee adds to agony of two mothers, each of whom is certain he is their son."
+      }
+    ],
+    "generated_at": "2026-07-05T17:34:29.489837+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-05-004",
+    "title": "Palestinians in Gaza celebrate Morocco's World Cup victory",
+    "summary": "",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-58506c612282"
+    ],
+    "source_ids": [
+      "gaza-2026-07-05-aljazeera-middle-east-58506c612282"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/5/palestinians-in-gaza-celebrate-moroccos-world-cup-victory?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-05-aljazeera-middle-east-58506c612282",
+        "title": "Palestinians in Gaza celebrate Morocco's World Cup victory",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/5/palestinians-in-gaza-celebrate-moroccos-world-cup-victory?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinians in Gaza celebrate Morocco's World Cup victory"
+      }
+    ],
+    "generated_at": "2026-07-05T17:34:29.489837+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-005",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
   }
 ]

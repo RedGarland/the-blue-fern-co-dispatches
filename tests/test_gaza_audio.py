@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.gaza_audio import build_gaza_audio_script, select_gaza_audio_stories, write_gaza_audio_outputs
+from bluefern_dispatches.gaza_audio import build_gaza_audio_script, select_gaza_audio_stories, write_audio_index, write_gaza_audio_outputs
 
 
 def _write_edition(tmp_path: Path, edition_date: str, *, curation: list[dict], sources: list[dict]) -> None:
@@ -652,3 +652,45 @@ def test_audio_script_repairs_sentence_stitching_and_terminal_punctuation():
     assert "between Israel and the militant group Hamas" in script
     assert script.endswith(".")
     assert len(used) == 3
+
+
+def test_audio_index_keeps_archived_pages_episode_when_local_site_is_sparse(tmp_path: Path):
+    local_audio_root = tmp_path / "output" / "site" / "gaza" / "audio"
+    local_audio_root.mkdir(parents=True, exist_ok=True)
+    (local_audio_root / "2026-07-04-transcript.html").write_text("<html>Local transcript</html>", encoding="utf-8")
+    (local_audio_root / "2026-07-04.json").write_text(
+        json.dumps(
+            {
+                "edition_date": "2026-07-04",
+                "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-04-transcript.html",
+                "audio_url": "/gaza/audio/2026-07-04.mp3",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    (pages_audio_root / "2026-07-03-transcript.html").write_text("<html>Archived transcript</html>", encoding="utf-8")
+    (pages_audio_root / "2026-07-03.json").write_text(
+        json.dumps(
+            {
+                "edition_date": "2026-07-03",
+                "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-03-transcript.html",
+                "audio_url": "/gaza/audio/2026-07-03.mp3",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    (tmp_path / "assets").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
+
+    index_path = write_audio_index(tmp_path, dry_run=False)
+    body = index_path.read_text(encoding="utf-8")
+
+    assert "2026-07-04" in body
+    assert "2026-07-03" in body
+    assert body.index("2026-07-04") < body.index("2026-07-03")

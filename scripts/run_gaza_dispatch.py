@@ -1907,11 +1907,16 @@ def run_gaza_dispatch(
     normalized, cross_edition_report = filter_recent_duplicate_sources(root, edition_date, normalized, lookback_days=7)
     write_json(normalized_dir / "normalized_sources.json", normalized, dry_run, wrote)
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "dedupe_report.json", cross_edition_report, dry_run, wrote)
+    active_normalized = [
+        source
+        for source in normalized
+        if not str(source.get("story_selection_excluded_reason") or "").strip()
+    ]
     if cross_edition_report.get("suppressed_candidate_count", 0):
         warnings.append(
             f"suppressed {cross_edition_report['suppressed_candidate_count']} repeated/stale candidate sources via cross-edition dedupe"
         )
-    if cross_edition_report.get("input_candidate_count", 0) > 0 and not normalized:
+    if cross_edition_report.get("input_candidate_count", 0) > 0 and not active_normalized:
         errors.append("No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition.")
     post_edition_date_source_count = sum(
         1
@@ -1990,14 +1995,14 @@ def run_gaza_dispatch(
         "providers_attempted": int(context_stage.get("providers_attempted") or 1),
         "providers_successful": int(context_stage.get("providers_successful") or (1 if manual_records else 0)),
         "raw_candidates": int(context_stage.get("raw_candidates") or len(manual_records)),
-        "normalized_candidates": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "normalized_candidates": len(normalized),
         "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
     }
     low_relevance_survivors = sum(1 for row in normalized if str(row.get("relevance_band") or "") == "low")
     no_story_explanation = "stories_available"
     if len(manual_records) == 0:
         no_story_explanation = "no_candidates_found_from_attempted_providers"
-    elif int(cross_edition_report.get("input_candidate_count", 0)) > 0 and len(normalized) == 0:
+    elif int(cross_edition_report.get("input_candidate_count", 0)) > 0 and not active_normalized:
         no_story_explanation = "all_candidates_suppressed_as_duplicates_or_stale"
     elif low_relevance_survivors > 0 and low_relevance_survivors == len(normalized):
         no_story_explanation = "only_low_relevance_items_survived"
@@ -2013,7 +2018,7 @@ def run_gaza_dispatch(
         "providers_successful": providers_successful,
         "provider_failures": provider_failures,
         "raw_candidate_count": int(context.get("raw_candidate_count") or len(manual_records)),
-        "normalized_candidate_count": len(normalized) + int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "normalized_candidate_count": len(normalized),
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),

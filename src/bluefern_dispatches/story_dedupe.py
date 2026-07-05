@@ -10,6 +10,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from bluefern_dispatches.gaza_sources import (
+    extract_canonical_from_google_wrapper,
+    normalize_publisher as normalize_source_publisher,
+    normalize_title as normalize_source_title,
+)
+
 
 MEMORY_PATH = Path("data") / "records" / "story_memory.json"
 STOPWORDS = {
@@ -203,7 +209,7 @@ def normalize_text(value: Any) -> str:
 
 
 def normalize_title(value: Any) -> str:
-    text = normalize_text(value)
+    text = normalize_source_title(str(value or ""))
     for prefix in ("breaking ", "update "):
         if text.startswith(prefix):
             text = text[len(prefix) :]
@@ -214,6 +220,9 @@ def normalize_url(value: Any) -> str:
     url = str(value or "").strip()
     if not url:
         return ""
+    extracted_canonical, _ = extract_canonical_from_google_wrapper(url)
+    if extracted_canonical:
+        url = extracted_canonical
     try:
         parts = urlsplit(url)
     except ValueError:
@@ -225,6 +234,16 @@ def normalize_url(value: Any) -> str:
     ]
     path = re.sub(r"/+$", "", parts.path or "")
     return urlunsplit((parts.scheme.lower(), parts.netloc.lower().removeprefix("www."), path, urlencode(query), ""))
+
+
+def is_unresolved_google_wrapper_url(value: Any) -> bool:
+    url = str(value or "").strip()
+    if not url:
+        return False
+    extracted_canonical, _ = extract_canonical_from_google_wrapper(url)
+    if extracted_canonical:
+        return False
+    return "news.google.com" in url.lower() and "/rss/" in url.lower()
 
 
 def similarity(left: Any, right: Any) -> float:
@@ -261,6 +280,17 @@ def story_canonical_urls(story: dict[str, Any]) -> list[str]:
             urls.append(str(record["canonical_url"]))
     urls.extend(story.get("canonical_urls") or [])
     return unique_strings(urls)
+
+
+def story_identity_urls(story: dict[str, Any]) -> list[str]:
+    urls = story_canonical_urls(story) or story_source_urls(story)
+    return unique_strings(
+        [
+            str(url)
+            for url in urls
+            if str(url or "").strip() and not is_unresolved_google_wrapper_url(url)
+        ]
+    )
 
 
 def story_publishers(story: dict[str, Any]) -> list[str]:
@@ -559,8 +589,12 @@ def has_same_topic(left: dict[str, Any], right: dict[str, Any]) -> bool:
 def has_new_detail(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
     if similarity(candidate.get("summary"), prior.get("summary")) < 0.88:
         return True
-    candidate_urls = {normalize_url(url) for url in story_source_urls(candidate)}
-    prior_urls = {normalize_url(url) for url in prior.get("source_urls", []) + prior.get("canonical_urls", [])}
+    candidate_urls = {normalize_url(url) for url in story_identity_urls(candidate)}
+    prior_urls = {
+        normalize_url(url)
+        for url in list(prior.get("source_urls", [])) + list(prior.get("canonical_urls", []))
+        if not is_unresolved_google_wrapper_url(url)
+    }
     return bool(candidate_urls - prior_urls)
 
 
@@ -578,10 +612,14 @@ def material_update(candidate: dict[str, Any], prior: dict[str, Any] | None) -> 
     if prior is None:
         return True, ["new_story"]
     reasons: list[str] = []
-    candidate_urls = {normalize_url(url) for url in story_source_urls(candidate) + story_canonical_urls(candidate) if normalize_url(url)}
-    prior_urls = {normalize_url(url) for url in prior.get("source_urls", []) + prior.get("canonical_urls", []) if normalize_url(url)}
-    candidate_publishers = {normalize_text(publisher) for publisher in story_publishers(candidate)}
-    prior_publishers = {normalize_text(publisher) for publisher in prior.get("publisher_names", [])}
+    candidate_urls = {normalize_url(url) for url in story_identity_urls(candidate) if normalize_url(url)}
+    prior_urls = {
+        normalize_url(url)
+        for url in list(prior.get("source_urls", [])) + list(prior.get("canonical_urls", []))
+        if normalize_url(url) and not is_unresolved_google_wrapper_url(url)
+    }
+    candidate_publishers = {normalize_source_publisher(publisher) for publisher in story_publishers(candidate)}
+    prior_publishers = {normalize_source_publisher(publisher) for publisher in prior.get("publisher_names", [])}
     candidate_families = {source_family(publisher) for publisher in candidate_publishers if source_family(publisher)}
     prior_families = {source_family(publisher) for publisher in prior_publishers if source_family(publisher)}
     if candidate_urls - prior_urls and candidate_publishers and not (candidate_publishers & prior_publishers) and not (candidate_families & prior_families):
@@ -607,14 +645,21 @@ def material_update(candidate: dict[str, Any], prior: dict[str, Any] | None) -> 
 
 
 def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str, Any]]) -> tuple[str, list[str], dict[str, Any] | None]:
-    candidate_urls = {url for url in (normalize_url(url) for url in story_source_urls(candidate) + story_canonical_urls(candidate)) if url}
+    candidate_urls = {url for url in (normalize_url(url) for url in story_identity_urls(candidate)) if url}
     candidate_title = normalize_title(candidate.get("title"))
-    candidate_publishers = {normalize_text(publisher) for publisher in story_publishers(candidate)}
+    candidate_publishers = {normalize_source_publisher(publisher) for publisher in story_publishers(candidate)}
     reasons: list[str] = []
     for prior in prior_rows:
-        prior_urls = {url for url in (normalize_url(url) for url in prior.get("source_urls", []) + prior.get("canonical_urls", [])) if url}
+        prior_urls = {
+            url
+            for url in (
+                normalize_url(url)
+                for url in list(prior.get("source_urls", [])) + list(prior.get("canonical_urls", []))
+            )
+            if url and not is_unresolved_google_wrapper_url(url)
+        }
         prior_title = normalize_title(prior.get("title"))
-        prior_publishers = {normalize_text(publisher) for publisher in prior.get("publisher_names", [])}
+        prior_publishers = {normalize_source_publisher(publisher) for publisher in prior.get("publisher_names", [])}
         exact_url = bool(candidate_urls & prior_urls)
         title_match = bool(candidate_title and candidate_title == prior_title)
         publisher_title = bool(title_match and candidate_publishers and candidate_publishers & prior_publishers)
@@ -665,6 +710,33 @@ def memory_row(dispatch_slug: str, edition_date: str, story: dict[str, Any], pri
     }
 
 
+def memory_row_from_source(dispatch_slug: str, edition_date: str, source: dict[str, Any]) -> dict[str, Any]:
+    source_url = str(source.get("canonical_url") or source.get("url") or "").strip()
+    publisher = str(source.get("publisher") or source.get("source_name") or "").strip()
+    title = str(source.get("title") or "").strip()
+    category = str(source.get("category_hint") or source.get("category") or "").strip()
+    published_at = str(source.get("published_at") or "").strip()
+    return {
+        "dispatch_slug": dispatch_slug,
+        "edition_date": edition_date,
+        "story_id": str(source.get("source_record_id") or source_url or title),
+        "title": title,
+        "normalized_title": normalize_title(title),
+        "summary": str(source.get("summary_or_snippet") or ""),
+        "source_urls": unique_strings([str(source.get("url") or "").strip()]),
+        "canonical_urls": unique_strings([source_url] if source_url else []),
+        "publisher_names": unique_strings([publisher] if publisher else []),
+        "category": category,
+        "geographies": unique_strings([str(source.get("region_scope") or "")]),
+        "source_dates": unique_strings([published_at] if published_at else []),
+        "topic_fingerprint": topic_fingerprint({"title": title, "summary": str(source.get("summary_or_snippet") or ""), "category": category}),
+        "first_seen_date": edition_date,
+        "last_seen_date": edition_date,
+        "update_count": 0,
+        "latest_classification": "new",
+    }
+
+
 def decision_record(
     story: dict[str, Any],
     classification: str,
@@ -691,22 +763,40 @@ def decision_record(
 def prior_memory_from_outputs(root: Path, dispatch_slug: str, edition_date: str) -> tuple[list[dict[str, Any]], list[str]]:
     rows: list[dict[str, Any]] = []
     checked: list[str] = []
-    editions_root = root / "output" / "site" / dispatch_slug / "editions"
-    if not editions_root.exists():
-        return rows, checked
-    for path in sorted(editions_root.iterdir(), reverse=True):
-        if not path.is_dir() or path.name >= edition_date:
+    edition_roots = [
+        root / "output" / "site" / dispatch_slug / "editions",
+        root / "bluefern-dispatches-pages" / dispatch_slug / "editions",
+    ]
+    seen_row_keys: set[tuple[str, str, str]] = set()
+    for editions_root in edition_roots:
+        if not editions_root.exists():
             continue
-        if dispatch_slug == "cascadia" and not is_weekly_cascadia_edition(path, path.name):
-            continue
-        curation_path = path / "curation_manifest.json"
-        if not curation_path.exists():
-            continue
-        checked.append(path.name)
-        for story in read_json_list(curation_path):
-            if story.get("included_in_public_summary") is False:
+        for path in sorted(editions_root.iterdir(), reverse=True):
+            if not path.is_dir() or path.name >= edition_date:
                 continue
-            rows.append(memory_row(dispatch_slug, path.name, story))
+            if dispatch_slug == "cascadia" and not is_weekly_cascadia_edition(path, path.name):
+                continue
+            curation_path = path / "curation_manifest.json"
+            sources_path = path / "sources_manifest.json"
+            checked.append(path.name)
+            if curation_path.exists():
+                for story in read_json_list(curation_path):
+                    if story.get("included_in_public_summary") is False:
+                        continue
+                    row = memory_row(dispatch_slug, path.name, story)
+                    key = (str(row.get("dispatch_slug")), str(row.get("story_id")), str(row.get("edition_date")))
+                    if key not in seen_row_keys:
+                        rows.append(row)
+                        seen_row_keys.add(key)
+                continue
+            if not sources_path.exists():
+                continue
+            for source in read_json_list(sources_path):
+                row = memory_row_from_source(dispatch_slug, path.name, source)
+                key = (str(row.get("dispatch_slug")), str(row.get("story_id")), str(row.get("edition_date")))
+                if key not in seen_row_keys:
+                    rows.append(row)
+                    seen_row_keys.add(key)
     return rows, checked
 
 
@@ -738,8 +828,8 @@ def collapse_within_edition(stories: list[dict[str, Any]], dispatch_slug: str) -
         match_index: int | None = None
         match_reasons: list[str] = []
         for index, existing in enumerate(included):
-            candidate_urls = {normalize_url(url) for url in story_source_urls(story)}
-            existing_urls = {normalize_url(url) for url in story_source_urls(existing)}
+            candidate_urls = {normalize_url(url) for url in story_identity_urls(story)}
+            existing_urls = {normalize_url(url) for url in story_identity_urls(existing)}
             duplicate_reason = ""
             normalized_event_key = ""
             if dispatch_slug == "gaza":

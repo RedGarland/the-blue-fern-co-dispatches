@@ -250,6 +250,47 @@ def test_same_topic_without_material_update_skipped():
     assert result.report["duplicate_skipped"][0]["material_update"] is False
 
 
+def test_pages_repo_prior_curation_is_used_for_july_4_wrapper_duplicate():
+    root = make_root()
+    pages_edition = root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03"
+    pages_edition.mkdir(parents=True, exist_ok=True)
+    pages_edition.joinpath("curation_manifest.json").write_text(
+        json.dumps(
+            [
+                story(
+                    "prior",
+                    "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'",
+                    "https://english.elpais.com/international/2026/07/03/a-heatwave-in-a-miserable-tent-in-gaza-i-dream-of-a-glass-of-cold-water.html",
+                    summary="A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'.",
+                    category="humanitarian_conditions",
+                    publisher="EL PAIS English",
+                    published_at="2026-07-03T04:28:00+02:00",
+                )
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidate = story(
+        "candidate",
+        "A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water' - EL PAÍS English",
+        "https://news.google.com/rss/articles/CBMiX2h0dHBzOi8vbmV3cy5nb29nbGUuY29tL3Jzcy9hcnRpY2xlcy91bnJlc29sdmVk?oc=5",
+        summary="A heatwave in a miserable tent in Gaza: 'I dream of a glass of cold water'.",
+        category="humanitarian_conditions",
+        publisher="EL PAÍS English",
+        published_at="2026-07-03T04:28:00+02:00",
+    )
+    candidate["source_records"][0]["canonical_url"] = ""
+
+    result = dedupe_public_stories(root, "gaza", "2026-07-04", [candidate])
+
+    assert result.stories == []
+    skipped = result.report["duplicate_skipped"][0]
+    assert skipped["classification"] == "duplicate_skip"
+    assert skipped["prior_edition_date"] == "2026-07-03"
+    assert skipped["prior_story_matched"] == "prior"
+
+
 def test_same_topic_new_official_source_included_as_material_continuation():
     root = make_root()
     prior = story("old", "Washington bridge inspection program", "https://example.com/old", summary="Officials described a bridge inspection program.", category="Transportation")

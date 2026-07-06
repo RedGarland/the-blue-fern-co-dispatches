@@ -164,6 +164,9 @@ def load_source_records(path: Path) -> list[dict[str, Any]]:
     return [record for record in records if isinstance(record, dict)]
 
 
+PRESERVED_MANUAL_SOURCE_FIELDS = ("traceability_note", "attribution_mode", "claim_status")
+
+
 def ensure_source_folder(edition_date: str) -> None:
     source_dir_for(edition_date).mkdir(parents=True, exist_ok=True)
 
@@ -206,6 +209,50 @@ def manual_source_invalid_message(path: Path, reason: str, edition_date: str, *,
     )
 
 
+def _source_record_identity(record: dict[str, Any]) -> tuple[str, str]:
+    source_record_id = str(record.get("source_record_id") or "").strip()
+    url = str(record.get("canonical_url") or record.get("url") or "").strip().lower()
+    return source_record_id, url
+
+
+def _preserve_manual_governance_fields(
+    records: list[dict[str, Any]],
+    preserved_records: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    preserved_by_id = {
+        source_record_id: record
+        for record in preserved_records
+        if (source_record_id := _source_record_identity(record)[0])
+    }
+    preserved_by_url = {
+        url: record
+        for record in preserved_records
+        if (url := _source_record_identity(record)[1])
+    }
+    merged: list[dict[str, Any]] = []
+    changes: list[str] = []
+    errors: list[str] = []
+    for index, record in enumerate(records, start=1):
+        row = dict(record)
+        source_record_id, url = _source_record_identity(row)
+        preserved = preserved_by_id.get(source_record_id) or preserved_by_url.get(url)
+        if preserved is not None:
+            for field in PRESERVED_MANUAL_SOURCE_FIELDS:
+                if str(row.get(field) or "").strip():
+                    continue
+                preserved_value = preserved.get(field)
+                if str(preserved_value or "").strip():
+                    row[field] = preserved_value
+                    changes.append(f"source record {index}: preserved {field}")
+        missing = [field for field in PRESERVED_MANUAL_SOURCE_FIELDS if not str(row.get(field) or "").strip()]
+        if missing:
+            errors.append(
+                f"source record {index} missing required governance fields after merge: {', '.join(missing)}"
+            )
+        merged.append(row)
+    return merged, changes, errors
+
+
 def _dedupe_source_rows(rows: list[dict[str, Any]], max_sources: int) -> list[dict[str, Any]]:
     seen: set[tuple[str, str]] = set()
     out: list[dict[str, Any]] = []
@@ -232,12 +279,17 @@ def _write_collection_context(edition_date: str, payload: dict[str, Any]) -> Non
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], log_path: Path) -> tuple[Path | None, list[dict[str, Any]]]:
+def collect_or_load_sources(
+    args: argparse.Namespace,
+    summary: dict[str, Any],
+    log_path: Path,
+) -> tuple[Path | None, list[dict[str, Any]], tuple[Path, str] | None]:
     ensure_source_folder(args.date)
     manual_path = source_file_for(args.date)
     tried_invalid_manual = False
     manual_records: list[dict[str, Any]] = []
     manual_valid = False
+    manual_restore: tuple[Path, str] | None = None
     if args.source_mode in {"manual", "both"} and manual_path.exists():
         log_line(log_path, f"Loading manual source file: {manual_path}")
         try:
@@ -263,6 +315,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
             else:
                 manual_records = records[: args.max_sources]
                 manual_valid = True
+                manual_restore = (manual_path, manual_path.read_text(encoding="utf-8"))
                 if args.source_mode == "manual":
                     summary["source_file"] = str(manual_path)
                     summary["source_count"] = len(manual_records)
@@ -281,11 +334,11 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                             **build_gaza_collection_timing_metadata(manual_records, args.date),
                         },
                     )
-                    return manual_path, manual_records
+                    return manual_path, manual_records, None
 
     if args.source_mode == "manual":
         summary["errors"].append(f"manual source file is required: {manual_path}")
-        return manual_path, []
+        return manual_path, [], None
 
     log_line(log_path, "Running auto source collection.")
     try:
@@ -319,15 +372,15 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
                     **build_gaza_collection_timing_metadata(manual_records, args.date),
                 },
             )
-            return manual_path, manual_records
+            return manual_path, manual_records, None
         summary["errors"].append(str(exc))
-        return None, []
+        return None, [], None
     summary["warnings"].extend(collected.get("warnings", []))
     summary["errors"].extend(collected.get("errors", []))
     summary["failed_source_ids"].extend(collected.get("failed_source_ids", []))
     summary["source_count"] = int(collected.get("source_count") or 0)
     if not collected.get("ok") and args.source_mode == "auto":
-        return None, []
+        return None, [], None
     auto_records = list(collected.get("sources") or [])
     records = list(auto_records)
     source_mode_used = "auto"
@@ -351,6 +404,12 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
         provider_diagnostics.append(
             {"source_id": "manual_sources_json", "status": "ok" if manual_valid and manual_records else "no_candidates", "raw_candidates": len(manual_records)}
         )
+        records, changes, preserve_errors = _preserve_manual_governance_fields(records, manual_records)
+        for change in changes:
+            log_line(log_path, change)
+        if preserve_errors:
+            summary["errors"].extend(preserve_errors)
+            return source_path, records, None
     if len(records) > 0:
         if args.source_mode == "both":
             source_path = write_source_records(ROOT, args.date, records, "manual_sources.json")
@@ -389,7 +448,7 @@ def collect_or_load_sources(args: argparse.Namespace, summary: dict[str, Any], l
     summary["source_file"] = str(source_path) if source_path else None
     summary["source_count"] = len(records)
     log_line(log_path, f"Source collection resolved {len(records)} records to {source_path}")
-    return source_path, records
+    return source_path, records, manual_restore
 
 
 def generation_command(
@@ -864,8 +923,19 @@ def main(argv: list[str] | None = None) -> int:
     log_path = log_path_for(args.date)
     summary = initial_summary(args)
     log_line(log_path, f"Starting daily Gaza run for {args.date} source_mode={args.source_mode} dry_run={args.dry_run}")
+    manual_source_restore: tuple[Path, str] | None = None
+
+    def restore_manual_source_file() -> None:
+        nonlocal manual_source_restore
+        if manual_source_restore is None:
+            return
+        path, original_text = manual_source_restore
+        path.write_text(original_text, encoding="utf-8")
+        manual_source_restore = None
 
     def finish(pipeline_code: int) -> int:
+        if pipeline_code != 0:
+            restore_manual_source_file()
         summary["pipeline_ok"] = pipeline_code == 0
         summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))
         if summary.get("email_requested"):
@@ -903,7 +973,7 @@ def main(argv: list[str] | None = None) -> int:
         return pipeline_code
 
     try:
-        source_path, records = collect_or_load_sources(args, summary, log_path)
+        source_path, records, manual_source_restore = collect_or_load_sources(args, summary, log_path)
     except Exception as exc:  # noqa: BLE001
         message = str(exc) or exc.__class__.__name__
         summary["errors"].append(message)

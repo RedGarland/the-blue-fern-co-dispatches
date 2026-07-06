@@ -125,6 +125,7 @@ if "--date" in args:
         date = args[args.index("--date") + 1]
     except (ValueError, IndexError):
         date = "unknown"
+manual_source_path = ROOT / "data" / "dispatches" / "gaza" / "sources" / date / "manual_sources.json"
 workspace_output = ROOT / "output" / "site" / "gaza" / "editions" / date
 workspace_output.mkdir(parents=True, exist_ok=True)
 (workspace_output / "index.html").write_text("dry-run", encoding="utf-8")
@@ -138,6 +139,7 @@ result = {
     "publish_ok": False,
     "generation_ok": True,
     "validation_ok": True,
+    "manual_source_present": manual_source_path.is_file(),
     "cwd": str(Path.cwd()),
     "root": str(ROOT),
     "output_root": str(ROOT / "output"),
@@ -429,7 +431,7 @@ def test_wrapper_check_only_fails_when_nested_object_contains_status_but_root_la
 
 
 def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_actions(tmp_path: Path) -> None:
-    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True, capture_dispatch_argv=True)
 
     result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"])
 
@@ -438,6 +440,7 @@ def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_acti
     assert "Dry-run full: True" in log_text
     assert "Isolated Gaza dry-run workspace:" in log_text
     assert "--generate-audio" in log_text
+    assert "--allow-listing-shrink" in log_text
     assert "--tts-provider none" in log_text
     assert "--push" not in log_text
     assert "--post-bluesky" not in log_text
@@ -457,6 +460,33 @@ def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_acti
     assert (source_clone / "output" / "site" / "gaza" / "editions" / "2026-07-05" / "index.html").is_file()
     assert _git_status_short(repo) == ""
     assert _git_status_short(repo / "bluefern-dispatches-pages") == ""
+
+
+def test_wrapper_gaza_dry_run_full_snapshots_untracked_manual_source_inputs(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+    manual_source_dir = repo / "data" / "dispatches" / "gaza" / "sources" / "2026-07-05"
+    manual_source_dir.mkdir(parents=True, exist_ok=True)
+    (manual_source_dir / "manual_sources.json").write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "url": "https://example.com/story",
+                        "publisher": "Example Publisher",
+                        "title": "Example title",
+                        "published_at": "2026-07-05T00:00:00Z",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert '"manual_source_present": true' in log_text
 
 
 @pytest.mark.parametrize("extra_flag", ["-Push", "-PostBluesky"])

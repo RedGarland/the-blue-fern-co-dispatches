@@ -19,6 +19,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from scripts import preflight_repo_state as preflight
+from scripts.run_gaza_daily_operator import validate_manual_source_records
 
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -159,7 +160,7 @@ def summarize_manual_sources(root: Path, edition_date: str) -> dict[str, Any]:
 
     field_counts = {field: {"present": 0, "missing": 0} for field in MANUAL_TRACEABILITY_FIELDS}
     missing_fields: dict[str, list[int]] = {field: [] for field in MANUAL_TRACEABILITY_FIELDS}
-    errors: list[str] = []
+    errors = validate_manual_source_records(records)
     for index, record in enumerate(records, start=1):
         for field in MANUAL_TRACEABILITY_FIELDS:
             value = str(record.get(field) or "").strip()
@@ -176,6 +177,14 @@ def summarize_manual_sources(root: Path, edition_date: str) -> dict[str, Any]:
             errors.append(f"record {index} missing claim_status")
 
     status = "valid" if not errors else "invalid"
+    next_action = "No action needed."
+    if errors:
+        if any("placeholder/example source" in error for error in errors):
+            next_action = "Remove or replace the placeholder/example source record and rerun."
+        elif any("missing traceability_note" in error or "missing attribution_mode" in error or "missing claim_status" in error for error in errors):
+            next_action = "Fill the missing manual source traceability fields and rerun."
+        else:
+            next_action = "Fix the invalid manual source record(s) and rerun."
     return {
         "path": str(path),
         "exists": True,
@@ -184,6 +193,7 @@ def summarize_manual_sources(root: Path, edition_date: str) -> dict[str, Any]:
         "field_counts": field_counts,
         "missing_fields": missing_fields,
         "errors": errors,
+        "next_action": next_action,
     }
 
 
@@ -448,7 +458,10 @@ def summarize_overall(
         issues.append("Resolve dirty Pages repo changes before continuing.")
     manual_status, manual_blocking = _status_from_manual(manual_sources)
     if manual_blocking:
-        issues.append(f"Fix {Path(manual_sources['path']).name} validation for {edition_date}.")
+        if any("placeholder/example source" in error for error in manual_sources.get("errors") or []):
+            issues.append("Remove or replace the placeholder/example manual source record and rerun.")
+        else:
+            issues.append(manual_sources.get("next_action") or f"Fix {Path(manual_sources['path']).name} validation for {edition_date}.")
     if _has_actionable_missing_artifact(source_artifacts["run_manifest"]):
         issues.append("Run the Gaza pipeline to create the run manifest.")
     if _has_actionable_missing_artifact(source_artifacts["dedupe_report"]):
@@ -556,7 +569,9 @@ def render_text_report(report: dict[str, Any]) -> str:
         counts = manual["field_counts"][field]
         lines.append(f"- {label}: {counts['present']}/{manual['record_count']}")
     if manual["errors"]:
-        lines.append(f"- Missing fields: {', '.join(sorted(set(manual['errors'])))}")
+        lines.append(f"- Errors: {', '.join(sorted(set(manual['errors'])))}")
+    if manual.get("next_action"):
+        lines.append(f"- Next action: {manual['next_action']}")
     lines.append("")
     lines.append("Source artifacts")
     for label, key in (

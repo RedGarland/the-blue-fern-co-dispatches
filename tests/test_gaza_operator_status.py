@@ -75,9 +75,9 @@ def test_summarize_manual_sources_reports_field_counts_and_missing_fields(isolat
             [
                 {
                     "source_record_id": "gaza-src-1",
-                    "title": "Test source",
-                    "url": "https://example.test/1",
-                    "publisher": "Example News",
+                    "title": "Gaza aid convoy reaches shelters",
+                    "url": "https://www.reuters.com/world/middle-east/gaza-aid-convoy-reaches-shelters/",
+                    "publisher": "Reuters",
                     "published_at": "2026-07-05T00:00:00Z",
                     "retrieved_at": "2026-07-05T00:01:00Z",
                     "summary_or_snippet": "Source-backed update.",
@@ -91,9 +91,9 @@ def test_summarize_manual_sources_reports_field_counts_and_missing_fields(isolat
                 },
                 {
                     "source_record_id": "gaza-src-2",
-                    "title": "Second source",
-                    "url": "https://example.test/2",
-                    "publisher": "Example News",
+                    "title": "Second Gaza aid update",
+                    "url": "https://www.reuters.com/world/middle-east/gaza-aid-update/",
+                    "publisher": "Reuters",
                     "published_at": "2026-07-05T01:00:00Z",
                     "retrieved_at": "2026-07-05T01:01:00Z",
                     "summary_or_snippet": "Source-backed update.",
@@ -118,6 +118,40 @@ def test_summarize_manual_sources_reports_field_counts_and_missing_fields(isolat
     assert report["field_counts"]["attribution_mode"] == {"present": 1, "missing": 1}
     assert report["field_counts"]["claim_status"] == {"present": 1, "missing": 1}
     assert report["missing_fields"]["traceability_note"] == [2]
+
+
+def test_summarize_manual_sources_rejects_placeholder_example_records(isolated: Path) -> None:
+    path = status.manual_sources_path(isolated, "2026-07-05")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-1",
+                    "title": "Example: Gaza story for 2026-07-05",
+                    "url": "https://example.com/gaza-story-2026-07-05",
+                    "publisher": "Example News",
+                    "published_at": "2026-07-05T00:00:00Z",
+                    "retrieved_at": "2026-07-05T00:01:00Z",
+                    "summary_or_snippet": "Short summary for the example Gaza story.",
+                    "source_type": "news",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                    "traceability_note": "Manually added for generator run.",
+                    "attribution_mode": "reported_public_source",
+                    "claim_status": "reported_public_source",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    report = status.summarize_manual_sources(isolated, "2026-07-05")
+    assert report["status"] == "invalid"
+    assert any("record 1 appears to be a placeholder/example source" in error for error in report["errors"])
+    assert "Remove or replace the placeholder/example source record and rerun." in report["next_action"]
 
 
 def test_summarize_pages_artifacts_detects_audio_links_and_feed_mentions(isolated: Path) -> None:

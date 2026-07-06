@@ -35,7 +35,7 @@ def write_payload(path: Path, payload: object) -> None:
 def sample_record(*, url: str, traceability_note: str = "", attribution_mode: str = "", claim_status: str = "") -> dict[str, str]:
     return {
         "source_record_id": "gaza-src-2026-07-05-001",
-        "title": "Example Gaza source",
+        "title": "Gaza aid convoy reaches shelters",
         "url": url,
         "publisher": "EL PAÍS English",
         "published_at": "2026-07-05T02:28:30+00:00",
@@ -53,7 +53,7 @@ def sample_record(*, url: str, traceability_note: str = "", attribution_mode: st
 
 def test_check_detects_missing_fields_and_does_not_modify_file(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
     path = repair.manual_sources_path(isolated, "2026-07-05")
-    payload = [sample_record(url="https://example.com/article"), sample_record(url="https://example.com/complete", traceability_note="Existing note", attribution_mode="reported_public_source", claim_status="reported_public_source")]
+    payload = [sample_record(url="https://www.reuters.com/world/middle-east/gaza-aid-convoy-reaches-shelters/"), sample_record(url="https://www.reuters.com/world/middle-east/gaza-aid-update/complete/", traceability_note="Existing note", attribution_mode="reported_public_source", claim_status="reported_public_source")]
     write_payload(path, payload)
     before = path.read_text(encoding="utf-8")
 
@@ -72,9 +72,9 @@ def test_check_detects_missing_fields_and_does_not_modify_file(isolated: Path, c
 def test_apply_fills_missing_fields_and_preserves_existing_values(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
     path = repair.manual_sources_path(isolated, "2026-07-05")
     payload = [
-        sample_record(url="https://example.com/article", traceability_note="", attribution_mode="", claim_status=""),
+        sample_record(url="https://www.reuters.com/world/middle-east/gaza-aid-convoy-reaches-shelters/", traceability_note="", attribution_mode="", claim_status=""),
         sample_record(
-            url="https://example.com/complete",
+            url="https://www.reuters.com/world/middle-east/gaza-aid-update/complete/",
             traceability_note="Keep me",
             attribution_mode="reported_public_source",
             claim_status="reported_public_source",
@@ -98,13 +98,57 @@ def test_apply_fills_missing_fields_and_preserves_existing_values(isolated: Path
     assert "python scripts\\gaza_operator_status.py --date 2026-07-05 --no-live" in output
 
 
+def test_check_rejects_placeholder_example_source(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    path = repair.manual_sources_path(isolated, "2026-07-05")
+    write_payload(
+        path,
+        [
+            sample_record(
+                url="https://example.com/gaza-story-2026-07-05",
+                traceability_note="Manually added for generator run.",
+            )
+        ],
+    )
+
+    code = repair.main(["--date", "2026-07-05", "--check"])
+
+    output = capsys.readouterr().out
+    assert code == 1
+    assert "Status: invalid" in output
+    assert "record 1 appears to be a placeholder/example source" in output
+    assert "Remove or replace the placeholder/example source record with a real source-backed record." in output
+
+
+def test_apply_does_not_repair_placeholder_example_source(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    path = repair.manual_sources_path(isolated, "2026-07-05")
+    write_payload(
+        path,
+        [
+            sample_record(
+                url="https://example.com/gaza-story-2026-07-05",
+                traceability_note="Manually added for generator run.",
+            )
+        ],
+    )
+    before = path.read_text(encoding="utf-8")
+
+    code = repair.main(["--date", "2026-07-05", "--apply"])
+
+    output = capsys.readouterr().out
+    after = path.read_text(encoding="utf-8")
+    assert code == 1
+    assert before == after
+    assert "Status: invalid" in output
+    assert "record 1 appears to be a placeholder/example source" in output
+
+
 def test_google_news_wrapper_note_is_labeled_as_wrapper(isolated: Path) -> None:
     path = repair.manual_sources_path(isolated, "2026-07-05")
     write_payload(
         path,
         [
             sample_record(
-                url="https://news.google.com/rss/articles/CBMiTWh0dHBzOi8vZXhhbXBsZS5jb20vZmFrZS1saW5r?oc=5",
+                url="https://news.google.com/rss/articles/CBMiTWh0dHBzOi8vd3d3LnJldXRlcnMuY29tL3dvcmxkL21pZGRsZS1lYXN0L2dhemEtYWlkLXVwZGF0ZS8?oc=5",
             )
         ],
     )
@@ -121,7 +165,7 @@ def test_direct_publisher_url_note_is_labeled_as_direct_publisher_url(isolated: 
         path,
         [
             sample_record(
-                url="https://www.example.com/news/gaza-update",
+                url="https://www.reuters.com/world/middle-east/gaza-update/",
             )
         ],
     )
@@ -135,7 +179,7 @@ def test_direct_publisher_url_note_is_labeled_as_direct_publisher_url(isolated: 
 @pytest.mark.parametrize("container_key", ["list", "sources", "records"])
 def test_supports_root_list_and_object_structures(isolated: Path, container_key: str) -> None:
     path = repair.manual_sources_path(isolated, "2026-07-05")
-    record = sample_record(url="https://www.example.com/news/gaza-update")
+    record = sample_record(url="https://www.reuters.com/world/middle-east/gaza-update/")
     if container_key == "list":
         payload: object = [record]
     elif container_key == "sources":

@@ -30,7 +30,7 @@ def write_manual_sources(root: Path, edition_date: str, text: str | None = None)
                 "source_record_id": f"gaza-src-{edition_date}-001",
                 "title": "UN says durable shelter materials remain blocked from Gaza",
                 "url": "https://valid.test/gaza-source",
-                "publisher": "Example News",
+                "publisher": "Reuters",
                 "published_at": f"{edition_date}T12:00:00Z",
                 "retrieved_at": f"{edition_date}T00:00:00Z",
                 "summary_or_snippet": "A source-backed Gaza update.",
@@ -50,7 +50,7 @@ def make_manual_source_record(edition_date: str, index: int = 1) -> dict[str, st
         "source_record_id": f"gaza-src-{edition_date}-{index:03d}",
         "title": f"Gaza source {index}",
         "url": f"https://valid.test/gaza-source-{index}",
-        "publisher": "Example News",
+        "publisher": "Reuters",
         "published_at": f"{edition_date}T12:00:00Z",
         "retrieved_at": f"{edition_date}T00:00:00Z",
         "summary_or_snippet": "A source-backed Gaza update.",
@@ -64,7 +64,7 @@ def make_manual_source_record(edition_date: str, index: int = 1) -> dict[str, st
 def write_generated_output(root: Path, edition_date: str, source_links: bool = True) -> None:
     edition = root / "output" / "site" / "gaza" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
-    link = '<p><strong>Sources</strong></p><a href="https://valid.test/gaza-source">Example News source</a>' if source_links else "<p>No links.</p>"
+    link = '<p><strong>Sources</strong></p><a href="https://valid.test/gaza-source">Reuters source</a>' if source_links else "<p>No links.</p>"
     (edition / "index.html").write_text(f"<html><body><article>{link}</article></body></html>", encoding="utf-8")
     (edition / "sources_manifest.json").write_text(
         json.dumps([{"source_record_id": "gaza-src", "source_id": "gaza-src", "url": "https://valid.test/gaza-source"}]),
@@ -141,7 +141,7 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
                     "warnings": [],
                     "source_adequacy_status": "limited_source_update",
                     "publisher_count": 1,
-                    "publishers": ["Example News"],
+                    "publishers": ["Reuters"],
                     "source_adequacy_warnings": [
                         "This is a limited-source update generated from 4 saved source records from 1 publisher(s). It should be read as a partial update, not a full daily briefing."
                     ],
@@ -169,7 +169,7 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert summary["pages_repo_updated"] is True
     assert summary["source_adequacy_status"] == "limited_source_update"
     assert summary["publisher_count"] == 1
-    assert summary["publishers"] == ["Example News"]
+    assert summary["publishers"] == ["Reuters"]
     assert any("limited-source update generated" in warning for warning in summary["warnings"])
     assert summary["pages_branch"] == "gh-pages"
     assert summary["pushed"] is False
@@ -199,7 +199,7 @@ def test_date_only_command_forwards_post_edition_date_override(isolated, monkeyp
                     "warnings": [],
                     "source_adequacy_status": "limited_source_update",
                     "publisher_count": 1,
-                    "publishers": ["Example News"],
+                    "publishers": ["Reuters"],
                     "source_adequacy_warnings": [],
                 },
             )
@@ -239,7 +239,7 @@ def test_daily_summary_includes_source_window_and_later_same_day_update_metadata
                     "source_record_id": "gaza-src-2026-05-07-001",
                     "title": "Gaza aid access update",
                     "url": "https://valid.test/gaza-source-1",
-                    "publisher": "Example News",
+                    "publisher": "Reuters",
                     "published_at": "2026-05-07T08:15:00Z",
                     "retrieved_at": "2026-05-07T08:20:00Z",
                     "summary_or_snippet": "A source-backed Gaza update.",
@@ -461,7 +461,7 @@ def test_collect_or_load_sources_both_mode_writes_manual_sources_before_generati
                     "errors": [],
                     "source_adequacy_status": "limited_source_update",
                     "publisher_count": 1,
-                    "publishers": ["Example News"],
+                    "publishers": ["Reuters"],
                     "source_adequacy_warnings": [],
                 },
             )
@@ -793,7 +793,7 @@ def test_email_report_failure_after_success_is_nonfatal(isolated, monkeypatch, c
                     "warnings": [],
                     "source_adequacy_status": "limited_source_update",
                     "publisher_count": 1,
-                    "publishers": ["Example News"],
+                    "publishers": ["Reuters"],
                     "source_adequacy_warnings": [],
                 },
             )

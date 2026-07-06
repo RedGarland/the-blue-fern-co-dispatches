@@ -137,7 +137,16 @@ def test_production_range_stops_on_first_failure(monkeypatch: pytest.MonkeyPatch
 
 def test_dry_run_full_invokes_wrapper_with_expected_flags(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(command_center, "_preflight_report", lambda: {"ok": True, "source_repo": {"summary": {"entry_count": 0, "risky_entries": [], "allowed_entries": []}}, "pages_repo": {"summary": {"entry_count": 0, "risky_entries": [], "allowed_entries": []}}})
-    monkeypatch.setattr(command_center, "_manual_source_status", lambda date_text: {"status": "valid", "record_count": 2, "errors": []})
+    monkeypatch.setattr(command_center, "_manual_source_status", lambda date_text: {"status": "not_present", "record_count": 0, "errors": [], "next_action": "Run manual source intake or create manual_sources.json."})
+    monkeypatch.setattr(
+        command_center,
+        "_readiness_report",
+        lambda date_text: {
+            "overall_status": "action_needed",
+            "next_action": "Run the Gaza pipeline to create the run manifest.",
+            "issues": ["Run the Gaza pipeline to create the run manifest."],
+        },
+    )
 
     captured: dict[str, object] = {}
 
@@ -153,6 +162,10 @@ def test_dry_run_full_invokes_wrapper_with_expected_flags(isolated: Path, monkey
 
     assert action["status"] == "passed"
     assert action["details"]["workspace"] == "C:\\tmp\\gaza"
+    assert report["ok"] is True
+    assert report["readiness_ok"] is False
+    assert report["aggregate"]["readiness_status"] == "needs_attention"
+    assert report["dates"][0]["next_safe_action"].startswith("Dry-run mechanism passed.")
     assert "-DryRunFull" in captured["cmd"]
     assert "-Push" not in captured["cmd"]
     assert "-PostBluesky" not in captured["cmd"]

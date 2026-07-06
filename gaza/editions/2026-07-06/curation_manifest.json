@@ -1,0 +1,325 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-06-003",
+    "title": "Israeli command system identified 850,000 targets in Gaza and Lebanon wars, says supplier",
+    "summary": "Elbit Systems supplied Tzayad digital army programme to map people, vehicles and other objects in real time. Israel identified about 1,000 potential targets a day during the first two years of the wars in Gaza and Lebanon with its command and control system, according to a presentation by the country's largest arms supplier, Elbit Systems. A total of 850,000 targets were detected in real time by the Israeli Tzayad digital army programme across all the military's theatres of war between 7 October and the end of 2025, the company said at a military conference in London.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-06-guardian-world-016650e7c425"
+    ],
+    "source_ids": [
+      "gaza-2026-07-06-guardian-world-016650e7c425"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/06/israel-command-system-identified-850000-targets-gaza-lebanon-war-supplier-elbit-systems"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-06-guardian-world-016650e7c425",
+        "title": "Israeli command system identified 850,000 targets in Gaza and Lebanon wars, says supplier",
+        "url": "https://www.theguardian.com/world/2026/jul/06/israel-command-system-identified-850000-targets-gaza-lebanon-war-supplier-elbit-systems",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Elbit Systems supplied Tzayad digital army programme to map people, vehicles and other objects in real time Israel identified about 1,000 potential targets a day during the first two years of the wars in Gaza and Lebanon with its command and control system, according to a presentation by the country's largest arms supplier, Elbit Systems. A total of 850,000 targets were detected in real time by the Israeli Tzayad digital army programme across all the military's theatres of war between 7 October and the end of 2025, the company said at a military conference in London."
+      }
+    ],
+    "generated_at": "2026-07-06T22:36:53.630075+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-06-005",
+    "title": "UN rights body demands release of Palestinian doctor detained by Israel",
+    "summary": "Hussam Abu Safia's family and lawyer say his life is in imminent danger and shows signs of having been tortured.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-06-aljazeera-middle-east-a7d251e2217a"
+    ],
+    "source_ids": [
+      "gaza-2026-07-06-aljazeera-middle-east-a7d251e2217a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/6/un-rights-body-demands-release-of-palestinian-doctor-detained-by-israel?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-06-aljazeera-middle-east-a7d251e2217a",
+        "title": "UN rights body demands release of Palestinian doctor detained by Israel",
+        "url": "https://www.aljazeera.com/news/2026/7/6/un-rights-body-demands-release-of-palestinian-doctor-detained-by-israel?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Hussam Abu Safia's family and lawyer say his life is in imminent danger and shows signs of having been tortured."
+      }
+    ],
+    "generated_at": "2026-07-06T22:36:53.630075+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-11-007",
+    "prior_edition_date": "2026-06-11",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-06-001",
+    "title": "Israeli police officer filmed throwing stun grenade into car in West Bank",
+    "summary": "Israel's police force says the officer acted \"not in accordance with procedure\" and that it has opened an investigation.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-06-bbc-middle-east-8edd2e1ff84c"
+    ],
+    "source_ids": [
+      "gaza-2026-07-06-bbc-middle-east-8edd2e1ff84c"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c1eyyyl8ye0o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-06-bbc-middle-east-8edd2e1ff84c",
+        "title": "Israeli police officer filmed throwing stun grenade into car in West Bank",
+        "url": "https://www.bbc.co.uk/news/articles/c1eyyyl8ye0o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israel's police force says the officer acted \"not in accordance with procedure\" and that it has opened an investigation."
+      }
+    ],
+    "generated_at": "2026-07-06T22:36:53.630075+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-06-004",
+    "title": "Pro-Palestine protesters rally for 'Filton 25' activists at UK court",
+    "summary": "",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-06-aljazeera-middle-east-b6eb535e60bd"
+    ],
+    "source_ids": [
+      "gaza-2026-07-06-aljazeera-middle-east-b6eb535e60bd"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/6/pro-palestine-protesters-rally-for-filton-25-activists-at-uk-court?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-06-aljazeera-middle-east-b6eb535e60bd",
+        "title": "Pro-Palestine protesters rally for 'Filton 25' activists at UK court",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/6/pro-palestine-protesters-rally-for-filton-25-activists-at-uk-court?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Pro-Palestine protesters rally for 'Filton 25' activists at UK court."
+      }
+    ],
+    "generated_at": "2026-07-06T22:36:53.630075+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-21-002",
+    "prior_edition_date": "2026-06-21",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-06-002",
+    "title": "Detained Gaza doctor almost unrecognisable after injuries in Israeli jail, lawyer says",
+    "summary": "Hussam Abu Safiya faces 'tangible danger to his life' following 18 months in prison without charge or trial Middle East crisis live - latest updates One of Gaza's most prominent doctors is almost unrecognisable because of severe injuries inflicted in Israeli detention, his lawyer has said, and faces \"tangible danger to his life\" after being held for 18 months without charge or trial. Hussam Abu Safiya met his lawyer on 2 July, after a transfer to Israel's notorious underground Rakefet prison in late June. He had difficulty breathing and speaking continuously, was so weak he struggled to sit upright, and repeatedly seemed on the verge of losing consciousness, said his lawyer, Nasser Odeh.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-06-guardian-world-e12b7d9ea4ea"
+    ],
+    "source_ids": [
+      "gaza-2026-07-06-guardian-world-e12b7d9ea4ea"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/06/detained-gaza-doctor-almost-unrecognisable-injuries-israeli-jail-hussam-abu-safiya"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-06-guardian-world-e12b7d9ea4ea",
+        "title": "Detained Gaza doctor almost unrecognisable after injuries in Israeli jail, lawyer says",
+        "url": "https://www.theguardian.com/world/2026/jul/06/detained-gaza-doctor-almost-unrecognisable-injuries-israeli-jail-hussam-abu-safiya",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Hussam Abu Safiya faces 'tangible danger to his life' following 18 months in prison without charge or trial Middle East crisis live - latest updates One of Gaza's most prominent doctors is almost unrecognisable because of severe injuries inflicted in Israeli detention, his lawyer has said, and faces \"tangible danger to his life\" after being held for 18 months without charge or trial. Hussam Abu Safiya met his lawyer on 2 July, after a transfer to Israel's notorious underground Rakefet prison in late June. He had difficulty breathing and speaking continuously, was so weak he struggled to sit upright, and repeatedly seemed on the verge of losing consciousness, said his lawyer, Nasser Odeh."
+      }
+    ],
+    "generated_at": "2026-07-06T22:36:53.630075+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

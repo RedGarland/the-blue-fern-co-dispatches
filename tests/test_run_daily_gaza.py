@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 import scripts.publish_gaza_historical as historical
+import scripts.run_gaza_daily_operator as operator
 import scripts.run_daily_gaza as daily
 
 
@@ -1437,6 +1438,65 @@ def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys
     assert called["count"] == 1
     assert called["provider"] == "none"
     assert summary["ok"] is True
+
+
+def test_gaza_daily_operator_defaults_to_audio_generation_on_publish(isolated, monkeypatch):
+    monkeypatch.setattr(operator, "ROOT", isolated)
+    args = operator.parse_args(["--date", "2026-05-07", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    captured: dict[str, list[str]] = {}
+
+    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
+    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
+    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
+    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: {"ok": True, "commands": []})
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "valid", "errors": []})
+
+    def fake_daily(run_args: list[str]):
+        captured["daily_args"] = run_args
+        return 0, {
+            "source_count": 5,
+            "publisher_count": 3,
+            "public_story_count": 5,
+            "generation_ok": True,
+            "validation_ok": True,
+            "tests_ok": True,
+            "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{args.date}/",
+        }, "{}"
+
+    def fake_run(args_list: list[str], *, cwd: Path = operator.ROOT):
+        _ = cwd
+        command = " ".join(args_list)
+        if "publish_github_pages.py" in command and "--dry-run" in args_list:
+            return type(
+                "Completed",
+                (),
+                {
+                    "returncode": 0,
+                    "stdout": json.dumps(
+                        {
+                            "ok": True,
+                            "errors": [],
+                            "paid_detail_excluded_from_public": True,
+                            "target_pages_branch": "gh-pages",
+                        }
+                    ),
+                    "stderr": "",
+                },
+            )()
+        return type("Completed", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
+    monkeypatch.setattr(operator, "_run_command", fake_run)
+    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
+    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["audio_status"] == "audio_generated"
+    assert "--generate-audio" in captured["daily_args"]
+    assert "--tts-provider" in captured["daily_args"]
+    assert "none" in captured["daily_args"]
 
 
 def test_daily_audio_flags_are_forwarded_to_gaza_audio_writer(isolated, monkeypatch, capsys):

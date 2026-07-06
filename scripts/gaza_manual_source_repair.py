@@ -3,15 +3,26 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from scripts.run_gaza_daily_operator import validate_manual_source_records
+
+
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 REPAIR_FIELDS = ("traceability_note", "attribution_mode", "claim_status")
 DEFAULT_ATTRIBUTION_MODE = "reported_public_source"
 DEFAULT_CLAIM_STATUS = "reported_public_source"
+PLACEHOLDER_ERROR_TOKEN = "appears to be a placeholder/example source"
 
 
 def validate_date(value: str) -> str:
@@ -98,6 +109,7 @@ def summarize_records(records: list[dict[str, Any]]) -> dict[str, Any]:
     missing_by_record: list[dict[str, Any]] = []
     field_counts = {field: 0 for field in REPAIR_FIELDS}
     proposed_notes: dict[int, str] = {}
+    validation_errors = validate_manual_source_records(records)
     for index, record in enumerate(records, start=1):
         missing = [field for field in REPAIR_FIELDS if _value_is_missing(record.get(field))]
         for field in REPAIR_FIELDS:
@@ -110,12 +122,22 @@ def summarize_records(records: list[dict[str, Any]]) -> dict[str, Any]:
                 entry["proposed_traceability_note"] = note
                 proposed_notes[index] = note
             missing_by_record.append(entry)
+    next_action = "No action needed."
+    if validation_errors:
+        if any(PLACEHOLDER_ERROR_TOKEN in error for error in validation_errors):
+            next_action = "Remove or replace the placeholder/example source record with a real source-backed record."
+        else:
+            next_action = "Fix the invalid manual source record(s) before rerunning."
+    elif missing_by_record:
+        next_action = f"Run with --apply to write missing fields."
     return {
         "record_count": len(records),
         "field_counts": field_counts,
         "missing_by_record": missing_by_record,
         "proposed_traceability_notes": proposed_notes,
-        "status": "valid" if not missing_by_record else "repair needed",
+        "validation_errors": validation_errors,
+        "status": "valid" if not missing_by_record and not validation_errors else ("repair needed" if missing_by_record and not validation_errors else "invalid"),
+        "next_action": next_action,
     }
 
 
@@ -152,7 +174,7 @@ def build_report(edition_date: str, *, apply: bool) -> dict[str, Any]:
 
     summary = summarize_records(records)
     fields_added = {field: 0 for field in REPAIR_FIELDS}
-    if apply and summary["missing_by_record"]:
+    if apply and summary["status"] == "repair needed":
         repaired_records: list[dict[str, Any]] = []
         for record in records:
             repaired, added, _note = _repair_record(record)
@@ -171,15 +193,14 @@ def build_report(edition_date: str, *, apply: bool) -> dict[str, Any]:
         "status": status,
         "record_count": summary["record_count"],
         "missing_by_record": summary["missing_by_record"],
+        "validation_errors": summary["validation_errors"],
         "field_counts": summary["field_counts"],
         "fields_added": fields_added,
         "proposed_traceability_notes": summary["proposed_traceability_notes"],
         "next_action": (
             f"python scripts\\gaza_operator_status.py --date {edition_date} --no-live"
             if status == "repaired"
-            else "Run with --apply to write missing fields."
-            if status == "repair needed"
-            else "No action needed."
+            else summary["next_action"]
         ),
     }
 
@@ -200,6 +221,10 @@ def render_report(report: dict[str, Any]) -> str:
     if report["status"] == "invalid":
         lines.append("Status: invalid")
         lines.append(f"Error: {report.get('error')}")
+        if report.get("validation_errors"):
+            lines.append("Validation errors:")
+            for error in report["validation_errors"]:
+                lines.append(f"- {error}")
         lines.append("")
         lines.append("Next action:")
         lines.append(str(report["next_action"]))
@@ -222,6 +247,11 @@ def render_report(report: dict[str, Any]) -> str:
                 proposed = entry.get("proposed_traceability_note")
                 if proposed:
                     lines.append(f"- Proposed traceability_note: {proposed}")
+            if report.get("validation_errors"):
+                lines.append("")
+                lines.append("Validation errors:")
+                for error in report["validation_errors"]:
+                    lines.append(f"- {error}")
         else:
             lines.append("Fields added:")
             for field in REPAIR_FIELDS:

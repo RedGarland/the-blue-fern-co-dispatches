@@ -11,6 +11,7 @@ import time
 from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 from urllib import request
 
 
@@ -38,7 +39,7 @@ SAFE_SOURCE_CLEAN_PREFIXES = (
     "output/tmp-backups-pages/",
     "logs/",
 )
-MANUAL_REQUIRED_FIELDS = (
+MANUAL_CORE_FIELDS = (
     "source_record_id",
     "title",
     "url",
@@ -47,13 +48,9 @@ MANUAL_REQUIRED_FIELDS = (
     "retrieved_at",
     "summary_or_snippet",
     "source_type",
-    "provider_id",
     "region_scope",
     "category_hint",
     "reliability_tier",
-    "attribution_mode",
-    "claim_status",
-    "traceability_note",
 )
 NORMALIZABLE_FIELDS = {
     "source_record_id",
@@ -62,6 +59,17 @@ NORMALIZABLE_FIELDS = {
     "attribution_mode",
     "claim_status",
 }
+PLACEHOLDER_RECORD_ERROR = "appears to be a placeholder/example source"
+PLACEHOLDER_URL_HOSTS = {"example.com", "example.org", "example.net"}
+PLACEHOLDER_URL_HINTS = ("placeholder", "todo", "test-source")
+PLACEHOLDER_TITLE_HINTS = ("example:", "placeholder", "todo", "test source")
+PLACEHOLDER_PUBLISHER_HINTS = ("example news", "placeholder", "test", "test news")
+PLACEHOLDER_SUMMARY_HINTS = ("example", "placeholder", "todo", "test source")
+PLACEHOLDER_TRACEABILITY_HINTS = (
+    "manually added for generator run.",
+    "manually added for generator run",
+    "generator run",
+)
 LIVE_RETRY_DELAYS = (0, 15, 30, 60, 60, 60, 60, 60, 60, 60, 60, 60)
 LIVE_MARKERS = ("Dispatches From Gaza", "Today's Read", "Todayâ€™s Read", "Limited-source update", "Source Mix")
 
@@ -217,6 +225,40 @@ def _load_manual_records(path: Path) -> list[dict[str, Any]]:
     return [record for record in records if isinstance(record, dict)]
 
 
+def _normalized_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
+def _manual_source_placeholder_reasons(record: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    url = str(record.get("url") or "").strip()
+    parsed = urlsplit(url) if url else None
+    host = (parsed.hostname or "").lower() if parsed else ""
+    if host in PLACEHOLDER_URL_HOSTS:
+        reasons.append(f"url host is {host}")
+    normalized_url = _normalized_text(url)
+    if any(hint in normalized_url for hint in PLACEHOLDER_URL_HINTS):
+        reasons.append("url contains placeholder text")
+
+    title = _normalized_text(record.get("title"))
+    if title and any(hint in title for hint in PLACEHOLDER_TITLE_HINTS):
+        reasons.append("title contains placeholder language")
+
+    publisher = _normalized_text(record.get("publisher"))
+    if publisher and any(hint in publisher for hint in PLACEHOLDER_PUBLISHER_HINTS):
+        reasons.append("publisher contains placeholder language")
+
+    summary = _normalized_text(record.get("summary_or_snippet"))
+    if summary and any(hint in summary for hint in PLACEHOLDER_SUMMARY_HINTS):
+        reasons.append("summary_or_snippet contains placeholder language")
+
+    traceability_note = _normalized_text(record.get("traceability_note"))
+    if traceability_note and any(hint in traceability_note for hint in PLACEHOLDER_TRACEABILITY_HINTS):
+        reasons.append("traceability_note is generic and not source-safe")
+
+    return reasons
+
+
 def _write_manual_records(path: Path, records: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(records, indent=2), encoding="utf-8")
@@ -250,12 +292,16 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     collected_errors = validate_collected_source_records(records, min_sources=0)
     for index, record in enumerate(records, start=1):
-        missing = [field for field in MANUAL_REQUIRED_FIELDS if not str(record.get(field) or "").strip()]
+        missing = [field for field in MANUAL_CORE_FIELDS if not str(record.get(field) or "").strip()]
         if missing:
             errors.append(f"source record {index} missing required fields: {', '.join(missing)}")
         url = str(record.get("url") or "").strip()
         if url and not url.startswith(("http://", "https://")):
             errors.append(f"source record {index} has invalid URL: {url}")
+        placeholder_reasons = _manual_source_placeholder_reasons(record)
+        if placeholder_reasons:
+            errors.append(f"record {index} {PLACEHOLDER_RECORD_ERROR}")
+            errors.append(f"record {index} placeholder indicators: {', '.join(placeholder_reasons)}")
     for error in collected_errors:
         if error not in errors:
             errors.append(error)

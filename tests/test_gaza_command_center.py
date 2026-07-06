@@ -158,6 +158,65 @@ def test_dry_run_full_invokes_wrapper_with_expected_flags(isolated: Path, monkey
     assert "-PostBluesky" not in captured["cmd"]
 
 
+def test_check_reports_placeholder_manual_source_as_needs_attention(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(command_center, "_preflight_report", lambda: {"ok": True, "source_repo": {"summary": {"entry_count": 0, "risky_entries": [], "allowed_entries": []}}, "pages_repo": {"summary": {"entry_count": 0, "risky_entries": [], "allowed_entries": []}}})
+    monkeypatch.setattr(
+        command_center.operator_status,
+        "build_report",
+        lambda *args, **kwargs: {
+            "overall_status": "action_needed",
+            "next_action": "Remove or replace the placeholder/example manual source record and rerun.",
+            "issues": ["Remove or replace the placeholder/example manual source record and rerun."],
+            "manual_sources": {
+                "status": "invalid",
+                "errors": ["record 1 appears to be a placeholder/example source"],
+                "next_action": "Remove or replace the placeholder/example manual source record and rerun.",
+            },
+            "source_repo": {"state": "clean"},
+            "pages_repo": {"state": "clean"},
+            "source_artifacts": {},
+            "pages_artifacts": {},
+            "live": {"enabled": False, "ok": True, "unknown_only": False},
+            "recent_logs": {"merged_fields": {}},
+        },
+    )
+    manual_path = isolated / "data" / "dispatches" / "gaza" / "sources" / "2026-07-05" / "manual_sources.json"
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-src-2026-07-05-001",
+                    "title": "Example: Gaza story for 2026-07-05",
+                    "url": "https://example.com/gaza-story-2026-07-05",
+                    "publisher": "Example News",
+                    "published_at": "2026-07-05T00:00:00Z",
+                    "retrieved_at": "2026-07-05T00:01:00Z",
+                    "summary_or_snippet": "Short summary for the example Gaza story.",
+                    "source_type": "news",
+                    "provider_id": "manual-supplement",
+                    "region_scope": "Gaza",
+                    "category_hint": "humanitarian",
+                    "reliability_tier": "reported-public-source",
+                    "traceability_note": "Manually added for generator run.",
+                    "attribution_mode": "reported_public_source",
+                    "claim_status": "reported_public_source",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    report = command_center.build_report(_parsed(["--date", "2026-07-05", "--check"]))
+    date_result = report["dates"][0]
+
+    assert report["ok"] is False
+    assert date_result["manual_sources"]["status"] == "invalid"
+    assert any("placeholder/example source" in error for error in date_result["manual_sources"]["errors"])
+    assert "remove or replace" in date_result["next_safe_action"].lower()
+
+
 def test_json_output_includes_dates_and_aggregate(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     monkeypatch.setattr(
         command_center,

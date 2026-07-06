@@ -64,6 +64,7 @@ def _make_fake_runner_repo(
     smoke_payload: object | None = None,
     smoke_mode: str = "json",
     capture_dispatch_argv: bool = False,
+    validate_placeholder_manual_sources: bool = False,
 ) -> Path:
     repo = tmp_path / "runner-repo"
     scripts_dir = repo / "scripts"
@@ -129,6 +130,28 @@ manual_source_path = ROOT / "data" / "dispatches" / "gaza" / "sources" / date / 
 workspace_output = ROOT / "output" / "site" / "gaza" / "editions" / date
 workspace_output.mkdir(parents=True, exist_ok=True)
 (workspace_output / "index.html").write_text("dry-run", encoding="utf-8")
+if __VALIDATE_PLACEHOLDER__ and manual_source_path.is_file():
+    manual_text = manual_source_path.read_text(encoding="utf-8", errors="replace").lower()
+    if "example.com" in manual_text or "example news" in manual_text or "manually added for generator run." in manual_text:
+        result = {{
+            "ok": False,
+            "operator_status": "MANUAL_SOURCE_INVALID",
+            "email_status": "not_requested",
+            "bluesky_status": "skipped",
+            "pages_push_ok": None,
+            "pages_repo_updated": False,
+            "publish_ok": False,
+            "generation_ok": False,
+            "validation_ok": False,
+            "manual_source_present": True,
+            "cwd": str(Path.cwd()),
+            "root": str(ROOT),
+            "output_root": str(ROOT / "output"),
+            "argv": args,
+            "errors": ["record 1 appears to be a placeholder/example source"],
+        }}
+        print(json.dumps(result, indent=2))
+        raise SystemExit(1)
 result = {
     "ok": True,
     "operator_status": "DRY_RUN_READY",
@@ -148,6 +171,7 @@ result = {
 print(json.dumps(result, indent=2))
 raise SystemExit(0)
 """.strip()
+        .replace("__VALIDATE_PLACEHOLDER__", str(validate_placeholder_manual_sources))
         + "\n",
     )
     smoke_python = [
@@ -487,6 +511,35 @@ def test_wrapper_gaza_dry_run_full_snapshots_untracked_manual_source_inputs(tmp_
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo)
     assert '"manual_source_present": true' in log_text
+
+
+def test_wrapper_gaza_dry_run_full_rejects_placeholder_manual_source_inputs(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True, validate_placeholder_manual_sources=True)
+    manual_source_dir = repo / "data" / "dispatches" / "gaza" / "sources" / "2026-07-05"
+    manual_source_dir.mkdir(parents=True, exist_ok=True)
+    (manual_source_dir / "manual_sources.json").write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "url": "https://example.com/story",
+                        "publisher": "Example News",
+                        "title": "Example title",
+                        "published_at": "2026-07-05T00:00:00Z",
+                        "retrieved_at": "2026-07-05T00:00:00Z",
+                        "summary_or_snippet": "Manually added for generator run.",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"])
+
+    assert result.returncode != 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "Runner wrapper failed: RuntimeException: Isolated Gaza dry-run failed with exit code 1." in log_text
 
 
 @pytest.mark.parametrize("extra_flag", ["-Push", "-PostBluesky"])

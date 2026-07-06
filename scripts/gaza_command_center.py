@@ -121,6 +121,7 @@ def _manual_source_status(date_text: str) -> dict[str, Any]:
         "status": report.get("status"),
         "record_count": report.get("record_count", 0),
         "errors": list(report.get("errors") or []),
+        "next_action": report.get("next_action"),
     }
 
 
@@ -629,6 +630,8 @@ def render_text_report(report: dict[str, Any]) -> str:
             lines.append(f"- records: {date_result['manual_sources']['record_count']}")
         if date_result["manual_sources"].get("errors"):
             lines.append(f"- errors: {', '.join(date_result['manual_sources']['errors'])}")
+        if date_result["manual_sources"].get("next_action"):
+            lines.append(f"- next action: {date_result['manual_sources']['next_action']}")
         lines.append("")
         if date_result.get("actions"):
             lines.append("Actions")

@@ -314,6 +314,7 @@ def _daily_args(
     remote_url: str,
     dry_run: bool,
     generate_audio: bool,
+    allow_listing_shrink: bool,
     tts_provider: str,
     audio_model: str,
     audio_voice: str,
@@ -334,6 +335,8 @@ def _daily_args(
         args.append("--dry-run")
     if skip_tests:
         args.append("--skip-tests")
+    if allow_listing_shrink:
+        args.append("--allow-listing-shrink")
     if generate_audio:
         args.extend(
             [
@@ -647,6 +650,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         remote_url=args.remote_url,
         dry_run=bool(args.dry_run),
         generate_audio=generate_audio,
+        allow_listing_shrink=bool(args.allow_listing_shrink),
         tts_provider=args.tts_provider,
         audio_model=args.audio_model,
         audio_voice=args.audio_voice,
@@ -823,6 +827,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--post-bluesky-only", action="store_true", help="Skip generation/publish and only finish the Bluesky post after live verification.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Ignore an existing Bluesky receipt and post again.")
     parser.add_argument("--force-audio", action="store_true", help="Regenerate dated Gaza audio even when an existing audio file is already present.")
+    parser.add_argument("--allow-listing-shrink", action="store_true", help="Allow Gaza homepage recent-editions pruning in dry-run planning.")
     parser.add_argument("--pages-repo", default=str(DEFAULT_PAGES_REPO), help="Local Pages repo path.")
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Pages branch.")
     parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL, help="Pages repo remote URL.")

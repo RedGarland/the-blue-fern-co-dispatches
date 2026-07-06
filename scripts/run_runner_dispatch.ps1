@@ -197,15 +197,23 @@ function Invoke-LoggedCommand {
 
 function Invoke-LoggedGitCommand {
     param(
-        [string[]]$Arguments
+        [string[]]$Arguments,
+        [string]$SafeDirectory = ""
     )
 
-    Write-Log ("Running: git {0}" -f ($Arguments -join " "))
+    $commandArgs = @()
+    if (-not [string]::IsNullOrWhiteSpace($SafeDirectory)) {
+        $commandArgs += "-c"
+        $commandArgs += "safe.directory=$SafeDirectory"
+    }
+    $commandArgs += $Arguments
+
+    Write-Log ("Running: git {0}" -f ($commandArgs -join " "))
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
         $combinedOutput = @(
-            & git @Arguments 2>&1 |
+            & git @commandArgs 2>&1 |
             ForEach-Object {
                 if ($_ -is [System.Management.Automation.ErrorRecord]) {
                     $_.Exception.Message
@@ -223,6 +231,90 @@ function Invoke-LoggedGitCommand {
         }
     } finally {
         $ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
+function Get-TrackedDirtyRepoPaths {
+    param(
+        [string]$Repo
+    )
+
+    $status = Invoke-LoggedGitCommand -Arguments @("-C", $Repo, "status", "--short", "--untracked-files=all") -SafeDirectory $Repo
+    if ($status.ExitCode -ne 0) {
+        throw "Could not inspect repo state for ${Repo}: $($status.OutputText)"
+    }
+
+    $paths = New-Object System.Collections.Generic.List[string]
+    foreach ($line in ($status.OutputText -split "\r?\n")) {
+        $trimmed = $line.TrimEnd()
+        if ([string]::IsNullOrWhiteSpace($trimmed)) {
+            continue
+        }
+        if ($trimmed.Length -lt 4) {
+            continue
+        }
+        $pathText = $trimmed.Substring(3).Trim()
+        if ($pathText.Contains(" -> ")) {
+            $pathText = $pathText.Split(" -> ", 2)[1].Trim()
+        }
+        if ([string]::IsNullOrWhiteSpace($pathText)) {
+            continue
+        }
+        $normalizedPath = $pathText -replace "/", "\"
+        if ($normalizedPath.StartsWith("logs\") -or $normalizedPath.StartsWith("output\") -or $normalizedPath.StartsWith(".pytest") -or $normalizedPath.StartsWith(".venv\") -or $normalizedPath.StartsWith("bluefern-dispatches-pages\")) {
+            continue
+        }
+        if (-not $paths.Contains($normalizedPath)) {
+            [void]$paths.Add($normalizedPath)
+        }
+    }
+
+    return $paths
+}
+
+function Copy-RepoSnapshotIntoClone {
+    param(
+        [string]$SourceRepo,
+        [string]$TempRepo,
+        [string]$SnapshotMessage
+    )
+
+    $dirtyPaths = Get-TrackedDirtyRepoPaths -Repo $SourceRepo
+    if ($dirtyPaths.Count -eq 0) {
+        return [pscustomobject]@{
+            DirtyPaths = @()
+            CommitCreated = $false
+        }
+    }
+
+    foreach ($relativePath in $dirtyPaths) {
+        $sourcePath = Join-Path $SourceRepo $relativePath
+        $tempPath = Join-Path $TempRepo $relativePath
+        if (Test-Path -LiteralPath $sourcePath) {
+            $parent = Split-Path -Parent $tempPath
+            if ($parent) {
+                New-Item -ItemType Directory -Force -Path $parent | Out-Null
+            }
+            Copy-Item -LiteralPath $sourcePath -Destination $tempPath -Force
+        } elseif (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Recurse -Force
+        }
+    }
+
+    $stageArgs = @("-C", $TempRepo, "add", "-A", "--") + $dirtyPaths
+    $stageResult = Invoke-LoggedGitCommand -Arguments $stageArgs
+    if ($stageResult.ExitCode -ne 0) {
+        throw "Could not stage isolated snapshot for ${TempRepo}: $($stageResult.OutputText)"
+    }
+
+    $commitResult = Invoke-LoggedGitCommand -Arguments @("-C", $TempRepo, "commit", "-m", $SnapshotMessage, "--no-gpg-sign")
+    if ($commitResult.ExitCode -ne 0) {
+        throw "Could not commit isolated snapshot for ${TempRepo}: $($commitResult.OutputText)"
+    }
+
+    return [pscustomobject]@{
+        DirtyPaths = @($dirtyPaths)
+        CommitCreated = $true
     }
 }
 
@@ -245,9 +337,9 @@ function Invoke-IsolatedGazaDryRun {
     $tempPagesRepo = Join-Path $tempWorkspace "pages"
 
     try {
-        $sourceClone = Invoke-LoggedGitCommand -Arguments @(
+        $sourceClone = Invoke-LoggedGitCommand -SafeDirectory $SourceRepo -Arguments @(
             "clone",
-            "--local",
+            "--no-local",
             "--branch", $SourceBranch,
             "--single-branch",
             $SourceRepo,
@@ -257,9 +349,20 @@ function Invoke-IsolatedGazaDryRun {
             throw "Isolated source clone failed: $($sourceClone.OutputText)"
         }
 
-        $pagesClone = Invoke-LoggedGitCommand -Arguments @(
+        $sourceSnapshot = Copy-RepoSnapshotIntoClone -SourceRepo $SourceRepo -TempRepo $tempSourceRepo -SnapshotMessage "Temporary isolated Gaza dry-run snapshot"
+        $tempSourceOrigin = Join-Path $tempWorkspace "source-origin.git"
+        $sourceOriginClone = Invoke-LoggedGitCommand -Arguments @("clone", "--bare", $tempSourceRepo, $tempSourceOrigin)
+        if ($sourceOriginClone.ExitCode -ne 0) {
+            throw "Isolated source origin clone failed: $($sourceOriginClone.OutputText)"
+        }
+        $sourceRemote = Invoke-LoggedGitCommand -Arguments @("-C", $tempSourceRepo, "remote", "set-url", "origin", $tempSourceOrigin)
+        if ($sourceRemote.ExitCode -ne 0) {
+            throw "Could not repoint isolated source origin: $($sourceRemote.OutputText)"
+        }
+
+        $pagesClone = Invoke-LoggedGitCommand -SafeDirectory $PagesRepo -Arguments @(
             "clone",
-            "--local",
+            "--no-local",
             "--branch", $PagesBranch,
             "--single-branch",
             $PagesRepo,
@@ -267,6 +370,17 @@ function Invoke-IsolatedGazaDryRun {
         )
         if ($pagesClone.ExitCode -ne 0) {
             throw "Isolated Pages clone failed: $($pagesClone.OutputText)"
+        }
+
+        $pagesSnapshot = Copy-RepoSnapshotIntoClone -SourceRepo $PagesRepo -TempRepo $tempPagesRepo -SnapshotMessage "Temporary isolated Gaza dry-run pages snapshot"
+        $tempPagesOrigin = Join-Path $tempWorkspace "pages-origin.git"
+        $pagesOriginClone = Invoke-LoggedGitCommand -Arguments @("clone", "--bare", $tempPagesRepo, $tempPagesOrigin)
+        if ($pagesOriginClone.ExitCode -ne 0) {
+            throw "Isolated Pages origin clone failed: $($pagesOriginClone.OutputText)"
+        }
+        $pagesRemote = Invoke-LoggedGitCommand -Arguments @("-C", $tempPagesRepo, "remote", "set-url", "origin", $tempPagesOrigin)
+        if ($pagesRemote.ExitCode -ne 0) {
+            throw "Could not repoint isolated Pages origin: $($pagesRemote.OutputText)"
         }
 
         $tempOperatorScript = Join-Path $tempSourceRepo "scripts\run_gaza_daily_operator.py"
@@ -279,6 +393,7 @@ function Invoke-IsolatedGazaDryRun {
             "--date", $Date,
             "--dry-run",
             "--generate-audio",
+            "--allow-listing-shrink",
             "--pages-repo", $tempPagesRepo,
             "--pages-branch", $PagesBranch,
             "--expected-source-branch", $SourceBranch,
@@ -288,6 +403,8 @@ function Invoke-IsolatedGazaDryRun {
         Write-Log "Isolated Gaza dry-run workspace: $tempWorkspace"
         Write-Log "Isolated source clone: $tempSourceRepo"
         Write-Log "Isolated Pages clone: $tempPagesRepo"
+        Write-Log ("Isolated source snapshot paths: {0}" -f ($sourceSnapshot.DirtyPaths.Count))
+        Write-Log ("Isolated Pages snapshot paths: {0}" -f ($pagesSnapshot.DirtyPaths.Count))
 
         $dispatchResult = Invoke-LoggedCommand -Python $Python -Arguments $dispatchArgs -ParseJsonTail
         if ($dispatchResult.ExitCode -ne 0) {
@@ -450,38 +567,12 @@ try {
         Load-SmtpCredential -Target $CredentialTarget
     }
 
-    $syncArgs = @(
-        $runnerMaintenanceScript,
-        "sync",
-        "--source-repo", $RepoRoot,
-        "--pages-repo", $PagesRepo,
-        "--source-branch", $SourceBranch,
-        "--pages-branch", $PagesBranch
-    )
-    $syncResult = Invoke-LoggedCommand -Python $python -Arguments $syncArgs -ParseJsonTail
-    if ($syncResult.ExitCode -ne 0) {
-        throw "Runner sync/preflight failed with exit code $($syncResult.ExitCode)."
-    }
-    $syncOk = Get-JsonField -Object $syncResult.Json -FieldName "ok"
-    if ($null -ne $syncOk -and (-not [bool]$syncOk)) {
-        $syncErrors = @(Get-JsonField -Object $syncResult.Json -FieldName "errors")
-        $syncMessage = if ($syncErrors.Count -gt 0) { $syncErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
-        throw "Runner sync/preflight reported ok=false: $syncMessage"
-    }
-
     if ($dryRunFullRequested) {
-        $preflightOk = Get-JsonField -Object $syncResult.Json -FieldName "ok"
-        if ($null -ne $preflightOk -and (-not [bool]$preflightOk)) {
-            $preflightErrors = @(Get-JsonField -Object $syncResult.Json -FieldName "errors")
-            $preflightMessage = if ($preflightErrors.Count -gt 0) { $preflightErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
-            throw "Runner sync/preflight reported ok=false: $preflightMessage"
-        }
-
-        $sourceBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $RepoRoot, "branch", "--show-current")
+        $sourceBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $RepoRoot, "branch", "--show-current") -SafeDirectory $RepoRoot
         if ($sourceBranchNow.ExitCode -ne 0) {
             throw "Could not determine source branch: $($sourceBranchNow.OutputText)"
         }
-        $pagesBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $PagesRepo, "branch", "--show-current")
+        $pagesBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $PagesRepo, "branch", "--show-current") -SafeDirectory $PagesRepo
         if ($pagesBranchNow.ExitCode -ne 0) {
             throw "Could not determine Pages branch: $($pagesBranchNow.OutputText)"
         }
@@ -516,6 +607,25 @@ try {
             Select-Object -Skip $KeepLogs |
             Remove-Item -Force
         exit $exitCode
+    }
+
+    $syncArgs = @(
+        $runnerMaintenanceScript,
+        "sync",
+        "--source-repo", $RepoRoot,
+        "--pages-repo", $PagesRepo,
+        "--source-branch", $SourceBranch,
+        "--pages-branch", $PagesBranch
+    )
+    $syncResult = Invoke-LoggedCommand -Python $python -Arguments $syncArgs -ParseJsonTail
+    if ($syncResult.ExitCode -ne 0) {
+        throw "Runner sync/preflight failed with exit code $($syncResult.ExitCode)."
+    }
+    $syncOk = Get-JsonField -Object $syncResult.Json -FieldName "ok"
+    if ($null -ne $syncOk -and (-not [bool]$syncOk)) {
+        $syncErrors = @(Get-JsonField -Object $syncResult.Json -FieldName "errors")
+        $syncMessage = if ($syncErrors.Count -gt 0) { $syncErrors -join "; " } else { "runner_repo_maintenance.py reported ok=false" }
+        throw "Runner sync/preflight reported ok=false: $syncMessage"
     } elseif ($checkOnlyRequested) {
         if ($Dispatch -eq "gaza") {
             $dispatchArgs = @(

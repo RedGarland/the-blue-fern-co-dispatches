@@ -163,6 +163,7 @@ def pages_publish_command(
     edition_date: str,
     dry_run: bool,
     only_dispatches: tuple[str, ...] = ("gaza",),
+    allow_listing_shrink: bool = False,
 ) -> list[str]:
     args = [sys.executable, "scripts\\publish_github_pages.py"]
     if dry_run:
@@ -181,6 +182,8 @@ def pages_publish_command(
         args.extend(["--only-dispatch", dispatch])
     if not dry_run:
         args.extend(["--remote-url", remote_url, "--commit", "--no-push"])
+    if allow_listing_shrink:
+        args.append("--allow-listing-shrink")
     return args
 
 

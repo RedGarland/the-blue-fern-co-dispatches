@@ -829,6 +829,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--no-post-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Post to Bluesky even when a successful receipt already exists for this edition.")
     parser.add_argument("--generate-audio", action="store_true", help="Generate Gaza audio artifacts after dispatch generation.")
+    parser.add_argument("--allow-listing-shrink", action="store_true", help="Allow Gaza homepage recent-editions pruning in dry-run planning.")
     parser.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="Optional TTS provider when --generate-audio is used.")
     parser.add_argument("--audio-voice", default="alloy", help="TTS voice for --generate-audio.")
     parser.add_argument("--audio-voices", default="", help="Comma-separated voices for alternating mode (example: alloy,verse).")
@@ -925,13 +926,33 @@ def main(argv: list[str] | None = None) -> int:
                 allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources),
             )
         ),
-        command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True)),
+        command_text(
+            pages_publish_command(
+                pages_repo,
+                args.remote_url,
+                args.pages_branch,
+                args.date,
+                dry_run=True,
+                allow_listing_shrink=bool(args.allow_listing_shrink),
+            )
+        ),
     ]
     pytest_basetemp = make_pytest_basetemp("bluefern-pytest-gaza")
     if not args.skip_tests:
         summary["planned_actions"].append(command_text(pytest_command(args.validation_profile, pytest_basetemp)))
     if not args.dry_run:
-        summary["planned_actions"].append(command_text(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=False)))
+        summary["planned_actions"].append(
+            command_text(
+                pages_publish_command(
+                    pages_repo,
+                    args.remote_url,
+                    args.pages_branch,
+                    args.date,
+                    dry_run=False,
+                    allow_listing_shrink=bool(args.allow_listing_shrink),
+                )
+            )
+        )
     if args.push:
         summary["planned_actions"].extend(["git status", f"git push origin {args.pages_branch}"])
 
@@ -1037,7 +1058,16 @@ def main(argv: list[str] | None = None) -> int:
         summary["warnings"].append("tests skipped by --skip-tests")
         summary["validation_ok"] = True
 
-    pages_dry_run = run_command(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=True))
+    pages_dry_run = run_command(
+        pages_publish_command(
+            pages_repo,
+            args.remote_url,
+            args.pages_branch,
+            args.date,
+            dry_run=True,
+            allow_listing_shrink=bool(args.allow_listing_shrink),
+        )
+    )
     log_line(log_path, f"Pages dry-run return code: {pages_dry_run.returncode}")
     if pages_dry_run.returncode != 0:
         summary["errors"].append(pages_dry_run.stderr.strip() or pages_dry_run.stdout.strip() or "Pages publish dry-run failed")
@@ -1088,7 +1118,16 @@ def main(argv: list[str] | None = None) -> int:
         log_line(log_path, "Dry run complete; Pages repo was not updated.")
         return finish(0)
 
-    pages_publish = run_command(pages_publish_command(pages_repo, args.remote_url, args.pages_branch, args.date, dry_run=False))
+    pages_publish = run_command(
+        pages_publish_command(
+            pages_repo,
+            args.remote_url,
+            args.pages_branch,
+            args.date,
+            dry_run=False,
+            allow_listing_shrink=bool(args.allow_listing_shrink),
+        )
+    )
     log_line(log_path, f"Pages publish return code: {pages_publish.returncode}")
     if pages_publish.returncode != 0:
         try:

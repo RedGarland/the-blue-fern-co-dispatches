@@ -55,6 +55,35 @@ Rules:
 - Do not commit `manual_sources.json`.
 - Traceability notes must remain source-safe and use only fields already present in the record.
 
+## Gaza Command Center
+
+Use the Gaza command center when you want one entrypoint for check, dry-run planning, publish planning, production publish, Bluesky posting, email, audio, and live verification.
+
+By default it runs in `--test` mode. In that mode, public actions become plans only. Use `--production` only when you intend the selected write-capable or public action to run for real.
+
+Examples:
+
+```powershell
+python scripts\gaza_command_center.py --date YYYY-MM-DD --check
+python scripts\gaza_command_center.py --date YYYY-MM-DD --dry-run-full
+python scripts\gaza_command_center.py --date YYYY-MM-DD --publish --test
+python scripts\gaza_command_center.py --date YYYY-MM-DD --publish --production
+python scripts\gaza_command_center.py --date YYYY-MM-DD --post-bluesky --production
+python scripts\gaza_command_center.py --date YYYY-MM-DD --email --production
+python scripts\gaza_command_center.py --start-date YYYY-MM-DD --end-date YYYY-MM-DD --check
+```
+
+Optional planning and support flags:
+
+- `--manual-source-check`
+- `--manual-source-repair`
+- `--audio-check`
+- `--audio-generate`
+- `--audio-publish`
+- `--verify-live`
+- `--json`
+- `--continue-on-error`
+
 ## 4. Check-Only Gate
 
 Run the safe check-only runner path after status and repair checks pass:

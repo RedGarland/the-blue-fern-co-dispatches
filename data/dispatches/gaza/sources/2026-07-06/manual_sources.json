@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "source_record_id": "gaza-manual-20260706-001",
+      "title": "Example: Gaza story for 2026-07-06",
+      "url": "https://example.com/gaza-story-2026-07-06",
+      "publisher": "Example News",
+      "published_at": "2026-07-06T05:00:00Z",
+      "retrieved_at": "2026-07-06T05:00:00Z",
+      "summary_or_snippet": "Short summary for the example Gaza story.",
+      "source_type": "manual",
+      "provider_id": "manual-supplement",
+      "region_scope": "Gaza",
+      "category_hint": "news",
+      "reliability_tier": "reported-public-source",
+      "traceability_note": "Manually added for generator run.",
+      "attribution_mode": "reported_public_source",
+      "claim_status": "reported_public_source"
+    }
+  ]
+}

@@ -58,6 +58,9 @@ def make_manual_source_record(edition_date: str, index: int = 1) -> dict[str, st
         "region_scope": "Gaza",
         "category_hint": "humanitarian",
         "reliability_tier": "reported-public-source",
+        "traceability_note": f"Traceable to Reuters via a direct publisher URL dated {edition_date}T12:00:00Z; title, publisher, URL, and published_at are preserved in the record.",
+        "attribution_mode": "reported_public_source",
+        "claim_status": "reported_public_source",
     }
 
 
@@ -557,6 +560,159 @@ def test_collect_or_load_sources_both_mode_reports_persisted_file_count(isolated
     assert code == 1
     assert summary["generated"] is False
     assert "manual_sources.json contains 1 records" in summary["errors"][0]
+
+
+def test_collect_or_load_sources_both_mode_preserves_governance_fields(isolated, monkeypatch, capsys):
+    root = isolated
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    original_record = {
+        "source_record_id": "gaza-src-2026-05-07-001",
+        "title": "Gaza aid access update",
+        "url": "https://valid.test/gaza-source-1",
+        "publisher": "Reuters",
+        "published_at": "2026-05-07T08:15:00Z",
+        "retrieved_at": "2026-05-07T08:20:00Z",
+        "summary_or_snippet": "A source-backed Gaza update.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+        "traceability_note": "Traceable to Reuters via a direct publisher URL dated 2026-05-07T08:15:00Z; title, publisher, URL, and published_at are preserved in the record.",
+        "attribution_mode": "reported_public_source",
+        "claim_status": "reported_public_source",
+    }
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(json.dumps([original_record], indent=2), encoding="utf-8")
+    auto_record = dict(original_record)
+    auto_record["retrieved_at"] = "2026-05-07T12:00:00Z"
+    auto_record.pop("traceability_note")
+    auto_record.pop("attribution_mode")
+    auto_record.pop("claim_status")
+
+    def fake_collect(*args, **kwargs):
+        _ = args, kwargs
+        return {
+            "ok": True,
+            "source_file": str(manual_path),
+            "source_count": 1,
+            "sources": [auto_record],
+            "warnings": [],
+            "errors": [],
+            "failed_source_ids": [],
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            persisted = json.loads(manual_path.read_text(encoding="utf-8"))
+            assert persisted[0]["source_record_id"] == original_record["source_record_id"]
+            assert persisted[0]["traceability_note"] == original_record["traceability_note"]
+            assert persisted[0]["attribution_mode"] == original_record["attribution_mode"]
+            assert persisted[0]["claim_status"] == original_record["claim_status"]
+            write_generated_output(root, "2026-05-07")
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "warnings": [],
+                    "errors": [],
+                    "source_adequacy_status": "limited_source_update",
+                    "publisher_count": 1,
+                    "publishers": ["Reuters"],
+                    "source_adequacy_warnings": [],
+                },
+            )
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "errors": [],
+                    "paid_detail_excluded_from_public": True,
+                    "target_pages_branch": "gh-pages",
+                },
+            )
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    persisted = json.loads(manual_path.read_text(encoding="utf-8"))
+    assert code == 0
+    assert summary["ok"] is True
+    assert persisted[0]["traceability_note"] == original_record["traceability_note"]
+    assert persisted[0]["attribution_mode"] == original_record["attribution_mode"]
+    assert persisted[0]["claim_status"] == original_record["claim_status"]
+    assert persisted[0]["retrieved_at"] == auto_record["retrieved_at"]
+
+
+def test_collect_or_load_sources_both_mode_restores_manual_sources_on_failure(isolated, monkeypatch, capsys):
+    root = isolated
+    manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
+    original_text = json.dumps(
+        [
+            {
+                "source_record_id": "gaza-src-2026-05-07-001",
+                "title": "Gaza aid access update",
+                "url": "https://valid.test/gaza-source-1",
+                "publisher": "Reuters",
+                "published_at": "2026-05-07T08:15:00Z",
+                "retrieved_at": "2026-05-07T08:20:00Z",
+                "summary_or_snippet": "A source-backed Gaza update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+                "traceability_note": "Traceable to Reuters via a direct publisher URL dated 2026-05-07T08:15:00Z; title, publisher, URL, and published_at are preserved in the record.",
+                "attribution_mode": "reported_public_source",
+                "claim_status": "reported_public_source",
+            }
+        ],
+        indent=2,
+    )
+    manual_path.parent.mkdir(parents=True, exist_ok=True)
+    manual_path.write_text(original_text, encoding="utf-8")
+    degraded_record = json.loads(original_text)[0]
+    degraded_record.pop("traceability_note")
+    degraded_record.pop("attribution_mode")
+    degraded_record.pop("claim_status")
+
+    def fake_collect(*args, **kwargs):
+        _ = args, kwargs
+        return {
+            "ok": True,
+            "source_file": str(manual_path),
+            "source_count": 1,
+            "sources": [degraded_record],
+            "warnings": [],
+            "errors": [],
+            "failed_source_ids": [],
+        }
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            return completed(
+                args,
+                payload={"ok": False, "warnings": [], "errors": ["generation boom"]},
+                returncode=1,
+            )
+        if "publish_github_pages.py" in command:
+            return completed(args, payload={"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"})
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "collect_gaza_sources", fake_collect)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--skip-tests", "--dry-run", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 1
+    assert summary["ok"] is False
+    assert manual_path.read_text(encoding="utf-8") == original_text
 
 
 def test_generated_page_requires_visible_source_links(isolated, monkeypatch, capsys):

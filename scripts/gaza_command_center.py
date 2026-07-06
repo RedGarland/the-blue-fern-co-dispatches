@@ -125,6 +125,16 @@ def _manual_source_status(date_text: str) -> dict[str, Any]:
     }
 
 
+def _readiness_report(date_text: str) -> dict[str, Any]:
+    return operator_status.build_report(
+        ROOT,
+        date_text,
+        pages_repo=ROOT / "bluefern-dispatches-pages",
+        pages_branch="gh-pages",
+        live_checks=False,
+    )
+
+
 def _audio_args(date_text: str, *, check: bool = False, generate: bool = False, publish: bool = False) -> argparse.Namespace:
     return argparse.Namespace(
         date=date_text,
@@ -198,13 +208,7 @@ def _run_dry_run_full(date_text: str) -> dict[str, Any]:
 
 
 def _run_check(date_text: str) -> dict[str, Any]:
-    report = operator_status.build_report(
-        ROOT,
-        date_text,
-        pages_repo=ROOT / "bluefern-dispatches-pages",
-        pages_branch="gh-pages",
-        live_checks=False,
-    )
+    report = _readiness_report(date_text)
     ok = report.get("overall_status") == "healthy"
     return {
         "action": "check",
@@ -215,6 +219,12 @@ def _run_check(date_text: str) -> dict[str, Any]:
         "command": f"python scripts\\gaza_operator_status.py --date {date_text} --no-live",
         "details": report,
     }
+
+
+def _manual_sources_need_attention(manual_sources: dict[str, Any]) -> bool:
+    if manual_sources.get("status") != "valid":
+        return True
+    return int(manual_sources.get("record_count") or 0) <= 0
 
 
 def _run_manual_source_check(date_text: str) -> dict[str, Any]:
@@ -480,9 +490,24 @@ def _build_next_safe_action(date_result: dict[str, Any]) -> str:
             if action["action"] in {"check", "manual_source_check", "verify_live"}:
                 return action.get("details", {}).get("next_action") or f"Inspect {action['action'].replace('_', '-')} output and rerun."
             return f"Fix the failed {action['action'].replace('_', '-')} action and rerun."
+    readiness = date_result.get("readiness") or {}
+    readiness_status = str(readiness.get("overall_status") or "").lower()
+    manual_sources = date_result.get("manual_sources") or {}
+    if any(action.get("action") == "dry_run_full" for action in date_result.get("actions") or []):
+        if _manual_sources_need_attention(manual_sources):
+            return "Dry-run mechanism passed. Run --check to determine publish readiness; no source-backed manual input is present for this date."
+        if readiness_status and readiness_status != "healthy":
+            return readiness.get("next_action") or "Dry-run mechanism passed. Run --check to determine publish readiness."
+        if readiness_status == "healthy":
+            return "No action needed."
+        return "Dry-run mechanism passed. Run --check to determine publish readiness."
     if any(action.get("execution") == "plan" for action in date_result.get("actions") or []):
         return "Run the planned actions with --production."
-    return "No action needed."
+    if readiness_status == "healthy":
+        return "No action needed."
+    if readiness.get("next_action"):
+        return readiness["next_action"]
+    return "Run --check to determine publish readiness."
 
 
 def _render_repo_line(label: str, repo: dict[str, Any]) -> str:
@@ -519,17 +544,21 @@ def _run_date(date_text: str, args: argparse.Namespace, selected_actions: list[s
     source_repo = _repo_state_from_preflight(preflight_report, "source_repo")
     pages_repo = _repo_state_from_preflight(preflight_report, "pages_repo")
     manual_sources = _manual_source_status(date_text)
+    readiness_report = _readiness_report(date_text)
     date_result: dict[str, Any] = {
         "date": date_text,
         "mode": "production" if args.production else "test",
         "selected_actions": list(selected_actions),
         "repos": {"source": source_repo, "pages": pages_repo},
         "manual_sources": manual_sources,
+        "readiness": readiness_report,
         "preflight": preflight_report,
         "actions": [],
         "ok": True,
         "stopped_early": False,
         "next_safe_action": "",
+        "readiness_ok": bool(readiness_report.get("overall_status") == "healthy"),
+        "readiness_status": readiness_report.get("overall_status") or "unknown",
     }
 
     if not preflight_report.get("ok") and (source_repo.get("risky") or pages_repo.get("risky")):
@@ -588,6 +617,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         "selected_actions": list(selected_actions),
         "dates": results,
         "ok": not failed_dates,
+        "readiness_ok": all(bool(result.get("readiness_ok")) for result in results),
         "failed_dates": failed_dates,
         "processed_dates": [result["date"] for result in results],
         "aggregate": {
@@ -595,6 +625,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "failed_date_count": len(failed_dates),
             "succeeded_date_count": len(results) - len(failed_dates),
             "selected_action_count": len(selected_actions),
+            "readiness_status": "healthy" if all(bool(result.get("readiness_ok")) for result in results) else "needs_attention",
         },
     }
 
@@ -641,14 +672,15 @@ def render_text_report(report: dict[str, Any]) -> str:
         else:
             lines.append("No actions selected.")
             lines.append("")
-        lines.append("Next safe action")
-        lines.append(f"- {date_result['next_safe_action']}")
-        lines.append("")
+    lines.append("Next safe action")
+    lines.append(f"- {date_result['next_safe_action']}")
+    lines.append("")
     lines.append("Aggregate")
     lines.append(f"- dates processed: {report['aggregate']['date_count']}")
     lines.append(f"- succeeded: {report['aggregate']['succeeded_date_count']}")
     lines.append(f"- failed: {report['aggregate']['failed_date_count']}")
-    lines.append(f"- overall: {'ok' if report['ok'] else 'needs attention'}")
+    lines.append(f"- execution: {'ok' if report['ok'] else 'needs attention'}")
+    lines.append(f"- readiness: {report['aggregate']['readiness_status']}")
     return "\n".join(lines).rstrip() + "\n"
 
 

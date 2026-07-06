@@ -27,6 +27,11 @@ Publishing is intentionally split into two steps: local copy/commit, then manual
   - Loads or generates Gaza source records, validates them, builds the edition, and updates the local Pages repo.
   - Does not push remotely unless `--push` is specified.
 
+- `scripts/gaza_command_center.py`
+  - CLI command center for Gaza date or date-range operations.
+  - Runs checks, dry-run emulation, audio actions, publish planning, production publish, Bluesky, email, and live verification in one place.
+  - Defaults to `--test`, which plans public actions instead of executing them.
+
 ### Gaza historical editions
 
 - `scripts/publish_gaza_historical.py`

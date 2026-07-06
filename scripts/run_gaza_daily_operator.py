@@ -684,7 +684,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         return result
     result["pages_synced_before_publish"] = True
 
-    generate_audio = bool(args.generate_audio and not args.skip_audio)
+    generate_audio = bool((args.generate_audio or not args.dry_run) and not args.skip_audio)
     if generate_audio and audio_file_path(args.date, args.audio_format).exists() and not args.force_audio:
         generate_audio = False
         result["audio_status"] = "audio_reused_existing"
@@ -711,7 +711,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
     result["tests_ok"] = summary.get("tests_ok")
     result["validation_ok"] = summary.get("validation_ok")
     result["pages_commit_sha"] = summary.get("pages_commit_sha")
-    if args.generate_audio and result["audio_status"] == "audio_skipped":
+    if generate_audio and result["audio_status"] == "audio_skipped":
         result["audio_status"] = "audio_generated" if generate_audio else "audio_reused_existing"
     if code != 0:
         errors = [str(item) for item in summary.get("errors") or []]

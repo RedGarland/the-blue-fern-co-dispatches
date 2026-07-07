@@ -1255,7 +1255,7 @@ def write_source_records(root: Path, edition_date: str, records: list[dict[str, 
         raise ValueError(f"date must use YYYY-MM-DD: {edition_date}")
     path = root / "data" / "dispatches" / "gaza" / "sources" / edition_date / filename
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(records, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
     return path
 
 

@@ -173,11 +173,15 @@ def _load_receipt_for_same_public_url(project_root: Path, edition_date: str, pub
 def _gaza_bluesky_artifact_paths(project_root: Path, edition_date: str) -> list[Path]:
     site_root = project_root / "output" / "site" / "gaza" / "editions" / edition_date
     dispatch_root = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    pages_root = project_root / "bluefern-dispatches-pages" / "gaza" / "editions" / edition_date
     run_root = project_root / "data" / "dispatches" / "gaza" / "editions" / edition_date
     return [
         site_root / "curation_manifest.json",
         site_root / "edition_manifest.json",
         site_root / "index.html",
+        pages_root / "curation_manifest.json",
+        pages_root / "edition_manifest.json",
+        pages_root / "index.html",
         dispatch_root / "curation_manifest.json",
         dispatch_root / "edition_manifest.json",
         dispatch_root / "index.html",
@@ -221,10 +225,12 @@ def _extract_html_field(html_text: str, pattern: re.Pattern[str]) -> str:
 def _extract_gaza_edition_identity(project_root: Path, edition_date: str, public_url: str | None) -> dict[str, Any]:
     manifest_candidates = [
         project_root / "output" / "site" / "gaza" / "editions" / edition_date / "edition_manifest.json",
+        project_root / "bluefern-dispatches-pages" / "gaza" / "editions" / edition_date / "edition_manifest.json",
         project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json",
     ]
     page_candidates = [
         project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html",
+        project_root / "bluefern-dispatches-pages" / "gaza" / "editions" / edition_date / "index.html",
         project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "index.html",
     ]
     manifest_path = manifest_candidates[0]
@@ -973,6 +979,7 @@ def _read_json(path: Path) -> Any:
 def _extract_top_story_summary(project_root: Path, edition_date: str, max_length: int) -> str:
     candidate_paths = [
         project_root / "output" / "site" / "gaza" / "editions" / edition_date / "curation_manifest.json",
+        project_root / "bluefern-dispatches-pages" / "gaza" / "editions" / edition_date / "curation_manifest.json",
         project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "curation_manifest.json",
     ]
     payload = None
@@ -1003,8 +1010,17 @@ def _extract_top_story_summary(project_root: Path, edition_date: str, max_length
 
 
 def _extract_first_paragraph_from_html(project_root: Path, edition_date: str, max_length: int) -> str:
-    index_path = project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html"
-    if not index_path.exists():
+    candidate_paths = [
+        project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html",
+        project_root / "bluefern-dispatches-pages" / "gaza" / "editions" / edition_date / "index.html",
+        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "index.html",
+    ]
+    index_path = None
+    for candidate in candidate_paths:
+        if candidate.exists():
+            index_path = candidate
+            break
+    if index_path is None:
         return ""
     try:
         html = index_path.read_text(encoding="utf-8")

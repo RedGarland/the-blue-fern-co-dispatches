@@ -293,6 +293,51 @@ def _copy_file(source: Path, target: Path) -> None:
     shutil.copy2(source, target)
 
 
+def _copy_if_present(source: Path, target: Path) -> bool:
+    if not source.exists():
+        return False
+    _copy_file(source, target)
+    return True
+
+
+def _restore_source_audio_from_pages(project_root: Path, edition_date: str, pages_repo: Path) -> list[str]:
+    restored: list[str] = []
+    source_audio_root = _source_audio_root(project_root)
+    pages_audio_root = _pages_audio_root(pages_repo)
+    pages_root_podcast = pages_repo / "gaza" / "podcast.xml"
+    source_root_podcast = project_root / "output" / "site" / "gaza" / "podcast.xml"
+    pages_metadata_path = pages_audio_root / f"{edition_date}.json"
+    source_metadata_path = source_audio_root / f"{edition_date}.json"
+    metadata: dict[str, Any] = {}
+    if pages_metadata_path.exists():
+        try:
+            payload = _load_json(pages_metadata_path)
+        except Exception:  # noqa: BLE001
+            payload = {}
+        if isinstance(payload, dict):
+            metadata = payload
+
+    file_pairs = [
+        (pages_audio_root / f"{edition_date}-transcript.html", source_audio_root / f"{edition_date}-transcript.html", "transcript"),
+        (pages_metadata_path, source_metadata_path, "metadata"),
+        (pages_audio_root / "index.html", source_audio_root / "index.html", "audio index"),
+        (pages_audio_root / "podcast.xml", source_audio_root / "podcast.xml", "audio podcast feed"),
+        (pages_audio_root / "podcast-artwork.png", source_audio_root / "podcast-artwork.png", "podcast artwork"),
+        (pages_root_podcast, source_root_podcast, "root podcast feed"),
+    ]
+    for source, target, label in file_pairs:
+        if _copy_if_present(source, target):
+            restored.append(f"restored {label} from Pages")
+
+    audio_file = _clean_text(metadata.get("audio_file"))
+    if audio_file:
+        pages_audio_file = pages_audio_root / audio_file
+        source_audio_file = source_audio_root / audio_file
+        if _copy_if_present(pages_audio_file, source_audio_file):
+            restored.append(f"restored audio file from Pages: {audio_file}")
+    return restored
+
+
 def _collect_publish_paths(project_root: Path, edition_date: str) -> list[tuple[Path, Path]]:
     pages_repo = project_root / "bluefern-dispatches-pages"
     audio_root = _source_audio_root(project_root)
@@ -423,10 +468,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         return report
 
     if mode == "generate":
-        if source_report["issues"]:
-            report["ok"] = False
-            report["next_action"] = "Repair the listed audio files before generating." if issues else ""
-            return report
+        restored_from_pages = _restore_source_audio_from_pages(ROOT, edition_date, pages_repo)
         try:
             result = write_gaza_audio_outputs(
                 ROOT,
@@ -438,9 +480,18 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
                 audio_format=str(args.audio_format or DEFAULT_AUDIO_FORMAT).strip().lower() or DEFAULT_AUDIO_FORMAT,
             )
         except Exception as exc:  # noqa: BLE001
+            refreshed_source_report = _build_source_report(ROOT, edition_date)
+            report["source_artifacts"] = refreshed_source_report
+            report["source_missing_keys"] = [name for name, item in (refreshed_source_report.get("files") or {}).items() if not _artifact_ready(item)]
+            report["generation"] = {"restored_from_pages": restored_from_pages}
             report["issues"].append(str(exc))
+            if restored_from_pages:
+                report["issues"].extend(restored_from_pages)
             report["next_action"] = "Fix the audio generation inputs and rerun --generate."
             return report
+        refreshed_source_report = _build_source_report(ROOT, edition_date)
+        report["source_artifacts"] = refreshed_source_report
+        report["source_missing_keys"] = [name for name, item in (refreshed_source_report.get("files") or {}).items() if not _artifact_ready(item)]
         report["generation"] = {
             "transcript_path": str(result.transcript_path),
             "metadata_path": str(result.metadata_path),
@@ -453,9 +504,21 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "tts_provider": result.tts_provider,
             "tts_model": result.tts_model,
             "tts_voice": result.tts_voice,
+            "restored_from_pages": restored_from_pages,
         }
-        report["ok"] = True
-        report["next_action"] = f'Run --publish to copy Gaza audio files into {pages_repo}.' if pages_ready else "Publish once the Pages repo is clean and on gh-pages."
+        if refreshed_source_report["ready"] and refreshed_source_report["mp3_ready"]:
+            report["ok"] = True
+            report["next_action"] = f'Run --publish to copy Gaza audio files into {pages_repo}.' if pages_ready else "Publish once the Pages repo is clean and on gh-pages."
+        else:
+            report["ok"] = False
+            if not refreshed_source_report["mp3_ready"]:
+                report["issues"].append(
+                    f"MP3 is still missing from source: {source_report['files']['audio_file']['path']}"
+                )
+            missing = ", ".join(report["source_missing_keys"] or [])
+            if missing:
+                report["issues"].append(f"Source audio artifacts are still incomplete after generation: {missing}")
+            report["next_action"] = "Run --generate with a TTS provider or restore the missing MP3 from a source-backed audio file."
         return report
 
     if source_report["issues"]:

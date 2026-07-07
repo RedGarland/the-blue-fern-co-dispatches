@@ -78,6 +78,44 @@ def _mirror_audio_fixture_to_pages(root: Path, pages: Path, edition_date: str, *
     (pages / "gaza" / "podcast.xml").write_text((source_audio / "podcast.xml").read_text(encoding="utf-8"), encoding="utf-8")
 
 
+def _write_edition_manifests(root: Path, edition_date: str) -> None:
+    edition_root = root / "output" / "site" / "gaza" / "editions" / edition_date
+    edition_root.mkdir(parents=True, exist_ok=True)
+    curation_rows = [
+        {
+            "title": "Gaza update one",
+            "summary": "A Gaza-focused update.",
+            "included_in_public_summary": True,
+            "public_rendered": True,
+            "source_record_ids": ["src-1"],
+            "publisher_names": ["Example News"],
+            "public_summary": "A Gaza-focused update.",
+        }
+    ]
+    sources_rows = [
+        {
+            "source_record_id": "src-1",
+            "publisher": "Example News",
+            "url": "https://example.com/story",
+            "title": "Example story",
+        }
+    ]
+    (edition_root / "curation_manifest.json").write_text(json.dumps(curation_rows, indent=2), encoding="utf-8")
+    (edition_root / "sources_manifest.json").write_text(json.dumps(sources_rows, indent=2), encoding="utf-8")
+    (edition_root / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "dispatch_slug": "gaza"}, indent=2),
+        encoding="utf-8",
+    )
+
+
+def _mirror_edition_manifests_to_pages(root: Path, pages: Path, edition_date: str) -> None:
+    source_edition = root / "output" / "site" / "gaza" / "editions" / edition_date
+    pages_edition = pages / "gaza" / "editions" / edition_date
+    pages_edition.mkdir(parents=True, exist_ok=True)
+    for name in ("curation_manifest.json", "sources_manifest.json", "edition_manifest.json"):
+        (pages_edition / name).write_text((source_edition / name).read_text(encoding="utf-8"), encoding="utf-8")
+
+
 @pytest.fixture()
 def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
     repo = Path(__file__).resolve().parents[1]
@@ -228,6 +266,74 @@ def test_generate_restores_source_audio_from_pages_but_fails_without_mp3(isolate
     assert (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.json").exists()
     assert not (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.mp3").exists()
     assert "run --generate with a tts provider" in output.lower()
+
+
+def test_generate_restores_missing_edition_manifests_from_pages_and_proceeds_to_mp3_generation(
+    isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _init_pages_repo(isolated)
+    _write_audio_fixture(isolated, "2026-07-05")
+    _write_edition_manifests(isolated, "2026-07-05")
+    pages = isolated / "bluefern-dispatches-pages"
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    _mirror_edition_manifests_to_pages(isolated, pages, "2026-07-05")
+    shutil.rmtree(isolated / "output" / "site" / "gaza" / "editions" / "2026-07-05")
+    (pages / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+
+    def fake_write(root: Path, edition_date: str, **kwargs: object) -> types.SimpleNamespace:
+        _ = kwargs
+        edition_root = root / "output" / "site" / "gaza" / "editions" / edition_date
+        audio_root = root / "output" / "site" / "gaza" / "audio"
+        assert (edition_root / "curation_manifest.json").exists()
+        assert (edition_root / "sources_manifest.json").exists()
+        assert (edition_root / "edition_manifest.json").exists()
+        assert json.loads((edition_root / "curation_manifest.json").read_text(encoding="utf-8"))
+        assert json.loads((edition_root / "sources_manifest.json").read_text(encoding="utf-8"))
+        audio_root.mkdir(parents=True, exist_ok=True)
+        (audio_root / f"{edition_date}.mp3").write_bytes(b"generated-mp3")
+        return types.SimpleNamespace(
+            transcript_path=audio_root / f"{edition_date}-transcript.html",
+            metadata_path=audio_root / f"{edition_date}.json",
+            podcast_path=root / "output" / "site" / "gaza" / "podcast.xml",
+            flash_briefing_path=root / "output" / "site" / "gaza" / "flash-briefing.json",
+            audio_status="audio_file_ready",
+            audio_file=f"{edition_date}.mp3",
+            audio_url=f"/gaza/audio/{edition_date}.mp3",
+            story_count=1,
+            tts_provider="openai",
+            tts_model="test-model",
+            tts_voice="test-voice",
+        )
+
+    monkeypatch.setattr(republish, "write_gaza_audio_outputs", fake_write)
+
+    code = republish.main(["--date", "2026-07-05", "--generate", "--no-live"])
+
+    output = capsys.readouterr().out
+    assert code == 0
+    assert "Generation" in output
+    assert "Audio status: audio_file_ready" in output
+    assert (isolated / "output" / "site" / "gaza" / "editions" / "2026-07-05" / "curation_manifest.json").exists()
+    assert (isolated / "output" / "site" / "gaza" / "editions" / "2026-07-05" / "sources_manifest.json").exists()
+    assert (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.mp3").exists()
+
+
+def test_generate_fails_clearly_when_required_manifests_are_missing_from_both_source_and_pages(
+    isolated: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _init_pages_repo(isolated)
+    _write_audio_fixture(isolated, "2026-07-05")
+    pages = isolated / "bluefern-dispatches-pages"
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    shutil.rmtree(isolated / "output" / "site" / "gaza" / "editions", ignore_errors=True)
+    shutil.rmtree(pages / "gaza" / "editions", ignore_errors=True)
+
+    code = republish.main(["--date", "2026-07-05", "--generate", "--no-live"])
+
+    output = capsys.readouterr().out
+    assert code == 1
+    assert "required Gaza edition artifacts missing for 2026-07-05" in output
+    assert "No action needed." not in output
 
 
 def test_publish_copies_audio_and_feed_files_without_touching_unrelated_pages_files(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:

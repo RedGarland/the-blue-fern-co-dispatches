@@ -186,6 +186,50 @@ def test_generate_forwards_audio_settings_and_writes_source_outputs(isolated: Pa
     assert "Audio status: audio_file_ready" in output
 
 
+def test_generate_restores_source_audio_from_pages_but_fails_without_mp3(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    _init_pages_repo(isolated)
+    _write_audio_fixture(isolated, "2026-07-05")
+    pages = isolated / "bluefern-dispatches-pages"
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    shutil.rmtree(isolated / "output" / "site" / "gaza" / "audio")
+    (pages / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+
+    def fake_write(root: Path, edition_date: str, **kwargs: object) -> types.SimpleNamespace:
+        _ = kwargs
+        audio_root = root / "output" / "site" / "gaza" / "audio"
+        assert (audio_root / f"{edition_date}-transcript.html").exists()
+        assert (audio_root / f"{edition_date}.json").exists()
+        assert (audio_root / "index.html").exists()
+        assert (audio_root / "podcast.xml").exists()
+        assert (root / "output" / "site" / "gaza" / "podcast.xml").exists()
+        return types.SimpleNamespace(
+            transcript_path=audio_root / f"{edition_date}-transcript.html",
+            metadata_path=audio_root / f"{edition_date}.json",
+            podcast_path=root / "output" / "site" / "gaza" / "podcast.xml",
+            flash_briefing_path=root / "output" / "site" / "gaza" / "flash-briefing.json",
+            audio_status="script_ready_no_audio_file",
+            audio_file=None,
+            audio_url=None,
+            story_count=4,
+            tts_provider="none",
+            tts_model=None,
+            tts_voice=None,
+        )
+
+    monkeypatch.setattr(republish, "write_gaza_audio_outputs", fake_write)
+
+    code = republish.main(["--date", "2026-07-05", "--generate", "--no-live"])
+
+    output = capsys.readouterr().out
+    assert code == 1
+    assert "repair needed" in output.lower()
+    assert "No action needed." not in output
+    assert (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05-transcript.html").exists()
+    assert (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.json").exists()
+    assert not (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.mp3").exists()
+    assert "run --generate with a tts provider" in output.lower()
+
+
 def test_publish_copies_audio_and_feed_files_without_touching_unrelated_pages_files(isolated: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
     _write_audio_fixture(isolated, "2026-07-05")
     pages = _init_pages_repo(isolated)
@@ -220,6 +264,21 @@ def test_publish_copies_audio_and_feed_files_without_touching_unrelated_pages_fi
     assert (pages / "gaza" / "audio" / "podcast.xml").exists()
     assert (pages / "gaza" / "podcast.xml").exists()
     assert (pages / "gaza" / "keep.txt").read_text(encoding="utf-8") == "keep\n"
+
+
+def test_publish_refuses_when_mp3_is_missing_even_if_other_source_audio_exists(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_audio_fixture(isolated, "2026-07-05")
+    pages = _init_pages_repo(isolated)
+    _mirror_audio_fixture_to_pages(isolated, pages, "2026-07-05")
+    (isolated / "output" / "site" / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+    (pages / "gaza" / "audio" / "2026-07-05.mp3").unlink()
+
+    code = republish.main(["--date", "2026-07-05", "--publish", "--no-live"])
+
+    output = capsys.readouterr().out
+    assert code == 1
+    assert "missing audio file" in output.lower()
+    assert "Repair the listed audio files before publishing." in output
 
 
 def test_publish_requires_source_side_artifacts(isolated: Path, capsys: pytest.CaptureFixture[str]) -> None:

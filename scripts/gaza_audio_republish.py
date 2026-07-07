@@ -300,6 +300,24 @@ def _copy_if_present(source: Path, target: Path) -> bool:
     return True
 
 
+def _restore_source_edition_manifests_from_pages(project_root: Path, edition_date: str, pages_repo: Path) -> list[str]:
+    restored: list[str] = []
+    source_edition_root = project_root / "output" / "site" / "gaza" / "editions" / edition_date
+    pages_edition_root = pages_repo / "gaza" / "editions" / edition_date
+    for name, label in (
+        ("curation_manifest.json", "curation manifest"),
+        ("sources_manifest.json", "sources manifest"),
+        ("edition_manifest.json", "edition manifest"),
+    ):
+        source_path = source_edition_root / name
+        pages_path = pages_edition_root / name
+        if source_path.exists():
+            continue
+        if _copy_if_present(pages_path, source_path):
+            restored.append(f"restored {label} from Pages")
+    return restored
+
+
 def _restore_source_audio_from_pages(project_root: Path, edition_date: str, pages_repo: Path) -> list[str]:
     restored: list[str] = []
     source_audio_root = _source_audio_root(project_root)
@@ -468,6 +486,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
         return report
 
     if mode == "generate":
+        restored_manifests = _restore_source_edition_manifests_from_pages(ROOT, edition_date, pages_repo)
         restored_from_pages = _restore_source_audio_from_pages(ROOT, edition_date, pages_repo)
         try:
             result = write_gaza_audio_outputs(
@@ -483,10 +502,10 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             refreshed_source_report = _build_source_report(ROOT, edition_date)
             report["source_artifacts"] = refreshed_source_report
             report["source_missing_keys"] = [name for name, item in (refreshed_source_report.get("files") or {}).items() if not _artifact_ready(item)]
-            report["generation"] = {"restored_from_pages": restored_from_pages}
+            report["generation"] = {"restored_from_pages": restored_manifests + restored_from_pages}
             report["issues"].append(str(exc))
-            if restored_from_pages:
-                report["issues"].extend(restored_from_pages)
+            if restored_manifests or restored_from_pages:
+                report["issues"].extend(restored_manifests + restored_from_pages)
             report["next_action"] = "Fix the audio generation inputs and rerun --generate."
             return report
         refreshed_source_report = _build_source_report(ROOT, edition_date)
@@ -504,7 +523,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "tts_provider": result.tts_provider,
             "tts_model": result.tts_model,
             "tts_voice": result.tts_voice,
-            "restored_from_pages": restored_from_pages,
+            "restored_from_pages": restored_manifests + restored_from_pages,
         }
         if refreshed_source_report["ready"] and refreshed_source_report["mp3_ready"]:
             report["ok"] = True

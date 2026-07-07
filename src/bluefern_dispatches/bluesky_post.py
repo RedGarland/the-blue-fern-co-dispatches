@@ -171,10 +171,17 @@ def _load_receipt_for_same_public_url(project_root: Path, edition_date: str, pub
 
 
 def _gaza_bluesky_artifact_paths(project_root: Path, edition_date: str) -> list[Path]:
+    site_root = project_root / "output" / "site" / "gaza" / "editions" / edition_date
+    dispatch_root = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    run_root = project_root / "data" / "dispatches" / "gaza" / "editions" / edition_date
     return [
-        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "curation_manifest.json",
-        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json",
-        project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html",
+        site_root / "curation_manifest.json",
+        site_root / "edition_manifest.json",
+        site_root / "index.html",
+        dispatch_root / "curation_manifest.json",
+        dispatch_root / "edition_manifest.json",
+        dispatch_root / "index.html",
+        run_root / "run_manifest.json",
     ]
 
 
@@ -212,8 +219,24 @@ def _extract_html_field(html_text: str, pattern: re.Pattern[str]) -> str:
 
 
 def _extract_gaza_edition_identity(project_root: Path, edition_date: str, public_url: str | None) -> dict[str, Any]:
-    manifest_path = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json"
-    page_path = project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html"
+    manifest_candidates = [
+        project_root / "output" / "site" / "gaza" / "editions" / edition_date / "edition_manifest.json",
+        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "edition_manifest.json",
+    ]
+    page_candidates = [
+        project_root / "output" / "site" / "gaza" / "editions" / edition_date / "index.html",
+        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "index.html",
+    ]
+    manifest_path = manifest_candidates[0]
+    for candidate in manifest_candidates:
+        if candidate.exists():
+            manifest_path = candidate
+            break
+    page_path = page_candidates[0]
+    for candidate in page_candidates:
+        if candidate.exists():
+            page_path = candidate
+            break
     result: dict[str, Any] = {
         "requested_date": edition_date,
         "manifest_edition_date": None,
@@ -303,9 +326,6 @@ def _extract_gaza_edition_identity(project_root: Path, edition_date: str, public
                 else:
                     issues.append(f"canonical_url could not be verified for requested {edition_date}")
                     result["mismatched_field"] = result["mismatched_field"] or "canonical_url"
-    else:
-        result["mismatched_field"] = result["mismatched_field"] or "page_title"
-
     if not matched_fields:
         if not result["mismatched_field"]:
             result["mismatched_field"] = "requested_date"
@@ -951,8 +971,15 @@ def _read_json(path: Path) -> Any:
 
 
 def _extract_top_story_summary(project_root: Path, edition_date: str, max_length: int) -> str:
-    curated_path = project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "curation_manifest.json"
-    payload = _read_json(curated_path)
+    candidate_paths = [
+        project_root / "output" / "site" / "gaza" / "editions" / edition_date / "curation_manifest.json",
+        project_root / "output" / "dispatches" / "gaza" / "editions" / edition_date / "curation_manifest.json",
+    ]
+    payload = None
+    for curated_path in candidate_paths:
+        payload = _read_json(curated_path)
+        if payload is not None:
+            break
     preferred: list[str] = []
     fallback: list[str] = []
     if isinstance(payload, list):

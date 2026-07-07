@@ -278,6 +278,74 @@ def test_june_13_post_uses_public_summary_and_public_url(tmp_path: Path):
     assert "The latest Gaza briefing is live." not in text
 
 
+def test_july_6_post_uses_site_artifacts_when_dispatch_output_is_absent(tmp_path: Path):
+    edition_date = "2026-07-06"
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-07-06/"
+    site_dir = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site_dir.mkdir(parents=True, exist_ok=True)
+    (site_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Israeli command system identified 850,000 targets in Gaza and Lebanon wars, says supplier",
+                    "summary": "Elbit Systems said its Tzayad digital army programme mapped targets in real time.",
+                    "story_scope": "core_gaza",
+                    "score": 53,
+                    "included_in_public_summary": True,
+                    "public_rendered": True,
+                },
+                {
+                    "title": "UN rights body demands release of Palestinian doctor detained by Israel",
+                    "summary": "Hussam Abu Safia's family says his life is in imminent danger.",
+                    "story_scope": "core_gaza",
+                    "score": 52,
+                    "included_in_public_summary": True,
+                    "public_rendered": True,
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (site_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "source_count": 5,
+                "story_count": 5,
+                "publisher_count": 3,
+                "publishers": ["Al Jazeera", "BBC News", "The Guardian"],
+                "source_adequacy_status": "limited_source_update",
+                "public_url": public_url,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (site_dir / "index.html").write_text("<html><body><h1>Dispatches From Gaza - July 6, 2026</h1><p>July 6, 2026</p></body></html>", encoding="utf-8")
+    run_manifest = tmp_path / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
+    run_manifest.parent.mkdir(parents=True, exist_ok=True)
+    run_manifest.write_text(
+        json.dumps(
+            {
+                "social_summary": "Limited-source Gaza update for July 6, 2026.",
+                "public_url": public_url,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    text = bluesky_post.build_gaza_bluesky_post_text(edition_date, public_url, project_root=tmp_path)
+
+    assert text != bluesky_post.BLUESKY_GAZA_POST_FALLBACK
+    assert public_url in text
+    assert "July 6" in text
+    assert "source-backed update" in text.lower() or "briefing" in text.lower()
+    assert "audio" not in text.lower()
+    assert "podcast" not in text.lower()
+    assert "feed" not in text.lower()
+    assert "listen" not in text.lower()
+    assert "mp3" not in text.lower()
+
+
 def test_gaza_post_text_omits_source_count_metadata_and_cleans_punctuation(tmp_path: Path):
     edition_date = "2026-06-22"
     edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date

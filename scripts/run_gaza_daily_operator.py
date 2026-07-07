@@ -127,6 +127,44 @@ def _git_branch(repo: Path) -> str:
     return _git_output(repo, "branch", "--show-current")
 
 
+def _git_head_sha(repo: Path) -> str:
+    return _git_output(repo, "rev-parse", "--short", "HEAD")
+
+
+def _git_head_subject(repo: Path) -> str:
+    return _git_output(repo, "log", "-1", "--pretty=%s")
+
+
+def _pages_repo_snapshot(pages_repo: Path) -> dict[str, Any]:
+    snapshot: dict[str, Any] = {
+        "exists": pages_repo.exists(),
+        "status_branch": None,
+        "branch": None,
+        "upstream": None,
+        "ahead": None,
+        "behind": None,
+        "head_sha": None,
+        "head_subject": None,
+    }
+    if not pages_repo.exists():
+        return snapshot
+    try:
+        snapshot["status_branch"] = _git_status_branch(pages_repo)
+        snapshot["branch"] = _git_branch(pages_repo)
+        snapshot["head_sha"] = _git_head_sha(pages_repo)
+        snapshot["head_subject"] = _git_head_subject(pages_repo)
+        upstream = _git_output(pages_repo, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}")
+        snapshot["upstream"] = upstream
+        counts = _git_output(pages_repo, "rev-list", "--left-right", "--count", f"{upstream}...HEAD")
+        parts = counts.split()
+        if len(parts) == 2:
+            snapshot["behind"] = int(parts[0])
+            snapshot["ahead"] = int(parts[1])
+    except Exception as exc:  # noqa: BLE001
+        snapshot["error"] = str(exc)
+    return snapshot
+
+
 def _git_dirty_path(line: str) -> str:
     text = line[3:] if len(line) > 3 else line
     if " -> " in text:
@@ -565,7 +603,14 @@ def _operator_result_base(args: argparse.Namespace) -> dict[str, Any]:
         "email_status": "not_requested",
         "cleanup_status": "not_run",
         "source_repo_status_after": None,
+        "source_repo_status_before": None,
         "pages_repo_status_after": None,
+        "pages_repo_status_before": None,
+        "pages_repo_ahead_before": None,
+        "pages_repo_behind_before": None,
+        "pages_repo_was_ahead_before": False,
+        "pages_commit_sha_before": None,
+        "pages_commit_subject_before": None,
         "next_action": None,
         "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{args.date}/",
         "commands_run": [],
@@ -578,7 +623,34 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
     result = _operator_result_base(args)
     pages_repo = Path(args.pages_repo).resolve()
     source_status_before = _git_status_lines(ROOT)
+    pages_snapshot_before = _pages_repo_snapshot(pages_repo)
+    result["source_repo_status_before"] = _git_status_branch(ROOT)
+    result["pages_repo_status_before"] = pages_snapshot_before.get("status_branch")
+    result["pages_repo_ahead_before"] = pages_snapshot_before.get("ahead")
+    result["pages_repo_behind_before"] = pages_snapshot_before.get("behind")
+    result["pages_repo_was_ahead_before"] = bool((pages_snapshot_before.get("ahead") or 0) > 0)
+    result["pages_commit_sha_before"] = pages_snapshot_before.get("head_sha")
+    result["pages_commit_subject_before"] = pages_snapshot_before.get("head_subject")
     kept, cleanable, risky = _split_source_dirty_state(args.date, source_status_before)
+    if result["pages_repo_was_ahead_before"]:
+        result["operator_status"] = "PAGES_REPO_AHEAD_BLOCKED"
+        commit_sha = str(result.get("pages_commit_sha_before") or "<unknown>")
+        commit_subject = str(result.get("pages_commit_subject_before") or "<unknown>")
+        ahead = result.get("pages_repo_ahead_before")
+        behind = result.get("pages_repo_behind_before")
+        next_action = (
+            f"Pages repo already has {ahead} local commit(s) ahead of origin"
+            f"{f' and {behind} commit(s) behind' if behind is not None else ''}: {commit_sha} {commit_subject}. "
+            "Push or reset that local Pages commit only if it is confirmed safe, then rerun."
+        )
+        if risky:
+            next_action += "\nSource repo also has unexpected dirty paths:\n" + "\n".join(risky)
+        elif cleanable:
+            next_action += "\nSource repo has cleanable generated artifacts:\n" + "\n".join(cleanable)
+        result["next_action"] = next_action
+        result["source_repo_status_after"] = _git_status_branch(ROOT)
+        result["pages_repo_status_after"] = pages_snapshot_before.get("status_branch") or _git_status_branch(pages_repo)
+        return result
     if risky:
         result["operator_status"] = "REPO_DIRTY_BLOCKED"
         result["next_action"] = "Clean or commit unexpected source repo changes before rerunning."

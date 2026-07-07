@@ -480,7 +480,7 @@ def summarize_overall(
     latest_log_fields = recent_logs.get("merged_fields") or {}
     if not issues and latest_log_fields.get("ok") is False:
         issues.append("Recent runner logs report a failed Gaza run.")
-    if not issues and str(latest_log_fields.get("operator_status") or "").upper() in {"FAILED", "AUDIO_FAILED", "BLUESKY_FAILED", "REPO_DIRTY_BLOCKED", "MANUAL_SOURCE_INVALID"}:
+    if not issues and str(latest_log_fields.get("operator_status") or "").upper() in {"FAILED", "AUDIO_FAILED", "BLUESKY_FAILED", "REPO_DIRTY_BLOCKED", "MANUAL_SOURCE_INVALID", "PAGES_REPO_AHEAD_BLOCKED"}:
         issues.append(f"Recent runner logs report {latest_log_fields.get('operator_status')}.")
 
     overall_status = "healthy" if not issues else "action_needed"

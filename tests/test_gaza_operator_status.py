@@ -219,6 +219,26 @@ def test_summarize_overall_healthy_and_actionable_next_action(isolated: Path) ->
     assert actionable["issues"]
 
 
+def test_summarize_overall_flags_pages_repo_ahead_operator_logs(isolated: Path) -> None:
+    report = status.summarize_overall(
+        source_repo={"risky": False, "dirty": False},
+        manual_sources={"exists": True, "status": "valid", "path": str(status.manual_sources_path(isolated, "2026-07-05"))},
+        source_artifacts={"run_manifest": {"exists": True}, "dedupe_report": {"exists": True}, "source_diversity_report": {"exists": True}},
+        pages_repo={"risky": False, "dirty": False},
+        pages_artifacts={
+            "edition_page": {"exists": True},
+            "audio_transcript": {"exists": True},
+            "audio_mp3": {"exists": True},
+        },
+        live={"enabled": False, "ok": True, "unknown_only": False},
+        recent_logs={"merged_fields": {"operator_status": "PAGES_REPO_AHEAD_BLOCKED"}},
+        edition_date="2026-07-05",
+    )
+
+    assert report["overall_status"] == "action_needed"
+    assert "PAGES_REPO_AHEAD_BLOCKED" in report["issues"][0]
+
+
 def test_main_json_output_contains_requested_sections(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], isolated: Path) -> None:
     payload = {
         "date": "2026-07-05",

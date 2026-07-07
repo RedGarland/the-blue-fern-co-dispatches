@@ -48,11 +48,11 @@ def test_manual_source_validation_accepts_template_shaped_record(isolated: Path)
         isolated,
         "2026-06-26",
         [
-            {
-                "source_record_id": "gaza-src-2026-06-26-001",
-                "title": "Aid access update",
-                "url": "https://valid.test/gaza-aid",
-                "publisher": "Example News",
+                {
+                    "source_record_id": "gaza-src-2026-06-26-001",
+                    "title": "Aid access update",
+                    "url": "https://valid.test/gaza-aid",
+                    "publisher": "Reuters",
                 "published_at": "2026-06-26T08:00:00Z",
                 "retrieved_at": "2026-06-26T09:00:00Z",
                 "summary_or_snippet": "Source-backed update.",
@@ -77,8 +77,8 @@ def test_manual_source_validation_rejects_missing_required_fields_with_precise_m
         isolated,
         "2026-06-26",
         [
-            {
-                "publisher": "Example News",
+                {
+                    "publisher": "Reuters",
                 "published_at": "2026-06-26T08:00:00Z",
                 "summary_or_snippet": "Source-backed update.",
                 "source_type": "news",
@@ -90,7 +90,7 @@ def test_manual_source_validation_rejects_missing_required_fields_with_precise_m
     )
     result = operator.validate_or_repair_manual_sources("2026-06-26")
     assert result["ok"] is False
-    assert "source record 1 missing required fields: title, url, traceability_note" in result["errors"][0]
+    assert "source record 1 missing required fields: title, url" in result["errors"][0]
 
 
 def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> None:
@@ -98,11 +98,11 @@ def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> N
         isolated,
         "2026-06-26",
         [
-            {
-                "source_record_id": "gaza-src-2026-06-26-001",
-                "title": "Aid access update",
-                "url": "https://valid.test/gaza-aid",
-                "publisher": "Example News",
+                {
+                    "source_record_id": "gaza-src-2026-06-26-001",
+                    "title": "Aid access update",
+                    "url": "https://valid.test/gaza-aid",
+                    "publisher": "Reuters",
                 "published_at": "2026-06-26T08:00:00Z",
                 "retrieved_at": "2026-06-26T09:00:00Z",
                 "summary_or_snippet": "Source-backed update.",
@@ -173,6 +173,39 @@ def test_pages_sync_uses_fetch_and_reset_safely(isolated: Path, monkeypatch: pyt
     assert any("fetch" in " ".join(call) for call in calls)
     assert any("reset --hard origin/gh-pages" in " ".join(call) for call in calls)
     assert all("pull" not in " ".join(call) for call in calls)
+
+
+def test_run_operator_blocks_when_pages_repo_is_already_ahead(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(["--date", "2026-06-26", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
+    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## add/pages-repo-default...origin/add/pages-repo-default" if repo == isolated else "## gh-pages...origin/gh-pages [ahead 1]")
+    monkeypatch.setattr(
+        operator,
+        "_pages_repo_snapshot",
+        lambda pages_repo: {
+            "exists": True,
+            "status_branch": "## gh-pages...origin/gh-pages [ahead 1]",
+            "branch": "gh-pages",
+            "upstream": "origin/gh-pages",
+            "ahead": 1,
+            "behind": 0,
+            "head_sha": "db465ab",
+            "head_subject": "Publish Blue Fern dispatches site",
+        },
+    )
+    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: (_ for _ in ()).throw(AssertionError("sync should not run")))
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: (_ for _ in ()).throw(AssertionError("manual validation should not run")))
+    monkeypatch.setattr(operator, "_capture_daily_run", lambda run_args: (_ for _ in ()).throw(AssertionError("daily generation should not run")))
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "PAGES_REPO_AHEAD_BLOCKED"
+    assert result["pages_repo_was_ahead_before"] is True
+    assert result["pages_commit_sha_before"] == "db465ab"
+    assert result["pages_commit_subject_before"] == "Publish Blue Fern dispatches site"
+    assert "db465ab" in result["next_action"]
+    assert "Publish Blue Fern dispatches site" in result["next_action"]
 
 
 def test_live_verification_retries_and_classifies_propagation_delay(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -335,10 +368,10 @@ def test_cleanup_preserves_manual_sources_file(isolated: Path, monkeypatch: pyte
         isolated,
         "2026-06-26",
         [
-            {
-                "title": "Aid access update",
-                "url": "https://valid.test/gaza-aid",
-                "publisher": "Example News",
+                {
+                    "title": "Aid access update",
+                    "url": "https://valid.test/gaza-aid",
+                    "publisher": "Reuters",
                 "published_at": "2026-06-26T08:00:00Z",
                 "summary_or_snippet": "Source-backed update.",
                 "source_type": "news",

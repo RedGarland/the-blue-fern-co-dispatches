@@ -934,8 +934,7 @@ def main(argv: list[str] | None = None) -> int:
         manual_source_restore = None
 
     def finish(pipeline_code: int) -> int:
-        if pipeline_code != 0:
-            restore_manual_source_file()
+        restore_manual_source_file()
         summary["pipeline_ok"] = pipeline_code == 0
         summary["overall_ok"] = compute_overall_ok(summary, push_requested=bool(args.push), dry_run=bool(args.dry_run))
         if summary.get("email_requested"):

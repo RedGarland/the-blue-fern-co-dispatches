@@ -244,6 +244,50 @@ def test_build_readiness_report_blocks_on_daily_pages_history_shrink(
     assert report["history_guard_status"]["ok"] is False
     assert report["blockers"]
     assert "pages check failed" in report["blockers"][0]
+    assert report["next_action"].startswith("Fix the first blocker")
+
+
+def test_build_readiness_report_allows_missing_surface_history_when_pages_dry_run_is_ok(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True)
+    (tmp_path / "assets").mkdir(parents=True)
+    (tmp_path / "assets" / "site.css").write_text("body{}", encoding="utf-8")
+    (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
+    _write_manual_sources(tmp_path, "2026-07-06")
+    payload = {"ok": True, "errors": [], "pages_dry_run_ok": True}
+    _configure_repo_mocks(monkeypatch, tmp_path, pages_repo, dry_run_payload=payload)
+
+    report = readiness.build_readiness_report(edition_date="2026-07-06", pages_repo=pages_repo)
+
+    assert report["ok"] is True
+    assert report["blockers"] == []
+    assert report["history_guard_status"]["ok"] is True
+    assert report["history_guard_status"]["source"] == "daily_dry_run_pages_dry_run_ok"
+    assert report["history_guard_status"]["surfaces_available"] is False
+    assert "did not include public surface history rows" in report["history_guard_status"]["note"]
+    assert report["next_action"] == "Schedule the Gaza daily run."
+
+
+def test_build_readiness_report_blocks_when_pages_dry_run_is_false_without_surface_history(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True)
+    (tmp_path / "assets").mkdir(parents=True)
+    (tmp_path / "assets" / "site.css").write_text("body{}", encoding="utf-8")
+    (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
+    _write_manual_sources(tmp_path, "2026-07-06")
+    payload = {"ok": True, "errors": [], "pages_dry_run_ok": False}
+    _configure_repo_mocks(monkeypatch, tmp_path, pages_repo, dry_run_payload=payload)
+
+    report = readiness.build_readiness_report(edition_date="2026-07-06", pages_repo=pages_repo)
+
+    assert report["ok"] is False
+    assert report["blockers"]
+    assert report["history_guard_status"]["ok"] is False
+    assert report["next_action"].startswith("Fix the first blocker")
 
 
 def test_build_readiness_report_ignores_cleanup_failure_after_safe_dry_run(
@@ -266,3 +310,4 @@ def test_build_readiness_report_ignores_cleanup_failure_after_safe_dry_run(
     assert "index.lock" in report["dry_run_status"]["cleanup_error"]
     assert report["history_guard_status"]["ok"] is True
     assert report["blockers"] == []
+    assert report["next_action"] == "Schedule the Gaza daily run."

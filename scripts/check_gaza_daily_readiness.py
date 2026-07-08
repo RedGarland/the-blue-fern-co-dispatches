@@ -404,9 +404,19 @@ def build_readiness_report(
                 "stderr": dry_run_status["stderr"],
             }
         )
+        surfaces_available = bool(dry_run_payload.get("gaza_public_surface_history"))
         if not dry_run_payload.get("pages_dry_run_ok"):
             blockers.append("Gaza dry-run pages check failed")
             history_guard_status["ok"] = False
+        elif not surfaces_available:
+            history_guard_status.update(
+                {
+                    "ok": True,
+                    "source": "daily_dry_run_pages_dry_run_ok",
+                    "surfaces_available": False,
+                    "note": "Daily dry-run reported pages_dry_run_ok true but did not include public surface history rows.",
+                }
+            )
         elif not history_guard_status["ok"]:
             blockers.extend(history_guard_status.get("blockers") or [])
     else:
@@ -416,6 +426,13 @@ def build_readiness_report(
     next_action = "Schedule the Gaza daily run."
     if blockers:
         next_action = f"Fix the first blocker, then rerun: {blockers[0]}"
+    if not ok and not blockers:
+        blockers.append("readiness report inconsistent: ok=false with no blockers")
+        next_action = f"Fix the first blocker, then rerun: {blockers[0]}"
+    if ok and blockers:
+        ok = False
+        if next_action == "Schedule the Gaza daily run.":
+            next_action = f"Fix the first blocker, then rerun: {blockers[0]}"
 
     return {
         "ok": ok,

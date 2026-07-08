@@ -136,6 +136,27 @@ def _dashboard_report(date_text: str) -> dict[str, object]:
     }
 
 
+def _dashboard_report_variant(
+    date_text: str,
+    *,
+    overall_status: str,
+    manual_status: str,
+    manual_record_count: int,
+    manual_next_action: str,
+    next_safe_action: str,
+) -> dict[str, object]:
+    report = _dashboard_report(date_text)
+    date_result = report["dates"][0]
+    date_result["readiness"]["overall_status"] = overall_status
+    date_result["readiness"]["next_action"] = next_safe_action
+    date_result["readiness"]["manual_status"] = manual_status
+    date_result["manual_sources"]["status"] = manual_status
+    date_result["manual_sources"]["record_count"] = manual_record_count
+    date_result["manual_sources"]["next_action"] = manual_next_action
+    date_result["next_safe_action"] = next_safe_action
+    return report
+
+
 def test_date_parsing_accepts_single_date_and_range() -> None:
     single = _parsed(["--date", "2026-07-05"])
     ranged = _parsed(["--start-date", "2026-07-01", "--end-date", "2026-07-05"])
@@ -439,6 +460,62 @@ def test_dashboard_main_writes_review_files_and_stays_read_only(isolated: Path, 
     assert "Read-only dashboard output written to" in html
     assert "output/review/gaza/operator-dashboard.html" in html.replace("\\", "/")
     assert "output/site" not in html
+
+
+def test_dashboard_uses_nonpublishing_next_action_when_no_publishable_update(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    date_text = "2026-07-09"
+    report = _dashboard_report_variant(
+        date_text,
+        overall_status="action_needed",
+        manual_status="valid",
+        manual_record_count=2,
+        manual_next_action="No action needed.",
+        next_safe_action="Publish the Gaza edition page into the Pages repo.",
+    )
+    monkeypatch.setattr(command_center, "build_report", lambda args: report)
+    monkeypatch.setattr(
+        command_center.daily_operator,
+        "_pages_repo_snapshot",
+        lambda pages_repo: {"head_subject": "Publish Gaza edition", "head_sha": "def5678", "ahead": 0, "behind": 0, "branch": "gh-pages"},
+    )
+
+    state = command_center.build_dashboard_state(_parsed(["--date", date_text, "--dashboard"]))
+    html = command_center.render_dashboard_html(state)
+
+    assert state["publishable_update_available"] is False
+    assert state["next_safe_action"] == (
+        "No publishable source-backed Gaza update is currently available. "
+        "Add valid manual sources or wait for the next source collection."
+    )
+    assert "Publish the Gaza edition page into the Pages repo." not in state["next_safe_action"]
+    assert "Publish the Gaza edition page into the Pages repo." not in html
+    assert "No publishable source-backed Gaza update is currently available" in html
+
+
+def test_dashboard_prefers_manual_source_next_action_when_manual_sources_need_attention(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    date_text = "2026-07-10"
+    report = _dashboard_report_variant(
+        date_text,
+        overall_status="action_needed",
+        manual_status="invalid",
+        manual_record_count=0,
+        manual_next_action="Fill the missing manual source traceability fields and rerun.",
+        next_safe_action="Publish the Gaza edition page into the Pages repo.",
+    )
+    monkeypatch.setattr(command_center, "build_report", lambda args: report)
+    monkeypatch.setattr(
+        command_center.daily_operator,
+        "_pages_repo_snapshot",
+        lambda pages_repo: {"head_subject": "Publish Gaza edition", "head_sha": "def5678", "ahead": 0, "behind": 0, "branch": "gh-pages"},
+    )
+
+    state = command_center.build_dashboard_state(_parsed(["--date", date_text, "--dashboard"]))
+    html = command_center.render_dashboard_html(state)
+
+    assert state["publishable_update_available"] is False
+    assert state["next_safe_action"] == "Fill the missing manual source traceability fields and rerun."
+    assert "Fill the missing manual source traceability fields and rerun." in html
+    assert "Publish the Gaza edition page into the Pages repo." not in html
 
 
 def test_dashboard_rejects_action_flags(monkeypatch: pytest.MonkeyPatch) -> None:

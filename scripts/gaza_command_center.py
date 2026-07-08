@@ -833,14 +833,26 @@ def build_dashboard_state(args: argparse.Namespace) -> dict[str, Any]:
     overall_status = str(readiness.get("overall_status") or "action_needed")
     manual_sources = dict(date_result["manual_sources"])
     source_count = int(readiness.get("source_repo", {}).get("summary", {}).get("entry_count") or 0)
+    publishable_update_available = overall_status == "healthy"
+    manual_source_status = str(manual_sources.get("status") or "")
+    manual_source_next_action = str(manual_sources.get("next_action") or "").strip()
+    if publishable_update_available:
+        next_safe_action = str(date_result["next_safe_action"] or "No action needed.")
+    elif manual_source_status and manual_source_status != "valid" and manual_source_next_action:
+        next_safe_action = manual_source_next_action
+    else:
+        next_safe_action = (
+            "No publishable source-backed Gaza update is currently available. "
+            "Add valid manual sources or wait for the next source collection."
+        )
     state = {
         "date": date_text,
         "mode": "dashboard",
         "overall_status": overall_status,
         "readiness_status": overall_status,
-        "next_safe_action": date_result["next_safe_action"],
-        "publishable_update_available": overall_status == "healthy",
-        "manual_source_update_available": bool(manual_sources.get("status") == "valid" and int(manual_sources.get("record_count") or 0) > 0),
+        "next_safe_action": next_safe_action,
+        "publishable_update_available": publishable_update_available,
+        "manual_source_update_available": bool(manual_source_status == "valid" and int(manual_sources.get("record_count") or 0) > 0),
         "source_repo_blocks_publish": source_repo_blocks_publish,
         "pages_repo_blocks_publish": pages_repo_blocks_publish,
         "source_repo": source_repo,

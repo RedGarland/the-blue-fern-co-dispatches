@@ -1112,6 +1112,46 @@ def source_record_id(source_id: str, title: str, url: str, edition_date: str) ->
     return f"gaza-{edition_date}-{source_id}-{digest}"
 
 
+def _governance_traceability_note(
+    *,
+    publisher: str,
+    published_at: str,
+    url: str,
+    canonical_url: str = "",
+    wrapper_url: str = "",
+) -> tuple[str, str | None]:
+    if not url:
+        return "", "source record missing a source URL"
+    if not url.startswith(("http://", "https://")):
+        return "", f"source record has invalid URL: {url}"
+    publisher_name = str(publisher or "").strip() or "the source"
+    if wrapper_url:
+        if not canonical_url:
+            return "", "source record uses an unresolved Google News wrapper URL"
+        note = f"Traceable to {publisher_name} via a Google News RSS wrapper and resolved canonical publisher URL {canonical_url}"
+        if published_at:
+            note = f"{note} dated {published_at}"
+        return f"{note}; title, publisher, URL, canonical_url, and published_at are preserved in the record.", None
+    note = f"Traceable to {publisher_name} via a direct publisher URL"
+    if published_at:
+        note = f"{note} dated {published_at}"
+    return f"{note}; title, publisher, URL, and published_at are preserved in the record.", None
+
+
+def _governance_attribution_mode(source: SourceDefinition, url: str) -> str:
+    reliability = str(source.reliability_tier or "").strip().lower()
+    source_group = str(source.source_group or "").strip().lower()
+    source_tier = str(source.source_tier or "").strip().lower()
+    publisher = str(source.publisher or "").strip().lower()
+    if "official-humanitarian-source" in reliability or source_group == "institutional" or source_tier == "official_humanitarian":
+        return "official_humanitarian"
+    if "jerusalem post" in publisher or "jpost" in publisher:
+        return "gaza_adjacent_context"
+    if "news.google.com" in str(url or "").lower():
+        return "reported_public_source"
+    return "reported_public_source"
+
+
 def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_date: str, retrieved_at: str) -> dict[str, Any] | None:
     title = clean_feed_text(item.get("title", ""))
     url = (item.get("url") or "").strip()
@@ -1127,6 +1167,16 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     if not wrapper_url:
         canonical_status = "direct_url"
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
+    traceability_note, traceability_error = _governance_traceability_note(
+        publisher=source.publisher,
+        published_at=published_at,
+        url=url,
+        canonical_url=canonical_url,
+        wrapper_url=wrapper_url,
+    )
+    if traceability_error:
+        return None
+    attribution_mode = _governance_attribution_mode(source, url)
     return {
         "source_record_id": source_record_id(source.source_id, title, url, edition_date),
         "source_id": source.source_id,
@@ -1150,6 +1200,9 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "canonicalization_status": canonical_status,
         "wrapper_url": wrapper_url or None,
         "published_at_missing": published_at == "",
+        "traceability_note": traceability_note,
+        "attribution_mode": attribution_mode,
+        "claim_status": attribution_mode,
     }
 
 

@@ -64,17 +64,19 @@ By default it runs in `--test` mode. In that mode, public actions become plans o
 Examples:
 
 ```powershell
+python scripts\gaza_command_center.py --date YYYY-MM-DD --dashboard
 python scripts\gaza_command_center.py --date YYYY-MM-DD --check
 python scripts\gaza_command_center.py --date YYYY-MM-DD --dry-run-full
 python scripts\gaza_command_center.py --date YYYY-MM-DD --publish --test
 python scripts\gaza_command_center.py --date YYYY-MM-DD --publish --production
-python scripts\gaza_command_center.py --date YYYY-MM-DD --post-bluesky --production
+python scripts\run_gaza_daily_operator.py --date YYYY-MM-DD --post-bluesky-only --post-bluesky
 python scripts\gaza_command_center.py --date YYYY-MM-DD --email --production
 python scripts\gaza_command_center.py --start-date YYYY-MM-DD --end-date YYYY-MM-DD --check
 ```
 
 Optional planning and support flags:
 
+- `--dashboard`
 - `--manual-source-check`
 - `--manual-source-repair`
 - `--audio-check`
@@ -83,6 +85,8 @@ Optional planning and support flags:
 - `--verify-live`
 - `--json`
 - `--continue-on-error`
+
+`--dashboard` writes a local review package under `output/review/gaza/` with an HTML dashboard and matching JSON state file. It is read-only and does not publish Pages, push Pages, post to Bluesky, or send email.
 
 ## 4. Check-Only Gate
 

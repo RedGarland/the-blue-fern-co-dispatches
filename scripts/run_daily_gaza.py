@@ -22,6 +22,7 @@ if str(SRC) not in sys.path:
 
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
 from bluefern_dispatches.gaza_sources import collect_gaza_sources
+from bluefern_dispatches.gaza_sources import extract_canonical_from_google_wrapper
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
 from bluefern_dispatches.gaza_sources import write_source_records
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
@@ -165,6 +166,7 @@ def load_source_records(path: Path) -> list[dict[str, Any]]:
 
 
 PRESERVED_MANUAL_SOURCE_FIELDS = ("traceability_note", "attribution_mode", "claim_status")
+DEFAULT_GOVERNANCE_ATTRIBUTION_MODE = "reported_public_source"
 
 
 def ensure_source_folder(edition_date: str) -> None:
@@ -215,6 +217,67 @@ def _source_record_identity(record: dict[str, Any]) -> tuple[str, str]:
     return source_record_id, url
 
 
+def _value_is_missing(value: Any) -> bool:
+    return not str(value or "").strip()
+
+
+def _governance_traceability_note(record: dict[str, Any]) -> tuple[str, str | None]:
+    url = str(record.get("url") or "").strip()
+    if not url:
+        return "", "source record missing a source URL"
+    if not url.startswith(("http://", "https://")):
+        return "", f"source record has invalid URL: {url}"
+    publisher = str(record.get("publisher") or "").strip() or "the source"
+    published_at = str(record.get("published_at") or "").strip()
+    canonical_url = str(record.get("canonical_url") or "").strip()
+    if "news.google.com" in url.lower():
+        extracted, _status = extract_canonical_from_google_wrapper(url)
+        if not extracted and not canonical_url:
+            return "", "source record uses an unresolved Google News wrapper URL"
+        resolved_url = canonical_url or extracted
+        note = f"Traceable to {publisher} via a Google News RSS wrapper and resolved canonical publisher URL {resolved_url}"
+        if published_at:
+            note = f"{note} dated {published_at}"
+        return f"{note}; title, publisher, URL, canonical_url, and published_at are preserved in the record.", None
+    note = f"Traceable to {publisher} via a direct publisher URL"
+    if published_at:
+        note = f"{note} dated {published_at}"
+    return f"{note}; title, publisher, URL, and published_at are preserved in the record.", None
+
+
+def _default_governance_attribution_mode(record: dict[str, Any]) -> str:
+    value = str(record.get("attribution_mode") or record.get("claim_status") or "").strip()
+    if value:
+        return value
+    reliability = str(record.get("reliability_tier") or "").strip().lower()
+    source_group = str(record.get("source_group") or "").strip().lower()
+    source_tier = str(record.get("source_tier") or "").strip().lower()
+    publisher = str(record.get("publisher") or "").strip().lower()
+    if "official-humanitarian-source" in reliability or source_group == "institutional" or source_tier == "official_humanitarian":
+        return "official_humanitarian"
+    if "jerusalem post" in publisher or "jpost" in publisher:
+        return "gaza_adjacent_context"
+    return DEFAULT_GOVERNANCE_ATTRIBUTION_MODE
+
+
+def _repair_governance_fields(record: dict[str, Any]) -> tuple[dict[str, Any], list[str], str | None]:
+    repaired = dict(record)
+    added: list[str] = []
+    if _value_is_missing(repaired.get("traceability_note")):
+        note, reason = _governance_traceability_note(repaired)
+        if reason:
+            return repaired, added, reason
+        repaired["traceability_note"] = note
+        added.append("traceability_note")
+    if _value_is_missing(repaired.get("attribution_mode")):
+        repaired["attribution_mode"] = _default_governance_attribution_mode(repaired)
+        added.append("attribution_mode")
+    if _value_is_missing(repaired.get("claim_status")):
+        repaired["claim_status"] = str(repaired.get("attribution_mode") or _default_governance_attribution_mode(repaired)).strip()
+        added.append("claim_status")
+    return repaired, added, None
+
+
 def _preserve_manual_governance_fields(
     records: list[dict[str, Any]],
     preserved_records: list[dict[str, Any]],
@@ -244,6 +307,16 @@ def _preserve_manual_governance_fields(
                 if str(preserved_value or "").strip():
                     row[field] = preserved_value
                     changes.append(f"source record {index}: preserved {field}")
+        repaired, repair_changes, repair_error = _repair_governance_fields(row)
+        row = repaired
+        for field in repair_changes:
+            changes.append(f"source record {index}: added {field}")
+        if repair_error:
+            errors.append(
+                f"source record {index} missing required governance fields after merge: {repair_error}"
+            )
+            merged.append(row)
+            continue
         missing = [field for field in PRESERVED_MANUAL_SOURCE_FIELDS if not str(row.get(field) or "").strip()]
         if missing:
             errors.append(

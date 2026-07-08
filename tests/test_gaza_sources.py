@@ -151,6 +151,9 @@ def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
     assert result["source_count"] == 1
     record = result["sources"][0]
     assert set(gaza_sources.REQUIRED_SOURCE_FIELDS).issubset(record)
+    assert record["traceability_note"]
+    assert record["attribution_mode"] == "reported_public_source"
+    assert record["claim_status"] == "reported_public_source"
     assert record["title"] == "Aid convoys enter Gaza"
     assert record["publisher"] == "Example Publisher"
     assert json.loads(Path(result["source_file"]).read_text(encoding="utf-8"))[0]["url"] == "https://valid.test/gaza-aid"
@@ -1268,6 +1271,10 @@ def test_google_news_query_provider_builds_wrapper_feed_and_extracts_canonical_u
 
     assert result["ok"] is True
     assert result["source_count"] == 1
+    record = result["sources"][0]
+    assert record["traceability_note"]
+    assert record["attribution_mode"] == "reported_public_source"
+    assert record["claim_status"] == "reported_public_source"
     record = result["sources"][0]
     assert record["canonical_url"] == "https://english.elpais.com/international/2026/07/03/gaza-heatwave.html"
     assert record["collector_source_type"] == "google_news_rss"

@@ -737,6 +737,60 @@ def test_collect_or_load_sources_both_mode_preserves_governance_fields(isolated,
     assert persisted[0]["retrieved_at"] == original_record["retrieved_at"]
 
 
+def test_preserve_manual_governance_fields_repairs_traceable_auto_records() -> None:
+    auto_record = {
+        "source_record_id": "gaza-src-2026-05-07-001",
+        "title": "Gaza aid access update",
+        "url": "https://valid.test/gaza-source-1",
+        "publisher": "Reuters",
+        "published_at": "2026-05-07T08:15:00Z",
+        "retrieved_at": "2026-05-07T12:00:00Z",
+        "summary_or_snippet": "A source-backed Gaza update.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+    }
+
+    repaired, changes, errors = daily._preserve_manual_governance_fields([auto_record], [])
+
+    assert errors == []
+    assert repaired[0]["traceability_note"] == (
+        "Traceable to Reuters via a direct publisher URL dated 2026-05-07T08:15:00Z; "
+        "title, publisher, URL, and published_at are preserved in the record."
+    )
+    assert repaired[0]["attribution_mode"] == "reported_public_source"
+    assert repaired[0]["claim_status"] == "reported_public_source"
+    assert "source record 1: added traceability_note" in changes
+    assert "source record 1: added attribution_mode" in changes
+    assert "source record 1: added claim_status" in changes
+
+
+def test_preserve_manual_governance_fields_fails_closed_on_unresolved_wrapper() -> None:
+    unresolved_wrapper = {
+        "source_record_id": "gaza-src-2026-05-07-002",
+        "title": "Gaza aid access update",
+        "url": "https://news.google.com/rss/articles/abc123",
+        "publisher": "Reuters",
+        "published_at": "2026-05-07T08:15:00Z",
+        "retrieved_at": "2026-05-07T12:00:00Z",
+        "summary_or_snippet": "A source-backed Gaza update.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+    }
+
+    repaired, changes, errors = daily._preserve_manual_governance_fields([unresolved_wrapper], [])
+
+    assert changes == []
+    assert repaired[0].get("traceability_note", "") == ""
+    assert repaired[0].get("attribution_mode", "") == ""
+    assert repaired[0].get("claim_status", "") == ""
+    assert errors
+    assert "unresolved Google News wrapper URL" in errors[0]
+
+
 def test_collect_or_load_sources_both_mode_restores_manual_sources_on_failure(isolated, monkeypatch, capsys):
     root = isolated
     manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"

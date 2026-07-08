@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-07-08-006",
+    "story_id": "gaza-story-2026-07-08-008",
     "title": "Gaza aid worker killed minutes before World Cup screening he organised",
     "summary": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match. A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed.",
     "category": "conflict",
@@ -58,7 +58,7 @@
         "summary_or_snippet": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed."
       }
     ],
-    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -123,7 +123,7 @@
         "summary_or_snippet": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed."
       }
     ],
-    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -137,12 +137,77 @@
     "core_ground_development": true,
     "include_decision": "merge_into_existing",
     "public_rendered": false,
-    "prior_story_matched": "gaza-story-2026-07-08-006",
+    "prior_story_matched": "gaza-story-2026-07-08-008",
     "prior_edition_date": "2026-07-08",
     "dedupe_classification": "duplicate_merged",
     "dedupe_reasons": [
       "same_event_named_casualty"
     ]
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-006",
+    "title": "Israeli air strikes in Gaza kill eight, including two children",
+    "summary": "Medics report 12 injuries alongside eight deaths in Gaza as Israeli air strikes target civilians and displaced families.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-282f15d63016"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-282f15d63016"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/8/israeli-air-strikes-in-gaza-kill-eight-including-two-children?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-282f15d63016",
+        "title": "Israeli air strikes in Gaza kill eight, including two children",
+        "url": "https://www.aljazeera.com/news/2026/7/8/israeli-air-strikes-in-gaza-kill-eight-including-two-children?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Medics report 12 injuries alongside eight deaths in Gaza as Israeli air strikes target civilians and displaced families."
+      }
+    ],
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
   },
   {
     "story_id": "gaza-story-2026-07-08-003",
@@ -189,7 +254,7 @@
         "summary_or_snippet": "Hundreds of people cheered for Egypt, which shares a border with Gaza, in the match against Argentina."
       }
     ],
-    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -208,7 +273,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-07-08-007",
+    "story_id": "gaza-story-2026-07-08-009",
     "title": "'There are risks': Ex-India judge behind damning UN report on Gaza children",
     "summary": "Before he exposed. Israel's deliberate targeting of Gaza children, Srinivasan Muralidhar took on Indian authorities.",
     "category": "conflict",
@@ -252,7 +317,7 @@
         "summary_or_snippet": "Before he exposed Israel's deliberate targeting of Gaza children, Srinivasan Muralidhar took on Indian authorities."
       }
     ],
-    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -271,7 +336,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-07-08-005",
+    "story_id": "gaza-story-2026-07-08-007",
     "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
     "summary": "A chronological look at key milestones from Hamas's 2006 election victory to its 2026 exit from governing Gaza.",
     "category": "conflict",
@@ -315,7 +380,70 @@
         "summary_or_snippet": "A chronological look at key milestones from Hamas's 2006 election victory to its 2026 exit from governing Gaza."
       }
     ],
-    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-005",
+    "title": "War on Gaza draws large crowds to Khamenei's funeral in Iraq",
+    "summary": "More than a million mourners packed streets in Najaf, Iraq for Iranian Supreme Leader Ali Khamenei's funeral procession.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-17f28c292217"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-17f28c292217"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/8/war-on-gaza-draws-large-crowds-to-khameneis-funeral-in-iraq?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-17f28c292217",
+        "title": "War on Gaza draws large crowds to Khamenei's funeral in Iraq",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/8/war-on-gaza-draws-large-crowds-to-khameneis-funeral-in-iraq?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "More than a million mourners packed streets in Najaf, Iraq for Iranian Supreme Leader Ali Khamenei's funeral procession."
+      }
+    ],
+    "generated_at": "2026-07-08T18:59:50.899336+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

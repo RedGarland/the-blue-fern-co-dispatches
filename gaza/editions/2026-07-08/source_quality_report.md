@@ -2,16 +2,16 @@
 
 - Status: **limited_source_update**
 - Recommendation: **publish limited-source update**
-- Sources: 7 from 3 publishers
+- Sources: 9 from 3 publishers
 - Publishers: Al Jazeera, BBC News, The Guardian
 - Categories: 1
 - All stories from one publisher: false
-- Core ground-development sources: 2
+- Core ground-development sources: 3
 - Context-only sources: 0
 - Claim-attributed sources: 0
 
 ## Source families
-- news_media: 4
+- news_media: 6
 - wire_international: 3
 
 ## Fetch failures
@@ -21,5 +21,5 @@
 - jpost-gaza-accountability-query: no matching Gaza items for 2026-07-08
 
 ## Warnings
-- This is a limited-source update generated from 7 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.
+- This is a limited-source update generated from 9 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.
 - source diversity warning triggered

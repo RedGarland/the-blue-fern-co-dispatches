@@ -1,14 +1,25 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-08",
-  "candidates_seen": 5,
+  "candidates_seen": 7,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-07-08-006",
+      "story_id": "gaza-story-2026-07-08-008",
       "title": "Gaza aid worker killed minutes before World Cup screening he organised",
       "classification": "major_update",
       "material_update": false,
       "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-08-006",
+      "title": "Israeli air strikes in Gaza kill eight, including two children",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
       "include_decision": "include",
       "public_rendered": true
     },
@@ -24,7 +35,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-08-007",
+      "story_id": "gaza-story-2026-07-08-009",
       "title": "'There are risks': Ex-India judge behind damning UN report on Gaza children",
       "classification": "new",
       "material_update": true,
@@ -35,8 +46,19 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-08-005",
+      "story_id": "gaza-story-2026-07-08-007",
       "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-08-005",
+      "title": "War on Gaza draws large crowds to Khamenei's funeral in Iraq",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -56,7 +78,7 @@
       "duplicate_reasons": [
         "same_event_named_casualty"
       ],
-      "prior_story_matched": "gaza-story-2026-07-08-006",
+      "prior_story_matched": "gaza-story-2026-07-08-008",
       "prior_edition_date": "2026-07-08",
       "include_decision": "merge_into_existing",
       "public_rendered": false
@@ -65,7 +87,7 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-07-08-006",
+      "story_id": "gaza-story-2026-07-08-008",
       "title": "Gaza aid worker killed minutes before World Cup screening he organised",
       "classification": "major_update",
       "material_update": false,
@@ -80,7 +102,7 @@
   "merged_sources": 1,
   "duplicate_groups": [
     {
-      "kept_story_id": "gaza-story-2026-07-08-006",
+      "kept_story_id": "gaza-story-2026-07-08-008",
       "merged_story_ids": [
         "gaza-story-2026-07-08-004"
       ],
@@ -104,13 +126,13 @@
       "duplicate_reasons": [
         "same_event_named_casualty"
       ],
-      "prior_story_matched": "gaza-story-2026-07-08-006",
+      "prior_story_matched": "gaza-story-2026-07-08-008",
       "prior_edition_date": "2026-07-08",
       "include_decision": "merge_into_existing",
       "public_rendered": false
     },
     {
-      "story_id": "gaza-story-2026-07-08-006",
+      "story_id": "gaza-story-2026-07-08-008",
       "title": "Gaza aid worker killed minutes before World Cup screening he organised",
       "classification": "major_update",
       "material_update": false,
@@ -118,6 +140,20 @@
       "duplicate_reasons": [],
       "prior_story_matched": "gaza-story-2026-06-30-001",
       "prior_edition_date": "2026-06-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-08-006",
+      "title": "Israeli air strikes in Gaza kill eight, including two children",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     },
@@ -136,7 +172,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-08-007",
+      "story_id": "gaza-story-2026-07-08-009",
       "title": "'There are risks': Ex-India judge behind damning UN report on Gaza children",
       "classification": "new",
       "material_update": true,
@@ -150,8 +186,22 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-08-005",
+      "story_id": "gaza-story-2026-07-08-007",
       "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-08-005",
+      "title": "War on Gaza draws large crowds to Khamenei's funeral in Iraq",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

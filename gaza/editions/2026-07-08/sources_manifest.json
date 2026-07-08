@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-07-07T16:10:14+00:00",
-    "retrieved_at": "2026-07-08T18:24:18.196050+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
     "retrieved_local_date": "2026-07-08",
     "post_edition_date_source": false,
     "summary_or_snippet": "The lawyer for Dr Hussam Abu Safiya tells the BBC his client was so badly beaten he could not recognise him during a visit last week.",
@@ -59,7 +59,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-07-06T18:52:48+00:00",
-    "retrieved_at": "2026-07-08T18:24:18.196050+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
     "retrieved_local_date": "2026-07-08",
     "post_edition_date_source": false,
     "summary_or_snippet": "Israel's police force says the officer acted \"not in accordance with procedure\" and that it has opened an investigation.",
@@ -112,7 +112,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-07-08T07:26:49+00:00",
-    "retrieved_at": "2026-07-08T18:24:18.196050+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
     "retrieved_local_date": "2026-07-08",
     "post_edition_date_source": false,
     "summary_or_snippet": "Hundreds of people cheered for Egypt, which shares a border with Gaza, in the match against Argentina.",
@@ -163,7 +163,7 @@
     "wrapper_url": null,
     "publisher": "The Guardian",
     "published_at": "2026-07-08T17:35:08+00:00",
-    "retrieved_at": "2026-07-08T18:24:18.196050+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
     "retrieved_local_date": "2026-07-08",
     "post_edition_date_source": false,
     "summary_or_snippet": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed.",
@@ -178,7 +178,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-08",
     "used_in_story_ids": [
-      "gaza-story-2026-07-08-006"
+      "gaza-story-2026-07-08-008"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -206,6 +206,110 @@
     "claim_fingerprint": "gaza|guardian|aid worker who organised world cup screenings in gaza killed in israeli strike|conflict|2026-07-08"
   },
   {
+    "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-17f28c292217",
+    "source_id": "gaza-2026-07-08-aljazeera-middle-east-17f28c292217",
+    "title": "War on Gaza draws large crowds to Khamenei's funeral in Iraq",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/7/8/war-on-gaza-draws-large-crowds-to-khameneis-funeral-in-iraq?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/7/8/war-on-gaza-draws-large-crowds-to-khameneis-funeral-in-iraq?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-07-08T18:51:32+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
+    "retrieved_local_date": "2026-07-08",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "More than a million mourners packed streets in Najaf, Iraq for Iranian Supreme Leader Ali Khamenei's funeral procession.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Traceable to Al Jazeera via a direct publisher URL dated 2026-07-08T18:51:32+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-08",
+    "used_in_story_ids": [
+      "gaza-story-2026-07-08-005"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|al jazeera|war on gaza draws large crowds to khamenei s funeral in iraq|conflict|2026-07-08",
+    "title_fingerprint": "war on gaza draws large crowds to khamenei s funeral in iraq",
+    "claim_fingerprint": "gaza|al jazeera|war on gaza draws large crowds to khamenei s funeral in iraq|conflict|2026-07-08"
+  },
+  {
+    "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-282f15d63016",
+    "source_id": "gaza-2026-07-08-aljazeera-middle-east-282f15d63016",
+    "title": "Israeli air strikes in Gaza kill eight, including two children",
+    "url": "https://www.aljazeera.com/news/2026/7/8/israeli-air-strikes-in-gaza-kill-eight-including-two-children?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/7/8/israeli-air-strikes-in-gaza-kill-eight-including-two-children?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-07-08T18:35:11+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
+    "retrieved_local_date": "2026-07-08",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Medics report 12 injuries alongside eight deaths in Gaza as Israeli air strikes target civilians and displaced families.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Traceable to Al Jazeera via a direct publisher URL dated 2026-07-08T18:35:11+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-08",
+    "used_in_story_ids": [
+      "gaza-story-2026-07-08-006"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 52,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|al jazeera|israeli air strikes in gaza kill eight including two children|conflict|2026-07-08",
+    "title_fingerprint": "israeli air strikes in gaza kill eight including two children",
+    "claim_fingerprint": "gaza|al jazeera|israeli air strikes in gaza kill eight including two children|conflict|2026-07-08"
+  },
+  {
     "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-46f4631905ce",
     "source_id": "gaza-2026-07-08-aljazeera-middle-east-46f4631905ce",
     "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
@@ -216,7 +320,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-07-08T13:29:22+00:00",
-    "retrieved_at": "2026-07-08T18:24:18.196050+00:00",
+    "retrieved_at": "2026-07-08T18:59:47.380588+00:00",
     "retrieved_local_date": "2026-07-08",
     "post_edition_date_source": false,
     "summary_or_snippet": "A chronological look at key milestones from Hamas's 2006 election victory to its 2026 exit from governing Gaza.",
@@ -231,7 +335,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-08",
     "used_in_story_ids": [
-      "gaza-story-2026-07-08-005"
+      "gaza-story-2026-07-08-007"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -282,7 +386,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-08",
     "used_in_story_ids": [
-      "gaza-story-2026-07-08-006"
+      "gaza-story-2026-07-08-008"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -335,7 +439,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-08",
     "used_in_story_ids": [
-      "gaza-story-2026-07-08-007"
+      "gaza-story-2026-07-08-009"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,

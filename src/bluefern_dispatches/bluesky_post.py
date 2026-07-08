@@ -13,6 +13,13 @@ from urllib import error, request
 from bluefern_dispatches.generator import BASE_URL
 from bluefern_dispatches.gaza_audio import select_gaza_audio_stories
 from bluefern_dispatches.public_prose import sanitize_public_prose
+from bluefern_dispatches.story_dedupe import (
+    GAZA_EVENT_STOPWORDS,
+    normalize_text as dedupe_normalize_text,
+    normalize_url as dedupe_normalize_url,
+    similarity as dedupe_similarity,
+    story_identity_urls,
+)
 
 BLUESKY_API_BASE = "https://bsky.social/xrpc"
 BLUESKY_MAX_POST_LENGTH = 300
@@ -683,21 +690,104 @@ def _story_post_snippet(record: dict[str, Any]) -> str:
     return cleaned
 
 
-def _derive_gaza_focus_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
+def _gaza_story_duplicate_keys(record: dict[str, Any]) -> set[str]:
+    keys: set[str] = set()
+    for field in ("story_id", "source_record_id", "source_id"):
+        value = str(record.get(field) or "").strip()
+        if value:
+            keys.add(f"id:{_normalize_story_phrase(value)}")
+    for field in ("canonical_url", "source_url", "url", "og_url", "public_url"):
+        normalized = dedupe_normalize_url(record.get(field))
+        if normalized:
+            keys.add(f"url:{normalized}")
+    for url in story_identity_urls(record):
+        normalized = dedupe_normalize_url(url)
+        if normalized:
+            keys.add(f"url:{normalized}")
+    return keys
+
+
+def _gaza_story_similarity_text(record: dict[str, Any]) -> str:
+    parts = [
+        str(record.get("title") or ""),
+        str(record.get("summary") or ""),
+        str(record.get("public_summary") or ""),
+        str(record.get("social_summary") or ""),
+        str(record.get("summary_or_snippet") or ""),
+        str(record.get("description") or ""),
+        str(record.get("dek") or ""),
+    ]
+    return " ".join(part for part in parts if part).strip()
+
+
+def _gaza_similarity_token(value: Any) -> str:
+    token = re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+    if not token or len(token) <= 3:
+        return ""
+    if token.endswith("s") and len(token) > 4 and not token.endswith(("ss", "us", "is")):
+        token = token[:-1]
+    return token
+
+
+def _gaza_story_similarity_tokens(record: dict[str, Any]) -> set[str]:
+    text = dedupe_normalize_text(_gaza_story_similarity_text(record))
+    return {
+        normalized
+        for normalized in (_gaza_similarity_token(token) for token in text.split())
+        if normalized and normalized not in GAZA_EVENT_STOPWORDS
+    }
+
+
+def _gaza_story_is_duplicate(candidate: dict[str, Any], prior_rows: list[dict[str, Any]]) -> bool:
+    candidate_keys = _gaza_story_duplicate_keys(candidate)
+    candidate_text = _gaza_story_similarity_text(candidate)
+    candidate_title = str(candidate.get("title") or "")
+    candidate_summary = str(candidate.get("summary") or "")
+    candidate_tokens = _gaza_story_similarity_tokens(candidate)
+    if not candidate_text and not candidate_keys:
+        return False
+    for prior in prior_rows:
+        prior_keys = _gaza_story_duplicate_keys(prior)
+        if candidate_keys and prior_keys and candidate_keys & prior_keys:
+            return True
+        prior_text = _gaza_story_similarity_text(prior)
+        prior_title = str(prior.get("title") or "")
+        prior_summary = str(prior.get("summary") or "")
+        prior_tokens = _gaza_story_similarity_tokens(prior)
+        shared_tokens = candidate_tokens & prior_tokens
+        union_tokens = candidate_tokens | prior_tokens
+        if shared_tokens and union_tokens:
+            overlap_ratio = len(shared_tokens) / len(union_tokens)
+            if len(shared_tokens) >= 5 and overlap_ratio >= 0.5 and dedupe_similarity(candidate_text, prior_text) >= 0.55:
+                return True
+        title_similarity = dedupe_similarity(candidate_title, prior_title)
+        summary_similarity = dedupe_similarity(candidate_summary, prior_summary)
+        if len(shared_tokens) >= 4 and title_similarity >= 0.8 and summary_similarity >= 0.7:
+            return True
+    return False
+
+
+def _gaza_bluesky_story_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
     context = _gaza_bluesky_context(project_root, edition_date)
     topics: list[str] = []
+    selected_rows: list[dict[str, Any]] = []
     for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
-        if not isinstance(row, dict):
-            continue
         snippet = _story_post_snippet(row)
         if not snippet:
             continue
         if snippet.casefold() in {item.casefold() for item in topics}:
             continue
+        if _gaza_story_is_duplicate(row, selected_rows):
+            continue
+        selected_rows.append(row)
         topics.append(snippet)
         if len(topics) >= max_topics:
             break
     return topics[:max_topics]
+
+
+def _derive_gaza_focus_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
+    return _gaza_bluesky_story_topics(project_root, edition_date, max_topics=max_topics)
 
 
 def _format_post_date(edition_date: str) -> str:
@@ -793,16 +883,7 @@ def build_gaza_bluesky_post_text(
     root = project_root or Path.cwd()
     clean_date = str(edition_date or "").strip()
     context = _gaza_bluesky_context(root, clean_date)
-    topics = []
-    for row in sorted((row for row in (context.get("story_rows") or []) if isinstance(row, dict)), key=_story_priority):
-        snippet = _story_post_snippet(row)
-        if not snippet:
-            continue
-        if snippet.casefold() in {item.casefold() for item in topics}:
-            continue
-        topics.append(snippet)
-        if len(topics) >= 2:
-            break
+    topics = _gaza_bluesky_story_topics(root, clean_date, max_topics=2)
     public_summary = _gaza_public_summary_for_bluesky(root, clean_date, max_length=180)
     if not topics and not public_summary:
         return BLUESKY_GAZA_POST_FALLBACK

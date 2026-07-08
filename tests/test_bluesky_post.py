@@ -278,6 +278,68 @@ def test_june_13_post_uses_public_summary_and_public_url(tmp_path: Path):
     assert "The latest Gaza briefing is live." not in text
 
 
+def test_july_8_post_omits_near_duplicate_also_covered_story(tmp_path: Path):
+    edition_date = "2026-07-08"
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-07-08/"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": "gaza-story-2026-07-08-001",
+                    "source_record_id": "gaza-src-2026-07-08-001",
+                    "url": "https://example.com/gaza-aid-worker-screening",
+                    "title": "Gaza aid worker killed minutes before World Cup screening he organised.",
+                    "summary": "Gaza aid worker killed minutes before World Cup screening he organised.",
+                    "score": 90,
+                    "included_in_public_summary": True,
+                },
+                {
+                    "story_id": "gaza-story-2026-07-08-002",
+                    "source_record_id": "gaza-src-2026-07-08-002",
+                    "url": "https://example.com/gaza-world-cup-screenings",
+                    "title": "Aid worker who organised World Cup screenings in Gaza killed in Israeli strike.",
+                    "summary": "Aid worker who organised World Cup screenings in Gaza killed in Israeli strike.",
+                    "score": 88,
+                    "included_in_public_summary": True,
+                },
+                {
+                    "story_id": "gaza-story-2026-07-08-003",
+                    "source_record_id": "gaza-src-2026-07-08-003",
+                    "url": "https://example.com/gaza-ceasefire-talks",
+                    "title": "Cairo mediators keep Gaza ceasefire talks alive.",
+                    "summary": "Mediators report another round of talks in Cairo.",
+                    "score": 12,
+                    "included_in_public_summary": True,
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 3, "publisher_count": 3, "publishers": ["Reuters", "AP", "Reuters"]}),
+        encoding="utf-8",
+    )
+    site_dir = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site_dir.mkdir(parents=True, exist_ok=True)
+    (site_dir / "index.html").write_text("<html><body><p>July 8, 2026</p></body></html>", encoding="utf-8")
+
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        edition_date,
+        public_url,
+        project_root=tmp_path,
+    )
+
+    assert text.startswith("In the July 8 Gaza briefing:")
+    assert "Also covered:" in text
+    assert "World Cup screening he organised" in text
+    assert "organised World Cup screenings in Gaza killed in Israeli strike" not in text
+    assert text.lower().count("world cup") == 1
+    assert "Cairo ceasefire talks" in text
+    assert len(text) <= bluesky_post.BLUESKY_MAX_POST_LENGTH
+
+
 def test_july_6_post_uses_site_artifacts_when_dispatch_output_is_absent(tmp_path: Path):
     edition_date = "2026-07-06"
     public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-07-06/"
@@ -444,8 +506,8 @@ def test_gaza_post_text_omits_source_count_metadata_and_cleans_punctuation(tmp_p
     assert "saved records across" not in text
     assert "?." not in text
     assert "!." not in text
-    assert "Gaza's footballers train on broken pitches with no shoes" in text
-    assert "Why has FIFA's rebuilding plan gone nowhere?" in text
+    assert ("Gaza's footballers train on broken pitches with no shoes" in text) != ("Why has FIFA's rebuilding plan gone nowhere?" in text)
+    assert text.count("Gaza's footballers") + text.count("Why has FIFA's") == 1
     assert "Source-backed briefing from The Blue Fern Co." not in text
 
 

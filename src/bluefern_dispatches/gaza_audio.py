@@ -160,6 +160,16 @@ def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
     return index_path
 
 
+def refresh_gaza_audio_public_surfaces(project_root: Path) -> tuple[Path, Path]:
+    # Preview and no-audio runs still need to keep the public history surfaces in sync.
+    index_path = write_audio_index(project_root, dry_run=False)
+
+    from bluefern_dispatches.podcast_feed import write_gaza_podcast_feed
+
+    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=False)
+    return index_path, podcast_path
+
+
 def _clean_public_text(value: str) -> str:
     return sanitize_public_prose(str(value or ""))
 
@@ -919,11 +929,14 @@ def write_gaza_audio_outputs(
         transcript_path.write_text(transcript_html, encoding="utf-8")
         metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
         flash_path.write_text(json.dumps([flash_item], indent=2), encoding="utf-8")
-        write_audio_index(project_root, dry_run=False)
+
+    # The public audio listing and podcast feed are preview-safe surfaces:
+    # they preserve existing Pages history and let dry-runs validate shrink guards.
+    write_audio_index(project_root, dry_run=False)
 
     from bluefern_dispatches.podcast_feed import write_gaza_podcast_feed
 
-    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=dry_run)
+    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=False)
     return GazaAudioResult(
         edition_date=date_text,
         transcript_path=transcript_path,

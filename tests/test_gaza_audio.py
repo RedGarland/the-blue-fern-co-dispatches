@@ -1,6 +1,7 @@
 import json
 import wave
 from io import BytesIO
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
@@ -33,6 +34,24 @@ def _write_dispatch_only_edition(tmp_path: Path, edition_date: str, *, curation:
     assets = tmp_path / "assets"
     assets.mkdir(parents=True, exist_ok=True)
     (assets / "gaza-logo.png").write_bytes(b"png")
+
+
+def _write_pages_audio_metadata(tmp_path: Path, edition_date: str, payload: dict) -> Path:
+    root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / f"{edition_date}.json"
+    (root / f"{edition_date}-transcript.html").write_text("<html>Archived transcript</html>", encoding="utf-8")
+    data = {
+        "edition_date": edition_date,
+        "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{edition_date}-transcript.html",
+        "script_text": f"Archived Gaza audio summary for {edition_date}.",
+        "audio_file": f"{edition_date}.mp3",
+        "audio_url": f"/gaza/audio/{edition_date}.mp3",
+        "audio_mime_type": "audio/mpeg",
+    }
+    data.update(payload)
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return path
 
 
 def test_audio_script_includes_source_attribution():
@@ -458,6 +477,52 @@ def test_audio_index_keeps_mp3_column_aligned_when_some_rows_have_no_file(tmp_pa
     assert f"/gaza/audio/{local_date}.mp3" in index_body
     assert f"/gaza/audio/{pages_date}.mp3" not in index_body
     assert "grid-template-columns: minmax(7.5rem, 8.5rem) minmax(8.5rem, 10rem) minmax(16rem, 1.2fr) minmax(8rem, 9rem);" in css_text
+
+
+def test_dry_run_audio_outputs_preserve_pages_history_surface_rows(tmp_path: Path):
+    current_date = "2026-07-06"
+    _write_edition(
+        tmp_path,
+        current_date,
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
+    )
+
+    pages_audio_root = tmp_path / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    start = date.fromisoformat(current_date)
+    preserved_dates = []
+    for offset in range(1, 36):
+        edition_date = (start - timedelta(days=offset)).isoformat()
+        preserved_dates.append(edition_date)
+        _write_pages_audio_metadata(
+            tmp_path,
+            edition_date,
+            {
+                "audio_file": None,
+                "audio_url": None,
+                "audio_mime_type": None,
+                "script_text": f"Archived Gaza audio summary for {edition_date}.",
+            },
+        )
+
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    result = write_gaza_audio_outputs(tmp_path, current_date, dry_run=True, tts_provider="none")
+
+    index_body = (tmp_path / "output" / "site" / "gaza" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_body = (tmp_path / "output" / "site" / "gaza" / "audio" / "podcast.xml").read_text(encoding="utf-8")
+
+    assert not result.transcript_path.exists()
+    assert not result.metadata_path.exists()
+    assert index_body.count("gaza-audio-index-row") == 35
+    assert podcast_body.count("<item>") == 35
+    assert preserved_dates[0] in index_body
+    assert preserved_dates[-1] in index_body
+    assert preserved_dates[0] in podcast_body
+    assert preserved_dates[-1] in podcast_body
 
 
 def test_openai_provider_without_api_key_fails_safely(tmp_path: Path, monkeypatch):

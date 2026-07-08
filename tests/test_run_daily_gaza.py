@@ -19,6 +19,9 @@ def make_root(repo: Path) -> Path:
     (root / "logs").mkdir()
     pages = root / "bluefern-dispatches-pages"
     pages.mkdir()
+    assets = root / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
     return root
 
 
@@ -1521,6 +1524,75 @@ def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys
     assert code == 0
     assert called["count"] == 1
     assert called["provider"] == "none"
+    assert summary["ok"] is True
+
+
+def test_dry_run_without_audio_refreshes_public_audio_surfaces(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    assets = root / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+    pages_audio_root = root / "bluefern-dispatches-pages" / "gaza" / "audio"
+    pages_audio_root.mkdir(parents=True, exist_ok=True)
+    for edition_date in ("2026-05-06", "2026-05-05"):
+        (pages_audio_root / f"{edition_date}-transcript.html").write_text("<html>Archived transcript</html>", encoding="utf-8")
+        (pages_audio_root / f"{edition_date}.json").write_text(
+            json.dumps(
+                {
+                    "edition_date": edition_date,
+                    "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{edition_date}-transcript.html",
+                    "script_text": f"Archived Gaza audio summary for {edition_date}.",
+                    "audio_file": None,
+                    "audio_url": None,
+                    "audio_mime_type": None,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True})
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "errors": [],
+                    "paid_detail_excluded_from_public": True,
+                    "target_pages_branch": "gh-pages",
+                },
+            )
+        if args[:3] == ["git", "status", "--porcelain=v1"]:
+            return completed(args, stdout="")
+        if args[:3] == ["git", "fetch", "origin"]:
+            return completed(args, stdout="fetched")
+        if args[:2] == ["git", "status"]:
+            return completed(args, stdout="On branch gh-pages")
+        if args[:3] == ["git", "push", "origin"]:
+            return completed(args, stdout="pushed")
+        if args[:2] == ["git", "rev-parse"] and args[-1] == "origin/gh-pages":
+            return completed(args, stdout="remote-sha")
+        if args[:2] == ["git", "ls-tree"]:
+            return completed(args, stdout=args[-1])
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(["--date", "2026-05-07", "--dry-run", "--skip-tests", "--pages-repo", str(root / "bluefern-dispatches-pages")])
+
+    summary = json.loads(capsys.readouterr().out)
+    audio_index = root / "output" / "site" / "gaza" / "audio" / "index.html"
+    podcast = root / "output" / "site" / "gaza" / "audio" / "podcast.xml"
+    assert code == 0
+    assert audio_index.exists()
+    assert podcast.exists()
+    assert "2026-05-06" in audio_index.read_text(encoding="utf-8")
+    assert "2026-05-05" in podcast.read_text(encoding="utf-8")
     assert summary["ok"] is True
 
 

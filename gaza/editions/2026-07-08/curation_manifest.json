@@ -1,0 +1,336 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-08-006",
+    "title": "Gaza aid worker killed minutes before World Cup screening he organised",
+    "summary": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match. A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-07-08-004"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-04673b675bbb",
+      "gaza-2026-07-08-guardian-world-0d74d3773ba7"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-04673b675bbb",
+      "gaza-2026-07-08-guardian-world-0d74d3773ba7"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/8/gaza-aid-worker-killed-minutes-before-world-cup-screening-he-organised?traffic_source=rss",
+      "https://www.theguardian.com/world/2026/jul/08/aid-worker-world-cup-screenings-gaza-killed-israeli-strike"
+    ],
+    "publisher_names": [
+      "Al Jazeera",
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-04673b675bbb",
+        "title": "Gaza aid worker killed minutes before World Cup screening he organised",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/8/gaza-aid-worker-killed-minutes-before-world-cup-screening-he-organised?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Mohammed al-Wahidi was killed in an Israeli strike just before people gathered for a World Cup screening he organised."
+      },
+      {
+        "source_record_id": "gaza-2026-07-08-guardian-world-0d74d3773ba7",
+        "title": "Aid worker who organised World Cup screenings in Gaza killed in Israeli strike",
+        "url": "https://www.theguardian.com/world/2026/jul/08/aid-worker-world-cup-screenings-gaza-killed-israeli-strike",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed."
+      }
+    ],
+    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-004",
+    "title": "Aid worker who organised World Cup screenings in Gaza killed in Israeli strike",
+    "summary": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match. A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-guardian-world-0d74d3773ba7"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-guardian-world-0d74d3773ba7"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/08/aid-worker-world-cup-screenings-gaza-killed-israeli-strike"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-guardian-world-0d74d3773ba7",
+        "title": "Aid worker who organised World Cup screenings in Gaza killed in Israeli strike",
+        "url": "https://www.theguardian.com/world/2026/jul/08/aid-worker-world-cup-screenings-gaza-killed-israeli-strike",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Mohamed al-Wahidi died when a missile struck his taxi shortly before Egypt played Argentina in their last 16 match A Palestinian aid worker who had organised screenings of World Cup matches in Gaza was killed by an Israeli missile strike just before the game between Egypt and Argentina on Tuesday evening. Two brothers aged eight and 10 and another man who was in the street near the site of the attack were also killed."
+      }
+    ],
+    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-07-08-006",
+    "prior_edition_date": "2026-07-08",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "same_event_named_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-003",
+    "title": "Watch: Gaza football fans watch World Cup from rubble",
+    "summary": "Hundreds of people cheered for Egypt, which shares a border with Gaza, in the match against Argentina.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-bbc-middle-east-9c2c0ec6dbf6"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-bbc-middle-east-9c2c0ec6dbf6"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/c8r2nmm7xeeo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-bbc-middle-east-9c2c0ec6dbf6",
+        "title": "Watch: Gaza football fans watch World Cup from rubble",
+        "url": "https://www.bbc.co.uk/news/videos/c8r2nmm7xeeo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Hundreds of people cheered for Egypt, which shares a border with Gaza, in the match against Argentina."
+      }
+    ],
+    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-007",
+    "title": "'There are risks': Ex-India judge behind damning UN report on Gaza children",
+    "summary": "Before he exposed. Israel's deliberate targeting of Gaza children, Srinivasan Muralidhar took on Indian authorities.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-6a0f500c5983"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-6a0f500c5983"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/8/there-are-risks-ex-india-judge-behind-damning-un-report-on-gaza-children?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-6a0f500c5983",
+        "title": "'There are risks': Ex-India judge behind damning UN report on Gaza children",
+        "url": "https://www.aljazeera.com/news/2026/7/8/there-are-risks-ex-india-judge-behind-damning-un-report-on-gaza-children?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Before he exposed Israel's deliberate targeting of Gaza children, Srinivasan Muralidhar took on Indian authorities."
+      }
+    ],
+    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-08-005",
+    "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
+    "summary": "A chronological look at key milestones from Hamas's 2006 election victory to its 2026 exit from governing Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-46f4631905ce"
+    ],
+    "source_ids": [
+      "gaza-2026-07-08-aljazeera-middle-east-46f4631905ce"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/8/timeline-20-years-of-hamas-rule-in-gaza-from-election-to-political-exit?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-08-aljazeera-middle-east-46f4631905ce",
+        "title": "Timeline: 20 years of Hamas rule in Gaza, from election to political exit",
+        "url": "https://www.aljazeera.com/news/2026/7/8/timeline-20-years-of-hamas-rule-in-gaza-from-election-to-political-exit?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A chronological look at key milestones from Hamas's 2006 election victory to its 2026 exit from governing Gaza."
+      }
+    ],
+    "generated_at": "2026-07-08T18:24:22.638495+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import os
 import re
@@ -43,6 +44,22 @@ ACTION_ORDER = (
 )
 PLAN_ONLY_ACTIONS = {"manual_source_repair", "audio_generate", "audio_publish", "publish", "post_bluesky", "email"}
 READ_ONLY_ACTIONS = {"check", "manual_source_check", "audio_check", "dry_run_full", "verify_live"}
+DEFAULT_PAGES_REPO = ROOT / "bluefern-dispatches-pages"
+SAFE_DASHBOARD_ACTIONS = {
+    "check",
+    "manual_source_check",
+    "audio_check",
+    "dry_run_full",
+    "verify_live",
+}
+WRITE_DASHBOARD_ACTIONS = {
+    "manual_source_repair",
+    "audio_generate",
+    "audio_publish",
+    "publish",
+    "post_bluesky",
+    "email",
+}
 
 
 def validate_date(value: str) -> str:
@@ -630,6 +647,464 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def _dashboard_output_paths() -> dict[str, Path]:
+    dashboard_dir = ROOT / "output" / "review" / "gaza"
+    return {
+        "directory": dashboard_dir,
+        "html": dashboard_dir / "operator-dashboard.html",
+        "json": dashboard_dir / "operator-dashboard.json",
+    }
+
+
+def _dashboard_command_snippets(date_text: str) -> dict[str, list[dict[str, Any]]]:
+    publish_command = f"python scripts\\gaza_command_center.py --date {date_text} --publish --production"
+    return {
+        "website_publishing": [
+            {
+                "label": "Dry run",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --dry-run-full",
+                "dangerous": False,
+                "requires_explicit_action": False,
+                "note": "Read-only planning and readiness preview.",
+            },
+            {
+                "label": "Local publish, no push",
+                "command": publish_command,
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Writes the local Pages repo only. Push remains separate.",
+            },
+            {
+                "label": "Pages push",
+                "command": f'git -C ".\\bluefern-dispatches-pages" push origin gh-pages',
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Push the already-reviewed Pages commit only after explicit approval.",
+            },
+        ],
+        "audio": [
+            {
+                "label": "Audio check",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --audio-check",
+                "dangerous": False,
+                "requires_explicit_action": False,
+                "note": "Read-only audio status and artifact inspection.",
+            },
+            {
+                "label": "Audio generate",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --audio-generate --production",
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Generates local audio artifacts; no push by itself.",
+            },
+            {
+                "label": "Audio publish dry run",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --audio-publish",
+                "dangerous": False,
+                "requires_explicit_action": False,
+                "note": "Plans the audio publish path without writing Pages.",
+            },
+            {
+                "label": "Audio publish commit/no-push",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --audio-publish --production",
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Writes the audio publish output locally only.",
+            },
+        ],
+        "bluesky": [
+            {
+                "label": "Preview",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky --dry-run",
+                "dangerous": False,
+                "requires_explicit_action": False,
+                "note": "Preview-only run through the post-only operator path; no post is published.",
+            },
+            {
+                "label": "Post",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky",
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Posts through the post-only operator path after publication is ready.",
+            },
+            {
+                "label": "Force repost",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky --force-bluesky-post",
+                "dangerous": True,
+                "requires_explicit_action": True,
+                "note": "Use only when a previous post was deleted or intentionally replaced.",
+            },
+        ],
+        "verification": [
+            {
+                "label": "Live verification",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --verify-live",
+                "dangerous": False,
+                "requires_explicit_action": False,
+                "note": "Read-only live URL verification.",
+            }
+        ],
+        "safe_checklist": [
+            {
+                "label": "Check readiness",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --check",
+                "dangerous": False,
+                "requires_explicit_action": False,
+            },
+            {
+                "label": "Manual source check",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --manual-source-check",
+                "dangerous": False,
+                "requires_explicit_action": False,
+            },
+            {
+                "label": "Dry run",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --dry-run-full",
+                "dangerous": False,
+                "requires_explicit_action": False,
+            },
+            {
+                "label": "Pages publish",
+                "command": publish_command,
+                "dangerous": True,
+                "requires_explicit_action": True,
+            },
+            {
+                "label": "Pages push",
+                "command": f'git -C ".\\bluefern-dispatches-pages" push origin gh-pages',
+                "dangerous": True,
+                "requires_explicit_action": True,
+            },
+            {
+                "label": "Bluesky preview",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky --dry-run",
+                "dangerous": False,
+                "requires_explicit_action": False,
+            },
+            {
+                "label": "Bluesky post",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky",
+                "dangerous": True,
+                "requires_explicit_action": True,
+            },
+            {
+                "label": "Force repost",
+                "command": f"python scripts\\run_gaza_daily_operator.py --date {date_text} --post-bluesky-only --post-bluesky --force-bluesky-post",
+                "dangerous": True,
+                "requires_explicit_action": True,
+            },
+            {
+                "label": "Live verification",
+                "command": f"python scripts\\gaza_command_center.py --date {date_text} --verify-live",
+                "dangerous": False,
+                "requires_explicit_action": False,
+            },
+        ],
+    }
+
+
+def build_dashboard_state(args: argparse.Namespace) -> dict[str, Any]:
+    if args.production:
+        raise ValueError("--dashboard cannot be combined with --production")
+    selected_actions = _selected_actions(args)
+    if selected_actions:
+        raise ValueError("--dashboard is read-only and cannot be combined with action flags")
+    dates = build_date_list(args)
+    if len(dates) != 1:
+        raise ValueError("--dashboard requires a single --date value")
+    date_text = dates[0]
+    report = build_report(args)
+    date_result = report["dates"][0]
+    readiness = date_result["readiness"]
+    pages_snapshot = daily_operator._pages_repo_snapshot(ROOT / "bluefern-dispatches-pages")
+    source_repo = dict(date_result["repos"]["source"])
+    pages_repo = dict(date_result["repos"]["pages"])
+    source_repo_tracking = dict(readiness.get("source_repo") or {})
+    pages_repo_tracking = dict(readiness.get("pages_repo") or {})
+    source_repo["tracking"] = source_repo_tracking
+    pages_repo["tracking"] = pages_repo_tracking
+    pages_repo["snapshot"] = pages_snapshot
+    source_repo_blocks_publish = bool(source_repo.get("risky"))
+    pages_repo_blocks_publish = bool(
+        pages_repo.get("risky")
+        or pages_repo.get("dirty")
+        or int(pages_repo_tracking.get("ahead") or 0) > 0
+    )
+    overall_status = str(readiness.get("overall_status") or "action_needed")
+    manual_sources = dict(date_result["manual_sources"])
+    source_count = int(readiness.get("source_repo", {}).get("summary", {}).get("entry_count") or 0)
+    state = {
+        "date": date_text,
+        "mode": "dashboard",
+        "overall_status": overall_status,
+        "readiness_status": overall_status,
+        "next_safe_action": date_result["next_safe_action"],
+        "publishable_update_available": overall_status == "healthy",
+        "manual_source_update_available": bool(manual_sources.get("status") == "valid" and int(manual_sources.get("record_count") or 0) > 0),
+        "source_repo_blocks_publish": source_repo_blocks_publish,
+        "pages_repo_blocks_publish": pages_repo_blocks_publish,
+        "source_repo": source_repo,
+        "pages_repo": pages_repo,
+        "manual_sources": manual_sources,
+        "readiness": readiness,
+        "command_center_report": report,
+        "command_snippets": _dashboard_command_snippets(date_text),
+        "output_paths": {key: str(path) for key, path in _dashboard_output_paths().items()},
+        "source_count": source_count,
+        "pages_commit_subject": pages_snapshot.get("head_subject"),
+        "pages_commit_sha": pages_snapshot.get("head_sha"),
+        "pages_repo_ahead": pages_snapshot.get("ahead"),
+        "pages_repo_behind": pages_snapshot.get("behind"),
+    }
+    return state
+
+
+def _dashboard_status_label(status: str) -> str:
+    return "Ready" if status == "healthy" else "Needs attention"
+
+
+def _dashboard_kv(items: list[tuple[str, Any]]) -> str:
+    parts = ["<dl class=\"dashboard-kv\">"]
+    for label, value in items:
+        parts.append(f"<dt>{html.escape(str(label))}</dt>")
+        if isinstance(value, bool):
+            rendered = "yes" if value else "no"
+        elif value is None:
+            rendered = "<none>"
+        else:
+            rendered = str(value)
+        parts.append(f"<dd>{html.escape(rendered)}</dd>")
+    parts.append("</dl>")
+    return "\n".join(parts)
+
+
+def _dashboard_command_card(command: dict[str, Any]) -> str:
+    classes = ["command-card"]
+    if command.get("dangerous"):
+        classes.append("dangerous")
+    label = html.escape(str(command.get("label") or "Command"))
+    note = html.escape(str(command.get("note") or ""))
+    command_text = html.escape(str(command.get("command") or ""))
+    badge = ""
+    if command.get("dangerous"):
+        badge = '<span class="danger-badge">Requires explicit operator action</span>'
+    return (
+        f'<article class="{" ".join(classes)}">'
+        f"<h3>{label}</h3>"
+        f"{badge}"
+        f"<p>{note}</p>"
+        f"<pre><code>{command_text}</code></pre>"
+        "</article>"
+    )
+
+
+def _dashboard_section(title: str, body: str) -> str:
+    return f"<section><h2>{html.escape(title)}</h2>{body}</section>"
+
+
+def render_dashboard_html(state: dict[str, Any]) -> str:
+    source_repo = state["source_repo"]
+    pages_repo = state["pages_repo"]
+    manual_sources = state["manual_sources"]
+    readiness = state["readiness"]
+    pages_snapshot = pages_repo.get("snapshot") or {}
+    live = readiness.get("live") or {}
+    recent_logs = readiness.get("recent_logs") or {}
+    recent_fields = recent_logs.get("merged_fields") or {}
+    commands = state["command_snippets"]
+
+    header = [
+        "<!doctype html>",
+        '<html lang="en">',
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        f"<title>Gaza Operator Dashboard - {html.escape(state['date'])}</title>",
+        "<style>",
+        "body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;background:#f5f1e8;color:#1f2328;}",
+        ".wrap{max-width:1180px;margin:0 auto;padding:32px 20px 64px;}",
+        "header{padding:28px 24px;border-radius:20px;background:linear-gradient(135deg,#223327,#35563e);color:#f7f5ee;box-shadow:0 14px 40px rgba(0,0,0,.14);}",
+        "header h1{margin:0 0 8px;font-size:2rem;}",
+        "header p{margin:6px 0;max-width:78ch;line-height:1.5;}",
+        ".summary-grid,.command-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;}",
+        "section{margin-top:28px;background:#fff;border:1px solid #dad3c7;border-radius:18px;padding:20px 20px 8px;box-shadow:0 6px 24px rgba(0,0,0,.05);}",
+        "section h2{margin:0 0 12px;font-size:1.25rem;}",
+        ".dashboard-kv{display:grid;grid-template-columns:minmax(180px,280px) 1fr;gap:8px 14px;margin:0 0 12px;}",
+        ".dashboard-kv dt{font-weight:700;color:#415043;}",
+        ".dashboard-kv dd{margin:0;color:#1f2328;word-break:break-word;}",
+        ".command-card{padding:14px 14px 4px;border-radius:14px;border:1px solid #d7cfbf;background:#faf8f2;}",
+        ".command-card.dangerous{border-color:#c47b64;background:#fff7f3;}",
+        ".command-card h3{margin:0 0 8px;font-size:1rem;}",
+        ".command-card p{margin:0 0 10px;line-height:1.45;}",
+        ".command-card pre{margin:0 0 12px;overflow:auto;padding:12px 14px;border-radius:12px;background:#1f2328;color:#f7f5ee;}",
+        ".danger-badge{display:inline-block;margin:0 0 10px;padding:4px 8px;border-radius:999px;background:#7b3f2f;color:#fff;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}",
+        ".muted{color:#5f665e;}",
+        ".status-pill{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;background:#dde9d7;color:#223327;}",
+        ".status-pill.needs{background:#f5d9d2;color:#7b3f2f;}",
+        ".two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}",
+        "ul{margin:0 0 12px 20px;}",
+        "li{margin:0 0 8px;line-height:1.45;}",
+        "code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;}",
+        "</style>",
+        "</head>",
+        "<body>",
+        '<div class="wrap">',
+        "<header>",
+        f"<h1>Gaza Operator Dashboard</h1>",
+        f"<p><strong>Date:</strong> {html.escape(state['date'])}</p>",
+        f"<p><strong>Overall status:</strong> <span class=\"status-pill{' needs' if state['overall_status'] != 'healthy' else ''}\">{html.escape(_dashboard_status_label(state['overall_status']))}</span></p>",
+        f"<p><strong>Readiness:</strong> {html.escape(str(state['readiness_status']))}</p>",
+        f"<p><strong>Next safe action:</strong> {html.escape(str(state['next_safe_action']))}</p>",
+        f"<p class=\"muted\">Read-only dashboard output written to {html.escape(state['output_paths']['html'])} and {html.escape(state['output_paths']['json'])}.</p>",
+        "</header>",
+        '<div class="summary-grid">',
+        _dashboard_section(
+            "Overall status",
+            _dashboard_kv(
+                [
+                    ("Date", state["date"]),
+                    ("Mode", state["mode"]),
+                    ("Readiness status", state["readiness_status"]),
+                    ("Publishable source-backed update", state["publishable_update_available"]),
+                    ("Next safe action", state["next_safe_action"]),
+                ]
+            ),
+        ),
+        _dashboard_section(
+            "Repo safety",
+            _dashboard_kv(
+                [
+                    ("Source repo branch", source_repo.get("branch")),
+                    ("Source repo state", source_repo.get("state")),
+                    ("Source repo blocks publish", state["source_repo_blocks_publish"]),
+                    ("Source repo head", source_repo.get("tracking", {}).get("head_sha")),
+                    ("Pages repo branch", pages_repo.get("branch")),
+                    ("Pages repo state", pages_repo.get("state")),
+                    ("Pages repo blocks publish", state["pages_repo_blocks_publish"]),
+                    ("Current Pages commit", state["pages_commit_sha"]),
+                    ("Current Pages subject", state["pages_commit_subject"]),
+                    ("Pages ahead", state["pages_repo_ahead"]),
+                    ("Pages behind", state["pages_repo_behind"]),
+                ]
+            ),
+        ),
+        _dashboard_section(
+            "Manual sources",
+            _dashboard_kv(
+                [
+                    ("Manual source path", manual_sources.get("path")),
+                    ("Status", manual_sources.get("status")),
+                    ("Record count", manual_sources.get("record_count")),
+                    ("Manual update available", state["manual_source_update_available"]),
+                    ("Next action", manual_sources.get("next_action")),
+                ]
+                + [("Error", error) for error in manual_sources.get("errors") or []]
+            ),
+        ),
+        _dashboard_section(
+            "Gaza readiness",
+            _dashboard_kv(
+                [
+                    ("Overall readiness", readiness.get("overall_status")),
+                    ("Source count", state["source_count"]),
+                    ("Latest runner status", recent_fields.get("operator_status") or recent_logs.get("latest_status")),
+                    ("Latest runner next action", recent_fields.get("next_action") or recent_logs.get("latest_next_action")),
+                    ("Ready to publish", readiness.get("overall_status") == "healthy"),
+                    ("Source-backed update available", state["publishable_update_available"]),
+                ]
+            ),
+        ),
+        _dashboard_section(
+            "Website publishing",
+            _dashboard_kv(
+                [
+                    ("Current publication readiness", readiness.get("overall_status")),
+                    ("Live verification status", live.get("status") if live.get("enabled") else "skipped"),
+                    ("Live verification healthy", live.get("ok") if live.get("enabled") else None),
+                    ("Edition URL", f"https://dispatches.thebluefernco.com/gaza/editions/{state['date']}/"),
+                    ("Archive URL", "https://dispatches.thebluefernco.com/gaza/archive.html"),
+                    ("Homepage URL", "https://dispatches.thebluefernco.com/gaza/"),
+                ]
+            )
+            + '<div class="command-grid">'
+            + "".join(_dashboard_command_card(command) for command in commands["website_publishing"])
+            + "</div>",
+        ),
+        _dashboard_section(
+            "Audio",
+            _dashboard_kv(
+                [
+                    ("Audio status", recent_fields.get("audio_status") or "unknown"),
+                    ("Audio transcript present", readiness.get("pages_artifacts", {}).get("audio_transcript", {}).get("exists")),
+                    ("Audio MP3 present", readiness.get("pages_artifacts", {}).get("audio_mp3", {}).get("exists")),
+                ]
+            )
+            + '<div class="command-grid">'
+            + "".join(_dashboard_command_card(command) for command in commands["audio"])
+            + "</div>",
+        ),
+        _dashboard_section(
+            "Bluesky",
+            _dashboard_kv(
+                [
+                    ("Latest Bluesky status", recent_fields.get("bluesky_status") or readiness.get("recent_logs", {}).get("latest_status")),
+                    ("Post URI", recent_fields.get("bluesky_post_uri")),
+                    ("Force repost note", "Use only when a previous post was deleted or intentionally replaced."),
+                ]
+            )
+            + '<div class="command-grid">'
+            + "".join(_dashboard_command_card(command) for command in commands["bluesky"])
+            + "</div>",
+        ),
+        _dashboard_section(
+            "Live verification",
+            _dashboard_kv(
+                [
+                    ("Edition URL", f"https://dispatches.thebluefernco.com/gaza/editions/{state['date']}/"),
+                    ("Archive URL", "https://dispatches.thebluefernco.com/gaza/archive.html"),
+                    ("Homepage URL", "https://dispatches.thebluefernco.com/gaza/"),
+                    ("Live status", live.get("status") if live.get("enabled") else "skipped"),
+                    ("Recent live HTTP ok", recent_fields.get("live_http_ok")),
+                    ("Recent live archive ok", recent_fields.get("live_archive_ok")),
+                ]
+            )
+            + '<div class="command-grid">'
+            + "".join(_dashboard_command_card(command) for command in commands["verification"])
+            + "</div>",
+        ),
+        _dashboard_section(
+            "Safe command checklist",
+            "<p class=\"muted\">Copy and paste the commands below. Items marked as dangerous require explicit operator action.</p>"
+            + '<div class="command-grid">'
+            + "".join(_dashboard_command_card(command) for command in commands["safe_checklist"])
+            + "</div>",
+        ),
+        "</div>",
+        "</div>",
+        "</body>",
+        "</html>",
+    ]
+    return "\n".join(header)
+
+
+def write_dashboard_files(state: dict[str, Any]) -> dict[str, str]:
+    paths = _dashboard_output_paths()
+    paths["directory"].mkdir(parents=True, exist_ok=True)
+    html_text = render_dashboard_html(state)
+    json_text = json.dumps(state, indent=2)
+    paths["html"].write_text(html_text, encoding="utf-8")
+    paths["json"].write_text(json_text, encoding="utf-8")
+    return {key: str(path) for key, path in paths.items()}
+
+
+def _print_dashboard_summary(state: dict[str, Any]) -> None:
+    print(f"Gaza dashboard status: {_dashboard_status_label(state['overall_status'])}")
+    print(f"Date: {state['date']}")
+    print(f"Next safe action: {state['next_safe_action']}")
+    print(f"Dashboard HTML: {state['output_paths']['html']}")
+    print(f"Dashboard JSON: {state['output_paths']['json']}")
+
+
 def _selected_actions_label(selected_actions: list[str]) -> str:
     return ", ".join(action.replace("_", "-") for action in selected_actions) if selected_actions else "none selected"
 
@@ -689,6 +1164,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--test", action="store_true", help="Plan public actions instead of executing them.")
     mode.add_argument("--production", action="store_true", help="Allow the selected public and write-capable actions to run.")
+    parser.add_argument("--dashboard", action="store_true", help="Write the local Gaza operator dashboard under output/review/gaza.")
     parser.add_argument("--date", help="Single Gaza edition date in YYYY-MM-DD format.")
     parser.add_argument("--start-date", help="Start date for an inclusive range in YYYY-MM-DD format.")
     parser.add_argument("--end-date", help="End date for an inclusive range in YYYY-MM-DD format.")
@@ -706,6 +1182,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         args = parse_args(argv)
         build_date_list(args)
+        if args.dashboard:
+            state = build_dashboard_state(args)
+            state["output_paths"] = write_dashboard_files(state)
+            if args.json:
+                print(json.dumps(state, indent=2))
+            else:
+                _print_dashboard_summary(state)
+            return 0
         report = build_report(args)
         if args.json:
             print(json.dumps(report, indent=2))

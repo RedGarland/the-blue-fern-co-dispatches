@@ -31,6 +31,111 @@ def _parsed(argv: list[str]) -> object:
     return command_center.parse_args(argv)
 
 
+def _dashboard_report(date_text: str) -> dict[str, object]:
+    return {
+        "mode": "test",
+        "date_scope": {"date": date_text, "start_date": None, "end_date": None, "dates": [date_text]},
+        "selected_actions": [],
+        "dates": [
+            {
+                "date": date_text,
+                "mode": "test",
+                "selected_actions": [],
+                "repos": {
+                    "source": {
+                        "path": str(Path("source")),
+                        "branch": "add/pages-repo-default",
+                        "state": "clean",
+                        "clean": True,
+                        "allowed_only": False,
+                        "risky": False,
+                        "entry_count": 2,
+                        "risky_entries": [],
+                        "allowed_entries": [],
+                    },
+                    "pages": {
+                        "path": str(Path("pages")),
+                        "branch": "gh-pages",
+                        "state": "clean",
+                        "clean": True,
+                        "allowed_only": False,
+                        "risky": False,
+                        "entry_count": 1,
+                        "risky_entries": [],
+                        "allowed_entries": [],
+                    },
+                },
+                "manual_sources": {
+                    "path": str(Path("data/dispatches/gaza/sources") / date_text / "manual_sources.json"),
+                    "status": "valid",
+                    "record_count": 2,
+                    "errors": [],
+                    "next_action": "No action needed.",
+                },
+                "readiness": {
+                    "date": date_text,
+                    "overall_status": "healthy",
+                    "next_action": "No action needed.",
+                    "issues": [],
+                    "source_repo": {
+                        "path": str(Path("source")),
+                        "branch": "add/pages-repo-default",
+                        "state": "clean",
+                        "upstream": "origin/add/pages-repo-default",
+                        "ahead": 0,
+                        "behind": 0,
+                        "head_sha": "abc1234",
+                        "origin_head_sha": "abc1234",
+                        "summary": {"entry_count": 2, "risky_entries": [], "allowed_entries": []},
+                    },
+                    "pages_repo": {
+                        "path": str(Path("pages")),
+                        "branch": "gh-pages",
+                        "state": "clean",
+                        "upstream": "origin/gh-pages",
+                        "ahead": 0,
+                        "behind": 0,
+                        "head_sha": "def5678",
+                        "origin_head_sha": "def5678",
+                        "summary": {"entry_count": 1, "risky_entries": [], "allowed_entries": []},
+                    },
+                    "live": {"enabled": False, "ok": True, "status": "skipped"},
+                    "recent_logs": {
+                        "merged_fields": {
+                            "operator_status": "healthy",
+                            "next_action": "No action needed.",
+                            "audio_status": "audio_ready",
+                            "bluesky_status": "skipped",
+                            "bluesky_post_uri": None,
+                            "live_http_ok": True,
+                            "live_archive_ok": True,
+                        },
+                        "latest_status": "healthy",
+                        "latest_next_action": "No action needed.",
+                    },
+                    "pages_artifacts": {
+                        "audio_transcript": {"exists": True},
+                        "audio_mp3": {"exists": True},
+                        "audio_index": {"exists": True},
+                    },
+                },
+                "next_safe_action": "No action needed.",
+            }
+        ],
+        "ok": True,
+        "readiness_ok": True,
+        "failed_dates": [],
+        "processed_dates": [date_text],
+        "aggregate": {
+            "date_count": 1,
+            "failed_date_count": 0,
+            "succeeded_date_count": 1,
+            "selected_action_count": 0,
+            "readiness_status": "healthy",
+        },
+    }
+
+
 def test_date_parsing_accepts_single_date_and_range() -> None:
     single = _parsed(["--date", "2026-07-05"])
     ranged = _parsed(["--start-date", "2026-07-01", "--end-date", "2026-07-05"])
@@ -255,3 +360,89 @@ def test_json_output_includes_dates_and_aggregate(monkeypatch: pytest.MonkeyPatc
     assert payload["dates"][0]["date"] == "2026-07-05"
     assert payload["aggregate"]["date_count"] == 1
     assert payload["ok"] is True
+
+
+def test_dashboard_state_and_html_include_required_sections(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    date_text = "2026-07-05"
+    monkeypatch.setattr(command_center, "build_report", lambda args: _dashboard_report(date_text))
+    monkeypatch.setattr(
+        command_center.daily_operator,
+        "_pages_repo_snapshot",
+        lambda pages_repo: {"head_subject": "Publish Gaza edition", "head_sha": "def5678", "ahead": 0, "behind": 0, "branch": "gh-pages"},
+    )
+
+    state = command_center.build_dashboard_state(_parsed(["--date", date_text, "--dashboard"]))
+    html = command_center.render_dashboard_html(state)
+
+    assert state["mode"] == "dashboard"
+    assert state["overall_status"] == "healthy"
+    assert state["publishable_update_available"] is True
+    assert state["manual_source_update_available"] is True
+    assert state["source_repo_blocks_publish"] is False
+    assert state["pages_repo_blocks_publish"] is False
+    assert state["pages_commit_subject"] == "Publish Gaza edition"
+    assert state["command_snippets"]["website_publishing"][0]["command"].endswith("--dry-run-full")
+    assert state["command_snippets"]["audio"][1]["command"].endswith("--audio-generate --production")
+    assert state["command_snippets"]["bluesky"][0]["command"].endswith("--post-bluesky-only --post-bluesky --dry-run")
+    assert state["command_snippets"]["bluesky"][1]["command"].endswith("--post-bluesky-only --post-bluesky")
+    assert state["command_snippets"]["bluesky"][2]["command"].endswith("--post-bluesky-only --post-bluesky --force-bluesky-post")
+    assert state["command_snippets"]["verification"][0]["command"].endswith("--verify-live")
+
+    for heading in [
+        "Overall status",
+        "Repo safety",
+        "Manual sources",
+        "Gaza readiness",
+        "Website publishing",
+        "Audio",
+        "Bluesky",
+        "Live verification",
+        "Safe command checklist",
+    ]:
+        assert heading in html
+    assert "Requires explicit operator action" in html
+    assert "--dry-run-full" in html
+    assert "--audio-generate --production" in html
+    assert "--audio-publish --production" in html
+    assert "--post-bluesky-only --post-bluesky --dry-run" in html
+    assert "--post-bluesky-only --post-bluesky" in html
+    assert "--post-bluesky-only --post-bluesky --force-bluesky-post" in html
+    assert "--verify-live" in html
+    assert "output/site" not in html
+
+
+def test_dashboard_main_writes_review_files_and_stays_read_only(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    date_text = "2026-07-05"
+    monkeypatch.setattr(command_center, "build_report", lambda args: _dashboard_report(date_text))
+    monkeypatch.setattr(
+        command_center.daily_operator,
+        "_pages_repo_snapshot",
+        lambda pages_repo: {"head_subject": "Publish Gaza edition", "head_sha": "def5678", "ahead": 0, "behind": 0, "branch": "gh-pages"},
+    )
+    monkeypatch.setattr(command_center, "_run_publish", lambda *args, **kwargs: pytest.fail("publish must not run for dashboard"))
+    monkeypatch.setattr(command_center, "_run_post_bluesky", lambda *args, **kwargs: pytest.fail("bluesky must not run for dashboard"))
+    monkeypatch.setattr(command_center, "_run_email", lambda *args, **kwargs: pytest.fail("email must not run for dashboard"))
+
+    code = command_center.main(["--date", date_text, "--dashboard"])
+
+    html_path = isolated / "output" / "review" / "gaza" / "operator-dashboard.html"
+    json_path = isolated / "output" / "review" / "gaza" / "operator-dashboard.json"
+
+    assert code == 0
+    assert html_path.exists()
+    assert json_path.exists()
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    html = html_path.read_text(encoding="utf-8")
+    assert payload["mode"] == "dashboard"
+    assert payload["date"] == date_text
+    assert "Gaza Operator Dashboard" in html
+    assert "Read-only dashboard output written to" in html
+    assert "output/review/gaza/operator-dashboard.html" in html.replace("\\", "/")
+    assert "output/site" not in html
+
+
+def test_dashboard_rejects_action_flags(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(command_center, "build_report", lambda args: _dashboard_report("2026-07-05"))
+    args = _parsed(["--date", "2026-07-05", "--dashboard", "--publish"])
+    with pytest.raises(ValueError, match="read-only"):
+        command_center.build_dashboard_state(args)

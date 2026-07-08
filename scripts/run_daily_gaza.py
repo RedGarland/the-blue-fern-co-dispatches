@@ -1183,10 +1183,9 @@ def main(argv: list[str] | None = None) -> int:
         summary["warnings"].append(
             f"audio not generated in daily run; follow-up: python scripts/run_gaza_audio.py --date {args.date} --tts-provider none"
         )
-        if args.dry_run:
-            from bluefern_dispatches.gaza_audio import refresh_gaza_audio_public_surfaces
+        from bluefern_dispatches.gaza_audio import refresh_gaza_audio_public_surfaces
 
-            refresh_gaza_audio_public_surfaces(ROOT)
+        refresh_gaza_audio_public_surfaces(ROOT)
 
     if not args.skip_tests:
         summary["tests_run"] = True

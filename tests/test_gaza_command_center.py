@@ -421,6 +421,12 @@ def test_dashboard_state_and_html_include_required_sections(isolated: Path, monk
         "Safe command checklist",
     ]:
         assert heading in html
+    assert "grid-template-columns:repeat(auto-fit,minmax(420px,1fr))" in html
+    assert "grid-template-columns:repeat(auto-fit,minmax(300px,1fr))" in html
+    assert "grid-template-columns:minmax(160px,220px) minmax(0,1fr)" in html
+    assert "overflow-wrap:anywhere" in html
+    assert "min-width:0" in html
+    assert "white-space:pre" in html
     assert "Requires explicit operator action" in html
     assert "--dry-run-full" in html
     assert "--audio-generate --production" in html

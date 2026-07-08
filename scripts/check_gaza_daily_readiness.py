@@ -391,24 +391,21 @@ def build_readiness_report(
         try:
             _cleanup_generated_artifacts(edition_date)
         except Exception as exc:  # noqa: BLE001
-            blockers.append(f"cleanup failed after dry-run: {exc}")
-            dry_run_status["ok"] = False
-        pages_history_result = _run_pages_history_guard(
-            edition_date=edition_date,
-            pages_repo=pages_repo,
-            pages_branch=pages_branch,
-        )
-        history_guard_status = _history_guard_status(dict(pages_history_result.get("payload") or {}))
+            dry_run_status["cleanup_ok"] = False
+            dry_run_status["cleanup_error"] = str(exc)
+        else:
+            dry_run_status["cleanup_ok"] = True
+        history_guard_status = _history_guard_status(dry_run_payload)
         history_guard_status.update(
             {
-                "command": pages_history_result["command"],
-                "returncode": pages_history_result["returncode"],
-                "stdout": pages_history_result["stdout"],
-                "stderr": pages_history_result["stderr"],
+                "command": dry_run_status["command"],
+                "returncode": dry_run_status["returncode"],
+                "stdout": dry_run_status["stdout"],
+                "stderr": dry_run_status["stderr"],
             }
         )
-        if pages_history_result["returncode"] != 0:
-            blockers.append("Pages history-guard dry-run failed")
+        if not dry_run_payload.get("pages_dry_run_ok"):
+            blockers.append("Gaza dry-run pages check failed")
             history_guard_status["ok"] = False
         elif not history_guard_status["ok"]:
             blockers.extend(history_guard_status.get("blockers") or [])

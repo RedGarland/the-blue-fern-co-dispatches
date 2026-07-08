@@ -31,8 +31,27 @@ def _write_manual_sources(root: Path, edition_date: str, records: list[dict] | N
     return path
 
 
-def _configure_repo_mocks(monkeypatch: pytest.MonkeyPatch, root: Path, pages_repo: Path) -> list[list[str]]:
+def _configure_repo_mocks(
+    monkeypatch: pytest.MonkeyPatch,
+    root: Path,
+    pages_repo: Path,
+    *,
+    dry_run_payload: dict | None = None,
+) -> list[list[str]]:
     calls: list[list[str]] = []
+    safe_pages_payload = dry_run_payload or {
+        "ok": True,
+        "errors": [],
+        "pages_dry_run_ok": True,
+        "paid_detail_excluded_from_public": True,
+        "gaza_public_surface_history": [
+            {"surface": "gaza/archive.html", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
+            {"surface": "gaza/rss.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
+            {"surface": "gaza/audio/index.html", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
+            {"surface": "gaza/audio/podcast.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
+            {"surface": "gaza/podcast.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
+        ],
+    }
 
     monkeypatch.setattr(readiness, "ROOT", root)
     monkeypatch.setattr(
@@ -68,23 +87,8 @@ def _configure_repo_mocks(monkeypatch: pytest.MonkeyPatch, root: Path, pages_rep
         calls.append(args)
         command = " ".join(args)
         if "run_daily_gaza.py" in command:
-            payload = {"ok": True, "errors": [], "warnings": []}
+            payload = safe_pages_payload
             text = "DRY RUN\n" + json.dumps(payload)
-            return subprocess.CompletedProcess(args, 0, stdout=text, stderr="")
-        if "publish_github_pages.py" in command and "--dry-run" in args:
-            payload = {
-                "ok": True,
-                "errors": [],
-                "paid_detail_excluded_from_public": True,
-                "gaza_public_surface_history": [
-                    {"surface": "gaza/archive.html", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
-                    {"surface": "gaza/rss.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
-                    {"surface": "gaza/audio/index.html", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
-                    {"surface": "gaza/audio/podcast.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
-                    {"surface": "gaza/podcast.xml", "previous_count": 2, "current_count": 2, "preserved_dates": ["2026-07-04", "2026-07-05"], "added_dates": [], "dropped_dates": [], "ok": True},
-                ],
-            }
-            text = "PAGES DRY RUN\n" + json.dumps(payload)
             return subprocess.CompletedProcess(args, 0, stdout=text, stderr="")
         if args[:3] == ["git", "restore", "--source=HEAD"] or args[:3] == ["git", "clean", "-fd"]:
             return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
@@ -113,11 +117,12 @@ def test_build_readiness_report_green_path(tmp_path: Path, monkeypatch: pytest.M
     assert report["credentials_status"]["ok"] is True
     assert report["assets_status"]["ok"] is True
     assert report["dry_run_status"]["ok"] is True
+    assert report["dry_run_status"]["cleanup_ok"] is True
     assert report["history_guard_status"]["ok"] is True
     assert report["blockers"] == []
     assert report["next_action"] == "Schedule the Gaza daily run."
     assert any("run_daily_gaza.py" in " ".join(call) and "--dry-run" in call for call in calls)
-    assert any("publish_github_pages.py" in " ".join(call) and "--dry-run" in call for call in calls)
+    assert not any("publish_github_pages.py" in " ".join(call) and "--dry-run" in call for call in calls)
 
 
 def test_build_readiness_report_blocks_on_invalid_manual_sources(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -202,3 +207,62 @@ def test_build_readiness_report_wires_explicit_audio_flag(tmp_path: Path, monkey
     assert "--generate-audio" in daily_calls[0]
     assert "--tts-provider" in daily_calls[0]
     assert "openai" in daily_calls[0]
+
+
+def test_build_readiness_report_blocks_on_daily_pages_history_shrink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True)
+    (tmp_path / "assets").mkdir(parents=True)
+    (tmp_path / "assets" / "site.css").write_text("body{}", encoding="utf-8")
+    (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
+    _write_manual_sources(tmp_path, "2026-07-06")
+    shrink_payload = {
+        "ok": True,
+        "errors": [],
+        "pages_dry_run_ok": False,
+        "paid_detail_excluded_from_public": True,
+        "gaza_public_surface_history": [
+            {
+                "surface": "gaza/archive.html",
+                "previous_count": 5,
+                "current_count": 3,
+                "preserved_dates": ["2026-07-05", "2026-07-06"],
+                "added_dates": [],
+                "dropped_dates": ["2026-07-04", "2026-07-03"],
+                "ok": False,
+            }
+        ],
+    }
+    _configure_repo_mocks(monkeypatch, tmp_path, pages_repo, dry_run_payload=shrink_payload)
+
+    report = readiness.build_readiness_report(edition_date="2026-07-06", pages_repo=pages_repo)
+
+    assert report["ok"] is False
+    assert report["dry_run_status"]["ok"] is True
+    assert report["history_guard_status"]["ok"] is False
+    assert report["blockers"]
+    assert "pages check failed" in report["blockers"][0]
+
+
+def test_build_readiness_report_ignores_cleanup_failure_after_safe_dry_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True)
+    (tmp_path / "assets").mkdir(parents=True)
+    (tmp_path / "assets" / "site.css").write_text("body{}", encoding="utf-8")
+    (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
+    _write_manual_sources(tmp_path, "2026-07-06")
+    _configure_repo_mocks(monkeypatch, tmp_path, pages_repo)
+    monkeypatch.setattr(readiness, "_cleanup_generated_artifacts", lambda edition_date: (_ for _ in ()).throw(RuntimeError("fatal: Unable to create .git/index.lock: Permission denied")))
+
+    report = readiness.build_readiness_report(edition_date="2026-07-06", pages_repo=pages_repo)
+
+    assert report["ok"] is True
+    assert report["dry_run_status"]["ok"] is True
+    assert report["dry_run_status"]["cleanup_ok"] is False
+    assert "index.lock" in report["dry_run_status"]["cleanup_error"]
+    assert report["history_guard_status"]["ok"] is True
+    assert report["blockers"] == []

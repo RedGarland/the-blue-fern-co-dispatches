@@ -27,6 +27,7 @@ from bluefern_dispatches.generator import (
     normalize_expect_dispatches,
     normalize_only_dispatches,
     public_edition_subtitle,
+    validate_pages_repo_copy_scope,
     validate_pages_publish,
     validate_pages_repo_after_copy,
     validate_traceability,
@@ -1882,6 +1883,34 @@ def test_pages_publish_copies_food_line_audio_map_and_feed_artifacts(built_site)
     assert (pages_repo / "food-line" / "assets" / "food-line-dispatch-social.png").exists()
 
 
+def test_pages_publish_removes_nested_duplicate_dispatch_trees(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    food_root = site_root / "food-line"
+
+    for root in (food_root / "food-line", pages_repo / "food-line" / "food-line"):
+        (root / "editions" / "2026-06-01").mkdir(parents=True, exist_ok=True)
+        (root / "index.html").write_text("<html>Nested duplicate</html>", encoding="utf-8")
+        (root / "archive.html").write_text("<html>Nested archive</html>", encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert not (food_root / "food-line").exists()
+    assert not (pages_repo / "food-line" / "food-line").exists()
+    assert result["nested_duplicate_dispatch_paths_removed"]
+    assert any("food-line/food-line" in path.replace("\\", "/") for path in result["nested_duplicate_dispatch_paths_removed"])
+
+
 def test_pages_publish_removes_skipped_food_line_editions(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
@@ -2083,6 +2112,23 @@ def test_food_line_only_dispatch_publish_does_not_copy_other_dispatch_files(buil
     assert not any("\\gaza\\" in path.lower() or "/gaza/" in path.lower() for path in copied)
     assert not any("\\cascadia\\" in path.lower() or "/cascadia/" in path.lower() for path in copied)
     assert not any("\\american-pressure\\" in path.lower() or "/american-pressure/" in path.lower() for path in copied)
+
+
+@pytest.mark.parametrize("nested_path", [
+    "food-line/food-line/index.html",
+    "gaza/gaza/index.html",
+    "cascadia/cascadia/index.html",
+])
+def test_validate_pages_repo_copy_scope_rejects_nested_duplicate_dispatch_paths(tmp_path: Path, nested_path: str):
+    pages_repo = tmp_path / "pages"
+    pages_repo.mkdir()
+    errors = validate_pages_repo_copy_scope(
+        pages_repo,
+        ("food-line",),
+        changed_paths=[pages_repo / nested_path],
+    )
+
+    assert any("nested duplicate dispatch path" in error for error in errors)
 
 
 def test_attached_landing_index_contains_american_pressure_map_button():

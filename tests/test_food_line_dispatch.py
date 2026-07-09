@@ -1523,6 +1523,60 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert manifest["source_freshness_status"] == "passed_no_qualifying_update"
 
 
+def test_food_line_no_current_update_blocks_publication_when_high_confidence_unresolved_candidates_remain(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    _ensure_assets(tmp_path)
+    _clear_food_line_registries(tmp_path)
+    monkeypatch.setattr(food_line, "FOOD_LINE_FRESHNESS_WINDOW_DAYS", 3)
+    monkeypatch.setattr(
+        food_line,
+        "collect_food_line_auto_sources",
+        lambda *args, **kwargs: {"ok": True, "source_count": 44},
+    )
+    monkeypatch.setattr(
+        food_line,
+        "_food_line_discovery_gap_summary",
+        lambda *args, **kwargs: {
+            "run": True,
+            "report_found": True,
+            "report_path": str(tmp_path / "data" / "dispatches" / "food-line" / "discovery_gap" / "2026-06-06" / "discovery_gap_report.json"),
+            "report_markdown_path": str(tmp_path / "data" / "dispatches" / "food-line" / "discovery_gap" / "2026-06-06" / "discovery_gap_report.md"),
+            "likely_qualifying_count": 2,
+            "blocking_likely_qualifying_count": 0,
+            "unresolved_likely_qualifying_count": 2,
+            "unresolved_high_confidence_direct_pressure_count": 2,
+            "unresolved_high_confidence_direct_pressure_titles": [
+                "Food bank demand surges in north Omaha as SNAP cuts and rising grocery costs strain families",
+                "Some food banks see up to 1,800% surge in demand since SNAP benefits were halted",
+            ],
+            "manual_review_only_count": 0,
+            "unreviewed_likely_qualifying_count": 0,
+            "public_no_qualifying_update_validated": False,
+            "warning": "Food Line discovery gap check found 2 unresolved high-confidence direct-pressure candidates that block public no-current-update publication. Top titles: Food bank demand surges in north Omaha as SNAP cuts and rising grocery costs strain families; Some food banks see up to 1,800% surge in demand since SNAP benefits were halted. See discovery_gap_report.md.",
+        },
+    )
+    date = "2026-06-06"
+    payload_path = Path(__file__).resolve().parents[1] / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json"
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date, collect=True, include_discovery_gap_summary=True)
+    manifest = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "editions" / date / "run_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["public_rendered"] is False
+    assert result["edition_mode"] == "internal_no_qualifying_update"
+    assert result["food_line_no_current_update_policy_status"] == "blocked"
+    assert any("unresolved high-confidence direct-pressure candidate" in reason for reason in result["food_line_no_current_update_policy_reasons"])
+    assert "north Omaha" in result["food_line_publish_blocked_reason"]
+    assert "north Omaha" in result["skip_reason"]
+    assert manifest["public_rendered"] is False
+    assert manifest["edition_mode"] == "internal_no_qualifying_update"
+    assert "north Omaha" in manifest["food_line_publish_blocked_reason"]
+    assert manifest["skip_reason"]
+
+
 def test_food_line_no_current_update_policy_blocks_when_discovery_gap_did_not_run() -> None:
     result = food_line.evaluate_food_line_no_current_update_publication_policy(
         edition_mode="no_current_update",
@@ -1593,6 +1647,33 @@ def test_food_line_no_current_update_policy_allows_public_no_qualifying_update_o
     assert result["allowed"] is True
     assert result["status"] == "allowed"
     assert result["reasons"] == []
+
+
+def test_food_line_no_current_update_policy_blocks_high_confidence_unresolved_direct_pressure_candidates() -> None:
+    result = food_line.evaluate_food_line_no_current_update_publication_policy(
+        edition_mode="no_current_update",
+        collector_result={"ok": True, "source_count": 18},
+        discovery_gap_check={
+            "run": True,
+            "blocking_likely_qualifying_count": 0,
+            "unresolved_high_confidence_direct_pressure_count": 2,
+            "unresolved_high_confidence_direct_pressure_titles": [
+                "Food bank demand surges in north Omaha as SNAP cuts and rising grocery costs strain families",
+                "Some food banks see up to 1,800% surge in demand since SNAP benefits were halted",
+            ],
+        },
+        discovery_expansion_used=False,
+        source_freshness_status="passed_no_qualifying_update",
+        news_item_count=8,
+        local_signal_count=4,
+        state_signal_count=2,
+        discovery_gap_blocking_likely_qualifying_count=0,
+    )
+
+    assert result["allowed"] is False
+    assert result["status"] == "blocked"
+    assert any("unresolved high-confidence direct-pressure candidate" in reason for reason in result["reasons"])
+    assert any("north Omaha" in reason for reason in result["reasons"])
 
 
 def test_food_line_no_current_update_policy_blocks_stale_candidate_even_with_discovery_gap_and_high_counts() -> None:
@@ -6693,10 +6774,12 @@ def test_food_line_discovery_gap_summary_ignores_duplicates_and_resource_only_ca
     assert gap_summary["report_found"] is True
     assert gap_summary["likely_qualifying_count"] == 0
     assert gap_summary["unreviewed_likely_qualifying_count"] == 0
+    assert gap_summary["unresolved_high_confidence_direct_pressure_count"] == 0
     assert gap_summary["warning"] == ""
     assert result["discovery_gap_warning"] == ""
     assert result["discovery_gap_likely_qualifying_count"] == 0
     assert result["discovery_gap_unreviewed_likely_qualifying_count"] == 0
+    assert result["discovery_gap_unresolved_high_confidence_direct_pressure_count"] == 0
 
 
 def test_food_line_discovery_gap_summary_treats_unresolved_google_news_likely_candidates_as_manual_review_only(tmp_path: Path):
@@ -6732,10 +6815,49 @@ def test_food_line_discovery_gap_summary_treats_unresolved_google_news_likely_ca
     assert gap_summary["blocking_likely_qualifying_count"] == 0
     assert gap_summary["unresolved_likely_qualifying_count"] == 1
     assert gap_summary["unreviewed_likely_qualifying_count"] == 0
+    assert gap_summary["unresolved_high_confidence_direct_pressure_count"] == 0
     assert gap_summary["public_no_qualifying_update_validated"] is True
     assert "manual review only" in gap_summary["warning"]
     assert result["discovery_gap_blocking_likely_qualifying_count"] == 0
     assert result["discovery_gap_unresolved_likely_qualifying_count"] == 1
+    assert result["discovery_gap_unresolved_high_confidence_direct_pressure_count"] == 0
+
+
+def test_food_line_discovery_gap_summary_blocks_unresolved_high_confidence_direct_pressure_candidates(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-18"
+    _write_food_line_discovery_gap_report(
+        tmp_path,
+        date,
+        [
+            {
+                "title": "Food bank demand surges in north Omaha as SNAP cuts and rising grocery costs strain families",
+                "url": "https://news.google.com/rss/articles/CBMiNORTH?oc=5",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiNORTH?oc=5",
+                "resolved_url": "",
+                "url_resolution_status": "resolution_skipped_max_candidates",
+                "reason": "food bank pressure; direct pressure signal: food bank demand, SNAP cuts, rising grocery costs",
+                "known_status": "unknown_domain_new_article",
+                "classification": "likely_qualifying",
+                "publication_blocking_candidate": False,
+                "score": 11,
+                "review_traceability_status": "unresolved_google_news",
+            }
+        ],
+        likely_qualifying_count=1,
+        blocking_likely_qualifying_count=0,
+        unresolved_likely_qualifying_count=1,
+    )
+
+    summary = food_line._food_line_discovery_gap_summary(tmp_path, date, [])
+
+    assert summary["run"] is True
+    assert summary["blocking_likely_qualifying_count"] == 0
+    assert summary["unresolved_likely_qualifying_count"] == 1
+    assert summary["unresolved_high_confidence_direct_pressure_count"] == 1
+    assert "north Omaha" in " ".join(summary["unresolved_high_confidence_direct_pressure_titles"])
+    assert summary["public_no_qualifying_update_validated"] is False
+    assert "high-confidence direct-pressure" in summary["warning"]
 
 
 def test_food_line_discovery_gap_summary_missing_report_does_not_fail(tmp_path: Path):

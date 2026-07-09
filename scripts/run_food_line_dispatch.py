@@ -132,6 +132,9 @@ def evaluate_food_line_no_current_update_publication_policy(
         "discovery_gap_run": bool((discovery_gap_check or {}).get("run")),
         "discovery_expansion_used": bool(discovery_expansion_used),
         "discovery_gap_blocking_likely_qualifying_count": discovery_gap_blocking_likely_qualifying_count,
+        "discovery_gap_unresolved_high_confidence_direct_pressure_count": _food_line_int(
+            (discovery_gap_check or {}).get("unresolved_high_confidence_direct_pressure_count")
+        ),
         "source_freshness_status": str(source_freshness_status or "").strip(),
         "min_collector_source_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_COLLECTOR_SOURCE_COUNT,
         "min_news_item_count": FOOD_LINE_NO_CURRENT_UPDATE_MIN_NEWS_ITEM_COUNT,
@@ -178,6 +181,21 @@ def evaluate_food_line_no_current_update_publication_policy(
         reasons.append(
             f"{discovery_gap_blocking_likely_qualifying_count} traceable likely qualifying discovery candidate"
             f"{'s remain' if discovery_gap_blocking_likely_qualifying_count != 1 else ' remains'}"
+        )
+
+    unresolved_high_confidence_count = metrics["discovery_gap_unresolved_high_confidence_direct_pressure_count"]
+    unresolved_high_confidence_titles_value = (discovery_gap_check or {}).get("unresolved_high_confidence_direct_pressure_titles")
+    unresolved_high_confidence_titles: list[str] = []
+    if isinstance(unresolved_high_confidence_titles_value, list):
+        unresolved_high_confidence_titles = [str(title).strip() for title in unresolved_high_confidence_titles_value if str(title).strip()]
+    elif isinstance(unresolved_high_confidence_titles_value, str) and unresolved_high_confidence_titles_value.strip():
+        unresolved_high_confidence_titles = [unresolved_high_confidence_titles_value.strip()]
+    if unresolved_high_confidence_count and unresolved_high_confidence_count > 0:
+        titles = "; ".join(unresolved_high_confidence_titles[:3])
+        suffix = f": {titles}" if titles else ""
+        reasons.append(
+            f"{unresolved_high_confidence_count} unresolved high-confidence direct-pressure candidate"
+            f"{'s remain' if unresolved_high_confidence_count != 1 else ' remains'}{suffix}"
         )
 
     if _food_line_no_current_update_blocked_freshness_status(metrics["source_freshness_status"]):
@@ -3844,6 +3862,8 @@ def _food_line_default_discovery_gap_summary(root: Path, date: str) -> dict[str,
         "likely_qualifying_count": 0,
         "blocking_likely_qualifying_count": 0,
         "unresolved_likely_qualifying_count": 0,
+        "unresolved_high_confidence_direct_pressure_count": 0,
+        "unresolved_high_confidence_direct_pressure_titles": [],
         "manual_review_only_count": 0,
         "unreviewed_likely_qualifying_count": 0,
         "public_no_qualifying_update_validated": False,
@@ -3914,16 +3934,30 @@ def _food_line_discovery_gap_summary(
             blocking_rows.append(row)
         else:
             unresolved_rows.append(row)
+    unresolved_high_confidence_count, unresolved_high_confidence_titles = _food_line_discovery_gap_unresolved_high_confidence_details(
+        {"candidates": unresolved_rows}
+    )
     summary["blocking_likely_qualifying_count"] = len(blocking_rows)
     summary["unresolved_likely_qualifying_count"] = len(unresolved_rows)
     summary["manual_review_only_count"] = int(report.get("manual_review_only_count") or report.get("needs_review_count") or 0)
     summary["unreviewed_likely_qualifying_count"] = len(blocking_rows)
+    summary["unresolved_high_confidence_direct_pressure_count"] = unresolved_high_confidence_count
+    summary["unresolved_high_confidence_direct_pressure_titles"] = unresolved_high_confidence_titles
     if blocking_rows:
         count = len(blocking_rows)
         summary["warning"] = (
             f"Food Line discovery gap check found {count} traceable likely qualifying candidate"
             f"{'s' if count != 1 else ''} not included in this edition."
             f" See {report_markdown_path}."
+        )
+    elif unresolved_high_confidence_count:
+        count = unresolved_high_confidence_count
+        titles = "; ".join(unresolved_high_confidence_titles[:3])
+        title_suffix = f" Top titles: {titles}." if titles else ""
+        summary["warning"] = (
+            f"Food Line discovery gap check found {count} unresolved high-confidence direct-pressure candidate"
+            f"{'s' if count != 1 else ''} that block public no-current-update publication."
+            f"{title_suffix} See {report_markdown_path}."
         )
     elif unresolved_rows:
         count = len(unresolved_rows)
@@ -3932,7 +3966,11 @@ def _food_line_discovery_gap_summary(
             f"{'s' if count != 1 else ''} for manual review only; unresolved Google News/title-only candidates do not block public no-qualifying-update publication."
             f" See {report_markdown_path}."
         )
-    summary["public_no_qualifying_update_validated"] = summary["run"] and summary["blocking_likely_qualifying_count"] == 0
+    summary["public_no_qualifying_update_validated"] = (
+        summary["run"]
+        and summary["blocking_likely_qualifying_count"] == 0
+        and summary["unresolved_high_confidence_direct_pressure_count"] == 0
+    )
     return summary
 
 
@@ -3961,6 +3999,47 @@ def _food_line_discovery_gap_blocking_count(summary: dict[str, Any] | None) -> i
         return blocking_count
     # Backward compatibility for older reports/tests that only provide the legacy field.
     return _food_line_int((summary or {}).get("unreviewed_likely_qualifying_count"))
+
+
+def _food_line_discovery_gap_unresolved_high_confidence_details(summary: dict[str, Any] | None) -> tuple[int, list[str]]:
+    raw_count = _food_line_int((summary or {}).get("unresolved_high_confidence_direct_pressure_count"))
+    titles_value = (summary or {}).get("unresolved_high_confidence_direct_pressure_titles")
+    titles: list[str] = []
+    if isinstance(titles_value, list):
+        titles = [str(title).strip() for title in titles_value if str(title).strip()]
+    elif isinstance(titles_value, str) and titles_value.strip():
+        titles = [titles_value.strip()]
+    if raw_count is not None:
+        return raw_count, titles
+    candidates = (summary or {}).get("candidates")
+    if not isinstance(candidates, list):
+        return 0, titles
+    count = 0
+    computed_titles: list[str] = []
+    for row in candidates:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("classification") or "").strip() != "likely_qualifying":
+            continue
+        if bool(row.get("publication_blocking_candidate")):
+            continue
+        if str(row.get("review_traceability_status") or "").strip() != "unresolved_google_news":
+            continue
+        try:
+            score = int(row.get("score") or 0)
+        except (TypeError, ValueError):
+            score = 0
+        if score < 8:
+            continue
+        reason = str(row.get("reason") or "").lower()
+        if "direct pressure signal" not in reason:
+            continue
+        count += 1
+        if len(computed_titles) < 5:
+            title = str(row.get("title") or "").strip()
+            if title:
+                computed_titles.append(title)
+    return count, titles or computed_titles
 
 
 def _food_line_resolve_discovery_gap_summary(
@@ -7462,6 +7541,13 @@ def run_food_line_dispatch(
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
         "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
         "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
+        "discovery_gap_unresolved_high_confidence_direct_pressure_count": int(
+            discovery_gap_summary.get("unresolved_high_confidence_direct_pressure_count") or 0
+        ),
+        "discovery_gap_unresolved_high_confidence_direct_pressure_titles": discovery_gap_summary.get(
+            "unresolved_high_confidence_direct_pressure_titles"
+        )
+        or [],
         "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
@@ -7677,6 +7763,13 @@ def run_food_line_dispatch(
         "discovery_gap_likely_qualifying_count": int(discovery_gap_summary.get("likely_qualifying_count") or 0),
         "discovery_gap_blocking_likely_qualifying_count": int(_food_line_discovery_gap_blocking_count(discovery_gap_summary) or 0),
         "discovery_gap_unresolved_likely_qualifying_count": int(discovery_gap_summary.get("unresolved_likely_qualifying_count") or 0),
+        "discovery_gap_unresolved_high_confidence_direct_pressure_count": int(
+            discovery_gap_summary.get("unresolved_high_confidence_direct_pressure_count") or 0
+        ),
+        "discovery_gap_unresolved_high_confidence_direct_pressure_titles": discovery_gap_summary.get(
+            "unresolved_high_confidence_direct_pressure_titles"
+        )
+        or [],
         "discovery_gap_manual_review_only_count": int(discovery_gap_summary.get("manual_review_only_count") or 0),
         "discovery_gap_unreviewed_likely_qualifying_count": int(discovery_gap_summary.get("unreviewed_likely_qualifying_count") or 0),
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",

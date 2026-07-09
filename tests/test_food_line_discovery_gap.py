@@ -335,6 +335,170 @@ def test_food_line_discovery_gap_max_candidates_limits_resolution_work(tmp_path:
     assert report["unresolved_url_count"] >= 1
 
 
+def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_reports_severity_for_20260709_case(tmp_path: Path, monkeypatch):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+    case_report = json.loads(
+        Path("data/dispatches/food-line/discovery_gap/2026-07-09/discovery_gap_report.json").read_text(encoding="utf-8")
+    )
+    high_confidence_wrapper = next(
+        row
+        for row in case_report["candidates"]
+        if row["title"].startswith("Food bank demand surges in Santa Cruz County as costs strain families")
+    )
+    lower_value_wrapper = next(
+        row
+        for row in case_report["candidates"]
+        if row["title"].startswith("Food bank officials respond to rising needs following SNAP cuts")
+    )
+    calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            items = [
+                _gap_item(
+                    title=lower_value_wrapper["title"],
+                    publisher=lower_value_wrapper["publisher"],
+                    source_url="https://" + lower_value_wrapper["publisher_domain"],
+                    link=lower_value_wrapper["google_news_url"],
+                    description=lower_value_wrapper["summary_or_snippet"],
+                ),
+                _gap_item(
+                    title=high_confidence_wrapper["title"],
+                    publisher=high_confidence_wrapper["publisher"],
+                    source_url="https://" + high_confidence_wrapper["publisher_domain"],
+                    link=high_confidence_wrapper["google_news_url"],
+                    description=high_confidence_wrapper["summary_or_snippet"],
+                ),
+            ]
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    exact_title_url = "https://www.ksbw.com/news/local/2026/07/09/food-bank-demand-surges-in-santa-cruz-county-as-costs-strain-families/"
+    def fake_collect_sitemap_urls(origin: str, **kwargs):
+        if origin == "https://www.ksbw.com":
+            return (exact_title_url,)
+        return ()
+
+    def fake_fetch_url_text(url: str, *, timeout_seconds: int = 20):
+        if url == exact_title_url:
+            return (
+                "<html><head>"
+                "<title>Food bank demand surges in Santa Cruz County as costs strain families - KSBW</title>"
+                '<meta property="article:published_time" content="2026-07-09T12:00:00Z">'
+                "</head><body></body></html>"
+            )
+        return ""
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url.startswith("https://news.google.com/rss/articles/"):
+            calls.append(url)
+            return _FakeResponse(final_url=url, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", fake_collect_sitemap_urls)
+    monkeypatch.setattr(food_line_gap, "_gap_fetch_url_text", fake_fetch_url_text)
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=1,
+        max_results_per_query=4,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    rows = {row["title"]: row for row in report["candidates"]}
+
+    assert calls[0] == high_confidence_wrapper["google_news_url"]
+    assert report["resolved_url_count"] == 1
+    assert report["unresolved_url_count"] >= 1
+    assert rows[high_confidence_wrapper["title"]]["resolved_url"] == exact_title_url
+    assert rows[high_confidence_wrapper["title"]]["url"] == food_line_gap._gap_normalize_url(exact_title_url)
+    assert rows[high_confidence_wrapper["title"]]["google_news_url"] == high_confidence_wrapper["google_news_url"]
+    assert rows[high_confidence_wrapper["title"]]["blocking_candidate_severity"] == "hard_block"
+    assert rows[high_confidence_wrapper["title"]]["direct_url_date_verified"] is True
+    assert rows[high_confidence_wrapper["title"]]["date_confidence"] >= 90
+    assert rows[lower_value_wrapper["title"]]["url_resolution_status"] == "resolution_skipped_max_candidates"
+    assert rows[lower_value_wrapper["title"]]["blocking_candidate_severity"] == "soft_block"
+    assert rows[lower_value_wrapper["title"]]["direct_url"] == ""
+    assert all("news.google.com" not in str(row.get("direct_url") or "") for row in report["candidates"])
+
+
+def test_food_line_discovery_gap_marks_same_day_direct_pressure_hard_block_and_stale_direct_pressure_soft_block(tmp_path: Path, monkeypatch):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+    same_day_direct_url = "https://www.news10.com/news/local-news/2026/07/09/food-bank-officials-respond-to-rising-needs-following-snap-cuts/"
+    stale_direct_url = "https://www.news10.com/news/local-news/2026/06/01/food-bank-officials-respond-to-rising-needs-following-snap-cuts/"
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            items = [
+                _gap_item(
+                    title="Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)",
+                    publisher="NEWS10 ABC",
+                    source_url=same_day_direct_url,
+                    description="Food bank officials respond to rising needs following SNAP cuts and report clear pressure on families.",
+                ),
+                _gap_item(
+                    title="Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (stale)",
+                    publisher="NEWS10 ABC",
+                    source_url=stale_direct_url,
+                    description="Food bank officials respond to rising needs following SNAP cuts and report clear pressure on families.",
+                ),
+            ]
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    def fake_fetch_url_text(url: str, *, timeout_seconds: int = 20):
+        if url == same_day_direct_url:
+            return (
+                "<html><head>"
+                "<title>Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)</title>"
+                '<meta property="article:published_time" content="2026-07-09T10:00:00Z">'
+                "</head><body></body></html>"
+            )
+        if url == stale_direct_url:
+            return (
+                "<html><head>"
+                "<title>Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (stale)</title>"
+                '<meta property="article:published_time" content="2026-06-01T10:00:00Z">'
+                "</head><body></body></html>"
+            )
+        return ""
+
+    monkeypatch.setattr(food_line_gap, "_gap_fetch_url_text", fake_fetch_url_text)
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=2,
+        max_results_per_query=2,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    rows = {row["title"]: row for row in report["candidates"]}
+
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)"]["blocking_candidate_severity"] == "hard_block"
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)"]["direct_url_date_verified"] is True
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)"]["date_confidence"] >= 90
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (stale)"]["blocking_candidate_severity"] == "soft_block"
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (stale)"]["direct_url_date_verified"] is False
+    assert rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (stale)"]["date_confidence"] < rows["Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC (same day)"]["date_confidence"]
+
+
 def test_food_line_discovery_gap_sitemap_lookup_is_cached_per_domain(monkeypatch):
     state: dict[str, object] = {}
     calls: list[str] = []
@@ -465,6 +629,97 @@ def test_food_line_discovery_gap_fast_mode_preserves_unresolved_urls(tmp_path: P
     assert result["ok"] is True
     assert row["url_resolution_status"] in {"url_resolution_timeout", "unresolved_google_news_url"}
     assert report["candidate_count"] == 1
+
+
+def test_food_line_discovery_gap_reports_high_confidence_resolution_diagnostics_when_exact_title_fallback_fails(
+    tmp_path: Path,
+    monkeypatch,
+):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+    google_link = "https://news.google.com/rss/articles/CBMiKSBKSBW?oc=5"
+    items = [
+        _gap_item(
+            title="Food bank demand surges in Santa Cruz County as SNAP cuts strain families - KSBW",
+            publisher="KSBW",
+            source_url="https://www.ksbw.com",
+            link=google_link,
+            description="SNAP cuts and rising demand are putting families under pressure.",
+        )
+    ]
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url == google_link:
+            return _FakeResponse(final_url=google_link, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", lambda origin, **kwargs: ())
+
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        fast=True,
+        max_queries=1,
+        max_candidates=1,
+        max_results_per_query=1,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    markdown = Path(result["report_markdown_path"]).read_text(encoding="utf-8")
+    attempts = report["high_confidence_url_resolution_attempts"]
+    row = report["candidates"][0]
+
+    assert report["high_confidence_url_resolution_attempt_count"] == 1
+    assert len(attempts) == 1
+    assert attempts[0]["publisher_domain"] == "www.ksbw.com"
+    assert attempts[0]["url_resolution_status"] == "unresolved_google_news_url"
+    assert "High-confidence URL resolution attempts" in markdown
+    assert "KSBW" in markdown
+    assert result["ok"] is True
+
+
+def test_food_line_discovery_gap_exact_title_failure_diagnostics_record_no_sitemap_url_cause(monkeypatch):
+    state: dict[str, object] = {}
+    google_link = "https://news.google.com/rss/articles/CBMiKSBKSBW?oc=5"
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url == google_link:
+            return _FakeResponse(final_url=google_link, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", lambda origin, **kwargs: ())
+
+    resolved, status, reason = food_line_gap._gap_resolve_google_news_url(
+        google_link,
+        title="Food bank demand surges in Santa Cruz County as SNAP cuts strain families - KSBW",
+        summary="SNAP cuts and rising demand are putting families under pressure.",
+        source_url="https://www.ksbw.com",
+        resolver_state=state,
+        skip_sitemap_fallback=True,
+        allow_exact_title_fallback=True,
+    )
+
+    diagnostics = state["resolution_diagnostics"][food_line_gap._gap_normalize_url(google_link)]
+    assert resolved == ""
+    assert status == "unresolved_google_news_url"
+    assert "exact title fallback failed" in reason
+    assert diagnostics["exact_title_attempted"] is True
+    assert diagnostics["exact_title_failure_cause"] == "no_sitemap_urls_found"
+    assert diagnostics["source_url"] == "https://www.ksbw.com"
 
 
 def test_food_line_discovery_gap_report_distinguishes_traceable_blocking_and_unresolved_likely_candidates(tmp_path: Path, monkeypatch):
@@ -855,10 +1110,10 @@ def test_food_line_discovery_gap_report_writes_json_and_markdown_and_skips_publi
     report = json.loads(report_path.read_text(encoding="utf-8"))
     rows = {row["title"]: row for row in report["candidates"]}
     assert report["candidate_count"] == 7
-    assert report["likely_qualifying_count"] == 2
+    assert report["likely_qualifying_count"] == 3
     assert report["needs_review_count"] == 1
     assert report["likely_resource_only_count"] == 2
-    assert report["duplicate_or_known_count"] == 2
+    assert report["duplicate_or_known_count"] == 1
     assert report["wrapper_candidate_count"] == 1
     assert report["secondary_query_count"] >= 1
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"

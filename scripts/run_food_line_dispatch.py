@@ -3927,7 +3927,14 @@ def _food_line_discovery_gap_summary(
         candidate_url = _gap_traceable_review_url(row)
         if candidate_url and candidate_url in included_urls:
             continue
+        severity = str(row.get("blocking_candidate_severity") or "").strip()
         is_blocking = row.get("publication_blocking_candidate")
+        if severity == "hard_block":
+            blocking_rows.append(row)
+            continue
+        if severity == "soft_block":
+            unresolved_rows.append(row)
+            continue
         if not isinstance(is_blocking, bool):
             is_blocking = bool(candidate_url)
         if is_blocking:

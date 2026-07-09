@@ -1888,6 +1888,9 @@ def test_pages_publish_removes_nested_duplicate_dispatch_trees(built_site):
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
     site_root = work / "output" / "site"
     food_root = site_root / "food-line"
+    food_root.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Food Line archive</html>", encoding="utf-8")
 
     for root in (food_root / "food-line", pages_repo / "food-line" / "food-line"):
         (root / "editions" / "2026-06-01").mkdir(parents=True, exist_ok=True)
@@ -2129,6 +2132,102 @@ def test_validate_pages_repo_copy_scope_rejects_nested_duplicate_dispatch_paths(
     )
 
     assert any("nested duplicate dispatch path" in error for error in errors)
+
+
+def test_dry_run_reports_nested_duplicate_pages_paths_without_removing_them(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    food_root = work / "output" / "site" / "food-line"
+    food_root.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Food Line archive</html>", encoding="utf-8")
+    nested = pages_repo / "food-line" / "food-line"
+    nested.mkdir(parents=True, exist_ok=True)
+    (nested / "index.html").write_text("nested", encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert nested.exists()
+    assert any("food-line/food-line" in path.replace("\\", "/") for path in result["nested_duplicate_dispatch_paths_that_would_be_removed"])
+
+
+def test_pages_repo_validation_failure_leaves_nested_duplicate_pages_paths_intact(built_site, monkeypatch):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    food_root = work / "output" / "site" / "food-line"
+    food_root.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Food Line archive</html>", encoding="utf-8")
+    nested = pages_repo / "food-line" / "food-line"
+    nested.mkdir(parents=True, exist_ok=True)
+    (nested / "index.html").write_text("nested", encoding="utf-8")
+
+    def fail_pages_branch(*args, **kwargs):
+        return {
+            "current_branch": "main",
+            "target_pages_branch": "gh-pages",
+            "checked_out_branch": None,
+            "fetch_attempted": False,
+            "fetched": False,
+            "created_pages_branch": False,
+            "warnings": [],
+            "errors": ["pages_repo_not_synced_with_origin: local HEAD is behind origin/gh-pages."],
+        }
+
+    monkeypatch.setattr(generator, "ensure_pages_branch", fail_pages_branch)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is False
+    assert any("pages_repo_not_synced_with_origin" in error for error in result["errors"])
+    assert nested.exists()
+    assert result["nested_duplicate_dispatch_paths_removed"] == []
+
+
+def test_real_publish_removes_nested_duplicate_pages_paths_after_validation_passes(built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    food_root = work / "output" / "site" / "food-line"
+    food_root.mkdir(parents=True, exist_ok=True)
+    (food_root / "index.html").write_text("<html>Food Line home</html>", encoding="utf-8")
+    (food_root / "archive.html").write_text("<html>Food Line archive</html>", encoding="utf-8")
+    nested = pages_repo / "food-line" / "food-line"
+    nested.mkdir(parents=True, exist_ok=True)
+    (nested / "index.html").write_text("nested", encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+    )
+
+    assert result["ok"] is True
+    assert not nested.exists()
+    assert any("food-line/food-line" in path.replace("\\", "/") for path in result["nested_duplicate_dispatch_paths_removed"])
 
 
 def test_attached_landing_index_contains_american_pressure_map_button():

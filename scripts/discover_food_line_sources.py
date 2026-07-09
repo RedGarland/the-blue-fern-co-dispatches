@@ -1296,6 +1296,9 @@ def _gap_resource_only_hit(text: str) -> bool:
     return any(term in lowered for term in resource_only_terms)
 
 
+FOOD_LINE_DISCOVERY_GAP_UNRESOLVED_DIRECT_PRESSURE_BLOCK_SCORE = 8
+
+
 def score_food_line_discovery_gap_candidate(
     candidate: dict[str, Any],
     *,
@@ -1441,6 +1444,25 @@ def _gap_candidate_is_publication_blocking(candidate: dict[str, Any]) -> bool:
     if not _gap_traceable_review_url(candidate):
         return False
     return bool(_nonempty(candidate.get("title")) and _nonempty(candidate.get("publisher")))
+
+
+def _gap_candidate_is_high_confidence_unresolved_direct_pressure(candidate: dict[str, Any]) -> bool:
+    if str(candidate.get("classification") or "").strip() != "likely_qualifying":
+        return False
+    if bool(candidate.get("publication_blocking_candidate")):
+        return False
+    if str(candidate.get("review_traceability_status") or "").strip() != "unresolved_google_news":
+        return False
+    if _nonempty(candidate.get("wrapper_kind")):
+        return False
+    try:
+        score = int(candidate.get("score") or 0)
+    except (TypeError, ValueError):
+        score = 0
+    if score < FOOD_LINE_DISCOVERY_GAP_UNRESOLVED_DIRECT_PRESSURE_BLOCK_SCORE:
+        return False
+    reason_text = str(candidate.get("reason") or "").lower()
+    return "direct pressure signal" in reason_text
 
 
 def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
@@ -1727,6 +1749,14 @@ def run_food_line_discovery_gap_check(
     }
     blocking_likely_qualifying = [row for row in grouped_by_class["likely_qualifying"] if bool(row.get("publication_blocking_candidate"))]
     unresolved_likely_qualifying = [row for row in grouped_by_class["likely_qualifying"] if not bool(row.get("publication_blocking_candidate"))]
+    unresolved_high_confidence_direct_pressure = [
+        row for row in unresolved_likely_qualifying if _gap_candidate_is_high_confidence_unresolved_direct_pressure(row)
+    ]
+    unresolved_high_confidence_direct_pressure_titles = [
+        str(row.get("title") or "").strip()
+        for row in unresolved_high_confidence_direct_pressure[:5]
+        if str(row.get("title") or "").strip()
+    ]
     report_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / edition_date
     report_dir.mkdir(parents=True, exist_ok=True)
     report_json_path = report_dir / "discovery_gap_report.json"
@@ -1746,6 +1776,8 @@ def run_food_line_discovery_gap_check(
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
         "unresolved_likely_qualifying_count": len(unresolved_likely_qualifying),
+        "unresolved_high_confidence_direct_pressure_count": len(unresolved_high_confidence_direct_pressure),
+        "unresolved_high_confidence_direct_pressure_titles": unresolved_high_confidence_direct_pressure_titles,
         "manual_review_only_count": len(grouped_by_class["needs_review"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
@@ -1764,6 +1796,7 @@ def run_food_line_discovery_gap_check(
             "likely_qualifying": len(grouped_by_class["likely_qualifying"]),
             "blocking_likely_qualifying": len(blocking_likely_qualifying),
             "unresolved_likely_qualifying": len(unresolved_likely_qualifying),
+            "unresolved_high_confidence_direct_pressure": len(unresolved_high_confidence_direct_pressure),
             "manual_review_only": len(grouped_by_class["needs_review"]),
             "needs_review": len(grouped_by_class["needs_review"]),
             "already_known": len(grouped_by_class["duplicate_or_known"]),
@@ -1795,6 +1828,7 @@ def run_food_line_discovery_gap_check(
         f"- likely qualifying: {len(grouped_by_class['likely_qualifying'])}",
         f"- blocking likely qualifying: {len(blocking_likely_qualifying)}",
         f"- unresolved likely qualifying: {len(unresolved_likely_qualifying)}",
+        f"- unresolved high-confidence direct-pressure: {len(unresolved_high_confidence_direct_pressure)}",
         f"- manual-review-only: {len(grouped_by_class['needs_review'])}",
         f"- needs review: {len(grouped_by_class['needs_review'])}",
         f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
@@ -1817,6 +1851,8 @@ def run_food_line_discovery_gap_check(
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
         "unresolved_likely_qualifying_count": len(unresolved_likely_qualifying),
+        "unresolved_high_confidence_direct_pressure_count": len(unresolved_high_confidence_direct_pressure),
+        "unresolved_high_confidence_direct_pressure_titles": unresolved_high_confidence_direct_pressure_titles,
         "manual_review_only_count": len(grouped_by_class["needs_review"]),
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),

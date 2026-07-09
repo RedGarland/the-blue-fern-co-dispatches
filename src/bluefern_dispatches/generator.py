@@ -2757,6 +2757,14 @@ def remove_stale_cascadia_pages_artifacts(site_root: Path, pages_repo: Path, dry
     return removed
 
 
+def remove_nested_duplicate_dispatch_paths(root: Path, dry_run: bool) -> list[str]:
+    removed: list[str] = []
+    for slug in ONLY_DISPATCH_CHOICES:
+        nested_root = root / slug / slug
+        removed.extend(remove_pages_path(nested_root, dry_run))
+    return removed
+
+
 def run_git(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     cwd = cwd.resolve()
     return subprocess.run(
@@ -3161,6 +3169,9 @@ def validate_pages_repo_copy_scope(
                 continue
             errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_text}")
             continue
+        if len(rel_path.parts) >= 2 and rel_path.parts[0] in DISPATCH_LABELS and rel_path.parts[1] == rel_path.parts[0]:
+            errors.append(f"nested duplicate dispatch path copied into the Pages repo: {rel_text}")
+            continue
         if top_level in {"detail", "paid"}:
             errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_text}")
             continue
@@ -3326,6 +3337,7 @@ def publish_pages(
     only_dispatches: tuple[str, ...] = (),
     allow_listing_shrink: bool = False,
 ) -> dict[str, Any]:
+    pages_repo = pages_repo.resolve()
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
     dispatch_seed_dates: dict[str, str] = {}
@@ -3336,6 +3348,8 @@ def publish_pages(
         existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / expect_date
         if existing_dispatch_edition.exists():
             dispatch_seed_dates["american-pressure"] = expect_date
+    removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
+    removed_nested_duplicate_paths.extend(remove_nested_duplicate_dispatch_paths(pages_repo, dry_run))
     build = build_site(
         root,
         dry_run=dry_run,
@@ -3347,7 +3361,6 @@ def publish_pages(
     )
     root = root.resolve()
     site_root = root / "output" / "site"
-    pages_repo = pages_repo.resolve()
     errors = list(build["errors"])
     validation_errors, validation_warnings = validate_pages_publish(
         root,
@@ -3517,6 +3530,8 @@ def publish_pages(
         "non_publishable_pages_editions_that_would_be_removed": [item["path"] for item in removed_non_publishable] if dry_run else [],
         "stale_pages_artifacts_removed": [] if dry_run else removed_stale_artifacts,
         "stale_pages_artifacts_that_would_be_removed": removed_stale_artifacts if dry_run else [],
+        "nested_duplicate_dispatch_paths_removed": [] if dry_run else removed_nested_duplicate_paths,
+        "nested_duplicate_dispatch_paths_that_would_be_removed": removed_nested_duplicate_paths if dry_run else [],
         "files_that_would_be_skipped": skipped,
         "food_line_public_edition_skip_diagnostics": skip_diagnostics,
         "would_copy": would_copy,

@@ -1498,6 +1498,8 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "source_table.html" in edition_html
     assert edition_path.exists()
     source_table_html = source_table_path.read_text(encoding="utf-8")
+    audio_index_html = (tmp_path / "output" / "site" / "food-line" / "audio" / "index.html").read_text(encoding="utf-8")
+    podcast_xml = (tmp_path / "output" / "site" / "food-line" / "podcast.xml").read_text(encoding="utf-8")
     assert "Background reference" in source_table_html
     assert "Sources behind this briefing" in source_table_html
     assert "Record ID" in source_table_html
@@ -1511,6 +1513,10 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert 'href="/cascadia/"' in index_html
     assert 'href="/food-line/"' in index_html
     assert "2026-06-06 — No qualifying update" in archive_html
+    assert "Food Line Audio" in audio_index_html
+    assert "Open the podcast feed" in audio_index_html
+    assert f"/food-line/audio/{date}-transcript.html" in podcast_xml
+    assert "Podcast enclosure status" in audio_index_html
     assert manifest["public_rendered"] is True
     assert manifest["edition_mode"] == "no_current_update"
     assert manifest["skip_reason"] == ""

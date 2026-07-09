@@ -734,6 +734,7 @@ def _gap_new_resolver_state(
         "max_sitemap_urls_per_domain": max_sitemap_urls_per_domain,
         "resolution_cache": {},
         "resolution_cache_hit_count": 0,
+        "resolution_diagnostics": {},
         "sitemap_cache": {},
         "sitemap_lookup_counts": {},
         "sitemap_lookup_count": 0,
@@ -811,6 +812,190 @@ def _gap_score_sitemap_candidate_url(url: str, *, title_terms: list[str], summar
     if re.search(r"/20\d{2}[-/]\d{2}[-/]\d{2}/", path) or re.search(r"/\d{4}/\d{2}/\d{2}/", path):
         score += 2
     return score
+
+
+def _gap_exact_text_key(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", _normalize_source_text(text).lower())
+
+
+def _gap_title_core_text(text: str) -> str:
+    normalized = _normalize_source_text(text)
+    if " - " not in normalized:
+        return normalized
+    head, tail = normalized.rsplit(" - ", 1)
+    tail_lower = tail.lower()
+    tail_terms = re.findall(r"[a-z0-9]+", tail_lower)
+    if not tail_terms or len(tail_terms) > 5:
+        return normalized
+    outlet_hints = (
+        "news",
+        "abc",
+        "cbs",
+        "nbc",
+        "fox",
+        "pbs",
+        "post",
+        "times",
+        "tribune",
+        "herald",
+        "journal",
+        "press",
+        "daily",
+        "magazine",
+        "flyer",
+        "republic",
+        "sun",
+        "union",
+        "newsnow",
+        "ktal",
+        "ksbw",
+        "wdrb",
+        "kiiitv",
+        "wmar",
+        "kmtv",
+        "koaa",
+        "aol",
+    )
+    if any(hint in tail_lower for hint in outlet_hints):
+        return head
+    return normalized
+
+
+def _gap_exact_title_key_variants(text: str) -> list[str]:
+    variants: list[str] = []
+    for candidate in (_normalize_source_text(text), _gap_title_core_text(text)):
+        key = _gap_exact_text_key(candidate)
+        if key and key not in variants:
+            variants.append(key)
+    return variants
+
+
+def _gap_candidate_resolution_priority(candidate: dict[str, Any], *, known_local_domain: bool = False) -> tuple[int, int, int]:
+    text = _gap_text_blob(candidate)
+    direct_hits = _gap_direct_pressure_hits(text)
+    resource_hits = _gap_resource_only_hits(text)
+    score, _, penalties = score_food_line_discovery_gap_candidate(candidate, known_local_domain=known_local_domain)
+    classification = classify_food_line_discovery_gap_candidate(
+        candidate,
+        known_status=str(candidate.get("known_status") or "unknown_domain_new_article"),
+        known_local_domain=known_local_domain,
+    ).get("classification")
+    classification_rank = {
+        "likely_qualifying": 3,
+        "needs_review": 2,
+        "likely_resource_only": 1,
+        "duplicate_or_known": 0,
+    }.get(str(classification or ""), 0)
+    priority = classification_rank * 1000 + int(score) * 50
+    priority += len(direct_hits) * 60
+    priority += min(40, len(_gap_title_terms(str(candidate.get("title") or ""))) * 2)
+    if _nonempty(candidate.get("published_at")):
+        priority += 20
+    if _nonempty(candidate.get("wrapper_kind")):
+        priority -= 150
+    if resource_hits and not direct_hits:
+        priority -= 120
+    if penalties:
+        priority -= 20 * len(penalties)
+    return priority, classification_rank, int(score)
+
+
+def _gap_manual_action_for_severity(severity: str) -> str:
+    if severity == "hard_block":
+        return "Add this story only if the direct publisher URL and date are verified."
+    if severity == "soft_block":
+        return "Verify the direct publisher URL and publication date before allowing no-current-update."
+    return "Keep for follow-up review; it does not block no-current-update on its own."
+
+
+def _gap_verify_direct_url_date(
+    url: str,
+    *,
+    published_at: str = "",
+    edition_date: str = "",
+    timeout_seconds: int = 15,
+) -> tuple[bool, str, str]:
+    value = _gap_normalize_url(url)
+    if not value or _gap_is_google_news_url(value):
+        return False, "", ""
+    page_text = _gap_fetch_url_text(value, timeout_seconds=timeout_seconds)
+    page_metadata_date = ""
+    if page_text:
+        try:
+            page_metadata_date = _extract_page_metadata_date(page_text)
+        except Exception:  # noqa: BLE001
+            page_metadata_date = ""
+    url_date = _extract_url_date(value)
+    published_date = _gap_parse_published_at(published_at)[:10] if published_at else ""
+    verified_date = ""
+    if page_metadata_date:
+        verified_date = _extract_source_date(page_metadata_date)
+    if not verified_date and url_date:
+        verified_date = url_date
+    if not verified_date and published_date:
+        verified_date = published_date
+    if published_date and verified_date and published_date == verified_date:
+        return True, verified_date, "published date matches direct URL"
+    if edition_date and verified_date and verified_date == edition_date:
+        return True, verified_date, "edition date matches direct URL"
+    if published_date and url_date and published_date == url_date:
+        return True, verified_date or url_date, "URL date matches published date"
+    return False, verified_date, "direct URL date could not be verified"
+
+
+def _gap_date_confidence(
+    *,
+    direct_url_date_verified: bool,
+    published_at: str,
+    verified_date: str,
+    edition_date: str,
+) -> int:
+    published_date = _gap_parse_published_at(published_at)[:10] if published_at else ""
+    if direct_url_date_verified:
+        if published_date and verified_date and published_date == verified_date:
+            return 95
+        if edition_date and verified_date and edition_date == verified_date:
+            return 90
+        if verified_date:
+            return 85
+        return 80
+    if published_date and edition_date and published_date == edition_date:
+        return 70
+    if published_date:
+        return 50
+    if verified_date:
+        return 40
+    return 10
+
+
+def _extract_url_date(value: str) -> str:
+    text = _nonempty(value)
+    if not text:
+        return ""
+    patterns = (
+        r"/(20\d{2})/(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01])(?:/|$)",
+        r"\b(20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b",
+        r"\b(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\b",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+    return ""
+
+
+def _gap_blocking_candidate_severity(candidate: dict[str, Any]) -> str:
+    classification = str(candidate.get("classification") or "").strip()
+    direct_url = _gap_normalize_url(_nonempty(candidate.get("direct_url") or candidate.get("resolved_url") or candidate.get("url")))
+    direct_url_date_verified = bool(candidate.get("direct_url_date_verified"))
+    traceable_review_url = _gap_traceable_review_url(candidate)
+    direct_pressure = bool(_gap_direct_pressure_hits(_gap_text_blob(candidate)))
+    score = int(candidate.get("score") or 0)
+    if classification == "likely_qualifying" and direct_url and traceable_review_url == direct_url and direct_url_date_verified and direct_pressure:
+        return "hard_block"
+    if classification == "likely_qualifying" and direct_pressure and score >= 4:
+        return "soft_block"
+    return "review_only"
 
 
 def _gap_collect_sitemap_urls(
@@ -916,6 +1101,88 @@ def _gap_resolve_publisher_sitemap_url(
     return best_url
 
 
+def _gap_resolve_publisher_exact_title_url(
+    source_url: str,
+    *,
+    title: str = "",
+    summary: str = "",
+    resolver_state: dict[str, Any] | None = None,
+    diagnostics: dict[str, Any] | None = None,
+    timeout_seconds: int = 20,
+    max_sitemap_lookups_per_domain: int = 2,
+    max_sitemap_urls_per_domain: int = 50,
+) -> str:
+    diag = diagnostics if diagnostics is not None else {}
+    base = _gap_normalize_url(source_url)
+    if not base:
+        diag["exact_title_failure_cause"] = "missing_origin_url"
+        return ""
+    parsed = urllib.parse.urlsplit(base)
+    if not parsed.scheme or not parsed.netloc:
+        diag["exact_title_failure_cause"] = "missing_origin_url"
+        return ""
+    origin = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, "", "", ""))
+    diag["exact_title_origin"] = origin
+    diag["exact_title_source_url"] = base
+    before_lookup_count = int((resolver_state or {}).get("sitemap_lookup_count") or 0)
+    discovered_urls = _gap_collect_sitemap_urls(
+        origin,
+        resolver_state=resolver_state,
+        timeout_seconds=timeout_seconds,
+        max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+        max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+    )
+    after_lookup_count = int((resolver_state or {}).get("sitemap_lookup_count") or 0)
+    diag["sitemap_lookup_count_delta"] = max(0, after_lookup_count - before_lookup_count)
+    diag["sitemap_urls_checked_count"] = len(discovered_urls)
+    if not discovered_urls:
+        diag["exact_title_failure_cause"] = "no_sitemap_urls_found"
+        return ""
+    title_keys = _gap_exact_title_key_variants(title)
+    title_terms = _gap_title_terms(title)
+    summary_terms = _gap_title_terms(summary)
+    scored_urls: list[tuple[int, str]] = []
+    for url in discovered_urls:
+        if not _gap_is_plausible_article_url(url, seed_url=base) or "news.google.com" in url.lower():
+            continue
+        path = urllib.parse.urlsplit(url).path.lower()
+        slug_key = _gap_exact_text_key(path)
+        score = 0
+        if title_keys and any(title_key == slug_key or title_key in slug_key or slug_key in title_key for title_key in title_keys):
+            score += 100
+        if title_terms and all(term in slug_key for term in title_terms[:6]):
+            score += 50
+        elif any(term in slug_key for term in title_terms[:6]):
+            score += 20
+        if any(term in slug_key for term in summary_terms[:6]):
+            score += 5
+        if score:
+            scored_urls.append((score, url))
+    diag["exact_title_scored_url_count"] = len(scored_urls)
+    scored_urls.sort(key=lambda item: (-item[0], len(item[1]), item[1]))
+    page_fetch_attempts = 0
+    for _, url in scored_urls[:8]:
+        page_fetch_attempts += 1
+        page_text = _gap_fetch_url_text(url, timeout_seconds=timeout_seconds)
+        if not page_text:
+            continue
+        page_title = _gap_extract_page_title(page_text)
+        page_title_keys = _gap_exact_title_key_variants(page_title)
+        if title_keys and page_title_keys and any(page_key == title_key or page_key in title_key or title_key in page_key for title_key in title_keys for page_key in page_title_keys):
+            diag["exact_title_resolution_mode"] = "page_title_exact_match"
+            return url
+        if _gap_resolved_url_relevance(url, title=title, summary=summary, body=page_text)[0]:
+            diag["exact_title_resolution_mode"] = "page_relevance_match"
+            return url
+    diag["exact_title_page_fetch_attempts"] = page_fetch_attempts
+    if scored_urls:
+        diag["exact_title_failure_cause"] = "candidate_returned_without_page_match"
+        diag["exact_title_fallback_url"] = scored_urls[0][1]
+        return scored_urls[0][1]
+    diag["exact_title_failure_cause"] = "no_matching_slug"
+    return ""
+
+
 def _gap_pick_best_article_url(urls: list[str], *, seed_url: str = "") -> str:
     best_url = ""
     best_score = -1
@@ -996,6 +1263,7 @@ def _gap_resolve_google_news_url(
     skip_sitemap_fallback: bool = False,
     max_sitemap_lookups_per_domain: int = 2,
     max_sitemap_urls_per_domain: int = 50,
+    allow_exact_title_fallback: bool = False,
 ) -> tuple[str, str, str]:
     value = _gap_normalize_url(url)
     if not value:
@@ -1003,17 +1271,37 @@ def _gap_resolve_google_news_url(
     state = resolver_state if resolver_state is not None else {}
     cache_key = value
     cache = state.setdefault("resolution_cache", {})
+    diagnostics = state.setdefault("resolution_diagnostics", {})
+    diag = diagnostics.setdefault(cache_key, {})
     if cache_key in cache:
         resolved_url, status, reason = cache[cache_key]
         state["resolution_cache_hit_count"] = int(state.get("resolution_cache_hit_count") or 0) + 1
+        diag["cache_hit"] = True
+        diag["cached_status"] = status
+        diag["cached_reason"] = reason
         return resolved_url, status, reason
     parsed = urllib.parse.urlsplit(value)
+    diag.update(
+        {
+            "input_url": value,
+            "source_url": _gap_normalize_url(source_url),
+            "source_url_is_google_news": _gap_is_google_news_url(source_url or ""),
+            "allow_exact_title_fallback": bool(allow_exact_title_fallback),
+            "skip_sitemap_fallback": bool(skip_sitemap_fallback),
+            "resolution_mode": "google_news_url",
+            "exact_title_attempted": False,
+            "sitemap_fallback_attempted": False,
+            "sitemap_lookup_count_before": int(state.get("sitemap_lookup_count") or 0),
+        }
+    )
     if parsed.netloc.lower() not in {"news.google.com", "www.news.google.com"} and "news.google.com" not in value.lower():
         result = (value, "direct_article_url", "")
         cache[cache_key] = result
+        diag["resolution_mode"] = "direct_article_url"
         return result
     resolved = ""
     body = ""
+    final_url = ""
     try:
         req = urllib.request.Request(value, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=timeout_seconds, context=ssl._create_unverified_context()) as resp:  # noqa: S310
@@ -1023,9 +1311,13 @@ def _gap_resolve_google_news_url(
                 if relevant:
                     result = (final_url, "resolved_google_news_url", "")
                     cache[cache_key] = result
+                    diag["resolution_mode"] = "google_news_redirect"
+                    diag["resolved_url"] = final_url
                     return result
                 result = ("", "rejected_unrelated_resolved_url", reason)
                 cache[cache_key] = result
+                diag["resolution_mode"] = "google_news_redirect_rejected"
+                diag["failure_reason"] = reason
                 return result
             try:
                 body = resp.read(200_000).decode("utf-8", errors="replace")
@@ -1035,6 +1327,8 @@ def _gap_resolve_google_news_url(
         reason = str(exc).strip() or "resolver timed out"
         result = ("", "url_resolution_timeout", reason)
         cache[cache_key] = result
+        diag["resolution_mode"] = "google_news_timeout"
+        diag["failure_reason"] = reason
         return result
     except Exception:  # noqa: BLE001
         final_url = ""
@@ -1045,23 +1339,90 @@ def _gap_resolve_google_news_url(
             if relevant:
                 result = (resolved, "resolved_google_news_url", "")
                 cache[cache_key] = result
+                diag["resolution_mode"] = "google_news_body_match"
+                diag["resolved_url"] = resolved
                 return result
             result = ("", "rejected_unrelated_resolved_url", reason)
             cache[cache_key] = result
+            diag["resolution_mode"] = "google_news_body_rejected"
+            diag["failure_reason"] = reason
             return result
     if final_url and _gap_is_plausible_article_url(final_url, seed_url=value):
         relevant, reason = _gap_resolved_url_relevance(final_url, title=title, summary=summary, body=body)
         if relevant:
             result = (final_url, "resolved_google_news_url", "")
             cache[cache_key] = result
+            diag["resolution_mode"] = "google_news_redirect"
+            diag["resolved_url"] = final_url
             return result
         result = ("", "rejected_unrelated_resolved_url", reason)
         cache[cache_key] = result
+        diag["resolution_mode"] = "google_news_redirect_rejected"
+        diag["failure_reason"] = reason
         return result
     if skip_sitemap_fallback:
-        result = ("", "unresolved_google_news_url", "sitemap fallback disabled")
+        if allow_exact_title_fallback:
+            diag["exact_title_attempted"] = True
+            exact_title_url = _gap_resolve_publisher_exact_title_url(
+                source_url or value,
+                title=title,
+                summary=summary,
+                resolver_state=resolver_state,
+                diagnostics=diag,
+                timeout_seconds=timeout_seconds,
+                max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+                max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+            )
+            if exact_title_url:
+                relevant, reason = _gap_resolved_url_relevance(exact_title_url, title=title, summary=summary)
+                if relevant:
+                    result = (exact_title_url, "resolved_publisher_exact_title_url", "")
+                    cache[cache_key] = result
+                    diag["resolution_mode"] = "publisher_exact_title"
+                    diag["resolved_url"] = exact_title_url
+                    return result
+                result = ("", "rejected_unrelated_resolved_url", reason)
+                cache[cache_key] = result
+                diag["resolution_mode"] = "publisher_exact_title_rejected"
+                diag["failure_reason"] = reason
+                return result
+        else:
+            diag["failure_reason"] = "exact title fallback not attempted: confidence gate not met"
+        failure_reason = "sitemap fallback disabled"
+        if allow_exact_title_fallback:
+            failure_cause = str(diag.get("exact_title_failure_cause") or "").strip()
+            if failure_cause:
+                failure_reason = f"sitemap fallback disabled; exact title fallback failed: {failure_cause}"
+        result = ("", "unresolved_google_news_url", failure_reason)
         cache[cache_key] = result
+        diag["failure_reason"] = failure_reason
         return result
+    if allow_exact_title_fallback:
+        diag["exact_title_attempted"] = True
+        exact_title_url = _gap_resolve_publisher_exact_title_url(
+            source_url or value,
+            title=title,
+            summary=summary,
+            resolver_state=resolver_state,
+            diagnostics=diag,
+            timeout_seconds=timeout_seconds,
+            max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+            max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+        )
+        if exact_title_url:
+            relevant, reason = _gap_resolved_url_relevance(exact_title_url, title=title, summary=summary)
+            if relevant:
+                result = (exact_title_url, "resolved_publisher_exact_title_url", "")
+                cache[cache_key] = result
+                diag["resolution_mode"] = "publisher_exact_title"
+                diag["resolved_url"] = exact_title_url
+                return result
+            result = ("", "rejected_unrelated_resolved_url", reason)
+            cache[cache_key] = result
+            diag["resolution_mode"] = "publisher_exact_title_rejected"
+            diag["failure_reason"] = reason
+            return result
+        diag["failure_reason"] = str(diag.get("exact_title_failure_cause") or "no_exact_title_match")
     sitemap_url = _gap_resolve_publisher_sitemap_url(
         source_url or value,
         title=title,
@@ -1071,17 +1432,26 @@ def _gap_resolve_google_news_url(
         max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
         max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
     )
+    diag["sitemap_fallback_attempted"] = True
     if sitemap_url:
         relevant, reason = _gap_resolved_url_relevance(sitemap_url, title=title, summary=summary)
         if relevant:
             result = (sitemap_url, "resolved_publisher_sitemap_url", "")
             cache[cache_key] = result
+            diag["resolution_mode"] = "publisher_sitemap"
+            diag["resolved_url"] = sitemap_url
             return result
         result = ("", "rejected_unrelated_resolved_url", reason)
         cache[cache_key] = result
+        diag["resolution_mode"] = "publisher_sitemap_rejected"
+        diag["failure_reason"] = reason
         return result
-    result = ("", "unresolved_google_news_url", "no acceptable article URL found")
+    failure_reason = str(diag.get("failure_reason") or "no acceptable article URL found")
+    if not failure_reason:
+        failure_reason = "no acceptable article URL found"
+    result = ("", "unresolved_google_news_url", failure_reason)
     cache[cache_key] = result
+    diag["failure_reason"] = failure_reason
     return result
 
 
@@ -1173,15 +1543,16 @@ def _gap_parse_rss_items(
     skip_sitemap_fallback: bool = False,
     max_sitemap_lookups_per_domain: int = 2,
     max_sitemap_urls_per_domain: int = 50,
+    edition_date: str = "",
 ) -> list[dict[str, str]]:
     text = INVALID_XML_ENTITY_RE.sub("&amp;", payload.decode("utf-8", errors="replace"))
     root = ET.fromstring(text)
     items = root.findall(".//item")
     if not items:
         items = root.findall(".//{*}item")
-    rows: list[dict[str, str]] = []
     state = resolver_state if resolver_state is not None else {}
     max_candidates = state.get("max_candidates")
+    provisional_rows: list[dict[str, Any]] = []
     for item in items:
         source_el = item.find("source")
         if source_el is None:
@@ -1197,11 +1568,88 @@ def _gap_parse_rss_items(
         title = _nonempty(item.findtext("title") or "")
         summary = _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or "")
         candidate_url = google_news_url or _gap_normalize_url(source_url)
+        candidate_domain = _gap_domain(candidate_url)
+        publisher_domain = _gap_domain(source_url)
+        provisional_candidate = {
+            "title": _normalize_source_text(item.findtext("title") or ""),
+            "publisher": publisher,
+            "source_url": _gap_normalize_url(source_url),
+            "publisher_url": _gap_normalize_url(source_url),
+            "candidate_url": candidate_url,
+            "resolved_url": "",
+            "google_news_url": google_news_url,
+            "url_resolution_status": "direct_article_url",
+            "url_resolution_reason": "",
+            "link_url": google_news_url,
+            "published_at": _gap_parse_published_at(item.findtext("pubDate") or item.findtext("published") or item.findtext("updated") or ""),
+            "summary_or_snippet": _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or ""),
+            "domain": candidate_domain or publisher_domain or publisher,
+            "publisher_domain": publisher_domain or candidate_domain or publisher,
+        }
+        provisional_rows.append(provisional_candidate)
+
+    sortable_rows: list[dict[str, Any]] = []
+    for row in provisional_rows:
+        candidate_url = str(row.get("candidate_url") or "").strip()
+        source_url = str(row.get("publisher_url") or "").strip()
+        wrapper_kind = _gap_wrapper_kind(row)
+        text = _gap_text_blob(row)
+        direct_pressure = bool(_gap_direct_pressure_hits(text))
+        score, reasons, penalties = score_food_line_discovery_gap_candidate(
+            {
+                **row,
+                "wrapper_kind": wrapper_kind,
+            },
+            known_local_domain=bool(_gap_domain(source_url) and _gap_domain(source_url) == _gap_domain(candidate_url)),
+        )
+        classification = classify_food_line_discovery_gap_candidate(
+            {
+                **row,
+                "wrapper_kind": wrapper_kind,
+            },
+            known_status="unknown_domain_new_article",
+            known_local_domain=bool(_gap_domain(source_url) and _gap_domain(source_url) == _gap_domain(candidate_url)),
+        )
+        priority, classification_rank, score_value = _gap_candidate_resolution_priority(
+            {
+                **row,
+                "wrapper_kind": wrapper_kind,
+                "known_status": "unknown_domain_new_article",
+            },
+            known_local_domain=bool(_gap_domain(source_url) and _gap_domain(source_url) == _gap_domain(candidate_url)),
+        )
+        row["wrapper_kind"] = wrapper_kind
+        row["pressure_clues_found"] = _gap_direct_pressure_hits(text)
+        row["secondary_queries_generated"] = _gap_secondary_queries_from_wrapper(row)
+        row["resolution_priority"] = priority
+        row["resolution_classification_rank"] = classification_rank
+        row["resolution_score"] = score_value
+        row["resolution_reasons"] = reasons
+        row["resolution_penalties"] = penalties
+        row["resolution_direct_pressure"] = direct_pressure
+        row["classification"] = classification.get("classification")
+        row["known_status"] = "unknown_domain_new_article"
+        sortable_rows.append(row)
+
+    sortable_rows.sort(
+        key=lambda row: (
+            -int(row.get("resolution_priority") or 0),
+            -int(row.get("resolution_score") or 0),
+            str(row.get("published_at") or ""),
+            str(row.get("title") or ""),
+            str(row.get("candidate_url") or ""),
+        )
+    )
+
+    rows: list[dict[str, str]] = []
+    for row in sortable_rows:
+        candidate_url = _gap_normalize_url(_nonempty(row.get("candidate_url")))
+        google_news_url = _gap_normalize_url(_nonempty(row.get("google_news_url")))
+        source_url = _gap_normalize_url(_nonempty(row.get("publisher_url")))
         resolved_url = ""
-        url_resolution_status = "direct_article_url"
+        url_resolution_status = str(row.get("url_resolution_status") or "direct_article_url")
         url_resolution_reason = ""
-        parsed_link = urllib.parse.urlsplit(google_news_url)
-        is_google_news_url = "news.google.com" in google_news_url.lower() or parsed_link.netloc.lower() in {"news.google.com", "www.news.google.com"}
+        is_google_news_url = _gap_is_google_news_url(candidate_url or google_news_url)
         if is_google_news_url:
             if max_candidates is not None and int(state.get("resolution_attempt_count") or 0) >= int(max_candidates):
                 url_resolution_status = "resolution_skipped_max_candidates"
@@ -1209,20 +1657,27 @@ def _gap_parse_rss_items(
                 state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
             else:
                 state["resolution_attempt_count"] = int(state.get("resolution_attempt_count") or 0) + 1
+                allow_exact_title_fallback = bool(
+                    int(row.get("resolution_classification_rank") or 0) >= 3
+                    or int(row.get("resolution_score") or 0) >= 6
+                    or bool(row.get("resolution_direct_pressure"))
+                )
                 resolved_url, url_resolution_status, url_resolution_reason = _gap_resolve_google_news_url(
-                    link,
-                    title=title,
-                    summary=summary,
+                    google_news_url or candidate_url,
+                    title=str(row.get("title") or ""),
+                    summary=str(row.get("summary_or_snippet") or ""),
                     source_url=source_url,
                     resolver_state=state,
                     timeout_seconds=resolver_timeout_seconds,
                     skip_sitemap_fallback=skip_sitemap_fallback,
                     max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
                     max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+                    allow_exact_title_fallback=allow_exact_title_fallback,
                 )
-                if url_resolution_status == "resolved_google_news_url":
-                    state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
-                elif url_resolution_status == "resolved_publisher_sitemap_url":
+                row["resolution_diagnostics"] = dict(
+                    (state.get("resolution_diagnostics") or {}).get(_gap_normalize_url(google_news_url or candidate_url), {})
+                )
+                if url_resolution_status in {"resolved_google_news_url", "resolved_publisher_sitemap_url", "resolved_publisher_exact_title_url"}:
                     state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
                 elif url_resolution_status == "rejected_unrelated_resolved_url":
                     state["rejected_unrelated_resolved_url_count"] = int(state.get("rejected_unrelated_resolved_url_count") or 0) + 1
@@ -1237,30 +1692,57 @@ def _gap_parse_rss_items(
             elif google_news_url:
                 candidate_url = google_news_url
             else:
-                candidate_url = _gap_normalize_url(source_url)
+                candidate_url = source_url
         else:
-            candidate_url = candidate_url or _gap_normalize_url(source_url)
+            candidate_url = candidate_url or source_url
         if not candidate_url:
             continue
         candidate_domain = _gap_domain(candidate_url)
         publisher_domain = _gap_domain(source_url)
-        rows.append(
-            {
-                "title": _normalize_source_text(item.findtext("title") or ""),
-                "publisher": publisher,
-                "publisher_url": _gap_normalize_url(source_url),
-                "candidate_url": candidate_url,
-                "resolved_url": resolved_url,
-                "google_news_url": google_news_url,
-                "url_resolution_status": url_resolution_status,
-                "url_resolution_reason": url_resolution_reason,
-                "link_url": google_news_url,
-                "published_at": _gap_parse_published_at(item.findtext("pubDate") or item.findtext("published") or item.findtext("updated") or ""),
-                "summary_or_snippet": _normalize_source_text(item.findtext("description") or item.findtext("summary") or item.findtext("content") or ""),
-                "domain": candidate_domain or publisher_domain or publisher,
-                "publisher_domain": publisher_domain or candidate_domain or publisher,
-            }
+        direct_url = resolved_url or (candidate_url if not is_google_news_url else "")
+        direct_url_date_verified = False
+        verified_date = ""
+        date_verification_reason = ""
+        should_verify_direct_date = bool(direct_url) and (
+            bool(row.get("resolution_direct_pressure"))
+            or int(row.get("resolution_classification_rank") or 0) >= 2
+            or int(row.get("resolution_score") or 0) >= 4
         )
+        if should_verify_direct_date:
+            direct_url_date_verified, verified_date, date_verification_reason = _gap_verify_direct_url_date(
+                direct_url,
+                published_at=str(row.get("published_at") or ""),
+                edition_date=edition_date,
+                timeout_seconds=resolver_timeout_seconds,
+            )
+        date_confidence = _gap_date_confidence(
+            direct_url_date_verified=direct_url_date_verified,
+            published_at=str(row.get("published_at") or ""),
+            verified_date=verified_date,
+            edition_date=edition_date,
+        )
+        row_payload = {
+            "title": str(row.get("title") or ""),
+            "publisher": str(row.get("publisher") or ""),
+            "source_url": _gap_normalize_url(_nonempty(source_url) or str((row.get("resolution_diagnostics") or {}).get("source_url") or "")),
+            "publisher_url": publisher_domain and source_url or source_url,
+            "candidate_url": candidate_url,
+            "resolved_url": resolved_url,
+            "google_news_url": google_news_url,
+            "url_resolution_status": url_resolution_status,
+            "url_resolution_reason": url_resolution_reason,
+            "link_url": google_news_url,
+            "published_at": str(row.get("published_at") or ""),
+            "summary_or_snippet": str(row.get("summary_or_snippet") or ""),
+            "domain": candidate_domain or publisher_domain or str(row.get("publisher") or ""),
+            "publisher_domain": publisher_domain or candidate_domain or str(row.get("publisher") or ""),
+            "date_confidence": date_confidence,
+            "direct_url_date_verified": direct_url_date_verified,
+            "verified_date": verified_date,
+            "date_verification_reason": date_verification_reason,
+            "resolution_diagnostics": row.get("resolution_diagnostics") or {},
+        }
+        rows.append(row_payload)
     return rows
 
 
@@ -1443,6 +1925,8 @@ def _gap_candidate_is_publication_blocking(candidate: dict[str, Any]) -> bool:
         return False
     if not _gap_traceable_review_url(candidate):
         return False
+    if not bool(candidate.get("direct_url_date_verified")):
+        return False
     return bool(_nonempty(candidate.get("title")) and _nonempty(candidate.get("publisher")))
 
 
@@ -1450,6 +1934,8 @@ def _gap_candidate_is_high_confidence_unresolved_direct_pressure(candidate: dict
     if str(candidate.get("classification") or "").strip() != "likely_qualifying":
         return False
     if bool(candidate.get("publication_blocking_candidate")):
+        return False
+    if str(candidate.get("blocking_candidate_severity") or "").strip() != "soft_block":
         return False
     if str(candidate.get("review_traceability_status") or "").strip() != "unresolved_google_news":
         return False
@@ -1469,8 +1955,8 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
     if not rows:
         return "_None._"
     lines = [
-        "| Title | Publisher/domain | URL | URL resolution | Query | Score | Reason | Known status |",
-        "| --- | --- | --- | --- | --- | ---: | --- | --- |",
+        "| Title | Publisher/domain | Direct URL | Google News wrapper | Date confidence | Block severity | Recommended manual action | URL resolution | Query | Score | Reason | Known status |",
+        "| --- | --- | --- | --- | ---: | --- | --- | --- | --- | ---: | --- | --- |",
     ]
     for row in rows:
         publisher = _normalize_source_text(str(row.get("publisher") or "")).replace("|", "\\|")
@@ -1478,24 +1964,32 @@ def _gap_markdown_table(rows: list[dict[str, Any]]) -> str:
         publisher_cell = publisher
         if publisher_domain and publisher_domain.lower() not in publisher.lower():
             publisher_cell = f"{publisher} ({publisher_domain})" if publisher else publisher_domain
+        direct_url = _normalize_source_text(str(row.get("direct_url") or "")).replace("|", "\\|")
+        google_news_url = _normalize_source_text(
+            str(row.get("google_news_url") or (row.get("url") if _gap_is_google_news_url(str(row.get("url") or "")) else ""))
+        ).replace("|", "\\|")
+        date_confidence = _normalize_source_text(str(row.get("date_confidence") or "")).replace("|", "\\|")
+        block_severity = _normalize_source_text(str(row.get("blocking_candidate_severity") or "review_only")).replace("|", "\\|")
+        recommended_manual_action = _normalize_source_text(str(row.get("recommended_manual_action") or "")).replace("|", "\\|")
         url_resolution = _normalize_source_text(str(row.get("url_resolution_status") or "")).replace("|", "\\|")
         url_resolution_reason = _normalize_source_text(str(row.get("url_resolution_reason") or "")).replace("|", "\\|")
         if url_resolution_reason:
             url_resolution = f"{url_resolution}: {url_resolution_reason}" if url_resolution else url_resolution_reason
-        escaped_row_url = _normalize_source_text(str(row.get("url") or "")).replace("|", "\\|")
-        lines.append(
-            "| "
-            + " | ".join(
-                (
-                    publisher_cell
-                    if field == "publisher_domain"
-                    else _normalize_source_text(str(row.get(field) or "")).replace("|", "\\|")
-                )
-                for field in ("title", "publisher_domain", "url", "discovered_query", "score", "reason", "known_status")
-            )
-            .replace(f" | {escaped_row_url} | ", f" | {escaped_row_url} | {url_resolution} | ")
-            + " |"
-        )
+        row_values = [
+            _normalize_source_text(str(row.get("title") or "")).replace("|", "\\|"),
+            publisher_cell,
+            direct_url,
+            google_news_url,
+            date_confidence,
+            block_severity,
+            recommended_manual_action,
+            url_resolution,
+            _normalize_source_text(str(row.get("discovered_query") or "")).replace("|", "\\|"),
+            _normalize_source_text(str(row.get("score") or "")).replace("|", "\\|"),
+            _normalize_source_text(str(row.get("reason") or "")).replace("|", "\\|"),
+            _normalize_source_text(str(row.get("known_status") or "")).replace("|", "\\|"),
+        ]
+        lines.append("| " + " | ".join(row_values) + " |")
     return "\n".join(lines)
 
 
@@ -1607,6 +2101,7 @@ def run_food_line_discovery_gap_check(
                 skip_sitemap_fallback=skip_sitemap_fallback,
                 max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
                 max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+                edition_date=edition_date,
             )
         except Exception as exc:  # noqa: BLE001
             query_errors.append({"query": query, "url": rss_url, "error": f"{type(exc).__name__}: {exc}"})
@@ -1661,6 +2156,10 @@ def run_food_line_discovery_gap_check(
                     "discovered_at": discovered_at,
                     "published_at": _nonempty(item.get("published_at")),
                     "summary_or_snippet": _nonempty(item.get("summary_or_snippet")),
+                    "date_confidence": int(item.get("date_confidence") or 0),
+                    "direct_url_date_verified": bool(item.get("direct_url_date_verified")),
+                    "verified_date": _nonempty(item.get("verified_date")),
+                    "date_verification_reason": _nonempty(item.get("date_verification_reason")),
                     "known_status": known_status,
                     "query_url": rss_url,
                     "raw_candidate": dict(item),
@@ -1703,14 +2202,27 @@ def run_food_line_discovery_gap_check(
     for candidate in grouped.values():
         normalized_url = str(candidate.get("normalized_url") or "").strip()
         candidate_domain = _gap_domain(str(candidate.get("publisher_url") or "")) or _gap_domain(normalized_url)
+        known_status = "unknown_domain_new_article"
+        publisher_name = str(candidate.get("publisher") or "").strip().lower()
+        if normalized_url in known["included_urls"]:
+            known_status = "already_included"
+        elif normalized_url in known["excluded_urls"]:
+            known_status = "already_excluded"
+        elif normalized_url in known["known_urls"]:
+            known_status = "duplicate"
+        elif candidate_domain and (candidate_domain in exclude_domains):
+            known_status = "already_excluded"
+        elif candidate_domain in known["known_domains"] or publisher_name in known["known_publishers"]:
+            known_status = "known_domain_new_article"
         classification = classify_food_line_discovery_gap_candidate(
             candidate,
-            known_status=str(candidate.get("known_status") or "unknown_domain_new_article"),
+            known_status=known_status,
             known_local_domain=bool(candidate_domain and candidate_domain in known_local_domains),
         )
         row = {
             "title": candidate.get("title") or "",
             "publisher": candidate.get("publisher") or "",
+            "source_url": candidate.get("source_url") or (candidate.get("resolution_diagnostics") or {}).get("source_url") or "",
             "publisher_domain": candidate.get("publisher_domain") or candidate_domain or "",
             "domain": candidate.get("domain") or candidate_domain or "",
             "url": normalized_url,
@@ -1719,15 +2231,21 @@ def run_food_line_discovery_gap_check(
             "resolved_url": candidate.get("resolved_url") or "",
             "url_resolution_status": candidate.get("url_resolution_status") or "",
             "url_resolution_reason": candidate.get("url_resolution_reason") or "",
+            "direct_url": candidate.get("resolved_url") or (normalized_url if not _gap_is_google_news_url(normalized_url) else ""),
             "discovered_query": candidate.get("discovered_queries", [candidate.get("discovered_query") or ""])[0] or "",
             "discovered_queries": candidate.get("discovered_queries") or [],
             "discovered_at": candidate.get("discovered_at") or discovered_at,
             "published_at": candidate.get("published_at") or "",
             "summary_or_snippet": candidate.get("summary_or_snippet") or "",
-            "known_status": str(candidate.get("known_status") or "unknown_domain_new_article"),
+            "known_status": known_status,
             "wrapper_kind": candidate.get("wrapper_kind") or "",
             "pressure_clues_found": candidate.get("pressure_clues_found") or [],
             "secondary_queries_generated": candidate.get("secondary_queries_generated") or [],
+            "date_confidence": int(candidate.get("date_confidence") or 0),
+            "direct_url_date_verified": bool(candidate.get("direct_url_date_verified")),
+            "verified_date": candidate.get("verified_date") or "",
+            "date_verification_reason": candidate.get("date_verification_reason") or "",
+            "resolution_diagnostics": candidate.get("resolution_diagnostics") or {},
             "source_role": classification["source_role"],
             "donation_wrapper": bool(classification["donation_wrapper"]),
             "public_eligible": bool(classification["public_eligible"]),
@@ -1735,11 +2253,22 @@ def run_food_line_discovery_gap_check(
             "reason": classification["reason"],
             "classification": classification["classification"],
         }
+        row["blocking_candidate_severity"] = _gap_blocking_candidate_severity(row)
+        row["recommended_manual_action"] = _gap_manual_action_for_severity(str(row.get("blocking_candidate_severity") or "review_only"))
         row["traceable_review_url"] = _gap_traceable_review_url(row)
         row["review_traceability_status"] = _gap_review_traceability_status(row)
         row["publication_blocking_candidate"] = _gap_candidate_is_publication_blocking(row)
         candidates.append(row)
-    candidates.sort(key=lambda row: (row["classification"], -int(row["score"] or 0), str(row["title"] or ""), str(row["url"] or "")))
+    severity_rank = {"hard_block": 3, "soft_block": 2, "review_only": 1}
+    candidates.sort(
+        key=lambda row: (
+            -severity_rank.get(str(row.get("blocking_candidate_severity") or "review_only"), 1),
+            -int(row.get("date_confidence") or 0),
+            -int(row.get("score") or 0),
+            str(row.get("title") or ""),
+            str(row.get("url") or ""),
+        )
+    )
     wrapper_candidate_count = sum(1 for row in candidates if _nonempty(row.get("wrapper_kind")))
     grouped_by_class = {
         "likely_qualifying": [row for row in candidates if row["classification"] == "likely_qualifying"],
@@ -1757,6 +2286,11 @@ def run_food_line_discovery_gap_check(
         for row in unresolved_high_confidence_direct_pressure[:5]
         if str(row.get("title") or "").strip()
     ]
+    hard_block_rows = [row for row in candidates if str(row.get("blocking_candidate_severity") or "") == "hard_block"]
+    soft_block_rows = [row for row in candidates if str(row.get("blocking_candidate_severity") or "") == "soft_block"]
+    review_only_rows = [row for row in candidates if str(row.get("blocking_candidate_severity") or "") == "review_only"]
+    direct_url_date_verified_count = sum(1 for row in candidates if bool(row.get("direct_url_date_verified")))
+    high_confidence_attempt_rows = soft_block_rows[:10]
     report_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / edition_date
     report_dir.mkdir(parents=True, exist_ok=True)
     report_json_path = report_dir / "discovery_gap_report.json"
@@ -1775,6 +2309,9 @@ def run_food_line_discovery_gap_check(
         "candidate_count": len(candidates),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
+        "hard_block_count": len(hard_block_rows),
+        "soft_block_count": len(soft_block_rows),
+        "review_only_count": len(review_only_rows),
         "unresolved_likely_qualifying_count": len(unresolved_likely_qualifying),
         "unresolved_high_confidence_direct_pressure_count": len(unresolved_high_confidence_direct_pressure),
         "unresolved_high_confidence_direct_pressure_titles": unresolved_high_confidence_direct_pressure_titles,
@@ -1782,12 +2319,40 @@ def run_food_line_discovery_gap_check(
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
+        "date_confidence_values": [int(row.get("date_confidence") or 0) for row in candidates],
+        "direct_url_date_verified_count": direct_url_date_verified_count,
         "resolved_url_count": int(resolver_state.get("resolved_url_count") or 0),
         "unresolved_url_count": int(resolver_state.get("unresolved_url_count") or 0),
         "rejected_unrelated_resolved_url_count": int(resolver_state.get("rejected_unrelated_resolved_url_count") or 0),
         "url_resolution_timeout_count": int(resolver_state.get("url_resolution_timeout_count") or 0),
         "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
         "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
+        "high_confidence_url_resolution_attempt_count": len(high_confidence_attempt_rows),
+        "high_confidence_url_resolution_attempts": [
+            {
+                "title": row.get("title") or "",
+                "publisher": row.get("publisher") or "",
+                "publisher_domain": row.get("publisher_domain") or "",
+                "source_url": row.get("source_url") or row.get("publisher_url") or (row.get("resolution_diagnostics") or {}).get("source_url") or "",
+                "publisher_url": row.get("publisher_url") or "",
+                "google_news_url": row.get("google_news_url") or "",
+                "url_resolution_status": row.get("url_resolution_status") or "",
+                "url_resolution_reason": row.get("url_resolution_reason") or "",
+                "exact_title_attempted": bool((row.get("resolution_diagnostics") or {}).get("exact_title_attempted")),
+                "exact_title_failure_cause": (row.get("resolution_diagnostics") or {}).get("exact_title_failure_cause") or "",
+                "exact_title_origin": (row.get("resolution_diagnostics") or {}).get("exact_title_origin") or "",
+                "sitemap_lookup_count_delta": int((row.get("resolution_diagnostics") or {}).get("sitemap_lookup_count_delta") or 0),
+                "sitemap_urls_checked_count": int((row.get("resolution_diagnostics") or {}).get("sitemap_urls_checked_count") or 0),
+                "exact_title_scored_url_count": int((row.get("resolution_diagnostics") or {}).get("exact_title_scored_url_count") or 0),
+                "resolution_mode": (row.get("resolution_diagnostics") or {}).get("resolution_mode") or "",
+                "failure_reason": (row.get("resolution_diagnostics") or {}).get("failure_reason") or "",
+                "blocking_candidate_severity": row.get("blocking_candidate_severity") or "",
+                "date_confidence": int(row.get("date_confidence") or 0),
+                "score": int(row.get("score") or 0),
+            }
+            for row in high_confidence_attempt_rows
+        ],
+        "public_no_qualifying_update_validated": len(hard_block_rows) == 0 and len(soft_block_rows) == 0,
         "elapsed_seconds": round(time.monotonic() - start, 3),
         "query_errors": query_errors,
         "candidates": candidates,
@@ -1795,6 +2360,9 @@ def run_food_line_discovery_gap_check(
             "candidates_reviewed": len(candidates),
             "likely_qualifying": len(grouped_by_class["likely_qualifying"]),
             "blocking_likely_qualifying": len(blocking_likely_qualifying),
+            "hard_block": len(hard_block_rows),
+            "soft_block": len(soft_block_rows),
+            "review_only": len(review_only_rows),
             "unresolved_likely_qualifying": len(unresolved_likely_qualifying),
             "unresolved_high_confidence_direct_pressure": len(unresolved_high_confidence_direct_pressure),
             "manual_review_only": len(grouped_by_class["needs_review"]),
@@ -1823,17 +2391,62 @@ def run_food_line_discovery_gap_check(
         "",
         _gap_markdown_table(grouped_by_class["duplicate_or_known"]),
         "",
-        "## Summary",
+    ]
+    if high_confidence_attempt_rows:
+        md_lines.extend(
+            [
+                "## High-confidence URL resolution attempts",
+                "",
+                "| Title | Publisher/domain | Source URL | Google News wrapper | Exact-title attempted | Failure cause | Sitemap URLs checked | URL resolution |",
+                "| --- | --- | --- | --- | --- | --- | ---: | --- |",
+            ]
+        )
+        for row in high_confidence_attempt_rows:
+            diag = row.get("resolution_diagnostics") or {}
+            publisher_cell = _normalize_source_text(str(row.get("publisher") or "")).replace("|", "\\|")
+            publisher_domain = _normalize_source_text(str(row.get("publisher_domain") or "")).replace("|", "\\|")
+            source_url = _normalize_source_text(
+                str(row.get("source_url") or row.get("publisher_url") or (row.get("resolution_diagnostics") or {}).get("source_url") or "")
+            ).replace("|", "\\|")
+            if publisher_domain and publisher_domain.lower() not in publisher_cell.lower():
+                publisher_cell = f"{publisher_cell} ({publisher_domain})" if publisher_cell else publisher_domain
+            md_lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        _normalize_source_text(str(row.get("title") or "")).replace("|", "\\|"),
+                        publisher_cell,
+                        source_url,
+                        _normalize_source_text(str(row.get("google_news_url") or "")).replace("|", "\\|"),
+                        str(bool(diag.get("exact_title_attempted"))).lower(),
+                        _normalize_source_text(str(diag.get("failure_reason") or row.get("url_resolution_reason") or "")).replace("|", "\\|"),
+                        str(int(diag.get("sitemap_urls_checked_count") or 0)),
+                        _normalize_source_text(
+                            f"{row.get('url_resolution_status') or ''}"
+                            f"{(': ' + str(row.get('url_resolution_reason') or '') if row.get('url_resolution_reason') else '')}"
+                        ).replace("|", "\\|"),
+                    ]
+                )
+                + " |"
+            )
+        md_lines.extend(["", "## Summary"])
+    else:
+        md_lines.extend(["## Summary"])
+    md_lines.extend([
         f"- candidates reviewed: {len(candidates)}",
         f"- likely qualifying: {len(grouped_by_class['likely_qualifying'])}",
         f"- blocking likely qualifying: {len(blocking_likely_qualifying)}",
+        f"- hard block: {len(hard_block_rows)}",
+        f"- soft block: {len(soft_block_rows)}",
+        f"- review only: {len(review_only_rows)}",
         f"- unresolved likely qualifying: {len(unresolved_likely_qualifying)}",
         f"- unresolved high-confidence direct-pressure: {len(unresolved_high_confidence_direct_pressure)}",
+        f"- direct URL date verified: {direct_url_date_verified_count}",
         f"- manual-review-only: {len(grouped_by_class['needs_review'])}",
         f"- needs review: {len(grouped_by_class['needs_review'])}",
         f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
         f"- likely resource-only: {len(grouped_by_class['likely_resource_only'])}",
-    ]
+    ])
     report_md_path.write_text("\n".join(md_lines).strip() + "\n", encoding="utf-8")
     summary = {
         "ok": True,

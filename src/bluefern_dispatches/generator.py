@@ -2744,6 +2744,10 @@ def remove_pages_path(path: Path, dry_run: bool) -> list[str]:
     return removed
 
 
+def list_nested_duplicate_dispatch_paths(root: Path) -> list[str]:
+    return [str(root / slug / slug) for slug in ONLY_DISPATCH_CHOICES if (root / slug / slug).exists()]
+
+
 def remove_stale_cascadia_pages_artifacts(site_root: Path, pages_repo: Path, dry_run: bool) -> list[str]:
     removed: list[str] = []
     removed.extend(remove_pages_path(pages_repo / "cascadia" / "map", dry_run))
@@ -2759,9 +2763,8 @@ def remove_stale_cascadia_pages_artifacts(site_root: Path, pages_repo: Path, dry
 
 def remove_nested_duplicate_dispatch_paths(root: Path, dry_run: bool) -> list[str]:
     removed: list[str] = []
-    for slug in ONLY_DISPATCH_CHOICES:
-        nested_root = root / slug / slug
-        removed.extend(remove_pages_path(nested_root, dry_run))
+    for nested_root_text in list_nested_duplicate_dispatch_paths(root):
+        removed.extend(remove_pages_path(Path(nested_root_text), dry_run))
     return removed
 
 
@@ -3349,7 +3352,6 @@ def publish_pages(
         if existing_dispatch_edition.exists():
             dispatch_seed_dates["american-pressure"] = expect_date
     removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
-    removed_nested_duplicate_paths.extend(remove_nested_duplicate_dispatch_paths(pages_repo, dry_run))
     build = build_site(
         root,
         dry_run=dry_run,
@@ -3440,6 +3442,7 @@ def publish_pages(
     skip_diagnostics: list[dict[str, Any]] = []
     removed_non_publishable: list[dict[str, str]] = []
     removed_stale_artifacts: list[str] = []
+    nested_duplicate_paths = list_nested_duplicate_dispatch_paths(pages_repo)
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
     preserved_pages_editions: list[dict[str, str]] = []
     pages_editions_before = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
@@ -3483,6 +3486,8 @@ def publish_pages(
                 )
             )
         if not errors:
+            if not dry_run:
+                removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(pages_repo, dry_run=False)
             commit_result = maybe_commit_pages_repo(
                 pages_repo,
                 dry_run=dry_run,
@@ -3531,7 +3536,7 @@ def publish_pages(
         "stale_pages_artifacts_removed": [] if dry_run else removed_stale_artifacts,
         "stale_pages_artifacts_that_would_be_removed": removed_stale_artifacts if dry_run else [],
         "nested_duplicate_dispatch_paths_removed": [] if dry_run else removed_nested_duplicate_paths,
-        "nested_duplicate_dispatch_paths_that_would_be_removed": removed_nested_duplicate_paths if dry_run else [],
+        "nested_duplicate_dispatch_paths_that_would_be_removed": nested_duplicate_paths if dry_run else [],
         "files_that_would_be_skipped": skipped,
         "food_line_public_edition_skip_diagnostics": skip_diagnostics,
         "would_copy": would_copy,

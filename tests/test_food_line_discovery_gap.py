@@ -237,7 +237,7 @@ def test_food_line_discovery_gap_rejects_unrelated_ktal_canonical_url(monkeypatc
     )
     assert resolved == ""
     assert status == "rejected_unrelated_resolved_url"
-    assert "no meaningful overlap" in reason
+    assert "resolved URL slug does not preserve enough candidate terms" in reason
 
 
 def test_food_line_discovery_gap_rejects_unrelated_aol_canonical_url(monkeypatch):
@@ -260,7 +260,7 @@ def test_food_line_discovery_gap_rejects_unrelated_aol_canonical_url(monkeypatch
     )
     assert resolved == ""
     assert status == "rejected_unrelated_resolved_url"
-    assert "no meaningful overlap" in reason
+    assert "resolved URL slug does not preserve enough candidate terms" in reason
 
 
 def test_food_line_discovery_gap_resolver_timeout_returns_unresolved_status(monkeypatch):
@@ -531,6 +531,79 @@ def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_repo
     assert rows[lower_value_wrapper["title"]]["blocking_candidate_severity"] == "soft_block"
     assert rows[lower_value_wrapper["title"]]["direct_url"] == ""
     assert all("news.google.com" not in str(row.get("direct_url") or "") for row in report["candidates"])
+
+
+def test_food_line_discovery_gap_rejects_false_exact_title_fallback_for_unrelated_same_domain_url(tmp_path: Path, monkeypatch):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+
+    bad_url = "https://www.3newsnow.com/news/local-news/gallery-gross-medical-photos-topic-of-omaha-science-cafe-tuesday"
+    google_link = "https://news.google.com/rss/articles/CBMiKMTV?oc=5"
+    item = _gap_item(
+        title="Food bank demand surges in north Omaha as SNAP cuts and rising grocery costs strain families - KMTV 3 News Now",
+        publisher="KMTV 3 News Now",
+        source_url="https://www.3newsnow.com",
+        link=google_link,
+        description="Food bank demand surges and SNAP cuts are straining families as grocery costs rise.",
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([item])
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url == google_link:
+            return _FakeResponse(final_url=google_link, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    def fake_collect_sitemap_urls(origin: str, **kwargs):
+        if origin == "https://www.3newsnow.com":
+            return (bad_url,)
+        return ()
+
+    def fake_fetch_url_text(url: str, *, timeout_seconds: int = 20):
+        if url == bad_url:
+            return (
+                "<html><head>"
+                "<title>Gallery gross medical photos topic of Omaha Science Cafe Tuesday</title>"
+                '<meta property="article:published_time" content="2026-06-10T12:00:00Z">'
+                "</head><body><p>Gallery coverage from the Omaha Science Cafe.</p></body></html>"
+            )
+        return ""
+
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", fake_collect_sitemap_urls)
+    monkeypatch.setattr(food_line_gap, "_gap_fetch_url_text", fake_fetch_url_text)
+
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=1,
+        max_results_per_query=4,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    row = report["candidates"][0]
+
+    assert row["title"] == item["title"]
+    assert row["resolved_url"] == ""
+    assert row["direct_url"] == ""
+    assert row["direct_url_date_verified"] is False
+    assert row["blocking_candidate_severity"] in {"soft_block", "review_only"}
+    assert row["blocking_candidate_severity"] != "hard_block"
+    assert row["url_resolution_status"] in {"unresolved_google_news_url", "rejected_unrelated_resolved_url"}
+    assert report["hard_block_count"] == 0
+    assert report["direct_url_date_verified_count"] == 0
+    assert report["resolved_url_count"] == 0
+    assert report["unresolved_url_count"] >= 1
 
 
 def test_food_line_discovery_gap_marks_same_day_direct_pressure_hard_block_and_stale_direct_pressure_soft_block(tmp_path: Path, monkeypatch):

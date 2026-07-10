@@ -327,6 +327,155 @@ def _build_report(tmp_path: Path) -> tuple[Path, Path, dict[str, object]]:
     return root, source_file, report
 
 
+def _build_attribution_fixture_root(tmp_path: Path) -> Path:
+    root = tmp_path
+    source_dir = root / "data" / "dispatches" / "food-line" / "sources" / "2026-07-09"
+    edition_dir = root / "data" / "dispatches" / "food-line" / "editions" / "2026-07-09"
+    discovery_dir = root / "data" / "dispatches" / "food-line" / "discovery" / "2026-07-09"
+    gap_dir = root / "data" / "dispatches" / "food-line" / "discovery_gap" / "2026-07-09"
+
+    included = _source_record(
+        source_record_id="attributed-included",
+        title="Food bank demand surges in Omaha as SNAP cuts strain families",
+        url="https://example.com/news/food-bank-demand-rises",
+        publisher="Example News",
+        source_family="local_news",
+        included=True,
+    )
+    excluded = _source_record(
+        source_record_id="attributed-excluded",
+        title="Community pantry donation drive",
+        url="https://example.com/news/community-pantry-drive",
+        publisher="Example News",
+        source_family="local_news",
+        included=False,
+        exclusion_reason="resource-only / no pressure signal",
+        source_role="resource_context",
+        source_purpose="resource_page",
+        pressure_verification_status="demoted_context",
+    )
+    unresolved = _source_record(
+        source_record_id="attributed-unresolved",
+        title="Food bank demand update needs review",
+        url="https://example.com/news/needs-review",
+        publisher="Example News",
+        source_family="local_news",
+        included=False,
+        exclusion_reason="",
+        pressure_verification_status="needs_review",
+    )
+    for row in (included, excluded, unresolved):
+        row.update(
+            {
+                "discovery_query_id": "q-food-bank-demand",
+                "discovery_query_text": "food bank demand",
+                "discovery_query_group": "local_news",
+                "discovery_queries": ["food bank demand"],
+                "discovery_query_ids": ["q-food-bank-demand"],
+                "discovery_query_texts": ["food bank demand"],
+                "discovery_query_groups": ["local_news"],
+                "discovery_channels": ["search"],
+                "discovery_providers": ["google_news"],
+                "original_discovery_urls": ["https://news.google.com/rss/search?q=food+bank+demand"],
+                "resolved_source_urls": [row["url"]],
+                "collector_run_ids": ["2026-07-09"],
+                "discovered_at": "2026-07-09T12:00:00Z",
+            }
+        )
+
+    _write_json(source_dir / "discovery_sources.json", [included, excluded, unresolved])
+    _write_json(
+        discovery_dir / "discovery_candidates.json",
+        [
+            {
+                "candidate_id": "attributed-candidate",
+                "title": "Food bank demand update needs review",
+                "discovered_title": "Food bank demand update needs review",
+                "url": "https://example.com/news/needs-review",
+                "canonical_url": "https://example.com/news/needs-review",
+                "discovered_url": "https://example.com/news/needs-review",
+                "publisher": "Example News",
+                "source_name": "Example News",
+                "published_at": "2026-07-09T12:00:00Z",
+                "classification_status": "needs_review",
+                "review_status": "approved",
+                "exclusion_reason": "",
+                "discovery_channel": "search",
+                "source_family": "local_news",
+                "location_name": "Omaha, NE",
+                "state": "NE",
+                "discovery_query_id": "q-food-bank-demand",
+                "discovery_query_text": "food bank demand",
+                "discovery_query_group": "local_news",
+                "discovery_queries": ["food bank demand"],
+                "discovery_query_ids": ["q-food-bank-demand"],
+                "discovery_query_texts": ["food bank demand"],
+                "discovery_query_groups": ["local_news"],
+                "discovery_channels": ["search"],
+                "discovery_providers": ["google_news"],
+                "original_discovery_urls": ["https://news.google.com/rss/search?q=food+bank+demand"],
+                "resolved_source_urls": ["https://example.com/news/needs-review"],
+                "collector_run_ids": ["2026-07-09"],
+            }
+        ],
+    )
+    _write_json(
+        gap_dir / "discovery_gap_report.json",
+        {
+            "candidates": [
+                {
+                    "candidate_id": "attributed-candidate",
+                    "title": "Food bank demand update needs review",
+                    "url": "https://example.com/news/needs-review",
+                    "publisher": "Example News",
+                    "source_family": "local_news",
+                    "classification": "needs_review",
+                }
+            ]
+        },
+    )
+    _write_json(
+        edition_dir / "run_manifest.json",
+        {
+            "edition_date": "2026-07-09",
+            "public_rendered": False,
+            "excluded_count": 2,
+            "exclusion_reason_summary": "Exclusion breakdown: resource-only / no pressure signal 1; unresolved 1.",
+            "primary_signal_status": "partial",
+            "public_url": None,
+        },
+    )
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "discovery_gap_queries.json",
+        {"queries": ["food bank demand"], "exclude_domains": []},
+    )
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "source_discovery_query_performance.json",
+        [
+            {
+                "query_id": "q-food-bank-demand",
+                "query_text": "food bank demand",
+                "query_category": "local_news",
+                "source_family": "local_news",
+                "attempted_run_count": 7,
+                "successful_run_count": 3,
+                "failed_run_count": 2,
+                "discovered_candidate_count": 4,
+                "unique_candidate_count": 3,
+                "included_count": 1,
+                "excluded_count": 1,
+                "unresolved_count": 1,
+                "duplicate_count": 1,
+                "last_attempted_date": "2026-07-09",
+                "last_successful_date": "2026-07-09",
+                "attribution_completeness": 1.0,
+                "attribution_state": "recorded",
+            }
+        ],
+    )
+    return root
+
+
 def test_food_line_coverage_audit_classifies_discovered_and_included_benchmark(tmp_path: Path) -> None:
     _, _, report = _build_report(tmp_path)
     row = next(item for item in report["benchmarks"]["results"] if item["title"] == "Food bank demand surges in Omaha as SNAP cuts strain families" and item["review_status"] == "approved")
@@ -382,6 +531,8 @@ def test_food_line_coverage_audit_no_writes_without_flag(tmp_path: Path) -> None
     markdown = render_food_line_coverage_markdown(report)
 
     assert "Food Line coverage audit" in markdown
+    assert "## Inclusion Diagnostics" in markdown
+    assert "## Query Analysis" in markdown
     assert not (root / "output" / "review" / "food-line" / "coverage-audits").exists()
 
 
@@ -429,3 +580,103 @@ def test_food_line_coverage_audit_does_not_modify_source_records_or_manifests(tm
     manifest_hash_after = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
     assert source_hash_before == source_hash_after
     assert manifest_hash_before == manifest_hash_after
+
+
+def test_food_line_coverage_audit_preserves_query_attribution_and_diagnostics(tmp_path: Path) -> None:
+    root = _build_attribution_fixture_root(tmp_path)
+    report = build_food_line_coverage_audit(root, "2026-07-09", "2026-07-09")
+
+    query_row = next(item for item in report["query_analysis"]["rows"] if item["query_id"] == "q-food-bank-demand")
+    gap_row = next(item for item in report["gap_analysis"]["discovery_query"] if item["query_id"] == "q-food-bank-demand")
+
+    assert report["query_analysis"]["attributed_record_count"] == 3
+    assert report["query_analysis"]["unattributed_record_count"] == 0
+    assert query_row["attribution_state"] == "recorded"
+    assert query_row["discovered_candidate_count"] == 4
+    assert query_row["unique_candidate_count"] == 3
+    assert query_row["included_count"] == 1
+    assert query_row["excluded_count"] == 1
+    assert query_row["unresolved_count"] == 1
+    assert query_row["duplicate_count"] == 1
+    assert query_row["attempted_run_count"] == 7
+    assert query_row["successful_run_count"] == 3
+    assert query_row["failed_run_count"] == 2
+    assert query_row["original_discovery_urls"] == ["https://news.google.com/rss/search?q=food+bank+demand"]
+    assert query_row["resolved_source_urls"] == [
+        "https://example.com/news/food-bank-demand-rises",
+        "https://example.com/news/community-pantry-drive",
+        "https://example.com/news/needs-review",
+    ]
+    assert gap_row["attribution_state"] == "recorded"
+    assert report["query_analysis"]["configured_missing_count"] == 0
+    assert report["inclusion_diagnostics"]["status"] == "included_records_present"
+    assert "qualified for inclusion" in report["inclusion_diagnostics"]["explanation"]
+    assert report["inclusion_diagnostics"]["attribution_state"] == "recorded"
+
+
+def test_food_line_coverage_audit_explains_zero_inclusion_windows(tmp_path: Path) -> None:
+    root = tmp_path
+    source_dir = root / "data" / "dispatches" / "food-line" / "sources" / "2026-07-09"
+    edition_dir = root / "data" / "dispatches" / "food-line" / "editions" / "2026-07-09"
+    discovery_dir = root / "data" / "dispatches" / "food-line" / "discovery" / "2026-07-09"
+    _write_json(
+        source_dir / "discovery_sources.json",
+        [
+            _source_record(
+                source_record_id="excluded-only",
+                title="Community pantry donation drive",
+                url="https://example.com/news/community-pantry-drive",
+                publisher="Example News",
+                source_family="local_news",
+                included=False,
+                exclusion_reason="resource-only / no pressure signal",
+                source_role="resource_context",
+                source_purpose="resource_page",
+                pressure_verification_status="demoted_context",
+            )
+        ],
+    )
+    _write_json(
+        discovery_dir / "discovery_candidates.json",
+        [
+            {
+                "candidate_id": "excluded-only",
+                "title": "Community pantry donation drive",
+                "discovered_title": "Community pantry donation drive",
+                "url": "https://example.com/news/community-pantry-drive",
+                "canonical_url": "https://example.com/news/community-pantry-drive",
+                "discovered_url": "https://example.com/news/community-pantry-drive",
+                "publisher": "Example News",
+                "source_name": "Example News",
+                "published_at": "2026-07-09T12:00:00Z",
+                "classification_status": "context_only",
+                "review_status": "approved",
+                "exclusion_reason": "resource-only / no pressure signal",
+                "discovery_channel": "search",
+                "source_family": "local_news",
+                "location_name": "Omaha, NE",
+                "state": "NE",
+                "discovery_query_id": "q-community-pantry",
+                "discovery_query_text": "community pantry",
+                "discovery_query_group": "resource_context",
+                "discovery_queries": ["community pantry"],
+                "discovery_query_ids": ["q-community-pantry"],
+                "discovery_query_texts": ["community pantry"],
+                "discovery_query_groups": ["resource_context"],
+                "discovery_channels": ["search"],
+                "discovery_providers": ["google_news"],
+                "original_discovery_urls": ["https://news.google.com/rss/search?q=community+pantry"],
+                "resolved_source_urls": ["https://example.com/news/community-pantry-drive"],
+                "collector_run_ids": ["2026-07-09"],
+            }
+        ],
+    )
+    _write_json(edition_dir / "run_manifest.json", {"edition_date": "2026-07-09", "public_rendered": False, "excluded_count": 1, "exclusion_reason_summary": "Exclusion breakdown: resource-only / no pressure signal 1.", "primary_signal_status": "none", "public_url": None})
+    _write_json(source_dir.parent.parent / "discovery_gap_queries.json", {"queries": ["community pantry"], "exclude_domains": []})
+
+    report = build_food_line_coverage_audit(root, "2026-07-09", "2026-07-09")
+
+    assert report["discovery_totals"]["total_included"] == 0
+    assert report["inclusion_diagnostics"]["status"] == "all_candidates_excluded"
+    assert "excluded" in report["inclusion_diagnostics"]["explanation"]
+    assert report["inclusion_diagnostics"]["dominant_exclusion_reasons"] == ["resource-only / no pressure signal"]

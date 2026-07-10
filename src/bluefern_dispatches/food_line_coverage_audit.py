@@ -424,6 +424,14 @@ def _load_source_performance_history(root: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+def _load_query_performance_rows(root: Path) -> list[dict[str, Any]]:
+    path = root / "data" / "dispatches" / "food-line" / "source_discovery_query_performance.json"
+    payload = _read_json(path)
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    return []
+
+
 def _load_discovery_queries(root: Path) -> dict[str, Any]:
     path = root / "data" / "dispatches" / "food-line" / "discovery_gap_queries.json"
     payload = _read_json(path)
@@ -539,6 +547,242 @@ def _summarize_rows(rows: list[dict[str, Any]], key_fn) -> list[dict[str, Any]]:
     return summary
 
 
+def _record_text_values(record: dict[str, Any], *keys: str) -> list[str]:
+    values: list[str] = []
+    seen: set[str] = set()
+    for key in keys:
+        raw = record.get(key)
+        if isinstance(raw, (list, tuple)):
+            items = raw
+        else:
+            items = [raw]
+        for item in items:
+            text = _nonempty(item)
+            if not text or text in seen:
+                continue
+            values.append(text)
+            seen.add(text)
+    return values
+
+
+def _merge_text_lists(*values: Any) -> list[str]:
+    merged: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        items = value if isinstance(value, (list, tuple)) else [value]
+        for item in items:
+            text = _nonempty(item)
+            if not text or text in seen:
+                continue
+            merged.append(text)
+            seen.add(text)
+    return merged
+
+
+def _record_query_attribution(record: dict[str, Any]) -> dict[str, Any]:
+    query_ids = _record_text_values(record, "discovery_query_ids", "discovery_query_id", "query_template", "query")
+    query_texts = _record_text_values(record, "discovery_queries", "discovery_query_texts", "discovery_query_text", "query_text", "discovery_query")
+    query_groups = _record_text_values(record, "discovery_query_groups", "discovery_query_group", "query_family", "category")
+    discovery_channels = _record_text_values(record, "discovery_channels", "discovery_channel", "source_type", "collector_source_type")
+    discovery_providers = _record_text_values(record, "discovery_providers", "discovery_provider", "search_provider")
+    original_discovery_urls = _record_text_values(
+        record,
+        "original_discovery_urls",
+        "original_discovery_url",
+        "discovery_seed_url",
+        "source_seed_url",
+        "query_url",
+        "google_news_url",
+    )
+    discovered_at = _record_value(record, "discovered_at", "first_discovered_at", "last_discovered_at", "retrieved_at", "published_at", "page_metadata_date")
+    resolved_source_url = _record_url(record)
+    collector_run_id = _record_value(record, "collector_run_id", "run_id", "edition_date")
+    attribution_present = bool(query_ids or query_texts or query_groups or discovery_channels or discovery_providers or original_discovery_urls or discovered_at)
+    return {
+        "query_ids": query_ids,
+        "query_texts": query_texts,
+        "query_groups": query_groups,
+        "discovery_channels": discovery_channels,
+        "discovery_providers": discovery_providers,
+        "original_discovery_urls": original_discovery_urls,
+        "resolved_source_url": resolved_source_url,
+        "discovered_at": discovered_at,
+        "collector_run_id": collector_run_id,
+        "attribution_present": attribution_present,
+        "attribution_state": "recorded" if attribution_present else "not_recorded",
+    }
+
+
+def _query_summary_key(attribution: dict[str, Any]) -> str:
+    for key in ("query_ids", "query_texts", "query_groups", "discovery_providers", "discovery_channels"):
+        values = attribution.get(key) or []
+        if values:
+            return str(values[0]).strip()
+    return "unknown"
+
+
+def _query_summary_label(attribution: dict[str, Any]) -> tuple[str, str, str]:
+    query_id = ""
+    query_text = ""
+    query_category = ""
+    query_ids = attribution.get("query_ids") or []
+    query_texts = attribution.get("query_texts") or []
+    query_groups = attribution.get("query_groups") or []
+    if query_ids:
+        query_id = str(query_ids[0]).strip()
+    elif query_texts:
+        query_id = str(query_texts[0]).strip()
+    elif query_groups:
+        query_id = str(query_groups[0]).strip()
+    if query_texts:
+        query_text = str(query_texts[0]).strip()
+    elif query_ids:
+        query_text = str(query_ids[0]).strip()
+    elif query_groups:
+        query_text = str(query_groups[0]).strip()
+    if query_groups:
+        query_category = str(query_groups[0]).strip()
+    return query_id or "unknown", query_text or "unknown", query_category or "unknown"
+
+
+def _query_analysis_rows(records: list[dict[str, Any]], *, configured_queries: list[str], performance_rows: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    query_buckets: dict[str, dict[str, Any]] = {}
+    unattributed_records = 0
+    performance_lookup: dict[str, dict[str, Any]] = {}
+    for row in performance_rows or []:
+        if not isinstance(row, dict):
+            continue
+        key = _nonempty(row.get("query_id") or row.get("query_template") or row.get("query_text") or row.get("template"))
+        if key and key not in performance_lookup:
+            performance_lookup[key] = row
+    for record in records:
+        attribution = _record_query_attribution(record)
+        if not attribution["attribution_present"]:
+            unattributed_records += 1
+            continue
+        record_key = record.get("_record_key", "")
+        query_keys = attribution.get("query_ids") or attribution.get("query_texts") or attribution.get("query_groups") or attribution.get("discovery_providers") or attribution.get("discovery_channels") or []
+        if not query_keys:
+            query_keys = ["unknown"]
+        for query_key in query_keys:
+            bucket = query_buckets.setdefault(
+                str(query_key).strip() or "unknown",
+                {
+                    "query_id": "",
+                    "query_text": "",
+                    "query_category": "",
+                    "discovery_channels": [],
+                    "discovery_providers": [],
+                    "original_discovery_urls": [],
+                    "resolved_source_urls": [],
+                    "collector_run_ids": [],
+                    "attribution_present_count": 0,
+                    "records": {},
+                    "attempted_dates": set(),
+                    "successful_dates": set(),
+                },
+            )
+            query_id, query_text, query_category = _query_summary_label(attribution)
+            if not bucket["query_id"]:
+                bucket["query_id"] = query_id
+            if not bucket["query_text"]:
+                bucket["query_text"] = query_text
+            if not bucket["query_category"]:
+                bucket["query_category"] = query_category
+            bucket["discovery_channels"] = _merge_text_lists(bucket["discovery_channels"], attribution.get("discovery_channels"))
+            bucket["discovery_providers"] = _merge_text_lists(bucket["discovery_providers"], attribution.get("discovery_providers"))
+            bucket["original_discovery_urls"] = _merge_text_lists(bucket["original_discovery_urls"], attribution.get("original_discovery_urls"))
+            bucket["resolved_source_urls"] = _merge_text_lists(bucket["resolved_source_urls"], attribution.get("resolved_source_url"))
+            bucket["collector_run_ids"] = _merge_text_lists(bucket["collector_run_ids"], attribution.get("collector_run_id"))
+            bucket["attribution_present_count"] += 1
+            bucket["records"][str(record_key)] = record
+            if attribution.get("discovered_at"):
+                bucket["attempted_dates"].add(str(attribution["discovered_at"])[:10])
+                if _record_status(record) != "duplicate":
+                    bucket["successful_dates"].add(str(attribution["discovered_at"])[:10])
+    rows: list[dict[str, Any]] = []
+    for bucket_key, bucket in sorted(query_buckets.items(), key=lambda item: (-len(item[1]["records"]), item[0])):
+        records_for_query = list(bucket["records"].values())
+        status_counts = Counter(_record_status(record) for record in records_for_query)
+        matched_performance = performance_lookup.get(bucket_key, {})
+        if not matched_performance:
+            matched_performance = performance_lookup.get(_nonempty(bucket.get("query_id"))) or performance_lookup.get(_nonempty(bucket.get("query_text"))) or {}
+        attempted_run_count = matched_performance.get("attempted_run_count", matched_performance.get("runs"))
+        successful_run_count = matched_performance.get("successful_run_count", matched_performance.get("candidates_inserted"))
+        failed_run_count = matched_performance.get("failed_run_count", matched_performance.get("rejects"))
+        discovered_candidate_count = matched_performance.get("discovered_candidate_count", len(records_for_query))
+        unique_candidate_count = matched_performance.get("unique_candidate_count", len(records_for_query))
+        included_count = matched_performance.get("included_count", int(status_counts.get("included") or 0))
+        excluded_count = matched_performance.get("excluded_count", int(status_counts.get("excluded") or 0))
+        unresolved_count = matched_performance.get("unresolved_count", int(status_counts.get("unresolved") or 0))
+        duplicate_count = matched_performance.get("duplicate_count", int(status_counts.get("duplicate") or 0))
+        last_attempted_date = matched_performance.get("last_attempted_date") or (max(bucket["attempted_dates"]) if bucket["attempted_dates"] else None)
+        last_successful_date = matched_performance.get("last_successful_date") or (max(bucket["successful_dates"]) if bucket["successful_dates"] else None)
+        attribution_state = "recorded" if bucket["attribution_present_count"] else "not_recorded"
+        rows.append(
+            {
+                "query_id": bucket["query_id"] or "unknown",
+                "query_text": bucket["query_text"] or "unknown",
+                "query_category": bucket["query_category"] or "unknown",
+                "attempted_run_count": int(attempted_run_count) if attempted_run_count is not None and str(attempted_run_count) != "" else None,
+                "successful_run_count": int(successful_run_count) if successful_run_count is not None and str(successful_run_count) != "" else None,
+                "failed_run_count": int(failed_run_count) if failed_run_count is not None and str(failed_run_count) != "" else None,
+                "discovered_candidate_count": int(discovered_candidate_count) if discovered_candidate_count is not None and str(discovered_candidate_count) != "" else len(records_for_query),
+                "unique_candidate_count": int(unique_candidate_count) if unique_candidate_count is not None and str(unique_candidate_count) != "" else len(records_for_query),
+                "included_count": int(included_count) if included_count is not None and str(included_count) != "" else 0,
+                "excluded_count": int(excluded_count) if excluded_count is not None and str(excluded_count) != "" else 0,
+                "unresolved_count": int(unresolved_count) if unresolved_count is not None and str(unresolved_count) != "" else 0,
+                "duplicate_count": int(duplicate_count) if duplicate_count is not None and str(duplicate_count) != "" else 0,
+                "last_attempted_date": last_attempted_date,
+                "last_successful_date": last_successful_date,
+                "discovery_channels": bucket["discovery_channels"],
+                "discovery_providers": bucket["discovery_providers"],
+                "original_discovery_urls": bucket["original_discovery_urls"],
+                "resolved_source_urls": bucket["resolved_source_urls"],
+                "collector_run_ids": bucket["collector_run_ids"],
+                "attribution_completeness": round(bucket["attribution_present_count"] / len(records_for_query), 3) if records_for_query else 0.0,
+                "attribution_state": attribution_state if bucket["attribution_present_count"] else "not_recorded",
+            }
+        )
+    if unattributed_records:
+        rows.append(
+            {
+                "query_id": "unknown",
+                "query_text": "unknown",
+                "query_category": "not_recorded",
+                "attempted_run_count": None,
+                "successful_run_count": None,
+                "failed_run_count": None,
+                "discovered_candidate_count": 0,
+                "unique_candidate_count": 0,
+                "included_count": 0,
+                "excluded_count": 0,
+                "unresolved_count": 0,
+                "duplicate_count": 0,
+                "last_attempted_date": None,
+                "last_successful_date": None,
+                "discovery_channels": [],
+                "discovery_providers": [],
+                "original_discovery_urls": [],
+                "resolved_source_urls": [],
+                "collector_run_ids": [],
+                "attribution_completeness": 0.0,
+                "attribution_state": "not_recorded",
+                "unattributed_record_count": unattributed_records,
+            }
+        )
+    configured_missing = [query for query in configured_queries if query and query not in {row["query_id"] for row in rows} and query not in {row["query_text"] for row in rows}]
+    return {
+        "rows": rows,
+        "attributed_record_count": len(records) - unattributed_records,
+        "unattributed_record_count": unattributed_records,
+        "configured_query_count": len(configured_queries),
+        "configured_missing_count": len(configured_missing),
+        "configured_missing_queries": configured_missing,
+        "attribution_completeness": round((len(records) - unattributed_records) / len(records), 3) if records else 0.0,
+    }
+
+
 def build_food_line_coverage_audit(
     root: Path,
     start_date: str,
@@ -550,6 +794,7 @@ def build_food_line_coverage_audit(
     run_manifests = {date: _load_run_manifest(root, date) for date in edition_dates}
     availability_by_date = {date: _artifact_availability(root, date) for date in edition_dates}
     performance_history = _load_source_performance_history(root)
+    query_performance_rows = _load_query_performance_rows(root)
     discovery_queries = _load_discovery_queries(root)
 
     raw_records: list[dict[str, Any]] = []
@@ -562,6 +807,7 @@ def build_food_line_coverage_audit(
         key = _record_match_key(record)
         if not key:
             continue
+        attribution = _record_query_attribution(record)
         if key in unique_records:
             duplicate_count += 1
             unique_records[key].setdefault("_evidence", []).append(
@@ -570,10 +816,46 @@ def build_food_line_coverage_audit(
                     "artifact_path": record.get("_artifact_path", ""),
                 }
             )
+            existing_attribution = unique_records[key].setdefault("_query_attribution", {
+                "query_ids": [],
+                "query_texts": [],
+                "query_groups": [],
+                "discovery_channels": [],
+                "discovery_providers": [],
+                "original_discovery_urls": [],
+                "resolved_source_url": "",
+                "discovered_at": "",
+                "collector_run_id": "",
+                "attribution_present": False,
+                "attribution_state": "not_recorded",
+            })
+            existing_attribution["query_ids"] = _merge_text_lists(existing_attribution.get("query_ids"), attribution.get("query_ids"))
+            existing_attribution["query_texts"] = _merge_text_lists(existing_attribution.get("query_texts"), attribution.get("query_texts"))
+            existing_attribution["query_groups"] = _merge_text_lists(existing_attribution.get("query_groups"), attribution.get("query_groups"))
+            existing_attribution["discovery_channels"] = _merge_text_lists(existing_attribution.get("discovery_channels"), attribution.get("discovery_channels"))
+            existing_attribution["discovery_providers"] = _merge_text_lists(existing_attribution.get("discovery_providers"), attribution.get("discovery_providers"))
+            existing_attribution["original_discovery_urls"] = _merge_text_lists(existing_attribution.get("original_discovery_urls"), attribution.get("original_discovery_urls"))
+            if not _nonempty(existing_attribution.get("resolved_source_url")) and _nonempty(attribution.get("resolved_source_url")):
+                existing_attribution["resolved_source_url"] = attribution.get("resolved_source_url")
+            if not _nonempty(existing_attribution.get("discovered_at")) and _nonempty(attribution.get("discovered_at")):
+                existing_attribution["discovered_at"] = attribution.get("discovered_at")
+            if not _nonempty(existing_attribution.get("collector_run_id")) and _nonempty(attribution.get("collector_run_id")):
+                existing_attribution["collector_run_id"] = attribution.get("collector_run_id")
+            existing_attribution["attribution_present"] = bool(
+                existing_attribution["query_ids"]
+                or existing_attribution["query_texts"]
+                or existing_attribution["query_groups"]
+                or existing_attribution["discovery_channels"]
+                or existing_attribution["discovery_providers"]
+                or existing_attribution["original_discovery_urls"]
+                or existing_attribution["discovered_at"]
+            )
+            existing_attribution["attribution_state"] = "recorded" if existing_attribution["attribution_present"] else "not_recorded"
             continue
         unique_records[key] = {
             **record,
             "_record_key": key,
+            "_query_attribution": attribution,
             "_evidence": [
                 {
                     "artifact_kind": record.get("_artifact_kind", ""),
@@ -583,6 +865,17 @@ def build_food_line_coverage_audit(
         }
 
     records = list(unique_records.values())
+    for record in records:
+        attribution = record.get("_query_attribution") or _record_query_attribution(record)
+        record["_query_attribution"] = attribution
+        record["discovery_query_ids"] = attribution.get("query_ids") or []
+        record["discovery_query_texts"] = attribution.get("query_texts") or []
+        record["discovery_query_groups"] = attribution.get("query_groups") or []
+        record["discovery_channels"] = attribution.get("discovery_channels") or []
+        record["discovery_providers"] = attribution.get("discovery_providers") or []
+        record["original_discovery_urls"] = attribution.get("original_discovery_urls") or []
+        record["resolved_source_url"] = attribution.get("resolved_source_url") or ""
+        record["collector_run_ids"] = [attribution.get("collector_run_id")] if _nonempty(attribution.get("collector_run_id")) else []
     included_records = [record for record in records if _record_status(record) == "included"]
     excluded_records = [record for record in records if _record_status(record) == "excluded"]
     unresolved_records = [record for record in records if _record_status(record) == "unresolved"]
@@ -684,6 +977,12 @@ def build_food_line_coverage_audit(
         "duplicate_count": duplicate_count,
     }
 
+    query_analysis = _query_analysis_rows(
+        records,
+        configured_queries=[str(item).strip() for item in (discovery_queries.get("queries") or []) if str(item).strip()],
+        performance_rows=query_performance_rows,
+    )
+
     exclusion_analysis = {
         "by_reason": _summarize_rows(excluded_records, lambda row: _record_classification_reason(row) or "unknown"),
         "by_publisher": _summarize_rows(excluded_records, lambda row: _record_value(row, "publisher", "source_name")),
@@ -758,15 +1057,24 @@ def build_food_line_coverage_audit(
         ),
         "discovery_query": [
             {
-                "query": query,
-                "count": sum(
-                    1
-                    for row in benchmark_results
-                    if row["classification"] != "discovered_and_included"
-                    and query.lower() in f"{row.get('title', '')} {row.get('reason_expected_to_qualify', '')} {row.get('notes', '')}".lower()
-                ),
+                "query_id": row.get("query_id") or "unknown",
+                "query_text": row.get("query_text") or "unknown",
+                "query_category": row.get("query_category") or "unknown",
+                "attempted_run_count": row.get("attempted_run_count"),
+                "successful_run_count": row.get("successful_run_count"),
+                "failed_run_count": row.get("failed_run_count"),
+                "discovered_candidate_count": row.get("discovered_candidate_count", 0),
+                "unique_candidate_count": row.get("unique_candidate_count", 0),
+                "included_count": row.get("included_count", 0),
+                "excluded_count": row.get("excluded_count", 0),
+                "unresolved_count": row.get("unresolved_count", 0),
+                "duplicate_count": row.get("duplicate_count", 0),
+                "last_attempted_date": row.get("last_attempted_date"),
+                "last_successful_date": row.get("last_successful_date"),
+                "attribution_completeness": row.get("attribution_completeness", 0.0),
+                "attribution_state": row.get("attribution_state") or "not_recorded",
             }
-            for query in discovery_queries.get("queries", [])[:20]
+            for row in (query_analysis.get("rows") or [])[:20]
         ],
         "rss_vs_search": _summarize_rows(
             [row for row in benchmark_results if row["classification"] != "discovered_and_included"],
@@ -786,6 +1094,36 @@ def build_food_line_coverage_audit(
         "fetch_or_parse_failures": recurring_fetch_failures,
     }
 
+    dominant_exclusion_reasons = [row.get("key") for row in exclusion_analysis.get("by_reason", [])[:3] if row.get("key")]
+    if not records:
+        inclusion_diagnostics = {
+            "status": "no_records_discovered",
+            "explanation": "No Food Line records were discovered in the selected window.",
+            "dominant_exclusion_reasons": [],
+            "attribution_state": "not_recorded",
+        }
+    elif included_records:
+        inclusion_diagnostics = {
+            "status": "included_records_present",
+            "explanation": "At least one discovered record qualified for inclusion.",
+            "dominant_exclusion_reasons": dominant_exclusion_reasons,
+            "attribution_state": "recorded" if query_analysis.get("attributed_record_count") else "not_recorded",
+        }
+    elif unresolved_records:
+        inclusion_diagnostics = {
+            "status": "classification_incomplete",
+            "explanation": "No included stories were recorded; discovered records remain unresolved and/or excluded, so inclusion status is indeterminate until classification completes.",
+            "dominant_exclusion_reasons": dominant_exclusion_reasons,
+            "attribution_state": "recorded" if query_analysis.get("attributed_record_count") else "not_recorded",
+        }
+    else:
+        inclusion_diagnostics = {
+            "status": "all_candidates_excluded",
+            "explanation": "No included stories were recorded; available diagnostics show the discovered records were all excluded.",
+            "dominant_exclusion_reasons": dominant_exclusion_reasons,
+            "attribution_state": "recorded" if query_analysis.get("attributed_record_count") else "not_recorded",
+        }
+
     recommendations: list[str] = []
     if not_discovered:
         top_publishers = Counter(row["publisher"] or "unknown" for row in not_discovered).most_common(3)
@@ -793,9 +1131,16 @@ def build_food_line_coverage_audit(
             recommendations.append(
                 "Add or repair discovery coverage for " + ", ".join(f"{publisher} ({count})" for publisher, count in top_publishers)
             )
-        top_queries = [item for item in gap_analysis["discovery_query"] if item["count"]][:3]
+        top_queries = [item for item in query_analysis.get("rows", []) if int(item.get("discovered_candidate_count") or 0)][:3]
         if top_queries:
-            recommendations.append("Add geographic or pressure-language query variants for " + ", ".join(item["query"] for item in top_queries))
+            recommendations.append(
+                "Add geographic or pressure-language query variants for "
+                + ", ".join(str(item.get("query_text") or item.get("query_id") or "unknown") for item in top_queries)
+            )
+    if query_analysis.get("unattributed_record_count"):
+        recommendations.append(
+            f"Record query attribution more completely; {int(query_analysis['unattributed_record_count'])} discovered record(s) lack query metadata."
+        )
     if excluded_records:
         reasons = Counter(_record_classification_reason(row) or "unknown" for row in excluded_records).most_common(3)
         if reasons:
@@ -822,6 +1167,8 @@ def build_food_line_coverage_audit(
             "artifact_availability_by_date": availability_by_date,
         },
         "discovery_totals": discovery_totals,
+        "query_analysis": query_analysis,
+        "inclusion_diagnostics": inclusion_diagnostics,
         "exclusion_analysis": exclusion_analysis,
         "benchmarks": {
             "benchmark_file": str(benchmark_file) if benchmark_file else "",
@@ -874,17 +1221,59 @@ def render_food_line_coverage_markdown(report: dict[str, Any]) -> str:
         f"- Total unresolved: {totals.get('total_unresolved', 0)}",
         f"- Duplicate count: {totals.get('duplicate_count', 0)}",
         "",
-        "## Recall Metrics",
-        f"- Approved benchmarks: {metrics.get('approved_benchmark_count', 0)}",
-        f"- Benchmark duplicates skipped: {(report.get('benchmarks') or {}).get('duplicate_benchmark_count', 0)}",
-        f"- Discovered benchmark recall: {metrics.get('discovery_recall', 0.0):.3f}",
-        f"- Qualification recall: {metrics.get('qualification_recall', 0.0):.3f}",
-        f"- Overall benchmark inclusion rate: {metrics.get('overall_benchmark_inclusion_rate', 0.0):.3f}",
-        "",
-        "## Benchmark Results",
-        "| Title | Classification | Publisher | URL |",
-        "| --- | --- | --- | --- |",
+        "## Inclusion Diagnostics",
     ]
+    inclusion = report.get("inclusion_diagnostics") or {}
+    lines.extend(
+        [
+            f"- Status: {inclusion.get('status', 'unknown')}",
+            f"- Explanation: {inclusion.get('explanation', 'unknown')}",
+            f"- Attribution state: {inclusion.get('attribution_state', 'unknown')}",
+            f"- Dominant exclusion reasons: {', '.join(inclusion.get('dominant_exclusion_reasons') or []) or 'none'}",
+            "",
+            "## Recall Metrics",
+            f"- Approved benchmarks: {metrics.get('approved_benchmark_count', 0)}",
+            f"- Benchmark duplicates skipped: {(report.get('benchmarks') or {}).get('duplicate_benchmark_count', 0)}",
+            f"- Discovered benchmark recall: {metrics.get('discovery_recall', 0.0):.3f}",
+            f"- Qualification recall: {metrics.get('qualification_recall', 0.0):.3f}",
+            f"- Overall benchmark inclusion rate: {metrics.get('overall_benchmark_inclusion_rate', 0.0):.3f}",
+            "",
+            "## Query Analysis",
+            "| Query ID | Query Text | Category | Attempted | Successful | Failed | Discovered | Included | Excluded | Unresolved | Duplicate | Attribution | Last Attempted | Last Successful |",
+            "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |",
+        ]
+    )
+    for row in (report.get("query_analysis") or {}).get("rows") or []:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row.get("query_id") or "unknown").replace("|", "\\|"),
+                    str(row.get("query_text") or "unknown").replace("|", "\\|"),
+                    str(row.get("query_category") or "unknown").replace("|", "\\|"),
+                    str(row.get("attempted_run_count") if row.get("attempted_run_count") is not None else "unknown"),
+                    str(row.get("successful_run_count") if row.get("successful_run_count") is not None else "unknown"),
+                    str(row.get("failed_run_count") if row.get("failed_run_count") is not None else "unknown"),
+                    str(row.get("discovered_candidate_count") or 0),
+                    str(row.get("included_count") or 0),
+                    str(row.get("excluded_count") or 0),
+                    str(row.get("unresolved_count") or 0),
+                    str(row.get("duplicate_count") or 0),
+                    str(row.get("attribution_state") or "unknown"),
+                    str(row.get("last_attempted_date") or "unknown"),
+                    str(row.get("last_successful_date") or "unknown"),
+                ]
+            )
+            + " |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Benchmark Results",
+            "| Title | Classification | Publisher | URL |",
+            "| --- | --- | --- | --- |",
+        ]
+    )
     for row in (report.get("benchmarks") or {}).get("results") or []:
         lines.append(
             "| "

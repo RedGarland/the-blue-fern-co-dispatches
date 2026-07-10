@@ -63,6 +63,11 @@ def _ensure_assets(root: Path) -> None:
         (assets / "bluefern.png").write_bytes(png_bytes)
 
 
+def _write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
 def _manual_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "sources" / date / "manual_sources.json"
 
@@ -9581,6 +9586,21 @@ def test_food_line_discovery_prefilters_obvious_non_pressure_pages_and_dedupes(t
     )
     _write_candidate_registry(tmp_path, [])
     _write_pressure_registry(tmp_path, [])
+    _write_json(
+        tmp_path / "data" / "dispatches" / "food-line" / "source_discovery_queries.json",
+        [
+            {
+                "query": "food bank demand",
+                "query_id": "q-food-bank-demand",
+                "query_text": "food bank demand",
+                "query_template": "food bank demand",
+                "category": "local_news",
+                "source_family": "local_news",
+                "search_provider": "google_news",
+                "discovery_channel": "search",
+            }
+        ],
+    )
 
     def fetcher(url: str, timeout: int = 15):
         if url == donation_url:
@@ -9613,6 +9633,84 @@ def test_food_line_discovery_prefilters_obvious_non_pressure_pages_and_dedupes(t
     registry_again = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "candidate_source_registry.json").read_text(encoding="utf-8"))
     assert len(registry_again) == 1
     assert result_again["updated_count"] >= 1
+
+
+def test_food_line_discovery_preserves_query_attribution_and_history(tmp_path: Path):
+    discovered = food_line_discovery._candidate_fields_from_discovery(  # type: ignore[attr-defined]
+        discovered_url="https://example.com/food-bank-demand",
+        source_name="Food bank demand story",
+        publisher="Example News",
+        source_family="local_news",
+        source_type="page",
+        state="NE",
+        location_name="Omaha, NE",
+        location_scope="state_local",
+        reason="Seed page text supports manual review from Food bank demand story",
+        pressure_terms=["food bank", "demand"],
+        notes="Discovered from https://example.com/food-bank-demand",
+        source_purpose="current_news",
+        current_or_evergreen="current",
+        promotable=True,
+        non_promotable_reason="",
+        source_quality_score=85,
+        source_quality_tier="high",
+        auto_discovered=True,
+        first_discovered_at="2026-06-11T00:00:00Z",
+        last_discovered_at="2026-06-11T00:00:00Z",
+        discovery_count=1,
+        last_recommendation="candidate",
+        last_recommendation_reason="Seed page text supports manual review from Food bank demand story",
+        source_seed_url="https://example.com/food-bank-demand",
+        discovery_seed_url="https://example.com/food-bank-demand",
+        discovered_from="seed_page",
+        retrieved_at="2026-06-11T00:00:00Z",
+        published_at="2026-06-11T00:00:00Z",
+        page_metadata_date="2026-06-11T00:00:00Z",
+        evidence_text="Food bank demand is rising and pantry lines grew.",
+        evidence_text_basis="page_text_excerpt",
+    )
+    discovery_meta = {
+        "discovery_method": "seed_page",
+        "discovery_query": "food bank demand",
+        "query_template": "food bank demand",
+        "discovery_query_id": "q-food-bank-demand",
+        "discovery_query_text": "food bank demand",
+        "discovery_query_group": "local_news",
+        "discovery_queries": ["food bank demand", "q-food-bank-demand"],
+        "discovery_query_ids": ["q-food-bank-demand", "food bank demand"],
+        "discovery_query_texts": ["food bank demand"],
+        "discovery_query_groups": ["local_news"],
+        "discovery_channels": ["page"],
+        "discovery_providers": ["google_news"],
+        "original_discovery_urls": ["https://news.google.com/rss/search?q=food+bank+demand"],
+        "resolved_source_urls": ["https://example.com/food-bank-demand"],
+        "collector_run_ids": ["2026-06-11T00:00:00Z"],
+        "discovered_at": "2026-06-11T00:00:00Z",
+    }
+    merged = food_line_discovery._merge_candidate(  # type: ignore[attr-defined]
+        {
+            "source_id": "seed-food-bank-demand",
+            "source_name": "Food bank demand story",
+            "publisher": "Example News",
+            "candidate_url": "https://example.com/food-bank-demand",
+            "source_family": "local_news",
+            "status": "candidate",
+        },
+        discovered,
+        discovery_meta,
+    )
+
+    assert merged["discovery_query_id"] == ["q-food-bank-demand"]
+    assert merged["discovery_query_text"] == ["food bank demand"]
+    assert merged["discovery_query_group"] == ["local_news"]
+    assert merged["discovery_queries"] == ["food bank demand", "q-food-bank-demand"]
+    assert merged["discovery_query_ids"] == ["q-food-bank-demand", "food bank demand"]
+    assert merged["discovery_query_texts"] == ["food bank demand"]
+    assert merged["discovery_channels"] == ["page"]
+    assert merged["discovery_providers"] == ["google_news"]
+    assert merged["original_discovery_urls"] == ["https://news.google.com/rss/search?q=food+bank+demand"]
+    assert merged["resolved_source_urls"] == ["https://example.com/food-bank-demand"]
+    assert merged["collector_run_ids"] == ["2026-06-11T00:00:00Z"]
 
 
 def test_food_line_candidate_quarantine_cleanup_and_include_quarantined(tmp_path: Path):

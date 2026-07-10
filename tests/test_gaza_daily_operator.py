@@ -361,8 +361,71 @@ def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.M
 
     monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
     result = operator.run_operator(args)
+    assert result["ok"] is True
+    assert result["operator_status"] == "LOCAL_PUBLISH_READY"
     assert result["audio_status"] == "audio_reused_existing"
     assert "--generate-audio" not in captured["args"]
+
+
+def test_non_audio_upstream_failure_remains_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": False,
+                "source_count": 1,
+                "publisher_count": 1,
+                "public_story_count": 1,
+                "errors": ["validation failed before audio verification"],
+            },
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "FAILED"
+    assert result["audio_status"] != "audio_failed"
+    assert "validation failed" in result["next_action"]
+
+
+def test_explicit_audio_generation_failure_remains_audio_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": False,
+                "source_count": 1,
+                "publisher_count": 1,
+                "public_story_count": 1,
+                "errors": ["audio generation failed: tts provider unavailable"],
+            },
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "AUDIO_FAILED"
+    assert "audio generation failed" in result["next_action"]
 
 
 def test_requested_audio_missing_from_output_site_fails_closed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:

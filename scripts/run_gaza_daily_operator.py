@@ -813,21 +813,6 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
     result["tests_ok"] = summary.get("tests_ok")
     result["validation_ok"] = summary.get("validation_ok")
     result["pages_commit_sha"] = summary.get("pages_commit_sha")
-    if audio_requested_for_run and not args.dry_run:
-        audio_verification = _verify_requested_audio_artifacts(args.date, pages_repo, args.audio_format)
-        if not audio_verification["ok"]:
-            result["ok"] = False
-            result["operator_status"] = "AUDIO_FAILED"
-            result["audio_status"] = "audio_failed"
-            result["next_action"] = audio_verification["next_action"]
-            cleanup = _clean_source_generated_artifacts()
-            result["commands_run"].extend(cleanup["commands"])
-            result["cleanup_status"] = cleanup["status"]
-            result["source_repo_status_after"] = _git_status_branch(ROOT)
-            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
-            return result
-        if result["audio_status"] == "audio_skipped":
-            result["audio_status"] = "audio_generated"
     if code != 0:
         errors = [str(item) for item in summary.get("errors") or []]
         no_publication = any(
@@ -849,6 +834,22 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["source_repo_status_after"] = _git_status_branch(ROOT)
         result["pages_repo_status_after"] = _git_status_branch(pages_repo)
         return result
+
+    if audio_requested_for_run and not args.dry_run:
+        audio_verification = _verify_requested_audio_artifacts(args.date, pages_repo, args.audio_format)
+        if not audio_verification["ok"]:
+            result["ok"] = False
+            result["operator_status"] = "AUDIO_FAILED"
+            result["audio_status"] = "audio_failed"
+            result["next_action"] = audio_verification["next_action"]
+            cleanup = _clean_source_generated_artifacts()
+            result["commands_run"].extend(cleanup["commands"])
+            result["cleanup_status"] = cleanup["status"]
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+            return result
+        if result["audio_status"] == "audio_skipped":
+            result["audio_status"] = "audio_generated"
 
     if args.dry_run:
         if args.post_bluesky and not args.skip_bluesky:

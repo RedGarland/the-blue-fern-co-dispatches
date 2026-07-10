@@ -1521,7 +1521,7 @@ def test_dry_run_bluesky_records_preview_without_publishing(isolated, monkeypatc
     assert summary["bluesky_stale_content_guard_status"] == "passed"
 
 
-def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys):
+def test_generate_audio_none_fails_before_generation(isolated, monkeypatch, capsys):
     root = isolated
     write_manual_sources(root, "2026-05-07")
     called = {"count": 0, "provider": None}
@@ -1548,16 +1548,7 @@ def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys
         return DummyAudio()
 
     def fake_run(args, cwd=daily.ROOT):
-        command = " ".join(args)
-        if "run_gaza_dispatch.py" in command:
-            write_generated_output(root, "2026-05-07")
-        if "publish_github_pages.py" in command:
-            payload = {"ok": True, "errors": [], "paid_detail_excluded_from_public": True, "target_pages_branch": "gh-pages"}
-            if "--dry-run" not in args:
-                write_pages_output(root, "2026-05-07")
-                payload.update({"copied": True, "commit_sha": "abc1234", "committed_branch": "gh-pages"})
-            return completed(args, payload=payload)
-        return completed(args, stdout="ok")
+        raise AssertionError(f"run_command should not be called for provider none: {args}")
 
     monkeypatch.setattr("bluefern_dispatches.gaza_audio.write_gaza_audio_outputs", fake_audio)
     monkeypatch.setattr(daily, "run_command", fake_run)
@@ -1575,10 +1566,12 @@ def test_generate_audio_none_runs_after_generation(isolated, monkeypatch, capsys
         ]
     )
     summary = json.loads(capsys.readouterr().out)
-    assert code == 0
-    assert called["count"] == 1
-    assert called["provider"] == "none"
-    assert summary["ok"] is True
+    assert code == 1
+    assert called["count"] == 0
+    assert called["provider"] is None
+    assert summary["ok"] is False
+    assert summary["publish_blocked_reason"] == "audio-generation-failed"
+    assert any("real TTS provider" in error for error in summary["errors"])
 
 
 def test_dry_run_without_audio_refreshes_public_audio_surfaces(isolated, monkeypatch, capsys):
@@ -1736,6 +1729,12 @@ def test_gaza_daily_operator_defaults_to_audio_generation_on_publish(isolated, m
 
     def fake_daily(run_args: list[str]):
         captured["daily_args"] = run_args
+        output_audio = isolated / "output" / "site" / "gaza" / "audio" / f"{args.date}.mp3"
+        pages_audio = isolated / "bluefern-dispatches-pages" / "gaza" / "audio" / f"{args.date}.mp3"
+        output_audio.parent.mkdir(parents=True, exist_ok=True)
+        pages_audio.parent.mkdir(parents=True, exist_ok=True)
+        output_audio.write_bytes(b"audio")
+        pages_audio.write_bytes(b"audio")
         return 0, {
             "source_count": 5,
             "publisher_count": 3,

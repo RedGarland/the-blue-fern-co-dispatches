@@ -73,6 +73,10 @@ The wrapper now derives `RepoRoot` from the wrapper location by default, so the 
 
 The recommended Gaza command above is the live runner form used on the dedicated runner clone. The wrapper still sends the email report by default and now only pushes Pages, posts to Bluesky, or generates Gaza audio when those switches are explicitly added.
 
+Gaza audio generation uses the supported `openai` TTS provider. The scheduled account must have `OPENAI_API_KEY` available in its environment, and any direct `scripts\run_daily_gaza.py` invocation must pass `--tts-provider openai` alongside `--generate-audio`. Do not place the API key in Task Scheduler arguments or logs.
+
+If `--generate-audio` is requested while the provider remains `none`, the daily runner now fails closed with `audio-generation-failed` instead of silently continuing.
+
 Gaza publishes also preserve existing public-history dates on the archive, RSS, and audio listing/feed surfaces by default. If a reviewed archival pruning is intentional, add `--allow-listing-shrink` explicitly and inspect the resulting diff before any push.
 
 Explicit live Gaza command:

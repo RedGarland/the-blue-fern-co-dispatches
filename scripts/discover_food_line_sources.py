@@ -344,6 +344,38 @@ def _write_json_object(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def _text_list(value: Any) -> list[str]:
+    if value is None or value == "":
+        return []
+    if isinstance(value, list):
+        values = value
+    elif isinstance(value, tuple):
+        values = list(value)
+    else:
+        values = [value]
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in values:
+        text = _nonempty(item)
+        if not text or text in seen:
+            continue
+        out.append(text)
+        seen.add(text)
+    return out
+
+
+def _merge_text_lists(*values: Any) -> list[str]:
+    merged: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        for text in _text_list(value):
+            if text in seen:
+                continue
+            merged.append(text)
+            seen.add(text)
+    return merged
+
+
 def _nonempty(value: Any) -> str:
     return str(value or "").strip()
 
@@ -421,10 +453,17 @@ def load_food_line_source_discovery_queries(root: Path) -> list[dict[str, Any]]:
             continue
         normalized.append(
             {
+                "query_id": _nonempty(row.get("query_id") or row.get("id") or template),
+                "query": _nonempty(row.get("query") or template),
+                "query_text": _nonempty(row.get("query_text") or row.get("query") or template),
                 "template": template,
                 "query_template": template,
                 "category": _nonempty(row.get("category")),
+                "query_family": _nonempty(row.get("query_family") or row.get("family") or row.get("category")),
                 "source_family": _nonempty(row.get("source_family")),
+                "state": _nonempty(row.get("state")),
+                "search_provider": _nonempty(row.get("search_provider") or row.get("provider") or row.get("discovery_provider")),
+                "discovery_channel": _nonempty(row.get("discovery_channel")),
                 "runs": int(row.get("runs") or 0),
                 "candidates_found": int(row.get("candidates_found") or 0),
                 "candidates_inserted": int(row.get("candidates_inserted") or 0),
@@ -457,10 +496,17 @@ def _load_discovery_query_rows(root: Path) -> list[dict[str, Any]]:
             continue
         normalized.append(
             {
+                "query_id": _nonempty(row.get("query_id") or row.get("id") or template),
+                "query": _nonempty(row.get("query") or template),
+                "query_text": _nonempty(row.get("query_text") or row.get("query") or template),
                 "template": template,
                 "query_template": template,
                 "category": _nonempty(row.get("category")),
+                "query_family": _nonempty(row.get("query_family") or row.get("family") or row.get("category")),
                 "source_family": _nonempty(row.get("source_family")),
+                "state": _nonempty(row.get("state")),
+                "search_provider": _nonempty(row.get("search_provider") or row.get("provider") or row.get("discovery_provider")),
+                "discovery_channel": _nonempty(row.get("discovery_channel")),
                 "runs": int(row.get("runs") or 0),
                 "candidates_found": int(row.get("candidates_found") or 0),
                 "candidates_inserted": int(row.get("candidates_inserted") or 0),
@@ -471,6 +517,23 @@ def _load_discovery_query_rows(root: Path) -> list[dict[str, Any]]:
             }
         )
     return normalized
+
+
+def _query_metadata_for_text(queries: list[dict[str, Any]], query_text: str, *, source_name: str = "") -> dict[str, Any]:
+    needle = _nonempty(query_text)
+    source_label = _nonempty(source_name)
+    for row in queries:
+        row_values = {
+            _nonempty(row.get("query")),
+            _nonempty(row.get("query_text")),
+            _nonempty(row.get("query_template")),
+            _nonempty(row.get("template")),
+        }
+        if needle and needle in row_values:
+            return row
+        if source_label and source_label in row_values:
+            return row
+    return {}
 
 
 def _save_discovery_query_rows(root: Path, rows: list[dict[str, Any]]) -> Path:
@@ -3204,6 +3267,18 @@ def _candidate_fields_from_discovery(
         "page_metadata_date": page_metadata_date,
         "evidence_text": evidence_text,
         "evidence_text_basis": evidence_text_basis,
+        "discovery_query_id": "",
+        "discovery_query_text": "",
+        "discovery_query_group": "",
+        "discovery_queries": [],
+        "discovery_query_ids": [],
+        "discovery_query_texts": [],
+        "discovery_query_groups": [],
+        "discovery_channels": [],
+        "discovery_providers": [],
+        "original_discovery_urls": [],
+        "resolved_source_urls": [],
+        "collector_run_ids": [],
         "source_role": source_role or ("discovery_lead" if donation_wrapper else "discovery_candidate"),
         "donation_wrapper": bool(donation_wrapper),
         "public_eligible": bool(public_eligible),
@@ -3238,6 +3313,21 @@ def _merge_candidate(existing: dict[str, Any], discovered: dict[str, Any], disco
     ):
         if not _nonempty(merged.get(key)) and _nonempty(discovered.get(key)):
             merged[key] = discovered[key]
+    for key in (
+        "discovery_query_id",
+        "discovery_query_text",
+        "discovery_query_group",
+        "discovery_queries",
+        "discovery_query_ids",
+        "discovery_query_texts",
+        "discovery_query_groups",
+        "discovery_channels",
+        "discovery_providers",
+        "original_discovery_urls",
+        "resolved_source_urls",
+        "collector_run_ids",
+    ):
+        merged[key] = _merge_text_lists(merged.get(key), discovered.get(key), discovery_meta.get(key))
     if not _nonempty(merged.get("status")):
         merged["status"] = discovered.get("status") or "candidate"
     merged["pressure_topics_expected"] = discovered.get("pressure_topics_expected") or merged.get("pressure_topics_expected") or []
@@ -3421,6 +3511,12 @@ def _discover_candidates_from_seed(
         discovered_summary = candidate_profile.get("page_summary_or_snippet") or ""
         discovered_evidence = candidate_profile.get("page_evidence_text") or ""
         discovered_evidence_basis = candidate_profile.get("page_evidence_text_basis") or ("page_text_excerpt" if source_type != "rss" else "rss_item_text")
+        query_meta = _query_metadata_for_text(queries, query_string, source_name=discovered_title)
+        discovery_query_id = _nonempty(query_meta.get("query_id") or query_meta.get("query_template") or query_meta.get("template") or query_template or query_string)
+        discovery_query_text = _nonempty(query_meta.get("query_text") or query_string or query_template or query_meta.get("query_template") or query_meta.get("template"))
+        discovery_query_group = _nonempty(query_meta.get("query_family") or query_meta.get("category"))
+        discovery_provider = _nonempty(query_meta.get("search_provider") or query_meta.get("discovery_channel"))
+        discovery_channel = _nonempty(query_meta.get("discovery_channel") or discovery_method or "unknown")
         blocked, block_reason = _blocked_by_discovery_rules(
             {
                 "candidate_url": discovered_url,
@@ -3514,6 +3610,18 @@ def _discover_candidates_from_seed(
                 "discovery_method": discovery_method,
                 "discovery_query": query_string,
                 "query_template": query_template,
+                "discovery_query_id": discovery_query_id,
+                "discovery_query_text": discovery_query_text,
+                "discovery_query_group": discovery_query_group,
+                "discovery_queries": _merge_text_lists(query_string, query_template, discovery_query_text, discovery_query_id),
+                "discovery_query_ids": _merge_text_lists(discovery_query_id, query_template, query_string),
+                "discovery_query_texts": _merge_text_lists(discovery_query_text, query_string, query_template),
+                "discovery_query_groups": _merge_text_lists(discovery_query_group),
+                "discovery_channels": _merge_text_lists(discovery_channel),
+                "discovery_providers": _merge_text_lists(discovery_provider),
+                "original_discovery_urls": _merge_text_lists(seed_url),
+                "resolved_source_urls": _merge_text_lists(discovered_url),
+                "collector_run_ids": _merge_text_lists(discovered_at),
                 "discovered_at": discovered_at,
                 "discovery_score": discovery_score,
                 "url_status": "ok",
@@ -3626,6 +3734,14 @@ def _discover_candidates_from_seed(
             non_promotable_reason=seed_purpose["non_promotable_reason"],
         )
     if not review_rows:
+        fallback_query_string = next((q.get("query", "") for q in queries if q.get("state") == _nonempty(seed.get("state") or "US").upper()), "")
+        fallback_query_template = next((q.get("query_template", q.get("template", fallback_query_string)) for q in queries if q.get("query") == fallback_query_string), fallback_query_string)
+        fallback_query_meta = _query_metadata_for_text(queries, fallback_query_string, source_name=_nonempty(seed.get("source_name") or seed_url))
+        fallback_query_id = _nonempty(fallback_query_meta.get("query_id") or fallback_query_meta.get("query_template") or fallback_query_meta.get("template") or fallback_query_template or fallback_query_string)
+        fallback_query_text = _nonempty(fallback_query_meta.get("query_text") or fallback_query_string or fallback_query_template or fallback_query_meta.get("query_template") or fallback_query_meta.get("template"))
+        fallback_query_group = _nonempty(fallback_query_meta.get("query_family") or fallback_query_meta.get("category"))
+        fallback_discovery_provider = _nonempty(fallback_query_meta.get("search_provider") or fallback_query_meta.get("discovery_channel"))
+        fallback_discovery_channel = _nonempty(fallback_query_meta.get("discovery_channel") or "seed_page")
         review_rows.append(
             {
                 "source_id": seed.get("source_id") or _candidate_id(seed_url, seed.get("publisher") or "", seed.get("source_family") or ""),
@@ -3634,6 +3750,18 @@ def _discover_candidates_from_seed(
                 "candidate_url": seed_url,
                 "source_family": seed.get("source_family") or "local_news",
                 "source_type": seed.get("source_type") or "page",
+                "discovery_query_id": fallback_query_id,
+                "discovery_query_text": fallback_query_text,
+                "discovery_query_group": fallback_query_group,
+                "discovery_queries": _merge_text_lists(fallback_query_string, fallback_query_template, fallback_query_text, fallback_query_id),
+                "discovery_query_ids": _merge_text_lists(fallback_query_id, fallback_query_template, fallback_query_string),
+                "discovery_query_texts": _merge_text_lists(fallback_query_text, fallback_query_string, fallback_query_template),
+                "discovery_query_groups": _merge_text_lists(fallback_query_group),
+                "discovery_channels": _merge_text_lists(fallback_discovery_channel),
+                "discovery_providers": _merge_text_lists(fallback_discovery_provider),
+                "original_discovery_urls": _merge_text_lists(seed_url),
+                "resolved_source_urls": _merge_text_lists(seed_url),
+                "collector_run_ids": _merge_text_lists(discovered_at),
                 "discovery_method": "seed_page",
                 "discovery_query": "",
                 "query_template": "",
@@ -3960,7 +4088,7 @@ def discover_food_line_sources(
                 candidate_by_pub_url[pub_url_key] = row
             discovered_candidate_count += 1
             review_rows.append(row)
-            audit_rows.append({**row, "discovery_queries": queries})
+            audit_rows.append({**row, "discovery_query_plan": queries})
             if query_template in query_results:
                 query_results[query_template]["runs"] += 1
                 query_results[query_template]["candidates_found"] += 1
@@ -4067,6 +4195,31 @@ def discover_food_line_sources(
             for row in updated_query_rows
         ],
     )
+    query_performance_history_rows: list[dict[str, Any]] = []
+    for row in updated_query_rows:
+        query_performance_history_rows.append(
+            {
+                "query_id": _nonempty(row.get("query_template") or row.get("template")),
+                "query_text": _nonempty(row.get("query_template") or row.get("template")),
+                "query_category": _nonempty(row.get("category")),
+                "source_family": _nonempty(row.get("source_family")),
+                "attempted_run_count": int(row.get("runs") or 0),
+                "successful_run_count": int(row.get("candidates_inserted") or 0),
+                "failed_run_count": int(row.get("rejects") or 0),
+                "discovered_candidate_count": int(row.get("candidates_found") or 0),
+                "unique_candidate_count": int(row.get("candidates_inserted") or 0),
+                "included_count": int(row.get("candidates_promoted") or 0),
+                "excluded_count": int(row.get("rejects") or 0),
+                "unresolved_count": 0,
+                "duplicate_count": 0,
+                "last_attempted_date": date,
+                "last_successful_date": date if int(row.get("candidates_inserted") or 0) > 0 else "",
+                "attribution_completeness": 1.0 if _nonempty(row.get("query_template") or row.get("template")) else 0.0,
+                "attribution_state": "recorded" if _nonempty(row.get("query_template") or row.get("template")) else "not_recorded",
+            }
+        )
+    query_performance_history_path = _query_metrics_path(root)
+    _write_json(query_performance_history_path, query_performance_history_rows)
     history = load_food_line_source_performance_history(root)
     health_rows = []
     latest_review_by_source_id = {str(row.get("source_id") or ""): row for row in review_rows if str(row.get("source_id") or "").strip()}
@@ -4140,6 +4293,7 @@ def discover_food_line_sources(
         "skipped_archived_count": skipped_archived_count,
         "source_quality_tier_counts": dict(sorted(Counter(str(row.get("source_quality_tier") or "quarantine") for row in review_rows).items())),
         "query_performance_path": str(query_performance_path),
+        "query_performance_history_path": str(query_performance_history_path),
         "query_performance_report_path": str(query_report_path),
         "source_registry_health_report_path": str(health_report_path),
         "review_path": str(discovery_review_path),

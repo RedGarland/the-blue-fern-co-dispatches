@@ -92,6 +92,35 @@ def audio_file_path(edition_date: str, audio_format: str) -> Path:
     return ROOT / "output" / "site" / "gaza" / "audio" / f"{edition_date}.{audio_format}"
 
 
+def pages_audio_file_path(pages_repo: Path, edition_date: str, audio_format: str) -> Path:
+    return pages_repo / "gaza" / "audio" / f"{edition_date}.{audio_format}"
+
+
+def _path_is_nonempty_file(path: Path) -> bool:
+    return path.is_file() and path.stat().st_size > 0
+
+
+def _verify_requested_audio_artifacts(edition_date: str, pages_repo: Path, audio_format: str) -> dict[str, Any]:
+    output_audio_path = audio_file_path(edition_date, audio_format)
+    pages_audio_path = pages_audio_file_path(pages_repo, edition_date, audio_format)
+    missing_paths: list[str] = []
+    if not _path_is_nonempty_file(output_audio_path):
+        missing_paths.append(str(output_audio_path))
+    if not _path_is_nonempty_file(pages_audio_path):
+        missing_paths.append(str(pages_audio_path))
+    return {
+        "ok": not missing_paths,
+        "output_audio_path": str(output_audio_path),
+        "pages_audio_path": str(pages_audio_path),
+        "missing_paths": missing_paths,
+        "next_action": (
+            "Verify the requested Gaza audio exists and is non-empty at: " + "; ".join(missing_paths)
+            if missing_paths
+            else None
+        ),
+    }
+
+
 def _normalize_repo_path(path: str) -> str:
     return path.replace("\\", "/")
 
@@ -756,7 +785,8 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         return result
     result["pages_synced_before_publish"] = True
 
-    generate_audio = bool((args.generate_audio or not args.dry_run) and not args.skip_audio)
+    audio_requested_for_run = bool((args.generate_audio or not args.dry_run) and not args.skip_audio)
+    generate_audio = audio_requested_for_run
     if generate_audio and audio_file_path(args.date, args.audio_format).exists() and not args.force_audio:
         generate_audio = False
         result["audio_status"] = "audio_reused_existing"
@@ -783,8 +813,21 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
     result["tests_ok"] = summary.get("tests_ok")
     result["validation_ok"] = summary.get("validation_ok")
     result["pages_commit_sha"] = summary.get("pages_commit_sha")
-    if generate_audio and result["audio_status"] == "audio_skipped":
-        result["audio_status"] = "audio_generated" if generate_audio else "audio_reused_existing"
+    if audio_requested_for_run and not args.dry_run:
+        audio_verification = _verify_requested_audio_artifacts(args.date, pages_repo, args.audio_format)
+        if not audio_verification["ok"]:
+            result["ok"] = False
+            result["operator_status"] = "AUDIO_FAILED"
+            result["audio_status"] = "audio_failed"
+            result["next_action"] = audio_verification["next_action"]
+            cleanup = _clean_source_generated_artifacts()
+            result["commands_run"].extend(cleanup["commands"])
+            result["cleanup_status"] = cleanup["status"]
+            result["source_repo_status_after"] = _git_status_branch(ROOT)
+            result["pages_repo_status_after"] = _git_status_branch(pages_repo)
+            return result
+        if result["audio_status"] == "audio_skipped":
+            result["audio_status"] = "audio_generated"
     if code != 0:
         errors = [str(item) for item in summary.get("errors") or []]
         no_publication = any(

@@ -3,7 +3,7 @@ param(
     [ValidateSet("gaza", "food-line")]
     [string]$Dispatch,
     [string]$Date = "",
-    [string]$RepoRoot = "C:\PythonProjects\Dispatches From The Blue Fern Co",
+    [string]$RepoRoot = "",
     [string]$PagesRepo = "",
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
@@ -477,7 +477,13 @@ function Invoke-IsolatedGazaDryRun {
 
 try {
     if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
-        throw "RepoRoot must not be empty."
+        if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+            throw "RepoRoot must not be empty and wrapper location is unavailable."
+        }
+        $RepoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+        $repoRootSource = "wrapper location"
+    } else {
+        $repoRootSource = "-RepoRoot"
     }
     if (-not (Test-Path -LiteralPath $RepoRoot -PathType Container)) {
         throw "RepoRoot does not exist: $RepoRoot"
@@ -546,7 +552,7 @@ try {
         $audioEnabled = $true
     }
 
-    Write-Log "Resolved repo root: $RepoRoot"
+    Write-Log ("Resolved repo root from {0}: {1}" -f $repoRootSource, $RepoRoot)
     Write-Log "Resolved Pages repo: $PagesRepo"
     Write-Log "Selected Python path: $python"
     Write-Log "Dispatch: $Dispatch"
@@ -629,22 +635,24 @@ try {
     } elseif ($checkOnlyRequested) {
         if ($Dispatch -eq "gaza") {
             $dispatchArgs = @(
-                $gazaSmokeScript,
-                "--date", $Date,
-                "--source-repo", $RepoRoot,
-                "--pages-repo", $PagesRepo,
-                "--source-branch", $SourceBranch,
-                "--pages-branch", $PagesBranch
-            )
+            $gazaSmokeScript,
+            "--date", $Date,
+            "--source-repo", $RepoRoot,
+            "--pages-repo", $PagesRepo,
+            "--source-branch", $SourceBranch,
+            "--pages-branch", $PagesBranch,
+            "--protected-path", $script:LogFile
+        )
         } else {
-            $dispatchArgs = @(
-                $runnerMaintenanceScript,
-                "postflight",
-                "--source-repo", $RepoRoot,
-                "--pages-repo", $PagesRepo,
-                "--source-branch", $SourceBranch,
-                "--pages-branch", $PagesBranch
-            )
+        $dispatchArgs = @(
+            $runnerMaintenanceScript,
+            "postflight",
+            "--source-repo", $RepoRoot,
+            "--pages-repo", $PagesRepo,
+            "--source-branch", $SourceBranch,
+            "--pages-branch", $PagesBranch,
+            "--protected-path", $script:LogFile
+        )
         }
     } elseif ($Dispatch -eq "gaza") {
         $dispatchArgs = @(
@@ -747,7 +755,8 @@ try {
             "--source-repo", $RepoRoot,
             "--pages-repo", $PagesRepo,
             "--source-branch", $SourceBranch,
-            "--pages-branch", $PagesBranch
+            "--pages-branch", $PagesBranch,
+            "--protected-path", $script:LogFile
         )
         $postflightResult = Invoke-LoggedCommand -Python $python -Arguments $postflightArgs -ParseJsonTail
         if ($postflightResult.ExitCode -ne 0) {

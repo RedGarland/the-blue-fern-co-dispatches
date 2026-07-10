@@ -215,23 +215,29 @@ def _run_wrapper(repo: Path) -> subprocess.CompletedProcess[str]:
     return _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02", "-CheckOnly"])
 
 
-def _run_wrapper_with_args(repo: Path, extra_args: list[str]) -> subprocess.CompletedProcess[str]:
+def _run_wrapper_with_args(
+    repo: Path,
+    extra_args: list[str],
+    *,
+    repo_root: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     powershell = shutil.which("powershell.exe")
     if not powershell:
         pytest.skip("powershell.exe not available in test environment")
+    invocation = [
+        powershell,
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(repo / "scripts" / "run_runner_dispatch.ps1"),
+    ]
+    if repo_root is not None:
+        invocation.extend(["-RepoRoot", str(repo_root)])
+    invocation.extend(extra_args)
     return subprocess.run(
-        [
-            powershell,
-            "-NoProfile",
-            "-NonInteractive",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(repo / "scripts" / "run_runner_dispatch.ps1"),
-            "-RepoRoot",
-            str(repo),
-            *extra_args,
-        ],
+        invocation,
         cwd=str(repo),
         check=False,
         capture_output=True,
@@ -263,8 +269,11 @@ def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: 
     result = _run_wrapper(repo)
 
     assert result.returncode == 0, result.stdout + result.stderr
-    log_text = _latest_log(repo)
+    log_path = max((repo / "logs").glob("runner-gaza-*.log"), key=lambda p: p.stat().st_mtime)
+    log_text = _read_log(log_path)
     assert "Runner check-only validation finished with exit code 0." in log_text
+    assert "--protected-path" in log_text
+    assert str(log_path) in log_text
     assert "root_ok_present=True" in log_text
     assert "root_smoke_mode_present=True" in log_text
     assert "operator_result_present=True" in log_text
@@ -350,7 +359,7 @@ def test_wrapper_gaza_non_check_only_defaults_to_no_push_no_post_no_audio(tmp_pa
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo)
-    assert f"Resolved repo root: {repo}" in log_text
+    assert f"Resolved repo root from wrapper location: {repo}" in log_text
     assert f"Resolved Pages repo: {repo / 'bluefern-dispatches-pages'}" in log_text
     assert f"Selected Python path: {repo / '.venv' / 'Scripts' / 'python.exe'}" in log_text
     assert "Push enabled: False" in log_text
@@ -362,6 +371,73 @@ def test_wrapper_gaza_non_check_only_defaults_to_no_push_no_post_no_audio(tmp_pa
     assert "--push" not in log_text
     assert "--post-bluesky" not in log_text
     assert "--generate-audio" not in log_text
+
+
+def test_wrapper_gaza_default_repo_root_comes_from_wrapper_location(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert f"Resolved repo root from wrapper location: {repo}" in log_text
+
+
+def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> None:
+    wrapper_repo = _make_fake_runner_repo(
+        tmp_path / "wrapper",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+    override_repo = _make_fake_runner_repo(
+        tmp_path / "override",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(wrapper_repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"], repo_root=override_repo)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(override_repo)
+    assert f"Resolved repo root from -RepoRoot: {override_repo}" in log_text
+    assert f"Resolved Pages repo: {override_repo / 'bluefern-dispatches-pages'}" in log_text
+
+
+def test_wrapper_gaza_postflight_cleanup_protects_active_log(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_path = max((repo / "logs").glob("runner-gaza-*.log"), key=lambda p: p.stat().st_mtime)
+    log_text = _read_log(log_path)
+    assert "--protected-path" in log_text
+    assert str(log_path) in log_text
+    assert "scripts\\runner_repo_maintenance.py postflight" in log_text
 
 
 def test_wrapper_gaza_non_check_only_appends_explicit_live_flags_only_when_requested(tmp_path: Path) -> None:

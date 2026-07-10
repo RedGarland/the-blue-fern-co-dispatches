@@ -56,6 +56,18 @@ def test_cleanup_plan_keeps_food_line_source_performance_history_outside_auto_cl
     assert plan["skipped_paths"] == ["data/dispatches/food-line/source_performance_history.json"]
 
 
+def test_cleanup_plan_skips_protected_paths() -> None:
+    entries = [
+        {"path": "logs/runner-gaza-20260710-070329.log", "is_untracked": True},
+        {"path": "logs/runner-gaza-20260710-070330.log", "is_untracked": True},
+    ]
+
+    plan = build_cleanup_plan(entries, protected_paths=["logs/runner-gaza-20260710-070329.log"])
+
+    assert plan["clean_paths"] == ["logs/runner-gaza-20260710-070330.log"]
+    assert plan["skipped_paths"] == ["logs/runner-gaza-20260710-070329.log"]
+
+
 def test_cleanup_plan_cleans_only_date_scoped_food_line_discovery_candidates() -> None:
     entries = [
         {"path": "data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json", "is_untracked": True},

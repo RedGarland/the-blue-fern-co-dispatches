@@ -57,6 +57,7 @@ def run_smoke(
     pages_repo: Path,
     source_branch: str,
     pages_branch: str,
+    protected_paths: list[str] | None = None,
 ) -> dict[str, Any]:
     sync_result = sync_runner_repos(
         source_repo,
@@ -116,7 +117,7 @@ def run_smoke(
     if done.returncode != 0:
         result["errors"].append(done.stderr.strip() or done.stdout.strip() or "operator smoke check failed")
 
-    postflight_result = postflight_runner_repos(source_repo, pages_repo)
+    postflight_result = postflight_runner_repos(source_repo, pages_repo, protected_paths=protected_paths)
     result["postflight_result"] = postflight_result
     result["source_repo_status_final"] = postflight_result.get("source_status_after")
     result["pages_repo_status_final"] = postflight_result.get("pages_status_after")
@@ -139,6 +140,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pages-repo", default=str(ROOT / "bluefern-dispatches-pages"))
     parser.add_argument("--source-branch", default=DEFAULT_SOURCE_BRANCH)
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH)
+    parser.add_argument("--protected-path", action="append", default=[], help="Path to exclude from postflight cleanup. May be repeated.")
     args = parser.parse_args(argv)
     args.date = validate_date(args.date)
     return args
@@ -152,6 +154,7 @@ def main(argv: list[str] | None = None) -> int:
         pages_repo=Path(args.pages_repo).resolve(),
         source_branch=args.source_branch,
         pages_branch=args.pages_branch,
+        protected_paths=list(args.protected_path),
     )
     print(json.dumps(result, indent=2))
     return 0 if result.get("ok") else 1

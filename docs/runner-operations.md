@@ -66,10 +66,12 @@ powershell.exe
 
 ```text
 Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza -Push -PostBluesky -GenerateAudio
 ```
 
-This safe Gaza command uses the documented source repo root `C:\PythonProjects\Dispatches From The Blue Fern Co` by default, sends the email report, and does not push Pages, post to Bluesky, or generate Gaza audio unless those switches are explicitly added.
+The wrapper now derives `RepoRoot` from the wrapper location by default, so the scheduled task does not need to hard-code the development path. If you need to override that behavior for a one-off run, `-RepoRoot` is still available and takes precedence.
+
+The recommended Gaza command above is the live runner form used on the dedicated runner clone. The wrapper still sends the email report by default and now only pushes Pages, posts to Bluesky, or generates Gaza audio when those switches are explicitly added.
 
 Gaza publishes also preserve existing public-history dates on the archive, RSS, and audio listing/feed surfaces by default. If a reviewed archival pruning is intentional, add `--allow-listing-shrink` explicitly and inspect the resulting diff before any push.
 

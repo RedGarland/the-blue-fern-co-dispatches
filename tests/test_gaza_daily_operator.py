@@ -43,6 +43,26 @@ def isolated(monkeypatch: pytest.MonkeyPatch) -> Path:
         shutil.rmtree(root.parent, ignore_errors=True)
 
 
+def _stub_operator_success(monkeypatch: pytest.MonkeyPatch, *, pages_repo: Path) -> None:
+    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
+    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == operator.ROOT else "gh-pages")
+    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo_arg, pages_branch: (True, None))
+    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo_arg, pages_branch: {"ok": True, "commands": []})
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
+    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
+    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
+
+
+def _write_audio_fixture(root: Path, edition_date: str, audio_format: str = "mp3") -> tuple[Path, Path]:
+    output_audio = root / "output" / "site" / "gaza" / "audio" / f"{edition_date}.{audio_format}"
+    pages_audio = root / "bluefern-dispatches-pages" / "gaza" / "audio" / f"{edition_date}.{audio_format}"
+    output_audio.parent.mkdir(parents=True, exist_ok=True)
+    pages_audio.parent.mkdir(parents=True, exist_ok=True)
+    output_audio.write_bytes(b"audio-output")
+    pages_audio.write_bytes(b"audio-pages")
+    return output_audio, pages_audio
+
+
 def test_manual_source_validation_accepts_template_shaped_record(isolated: Path) -> None:
     write_manual_sources(
         isolated,
@@ -123,12 +143,8 @@ def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> N
 
 
 def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    args = operator.parse_args(["--date", "2026-06-26", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
-    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
-    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
-    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
-    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: {"ok": True, "commands": ["git fetch", "git reset"]})
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
+    args = operator.parse_args(["--date", "2026-06-26", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
         operator,
         "_capture_daily_run",
@@ -146,8 +162,6 @@ def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypat
             "{}",
         ),
     )
-    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
-    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
     result = operator.run_operator(args)
     assert result["ok"] is True
     assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
@@ -234,12 +248,9 @@ def test_live_verification_retries_and_classifies_propagation_delay(monkeypatch:
 
 def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     args = operator.parse_args(
-        ["--date", "2026-06-26", "--post-bluesky-only", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+        ["--date", "2026-06-26", "--post-bluesky-only", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
     )
-    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
-    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
-    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
         operator,
         "verify_live_publication",
@@ -255,8 +266,6 @@ def test_post_only_does_not_publish_push_or_regenerate(isolated: Path, monkeypat
         "maybe_post_gaza_dispatch_to_bluesky",
         lambda **kwargs: {"status": "success", "post_uri": "at://example/post/1"},
     )
-    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
-    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
     monkeypatch.setattr(
         operator,
         "_capture_daily_run",
@@ -339,16 +348,11 @@ def test_email_failure_remains_fatal_on_dry_run(isolated: Path, monkeypatch: pyt
 
 
 def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    (isolated / "output" / "site" / "gaza" / "audio").mkdir(parents=True, exist_ok=True)
-    (isolated / "output" / "site" / "gaza" / "audio" / "2026-06-26.mp3").write_bytes(b"audio")
+    _write_audio_fixture(isolated, "2026-06-26")
     args = operator.parse_args(
         ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
     )
-    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
-    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
-    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
-    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: {"ok": True, "commands": []})
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     captured: dict[str, list[str]] = {}
 
     def fake_daily(run_args: list[str]):
@@ -356,11 +360,173 @@ def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.M
         return 0, {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1}, "{}"
 
     monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
-    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
-    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
     result = operator.run_operator(args)
+    assert result["ok"] is True
+    assert result["operator_status"] == "LOCAL_PUBLISH_READY"
     assert result["audio_status"] == "audio_reused_existing"
     assert "--generate-audio" not in captured["args"]
+
+
+def test_non_audio_upstream_failure_remains_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": False,
+                "source_count": 1,
+                "publisher_count": 1,
+                "public_story_count": 1,
+                "errors": ["validation failed before audio verification"],
+            },
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "FAILED"
+    assert result["audio_status"] != "audio_failed"
+    assert "validation failed" in result["next_action"]
+
+
+def test_explicit_audio_generation_failure_remains_audio_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": False,
+                "source_count": 1,
+                "publisher_count": 1,
+                "public_story_count": 1,
+                "errors": ["audio generation failed: tts provider unavailable"],
+            },
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "AUDIO_FAILED"
+    assert "audio generation failed" in result["next_action"]
+
+
+def test_requested_audio_missing_from_output_site_fails_closed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            0,
+            {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1},
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "AUDIO_FAILED"
+    assert result["audio_status"] == "audio_failed"
+    assert str(isolated / "output" / "site" / "gaza" / "audio" / "2026-06-26.mp3") in result["next_action"]
+
+
+def test_requested_audio_missing_from_pages_copy_fails_closed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    output_audio, _ = _write_audio_fixture(isolated, "2026-06-26")
+    pages_audio = isolated / "bluefern-dispatches-pages" / "gaza" / "audio" / "2026-06-26.mp3"
+    if pages_audio.exists():
+        pages_audio.unlink()
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            0,
+            {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1},
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert output_audio.is_file()
+    assert result["ok"] is False
+    assert result["operator_status"] == "AUDIO_FAILED"
+    assert result["audio_status"] == "audio_failed"
+    assert str(pages_audio) in result["next_action"]
+
+
+def test_requested_audio_present_in_both_locations_is_reported_generated(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+
+    def fake_daily(run_args: list[str]):
+        _ = run_args
+        _write_audio_fixture(isolated, "2026-06-26")
+        return 0, {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1}, "{}"
+
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        fake_daily,
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "LOCAL_PUBLISH_READY"
+    assert result["audio_status"] == "audio_generated"
+    assert result["next_action"]
+
+
+def test_reused_audio_requires_pages_copy_before_success(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    (isolated / "output" / "site" / "gaza" / "audio").mkdir(parents=True, exist_ok=True)
+    (isolated / "output" / "site" / "gaza" / "audio" / "2026-06-26.mp3").write_bytes(b"audio")
+    args = operator.parse_args(
+        ["--date", "2026-06-26", "--generate-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            0,
+            {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1},
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "AUDIO_FAILED"
+    assert result["audio_status"] == "audio_failed"
+    assert str(isolated / "bluefern-dispatches-pages" / "gaza" / "audio" / "2026-06-26.mp3") in result["next_action"]
 
 
 def test_cleanup_preserves_manual_sources_file(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -382,11 +548,8 @@ def test_cleanup_preserves_manual_sources_file(isolated: Path, monkeypatch: pyte
             }
         ],
     )
-    args = operator.parse_args(["--date", "2026-06-26", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
-    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
-    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
-    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
-    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: {"ok": True, "commands": []})
+    args = operator.parse_args(["--date", "2026-06-26", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
         operator,
         "_capture_daily_run",
@@ -399,7 +562,6 @@ def test_cleanup_preserves_manual_sources_file(isolated: Path, monkeypatch: pyte
             "{}",
         ),
     )
-    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
 
     def fake_cleanup():
         assert path.exists()

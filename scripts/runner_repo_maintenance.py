@@ -80,13 +80,21 @@ def _is_safe_cleanup_path(path: str) -> bool:
     )
 
 
-def build_cleanup_plan(entries: list[dict[str, Any]]) -> dict[str, list[str]]:
+def build_cleanup_plan(entries: list[dict[str, Any]], protected_paths: list[str] | None = None) -> dict[str, list[str]]:
+    protected = {
+        str(path or "").replace("\\", "/").strip()
+        for path in (protected_paths or [])
+        if str(path or "").strip()
+    }
     restore_paths: list[str] = []
     clean_paths: list[str] = []
     skipped_paths: list[str] = []
     for entry in entries:
         path = str(entry.get("path") or "").replace("\\", "/").strip()
         if not path:
+            continue
+        if path in protected:
+            skipped_paths.append(path)
             continue
         if not _is_safe_cleanup_path(path):
             skipped_paths.append(path)
@@ -202,9 +210,14 @@ def sync_runner_repos(
     return result
 
 
-def postflight_runner_repos(source_repo: Path, pages_repo: Path) -> dict[str, Any]:
+def postflight_runner_repos(
+    source_repo: Path,
+    pages_repo: Path,
+    *,
+    protected_paths: list[str] | None = None,
+) -> dict[str, Any]:
     entries_before = _git_status_entries(source_repo)
-    cleanup_plan = build_cleanup_plan(entries_before)
+    cleanup_plan = build_cleanup_plan(entries_before, protected_paths=protected_paths)
     cleanup_result = apply_cleanup_plan(source_repo, cleanup_plan)
     report_after = _preflight_summary(source_repo, pages_repo)
     source_entries_after = _git_status_entries(source_repo)
@@ -234,6 +247,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         subparser.add_argument("--pages-repo", default=str(ROOT / "bluefern-dispatches-pages"))
         subparser.add_argument("--source-branch", default=DEFAULT_SOURCE_BRANCH)
         subparser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH)
+        subparser.add_argument("--protected-path", action="append", default=[], help="Path to exclude from postflight cleanup. May be repeated.")
 
     sync_parser = subparsers.add_parser("sync", help="Fetch and hard-reset a clean runner source repo and Pages repo to their tracked branches.")
     add_common(sync_parser)
@@ -256,7 +270,7 @@ def main(argv: list[str] | None = None) -> int:
             pages_branch=args.pages_branch,
         )
     else:
-        result = postflight_runner_repos(source_repo, pages_repo)
+        result = postflight_runner_repos(source_repo, pages_repo, protected_paths=list(args.protected_path))
     print(json.dumps(result, indent=2))
     return 0 if result.get("ok") else 1
 

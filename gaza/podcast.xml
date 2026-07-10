@@ -18,7 +18,14 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 08 Jul 2026 19:00:29 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 10 Jul 2026 14:03:36 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 10, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-10-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-10-transcript.html</guid>
+    <pubDate>Fri, 10 Jul 2026 00:00:00 +0000</pubDate>
+    <description>IDF accused of 'field execution' of Palestinian driver bringing aid into Gaza. Local truckers' association says it may suspend operations, after several eyewitnesses decried Ahmad Esleem's murder. Transcript and source links are available from The Blue Fern Co.</description>
+  </item>
   <item>
     <title>Gaza Briefing for July 8, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-08-transcript.html</link>

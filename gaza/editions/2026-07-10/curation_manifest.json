@@ -1,0 +1,390 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-10-004",
+    "title": "IDF accused of 'field execution' of Palestinian driver bringing aid into Gaza",
+    "summary": "Local truckers' association says it may suspend operations, after several eyewitnesses decried Ahmad Esleem's murder. A Palestinian driver bringing food aid from the World Central Kitchen (WCK) into Gaza has been killed by an Israeli soldier \"in a field execution\", according to witnesses and the local truckers' association, which said it may suspend operations in protest. Ahmad Esleem was shot in the head on Wednesday when an aid convoy stopped because of a breakdown to one truck soon after entering Gaza, according to three accounts. Israeli soldiers ordered the drivers to dismount and one of them shot Esleem in the head when his hands were raised.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-guardian-world-835ea0ce2f8e"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-guardian-world-835ea0ce2f8e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/09/idf-accused-of-field-execution-of-palestinian-driver-bringing-aid-into-gaza"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-guardian-world-835ea0ce2f8e",
+        "title": "IDF accused of 'field execution' of Palestinian driver bringing aid into Gaza",
+        "url": "https://www.theguardian.com/world/2026/jul/09/idf-accused-of-field-execution-of-palestinian-driver-bringing-aid-into-gaza",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Local truckers' association says it may suspend operations, after several eyewitnesses decried Ahmad Esleem's murder A Palestinian driver bringing food aid from the World Central Kitchen (WCK) into Gaza has been killed by an Israeli soldier \"in a field execution\", according to witnesses and the local truckers' association, which said it may suspend operations in protest. Ahmad Esleem was shot in the head on Wednesday when an aid convoy stopped because of a breakdown to one truck soon after entering Gaza, according to three accounts. Israeli soldiers ordered the drivers to dismount and one of them shot Esleem in the head when his hands were raised."
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-10-001",
+    "title": "Palestinians mourn Gaza World Cup screenings organiser killed in Israeli strike",
+    "summary": "Israel-Hamas war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 69,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-bbc-middle-east-8bcd3e604f48"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-bbc-middle-east-8bcd3e604f48"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cwylznzjk04o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-bbc-middle-east-8bcd3e604f48",
+        "title": "Palestinians mourn Gaza World Cup screenings organiser killed in Israeli strike",
+        "url": "https://www.bbc.co.uk/news/articles/cwylznzjk04o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Aid worker Mohammed al-Wahidi had become a prominent humanitarian figure during the Israel-Hamas war."
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 69,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-08-008",
+    "prior_edition_date": "2026-07-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-10-007",
+    "title": "How Hamas Governed Gaza",
+    "summary": "Hamas is dissolving its government and handing power over to a new technocratic administration.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-aljazeera-middle-east-ab0497c0fb69"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-aljazeera-middle-east-ab0497c0fb69"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/10/how-hamas-governed-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-aljazeera-middle-east-ab0497c0fb69",
+        "title": "How Hamas Governed Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/10/how-hamas-governed-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Hamas is dissolving its government and handing power over to a new technocratic administration."
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-10-003",
+    "title": "Israel-Gaza war - BBC",
+    "summary": "Israel-Gaza war BBC.",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-bbc-gaza-health-query-94dbde5794ee"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-bbc-gaza-health-query-94dbde5794ee"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9obXNaT3JaQ2JlcVF4VDk2VFpNUFpxcG9YMUhGOC1VMkJhN3pJaTVvZVRlSnZCTDNUekt0YndVelJHVUJaeF9rWjZqdlJ5NU1iRnlDb2NFTQ?oc=5"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-bbc-gaza-health-query-94dbde5794ee",
+        "title": "Israel-Gaza war - BBC",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9obXNaT3JaQ2JlcVF4VDk2VFpNUFpxcG9YMUhGOC1VMkJhN3pJaTVvZVRlSnZCTDNUekt0YndVelJHVUJaeF9rWjZqdlJ5NU1iRnlDb2NFTQ?oc=5",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israel-Gaza war BBC"
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-10-006",
+    "title": "Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting?",
+    "summary": "Likely incoming UK PM hints at policy shifts towards. Israel's genocidal war on Gaza. But analysts are wary.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-aljazeera-middle-east-ecb400e676b6"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-aljazeera-middle-east-ecb400e676b6"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/7/10/andy-burnham-apology-for-labour-stance-on-gaza-is-uks-position-shifting?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-aljazeera-middle-east-ecb400e676b6",
+        "title": "Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting?",
+        "url": "https://www.aljazeera.com/features/2026/7/10/andy-burnham-apology-for-labour-stance-on-gaza-is-uks-position-shifting?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Likely incoming UK PM hints at policy shifts towards Israel's genocidal war on Gaza. But analysts are wary."
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-10-005",
+    "title": "Andy Burnham apologises for Labour's stance on Gaza and says it 'didn't get it right'",
+    "summary": "Exclusive: PM-in-waiting says party must 'do better' in approach to Middle East and he will put more pressure on Israel Analysis: Burnham's apology marks 'reset moment' as Labour seeks to win back progressive voters Andy Burnham has apologised for Labour's initial response to Israel's military action in Gaza, saying the party \"didn't get it right\" and needs to \"do better\" under his leadership signalling a significant shift in the UK's approach to the Middle East. The prime minister-in-waiting told the Guardian he would put more pressure on the Israeli government, including through further sanctions on individuals and entities, as well as a potential ban on the trade of goods with illegal settlements.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-10-guardian-world-4ef81fe7d5e6"
+    ],
+    "source_ids": [
+      "gaza-2026-07-10-guardian-world-4ef81fe7d5e6"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/jul/09/andy-burnham-labour-didnt-get-it-right-stance-gaza-war"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-10-guardian-world-4ef81fe7d5e6",
+        "title": "Andy Burnham apologises for Labour's stance on Gaza and says it 'didn't get it right'",
+        "url": "https://www.theguardian.com/politics/2026/jul/09/andy-burnham-labour-didnt-get-it-right-stance-gaza-war",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Exclusive: PM-in-waiting says party must 'do better' in approach to Middle East and he will put more pressure on Israel Analysis: Burnham's apology marks 'reset moment' as Labour seeks to win back progressive voters Andy Burnham has apologised for Labour's initial response to Israel's military action in Gaza, saying the party \"didn't get it right\" and needs to \"do better\" under his leadership signalling a significant shift in the UK's approach to the Middle East. The prime minister-in-waiting told the Guardian he would put more pressure on the Israeli government, including through further sanctions on individuals and entities, as well as a potential ban on the trade of goods with illegal settlements."
+      }
+    ],
+    "generated_at": "2026-07-10T14:03:36.374230+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-19-003",
+    "prior_edition_date": "2026-06-19",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

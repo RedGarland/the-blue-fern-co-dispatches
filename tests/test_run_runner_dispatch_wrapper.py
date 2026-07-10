@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
+import os
+import re
 import shutil
 import subprocess
 import sys
-import re
 from pathlib import Path
 
 import pytest
@@ -220,10 +221,17 @@ def _run_wrapper_with_args(
     extra_args: list[str],
     *,
     repo_root: Path | None = None,
+    env_overrides: dict[str, str | None] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     powershell = shutil.which("powershell.exe")
     if not powershell:
         pytest.skip("powershell.exe not available in test environment")
+    env = os.environ.copy()
+    for key, value in (env_overrides or {}).items():
+        if value is None:
+            env.pop(key, None)
+        else:
+            env[key] = value
     invocation = [
         powershell,
         "-NoProfile",
@@ -244,6 +252,7 @@ def _run_wrapper_with_args(
         text=True,
         encoding="utf-8",
         errors="replace",
+        env=env,
     )
 
 
@@ -468,6 +477,144 @@ def test_wrapper_gaza_non_check_only_appends_explicit_live_flags_only_when_reque
     assert "--generate-audio" in log_text
 
 
+def test_wrapper_gaza_generate_audio_defaults_to_openai_provider(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        capture_dispatch_argv=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-02", "-GenerateAudio"],
+        env_overrides={"OPENAI_API_KEY": "secret-api-key"},
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "TTS provider: openai" in log_text
+    assert "--generate-audio" in log_text
+    assert "--tts-provider openai" in log_text
+    assert "secret-api-key" not in log_text
+    assert "secret-api-key" not in result.stdout
+    assert "secret-api-key" not in result.stderr
+
+
+def test_wrapper_gaza_generate_audio_explicit_openai_provider_is_passed_through(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        capture_dispatch_argv=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "gaza",
+            "-Date",
+            "2026-07-02",
+            "-GenerateAudio",
+            "-TtsProvider",
+            "openai",
+        ],
+        env_overrides={"OPENAI_API_KEY": "secret-api-key"},
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "TTS provider: openai" in log_text
+    assert "--tts-provider openai" in log_text
+    assert "secret-api-key" not in log_text
+
+
+def test_wrapper_gaza_generate_audio_with_none_provider_fails_before_dispatch(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-02", "-GenerateAudio", "-TtsProvider", "none"],
+        env_overrides={"OPENAI_API_KEY": "secret-api-key"},
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "TTS provider: none" in log_text
+    assert "Gaza audio was requested with -TtsProvider none" in log_text
+    assert "sync step starting" not in log_text
+    assert "gaza operator invoked" not in log_text
+    assert "--generate-audio" not in log_text
+    assert "secret-api-key" not in log_text
+
+
+def test_wrapper_gaza_generate_audio_openai_without_api_key_fails_before_dispatch(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-02", "-GenerateAudio"],
+        env_overrides={"OPENAI_API_KEY": None},
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "TTS provider: openai" in log_text
+    assert "OPENAI_API_KEY is missing or blank" in log_text
+    assert "sync step starting" not in log_text
+    assert "gaza operator invoked" not in log_text
+    assert "--generate-audio" not in log_text
+
+
+def test_wrapper_gaza_no_audio_does_not_require_openai_api_key(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-02"],
+        env_overrides={"OPENAI_API_KEY": None},
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "Audio enabled: False" in log_text
+    assert "TTS provider:" not in log_text
+    assert "--generate-audio" not in log_text
+
+
 def test_wrapper_check_only_fails_closed_when_sync_json_reports_not_ok(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
@@ -533,7 +680,11 @@ def test_wrapper_check_only_fails_when_nested_object_contains_status_but_root_la
 def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_actions(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(tmp_path, sync_ok=True, capture_dispatch_argv=True)
 
-    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"])
+    result = _run_wrapper_with_args(
+        repo,
+        ["-Dispatch", "gaza", "-Date", "2026-07-05", "-DryRunFull"],
+        env_overrides={"OPENAI_API_KEY": "secret-api-key"},
+    )
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo)
@@ -545,6 +696,7 @@ def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_acti
     assert "--push" not in log_text
     assert "--post-bluesky" not in log_text
     assert "--email-report" not in log_text
+    assert "secret-api-key" not in log_text
     assert '"email_status": "not_requested"' in log_text
     assert '"bluesky_status": "skipped"' in log_text
     assert '"pages_push_ok": null' in log_text

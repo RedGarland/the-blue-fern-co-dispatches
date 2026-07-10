@@ -14,6 +14,8 @@ param(
     [switch]$Push,
     [switch]$PostBluesky,
     [switch]$GenerateAudio,
+    [ValidateSet("openai", "none")]
+    [string]$TtsProvider = "",
     [switch]$SmtpDebug,
     [int]$KeepLogs = 30
 )
@@ -542,10 +544,29 @@ try {
     $pushEnabled = $false
     $blueskyEnabled = $false
     $audioEnabled = $false
+    $resolvedTtsProvider = $null
     if ($Dispatch -eq "gaza") {
         $pushEnabled = $pushRequested
         $blueskyEnabled = $postBlueskyRequested
         $audioEnabled = [bool]($generateAudioRequested -or $dryRunFullRequested)
+        if ($generateAudioRequested) {
+            if ($dryRunFullRequested) {
+                $resolvedTtsProvider = "none"
+            } elseif ([string]::IsNullOrWhiteSpace($TtsProvider)) {
+                $resolvedTtsProvider = "openai"
+            } else {
+                $resolvedTtsProvider = [string]$TtsProvider
+            }
+            Write-Log "TTS provider: $resolvedTtsProvider"
+            if (-not $dryRunFullRequested) {
+                if ($resolvedTtsProvider -eq "none") {
+                    throw "Gaza audio was requested with -TtsProvider none. Use -TtsProvider openai and ensure OPENAI_API_KEY is available."
+                }
+                if ($resolvedTtsProvider -eq "openai" -and [string]::IsNullOrWhiteSpace($env:OPENAI_API_KEY)) {
+                    throw "Gaza audio was requested with TTS provider openai, but OPENAI_API_KEY is missing or blank."
+                }
+            }
+        }
     } elseif (-not $checkOnlyRequested) {
         $pushEnabled = $true
         $blueskyEnabled = $true
@@ -671,6 +692,8 @@ try {
         }
         if ($GenerateAudio) {
             $dispatchArgs += "--generate-audio"
+            $dispatchArgs += "--tts-provider"
+            $dispatchArgs += $resolvedTtsProvider
         }
         if ($SmtpDebug) {
             $dispatchArgs += "--smtp-debug"

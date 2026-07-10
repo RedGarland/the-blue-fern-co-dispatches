@@ -744,6 +744,10 @@ def _gap_new_resolver_state(
         "rejected_unrelated_resolved_url_count": 0,
         "url_resolution_timeout_count": 0,
         "resolution_attempt_count": 0,
+        "general_resolution_attempt_count": 0,
+        "reserved_soft_block_resolution_attempt_count": 0,
+        "reserved_soft_block_resolution_skipped_count": 0,
+        "reserved_soft_block_exact_title_attempt_count": 0,
     }
 
 
@@ -898,6 +902,44 @@ def _gap_candidate_resolution_priority(candidate: dict[str, Any], *, known_local
     if penalties:
         priority -= 20 * len(penalties)
     return priority, classification_rank, int(score)
+
+
+def _gap_reserved_soft_block_resolution_budget(max_candidates: int | None) -> int:
+    if max_candidates is None:
+        return 0
+    try:
+        candidate_budget = int(max_candidates)
+    except (TypeError, ValueError):
+        candidate_budget = 0
+    if candidate_budget <= 0:
+        return 1
+    return min(10, max(1, candidate_budget // 2))
+
+
+def _gap_candidate_uses_reserved_soft_block_budget(candidate: dict[str, Any]) -> bool:
+    if _nonempty(candidate.get("wrapper_kind")):
+        return False
+    if str(candidate.get("classification") or "").strip() != "likely_qualifying":
+        return False
+    text = _gap_text_blob(candidate)
+    score = int(candidate.get("resolution_score") or 0)
+    if bool(candidate.get("resolution_direct_pressure")):
+        return True
+    if score >= 6:
+        return True
+    return any(
+        term in text
+        for term in (
+            "children",
+            "child",
+            "kids",
+            "household",
+            "households",
+            "families",
+            "family",
+            "numeric",
+        )
+    )
 
 
 def _gap_manual_action_for_severity(severity: str) -> str:
@@ -1286,6 +1328,7 @@ def _gap_resolve_google_news_url(
             "input_url": value,
             "source_url": _gap_normalize_url(source_url),
             "source_url_is_google_news": _gap_is_google_news_url(source_url or ""),
+            "resolution_budget_mode": str(state.get("_current_resolution_budget_mode") or "general"),
             "allow_exact_title_fallback": bool(allow_exact_title_fallback),
             "skip_sitemap_fallback": bool(skip_sitemap_fallback),
             "resolution_mode": "google_news_url",
@@ -1363,6 +1406,8 @@ def _gap_resolve_google_news_url(
     if skip_sitemap_fallback:
         if allow_exact_title_fallback:
             diag["exact_title_attempted"] = True
+            if str(state.get("_current_resolution_budget_mode") or "") == "reserved_soft_block":
+                state["reserved_soft_block_exact_title_attempt_count"] = int(state.get("reserved_soft_block_exact_title_attempt_count") or 0) + 1
             exact_title_url = _gap_resolve_publisher_exact_title_url(
                 source_url or value,
                 title=title,
@@ -1399,6 +1444,8 @@ def _gap_resolve_google_news_url(
         return result
     if allow_exact_title_fallback:
         diag["exact_title_attempted"] = True
+        if str(state.get("_current_resolution_budget_mode") or "") == "reserved_soft_block":
+            state["reserved_soft_block_exact_title_attempt_count"] = int(state.get("reserved_soft_block_exact_title_attempt_count") or 0) + 1
         exact_title_url = _gap_resolve_publisher_exact_title_url(
             source_url or value,
             title=title,
@@ -1641,6 +1688,29 @@ def _gap_parse_rss_items(
         )
     )
 
+    reserved_soft_block_budget = _gap_reserved_soft_block_resolution_budget(max_candidates)
+    general_resolution_budget: int | None
+    if max_candidates is None:
+        general_resolution_budget = None
+    else:
+        general_resolution_budget = max(0, int(max_candidates) - reserved_soft_block_budget)
+    state["reserved_soft_block_resolution_budget"] = reserved_soft_block_budget
+    state["general_resolution_budget"] = general_resolution_budget
+    reserved_soft_block_candidate_urls: set[str] = set()
+    reserved_soft_block_candidate_rank = 0
+    for row in sortable_rows:
+        candidate_url = _gap_normalize_url(_nonempty(row.get("candidate_url")))
+        if not candidate_url or not _gap_is_google_news_url(candidate_url):
+            continue
+        if not _gap_candidate_uses_reserved_soft_block_budget(row):
+            continue
+        reserved_soft_block_candidate_rank += 1
+        row["reserved_soft_block_candidate_rank"] = reserved_soft_block_candidate_rank
+        if reserved_soft_block_candidate_rank <= reserved_soft_block_budget:
+            reserved_soft_block_candidate_urls.add(candidate_url)
+        else:
+            row["reserved_soft_block_candidate_rank"] = reserved_soft_block_candidate_rank
+
     rows: list[dict[str, str]] = []
     for row in sortable_rows:
         candidate_url = _gap_normalize_url(_nonempty(row.get("candidate_url")))
@@ -1651,42 +1721,117 @@ def _gap_parse_rss_items(
         url_resolution_reason = ""
         is_google_news_url = _gap_is_google_news_url(candidate_url or google_news_url)
         if is_google_news_url:
-            if max_candidates is not None and int(state.get("resolution_attempt_count") or 0) >= int(max_candidates):
-                url_resolution_status = "resolution_skipped_max_candidates"
-                url_resolution_reason = "max candidates reached"
-                state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+            row["resolution_diagnostics"] = dict(row.get("resolution_diagnostics") or {})
+            is_reserved_soft_block_candidate = candidate_url in reserved_soft_block_candidate_urls
+            row["resolution_diagnostics"]["reserved_soft_block_candidate"] = is_reserved_soft_block_candidate
+            row["resolution_diagnostics"]["reserved_soft_block_candidate_rank"] = int(row.get("reserved_soft_block_candidate_rank") or 0)
+            row["resolution_diagnostics"]["reserved_soft_block_budget"] = reserved_soft_block_budget
+            row["resolution_diagnostics"]["general_resolution_budget"] = -1 if general_resolution_budget is None else int(general_resolution_budget)
+            row["resolution_diagnostics"]["resolution_budget_mode"] = "reserved_soft_block" if is_reserved_soft_block_candidate else "general"
+            row["resolution_diagnostics"]["resolution_budget_status"] = "pending"
+            if is_reserved_soft_block_candidate:
+                if int(state.get("reserved_soft_block_resolution_attempt_count") or 0) >= reserved_soft_block_budget:
+                    url_resolution_status = "resolution_skipped_reserved_budget"
+                    url_resolution_reason = "reserved budget exhausted"
+                    row["resolution_diagnostics"]["resolution_budget_status"] = "skipped"
+                    row["resolution_diagnostics"]["resolution_skip_reason"] = url_resolution_reason
+                    state["reserved_soft_block_resolution_skipped_count"] = int(state.get("reserved_soft_block_resolution_skipped_count") or 0) + 1
+                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                else:
+                    state["reserved_soft_block_resolution_attempt_count"] = int(state.get("reserved_soft_block_resolution_attempt_count") or 0) + 1
+                    state["resolution_attempt_count"] = int(state.get("resolution_attempt_count") or 0) + 1
+                    state["reserved_soft_block_resolution_budget_remaining"] = max(0, reserved_soft_block_budget - int(state.get("reserved_soft_block_resolution_attempt_count") or 0))
+                    allow_exact_title_fallback = bool(
+                        int(row.get("resolution_classification_rank") or 0) >= 3
+                        or int(row.get("resolution_score") or 0) >= 6
+                        or bool(row.get("resolution_direct_pressure"))
+                    )
+                    state["_current_resolution_budget_mode"] = "reserved_soft_block"
+                    try:
+                        resolved_url, url_resolution_status, url_resolution_reason = _gap_resolve_google_news_url(
+                            google_news_url or candidate_url,
+                            title=str(row.get("title") or ""),
+                            summary=str(row.get("summary_or_snippet") or ""),
+                            source_url=source_url,
+                            resolver_state=state,
+                            timeout_seconds=resolver_timeout_seconds,
+                            skip_sitemap_fallback=skip_sitemap_fallback,
+                            max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+                            max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+                            allow_exact_title_fallback=allow_exact_title_fallback,
+                        )
+                    finally:
+                        state.pop("_current_resolution_budget_mode", None)
+                    row["resolution_diagnostics"] = dict(
+                        (state.get("resolution_diagnostics") or {}).get(_gap_normalize_url(google_news_url or candidate_url), {})
+                    )
+                    if url_resolution_status in {"resolved_google_news_url", "resolved_publisher_sitemap_url", "resolved_publisher_exact_title_url"}:
+                        state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
+                    elif url_resolution_status == "rejected_unrelated_resolved_url":
+                        state["rejected_unrelated_resolved_url_count"] = int(state.get("rejected_unrelated_resolved_url_count") or 0) + 1
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    elif url_resolution_status == "url_resolution_timeout":
+                        state["url_resolution_timeout_count"] = int(state.get("url_resolution_timeout_count") or 0) + 1
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    elif url_resolution_status in {"unresolved_google_news_url", "resolution_skipped_max_candidates", "resolution_skipped_reserved_budget"}:
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    if url_resolution_status == "resolved_publisher_exact_title_url" and is_reserved_soft_block_candidate:
+                        row["resolution_diagnostics"]["reserved_soft_block_exact_title_resolved"] = True
             else:
-                state["resolution_attempt_count"] = int(state.get("resolution_attempt_count") or 0) + 1
-                allow_exact_title_fallback = bool(
-                    int(row.get("resolution_classification_rank") or 0) >= 3
-                    or int(row.get("resolution_score") or 0) >= 6
-                    or bool(row.get("resolution_direct_pressure"))
-                )
-                resolved_url, url_resolution_status, url_resolution_reason = _gap_resolve_google_news_url(
-                    google_news_url or candidate_url,
-                    title=str(row.get("title") or ""),
-                    summary=str(row.get("summary_or_snippet") or ""),
-                    source_url=source_url,
-                    resolver_state=state,
-                    timeout_seconds=resolver_timeout_seconds,
-                    skip_sitemap_fallback=skip_sitemap_fallback,
-                    max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
-                    max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
-                    allow_exact_title_fallback=allow_exact_title_fallback,
-                )
-                row["resolution_diagnostics"] = dict(
-                    (state.get("resolution_diagnostics") or {}).get(_gap_normalize_url(google_news_url or candidate_url), {})
-                )
-                if url_resolution_status in {"resolved_google_news_url", "resolved_publisher_sitemap_url", "resolved_publisher_exact_title_url"}:
-                    state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
-                elif url_resolution_status == "rejected_unrelated_resolved_url":
-                    state["rejected_unrelated_resolved_url_count"] = int(state.get("rejected_unrelated_resolved_url_count") or 0) + 1
+                if general_resolution_budget is not None and int(state.get("general_resolution_attempt_count") or 0) >= int(general_resolution_budget):
+                    url_resolution_status = "resolution_skipped_max_candidates"
+                    url_resolution_reason = "general budget exhausted"
+                    row["resolution_diagnostics"]["resolution_budget_status"] = "skipped"
+                    row["resolution_diagnostics"]["resolution_skip_reason"] = url_resolution_reason
                     state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
-                elif url_resolution_status == "url_resolution_timeout":
-                    state["url_resolution_timeout_count"] = int(state.get("url_resolution_timeout_count") or 0) + 1
-                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
-                elif url_resolution_status in {"unresolved_google_news_url", "resolution_skipped_max_candidates"}:
-                    state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    if _gap_candidate_uses_reserved_soft_block_budget(row):
+                        state["reserved_soft_block_resolution_skipped_count"] = int(state.get("reserved_soft_block_resolution_skipped_count") or 0) + 1
+                        row["resolution_diagnostics"]["resolution_skip_reason"] = "reserved budget exhausted"
+                        row["resolution_diagnostics"]["resolution_budget_status"] = "skipped"
+                        row["resolution_diagnostics"]["reserved_soft_block_candidate"] = True
+                        row["resolution_diagnostics"]["reserved_soft_block_candidate_rank"] = int(row.get("reserved_soft_block_candidate_rank") or 0)
+                        url_resolution_reason = "reserved budget exhausted"
+                    state["general_resolution_budget_remaining"] = 0
+                else:
+                    state["general_resolution_attempt_count"] = int(state.get("general_resolution_attempt_count") or 0) + 1
+                    state["resolution_attempt_count"] = int(state.get("resolution_attempt_count") or 0) + 1
+                    state["general_resolution_budget_remaining"] = (
+                        -1 if general_resolution_budget is None else max(0, int(general_resolution_budget) - int(state.get("general_resolution_attempt_count") or 0))
+                    )
+                    allow_exact_title_fallback = bool(
+                        int(row.get("resolution_classification_rank") or 0) >= 3
+                        or int(row.get("resolution_score") or 0) >= 6
+                        or bool(row.get("resolution_direct_pressure"))
+                    )
+                    state["_current_resolution_budget_mode"] = "general"
+                    try:
+                        resolved_url, url_resolution_status, url_resolution_reason = _gap_resolve_google_news_url(
+                            google_news_url or candidate_url,
+                            title=str(row.get("title") or ""),
+                            summary=str(row.get("summary_or_snippet") or ""),
+                            source_url=source_url,
+                            resolver_state=state,
+                            timeout_seconds=resolver_timeout_seconds,
+                            skip_sitemap_fallback=skip_sitemap_fallback,
+                            max_sitemap_lookups_per_domain=max_sitemap_lookups_per_domain,
+                            max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
+                            allow_exact_title_fallback=allow_exact_title_fallback,
+                        )
+                    finally:
+                        state.pop("_current_resolution_budget_mode", None)
+                    row["resolution_diagnostics"] = dict(
+                        (state.get("resolution_diagnostics") or {}).get(_gap_normalize_url(google_news_url or candidate_url), {})
+                    )
+                    if url_resolution_status in {"resolved_google_news_url", "resolved_publisher_sitemap_url", "resolved_publisher_exact_title_url"}:
+                        state["resolved_url_count"] = int(state.get("resolved_url_count") or 0) + 1
+                    elif url_resolution_status == "rejected_unrelated_resolved_url":
+                        state["rejected_unrelated_resolved_url_count"] = int(state.get("rejected_unrelated_resolved_url_count") or 0) + 1
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    elif url_resolution_status == "url_resolution_timeout":
+                        state["url_resolution_timeout_count"] = int(state.get("url_resolution_timeout_count") or 0) + 1
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
+                    elif url_resolution_status in {"unresolved_google_news_url", "resolution_skipped_max_candidates", "resolution_skipped_reserved_budget"}:
+                        state["unresolved_url_count"] = int(state.get("unresolved_url_count") or 0) + 1
             if resolved_url:
                 candidate_url = resolved_url
             elif google_news_url:
@@ -2327,6 +2472,10 @@ def run_food_line_discovery_gap_check(
         "url_resolution_timeout_count": int(resolver_state.get("url_resolution_timeout_count") or 0),
         "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
         "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
+        "general_resolution_attempt_count": int(resolver_state.get("general_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_attempt_count": int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_skipped_count": int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0),
+        "reserved_soft_block_exact_title_attempt_count": int(resolver_state.get("reserved_soft_block_exact_title_attempt_count") or 0),
         "high_confidence_url_resolution_attempt_count": len(high_confidence_attempt_rows),
         "high_confidence_url_resolution_attempts": [
             {
@@ -2338,6 +2487,11 @@ def run_food_line_discovery_gap_check(
                 "google_news_url": row.get("google_news_url") or "",
                 "url_resolution_status": row.get("url_resolution_status") or "",
                 "url_resolution_reason": row.get("url_resolution_reason") or "",
+                "resolution_budget_mode": (row.get("resolution_diagnostics") or {}).get("resolution_budget_mode") or "",
+                "resolution_budget_status": (row.get("resolution_diagnostics") or {}).get("resolution_budget_status") or "",
+                "resolution_skip_reason": (row.get("resolution_diagnostics") or {}).get("resolution_skip_reason") or "",
+                "reserved_soft_block_candidate": bool((row.get("resolution_diagnostics") or {}).get("reserved_soft_block_candidate")),
+                "reserved_soft_block_candidate_rank": int((row.get("resolution_diagnostics") or {}).get("reserved_soft_block_candidate_rank") or 0),
                 "exact_title_attempted": bool((row.get("resolution_diagnostics") or {}).get("exact_title_attempted")),
                 "exact_title_failure_cause": (row.get("resolution_diagnostics") or {}).get("exact_title_failure_cause") or "",
                 "exact_title_origin": (row.get("resolution_diagnostics") or {}).get("exact_title_origin") or "",
@@ -2397,8 +2551,8 @@ def run_food_line_discovery_gap_check(
             [
                 "## High-confidence URL resolution attempts",
                 "",
-                "| Title | Publisher/domain | Source URL | Google News wrapper | Exact-title attempted | Failure cause | Sitemap URLs checked | URL resolution |",
-                "| --- | --- | --- | --- | --- | --- | ---: | --- |",
+                "| Title | Publisher/domain | Source URL | Google News wrapper | Budget mode | Skip reason | Exact-title attempted | Failure cause | Sitemap URLs checked | URL resolution |",
+                "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- |",
             ]
         )
         for row in high_confidence_attempt_rows:
@@ -2418,6 +2572,8 @@ def run_food_line_discovery_gap_check(
                         publisher_cell,
                         source_url,
                         _normalize_source_text(str(row.get("google_news_url") or "")).replace("|", "\\|"),
+                        _normalize_source_text(str(diag.get("resolution_budget_mode") or "")).replace("|", "\\|"),
+                        _normalize_source_text(str(diag.get("resolution_skip_reason") or "")).replace("|", "\\|"),
                         str(bool(diag.get("exact_title_attempted"))).lower(),
                         _normalize_source_text(str(diag.get("failure_reason") or row.get("url_resolution_reason") or "")).replace("|", "\\|"),
                         str(int(diag.get("sitemap_urls_checked_count") or 0)),
@@ -2442,6 +2598,10 @@ def run_food_line_discovery_gap_check(
         f"- unresolved likely qualifying: {len(unresolved_likely_qualifying)}",
         f"- unresolved high-confidence direct-pressure: {len(unresolved_high_confidence_direct_pressure)}",
         f"- direct URL date verified: {direct_url_date_verified_count}",
+        f"- general resolution attempts: {int(resolver_state.get('general_resolution_attempt_count') or 0)}",
+        f"- reserved soft-block resolution attempts: {int(resolver_state.get('reserved_soft_block_resolution_attempt_count') or 0)}",
+        f"- reserved soft-block resolution skipped: {int(resolver_state.get('reserved_soft_block_resolution_skipped_count') or 0)}",
+        f"- reserved soft-block exact-title attempts: {int(resolver_state.get('reserved_soft_block_exact_title_attempt_count') or 0)}",
         f"- manual-review-only: {len(grouped_by_class['needs_review'])}",
         f"- needs review: {len(grouped_by_class['needs_review'])}",
         f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
@@ -2460,6 +2620,10 @@ def run_food_line_discovery_gap_check(
         "url_resolution_timeout_count": int(resolver_state.get("url_resolution_timeout_count") or 0),
         "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
         "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
+        "general_resolution_attempt_count": int(resolver_state.get("general_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_attempt_count": int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_skipped_count": int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0),
+        "reserved_soft_block_exact_title_attempt_count": int(resolver_state.get("reserved_soft_block_exact_title_attempt_count") or 0),
         "elapsed_seconds": round(time.monotonic() - start, 3),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "blocking_likely_qualifying_count": len(blocking_likely_qualifying),

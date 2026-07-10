@@ -335,6 +335,107 @@ def test_food_line_discovery_gap_max_candidates_limits_resolution_work(tmp_path:
     assert report["unresolved_url_count"] >= 1
 
 
+def test_food_line_discovery_gap_reserves_soft_block_exact_title_resolution_even_when_general_budget_is_exhausted(
+    tmp_path: Path, monkeypatch
+):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+
+    exact_title_url = "https://www.ksbw.com/news/local/2026/07/09/food-bank-demand-surges-in-santa-cruz-county-as-costs-strain-families/"
+    high_priority_google_link = "https://news.google.com/rss/articles/CBMiKSBW?oc=5"
+    lower_priority_google_link = "https://news.google.com/rss/articles/CBMiLOWER?oc=5"
+    wrapper_google_link = "https://news.google.com/rss/articles/CBMiWRAP?oc=5"
+
+    items = [
+        _gap_item(
+            title="Food bank demand surges in Santa Cruz County as costs strain families and children - KSBW",
+            publisher="KSBW",
+            source_url="https://www.ksbw.com",
+            link=high_priority_google_link,
+            description="Children and households are seeing higher demand, low inventory, and rising fuel costs.",
+        ),
+        _gap_item(
+            title="Food bank sees rising demand amid low inventory",
+            publisher="Example News",
+            source_url="https://example.com",
+            link=lower_priority_google_link,
+            description="Need is rising and the pantry says inventory is low.",
+        ),
+        _gap_item(
+            title="Food pantry fundraiser helps families",
+            publisher="Wrapper News",
+            source_url="https://wrapper.example",
+            link=wrapper_google_link,
+            description="A donation page encourages readers to support the pantry.",
+        ),
+    ]
+
+    exact_title_calls: list[str] = []
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url in {high_priority_google_link, lower_priority_google_link, wrapper_google_link}:
+            return _FakeResponse(final_url=url, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    def fake_collect_sitemap_urls(origin: str, **kwargs):
+        if origin == "https://www.ksbw.com":
+            return (exact_title_url,)
+        return ()
+
+    def fake_fetch_url_text(url: str, *, timeout_seconds: int = 20):
+        if url == exact_title_url:
+            exact_title_calls.append(url)
+            return (
+                "<html><head>"
+                "<title>Food bank demand surges in Santa Cruz County as costs strain families and children - KSBW</title>"
+                '<meta property="article:published_time" content="2026-07-09T12:00:00Z">'
+                "</head><body></body></html>"
+            )
+        return ""
+
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", fake_collect_sitemap_urls)
+    monkeypatch.setattr(food_line_gap, "_gap_fetch_url_text", fake_fetch_url_text)
+
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=0,
+        max_results_per_query=5,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    high_priority_row = next(row for row in report["candidates"] if row["title"].startswith("Food bank demand surges in Santa Cruz County as costs strain families"))
+    low_priority_row = next(row for row in report["candidates"] if row["title"].startswith("Food bank sees rising demand amid low inventory"))
+    wrapper_row = next(row for row in report["candidates"] if row["title"].startswith("Food pantry fundraiser helps families"))
+
+    assert report["general_resolution_attempt_count"] == 0
+    assert report["reserved_soft_block_resolution_attempt_count"] == 1
+    assert report["reserved_soft_block_exact_title_attempt_count"] == 1
+    assert report["reserved_soft_block_resolution_skipped_count"] >= 1
+    assert exact_title_calls == [exact_title_url]
+    assert high_priority_row["resolved_url"] == exact_title_url
+    assert high_priority_row["url_resolution_status"] == "resolved_publisher_exact_title_url"
+    assert high_priority_row["blocking_candidate_severity"] == "hard_block"
+    assert high_priority_row["direct_url_date_verified"] is True
+    assert low_priority_row["url_resolution_status"] == "resolution_skipped_max_candidates"
+    assert wrapper_row["url_resolution_status"] == "resolution_skipped_max_candidates"
+    assert wrapper_row["resolved_url"] == ""
+    assert all("news.google.com" not in str(row.get("direct_url") or "") for row in report["candidates"])
+
+
 def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_reports_severity_for_20260709_case(tmp_path: Path, monkeypatch):
     root = tmp_path
     data_dir = root / "data" / "dispatches" / "food-line"

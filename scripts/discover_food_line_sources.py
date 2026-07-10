@@ -590,6 +590,41 @@ def _gap_title_terms(text: str) -> list[str]:
     return terms
 
 
+FOOD_LINE_RESOLUTION_PRESSURE_TERMS = (
+    "food bank",
+    "food pantry",
+    "food insecurity",
+    "snap",
+    "demand",
+    "shelves",
+    "shortage",
+    "cost",
+    "costs",
+    "families",
+    "family",
+    "children",
+    "pantry",
+    "inventory",
+    "fuel",
+    "inflation",
+    "need",
+    "visits",
+    "assistance",
+)
+
+
+def _gap_pressure_term_hits(text: str) -> list[str]:
+    lowered = _normalize_source_text(text).lower()
+    hits: list[str] = []
+    for term in FOOD_LINE_RESOLUTION_PRESSURE_TERMS:
+        if term in lowered and term not in hits:
+            hits.append(term)
+    for hit in _gap_direct_pressure_hits(lowered):
+        if hit not in hits:
+            hits.append(hit)
+    return hits
+
+
 def _gap_relevance_terms(text: str) -> list[str]:
     stopwords = {
         "about",
@@ -708,14 +743,45 @@ def _gap_url_terms(url: str) -> list[str]:
 
 
 def _gap_resolved_url_relevance(url: str, *, title: str = "", summary: str = "", body: str = "") -> tuple[bool, str]:
-    expected_terms = _gap_relevance_terms(" ".join(part for part in (title, summary, _gap_extract_page_title(body)) if part))
-    if not expected_terms:
+    candidate_text = " ".join(part for part in (title, summary) if part)
+    candidate_terms = _gap_relevance_terms(candidate_text)
+    if not candidate_terms:
         return False, "insufficient title terms for relevance check"
+
+    page_title = _gap_title_core_text(_gap_extract_page_title(body))
+    page_terms = _gap_relevance_terms(page_title) if page_title else []
     url_terms = _gap_url_terms(url)
-    overlap = [term for term in expected_terms if term in url_terms]
-    if overlap:
+    candidate_keys = _gap_exact_title_key_variants(candidate_text)
+    page_keys = _gap_exact_title_key_variants(page_title) if page_title else []
+    title_overlap = [term for term in candidate_terms if term in page_terms] if page_terms else []
+    slug_overlap = [term for term in candidate_terms if term in url_terms]
+    page_pressure_hits = _gap_pressure_term_hits(" ".join(part for part in (page_title, body) if part))
+    candidate_pressure_hits = _gap_pressure_term_hits(candidate_text)
+    exact_title_match = bool(
+        candidate_keys
+        and page_keys
+        and any(
+            candidate_key == page_key or candidate_key in page_key or page_key in candidate_key
+            for candidate_key in candidate_keys
+            for page_key in page_keys
+        )
+    )
+
+    if page_terms:
+        min_shared_terms = max(2, min(len(candidate_terms), len(page_terms)) // 2)
+        if not exact_title_match and len(title_overlap) < min_shared_terms:
+            return False, f"title overlap too weak after outlet normalization: {', '.join(title_overlap[:4]) or 'none'}"
+        if not page_pressure_hits:
+            return False, "page title/body lacks Food Line pressure terms"
+        if len(slug_overlap) < 2 and not exact_title_match:
+            return False, f"resolved URL slug does not preserve enough candidate terms: {', '.join(slug_overlap[:4]) or 'none'}"
         return True, ""
-    return False, f"no meaningful overlap between title terms and resolved URL: {', '.join(expected_terms[:4])}"
+
+    if not candidate_pressure_hits:
+        return False, "candidate title/summary lacks Food Line pressure terms"
+    if len(slug_overlap) < 2 and not exact_title_match:
+        return False, f"resolved URL slug does not preserve enough candidate terms: {', '.join(slug_overlap[:4]) or 'none'}"
+    return True, ""
 
 
 def _gap_new_resolver_state(
@@ -1208,20 +1274,14 @@ def _gap_resolve_publisher_exact_title_url(
         page_text = _gap_fetch_url_text(url, timeout_seconds=timeout_seconds)
         if not page_text:
             continue
-        page_title = _gap_extract_page_title(page_text)
-        page_title_keys = _gap_exact_title_key_variants(page_title)
-        if title_keys and page_title_keys and any(page_key == title_key or page_key in title_key or title_key in page_key for title_key in title_keys for page_key in page_title_keys):
-            diag["exact_title_resolution_mode"] = "page_title_exact_match"
-            return url
         if _gap_resolved_url_relevance(url, title=title, summary=summary, body=page_text)[0]:
             diag["exact_title_resolution_mode"] = "page_relevance_match"
             return url
     diag["exact_title_page_fetch_attempts"] = page_fetch_attempts
     if scored_urls:
         diag["exact_title_failure_cause"] = "candidate_returned_without_page_match"
-        diag["exact_title_fallback_url"] = scored_urls[0][1]
-        return scored_urls[0][1]
-    diag["exact_title_failure_cause"] = "no_matching_slug"
+    else:
+        diag["exact_title_failure_cause"] = "no_matching_slug"
     return ""
 
 
@@ -1419,17 +1479,10 @@ def _gap_resolve_google_news_url(
                 max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
             )
             if exact_title_url:
-                relevant, reason = _gap_resolved_url_relevance(exact_title_url, title=title, summary=summary)
-                if relevant:
-                    result = (exact_title_url, "resolved_publisher_exact_title_url", "")
-                    cache[cache_key] = result
-                    diag["resolution_mode"] = "publisher_exact_title"
-                    diag["resolved_url"] = exact_title_url
-                    return result
-                result = ("", "rejected_unrelated_resolved_url", reason)
+                result = (exact_title_url, "resolved_publisher_exact_title_url", "")
                 cache[cache_key] = result
-                diag["resolution_mode"] = "publisher_exact_title_rejected"
-                diag["failure_reason"] = reason
+                diag["resolution_mode"] = "publisher_exact_title"
+                diag["resolved_url"] = exact_title_url
                 return result
         else:
             diag["failure_reason"] = "exact title fallback not attempted: confidence gate not met"
@@ -1457,17 +1510,10 @@ def _gap_resolve_google_news_url(
             max_sitemap_urls_per_domain=max_sitemap_urls_per_domain,
         )
         if exact_title_url:
-            relevant, reason = _gap_resolved_url_relevance(exact_title_url, title=title, summary=summary)
-            if relevant:
-                result = (exact_title_url, "resolved_publisher_exact_title_url", "")
-                cache[cache_key] = result
-                diag["resolution_mode"] = "publisher_exact_title"
-                diag["resolved_url"] = exact_title_url
-                return result
-            result = ("", "rejected_unrelated_resolved_url", reason)
+            result = (exact_title_url, "resolved_publisher_exact_title_url", "")
             cache[cache_key] = result
-            diag["resolution_mode"] = "publisher_exact_title_rejected"
-            diag["failure_reason"] = reason
+            diag["resolution_mode"] = "publisher_exact_title"
+            diag["resolved_url"] = exact_title_url
             return result
         diag["failure_reason"] = str(diag.get("exact_title_failure_cause") or "no_exact_title_match")
     sitemap_url = _gap_resolve_publisher_sitemap_url(

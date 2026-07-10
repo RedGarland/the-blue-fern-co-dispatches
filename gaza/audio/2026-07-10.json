@@ -1,35 +1,43 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-10",
-  "generated_at": "2026-07-10T14:03:36.887010Z",
-  "audio_status": "script_ready_no_audio_file",
-  "audio_file": null,
-  "audio_url": null,
-  "audio_mime_type": null,
-  "tts_provider": "none",
-  "tts_model": null,
-  "tts_voice": null,
+  "generated_at": "2026-07-10T16:26:58.234310Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-10.mp3",
+  "audio_url": "/gaza/audio/2026-07-10.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
   "tts_error": null,
   "voice_mode": "single",
-  "tts_voices_used": [],
-  "segment_voice_map": [],
-  "tts_input_character_count": 0,
-  "tts_input_word_count": 0,
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1666,
+  "tts_input_word_count": 265,
   "tts_story_count": 6,
-  "tts_segment_count": 0,
+  "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": null,
+  "audio_file_size_bytes": 1751424,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-07-10T14:03:36.886993Z",
+  "cost_logged_at": "2026-07-10T16:26:58.234287Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-10-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-10/",
-  "script_text": "This is the Gaza Dispatch audio briefing for July 10, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. IDF accused of 'field execution' of Palestinian driver bringing aid into Gaza. Local truckers' association says it may suspend operations, after several eyewitnesses decried Ahmad Esleem's murder. This was reported by The Guardian.\n\n2. Palestinians mourn Gaza World Cup screenings organiser killed in Israeli strike. Israel-Hamas war. This was reported by BBC News.\n\n3. How Hamas Governed Gaza. Hamas is dissolving its government and handing power over to a new technocratic administration. This was reported by Al Jazeera.\n\n4. Israel-Gaza war - BBC. Israel-Gaza war BBC. This was reported by BBC News.\n\n5. Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting? Likely incoming UK PM hints at policy shifts towards. This was reported by Al Jazeera.\n\n6. Andy Burnham apologises for Labour's stance on Gaza and says it 'didn't get it right'. Exclusive: PM-in-waiting says party must 'do better' in approach to Middle East and he will put more pressure on Israel Analysis: Burnham's apology marks 'reset moment' as Labour seeks to win back progressive voters Andy Burnham has apologised for Labour's initial response to Israel's military action in Gaza, saying the party \"didn't get it right\" and needs to \"do better\" under his leadership signalling a significant shift in the UK's approach to the Middle East. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the July 10, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 10, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. IDF accused of 'field execution' of Palestinian driver bringing aid into Gaza. Local truckers' association says it may suspend operations, after several eyewitnesses decried Ahmad Esleem's murder. This was reported by The Guardian.\n\n2. Palestinians mourn Gaza World Cup screenings organiser killed in Israeli strike. Israel-Hamas war. This was reported by BBC News.\n\n3. Israel-Gaza war - BBC. Israel-Gaza war BBC. This was reported by BBC News.\n\n4. Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting? Likely incoming UK PM hints at policy shifts towards. This was reported by Al Jazeera.\n\n5. Israel bans Jerusalem's grand mufti from Al-Aqsa Mosque for one week. The incident is the latest in a pattern of Israeli measures in the occupied territory since the Gaza genocide began. This was reported by Al Jazeera.\n\n6. Andy Burnham apologises for Labour's stance on Gaza and says it 'didn't get it right'. Exclusive: PM-in-waiting says party must 'do better' in approach to Middle East and he will put more pressure on Israel Analysis: Burnham's apology marks 'reset moment' as Labour seeks to win back progressive voters Andy Burnham has apologised for Labour's initial response to Israel's military action in Gaza, saying the party \"didn't get it right\" and needs to \"do better\" under his leadership signalling a significant shift in the UK's approach to the Middle East. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the July 10, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
     {
@@ -45,12 +53,6 @@
       "title": "Palestinians mourn Gaza World Cup screenings organiser killed in Israeli strike"
     },
     {
-      "source_record_id": "gaza-2026-07-10-aljazeera-middle-east-ab0497c0fb69",
-      "publisher": "Al Jazeera",
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/10/how-hamas-governed-gaza?traffic_source=rss",
-      "title": "How Hamas Governed Gaza"
-    },
-    {
       "source_record_id": "gaza-2026-07-10-bbc-gaza-health-query-94dbde5794ee",
       "publisher": "BBC News",
       "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9obXNaT3JaQ2JlcVF4VDk2VFpNUFpxcG9YMUhGOC1VMkJhN3pJaTVvZVRlSnZCTDNUekt0YndVelJHVUJaeF9rWjZqdlJ5NU1iRnlDb2NFTQ?oc=5",
@@ -61,6 +63,12 @@
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/features/2026/7/10/andy-burnham-apology-for-labour-stance-on-gaza-is-uks-position-shifting?traffic_source=rss",
       "title": "Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting?"
+    },
+    {
+      "source_record_id": "gaza-2026-07-10-aljazeera-middle-east-8168cdf1bc5b",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/10/israel-bans-jerusalems-grand-mufti-from-al-aqsa-mosque-for-one-week?traffic_source=rss",
+      "title": "Israel bans Jerusalem's grand mufti from Al-Aqsa Mosque for one week"
     },
     {
       "source_record_id": "gaza-2026-07-10-guardian-world-4ef81fe7d5e6",

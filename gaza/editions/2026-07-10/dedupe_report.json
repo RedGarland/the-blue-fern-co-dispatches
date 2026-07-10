@@ -26,17 +26,6 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-10-007",
-      "title": "How Hamas Governed Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-07-10-003",
       "title": "Israel-Gaza war - BBC",
       "classification": "new",
@@ -48,8 +37,19 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-10-006",
+      "story_id": "gaza-story-2026-07-10-008",
       "title": "Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-10-006",
+      "title": "Israel bans Jerusalem's grand mufti from Al-Aqsa Mosque for one week",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -134,20 +134,6 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-10-007",
-      "title": "How Hamas Governed Gaza",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-07-10-003",
       "title": "Israel-Gaza war - BBC",
       "classification": "new",
@@ -162,8 +148,22 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-07-10-006",
+      "story_id": "gaza-story-2026-07-10-008",
       "title": "Andy Burnham apology for Labour stance on Gaza: Is UK's position shifting?",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-10-006",
+      "title": "Israel bans Jerusalem's grand mufti from Al-Aqsa Mosque for one week",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

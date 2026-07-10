@@ -1044,6 +1044,15 @@ def main(argv: list[str] | None = None) -> int:
         write_summary(summary)
         return pipeline_code
 
+    tts_provider = str(args.tts_provider or "none").strip().lower()
+    if args.generate_audio and tts_provider == "none":
+        message = "audio generation requested but no real TTS provider is configured; set --tts-provider openai and OPENAI_API_KEY before rerunning."
+        summary["errors"].append(f"audio generation failed: {message}")
+        summary["publish_blocked"] = True
+        summary["publish_blocked_reason"] = "audio-generation-failed"
+        log_line(log_path, f"Audio configuration failed: {message}")
+        return finish(1)
+
     try:
         source_path, records, manual_source_restore = collect_or_load_sources(args, summary, log_path)
     except Exception as exc:  # noqa: BLE001
@@ -1158,7 +1167,7 @@ def main(argv: list[str] | None = None) -> int:
                 ROOT,
                 args.date,
                 dry_run=bool(args.dry_run),
-                tts_provider=str(args.tts_provider or "none"),
+                tts_provider=tts_provider,
                 tts_model=str(args.audio_model or "gpt-4o-mini-tts"),
                 tts_voice=str(args.audio_voice or "alloy"),
                 audio_format=str(args.audio_format or "mp3"),
@@ -1169,7 +1178,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             if not args.dry_run:
                 summary["warnings"].append(f"audio artifacts updated: {audio_result.transcript_path}")
-            if str(args.tts_provider or "none") != "none" and str(audio_result.audio_status) != "audio_file_ready":
+            if tts_provider != "none" and str(audio_result.audio_status) != "audio_file_ready":
                 summary["errors"].append(f"audio generation failed: {audio_result.audio_status}")
                 summary["publish_blocked"] = True
                 summary["publish_blocked_reason"] = "audio-generation-failed"

@@ -3866,6 +3866,9 @@ def _food_line_default_discovery_gap_summary(root: Path, date: str) -> dict[str,
         "unresolved_high_confidence_direct_pressure_titles": [],
         "manual_review_only_count": 0,
         "unreviewed_likely_qualifying_count": 0,
+        "unresolved_review_path": "",
+        "unresolved_review_markdown_path": "",
+        "unresolved_review_count": 0,
         "public_no_qualifying_update_validated": False,
         "warning": "",
     }
@@ -3950,6 +3953,11 @@ def _food_line_discovery_gap_summary(
     summary["unreviewed_likely_qualifying_count"] = len(blocking_rows)
     summary["unresolved_high_confidence_direct_pressure_count"] = unresolved_high_confidence_count
     summary["unresolved_high_confidence_direct_pressure_titles"] = unresolved_high_confidence_titles
+    unresolved_review_json_path = root / "output" / "review" / DISPATCH_SLUG / date / "unresolved_candidates_review.json"
+    unresolved_review_md_path = root / "output" / "review" / DISPATCH_SLUG / date / "unresolved_candidates_review.md"
+    summary["unresolved_review_path"] = str(unresolved_review_json_path)
+    summary["unresolved_review_markdown_path"] = str(unresolved_review_md_path)
+    summary["unresolved_review_count"] = int(report.get("unresolved_review_count") or len(unresolved_rows))
     if blocking_rows:
         count = len(blocking_rows)
         summary["warning"] = (
@@ -7560,6 +7568,9 @@ def run_food_line_dispatch(
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
         "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
+        "discovery_gap_unresolved_review_path": discovery_gap_summary.get("unresolved_review_path"),
+        "discovery_gap_unresolved_review_markdown_path": discovery_gap_summary.get("unresolved_review_markdown_path"),
+        "discovery_gap_unresolved_review_count": int(discovery_gap_summary.get("unresolved_review_count") or 0),
         "discovery_expansion_audit_path": discovery_expansion_audit.get("discovery_audit_json_path"),
         "discovery_expansion_audit_markdown_path": discovery_expansion_audit.get("discovery_audit_md_path"),
         "discovery_expansion_candidate_path": discovery_expansion_audit.get("discovery_candidates_path"),
@@ -7782,6 +7793,9 @@ def run_food_line_dispatch(
         "discovery_gap_warning": discovery_gap_summary.get("warning") or "",
         "discovery_gap_report_path": discovery_gap_summary.get("report_path"),
         "discovery_gap_report_markdown_path": discovery_gap_summary.get("report_markdown_path"),
+        "discovery_gap_unresolved_review_path": discovery_gap_summary.get("unresolved_review_path"),
+        "discovery_gap_unresolved_review_markdown_path": discovery_gap_summary.get("unresolved_review_markdown_path"),
+        "discovery_gap_unresolved_review_count": int(discovery_gap_summary.get("unresolved_review_count") or 0),
         "discovery_expansion_audit_path": discovery_expansion_audit.get("discovery_audit_json_path"),
         "discovery_expansion_audit_markdown_path": discovery_expansion_audit.get("discovery_audit_md_path"),
         "discovery_expansion_candidate_path": discovery_expansion_audit.get("discovery_candidates_path"),

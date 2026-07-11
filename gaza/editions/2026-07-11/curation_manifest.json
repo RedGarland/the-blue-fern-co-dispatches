@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-07-11-003",
+    "story_id": "gaza-story-2026-07-11-004",
     "title": "Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist",
     "summary": "Gaza is suffering from an energy crisis, affecting hospitals struggling to treat patients amid Israeli bombing.",
     "category": "conflict",
@@ -46,7 +46,7 @@
         "summary_or_snippet": "Gaza is suffering from an energy crisis, affecting hospitals struggling to treat patients amid Israeli bombing."
       }
     ],
-    "generated_at": "2026-07-11T17:47:50.826167+00:00",
+    "generated_at": "2026-07-11T21:39:26.900136+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -62,6 +62,70 @@
     "prior_story_matched": null,
     "prior_edition_date": null,
     "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-11-001",
+    "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers",
+    "summary": "Khanna, 49, was visiting the occupied West Bank when he was held for 90 minutes, he says.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-11-bbc-middle-east-32d8fda093fa"
+    ],
+    "source_ids": [
+      "gaza-2026-07-11-bbc-middle-east-32d8fda093fa"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c0qyk9jwq9no?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-11-bbc-middle-east-32d8fda093fa",
+        "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers",
+        "url": "https://www.bbc.co.uk/news/articles/c0qyk9jwq9no?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Khanna, 49, was visiting the occupied West Bank when he was held for 90 minutes, he says."
+      }
+    ],
+    "generated_at": "2026-07-11T21:39:26.900136+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

@@ -1,10 +1,10 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-11",
-  "candidates_seen": 1,
+  "candidates_seen": 2,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-07-11-003",
+      "story_id": "gaza-story-2026-07-11-004",
       "title": "Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist",
       "classification": "new",
       "material_update": true,
@@ -13,16 +13,42 @@
       ],
       "include_decision": "include",
       "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-11-001",
+      "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
     }
   ],
   "duplicate_skipped": [],
   "continuing_developments": [],
-  "major_updates": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-07-11-001",
+      "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
   "merged_sources": 0,
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-07-11-003",
+      "story_id": "gaza-story-2026-07-11-004",
       "title": "Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist",
       "classification": "new",
       "material_update": true,
@@ -32,6 +58,20 @@
       "duplicate_reasons": [],
       "prior_story_matched": null,
       "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-11-001",
+      "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
       "include_decision": "include",
       "public_rendered": true
     }

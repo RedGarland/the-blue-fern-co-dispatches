@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-11",
-  "generated_at": "2026-07-11T17:47:50.826167+00:00",
+  "generated_at": "2026-07-11T21:39:26.900136+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-11/",
   "local_output_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-11",
   "local_dispatch_output_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-07-11",
   "local_backup_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-07-11",
   "template_version": "gaza-source-record-v1",
-  "source_count": 3,
-  "story_count": 1,
+  "source_count": 4,
+  "story_count": 2,
   "source_adequacy_status": "limited_source_update",
   "source_adequacy_label": "Limited-source update",
   "publisher_count": 3,
@@ -19,8 +19,7 @@
     "The Guardian"
   ],
   "source_adequacy_warnings": [
-    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "All saved source records for this edition came from Al Jazeera."
+    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
   ],
   "allow_post_edition_date_sources": false,
   "post_edition_date_sources_included": false,
@@ -40,18 +39,16 @@
   "public_exposed": true,
   "warnings": [
     "suppressed 2 repeated/stale candidate sources via cross-edition dedupe",
-    "This is a limited-source update generated from 3 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "All saved source records for this edition came from Al Jazeera.",
-    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-07-11\\manual_sources.template.json",
-    "source dominance note: single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    "This is a limited-source update generated from 4 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-07-11\\manual_sources.template.json"
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-07-11T06:00:00-07:00",
-  "actual_run_local_time": "2026-07-11T10:47:50-07:00",
+  "actual_run_local_time": "2026-07-11T14:39:26-07:00",
   "source_window_start_utc": "2026-07-09T17:58:50Z",
-  "source_window_end_utc": "2026-07-11T13:18:29Z",
-  "first_source_retrieved_at": "2026-07-11T17:47:46.104632Z",
-  "last_source_retrieved_at": "2026-07-11T17:47:46.104632Z",
+  "source_window_end_utc": "2026-07-11T18:00:09Z",
+  "first_source_retrieved_at": "2026-07-11T21:39:22.834629Z",
+  "last_source_retrieved_at": "2026-07-11T21:39:22.834629Z",
   "contains_later_same_day_update": false,
   "later_same_day_update_count": 0,
   "later_same_day_update_batch_count": 0,
@@ -63,16 +60,17 @@
   "post_edition_date_retrieval_batches": [],
   "retrieval_batches": [
     {
-      "retrieved_at": "2026-07-11T17:47:46.104632Z",
-      "retrieved_at_local": "2026-07-11T10:47:46-07:00",
+      "retrieved_at": "2026-07-11T21:39:22.834629Z",
+      "retrieved_at_local": "2026-07-11T14:39:22-07:00",
       "retrieved_local_date": "2026-07-11",
       "batch_classification": "scheduled_or_pre_scheduled_batch",
       "source_record_ids": [
+        "gaza-2026-07-11-bbc-middle-east-32d8fda093fa",
         "gaza-2026-07-11-bbc-middle-east-8bcd3e604f48",
         "gaza-2026-07-11-guardian-world-835ea0ce2f8e",
         "gaza-2026-07-11-aljazeera-middle-east-3881a94b1649"
       ],
-      "source_count": 3
+      "source_count": 4
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-07-11",
-  "generated_at": "2026-07-11T17:48:07.776418Z",
+  "generated_at": "2026-07-11T21:39:36.220105Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-07-11.mp3",
   "audio_url": "/gaza/audio/2026-07-11.mp3",
@@ -21,30 +21,36 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 458,
-  "tts_input_word_count": 68,
-  "tts_story_count": 1,
+  "tts_input_character_count": 653,
+  "tts_input_word_count": 104,
+  "tts_story_count": 2,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 551424,
+  "audio_file_size_bytes": 750720,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-07-11T17:48:07.776387Z",
+  "cost_logged_at": "2026-07-11T21:39:36.220081Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-11-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-11/",
-  "script_text": "This is the Gaza Dispatch audio briefing for July 11, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist. Gaza is suffering from an energy crisis, affecting hospitals struggling to treat patients amid Israeli bombing. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 11, 2026 Gaza edition at dispatches.thebluefernco.com.",
-  "source_count": 1,
+  "script_text": "This is the Gaza Dispatch audio briefing for July 11, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist. Gaza is suffering from an energy crisis, affecting hospitals struggling to treat patients amid Israeli bombing. This was reported by Al Jazeera.\n\n2. US Democrat Ro Khanna says he was detained by armed Israeli settlers. Khanna, 49, was visiting the occupied West Bank when he was held for 90 minutes, he says. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the July 11, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 2,
   "sources": [
     {
       "source_record_id": "gaza-2026-07-11-aljazeera-middle-east-3881a94b1649",
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/features/2026/7/11/power-cuts-plunge-gaza-hospitals-into-darkness-as-israels-attacks-persist?traffic_source=rss",
       "title": "Power cuts plunge Gaza hospitals into darkness as Israel's attacks persist"
+    },
+    {
+      "source_record_id": "gaza-2026-07-11-bbc-middle-east-32d8fda093fa",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c0qyk9jwq9no?at_medium=RSS&at_campaign=rss",
+      "title": "US Democrat Ro Khanna says he was detained by armed Israeli settlers"
     }
   ]
 }

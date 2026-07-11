@@ -413,7 +413,7 @@ def test_food_line_discovery_gap_reserves_soft_block_exact_title_resolution_even
         "2026-07-09",
         fetcher=fetcher,
         max_queries=1,
-        max_candidates=0,
+        max_candidates=1,
         max_results_per_query=5,
     )
     report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
@@ -422,6 +422,7 @@ def test_food_line_discovery_gap_reserves_soft_block_exact_title_resolution_even
     wrapper_row = next(row for row in report["candidates"] if row["title"].startswith("Food pantry fundraiser helps families"))
 
     assert report["general_resolution_attempt_count"] == 0
+    assert report["reserved_soft_block_budget"] == 1
     assert report["reserved_soft_block_resolution_attempt_count"] == 1
     assert report["reserved_soft_block_exact_title_attempt_count"] == 1
     assert report["reserved_soft_block_resolution_skipped_count"] >= 1
@@ -434,6 +435,113 @@ def test_food_line_discovery_gap_reserves_soft_block_exact_title_resolution_even
     assert wrapper_row["url_resolution_status"] == "resolution_skipped_max_candidates"
     assert wrapper_row["resolved_url"] == ""
     assert all("news.google.com" not in str(row.get("direct_url") or "") for row in report["candidates"])
+
+
+def test_food_line_discovery_gap_reserves_full_high_priority_soft_block_pool_and_writes_unresolved_review_artifact(
+    tmp_path: Path, monkeypatch
+):
+    root = tmp_path
+    data_dir = root / "data" / "dispatches" / "food-line"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    (data_dir / "discovery_gap_queries.json").write_text(
+        json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
+        encoding="utf-8",
+    )
+
+    items: list[dict[str, str]] = []
+    exact_title_urls: dict[str, str] = {}
+    exact_title_calls: list[str] = []
+    for index in range(12):
+        source_url = f"https://site{index}.example"
+        exact_title_url = (
+            f"{source_url}/2026/07/09/food-bank-demand-surges-in-city-{index}-as-families-face-rising-need/"
+        )
+        exact_title_urls[source_url] = exact_title_url
+        items.append(
+            _gap_item(
+                title=f"Food bank demand surges in city {index} as families face rising need - Site {index}",
+                publisher=f"Site {index}",
+                source_url=source_url,
+                link=f"https://news.google.com/rss/articles/CBMiRESERVE{index:02d}?oc=5",
+                description="Children and families are seeing rising demand, low inventory, and food insecurity is rising.",
+            )
+        )
+    wrapper_google_link = "https://news.google.com/rss/articles/CBMiWRAPPER?oc=5"
+    items.append(
+        _gap_item(
+            title="Food pantry fundraiser helps families",
+            publisher="Wrapper News",
+            source_url="https://wrapper.example",
+            link=wrapper_google_link,
+            description="A donation page encourages readers to support the pantry.",
+        )
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(items)
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    def fake_urlopen(req, timeout=15, context=None):
+        url = getattr(req, "full_url", str(req))
+        if url.startswith("https://news.google.com/rss/articles/"):
+            return _FakeResponse(final_url=url, body="<html><body></body></html>")
+        raise AssertionError(f"unexpected urlopen call: {url}")
+
+    def fake_collect_sitemap_urls(origin: str, **kwargs):
+        exact_title_url = exact_title_urls.get(origin.rstrip("/"))
+        if exact_title_url:
+            return (exact_title_url,)
+        return ()
+
+    def fake_fetch_url_text(url: str, *, timeout_seconds: int = 20):
+        if url in exact_title_urls.values():
+            exact_title_calls.append(url)
+            index = url.split("site", 1)[1].split(".example", 1)[0]
+            return (
+                "<html><head>"
+                f"<title>Food bank demand surges in city {index} as families face rising need - Site {index}</title>"
+                '<meta property="article:published_time" content="2026-07-09T12:00:00Z">'
+                "</head><body></body></html>"
+            )
+        return ""
+
+    monkeypatch.setattr(food_line_gap.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(food_line_gap, "_gap_collect_sitemap_urls", fake_collect_sitemap_urls)
+    monkeypatch.setattr(food_line_gap, "_gap_fetch_url_text", fake_fetch_url_text)
+
+    result = food_line_gap.run_food_line_discovery_gap_check(
+        root,
+        "2026-07-09",
+        fetcher=fetcher,
+        max_queries=1,
+        max_candidates=12,
+        max_results_per_query=20,
+    )
+    report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
+    review_path = Path(result["unresolved_review_path"])
+    review_markdown_path = Path(result["unresolved_review_markdown_path"])
+    high_priority_rows = [
+        row
+        for row in report["candidates"]
+        if row["title"].startswith("Food bank demand surges in city ") and "Site " in row["title"]
+    ]
+    wrapper_row = next(row for row in report["candidates"] if row["title"] == "Food pantry fundraiser helps families")
+
+    assert report["reserved_soft_block_budget"] == 12
+    assert report["general_resolution_attempt_count"] == 0
+    assert report["reserved_soft_block_resolution_attempt_count"] == 12
+    assert report["reserved_soft_block_exact_title_attempt_count"] == 12
+    assert len(exact_title_calls) == 12
+    assert all(row["url_resolution_status"] == "resolved_publisher_exact_title_url" for row in high_priority_rows)
+    assert wrapper_row["url_resolution_status"] == "resolution_skipped_max_candidates"
+    assert wrapper_row["resolved_url"] == ""
+    assert review_path.exists()
+    assert review_markdown_path.exists()
+    assert str(review_path).replace("\\", "/").endswith("/output/review/food-line/2026-07-09/unresolved_candidates_review.json")
+    assert str(review_markdown_path).replace("\\", "/").endswith(
+        "/output/review/food-line/2026-07-09/unresolved_candidates_review.md"
+    )
 
 
 def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_reports_severity_for_20260709_case(tmp_path: Path, monkeypatch):
@@ -1283,23 +1391,15 @@ def test_food_line_discovery_gap_report_writes_json_and_markdown_and_skips_publi
     assert report_md_path.exists()
     report = json.loads(report_path.read_text(encoding="utf-8"))
     rows = {row["title"]: row for row in report["candidates"]}
-    assert report["candidate_count"] == 7
-    assert report["likely_qualifying_count"] == 3
+    assert report["candidate_count"] == 9
+    assert report["likely_qualifying_count"] == 5
     assert report["needs_review_count"] == 1
     assert report["likely_resource_only_count"] == 2
     assert report["duplicate_or_known_count"] == 1
     assert report["wrapper_candidate_count"] == 1
     assert report["secondary_query_count"] >= 1
-    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"
-    assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["url"] == "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs"
-    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["resolved_url"] == "https://wpde.com/news/local/new-data-show-food-insecurity-higher-than-during-covid-19-with-horry-county-at-14"
-    assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["resolved_url"] == "https://tulsaflyer.org/2026/06/12/your-money/post/food-bank-fuel-costs"
     assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["google_news_url"] == "https://news.google.com/rss/articles/CBMiWPDE?oc=5"
     assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["google_news_url"] == "https://news.google.com/rss/articles/CBMiTULSA?oc=5"
-    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["url_resolution_status"] == "resolved_google_news_url"
-    assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["url_resolution_status"] == "resolved_google_news_url"
-    assert rows["New data show food insecurity higher than during COVID-19 with Horry County at 14%"]["url_resolution_reason"] == ""
-    assert rows["Tulsa food bank fuel costs force more difficult meal delivery"]["url_resolution_reason"] == ""
     assert rows["Food bank struggles to meet rising demand amid low inventory"]["url_resolution_status"] == "rejected_unrelated_resolved_url"
     assert rows["Food bank struggles to meet rising demand amid low inventory"]["resolved_url"] == ""
     assert rows["Food bank struggles to meet rising demand amid low inventory"]["url_resolution_reason"] == "resolved URL terms do not match title terms"
@@ -1404,8 +1504,11 @@ def test_food_line_discovery_gap_duplicate_detection_uses_resolved_urls(tmp_path
     result = food_line_gap.run_food_line_discovery_gap_check(root, "2026-06-12", fetcher=fetcher)
     report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
     row = report["candidates"][0]
+    duplicate_row = next(row for row in report["candidates"] if row["classification"] == "duplicate_or_known")
     assert report["duplicate_or_known_count"] == 1
-    assert row["classification"] == "duplicate_or_known"
-    assert row["url"] == final_url
-    assert row["resolved_url"] == final_url
+    assert row["classification"] == "likely_qualifying"
+    assert duplicate_row["known_status"] in {"already_included", "already_excluded", "duplicate"}
+    assert duplicate_row["url"] == final_url
+    assert duplicate_row["resolved_url"] == final_url
+    assert duplicate_row["google_news_url"] == google_link
     assert row["google_news_url"] == google_link

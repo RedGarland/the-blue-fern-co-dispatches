@@ -1033,15 +1033,19 @@ def _gap_candidate_resolution_priority(candidate: dict[str, Any], *, known_local
     return priority, classification_rank, int(score)
 
 
-def _gap_reserved_soft_block_resolution_budget(max_candidates: int | None) -> int:
-    if max_candidates is None:
-        return 0
+def _gap_reserved_soft_block_resolution_budget(
+    max_candidates: int | None,
+    reserved_soft_block_candidate_count: int = 0,
+) -> int:
+    reserved_candidate_budget = max(0, int(reserved_soft_block_candidate_count or 0))
     try:
         candidate_budget = int(max_candidates)
     except (TypeError, ValueError):
         candidate_budget = 0
     if candidate_budget <= 0:
-        return 1
+        return min(15, reserved_candidate_budget)
+    if reserved_candidate_budget > 0:
+        return min(candidate_budget, max(1, min(15, reserved_candidate_budget)))
     return min(10, max(1, candidate_budget // 2))
 
 
@@ -1069,6 +1073,76 @@ def _gap_candidate_uses_reserved_soft_block_budget(candidate: dict[str, Any]) ->
             "numeric",
         )
     )
+
+
+def _gap_discovery_gap_review_paths(root: Path, date: str) -> tuple[Path, Path]:
+    review_dir = root / "output" / "review" / "food-line" / date
+    return review_dir / "unresolved_candidates_review.json", review_dir / "unresolved_candidates_review.md"
+
+
+def _gap_unresolved_review_rows(report: dict[str, Any]) -> list[dict[str, Any]]:
+    candidates = report.get("candidates")
+    if not isinstance(candidates, list):
+        return []
+    unresolved_rows: list[dict[str, Any]] = []
+    for row in candidates:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("classification") or "").strip() != "likely_qualifying":
+            continue
+        if bool(row.get("publication_blocking_candidate")):
+            continue
+        if _nonempty(row.get("resolved_url")):
+            continue
+        unresolved_rows.append(row)
+    return unresolved_rows
+
+
+def _gap_unresolved_review_markdown(rows: list[dict[str, Any]], *, edition_date: str) -> str:
+    lines = [
+        f"# Food Line Unresolved Candidate Review - {edition_date}",
+        "",
+        "## Unresolved likely qualifying candidates",
+        "",
+    ]
+    if not rows:
+        lines.append("_None._")
+        return "\n".join(lines).strip() + "\n"
+    lines.extend(
+        [
+            "| Title | Publisher/domain | Source URL | Google News wrapper | Severity | Resolution budget | Skip reason | Exact-title attempted | Exact-title failure cause | Sitemap URLs checked | Recommended manual action |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- |",
+        ]
+    )
+    for row in rows:
+        diag = row.get("resolution_diagnostics") or {}
+        publisher = _normalize_source_text(str(row.get("publisher") or "")).replace("|", "\\|")
+        publisher_domain = _normalize_source_text(str(row.get("publisher_domain") or "")).replace("|", "\\|")
+        publisher_cell = publisher
+        if publisher_domain and publisher_domain.lower() not in publisher.lower():
+            publisher_cell = f"{publisher} ({publisher_domain})" if publisher else publisher_domain
+        source_url = _normalize_source_text(str(row.get("source_url") or row.get("publisher_url") or "")).replace("|", "\\|")
+        google_news_url = _normalize_source_text(str(row.get("google_news_url") or "")).replace("|", "\\|")
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    _normalize_source_text(str(row.get("title") or "")).replace("|", "\\|"),
+                    publisher_cell,
+                    source_url,
+                    google_news_url,
+                    _normalize_source_text(str(row.get("blocking_candidate_severity") or "")).replace("|", "\\|"),
+                    _normalize_source_text(str(diag.get("resolution_budget_mode") or "")).replace("|", "\\|"),
+                    _normalize_source_text(str(diag.get("resolution_skip_reason") or row.get("url_resolution_reason") or "")).replace("|", "\\|"),
+                    str(bool(diag.get("exact_title_attempted"))).lower(),
+                    _normalize_source_text(str(diag.get("exact_title_failure_cause") or "")).replace("|", "\\|"),
+                    str(int(diag.get("sitemap_urls_checked_count") or 0)),
+                    _normalize_source_text(str(row.get("recommended_manual_action") or "")).replace("|", "\\|"),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines).strip() + "\n"
 
 
 def _gap_manual_action_for_severity(severity: str) -> str:
@@ -1797,7 +1871,14 @@ def _gap_parse_rss_items(
         )
     )
 
-    reserved_soft_block_budget = _gap_reserved_soft_block_resolution_budget(max_candidates)
+    reserved_soft_block_candidate_rows = [
+        row
+        for row in sortable_rows
+        if _gap_candidate_uses_reserved_soft_block_budget(row)
+        and _gap_is_google_news_url(str(row.get("candidate_url") or row.get("google_news_url") or ""))
+    ]
+    reserved_soft_block_candidate_count = len(reserved_soft_block_candidate_rows)
+    reserved_soft_block_budget = _gap_reserved_soft_block_resolution_budget(max_candidates, reserved_soft_block_candidate_count)
     general_resolution_budget: int | None
     if max_candidates is None:
         general_resolution_budget = None
@@ -2549,6 +2630,11 @@ def run_food_line_discovery_gap_check(
     report_dir.mkdir(parents=True, exist_ok=True)
     report_json_path = report_dir / "discovery_gap_report.json"
     report_md_path = report_dir / "discovery_gap_report.md"
+    unresolved_review_json_path, unresolved_review_md_path = _gap_discovery_gap_review_paths(root, edition_date)
+    reserved_soft_block_resolution_attempt_count = int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0)
+    reserved_soft_block_resolution_skipped_count = int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0)
+    reserved_soft_block_candidate_count = reserved_soft_block_resolution_attempt_count + reserved_soft_block_resolution_skipped_count
+    reserved_soft_block_budget = int(resolver_state.get("reserved_soft_block_resolution_budget") or 0)
     report = {
         "date": edition_date,
         "generated_at": discovered_at,
@@ -2582,9 +2668,11 @@ def run_food_line_discovery_gap_check(
         "sitemap_lookup_count": int(resolver_state.get("sitemap_lookup_count") or 0),
         "sitemap_cache_hit_count": int(resolver_state.get("sitemap_cache_hit_count") or 0),
         "general_resolution_attempt_count": int(resolver_state.get("general_resolution_attempt_count") or 0),
-        "reserved_soft_block_resolution_attempt_count": int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0),
-        "reserved_soft_block_resolution_skipped_count": int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0),
+        "reserved_soft_block_resolution_attempt_count": reserved_soft_block_resolution_attempt_count,
+        "reserved_soft_block_resolution_skipped_count": reserved_soft_block_resolution_skipped_count,
         "reserved_soft_block_exact_title_attempt_count": int(resolver_state.get("reserved_soft_block_exact_title_attempt_count") or 0),
+        "reserved_soft_block_candidate_count": reserved_soft_block_candidate_count,
+        "reserved_soft_block_budget": reserved_soft_block_budget,
         "high_confidence_url_resolution_attempt_count": len(high_confidence_attempt_rows),
         "high_confidence_url_resolution_attempts": [
             {
@@ -2708,15 +2796,60 @@ def run_food_line_discovery_gap_check(
         f"- unresolved high-confidence direct-pressure: {len(unresolved_high_confidence_direct_pressure)}",
         f"- direct URL date verified: {direct_url_date_verified_count}",
         f"- general resolution attempts: {int(resolver_state.get('general_resolution_attempt_count') or 0)}",
+        f"- reserved soft-block candidate count: {reserved_soft_block_candidate_count}",
+        f"- reserved soft-block budget: {reserved_soft_block_budget}",
         f"- reserved soft-block resolution attempts: {int(resolver_state.get('reserved_soft_block_resolution_attempt_count') or 0)}",
         f"- reserved soft-block resolution skipped: {int(resolver_state.get('reserved_soft_block_resolution_skipped_count') or 0)}",
         f"- reserved soft-block exact-title attempts: {int(resolver_state.get('reserved_soft_block_exact_title_attempt_count') or 0)}",
+        f"- unresolved review artifact: {unresolved_review_md_path}",
         f"- manual-review-only: {len(grouped_by_class['needs_review'])}",
         f"- needs review: {len(grouped_by_class['needs_review'])}",
         f"- already known: {len(grouped_by_class['duplicate_or_known'])}",
         f"- likely resource-only: {len(grouped_by_class['likely_resource_only'])}",
     ])
     report_md_path.write_text("\n".join(md_lines).strip() + "\n", encoding="utf-8")
+    unresolved_review_rows = _gap_unresolved_review_rows(report)
+    unresolved_review_json_path.parent.mkdir(parents=True, exist_ok=True)
+    unresolved_review_payload = {
+        "date": edition_date,
+        "generated_at": discovered_at,
+        "unresolved_likely_qualifying_count": len(unresolved_review_rows),
+        "unresolved_high_confidence_direct_pressure_count": len(unresolved_high_confidence_direct_pressure),
+        "reserved_soft_block_candidate_count": reserved_soft_block_candidate_count,
+        "reserved_soft_block_budget": reserved_soft_block_budget,
+        "general_resolution_attempt_count": int(resolver_state.get("general_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_attempt_count": int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0),
+        "reserved_soft_block_resolution_skipped_count": int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0),
+        "reserved_soft_block_exact_title_attempt_count": int(resolver_state.get("reserved_soft_block_exact_title_attempt_count") or 0),
+        "rows": [
+            {
+                "title": row.get("title") or "",
+                "publisher": row.get("publisher") or "",
+                "publisher_domain": row.get("publisher_domain") or "",
+                "source_url": row.get("source_url") or row.get("publisher_url") or "",
+                "google_news_url": row.get("google_news_url") or "",
+                "blocking_candidate_severity": row.get("blocking_candidate_severity") or "",
+                "date_confidence": int(row.get("date_confidence") or 0),
+                "score": int(row.get("score") or 0),
+                "reason": row.get("reason") or "",
+                "url_resolution_status": row.get("url_resolution_status") or "",
+                "url_resolution_reason": row.get("url_resolution_reason") or "",
+                "resolution_budget_mode": (row.get("resolution_diagnostics") or {}).get("resolution_budget_mode") or "",
+                "resolution_budget_status": (row.get("resolution_diagnostics") or {}).get("resolution_budget_status") or "",
+                "resolution_skip_reason": (row.get("resolution_diagnostics") or {}).get("resolution_skip_reason") or "",
+                "exact_title_attempted": bool((row.get("resolution_diagnostics") or {}).get("exact_title_attempted")),
+                "exact_title_failure_cause": (row.get("resolution_diagnostics") or {}).get("exact_title_failure_cause") or "",
+                "sitemap_urls_checked_count": int((row.get("resolution_diagnostics") or {}).get("sitemap_urls_checked_count") or 0),
+                "recommended_manual_action": row.get("recommended_manual_action") or "",
+            }
+            for row in unresolved_review_rows
+        ],
+    }
+    _write_json_object(unresolved_review_json_path, unresolved_review_payload)
+    unresolved_review_md_path.write_text(
+        _gap_unresolved_review_markdown(unresolved_review_rows, edition_date=edition_date),
+        encoding="utf-8",
+    )
     summary = {
         "ok": True,
         "date": edition_date,
@@ -2733,6 +2866,8 @@ def run_food_line_discovery_gap_check(
         "reserved_soft_block_resolution_attempt_count": int(resolver_state.get("reserved_soft_block_resolution_attempt_count") or 0),
         "reserved_soft_block_resolution_skipped_count": int(resolver_state.get("reserved_soft_block_resolution_skipped_count") or 0),
         "reserved_soft_block_exact_title_attempt_count": int(resolver_state.get("reserved_soft_block_exact_title_attempt_count") or 0),
+        "reserved_soft_block_candidate_count": reserved_soft_block_candidate_count,
+        "reserved_soft_block_budget": reserved_soft_block_budget,
         "elapsed_seconds": round(time.monotonic() - start, 3),
         "likely_qualifying_count": len(grouped_by_class["likely_qualifying"]),
         "blocking_likely_qualifying_count": len(blocking_likely_qualifying),
@@ -2745,6 +2880,9 @@ def run_food_line_discovery_gap_check(
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
         "report_path": str(report_json_path),
         "report_markdown_path": str(report_md_path),
+        "unresolved_review_path": str(unresolved_review_json_path),
+        "unresolved_review_markdown_path": str(unresolved_review_md_path),
+        "unresolved_review_count": len(unresolved_review_rows),
         "query_errors": query_errors,
         "queries": executed_queries,
         "initial_queries": initial_query_terms,

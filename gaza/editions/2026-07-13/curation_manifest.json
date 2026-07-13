@@ -1,0 +1,131 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-13-003",
+    "title": "Sheikh Hamad: The Arab leader who broke Israel's siege on Gaza",
+    "summary": "A look at Sheikh Hamad bin Khalifa Al Thani's enduring legacy of solidarity and support for the Palestinian people.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-13-aljazeera-middle-east-feffd25e99f4"
+    ],
+    "source_ids": [
+      "gaza-2026-07-13-aljazeera-middle-east-feffd25e99f4"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/13/sheikh-hamad-the-arab-leader-who-broke-israels-siege-on-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-13-aljazeera-middle-east-feffd25e99f4",
+        "title": "Sheikh Hamad: The Arab leader who broke Israel's siege on Gaza",
+        "url": "https://www.aljazeera.com/news/2026/7/13/sheikh-hamad-the-arab-leader-who-broke-israels-siege-on-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A look at Sheikh Hamad bin Khalifa Al Thani's enduring legacy of solidarity and support for the Palestinian people."
+      }
+    ],
+    "generated_at": "2026-07-13T13:00:41.013568+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-13-002",
+    "title": "In Wales, an artist sews names of Gaza's infant victims on christening gown",
+    "summary": "Diana Williams embroiders names of 300 babies killed by Israel on gown, an evocative work she hopes will reach New York.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-13-aljazeera-middle-east-1c46bc82b164"
+    ],
+    "source_ids": [
+      "gaza-2026-07-13-aljazeera-middle-east-1c46bc82b164"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/13/i-have-to-do-something-a-welsh-artist-honours-gazas-child-victims?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-13-aljazeera-middle-east-1c46bc82b164",
+        "title": "In Wales, an artist sews names of Gaza's infant victims on christening gown",
+        "url": "https://www.aljazeera.com/news/2026/7/13/i-have-to-do-something-a-welsh-artist-honours-gazas-child-victims?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Diana Williams embroiders names of 300 babies killed by Israel on gown, an evocative work she hopes will reach New York."
+      }
+    ],
+    "generated_at": "2026-07-13T13:00:41.013568+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

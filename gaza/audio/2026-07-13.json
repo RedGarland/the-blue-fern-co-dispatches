@@ -1,0 +1,56 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-13",
+  "generated_at": "2026-07-13T13:00:50.857665Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-13.mp3",
+  "audio_url": "/gaza/audio/2026-07-13.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 685,
+  "tts_input_word_count": 112,
+  "tts_story_count": 2,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 776832,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-13T13:00:50.857632Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-13-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-13/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 13, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Sheikh Hamad: The Arab leader who broke Israel's siege on Gaza. A look at Sheikh Hamad bin Khalifa Al Thani's enduring legacy of solidarity and support for the Palestinian people. This was reported by Al Jazeera.\n\n2. In Wales, an artist sews names of Gaza's infant victims on christening gown. Diana Williams embroiders names of 300 babies killed by Israel on gown, an evocative work she hopes will reach New York. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 13, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 2,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-13-aljazeera-middle-east-feffd25e99f4",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/13/sheikh-hamad-the-arab-leader-who-broke-israels-siege-on-gaza?traffic_source=rss",
+      "title": "Sheikh Hamad: The Arab leader who broke Israel's siege on Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-07-13-aljazeera-middle-east-1c46bc82b164",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/13/i-have-to-do-something-a-welsh-artist-honours-gazas-child-victims?traffic_source=rss",
+      "title": "In Wales, an artist sews names of Gaza's infant victims on christening gown"
+    }
+  ]
+}

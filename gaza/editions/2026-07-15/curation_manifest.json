@@ -1,0 +1,481 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-15-006",
+    "title": "'Cycle of chaos': Israel killing Gaza civil officials to derail its future",
+    "summary": "Israel's relentless Gaza attacks aim to sabotage the 'ceasefire' and ensure perpetual chaos, analysts warn.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-6776903a391c"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-6776903a391c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/15/cycle-of-chaos-israel-killing-gaza-civil-officials-to-derail-its-future?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-aljazeera-middle-east-6776903a391c",
+        "title": "'Cycle of chaos': Israel killing Gaza civil officials to derail its future",
+        "url": "https://www.aljazeera.com/news/2026/7/15/cycle-of-chaos-israel-killing-gaza-civil-officials-to-derail-its-future?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel's relentless Gaza attacks aim to sabotage the 'ceasefire' and ensure perpetual chaos, analysts warn."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-07-15-005",
+    "prior_edition_date": "2026-07-15",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "gaza_ceasefire_casualty"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-004",
+    "title": "Arrest of American who has given $1m in aid to Palestine prompts fears of 'growing repression from Trump'",
+    "summary": "Extradition request for James 'Fergie' Chambers sparks concerns that US government is conflating humanitarian aid with terrorism. The arrest in Ibiza and US justice department extradition request for a wealthy American donor to lefwing causes in connection with alleged material support for Hamas is sending ripples through leftwing circles in Spain and being closely monitored in the US for potential \"chilling effects\" on support for Palestine. Spanish authorities detained James \"Fergie\" Chambers Friday and are now holding him without bail in Madrid. A hearing is scheduled on whether he can be released on bail for Thursday.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-guardian-world-5794c7d76874"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-guardian-world-5794c7d76874"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/15/james-fergie-chambers-arrest-palestine-aid-trump"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-guardian-world-5794c7d76874",
+        "title": "Arrest of American who has given $1m in aid to Palestine prompts fears of 'growing repression from Trump'",
+        "url": "https://www.theguardian.com/world/2026/jul/15/james-fergie-chambers-arrest-palestine-aid-trump",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Extradition request for James 'Fergie' Chambers sparks concerns that US government is conflating humanitarian aid with terrorism The arrest in Ibiza and US justice department extradition request for a wealthy American donor to lefwing causes in connection with alleged material support for Hamas is sending ripples through leftwing circles in Spain and being closely monitored in the US for potential \"chilling effects\" on support for Palestine. Spanish authorities detained James \"Fergie\" Chambers Friday and are now holding him without bail in Madrid. A hearing is scheduled on whether he can be released on bail for Thursday."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-005",
+    "title": "Israeli air attack on Gaza apartment kills family of three",
+    "summary": "One child survives hit on Deir el-Balah home as. Israel escalates attacks across territory despite October 'ceasefire'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-07-15-006"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-3f21a551caac",
+      "gaza-2026-07-15-aljazeera-middle-east-6776903a391c"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-3f21a551caac",
+      "gaza-2026-07-15-aljazeera-middle-east-6776903a391c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/15/israeli-air-attack-on-gaza-apartment-kills-family-of-3?traffic_source=rss",
+      "https://www.aljazeera.com/news/2026/7/15/cycle-of-chaos-israel-killing-gaza-civil-officials-to-derail-its-future?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-aljazeera-middle-east-3f21a551caac",
+        "title": "Israeli air attack on Gaza apartment kills family of three",
+        "url": "https://www.aljazeera.com/news/2026/7/15/israeli-air-attack-on-gaza-apartment-kills-family-of-3?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "One child survives hit on Deir el-Balah home as Israel escalates attacks across territory despite October 'ceasefire'."
+      },
+      {
+        "source_record_id": "gaza-2026-07-15-aljazeera-middle-east-6776903a391c",
+        "title": "'Cycle of chaos': Israel killing Gaza civil officials to derail its future",
+        "url": "https://www.aljazeera.com/news/2026/7/15/cycle-of-chaos-israel-killing-gaza-civil-officials-to-derail-its-future?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel's relentless Gaza attacks aim to sabotage the 'ceasefire' and ensure perpetual chaos, analysts warn."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-002",
+    "title": "Israeli strike on police post in north Gaza kills seven, officials say - BBC",
+    "summary": "Israeli strike on police post in north Gaza kills seven, officials say BBC.",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-07-15-001"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-bbc-gaza-health-query-c93e60b573d9",
+      "gaza-2026-07-15-bbc-middle-east-79193096e914"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-bbc-gaza-health-query-c93e60b573d9",
+      "gaza-2026-07-15-bbc-middle-east-79193096e914"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiWkFVX3lxTFAwR2FNNjY1anpHS19fa1BuYVhHWGdrVlcySmprTVRpdGRlTE5TZUxfb1A2X2VOYmdFWWRSWGlZQXdTWGtERnVkX2Q3SEhuMTRVR3Rwd0UtbWpEUQ?oc=5",
+      "https://www.bbc.co.uk/news/articles/cqj1jqeyl5ro?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-bbc-gaza-health-query-c93e60b573d9",
+        "title": "Israeli strike on police post in north Gaza kills seven, officials say - BBC",
+        "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFAwR2FNNjY1anpHS19fa1BuYVhHWGdrVlcySmprTVRpdGRlTE5TZUxfb1A2X2VOYmdFWWRSWGlZQXdTWGtERnVkX2Q3SEhuMTRVR3Rwd0UtbWpEUQ?oc=5",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israeli strike on police post in north Gaza kills seven, officials say BBC"
+      },
+      {
+        "source_record_id": "gaza-2026-07-15-bbc-middle-east-79193096e914",
+        "title": "Israeli strike on police post in north Gaza kills seven, officials say",
+        "url": "https://www.bbc.co.uk/news/articles/cqj1jqeyl5ro?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "A senior officer in the Hamas-run police force was among those killed in the strike, which Israel's military says targeted \"terrorists\"."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-10-003",
+    "prior_edition_date": "2026-07-10",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-007",
+    "title": "Waiting for Hassan: Another Gaza doctor held by Israel without charge",
+    "summary": "Hassan Khalil Almukayed is among at least 15 Palestinian doctors from Gaza currently in Israeli detention.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-388bb16bb37f"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-aljazeera-middle-east-388bb16bb37f"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/15/waiting-for-hassan-another-gaza-doctor-held-by-israel-without-charge?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-aljazeera-middle-east-388bb16bb37f",
+        "title": "Waiting for Hassan: Another Gaza doctor held by Israel without charge",
+        "url": "https://www.aljazeera.com/news/2026/7/15/waiting-for-hassan-another-gaza-doctor-held-by-israel-without-charge?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Hassan Khalil Almukayed is among at least 15 Palestinian doctors from Gaza currently in Israeli detention."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-06-002",
+    "prior_edition_date": "2026-07-06",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-001",
+    "title": "Israeli strike on police post in north Gaza kills seven, officials say",
+    "summary": "Israel's military says targeted \"terrorists\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-bbc-middle-east-79193096e914"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-bbc-middle-east-79193096e914"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cqj1jqeyl5ro?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-bbc-middle-east-79193096e914",
+        "title": "Israeli strike on police post in north Gaza kills seven, officials say",
+        "url": "https://www.bbc.co.uk/news/articles/cqj1jqeyl5ro?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "A senior officer in the Hamas-run police force was among those killed in the strike, which Israel's military says targeted \"terrorists\"."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-07-15-002",
+    "prior_edition_date": "2026-07-15",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_normalized_title"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-07-15-003",
+    "title": "Shoebridge criticises Labor for delayed AI policy - as it happened",
+    "summary": "This blog is now closed Get our breaking news email , free app or daily news podcast Shorten shocked by testimony given to royal commission on antisemitism Former Labor leader Bill Shorten , now the vice-chancellor of the University of Canberra, said he was shocked by the evidence given from the university sector during the latest round of hearings before the royal commission on antisemitism. It describes an Australia \u2026 and Australian universities that I don't recognise. But the fact is that these voices who are speaking up through the vehicle of the royal commission are revealing things, which mean that there's no excuse to ignore them. Once people are putting coverings over their faces so they can't be identified, once they're going to people's individual offices, they've crossed a line. This is not a protest any more. It's just bullying. It's thuggery. It's cowardice. It's intimidation. And I don't really care how righteous you think your cause is. You've got no right in this country to make someone else's life so scary, so miserable, so fearful, just because you happen to have a view.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 29,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-15-guardian-world-ad5730268f6a"
+    ],
+    "source_ids": [
+      "gaza-2026-07-15-guardian-world-ad5730268f6a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/australia-news/live/2026/jul/15/australia-news-live-ceo-pay-anthony-albanese-palestine-gaza-ai-artificial-intelligence-datacentres-copyright-royal-commission-antisemitism-labor-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-15-guardian-world-ad5730268f6a",
+        "title": "Shoebridge criticises Labor for delayed AI policy - as it happened",
+        "url": "https://www.theguardian.com/australia-news/live/2026/jul/15/australia-news-live-ceo-pay-anthony-albanese-palestine-gaza-ai-artificial-intelligence-datacentres-copyright-royal-commission-antisemitism-labor-ntwnfb",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "This blog is now closed Get our breaking news email , free app or daily news podcast Shorten shocked by testimony given to royal commission on antisemitism Former Labor leader Bill Shorten , now the vice-chancellor of the University of Canberra, said he was shocked by the evidence given from the university sector during the latest round of hearings before the royal commission on antisemitism. It describes an Australia \u2026 and Australian universities that I don't recognise. But the fact is that these voices who are speaking up through the vehicle of the royal commission are revealing things, which mean that there's no excuse to ignore them. Once people are putting coverings over their faces so they can't be identified, once they're going to people's individual offices, they've crossed a line. This is not a protest any more. It's just bullying. It's thuggery. It's cowardice. It's intimidation. And I don't really care how righteous you think your cause is. You've got no right in this country to make someone else's life so scary, so miserable, so fearful, just because you happen to have a view."
+      }
+    ],
+    "generated_at": "2026-07-15T13:00:43.026581+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 29,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

@@ -1,0 +1,327 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-15",
+  "candidates_seen": 7,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-07-15-005",
+      "title": "Israeli air attack on Gaza apartment kills family of three",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-004",
+      "title": "Arrest of American who has given $1m in aid to Palestine prompts fears of 'growing repression from Trump'",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-002",
+      "title": "Israeli strike on police post in north Gaza kills seven, officials say - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-007",
+      "title": "Waiting for Hassan: Another Gaza doctor held by Israel without charge",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-003",
+      "title": "Shoebridge criticises Labor for delayed AI policy - as it happened",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-07-15-006",
+      "title": "'Cycle of chaos': Israel killing Gaza civil officials to derail its future",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-15-005",
+      "prior_edition_date": "2026-07-15",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-001",
+      "title": "Israeli strike on police post in north Gaza kills seven, officials say",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_normalized_title"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-15-002",
+      "prior_edition_date": "2026-07-15",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-07-15-005",
+      "title": "Israeli air attack on Gaza apartment kills family of three",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-30-001",
+      "prior_edition_date": "2026-06-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-002",
+      "title": "Israeli strike on police post in north Gaza kills seven, officials say - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-10-003",
+      "prior_edition_date": "2026-07-10",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-007",
+      "title": "Waiting for Hassan: Another Gaza doctor held by Israel without charge",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-06-002",
+      "prior_edition_date": "2026-07-06",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 2,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-07-15-005",
+      "merged_story_ids": [
+        "gaza-story-2026-07-15-006"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-07-15-aljazeera-middle-east-6776903a391c"
+      ],
+      "duplicate_reason": "gaza_ceasefire_casualty",
+      "normalized_event_key": "gaza_ceasefire_casualty",
+      "reasons": [
+        "gaza_ceasefire_casualty"
+      ]
+    },
+    {
+      "kept_story_id": "gaza-story-2026-07-15-002",
+      "merged_story_ids": [
+        "gaza-story-2026-07-15-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-07-15-bbc-middle-east-79193096e914"
+      ],
+      "duplicate_reason": "within_edition_duplicate",
+      "normalized_event_key": "",
+      "reasons": [
+        "within_edition_normalized_title"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-07-15-006",
+      "title": "'Cycle of chaos': Israel killing Gaza civil officials to derail its future",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "gaza_ceasefire_casualty"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-15-005",
+      "prior_edition_date": "2026-07-15",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-001",
+      "title": "Israeli strike on police post in north Gaza kills seven, officials say",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_normalized_title"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-15-002",
+      "prior_edition_date": "2026-07-15",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-005",
+      "title": "Israeli air attack on Gaza apartment kills family of three",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-30-001",
+      "prior_edition_date": "2026-06-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-004",
+      "title": "Arrest of American who has given $1m in aid to Palestine prompts fears of 'growing repression from Trump'",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-002",
+      "title": "Israeli strike on police post in north Gaza kills seven, officials say - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-10-003",
+      "prior_edition_date": "2026-07-10",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-007",
+      "title": "Waiting for Hassan: Another Gaza doctor held by Israel without charge",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-06-002",
+      "prior_edition_date": "2026-07-06",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-07-15-003",
+      "title": "Shoebridge criticises Labor for delayed AI policy - as it happened",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-07-13",
+    "2026-07-11",
+    "2026-07-10",
+    "2026-07-08",
+    "2026-07-06",
+    "2026-07-05",
+    "2026-07-04",
+    "2026-07-03",
+    "2026-07-02",
+    "2026-07-01",
+    "2026-06-30",
+    "2026-06-29",
+    "2026-06-28",
+    "2026-06-27",
+    "2026-06-26",
+    "2026-06-25",
+    "2026-06-24",
+    "2026-06-22",
+    "2026-06-21",
+    "2026-06-20",
+    "2026-06-19",
+    "2026-06-18",
+    "2026-06-17",
+    "2026-06-16",
+    "2026-06-15",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-12",
+    "2026-06-11",
+    "2026-06-10",
+    "2026-06-09",
+    "2026-06-08",
+    "2026-06-07",
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-12",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

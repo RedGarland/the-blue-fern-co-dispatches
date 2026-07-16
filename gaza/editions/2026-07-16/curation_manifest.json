@@ -1,0 +1,133 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-16-004",
+    "title": "Palestinians fight fires after settler attacks in the occupied West Bank",
+    "summary": "Overnight Israeli settler attacks set farmlands ablaze in Masafer Yatta and burned vehicles near Tulkarem.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-16-aljazeera-middle-east-d6e9bc3a40fc"
+    ],
+    "source_ids": [
+      "gaza-2026-07-16-aljazeera-middle-east-d6e9bc3a40fc"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/16/palestinians-fight-fires-after-settler-attacks-in-the-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-16-aljazeera-middle-east-d6e9bc3a40fc",
+        "title": "Palestinians fight fires after settler attacks in the occupied West Bank",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/16/palestinians-fight-fires-after-settler-attacks-in-the-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Overnight Israeli settler attacks set farmlands ablaze in Masafer Yatta and burned vehicles near Tulkarem."
+      }
+    ],
+    "generated_at": "2026-07-16T13:00:41.337584+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-16-003",
+    "title": "Palestinians in Gaza search through homes destroyed by Israeli strikes",
+    "summary": "Palestinians are inspecting the damage in Nuseirat after Israeli strikes reduced their homes to rubble.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-16-aljazeera-middle-east-3b1c9bd428a9"
+    ],
+    "source_ids": [
+      "gaza-2026-07-16-aljazeera-middle-east-3b1c9bd428a9"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/16/palestinians-in-gaza-search-through-homes-destroyed-by-israeli-strikes?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-16-aljazeera-middle-east-3b1c9bd428a9",
+        "title": "Palestinians in Gaza search through homes destroyed by Israeli strikes",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/16/palestinians-in-gaza-search-through-homes-destroyed-by-israeli-strikes?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinians are inspecting the damage in Nuseirat after Israeli strikes reduced their homes to rubble."
+      }
+    ],
+    "generated_at": "2026-07-16T13:00:41.337584+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

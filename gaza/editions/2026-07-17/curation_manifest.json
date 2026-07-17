@@ -1,0 +1,68 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-17-001",
+    "title": "Trump's Board of Peace drops full Gaza recovery plan in favour of tiny pilot scheme",
+    "summary": "Revised plan aims to 'keep something going' amid fears Netanyahu may gamble on new all-out offensive before Israeli elections. The Gaza recovery plan being pursued by Donald Trump's Board of Peace (BoP) has shrunk dramatically from an ambitious blueprint for the reconstruction of the whole territory to a small pilot project in the south of the strip. Even the envisaged pilot scheme - involving a temporary camp for a tiny fraction of Gaza's 2 million displaced people, with a Palestinian administration, police and a small international security force - is not expected to take shape before the end of the year.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-17-guardian-world-1bc41a5660e5"
+    ],
+    "source_ids": [
+      "gaza-2026-07-17-guardian-world-1bc41a5660e5"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/16/trumps-board-of-peace-drops-full-gaza-recovery-plan-for-tiny-pilot-scheme"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-17-guardian-world-1bc41a5660e5",
+        "title": "Trump's Board of Peace drops full Gaza recovery plan in favour of tiny pilot scheme",
+        "url": "https://www.theguardian.com/world/2026/jul/16/trumps-board-of-peace-drops-full-gaza-recovery-plan-for-tiny-pilot-scheme",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Revised plan aims to 'keep something going' amid fears Netanyahu may gamble on new all-out offensive before Israeli elections The Gaza recovery plan being pursued by Donald Trump's Board of Peace (BoP) has shrunk dramatically from an ambitious blueprint for the reconstruction of the whole territory to a small pilot project in the south of the strip. Even the envisaged pilot scheme - involving a temporary camp for a tiny fraction of Gaza's 2 million displaced people, with a Palestinian administration, police and a small international security force - is not expected to take shape before the end of the year."
+      }
+    ],
+    "generated_at": "2026-07-17T13:00:41.543755+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

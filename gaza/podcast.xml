@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 16 Jul 2026 13:00:50 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 17 Jul 2026 13:00:49 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 17, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-17-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-17-transcript.html</guid>
+    <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Trump's Board of Peace drops full Gaza recovery plan in favour of tiny pilot scheme. Revised plan aims to 'keep something going' amid fears Netanyahu may gamble on new all-out offensive before Israeli elections. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-17.mp3" length="592896" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 16, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-16-transcript.html</link>

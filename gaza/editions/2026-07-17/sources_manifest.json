@@ -1,0 +1,55 @@
+[
+  {
+    "source_record_id": "gaza-2026-07-17-guardian-world-1bc41a5660e5",
+    "source_id": "gaza-2026-07-17-guardian-world-1bc41a5660e5",
+    "title": "Trump's Board of Peace drops full Gaza recovery plan in favour of tiny pilot scheme",
+    "url": "https://www.theguardian.com/world/2026/jul/16/trumps-board-of-peace-drops-full-gaza-recovery-plan-for-tiny-pilot-scheme",
+    "canonical_url": "https://www.theguardian.com/world/2026/jul/16/trumps-board-of-peace-drops-full-gaza-recovery-plan-for-tiny-pilot-scheme",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "The Guardian",
+    "published_at": "2026-07-16T13:58:29+00:00",
+    "retrieved_at": "2026-07-17T13:00:39.020134+00:00",
+    "retrieved_local_date": "2026-07-17",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Revised plan aims to 'keep something going' amid fears Netanyahu may gamble on new all-out offensive before Israeli elections The Gaza recovery plan being pursued by Donald Trump's Board of Peace (BoP) has shrunk dramatically from an ambitious blueprint for the reconstruction of the whole territory to a small pilot project in the south of the strip. Even the envisaged pilot scheme - involving a temporary camp for a tiny fraction of Gaza's 2 million displaced people, with a Palestinian administration, police and a small international security force - is not expected to take shape before the end of the year.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "guardian-world",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Traceable to The Guardian via a direct publisher URL dated 2026-07-16T13:58:29+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-17",
+    "used_in_story_ids": [
+      "gaza-story-2026-07-17-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "ranking_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|guardian|trump s board of peace drops full gaza recovery plan in favour of tiny pilot scheme|conflict|2026-07-16",
+    "title_fingerprint": "trump s board of peace drops full gaza recovery plan in favour of tiny pilot scheme",
+    "claim_fingerprint": "gaza|guardian|trump s board of peace drops full gaza recovery plan in favour of tiny pilot scheme|conflict|2026-07-16"
+  }
+]

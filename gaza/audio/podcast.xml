@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 17 Jul 2026 13:00:49 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 18 Jul 2026 13:00:50 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 18, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-18-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-18-transcript.html</guid>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Israeli ministers announce plans for new illegal settlements in Gaza and West Bank. Defence minister seeks three 'Nahal' outposts in Gaza as top commander says. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-18.mp3" length="902400" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 17, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-17-transcript.html</link>

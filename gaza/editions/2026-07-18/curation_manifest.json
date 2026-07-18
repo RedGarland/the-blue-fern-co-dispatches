@@ -1,0 +1,200 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-18-001",
+    "title": "Israeli ministers announce plans for new illegal settlements in Gaza and West Bank",
+    "summary": "Defence minister seeks three 'Nahal' outposts in Gaza as top commander says. Israel now controls 65% of the strip, violating Trump ceasefire deal. Israel's defence and finance ministers announced plans for three illegal settlements in Gaza and more than $400m (\u00a3300m) in funding to expand construction in the occupied West Bank, as. Israel's military commander for the region celebrated violent outposts as his \"security partners\". With national elections scheduled for 27 October, Benjamin Netanyahu's far-right coalition is racing to expand control of land in occupied Palestine and drive out Palestinians before its mandate expires.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-18-guardian-world-6826b2e2dba4"
+    ],
+    "source_ids": [
+      "gaza-2026-07-18-guardian-world-6826b2e2dba4"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/18/israel-plan-new-illegal-settlements-gaza-west-bank-occupied-palestine"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-18-guardian-world-6826b2e2dba4",
+        "title": "Israeli ministers announce plans for new illegal settlements in Gaza and West Bank",
+        "url": "https://www.theguardian.com/world/2026/jul/18/israel-plan-new-illegal-settlements-gaza-west-bank-occupied-palestine",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Defence minister seeks three 'Nahal' outposts in Gaza as top commander says Israel now controls 65% of the strip, violating Trump ceasefire deal Israel's defence and finance ministers announced plans for three illegal settlements in Gaza and more than $400m (\u00a3300m) in funding to expand construction in the occupied West Bank, as Israel's military commander for the region celebrated violent outposts as his \"security partners\". With national elections scheduled for 27 October, Benjamin Netanyahu's far-right coalition is racing to expand control of land in occupied Palestine and drive out Palestinians before its mandate expires."
+      }
+    ],
+    "generated_at": "2026-07-18T13:00:41.291152+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-18-002",
+    "prior_edition_date": "2026-06-18",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-18-002",
+    "title": "Israeli strike on Gaza funeral killed at least seven people, hospital says",
+    "summary": "Another 22 reportedly injured while mourning Palestinian killed in Israeli attack earlier in the day. An Israeli strike on a funeral in the Gaza Strip has killed at least seven people and injured another 22, according to a local hospital. There was no immediate comment from the Israeli military.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 58,
+    "scoring_reasons": [
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-18-guardian-world-f8871ec44bbd"
+    ],
+    "source_ids": [
+      "gaza-2026-07-18-guardian-world-f8871ec44bbd"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/jul/17/israeli-strike-gaza-funeral-multiple-deaths"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-18-guardian-world-f8871ec44bbd",
+        "title": "Israeli strike on Gaza funeral killed at least seven people, hospital says",
+        "url": "https://www.theguardian.com/world/2026/jul/17/israeli-strike-gaza-funeral-multiple-deaths",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Another 22 reportedly injured while mourning Palestinian killed in Israeli attack earlier in the day An Israeli strike on a funeral in the Gaza Strip has killed at least seven people and injured another 22, according to a local hospital. There was no immediate comment from the Israeli military."
+      }
+    ],
+    "generated_at": "2026-07-18T13:00:41.291152+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-18-003",
+    "title": "Israel's 'Crimson Thread' military barrier is strangling the West Bank",
+    "summary": "A new military barrier in the West Bank's Jordan Valley is cutting off Palestinian communities from their land.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-18-aljazeera-middle-east-19b948c4a949"
+    ],
+    "source_ids": [
+      "gaza-2026-07-18-aljazeera-middle-east-19b948c4a949"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/7/18/israels-crimson-thread-military-barrier-is-strangling-the-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-18-aljazeera-middle-east-19b948c4a949",
+        "title": "Israel's 'Crimson Thread' military barrier is strangling the West Bank",
+        "url": "https://www.aljazeera.com/features/2026/7/18/israels-crimson-thread-military-barrier-is-strangling-the-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A new military barrier in the West Bank's Jordan Valley is cutting off Palestinian communities from their land."
+      }
+    ],
+    "generated_at": "2026-07-18T13:00:41.291152+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

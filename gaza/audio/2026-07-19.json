@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-19",
+  "generated_at": "2026-07-19T13:00:53.687564Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-19.mp3",
+  "audio_url": "/gaza/audio/2026-07-19.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 778,
+  "tts_input_word_count": 117,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 838656,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-19T13:00:53.687533Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-19-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-19/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 19, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. From settlements to blocked recovery: Israeli strategy taking shape in Gaza. Setting up illegal settlements, erasing cities and obstructing aid serve goal of forcing Palestinians out, analysts say. This was reported by Al Jazeera.\n\n2. Israel demolishes Palestinian home in Masafer Yatta. This was reported by Al Jazeera.\n\n3. Gaza cheers for Spain as World Cup final anticipation mounts. Football fans in Gaza express support for Spain in showdown with Argentina, citing Spanish solidarity with Palestinians. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 19, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-19-aljazeera-middle-east-18855722956c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/19/from-settlements-to-blocked-recovery-israeli-strategy-taking-shape-in-gaza?traffic_source=rss",
+      "title": "From settlements to blocked recovery: Israeli strategy taking shape in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-07-19-aljazeera-middle-east-4d3c08394301",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/19/israel-demolishes-palestinian-home-in-masafer-yatta?traffic_source=rss",
+      "title": "Israel demolishes Palestinian home in Masafer Yatta"
+    },
+    {
+      "source_record_id": "gaza-2026-07-19-aljazeera-middle-east-84be5d94b787",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/19/gaza-cheers-for-spain-as-world-cup-final-anticipation-mounts?traffic_source=rss",
+      "title": "Gaza cheers for Spain as World Cup final anticipation mounts"
+    }
+  ]
+}

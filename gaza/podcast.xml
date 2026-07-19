@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 18 Jul 2026 13:00:50 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 19 Jul 2026 13:00:53 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 19, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-19-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-19-transcript.html</guid>
+    <pubDate>Sun, 19 Jul 2026 00:00:00 +0000</pubDate>
+    <description>From settlements to blocked recovery: Israeli strategy taking shape in Gaza. Setting up illegal settlements, erasing cities and obstructing aid serve goal of forcing Palestinians out, analysts say. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-19.mp3" length="838656" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 18, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-18-transcript.html</link>

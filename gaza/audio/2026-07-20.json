@@ -1,0 +1,56 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-20",
+  "generated_at": "2026-07-20T13:00:52.345961Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-20.mp3",
+  "audio_url": "/gaza/audio/2026-07-20.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 663,
+  "tts_input_word_count": 107,
+  "tts_story_count": 2,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 801792,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-20T13:00:52.345935Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-20-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-20/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 20, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Occupied West Bank World Cup screening halted for funeral. A screening of the FIFA World Cup final in Ramallah was halted following news that two Palestinians were killed. This was reported by Al Jazeera.\n\n2. Iran says Spain World Cup win brings joy to critics of US, Israel. Iran praises Spain's win over Argentina after Spanish government's condemnation of policies on Gaza and war on Iran. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 20, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 2,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-20-aljazeera-middle-east-4c7d60481740",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/20/occupied-west-bank-world-cup-screening-halted-for-funeral?traffic_source=rss",
+      "title": "Occupied West Bank World Cup screening halted for funeral"
+    },
+    {
+      "source_record_id": "gaza-2026-07-20-aljazeera-middle-east-59cd3ff44699",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/sports/2026/7/20/iran-says-spain-world-cup-win-brought-joy-to-critics-of-us-israel?traffic_source=rss",
+      "title": "Iran says Spain World Cup win brings joy to critics of US, Israel"
+    }
+  ]
+}

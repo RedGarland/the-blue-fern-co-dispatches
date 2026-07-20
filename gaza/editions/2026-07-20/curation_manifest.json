@@ -1,0 +1,131 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-20-002",
+    "title": "Occupied West Bank World Cup screening halted for funeral",
+    "summary": "A screening of the FIFA World Cup final in Ramallah was halted following news that two Palestinians were killed.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-20-aljazeera-middle-east-4c7d60481740"
+    ],
+    "source_ids": [
+      "gaza-2026-07-20-aljazeera-middle-east-4c7d60481740"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/20/occupied-west-bank-world-cup-screening-halted-for-funeral?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-20-aljazeera-middle-east-4c7d60481740",
+        "title": "Occupied West Bank World Cup screening halted for funeral",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/20/occupied-west-bank-world-cup-screening-halted-for-funeral?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A screening of the FIFA World Cup final in Ramallah was halted following news that two Palestinians were killed."
+      }
+    ],
+    "generated_at": "2026-07-20T13:00:41.701800+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-20-001",
+    "title": "Iran says Spain World Cup win brings joy to critics of US, Israel",
+    "summary": "Iran praises Spain's win over Argentina after Spanish government's condemnation of policies on Gaza and war on Iran.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-20-aljazeera-middle-east-59cd3ff44699"
+    ],
+    "source_ids": [
+      "gaza-2026-07-20-aljazeera-middle-east-59cd3ff44699"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/sports/2026/7/20/iran-says-spain-world-cup-win-brought-joy-to-critics-of-us-israel?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-20-aljazeera-middle-east-59cd3ff44699",
+        "title": "Iran says Spain World Cup win brings joy to critics of US, Israel",
+        "url": "https://www.aljazeera.com/sports/2026/7/20/iran-says-spain-world-cup-win-brought-joy-to-critics-of-us-israel?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Iran praises Spain's win over Argentina after Spanish government's condemnation of policies on Gaza and war on Iran."
+      }
+    ],
+    "generated_at": "2026-07-20T13:00:41.701800+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

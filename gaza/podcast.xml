@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 20 Jul 2026 13:00:52 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 21 Jul 2026 13:00:56 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 21, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-21-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-21-transcript.html</guid>
+    <pubDate>Tue, 21 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Gaza celebrates World Cup victory of Spanish team they took into their hearts. People gather at cafes and outdoor screenings to support team after Spain's backing for Palestinian rights. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-21.mp3" length="1301760" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 20, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-20-transcript.html</link>

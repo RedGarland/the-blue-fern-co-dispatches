@@ -1,0 +1,324 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-23-002",
+    "title": "Palestine Action barrister's prosecution criticised as 'chilling'",
+    "summary": "CBA chair says contempt charge over closing speech by Rajiv Menon KC has left lawyers fearful of doing their job. The prosecution of a leading human rights barrister for contempt of court over his closing speech during a trial of Palestine Action activists has left lawyers fearful of doing their job, the chair of the Criminal Bar Association (CBA) has said. Rajiv Menon KC, who was acting for the defence, is due to stand trial next week, accused of breaching the judge's directions in the trial of six people for a direct action protest at an arms factory of the Israeli subsidiary Elbit Systems UK in Filton, near Bristol, in 2024.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-23-guardian-world-31782c903d9f"
+    ],
+    "source_ids": [
+      "gaza-2026-07-23-guardian-world-31782c903d9f"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/uk-news/2026/jul/23/palestine-action-trial-lawyer-prosecution-criticised-rajiv-menon-kc"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-23-guardian-world-31782c903d9f",
+        "title": "Palestine Action barrister's prosecution criticised as 'chilling'",
+        "url": "https://www.theguardian.com/uk-news/2026/jul/23/palestine-action-trial-lawyer-prosecution-criticised-rajiv-menon-kc",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "CBA chair says contempt charge over closing speech by Rajiv Menon KC has left lawyers fearful of doing their job The prosecution of a leading human rights barrister for contempt of court over his closing speech during a trial of Palestine Action activists has left lawyers fearful of doing their job, the chair of the Criminal Bar Association (CBA) has said. Rajiv Menon KC, who was acting for the defence, is due to stand trial next week, accused of breaching the judge's directions in the trial of six people for a direct action protest at an arms factory of the Israeli subsidiary Elbit Systems UK in Filton, near Bristol, in 2024."
+      }
+    ],
+    "generated_at": "2026-07-23T13:00:43.729802+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-06-004",
+    "prior_edition_date": "2026-07-06",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-23-005",
+    "title": "Photos: Gaza's shelter crisis",
+    "summary": "Gaza faces a deepening housing crisis as more than 92 percent of homes have been damaged or destroyed by Israel.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 58,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-546170083f02"
+    ],
+    "source_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-546170083f02"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/gallery/2026/7/23/photos-gazas-shelter-crisis?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-546170083f02",
+        "title": "Photos: Gaza's shelter crisis",
+        "url": "https://www.aljazeera.com/gallery/2026/7/23/photos-gazas-shelter-crisis?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Gaza faces a deepening housing crisis as more than 92 percent of homes have been damaged or destroyed by Israel."
+      }
+    ],
+    "generated_at": "2026-07-23T13:00:43.729802+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-18-005",
+    "prior_edition_date": "2026-05-18",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-23-001",
+    "title": "Israeli strikes in Gaza kill 12, including family of six, medics say",
+    "summary": "Firas al-Masri, his wife and their four children died in one attack, which the Israeli military says targeted a Hamas operative.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 45,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-23-bbc-middle-east-b95c120b3d4e"
+    ],
+    "source_ids": [
+      "gaza-2026-07-23-bbc-middle-east-b95c120b3d4e"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c0qv0pdj18go?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-23-bbc-middle-east-b95c120b3d4e",
+        "title": "Israeli strikes in Gaza kill 12, including family of six, medics say",
+        "url": "https://www.bbc.co.uk/news/articles/c0qv0pdj18go?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Firas al-Masri, his wife and their four children died in one attack, which the Israeli military says targeted a Hamas operative."
+      }
+    ],
+    "generated_at": "2026-07-23T13:00:43.729802+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 45,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-05-004",
+    "prior_edition_date": "2026-06-05",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-23-004",
+    "title": "'Back from the dead': The continuing agony over Gaza's 9,500 missing people",
+    "summary": "Palestinian's sudden return alive after family held his funeral highlights suffering of those still waiting for answers.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-06f8e31abf85"
+    ],
+    "source_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-06f8e31abf85"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/7/23/back-from-the-dead-the-continuing-agony-of-gazas-9500-missing-persons?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-06f8e31abf85",
+        "title": "'Back from the dead': The continuing agony over Gaza's 9,500 missing people",
+        "url": "https://www.aljazeera.com/features/2026/7/23/back-from-the-dead-the-continuing-agony-of-gazas-9500-missing-persons?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinian's sudden return alive after family held his funeral highlights suffering of those still waiting for answers."
+      }
+    ],
+    "generated_at": "2026-07-23T13:00:43.729802+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-23-003",
+    "title": "Israel releases 35 detainees from Gaza",
+    "summary": "",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-4fe7ae196c15"
+    ],
+    "source_ids": [
+      "gaza-2026-07-23-aljazeera-middle-east-4fe7ae196c15"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/23/israel-releases-35-detainees-from-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-4fe7ae196c15",
+        "title": "Israel releases 35 detainees from Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/23/israel-releases-35-detainees-from-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel releases 35 detainees from Gaza"
+      }
+    ],
+    "generated_at": "2026-07-23T13:00:43.729802+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-21-002",
+    "prior_edition_date": "2026-07-21",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

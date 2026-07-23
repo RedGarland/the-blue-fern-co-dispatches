@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-23",
+  "generated_at": "2026-07-23T13:00:57.155555Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-23.mp3",
+  "audio_url": "/gaza/audio/2026-07-23.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1180,
+  "tts_input_word_count": 188,
+  "tts_story_count": 5,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1329024,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-23T13:00:57.155525Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-23-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-23/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 23, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestine Action barrister's prosecution criticised as 'chilling'. CBA chair says contempt charge over closing speech by Rajiv Menon KC has left lawyers fearful of doing their job. This was reported by The Guardian.\n\n2. Photos: Gaza's shelter crisis. Gaza faces a deepening housing crisis as more than 92 percent of homes have been damaged or destroyed by Israel. This was reported by Al Jazeera.\n\n3. Israeli strikes in Gaza kill 12, including family of six, medics say. Firas al-Masri, his wife and their four children died in one attack, which the Israeli military says targeted a Hamas operative. This was reported by BBC News.\n\n4. 'Back from the dead': The continuing agony over Gaza's 9,500 missing people. Palestinian's sudden return alive after family held his funeral highlights suffering of those still waiting for answers. This was reported by Al Jazeera.\n\n5. Israel releases 35 detainees from Gaza. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 23, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-23-guardian-world-31782c903d9f",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/uk-news/2026/jul/23/palestine-action-trial-lawyer-prosecution-criticised-rajiv-menon-kc",
+      "title": "Palestine Action barrister's prosecution criticised as 'chilling'"
+    },
+    {
+      "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-546170083f02",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/gallery/2026/7/23/photos-gazas-shelter-crisis?traffic_source=rss",
+      "title": "Photos: Gaza's shelter crisis"
+    },
+    {
+      "source_record_id": "gaza-2026-07-23-bbc-middle-east-b95c120b3d4e",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c0qv0pdj18go?at_medium=RSS&at_campaign=rss",
+      "title": "Israeli strikes in Gaza kill 12, including family of six, medics say"
+    },
+    {
+      "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-06f8e31abf85",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/7/23/back-from-the-dead-the-continuing-agony-of-gazas-9500-missing-persons?traffic_source=rss",
+      "title": "'Back from the dead': The continuing agony over Gaza's 9,500 missing people"
+    },
+    {
+      "source_record_id": "gaza-2026-07-23-aljazeera-middle-east-4fe7ae196c15",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/23/israel-releases-35-detainees-from-gaza?traffic_source=rss",
+      "title": "Israel releases 35 detainees from Gaza"
+    }
+  ]
+}

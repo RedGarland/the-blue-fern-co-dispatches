@@ -134,6 +134,7 @@ def test_phase14h_publication_renders_two_events_and_hides_internal_fields(tmp_p
         assert "Record fingerprint" not in page
         assert "Review packet fingerprint" not in page
         assert "children?s" not in page.lower()
+        assert "service_restoration" not in page
 
     assert "Children’s" in first_event
     assert "UnitedHealthcare" in second_event

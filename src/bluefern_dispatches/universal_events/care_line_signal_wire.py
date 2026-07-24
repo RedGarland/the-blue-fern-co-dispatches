@@ -374,15 +374,6 @@ def _render_event_page(event: SignalWireEvent) -> str:
     source_link = f'<a href="{html.escape(event.source_url)}" rel="noopener noreferrer" target="_blank">{html.escape(event.publisher)}</a>'
     evidence_block = html.escape(event.evidence_text)
     revision_status = f"        <li><strong>Revision status:</strong> {html.escape(event.revision_status)}</li>\\n" if event.revision_status else ""
-    taxonomy_note = (
-        f'''    <section class="section">
-      <h2>Taxonomy note</h2>
-      <p>{html.escape(event.taxonomy_gap_note)}</p>
-    </section>
-'''
-        if event.taxonomy_gap_note
-        else ""
-    )
     body = f'''  <main class="briefing event-page">
     <p class="eyebrow">Care Line Signal Wire</p>
     <h1>{html.escape(event.title)}</h1>
@@ -415,7 +406,7 @@ def _render_event_page(event: SignalWireEvent) -> str:
     <section class="section">
       <p>This signal was published from a reviewed source record with preserved source lineage.</p>
     </section>
-{taxonomy_note}  </main>'''
+  </main>'''
     return _render_page(event.title, f"Care Line Universal Event {event.event_id}", body, f"{BASE_URL}/events/{event.event_id}/")
 
 

@@ -36,6 +36,7 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
+from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -394,8 +395,9 @@ def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings:
     if not registry:
         warnings.append("care-line pressure source registry is empty")
 
-    public_summary = care_line_summary_for_records(rows) if rows else care_line_no_current_update_summary()
-    body_html = render_care_line_edition_body(rows, edition_date)
+    public_rows = [row for row in rows if care_line_record_is_public(row)]
+    public_summary = care_line_summary_for_records(public_rows) if public_rows else care_line_no_current_update_summary()
+    body_html = render_care_line_edition_body(public_rows, edition_date)
     return DispatchConfig(
         slug=CARE_LINE_DISPATCH_SLUG,
         name=CARE_LINE_DISPATCH_NAME,
@@ -822,12 +824,13 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     card_rows: list[str] = []
     summaries = {
         "gaza": "Daily source-backed briefings from Gaza.",
+        "american-pressure": AMERICAN_PRESSURE_PUBLIC_DESCRIPTION,
         "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
     }
     for dispatch in dispatches:
-        if dispatch.slug != "gaza":
+        if dispatch.slug not in {"gaza", "american-pressure"}:
             continue
-        card_style = ' style="--dispatch-card-watermark: url(\'/gaza/assets/gaza-logo.png\');"'
+        card_style = f' style="--dispatch-card-watermark: url(\'/{dispatch.slug}/assets/{dispatch.logo}\');"'
         card_rows.append(
             f"""      <li class="dispatch-card"{card_style}>
         <a href="/{dispatch.slug}/">
@@ -850,7 +853,7 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
       </li>"""
     card_rows.append(food_line_card)
     cards = "\n".join(card_rows)
-    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "food-line"))}
+    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "american-pressure", "food-line"))}
   <main class="home">
     <section class="hero root-hero">
       <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">
@@ -1432,9 +1435,9 @@ def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date
         return edition_date
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
     if manifest.get("coverage_label"):
-        return str(manifest["coverage_label"])
+        return f"{dispatch.name} - {manifest['coverage_label']}"
     if manifest.get("coverage_start") and manifest.get("coverage_end"):
-        return format_coverage_label(str(manifest["coverage_start"]), str(manifest["coverage_end"]))
+        return f"{dispatch.name} - {format_coverage_label(str(manifest['coverage_start']), str(manifest['coverage_end']))}"
     return edition_date
 
 
@@ -2160,8 +2163,14 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "local_output_path": str(public_dir),
         "local_backup_path": str(backup_dir),
         "template_version": TEMPLATE_VERSION,
-        "source_count": len(dispatch.sources),
-        "story_count": len(dispatch.stories),
+        "source_count": (
+            len(care_line_records)
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
+            else 0
+            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
+            else len(dispatch.sources)
+        ),
+        "story_count": len(care_line_public_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else len(dispatch.stories),
         "source_manifest_path": str(source_manifest_public),
         "curation_manifest_path": str(curation_manifest_public),
         "free_public_artifacts": public_artifacts,
@@ -2185,7 +2194,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "public_summary": (
             care_line_summary_for_records(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary(care_line_records)
+            else care_line_no_current_update_summary()
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG
             else ""
         ),
@@ -2199,7 +2208,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "public_archive_subtitle": (
             care_line_summary_for_records(care_line_records)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary(care_line_records)
+            else care_line_no_current_update_summary()
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG
             else ""
         ),
@@ -2386,8 +2395,10 @@ def build_site(
             write_text(dispatch_public_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
                 care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
-                write_text(dispatch_public_edition / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
-                write_text(dispatch_public_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
+                care_line_artifact_records = care_line_records if care_line_public_records else []
+                write_text(dispatch_public_edition / "source_table.html", render_care_line_source_table_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
+                write_text(dispatch_public_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
             if dispatch.slug in {"gaza", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}:
                 dispatch_output_edition = root / "output" / "dispatches" / dispatch.slug / "editions" / dispatch.edition_date
                 write_text(dispatch_output_edition / "index.html", edition_html, dry_run, wrote)
@@ -2396,8 +2407,10 @@ def build_site(
                     write_text(dispatch_output_edition / "edition.md", dispatch.body_html or "", dry_run, wrote)
                 if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
                     care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
-                    write_text(dispatch_output_edition / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
-                    write_text(dispatch_output_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                    care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
+                    care_line_artifact_records = care_line_records if care_line_public_records else []
+                    write_text(dispatch_output_edition / "source_table.html", render_care_line_source_table_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
+                    write_text(dispatch_output_edition / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
                 write_text(dispatch_output_edition / "edition_manifest.json", json.dumps(edition_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "sources_manifest.json", json.dumps(sources_manifest, indent=2), dry_run, wrote)
                 write_text(dispatch_output_edition / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
@@ -2407,8 +2420,10 @@ def build_site(
             write_text(backup_dir / "curation_manifest.json", json.dumps(curation_manifest, indent=2), dry_run, wrote)
             if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
                 care_line_records = dispatch.raw_records or [row.__dict__ if not isinstance(row, dict) else row for row in dispatch.sources]
-                write_text(backup_dir / "source_table.html", render_care_line_source_table_html(care_line_records, dispatch.edition_date), dry_run, wrote)
-                write_text(backup_dir / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_records, dispatch.edition_date), dry_run, wrote)
+                care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
+                care_line_artifact_records = care_line_records if care_line_public_records else []
+                write_text(backup_dir / "source_table.html", render_care_line_source_table_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
+                write_text(backup_dir / "claim_ledger.html", render_care_line_claim_ledger_html(care_line_artifact_records, dispatch.edition_date), dry_run, wrote)
             write_text(backup_dir / "run_manifest.json", json.dumps({"generated_at": generated_at, "dry_run": dry_run, "warnings": warnings, "errors": errors}, indent=2), dry_run, wrote)
         if dispatch.slug in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}:
             if dispatch.slug == "cascadia":
@@ -2430,6 +2445,23 @@ def build_site(
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+    if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
+        try:
+            care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if care_line_signal_wire.get("ok") and not care_line_signal_wire.get("skipped"):
+                for artifact in care_line_signal_wire.get("shadow_artifacts") or []:
+                    artifact_path = Path(str(artifact["path"]))
+                    if not artifact_path.is_absolute():
+                        artifact_path = root / artifact_path
+                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                for artifact in care_line_signal_wire.get("site_artifacts") or []:
+                    artifact_path = Path(str(artifact["path"]))
+                    if not artifact_path.is_absolute():
+                        artifact_path = root / artifact_path
+                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                public_urls.extend(str(url) for url in care_line_signal_wire.get("public_urls") or [])
+        except Exception as exc:
+            errors.append(f"care-line signal wire generation failed: {exc}")
     ensure_public_html_favicons(site_root, dry_run, wrote)
     return {
         "ok": not errors,
@@ -3027,19 +3059,19 @@ def ensure_pages_branch(pages_repo: Path, pages_branch: str, dry_run: bool, ligh
         )
         return result
 
+    remotes = git_stdout(["remote"], pages_repo) or ""
+    has_origin = "origin" in remotes.split()
     try:
         dirty_paths = _git_porcelain_paths(pages_repo)
     except RuntimeError as exc:
         result["errors"].append(str(exc))
         return result
-    if dirty_paths:
+    if dirty_paths and has_origin:
         result["errors"].append(
             f"{pages_sync_repair_message(pages_repo, pages_branch)} Uncommitted Pages worktree changes detected: {', '.join(dirty_paths[:10])}"
         )
         return result
-
-    remotes = git_stdout(["remote"], pages_repo) or ""
-    if "origin" in remotes.split():
+    if has_origin:
         result["fetch_attempted"] = True
         fetch = run_git(["fetch", "origin", pages_branch], pages_repo)
         result["fetched"] = fetch.returncode == 0
@@ -3351,6 +3383,14 @@ def publish_pages(
         existing_dispatch_edition = resolved_root / "output" / "dispatches" / "american-pressure" / "editions" / expect_date
         if existing_dispatch_edition.exists():
             dispatch_seed_dates["american-pressure"] = expect_date
+    # A publication scoped to another dispatch must not advance Care Line to a
+    # newer intake fixture as a side effect of rebuilding the shared site. In
+    # particular, the Phase 14A review set may intentionally remain
+    # needs_evidence_review and must not become an unrelated publication gate.
+    if "care-line" not in only_dispatches:
+        existing_care_line_dates = discover_public_edition_dates(root / "output" / "site", CARE_LINE_DISPATCH_SLUG)
+        if existing_care_line_dates:
+            dispatch_seed_dates["care-line"] = max(existing_care_line_dates)
     removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
     build = build_site(
         root,
